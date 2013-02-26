@@ -44,7 +44,16 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>openhmis.commons-api</artifactId>
 				<version>1.5.0-SNAPSHOT</version>
-				<scope>compile</scope>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>openhmis.commons-api</artifactId>
+				<version>1.5.0-SNAPSHOT</version>
+				<type>test-jar</type>
+				<scope>test</scope>
 			</dependency>
 
 			<!-- Begin OpenMRS core -->

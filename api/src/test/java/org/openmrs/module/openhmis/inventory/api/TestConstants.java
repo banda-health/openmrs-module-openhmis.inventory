@@ -13,18 +13,6 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.openmrs.api.context.Context;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
-
-/**
- * Tests {@link ${InventoryServiceService}}.
- */
-public class  InventoryServiceServiceTest extends BaseModuleContextSensitiveTest {
-	
-	@Test
-	public void shouldSetupContext() {
-		assertNotNull(Context.getService(InventoryServiceService.class));
-	}
+public class TestConstants {
+	public static final String BASE_DATASET_DIR = "org/openmrs/module/openhmis/inventory/api/include/";
 }

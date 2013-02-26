@@ -11,20 +11,14 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
+
 package org.openmrs.module.openhmis.inventory.api;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.openmrs.api.context.Context;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Department;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Tests {@link ${InventoryServiceService}}.
- */
-public class  InventoryServiceServiceTest extends BaseModuleContextSensitiveTest {
-	
-	@Test
-	public void shouldSetupContext() {
-		assertNotNull(Context.getService(InventoryServiceService.class));
-	}
+@Transactional
+public interface IDepartmentService extends IMetadataDataService<Department> {
+
 }

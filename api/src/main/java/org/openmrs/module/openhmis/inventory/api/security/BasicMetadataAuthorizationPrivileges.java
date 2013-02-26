@@ -11,20 +11,17 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.openhmis.inventory.api;
+package org.openmrs.module.openhmis.inventory.api.security;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.openmrs.api.context.Context;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
-/**
- * Tests {@link ${InventoryServiceService}}.
- */
-public class  InventoryServiceServiceTest extends BaseModuleContextSensitiveTest {
-	
-	@Test
-	public void shouldSetupContext() {
-		assertNotNull(Context.getService(InventoryServiceService.class));
+public class BasicMetadataAuthorizationPrivileges
+		extends BasicObjectAuthorizationPrivileges
+		implements IMetadataAuthorizationPrivileges {
+	@Override
+	public String getRetirePrivilege() {
+		return PrivilegeConstants.MANAGE_METADATA;
 	}
 }
+

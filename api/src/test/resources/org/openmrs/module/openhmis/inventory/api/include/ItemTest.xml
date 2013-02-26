@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<cashier_item item_id="0" name="test 1 item" description="test description" department_id="0" default_price_id="0"
+	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA013995675A7E0001" />
+	<cashier_item_code item_code_id="0" name="code 1" item_id="0" code="item 1 code"
+	                   creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA0139956A95ED0003" />
+	<cashier_item_price item_price_id="0" name="default" item_id="0" price="101.01"
+	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399569049E0002" />
+
+	<cashier_item item_id="1" name="test 2 item" description="test description numero dos" department_id="0" default_price_id="1"
+	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399671011D000A" />
+	<cashier_item_code item_code_id="1" name="code 2" item_id="1" code="item 2 code"
+	                   creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA013996710B7B000B" />
+	<cashier_item_price item_price_id="1" name="default" item_id="1" price="102.01"
+	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA013996711FE5000D" />
+	<cashier_item_price item_price_id="2" name="test 2 price" item_id="1" price="202.01"
+	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B39B565A20139B9930ACC000A" />
+	<cashier_item_price item_price_id="3" name="test 3 price" item_id="1" price="302.01"
+	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B39B565A20139B993158D000B" />
+
+	<cashier_item item_id="2" name="test 3 item" description="test description 3" department_id="0" default_price_id="2"
+	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399681B1B5000E" />
+	<cashier_item_code item_code_id="2" name="code 3" item_id="2" code="item 3 code"
+	                   creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399681BEE5000F" />
+	<cashier_item_price item_price_id="4" name="default" item_id="2" price="103.01"
+	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399681CD640010" />
+</dataset>

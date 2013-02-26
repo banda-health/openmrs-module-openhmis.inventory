@@ -11,20 +11,28 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.openhmis.inventory.api;
+package org.openmrs.module.openhmis.inventory.api.model;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.openmrs.api.context.Context;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.attribute.BaseAttribute;
 
-/**
- * Tests {@link ${InventoryServiceService}}.
- */
-public class  InventoryServiceServiceTest extends BaseModuleContextSensitiveTest {
-	
-	@Test
-	public void shouldSetupContext() {
-		assertNotNull(Context.getService(InventoryServiceService.class));
+public class ItemAttribute extends BaseAttribute<ItemAttributeType, Item> {
+	private Integer itemAttributeId;
+
+	@Override
+	public Integer getId() {
+		return itemAttributeId;
+	}
+
+	@Override
+	public void setId(Integer id) {
+		this.itemAttributeId = id;
+	}
+
+	public Item getItem() {
+		return getOwner();
+	}
+
+	public void setItem(Item item) {
+		setOwner(item);
 	}
 }
