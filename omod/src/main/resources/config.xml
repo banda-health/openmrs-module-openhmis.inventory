@@ -15,6 +15,10 @@
 	<require_version>${openMRSVersion}</require_version>
 	<!-- / Module Properties -->
 
+	<require_modules>
+		<require_module version="1.1">org.openmrs.module.webservices.rest</require_module>
+		<require_module version="1.5">org.openmrs.module.openhmis.commons</require_module>
+	</require_modules>
 	
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.OpenHMISInventoryModuleActivator</activator>
