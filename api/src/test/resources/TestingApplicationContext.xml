@@ -27,4 +27,8 @@
 			</list>
 		</property>
 	</bean>
+
+	<bean id="genericRepository" class="org.openmrs.module.openhmis.commons.api.entity.db.hibernate.HibernateRepository">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
+	</bean>
 </beans>

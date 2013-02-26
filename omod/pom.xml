@@ -193,6 +193,7 @@
 							<includeArtifactIds>${project.parent.artifactId}-api</includeArtifactIds>
 							<excludeTransitive>true</excludeTransitive>
 							<includes>**/*</includes>
+							<excludes>**/parent*.xml</excludes>
 							<outputDirectory>${project.build.directory}/classes</outputDirectory>
 						</configuration>
 					</execution>
