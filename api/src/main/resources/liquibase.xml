@@ -4,9 +4,282 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
-    <!--
-        See http://www.liquibase.org/manual/home#available_database_refactorings
-        for a list of supported elements and attributes
-    -->
-    
+	<changeSet id="openhmis.inventory-v1.0-1" author="ibewes">
+		<createTable tableName="inv_item">
+			<column name="item_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+
+			<column name="name" type="varchar(255)" defaultValue="" ><constraints nullable="false"/></column>
+			<column name="description" type="varchar(1024)" defaultValue=""/>
+			<column name="department_id" type="int"><constraints nullable="false" /></column>
+			<column name="category_id" type="int" />
+			<column name="default_price_id" type="int" />
+
+			<column name="creator" type="int" defaultValueNumeric="0" ><constraints nullable="false"/></column>
+			<column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
+			<column name="changed_by" type="int"/>
+			<column name="date_changed" type="DATETIME"/>
+			<column defaultValueBoolean="false" name="retired" type="BOOLEAN"><constraints nullable="false"/></column>
+			<column name="retired_by" type="int"/>
+			<column name="date_retired" type="DATETIME"/>
+			<column name="retire_reason" type="varchar(255)"/>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_item_attribute_type">
+			<column name="item_attribute_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)"><constraints nullable="false" /></column>
+			<column name="description" type="varchar(1024)" />
+			<column name="datatype" type="varchar(255)" />
+			<column name="datatype_config" type="text" />
+			<column name="preferred_handler" type="varchar(255)" />
+			<column name="handler_config" type="text" />
+			<column name="min_occurs" type="int"><constraints nullable="false" /></column>
+			<column name="max_occurs" type="int"/>
+			<column name="creator" type="int"><constraints nullable="false" /></column>
+			<column name="date_created" type="datetime"><constraints nullable="false" /></column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="boolean" defaultValueBoolean="false"><constraints nullable="false" /></column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_item_attribute">
+			<column name="item_attribute_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="item_id" type="int"><constraints nullable="false" /></column>
+			<column name="item_attribute_type_id" type="int"><constraints nullable="false" /></column>
+			<column name="value_reference" type="text"><constraints nullable="false" /></column>
+			<column name="creator" type="int"><constraints nullable="false"/></column>
+			<column name="date_created" type="datetime"><constraints nullable="false"/></column>
+			<column name="changed_by" type="int"/>
+			<column name="date_changed" type="datetime" />
+			<column name="voided" type="boolean" defaultValueBoolean="false"><constraints nullable="false"/></column>
+			<column name="voided_by" type="int" />
+			<column name="date_voided" type="datetime" />
+			<column name="void_reason" type="varchar(255)" defaultValue="null"/>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_item_price">
+			<column name="item_price_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="item_id" type="int"><constraints nullable="false"/></column>
+			<column name="price" type="decimal(10,2)"><constraints nullable="false"/></column>
+
+			<column defaultValue="" name="name" type="varchar(255)" />
+			<column defaultValue="" name="description" type="varchar(1024)" />
+
+			<column name="creator" type="int" defaultValueNumeric="0" ><constraints nullable="false"/></column>
+			<column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
+			<column name="changed_by" type="int"/>
+			<column name="date_changed" type="DATETIME"/>
+			<column defaultValueBoolean="false" name="retired" type="BOOLEAN"><constraints nullable="false"/></column>
+			<column name="retired_by" type="int"/>
+			<column name="date_retired" type="DATETIME"/>
+			<column name="retire_reason" type="varchar(255)"/>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_item_code">
+			<column name="item_code_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="item_id" type="int">
+				<constraints nullable="false"/>
+			</column>
+			<column name="code" type="varchar(255)">
+				<constraints nullable="false"/>
+			</column>
+
+			<column defaultValue="" name="name" type="varchar(255)" />
+			<column defaultValue="" name="description" type="varchar(1024)" />
+
+			<column name="creator" type="int" defaultValueNumeric="0" >
+				<constraints nullable="false"/>
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false"/>
+			</column>
+			<column name="changed_by" type="int"/>
+			<column name="date_changed" type="DATETIME"/>
+			<column defaultValueBoolean="false" name="retired" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="retired_by" type="int"/>
+			<column name="date_retired" type="DATETIME"/>
+			<column name="retire_reason" type="varchar(255)"/>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_department">
+			<column name="department_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
+			<column defaultValue="" name="description" type="varchar(1024)" />
+
+			<column name="creator" type="int" defaultValueNumeric="0" >
+				<constraints nullable="false"/>
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false"/>
+			</column>
+			<column name="changed_by" type="int"/>
+			<column name="date_changed" type="DATETIME"/>
+			<column defaultValueBoolean="false" name="retired" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="retired_by" type="int"/>
+			<column name="date_retired" type="DATETIME"/>
+			<column name="retire_reason" type="varchar(255)"/>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_category">
+			<column name="category_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
+			<column defaultValue="" name="description" type="varchar(1024)" />
+			<column name="parent_id" type="int" />
+
+			<column name="creator" type="int" defaultValueNumeric="0" >
+				<constraints nullable="false"/>
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false"/>
+			</column>
+			<column name="changed_by" type="int"/>
+			<column name="date_changed" type="DATETIME"/>
+			<column defaultValueBoolean="false" name="retired" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="retired_by" type="int"/>
+			<column name="date_retired" type="DATETIME"/>
+			<column name="retire_reason" type="varchar(255)"/>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+
+		<createIndex indexName="inv_item_name_idx" tableName="inv_item" unique="false">
+			<column name="name"/>
+			<column name="retired" />
+		</createIndex>
+		<createIndex indexName="inv_item_department_name_idx" tableName="inv_item" unique="false">
+			<column name="department_id" />
+			<column name="name"/>
+			<column name="retired" />
+		</createIndex>
+		<createIndex indexName="inv_item_category_name_idx" tableName="inv_item" unique="false">
+			<column name="category_id" />
+			<column name="name"/>
+			<column name="retired" />
+		</createIndex>
+
+		<createIndex indexName="inv_category_parent_idx" tableName="inv_category" unique="false">
+			<column name="parent_id"/>
+			<column name="retired" />
+		</createIndex>
+
+		<addForeignKeyConstraint constraintName="inv_item_creator_fk"
+	                             baseTableName="inv_item" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"
+		                         deferrable="false" initiallyDeferred="false" />
+		<addForeignKeyConstraint constraintName="inv_item_changed_by_fk"
+		                         baseTableName="inv_item" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"
+		                         deferrable="false" initiallyDeferred="false" />
+		<addForeignKeyConstraint constraintName="inv_item_retired_by_fk"
+		                         baseTableName="inv_item" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"
+		                         deferrable="false" initiallyDeferred="false" />
+		<addForeignKeyConstraint constraintName="inv_item_department_fk"
+		                         baseTableName="inv_item" baseColumnNames="department_id"
+		                         referencedTableName="inv_department" referencedColumnNames="department_id"
+		                         deferrable="false" initiallyDeferred="false" />
+		<addForeignKeyConstraint constraintName="inv_item_category_fk"
+		                         baseTableName="inv_item" baseColumnNames="category_id"
+		                         referencedTableName="inv_category" referencedColumnNames="category_id"
+		                         deferrable="false" initiallyDeferred="false" />
+
+		<addForeignKeyConstraint constraintName="inv_item_attribute_type_creator_fk"
+		                         baseTableName="inv_item_attribute_type" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_type_changed_by_fk"
+		                         baseTableName="inv_item_attribute_type" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_type_retired_by_fk"
+		                         baseTableName="inv_item_attribute_type" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_item_attribute_attribute_type_id_fk"
+		                         baseTableName="inv_item_attribute" baseColumnNames="item_attribute_type_id"
+		                         referencedTableName="inv_item_attribute_type" referencedColumnNames="item_attribute_type_id" />
+		<addForeignKeyConstraint constraintName="inv_item_attribute_item_id_fk"
+		                         baseTableName="inv_item_attribute" baseColumnNames="item_id"
+		                         referencedTableName="inv_item" referencedColumnNames="item_id"
+		                         onDelete="CASCADE" onUpdate="CASCADE"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_creator_fk"
+		                         baseTableName="inv_item_attribute" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_changed_by_fk"
+		                         baseTableName="inv_item_attribute" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_voided_by_fk"
+		                         baseTableName="inv_item_attribute" baseColumnNames="voided_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_item_price_item_id_fk"
+		                         baseTableName="inv_item_price" baseColumnNames="item_id"
+		                         referencedTableName="inv_item" referencedColumnNames="item_id"
+		                         onDelete="CASCADE" onUpdate="CASCADE"/>
+		<addForeignKeyConstraint constraintName="inv_item_price_creator_fk"
+		                         baseTableName="inv_item_price" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_price_changed_by_fk"
+		                         baseTableName="inv_item_price" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_price_retired_by_fk"
+		                         baseTableName="inv_item_price" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_item_code_item_id_fk"
+		                         baseTableName="inv_item_code" baseColumnNames="item_id"
+		                         referencedTableName="inv_item" referencedColumnNames="item_id"
+		                         onDelete="CASCADE" onUpdate="CASCADE" />
+		<addForeignKeyConstraint constraintName="inv_item_code_creator_fk"
+		                         baseTableName="inv_item_code" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_code_changed_by_fk"
+		                         baseTableName="inv_item_code" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_code_retired_by_fk"
+		                         baseTableName="inv_item_code" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_department_creator_fk"
+		                         baseTableName="inv_department" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_department_changed_by_fk"
+		                         baseTableName="inv_department" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_department_retired_by_fk"
+		                         baseTableName="inv_department" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_category_creator_fk"
+		                         baseTableName="inv_category" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_category_changed_by_fk"
+		                         baseTableName="inv_department" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_category_retired_by_fk"
+		                         baseTableName="inv_department" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_category_parent_fk"
+		                         baseTableName="inv_department" baseColumnNames="parent_id"
+		                         referencedTableName="inv_department" referencedColumnNames="category_id"/>
+	</changeSet>
 </databaseChangeLog>
