@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
- 
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
@@ -273,14 +272,14 @@
 		                         baseTableName="inv_category" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 		<addForeignKeyConstraint constraintName="inv_category_changed_by_fk"
-		                         baseTableName="inv_department" baseColumnNames="changed_by"
+		                         baseTableName="inv_category" baseColumnNames="changed_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 		<addForeignKeyConstraint constraintName="inv_category_retired_by_fk"
-		                         baseTableName="inv_department" baseColumnNames="retired_by"
+		                         baseTableName="inv_category" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 		<addForeignKeyConstraint constraintName="inv_category_parent_fk"
-		                         baseTableName="inv_department" baseColumnNames="parent_id"
-		                         referencedTableName="inv_department" referencedColumnNames="category_id"
+		                         baseTableName="inv_category" baseColumnNames="parent_id"
+		                         referencedTableName="inv_category" referencedColumnNames="category_id"
 		                         onDelete="CASCADE" onUpdate="CASCADE"/>
 	</changeSet>
 </databaseChangeLog>
