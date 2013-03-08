@@ -17,6 +17,7 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
@@ -36,11 +37,11 @@ public interface IInventoryService extends OpenmrsService {
 
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(ItemCategory category, String nameFragment, boolean includeRetired) throws APIException;
+	List<Item> findItems(Category category, String nameFragment, boolean includeRetired) throws APIException;
 
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(ItemCategory category, String nameFragment, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+	List<Item> findItems(Category category, String nameFragment, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_METADATA})

@@ -21,7 +21,7 @@
 	</require_modules>
 	
 	<!-- Module Activator -->
-	<activator>${project.parent.groupId}.${project.parent.artifactId}.OpenHMISInventoryModuleActivator</activator>
+	<activator>${project.parent.groupId}.${project.parent.artifactId}.InventoryModuleActivator</activator>
 	
 	
 	<!-- Adds link to admin page -->
@@ -32,9 +32,9 @@
 	
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-				
 		Item.hbm.xml
-				
+		Department.hbm.xml
+		Category.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

@@ -280,6 +280,7 @@
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 		<addForeignKeyConstraint constraintName="inv_category_parent_fk"
 		                         baseTableName="inv_department" baseColumnNames="parent_id"
-		                         referencedTableName="inv_department" referencedColumnNames="category_id"/>
+		                         referencedTableName="inv_department" referencedColumnNames="category_id"
+		                         onDelete="CASCADE" onUpdate="CASCADE"/>
 	</changeSet>
 </databaseChangeLog>
