@@ -13,24 +13,8 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
-import org.openmrs.api.OpenmrsService;
-import org.springframework.transaction.annotation.Transactional;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Category;
 
-/**
- * This service exposes module's core functionality. It is a Spring managed bean which is configured in moduleApplicationContext.xml.
- * <p>
- * It can be accessed only via Context:<br>
- * <code>
- * Context.getService(InventoryServiceService.class).someMethod();
- * </code>
- * 
- * @see org.openmrs.api.context.Context
- */
-@Transactional
-public interface InventoryService extends OpenmrsService {
-     
-	/*
-	 * Add service methods here
-	 * 
-	 */
+public interface ICategoryDataService extends IMetadataDataService<Category> {
 }

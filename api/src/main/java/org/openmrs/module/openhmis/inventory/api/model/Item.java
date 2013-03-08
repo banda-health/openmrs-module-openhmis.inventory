@@ -25,10 +25,13 @@ import java.util.Set;
  * Model class that represents an item that can be billed by an institution.
  */
 public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
+	public static final long serialVersionUID = 0L;
+
 	private Integer itemId;
 	private Set<ItemCode> codes;
 	private Set<ItemPrice> prices;
 	private Department department;
+	private Category category;
 	private ItemPrice defaultPrice;
 
 	public Item() {
@@ -82,7 +85,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	public void removeCode(ItemCode code) {
 		if (code != null) {
 			if (codes == null) {
-				codes = new HashSet<ItemCode>();
+				return;
 			}
 
 			codes.remove(code);
@@ -126,7 +129,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	public void removePrice(ItemPrice price) {
 		if (price != null) {
 			if (prices == null) {
-				prices = new HashSet<ItemPrice>();
+				return;
 			}
 
 			prices.remove(price);
@@ -147,5 +150,13 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setDefaultPrice(ItemPrice defaultPrice) {
 		this.defaultPrice = defaultPrice;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 }

@@ -19,6 +19,8 @@ import org.openmrs.BaseOpenmrsMetadata;
  * Model class to represent an externally defined code for an {@link Item}.
  */
 public class ItemCode extends BaseOpenmrsMetadata {
+	public static final long serialVersionUID = 0L;
+
 	private Integer itemCodeId;
 	private String code;
 	private Item item;

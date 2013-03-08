@@ -15,17 +15,17 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.openmrs.api.APIException;
+import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
-import org.openmrs.module.openhmis.inventory.api.IDepartmentService;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public class DepartmentServiceImpl
+public class DepartmentDataServiceImpl
 		extends BaseMetadataDataServiceImpl<Department>
-		implements IDepartmentService {
+		implements IDepartmentDataService {
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();

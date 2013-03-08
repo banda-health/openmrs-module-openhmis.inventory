@@ -17,7 +17,7 @@ package org.openmrs.module.openhmis.inventory.api;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 
-public class IDepartmentServiceTest extends IMetadataDataServiceTest<IDepartmentService, Department> {
+public class IDepartmentDataServiceTest extends IMetadataDataServiceTest<IDepartmentDataService, Department> {
 	public static final String DEPARTMENT_DATASET = TestConstants.BASE_DATASET_DIR + "DepartmentTest.xml";
 
 	@Override

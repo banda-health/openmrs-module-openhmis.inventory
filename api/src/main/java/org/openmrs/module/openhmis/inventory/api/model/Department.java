@@ -19,6 +19,8 @@ import org.openmrs.BaseOpenmrsMetadata;
  * Model class that represents an institutional department.
  */
 public class Department extends BaseOpenmrsMetadata {
+	public static final long serialVersionUID = 0L;
+
 	private Integer departmentId;
 
 	@Override

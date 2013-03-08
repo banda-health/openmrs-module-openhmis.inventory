@@ -29,8 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Item> {
-	IDepartmentService departmentService;
+public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataService, Item> {
+	IDepartmentDataService departmentService;
 
 	public static final String ITEM_DATASET = TestConstants.BASE_DATASET_DIR + "ItemTest.xml";
 
@@ -38,9 +38,9 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 	public void before() throws Exception {
 		super.before();
 
-		departmentService = Context.getService(IDepartmentService.class);
+		departmentService = Context.getService(IDepartmentDataService.class);
 
-		executeDataSet(IDepartmentServiceTest.DEPARTMENT_DATASET);
+		executeDataSet(IDepartmentDataServiceTest.DEPARTMENT_DATASET);
 		executeDataSet(ITEM_DATASET);
 	}
 
@@ -151,7 +151,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies throw IllegalArgumentException if the item code is null
-	 * @see IItemService#getItemByCode(String)
+	 * @see IItemDataService#getItemByCode(String)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getItemByCode_shouldThrowIllegalArgumentExceptionIfTheItemCodeIsNull() throws Exception {
@@ -160,7 +160,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies throw IllegalArgumentException if the item code is longer than 255 characters
-	 * @see IItemService#getItemByCode(String)
+	 * @see IItemDataService#getItemByCode(String)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getItemByCode_shouldThrowIllegalArgumentExceptionIfTheItemCodeIsLongerThan255Characters() throws Exception {
@@ -169,7 +169,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies return the item with the specified item code
-	 * @see IItemService#getItemByCode(String)
+	 * @see IItemDataService#getItemByCode(String)
 	 */
 	@Test
 	public void getItemByCode_shouldReturnTheItemWithTheSpecifiedItemCode() throws Exception {
@@ -182,7 +182,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies return null if the item code is not found
-	 * @see IItemService#getItemByCode(String)
+	 * @see IItemDataService#getItemByCode(String)
 	 */
 	@Test
 	public void getItemByCode_shouldReturnNullIfTheItemCodeIsNotFound() throws Exception {
@@ -193,7 +193,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsNull() throws Exception {
@@ -202,7 +202,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is null
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsNull() throws Exception {
@@ -211,7 +211,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is empty
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsEmpty() throws Exception {
@@ -220,7 +220,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is longer than 255 characters
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsLongerThan255Characters() throws Exception {
@@ -229,7 +229,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies return an empty list if no items are found
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnAnEmptyListIfNoItemsAreFound() throws Exception {
@@ -241,7 +241,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies not return retired items unless specified
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldNotReturnRetiredItemsUnlessSpecified() throws Exception {
@@ -262,7 +262,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies return items that start with the specified name
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsThatStartWithTheSpecifiedName() throws Exception {
@@ -276,7 +276,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies return items for only the specified department
-	 * @see IItemService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsForOnlyTheSpecifiedDepartment() throws Exception {
@@ -291,7 +291,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void getItemsByDepartment_shouldThrowNullPointerExceptionIfTheDepartmentIsNull() throws Exception {
@@ -300,7 +300,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies return an empty list if the department has no items
-	 * @see IItemService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
 	 */
 	@Test
 	public void getItemsByDepartment_shouldReturnAnEmptyListIfTheDepartmentHasNoItems() throws Exception {
@@ -314,7 +314,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies not return retired items unless specified
-	 * @see IItemService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
 	 */
 	@Test
 	public void getItemsByDepartment_shouldNotReturnRetiredItemsUnlessSpecified() throws Exception {
@@ -343,7 +343,7 @@ public class IItemServiceTest extends IMetadataDataServiceTest<IItemService, Ite
 
 	/**
 	 * @verifies return all items for the specified department
-	 * @see IItemService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
 	 */
 	@Test
 	public void getItemsByDepartment_shouldReturnAllItemsForTheSpecifiedDepartment() throws Exception {

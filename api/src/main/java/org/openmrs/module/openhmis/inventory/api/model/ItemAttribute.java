@@ -16,6 +16,8 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.attribute.BaseAttribute;
 
 public class ItemAttribute extends BaseAttribute<ItemAttributeType, Item> {
+	public static final long serialVersionUID = 0L;
+
 	private Integer itemAttributeId;
 
 	@Override

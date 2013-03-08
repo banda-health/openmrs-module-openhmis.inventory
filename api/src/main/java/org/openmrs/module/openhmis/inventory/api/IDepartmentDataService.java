@@ -19,6 +19,6 @@ import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public interface IDepartmentService extends IMetadataDataService<Department> {
+public interface IDepartmentDataService extends IMetadataDataService<Department> {
 
 }

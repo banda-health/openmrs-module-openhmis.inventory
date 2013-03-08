@@ -32,6 +32,7 @@
 
 		<!-- Associations -->
 		<many-to-one name="department" class="Department" column="department_id" />
+		<many-to-one name="category" class="Category" column="category_id" />
 		<many-to-one name="defaultPrice" class="ItemPrice" column="default_price_id" />
 
 		<set name="attributes" lazy="true" inverse="true" batch-size="100"
