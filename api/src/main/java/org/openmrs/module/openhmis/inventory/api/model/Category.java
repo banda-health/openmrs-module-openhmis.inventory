@@ -83,7 +83,7 @@ public class Category extends BaseOpenmrsMetadata {
 		}
 	}
 
-	public void removeCode(Category category) {
+	public void removeCategory(Category category) {
 		if (category != null) {
 			if (categories == null) {
 				return;
