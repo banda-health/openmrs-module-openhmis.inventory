@@ -15,13 +15,13 @@
 
 		<property name="name" type="java.lang.String" column="name" not-null="true" length="255" />
 		<property name="description" type="java.lang.String" column="description" length="1024" />
-		<property name="parentCategory" type="int" column="parent_id" />
 
-		<list name="categories" lazy="true" inverse="true" cascade="all-delete-orphan">
+		<many-to-one name="parentCategory" class="Category" column="parent_id" />
+		<set name="categories" lazy="true" inverse="true" batch-size="100"
+		     cascade="all-delete-orphan" order-by="name">
 			<key column="parent_id" />
-			<list-index column="name" />
 			<one-to-many class="Category" />
-		</list>
+		</set>
 
 		<!-- bi-directional many-to-one association to User -->
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />

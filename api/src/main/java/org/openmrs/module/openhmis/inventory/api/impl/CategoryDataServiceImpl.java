@@ -13,12 +13,20 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
+
+import java.util.List;
+import java.util.Set;
 
 public class CategoryDataServiceImpl
 		extends BaseMetadataDataServiceImpl<Category>
@@ -29,6 +37,62 @@ public class CategoryDataServiceImpl
 	}
 
 	@Override
-	protected void validate(Category object) throws APIException {
+	protected void validate(Category category) throws APIException {
+		// Ensure that the category is not a child of itself
+		if (hasCycle(category, category.getCategories())) {
+			throw new APIException("Cycle detected.  A category cannot be a child of itself.");
+		}
+	}
+
+	/**
+	 * Checks to see if the specified parent category is a descendant of itself
+	 */
+	private boolean hasCycle(Category parent, Set<Category> children) {
+		// If there are no children then there are no cycles
+		if (children == null || children.size() == 0) {
+			return false;
+		}
+
+		// Check for each descendant
+		for (Category child : children) {
+			// Check direct children
+			if (child.getId() != null && child.getId().equals(parent.getId())) {
+				return true;
+			}
+
+			// Check children of direct children
+			if (hasCycle(parent, child.getCategories())) {
+				return true;
+			}
+		}
+
+		// Because a category can only be the child of a single parent, we don't need to check for cycles for each child
+
+		// We're done, no cycles
+		return false;
+	}
+
+	/**
+	 * Overrides the get all logic to only return the root categories (ie, categories with no parent).
+	 * @param pagingInfo The {@link PagingInfo} object to load with the record count.
+	 * @return The root categories.
+	 */
+	@Override
+	public List<Category> getAll(boolean includeRetired, PagingInfo pagingInfo) {
+		IMetadataAuthorizationPrivileges privileges = getPrivileges();
+		if (privileges != null && !StringUtils.isEmpty(privileges.getGetPrivilege())) {
+			Context.requirePrivilege(privileges.getGetPrivilege());
+		}
+
+		Criteria criteria = repository.createCriteria(Category.class);
+		criteria.add(Restrictions.isNull("parentCategory"));
+		//criteria.add(Restrictions.sqlRestriction("parent_id IS NULL"));
+		if (!includeRetired) {
+			criteria.add(Restrictions.eq("retired", false));
+		}
+
+		loadPagingTotal(pagingInfo, criteria);
+
+		return repository.select(getEntityClass(), createPagingCriteria(pagingInfo, criteria));
 	}
 }

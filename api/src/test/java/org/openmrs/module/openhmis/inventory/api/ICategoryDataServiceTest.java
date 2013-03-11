@@ -1,11 +1,14 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import org.junit.Assert;
+import org.junit.Test;
+import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 public class ICategoryDataServiceTest extends IMetadataDataServiceTest<ICategoryDataService, Category> {
 	public static final String CATEGORY_DATASET = TestConstants.BASE_DATASET_DIR + "CategoryTest.xml";
@@ -34,7 +37,8 @@ public class ICategoryDataServiceTest extends IMetadataDataServiceTest<ICategory
 
 	@Override
 	protected int getTestEntityCount() {
-		return 6;
+		// This is the number of root categories
+		return 3;
 	}
 
 	@Override
@@ -42,22 +46,22 @@ public class ICategoryDataServiceTest extends IMetadataDataServiceTest<ICategory
 		category.setDescription(category.getDescription() + " Updated");
 		category.setName(category.getName() + " Updated");
 
-		List<Category> categories = category.getCategories();
+		Set<Category> categories = category.getCategories();
 		if (categories.size() > 0) {
-			// Update an existing code
+			// Update an existing category
 			Iterator<Category> iterator = categories.iterator();
 			Category child = iterator.next();
 			child.setName(child.getName() + " Updated");
 
 			if (categories.size() > 1) {
-				// Delete an existing code
+				// Delete an existing category
 				child = iterator.next();
 
 				category.removeCategory(child);
 			}
 		}
 
-		// Add a new code
+		// Add a new category
 		category.addCategory("new sub category");
 	}
 
@@ -71,14 +75,134 @@ public class ICategoryDataServiceTest extends IMetadataDataServiceTest<ICategory
 			Assert.assertEquals(expected.getParentCategory().getId(), actual.getParentCategory().getId());
 		}
 
-		Assert.assertEquals(expected.getCategories().size(), actual.getCategories().size());
-		Category[] expectedChildren = new Category[expected.getCategories().size()];
-		expected.getCategories().toArray(expectedChildren);
-		Category[] actualChildren = new Category[actual.getCategories().size()];
-		actual.getCategories().toArray(actualChildren);
-		for (int i = 0; i < expected.getCategories().size(); i++) {
-			Assert.assertEquals(expectedChildren[i].getId(), actualChildren[i].getId());
-			Assert.assertEquals(expectedChildren[i].getName(), actualChildren[i].getName());
+		if (expected.getCategories() == null) {
+			Assert.assertNull(actual.getCategories());
+		} else {
+			Assert.assertEquals(expected.getCategories().size(), actual.getCategories().size());
+			Category[] expectedChildren = new Category[expected.getCategories().size()];
+			expected.getCategories().toArray(expectedChildren);
+			Category[] actualChildren = new Category[actual.getCategories().size()];
+			actual.getCategories().toArray(actualChildren);
+			for (int i = 0; i < expected.getCategories().size(); i++) {
+				Assert.assertEquals(expectedChildren[i].getId(), actualChildren[i].getId());
+				Assert.assertEquals(expectedChildren[i].getName(), actualChildren[i].getName());
+
+				assertEntity(expectedChildren[i], actualChildren[i]);
+			}
 		}
+	}
+
+	@Test
+	public void save_shouldSaveAllChildCategoriesWithParent() {
+		Category parent = new Category("parent");
+		Category child = parent.addCategory("child");
+		Category child2 = parent.addCategory("child2");
+		Category grandchild = child.addCategory("grandchild");
+
+		// Save all categories
+		service.save(parent);
+		Context.flushSession();
+
+		// Test that hierarchy was saved properly
+		Assert.assertNotNull(parent.getId());
+		Assert.assertEquals(2, parent.getCategories().size());
+		Category[] categories = new Category[parent.getCategories().size()];
+		parent.getCategories().toArray(categories);
+		Assert.assertEquals(child, categories[0]);
+		Assert.assertEquals(child2, categories[1]);
+		Assert.assertEquals(1, child.getCategories().size());
+		categories = new Category[child.getCategories().size()];
+		child.getCategories().toArray(categories);
+		Assert.assertEquals(grandchild, categories[0]);
+
+		// Test that id's were created for each category
+		Assert.assertNotNull(parent.getId());
+		Assert.assertNotNull(child.getId());
+		Assert.assertNotNull(child2.getId());
+		Assert.assertNotNull(grandchild.getId());
+
+		// Test that categories are retrieved properly
+		Category getParent = service.getById(parent.getId());
+
+		Assert.assertNotNull(getParent.getId());
+		Assert.assertEquals(2, getParent.getCategories().size());
+		categories = new Category[getParent.getCategories().size()];
+		getParent.getCategories().toArray(categories);
+		Assert.assertEquals(child.getId(), categories[0].getId());
+		Assert.assertEquals(child2.getId(), categories[1].getId());
+
+		Category getChild = categories[0];
+		Assert.assertEquals(1, getChild.getCategories().size());
+		categories = new Category[getChild.getCategories().size()];
+		getChild.getCategories().toArray(categories);
+		Assert.assertEquals(grandchild.getId(), categories[0].getId());
+	}
+
+	@Test
+	public void save_shouldAllowCategoriesToBeMoved() {
+		Category parent = new Category("parent");
+		Category child = parent.addCategory("child");
+		Category grandchild = child.addCategory("grandchild");
+
+		// Save all categories
+		service.save(parent);
+		Context.flushSession();
+
+		Assert.assertEquals(1, parent.getCategories().size());
+		Category[] categories = new Category[parent.getCategories().size()];
+		parent.getCategories().toArray(categories);
+		Assert.assertEquals(child, categories[0]);
+		Assert.assertNotNull(grandchild.getId());
+		Integer grandChildId = grandchild.getId();
+
+		// Move the grandchild to a child of the parent
+		grandchild.setParentCategory(parent);
+
+		service.save(grandchild);
+		Context.flushSession();
+
+		Assert.assertEquals(2, parent.getCategories().size());
+		categories = new Category[parent.getCategories().size()];
+		parent.getCategories().toArray(categories);
+		Assert.assertEquals(child, categories[0]);
+		Assert.assertEquals(grandchild, categories[1]);
+
+		// Make sure the category id did not change
+		Assert.assertEquals(grandChildId, grandchild.getId());
+	}
+
+	@Test
+	public void save_shouldThrowApiExceptionIfCategoryCycle() {
+		Category parent = new Category("parent");
+		Category child = parent.addCategory("child");
+		Category grandchild = child.addCategory("grandchild");
+
+		// Save all categories
+		service.save(parent);
+		Context.flushSession();
+
+		Assert.assertNotNull(parent.getId());
+		Assert.assertNotNull(child.getId());
+		Assert.assertNotNull(grandchild.getId());
+
+		// Set parent category of parent to child
+		APIException expected = null;
+		parent.setParentCategory(child);
+		try {
+			service.save(parent);
+		} catch (APIException ex) {
+			expected = ex;
+		}
+		Assert.assertNotNull(expected);
+
+		// Set parent category of parent to grandchild
+		expected = null;
+		parent.setParentCategory(grandchild);
+		try {
+			service.save(parent);
+		} catch (APIException ex) {
+			expected = ex;
+		}
+		Assert.assertNotNull(expected);
 	}
 }

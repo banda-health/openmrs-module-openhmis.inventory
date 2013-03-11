@@ -11,4 +11,8 @@
 	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D4A5166013D4A549A910003" />
 	<inv_category category_id="5" name="Parent Category 2"
 	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D4A5166013D4A54E9690004" />
+	<inv_category category_id="6" name="Child Cat 1" parent_id="5"
+	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D59AB8A013D59ABA27A0002" />
+	<inv_category category_id="7" name="Parent Category 3"
+	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D59AB8A013D59AB8A430000" />
 </dataset>

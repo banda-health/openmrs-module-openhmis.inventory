@@ -16,15 +16,15 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.BaseOpenmrsMetadata;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Category extends BaseOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer categoryId;
 	private Category parentCategory;
-	private List<Category> categories;
+	private Set<Category> categories;
 
 	public Category() {
 		super();
@@ -54,11 +54,11 @@ public class Category extends BaseOpenmrsMetadata {
 		this.parentCategory = parentCategory;
 	}
 
-	public List<Category> getCategories() {
+	public Set<Category> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
 
@@ -76,7 +76,7 @@ public class Category extends BaseOpenmrsMetadata {
 	public void addCategory(Category category) {
 		if (category != null) {
 			if (categories == null) {
-				categories = new ArrayList<Category>();
+				categories = new HashSet<Category>();
 			}
 
 			categories.add(category);
@@ -84,12 +84,10 @@ public class Category extends BaseOpenmrsMetadata {
 	}
 
 	public void removeCategory(Category category) {
-		if (category != null) {
-			if (categories == null) {
-				return;
-			}
-
-			categories.remove(category);
+		if (category == null || categories == null) {
+			return;
 		}
+
+		categories.remove(category);
 	}
 }
