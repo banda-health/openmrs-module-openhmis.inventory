@@ -16,6 +16,7 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -25,6 +26,7 @@ import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +44,11 @@ public class CategoryDataServiceImpl
 		if (hasCycle(category, category.getCategories())) {
 			throw new APIException("Cycle detected.  A category cannot be a child of itself.");
 		}
+	}
+
+	@Override
+	protected List<? extends OpenmrsObject> getRelatedMetadata(Category entity) {
+		return new ArrayList<Category>(entity.getCategories());
 	}
 
 	/**
@@ -73,7 +80,7 @@ public class CategoryDataServiceImpl
 	}
 
 	/**
-	 * Overrides the get all logic to only return the root categories (ie, categories with no parent).
+	 * Overrides the default get all logic to return only the root categories (ie, categories with no parent).
 	 * @param pagingInfo The {@link PagingInfo} object to load with the record count.
 	 * @return The root categories.
 	 */
@@ -86,13 +93,11 @@ public class CategoryDataServiceImpl
 
 		Criteria criteria = repository.createCriteria(Category.class);
 		criteria.add(Restrictions.isNull("parentCategory"));
-		//criteria.add(Restrictions.sqlRestriction("parent_id IS NULL"));
 		if (!includeRetired) {
 			criteria.add(Restrictions.eq("retired", false));
 		}
 
 		loadPagingTotal(pagingInfo, criteria);
-
 		return repository.select(getEntityClass(), createPagingCriteria(pagingInfo, criteria));
 	}
 }

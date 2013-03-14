@@ -50,8 +50,18 @@ public class Category extends BaseOpenmrsMetadata {
 		return parentCategory;
 	}
 
-	public void setParentCategory(Category parentCategory) {
-		this.parentCategory = parentCategory;
+	public void setParentCategory(Category newParent) {
+		// Remove this category from current parent
+		if (this.parentCategory != null) {
+			this.parentCategory.removeCategory(this);
+		}
+
+		// Add the category to the new parent
+		if (newParent != null) {
+			newParent.addCategory(this);
+		}
+
+		this.parentCategory = newParent;
 	}
 
 	public Set<Category> getCategories() {
@@ -80,6 +90,7 @@ public class Category extends BaseOpenmrsMetadata {
 			}
 
 			categories.add(category);
+			category.parentCategory = this;
 		}
 	}
 
@@ -88,6 +99,7 @@ public class Category extends BaseOpenmrsMetadata {
 			return;
 		}
 
+		category.parentCategory = null;
 		categories.remove(category);
 	}
 }
