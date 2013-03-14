@@ -19,10 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.model.Department;
-import org.openmrs.module.openhmis.inventory.api.model.Item;
-import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
-import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -367,5 +364,80 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		results = service.getItemsByDepartment(department2, false);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
+	}
+
+	@Test
+	public void retire_shouldRetireAllChildCategories() {
+		Item item = service.getById(0);
+
+		// Everything is currently not retired
+		Assert.assertNotNull(item);
+		Assert.assertEquals(false, item.getRetired());
+		for (ItemCode child : item.getCodes()) {
+			Assert.assertEquals(false, child.getRetired());
+		}
+		for (ItemPrice child : item.getPrices()) {
+			Assert.assertEquals(false, child.getRetired());
+		}
+
+		// Retire the item
+		service.retire(item, "something");
+		Context.flushSession();
+
+		// The item and all related objects should now be retired
+		Assert.assertEquals(true, item.getRetired());
+		for (ItemCode child : item.getCodes()) {
+			Assert.assertEquals(true, child.getRetired());
+		}
+		for (ItemPrice child : item.getPrices()) {
+			Assert.assertEquals(true, child.getRetired());
+		}
+
+		item = service.getById(0);
+		Assert.assertEquals(true, item.getRetired());
+		for (ItemCode child : item.getCodes()) {
+			Assert.assertEquals(true, child.getRetired());
+		}
+		for (ItemPrice child : item.getPrices()) {
+			Assert.assertEquals(true, child.getRetired());
+		}
+	}
+
+	@Test
+	public void unretire_shouldUnretireAllChildCategories() {
+		Item item = service.getById(0);
+
+		service.retire(item, "something");
+		Context.flushSession();
+
+		// Ensure that parent and children are now retired
+		item = service.getById(0);
+		Assert.assertEquals(true, item.getRetired());
+		for (ItemCode child : item.getCodes()) {
+			Assert.assertEquals(true, child.getRetired());
+		}
+		for (ItemPrice child : item.getPrices()) {
+			Assert.assertEquals(true, child.getRetired());
+		}
+		
+		service.unretire(item);
+		Context.flushSession();
+
+		Assert.assertEquals(false, item.getRetired());
+		for (ItemCode child : item.getCodes()) {
+			Assert.assertEquals(false, child.getRetired());
+		}
+		for (ItemPrice child : item.getPrices()) {
+			Assert.assertEquals(false, child.getRetired());
+		}
+
+		item = service.getById(0);
+		Assert.assertEquals(false, item.getRetired());
+		for (ItemCode child : item.getCodes()) {
+			Assert.assertEquals(false, child.getRetired());
+		}
+		for (ItemPrice child : item.getPrices()) {
+			Assert.assertEquals(false, child.getRetired());
+		}
 	}
 }

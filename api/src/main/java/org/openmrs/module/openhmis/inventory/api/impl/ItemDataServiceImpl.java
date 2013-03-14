@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -28,6 +29,7 @@ import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -37,6 +39,17 @@ public class ItemDataServiceImpl
 	@Override
 	protected void validate(Item entity) throws APIException {
 		return;
+	}
+
+	@Override
+	protected List<? extends OpenmrsObject> getRelatedMetadata(Item entity) {
+		ArrayList<OpenmrsObject> results = new ArrayList<OpenmrsObject>();
+
+		results.addAll(entity.getCodes());
+		results.addAll(entity.getPrices());
+		results.addAll(entity.getAttributes());
+
+		return results;
 	}
 
 	@Override
