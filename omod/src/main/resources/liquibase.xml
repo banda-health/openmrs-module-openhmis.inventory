@@ -161,6 +161,39 @@
 			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
+		<createTable tableName="inv_stock_room">
+			<column name="stock_room_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
+			<column defaultValue="" name="description" type="varchar(1024)" />
+			<column name="location_id" type="int" />
+
+			<column name="creator" type="int" defaultValueNumeric="0" >
+				<constraints nullable="false"/>
+			</column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false"/>
+			</column>
+			<column name="changed_by" type="int"/>
+			<column name="date_changed" type="DATETIME"/>
+			<column defaultValueBoolean="false" name="retired" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="retired_by" type="int"/>
+			<column name="date_retired" type="DATETIME"/>
+			<column name="retire_reason" type="varchar(255)"/>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_stock_room_item">
+			<column name="stock_room_item_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+			<column name="stock_room_id" type="int"><constraints nullable="false" /></column>
+			<column name="item_id" type="int"><constraints nullable="false" /></column>
+			<column name="quantity" type="int"><constraints nullable="false"/></column>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
 
 		<createIndex indexName="inv_item_name_idx" tableName="inv_item" unique="false">
 			<column name="name"/>
@@ -176,10 +209,13 @@
 			<column name="name"/>
 			<column name="retired" />
 		</createIndex>
-
 		<createIndex indexName="inv_category_parent_idx" tableName="inv_category" unique="false">
 			<column name="parent_id"/>
 			<column name="retired" />
+		</createIndex>
+		<createIndex indexName="inv_stock_room_item_idx" tableName="inv_stock_room_item" unique="true">
+			<column name="stock_room_id"/>
+			<column name="item_id" />
 		</createIndex>
 
 		<addForeignKeyConstraint constraintName="inv_item_creator_fk"
@@ -281,5 +317,22 @@
 		                         baseTableName="inv_category" baseColumnNames="parent_id"
 		                         referencedTableName="inv_category" referencedColumnNames="category_id"
 		                         onDelete="CASCADE" onUpdate="CASCADE"/>
+
+		<addForeignKeyConstraint constraintName="inv_stock_room_creator_fk"
+		                         baseTableName="inv_stock_room" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_changed_by_fk"
+		                         baseTableName="inv_stock_room" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_retired_by_fk"
+		                         baseTableName="inv_stock_room" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_stock_room_item_stock_room_fk"
+		                         baseTableName="inv_stock_room_item" baseColumnNames="stock_room_id"
+		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_item_item_fk"
+		                         baseTableName="inv_stock_room_item" baseColumnNames="item_id"
+		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
 	</changeSet>
 </databaseChangeLog>

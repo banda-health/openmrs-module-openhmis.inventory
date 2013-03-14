@@ -419,7 +419,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		for (ItemPrice child : item.getPrices()) {
 			Assert.assertEquals(true, child.getRetired());
 		}
-		
+
 		service.unretire(item);
 		Context.flushSession();
 
