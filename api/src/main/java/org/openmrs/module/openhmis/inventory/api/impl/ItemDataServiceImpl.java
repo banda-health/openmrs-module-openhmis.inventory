@@ -30,6 +30,7 @@ import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Transactional
@@ -42,7 +43,7 @@ public class ItemDataServiceImpl
 	}
 
 	@Override
-	protected List<? extends OpenmrsObject> getRelatedMetadata(Item entity) {
+	protected Collection<? extends OpenmrsObject> getRelatedObjects(Item entity) {
 		ArrayList<OpenmrsObject> results = new ArrayList<OpenmrsObject>();
 
 		results.addAll(entity.getCodes());

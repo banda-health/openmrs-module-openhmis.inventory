@@ -27,6 +27,7 @@ import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public class CategoryDataServiceImpl
 	}
 
 	@Override
-	protected List<? extends OpenmrsObject> getRelatedMetadata(Category entity) {
+	protected Collection<? extends OpenmrsObject> getRelatedObjects(Category entity) {
 		return new ArrayList<Category>(entity.getCategories());
 	}
 
