@@ -14,5 +14,6 @@
 	  <mapping file="Item.hbm.xml" />
 	  <mapping file="Department.hbm.xml" />
 	  <mapping file="Category.hbm.xml" />
+	  <mapping file="StockRoom.hbm.xml" />
   </session-factory>
 </hibernate-configuration>

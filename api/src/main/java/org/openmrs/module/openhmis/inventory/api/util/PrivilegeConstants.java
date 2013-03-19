@@ -13,22 +13,16 @@
  */
 package org.openmrs.module.openhmis.inventory.api.util;
 
-import org.openmrs.annotation.AddOnStartup;
-
 public class PrivilegeConstants {
-	@AddOnStartup(description = "Able to add/edit/delete inventory items")
 	public static final String MANAGE_ITEMS = "Manage Inventory Items";
-
-	@AddOnStartup(description = "Able to view inventory items")
 	public static final String VIEW_ITEMS = "View Inventory Items";
-
 	public static final String PURGE_ITEMS = "Purge Inventory Items";
 
-	@AddOnStartup(description = "Able to add/edit/delete inventory module metadata")
 	public static final String MANAGE_METADATA = "Manage Inventory Metadata";
-
-	@AddOnStartup(description = "Able to view inventory module metadata")
 	public static final String VIEW_METADATA = "View Inventory Metadata";
-
 	public static final String PURGE_METADATA = "Purge Inventory Metadata";
+
+	public static final String MANAGE_TRANSFERS = "Manage Inventory Transfers";
+	public static final String VIEW_TRANSFERS = "View Inventory Transfers";
+	public static final String PURGE_TRANSFERS = "Purge Inventory Transfers";
 }
