@@ -15,13 +15,15 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.BaseOpenmrsMetadata;
 
-import java.util.Set;
+import java.util.List;
 
 public class StockRoomTransferType extends BaseOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferTypeId;
-	private Set<StockRoomTransferTypeAttributeType> attributeTypes;
+	private List<StockRoomTransferTypeAttributeType> attributeTypes;
+	private boolean fromRequired;
+	private boolean toRequired;
 	private boolean authorized;
 
 	@Override
@@ -34,12 +36,28 @@ public class StockRoomTransferType extends BaseOpenmrsMetadata {
 		stockRoomTransferTypeId = id;
 	}
 
-	public Set<StockRoomTransferTypeAttributeType> getAttributeTypes() {
+	public List<StockRoomTransferTypeAttributeType> getAttributeTypes() {
 		return attributeTypes;
 	}
 
-	public void setAttributeTypes(Set<StockRoomTransferTypeAttributeType> attributeTypes) {
+	public void setAttributeTypes(List<StockRoomTransferTypeAttributeType> attributeTypes) {
 		this.attributeTypes = attributeTypes;
+	}
+
+	public boolean isFromRequired() {
+		return fromRequired;
+	}
+
+	public void setFromRequired(boolean fromRequired) {
+		this.fromRequired = fromRequired;
+	}
+
+	public boolean isToRequired() {
+		return toRequired;
+	}
+
+	public void setToRequired(boolean toRequired) {
+		this.toRequired = toRequired;
 	}
 
 	public boolean isAuthorized() {
