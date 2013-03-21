@@ -25,7 +25,7 @@ public class StockRoom extends BaseOpenmrsMetadata {
 	private Integer storeRoomId;
 	private Location location;
 	private Set<StockRoomItem> items;
-	private List<StockRoomTransfer> transfers;
+	private List<StockRoomTransaction> transfers;
 
 	@Override
 	public Integer getId() {
@@ -53,11 +53,11 @@ public class StockRoom extends BaseOpenmrsMetadata {
 		this.items = items;
 	}
 
-	public List<StockRoomTransfer> getTransfers() {
+	public List<StockRoomTransaction> getTransfers() {
 		return transfers;
 	}
 
-	public void setTransfers(List<StockRoomTransfer> transfers) {
+	public void setTransfers(List<StockRoomTransaction> transfers) {
 		this.transfers = transfers;
 	}
 }

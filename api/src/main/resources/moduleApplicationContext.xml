@@ -56,7 +56,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.openhmis.inventory.api.IStockRoomTransferDataService</value>
+				<value>org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService</value>
 				<ref bean="invStockRoomTransferService" />
 			</list>
 		</property>
@@ -106,7 +106,7 @@
 	<bean id="invStockRoomTransferService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target">
-			<bean class="org.openmrs.module.openhmis.inventory.api.impl.StockRoomTransferDataServiceImpl">
+			<bean class="org.openmrs.module.openhmis.inventory.api.impl.StockRoomTransactionDataServiceImpl">
 				<property name="repository" ref="genericRepository" />
 			</bean>
 		</property>

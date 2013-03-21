@@ -194,15 +194,15 @@
 			<column name="quantity" type="int"><constraints nullable="false"/></column>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
-		<createTable tableName="inv_stock_room_transfer">
-			<column name="stock_room_transfer_id" autoIncrement="true" type="int">
+		<createTable tableName="inv_stock_room_transaction">
+			<column name="stock_room_transaction_id" autoIncrement="true" type="int">
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 
 			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
 			<column defaultValue="" name="description" type="varchar(1024)" />
 
-			<column name="transfer_type_id" type="int"><constraints nullable="false" /></column>
+			<column name="transaction_type_id" type="int"><constraints nullable="false" /></column>
 			<column name="stock_room_from_id" type="int"/>
 			<column name="stock_room_to_id" type="int" />
 
@@ -222,8 +222,8 @@
 			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
-		<createTable tableName="inv_stock_room_transfer_type">
-			<column name="stock_room_transfer_type_id" autoIncrement="true" type="int">
+		<createTable tableName="inv_stock_room_transaction_type">
+			<column name="stock_room_transaction_type_id" autoIncrement="true" type="int">
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
@@ -249,14 +249,14 @@
 			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
-		<createTable tableName="inv_stock_room_transfer_type_attribute_type">
-			<column name="stock_room_transfer_type_attribute_type_id" autoIncrement="true" type="int">
+		<createTable tableName="inv_stock_room_transaction_type_attribute_type">
+			<column name="stock_room_transaction_type_attribute_type_id" autoIncrement="true" type="int">
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
 			<column defaultValue="" name="description" type="varchar(1024)" />
 
-			<column name="transfer_type_id" type="int"><constraints nullable="false"/></column>
+			<column name="transaction_type_id" type="int"><constraints nullable="false"/></column>
 			<column name="attribute_order" type="int"><constraints nullable="false" /></column>
 			<column name="format" type="varchar(255)" />
 			<column name="foreign_key" type="int" />
@@ -279,14 +279,14 @@
 			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
-		<createTable tableName="inv_stock_room_transfer_attribute">
-			<column name="stock_room_transfer_attribute_id" autoIncrement="true" type="int">
+		<createTable tableName="inv_stock_room_transaction_attribute">
+			<column name="stock_room_transaction_attribute_id" autoIncrement="true" type="int">
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
 			<column defaultValue="" name="description" type="varchar(1024)" />
 
-			<column name="transfer_id" type="int"><constraints nullable="false" /></column>
+			<column name="transaction_id" type="int"><constraints nullable="false" /></column>
 			<column name="attribute_type_id" type="int"><constraints nullable="false" /></column>
 			<column name="value_reference" type="text"><constraints nullable="false" /></column>
 
@@ -329,12 +329,12 @@
 			<column name="stock_room_id"/>
 			<column name="item_id" />
 		</createIndex>
-		<createIndex indexName="inv_stock_room_transfer_type_attribute_type_idx" tableName="inv_stock_room_transfer_type_attribute_type" unique="false">
-			<column name="transfer_type_id"/>
+		<createIndex indexName="inv_stock_room_transaction_type_attribute_type_idx" tableName="inv_stock_room_transaction_type_attribute_type" unique="false">
+			<column name="transaction_type_id"/>
 			<column name="attribute_order" />
 		</createIndex>
-		<createIndex indexName="inv_stock_room_transfer_attribute_idx" tableName="inv_stock_room_transfer_attribute" unique="false">
-			<column name="transfer_id"/>
+		<createIndex indexName="inv_stock_room_transaction_attribute_idx" tableName="inv_stock_room_transaction_attribute" unique="false">
+			<column name="transaction_id"/>
 			<column name="attribute_type_id" />
 		</createIndex>
 
@@ -458,62 +458,62 @@
 		                         baseTableName="inv_stock_room_item" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_transfer_type_fk"
-		                         baseTableName="inv_stock_room_transfer" baseColumnNames="transfer_type_id"
-		                         referencedTableName="inv_stock_room_transfer_type" referencedColumnNames="stock_room_transfer_type_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_from_fk"
-		                         baseTableName="inv_stock_room_transfer" baseColumnNames="stock_room_from_id"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_transfer_type_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="transaction_type_id"
+		                         referencedTableName="inv_stock_room_transaction_type" referencedColumnNames="stock_room_transaction_type_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_from_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_from_id"
 		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_to_fk"
-		                         baseTableName="inv_stock_room_transfer" baseColumnNames="stock_room_to_id"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_to_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_to_id"
 		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_creator_fk"
-		                         baseTableName="inv_stock_room_transfer" baseColumnNames="creator"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_creator_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_changed_by_fk"
-		                         baseTableName="inv_stock_room_transfer" baseColumnNames="changed_by"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_changed_by_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="changed_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_retired_by_fk"
-		                         baseTableName="inv_stock_room_transfer" baseColumnNames="retired_by"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
-
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_type_creator_fk"
-		                         baseTableName="inv_stock_room_transfer_type" baseColumnNames="creator"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_type_changed_by_fk"
-		                         baseTableName="inv_stock_room_transfer_type" baseColumnNames="changed_by"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_type_retired_by_fk"
-		                         baseTableName="inv_stock_room_transfer_type" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_retired_by_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_type_attribute_type_transfer_type_fk"
-		                         baseTableName="inv_stock_room_transfer_type_attribute_type" baseColumnNames="transfer_type_id"
-		                         referencedTableName="inv_stock_room_transfer_type" referencedColumnNames="stock_room_transfer_type_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_type_attribute_type_creator_fk"
-		                         baseTableName="inv_stock_room_transfer_type_attribute_type" baseColumnNames="creator"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_creator_fk"
+		                         baseTableName="inv_stock_room_transaction_type" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_type_attribute_type_changed_by_fk"
-		                         baseTableName="inv_stock_room_transfer_type_attribute_type" baseColumnNames="changed_by"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_changed_by_fk"
+		                         baseTableName="inv_stock_room_transaction_type" baseColumnNames="changed_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_type_attribute_type_retired_by_fk"
-		                         baseTableName="inv_stock_room_transfer_type_attribute_type" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_retired_by_fk"
+		                         baseTableName="inv_stock_room_transaction_type" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_attribute_transfer_fk"
-		                         baseTableName="inv_stock_room_transfer_attribute" baseColumnNames="transfer_id"
-		                         referencedTableName="inv_stock_room_transfer" referencedColumnNames="stock_room_transfer_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_attribute_attribute_type_fk"
-		                         baseTableName="inv_stock_room_transfer_attribute" baseColumnNames="attribute_type_id"
-		                         referencedTableName="inv_stock_room_transfer_type_attribute_type" referencedColumnNames="stock_room_transfer_type_attribute_type_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_attribute_creator_fk"
-		                         baseTableName="inv_stock_room_transfer_attribute" baseColumnNames="creator"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_transfer_type_fk"
+		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="transaction_type_id"
+		                         referencedTableName="inv_stock_room_transaction_type" referencedColumnNames="stock_room_transaction_type_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_creator_fk"
+		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_attribute_changed_by_fk"
-		                         baseTableName="inv_stock_room_transfer_attribute" baseColumnNames="changed_by"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_changed_by_fk"
+		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="changed_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transfer_attribute_retired_by_fk"
-		                         baseTableName="inv_stock_room_transfer_attribute" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_retired_by_fk"
+		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="retired_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_transfer_fk"
+		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="transaction_id"
+		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_attribute_type_fk"
+		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="attribute_type_id"
+		                         referencedTableName="inv_stock_room_transaction_type_attribute_type" referencedColumnNames="stock_room_transaction_type_attribute_type_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_creator_fk"
+		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="creator"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_changed_by_fk"
+		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="changed_by"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_retired_by_fk"
+		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 	</changeSet>
 </databaseChangeLog>

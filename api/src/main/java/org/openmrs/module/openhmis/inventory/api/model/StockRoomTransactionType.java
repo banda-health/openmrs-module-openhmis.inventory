@@ -17,11 +17,11 @@ import org.openmrs.BaseOpenmrsMetadata;
 
 import java.util.List;
 
-public class StockRoomTransferType extends BaseOpenmrsMetadata {
+public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferTypeId;
-	private List<StockRoomTransferTypeAttributeType> attributeTypes;
+	private List<StockRoomTransactionTypeAttributeType> attributeTypes;
 	private boolean fromRequired;
 	private boolean toRequired;
 	private boolean authorized;
@@ -36,11 +36,11 @@ public class StockRoomTransferType extends BaseOpenmrsMetadata {
 		stockRoomTransferTypeId = id;
 	}
 
-	public List<StockRoomTransferTypeAttributeType> getAttributeTypes() {
+	public List<StockRoomTransactionTypeAttributeType> getAttributeTypes() {
 		return attributeTypes;
 	}
 
-	public void setAttributeTypes(List<StockRoomTransferTypeAttributeType> attributeTypes) {
+	public void setAttributeTypes(List<StockRoomTransactionTypeAttributeType> attributeTypes) {
 		this.attributeTypes = attributeTypes;
 	}
 

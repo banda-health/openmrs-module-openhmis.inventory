@@ -3,11 +3,11 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransfer;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
-public class StockRoomTransferDataServiceImpl
-		extends BaseCustomizableMetadataDataServiceImpl<StockRoomTransfer>
+public class StockRoomTransactionDataServiceImpl
+		extends BaseCustomizableMetadataDataServiceImpl<StockRoomTransaction>
 		implements IMetadataAuthorizationPrivileges {
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
@@ -15,7 +15,7 @@ public class StockRoomTransferDataServiceImpl
 	}
 
 	@Override
-	protected void validate(StockRoomTransfer object) throws APIException {
+	protected void validate(StockRoomTransaction object) throws APIException {
 	}
 
 	@Override
