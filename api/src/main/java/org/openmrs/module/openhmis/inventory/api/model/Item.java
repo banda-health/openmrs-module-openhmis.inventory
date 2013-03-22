@@ -33,6 +33,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Department department;
 	private Category category;
 	private ItemPrice defaultPrice;
+	private boolean hasExpiration;
 
 	public Item() {
 	}
@@ -158,5 +159,13 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public boolean isHasExpiration() {
+		return hasExpiration;
+	}
+
+	public void setHasExpiration(boolean hasExpiration) {
+		this.hasExpiration = hasExpiration;
 	}
 }
