@@ -216,8 +216,8 @@
 			<column name="transaction_number" type="varchar(50)"><constraints nullable="false" /></column>
 			<column name="transaction_type_id" type="int"><constraints nullable="false" /></column>
 			<column name="status" type="varchar(50)"><constraints nullable="false" /></column>
-			<column name="stock_room_from_id" type="int"/>
-			<column name="stock_room_to_id" type="int" />
+			<column name="stock_room_source_id" type="int"/>
+			<column name="stock_room_destination_id" type="int" />
 
 			<column name="creator" type="int" defaultValueNumeric="0" >
 				<constraints nullable="false"/>
@@ -256,8 +256,8 @@
 			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
 			<column defaultValue="" name="description" type="varchar(1024)" />
 
-			<column name="fromRequired" type="boolean" />
-			<column name="toRequired" type="boolean" />
+			<column name="source_required" type="boolean" defaultValueBoolean="false" />
+			<column name="destination_required" type="boolean" defaultValueBoolean="false" />
 			<column name="authorized" type="boolean" />
 
 			<column name="creator" type="int" defaultValueNumeric="0" >
@@ -495,11 +495,11 @@
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_transfer_type_fk"
 		                         baseTableName="inv_stock_room_transaction" baseColumnNames="transaction_type_id"
 		                         referencedTableName="inv_stock_room_transaction_type" referencedColumnNames="stock_room_transaction_type_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_from_fk"
-		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_from_id"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_source_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_source_id"
 		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_to_fk"
-		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_to_id"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_destination_fk"
+		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_destination_id"
 		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_creator_fk"
 		                         baseTableName="inv_stock_room_transaction" baseColumnNames="creator"

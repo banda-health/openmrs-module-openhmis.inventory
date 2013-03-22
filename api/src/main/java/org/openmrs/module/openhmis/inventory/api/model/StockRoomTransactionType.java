@@ -22,8 +22,8 @@ public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 
 	private Integer stockRoomTransferTypeId;
 	private List<StockRoomTransactionTypeAttributeType> attributeTypes;
-	private boolean fromRequired;
-	private boolean toRequired;
+	private boolean sourceRequired;
+	private boolean destinationRequired;
 	private boolean authorized;
 
 	@Override
@@ -44,20 +44,20 @@ public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 		this.attributeTypes = attributeTypes;
 	}
 
-	public boolean isFromRequired() {
-		return fromRequired;
+	public boolean isSourceRequired() {
+		return sourceRequired;
 	}
 
-	public void setFromRequired(boolean fromRequired) {
-		this.fromRequired = fromRequired;
+	public void setSourceRequired(boolean sourceRequired) {
+		this.sourceRequired = sourceRequired;
 	}
 
-	public boolean isToRequired() {
-		return toRequired;
+	public boolean isDestinationRequired() {
+		return destinationRequired;
 	}
 
-	public void setToRequired(boolean toRequired) {
-		this.toRequired = toRequired;
+	public void setDestinationRequired(boolean destinationRequired) {
+		this.destinationRequired = destinationRequired;
 	}
 
 	public boolean isAuthorized() {

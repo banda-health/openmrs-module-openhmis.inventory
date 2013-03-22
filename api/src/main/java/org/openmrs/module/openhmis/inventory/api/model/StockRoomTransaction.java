@@ -22,10 +22,10 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 
 	private Integer stockRoomTransferId;
 	private String transactionNumber;
-	private StockRoomTransactionType transferType;
+	private StockRoomTransactionType transactionType;
 	private StockRoomTransactionStatus status;
-	private StockRoom from;
-	private StockRoom to;
+	private StockRoom source;
+	private StockRoom destination;
 	private Set<StockRoomTransactionItem> items;
 
 	@Override
@@ -46,12 +46,12 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 		this.transactionNumber = transactionNumber;
 	}
 
-	public StockRoomTransactionType getTransferType() {
-		return transferType;
+	public StockRoomTransactionType getTransactionType() {
+		return transactionType;
 	}
 
-	public void setTransferType(StockRoomTransactionType transferType) {
-		this.transferType = transferType;
+	public void setTransactionType(StockRoomTransactionType transactionType) {
+		this.transactionType = transactionType;
 	}
 
 	public StockRoomTransactionStatus getStatus() {
@@ -62,20 +62,20 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 		this.status = status;
 	}
 
-	public StockRoom getFrom() {
-		return from;
+	public StockRoom getSource() {
+		return source;
 	}
 
-	public void setFrom(StockRoom from) {
-		this.from = from;
+	public void setSource(StockRoom source) {
+		this.source = source;
 	}
 
-	public StockRoom getTo() {
-		return to;
+	public StockRoom getDestination() {
+		return destination;
 	}
 
-	public void setTo(StockRoom to) {
-		this.to = to;
+	public void setDestination(StockRoom destination) {
+		this.destination = destination;
 	}
 
 	public Set<StockRoomTransactionItem> getItems() {
