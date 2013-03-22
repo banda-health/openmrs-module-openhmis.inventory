@@ -15,13 +15,18 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
 
+import java.util.Set;
+
 public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<StockRoomTransactionAttribute> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferId;
+	private String transactionNumber;
 	private StockRoomTransactionType transferType;
+	private StockRoomTransactionStatus status;
 	private StockRoom from;
 	private StockRoom to;
+	private Set<StockRoomTransactionItem> items;
 
 	@Override
 	public Integer getId() {
@@ -33,12 +38,28 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 		stockRoomTransferId = id;
 	}
 
+	public String getTransactionNumber() {
+		return transactionNumber;
+	}
+
+	public void setTransactionNumber(String transactionNumber) {
+		this.transactionNumber = transactionNumber;
+	}
+
 	public StockRoomTransactionType getTransferType() {
 		return transferType;
 	}
 
 	public void setTransferType(StockRoomTransactionType transferType) {
 		this.transferType = transferType;
+	}
+
+	public StockRoomTransactionStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(StockRoomTransactionStatus status) {
+		this.status = status;
 	}
 
 	public StockRoom getFrom() {
@@ -55,5 +76,13 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 
 	public void setTo(StockRoom to) {
 		this.to = to;
+	}
+
+	public Set<StockRoomTransactionItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<StockRoomTransactionItem> items) {
+		this.items = items;
 	}
 }

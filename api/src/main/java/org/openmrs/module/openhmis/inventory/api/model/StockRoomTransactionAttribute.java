@@ -4,5 +4,6 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseMetadataInstance
 
 public class StockRoomTransactionAttribute
 		extends BaseMetadataInstanceAttribute<StockRoomTransaction,StockRoomTransactionTypeAttributeType> {
+	public static final long serialVersionUID = 0L;
 }
 

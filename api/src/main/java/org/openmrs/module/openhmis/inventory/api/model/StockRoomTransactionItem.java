@@ -17,32 +17,34 @@ import org.openmrs.BaseOpenmrsObject;
 
 import java.util.Date;
 
-public class StockRoomItem extends BaseOpenmrsObject {
+public class StockRoomTransactionItem extends BaseOpenmrsObject {
 	public static final long serialVersionUID = 0L;
 
-	private Integer stockRoomItemId;
-	private StockRoom stockRoom;
+	private Integer stockRoomTransactionItemId;
+	private StockRoomTransaction transaction;
 	private ImportBatch importBatch;
 	private Item item;
-	private int quantity;
+	private int quantityOrdered;       // The item quantity requested for this transaction
+	private int quantityTransferred;   // The transferred item quantity while the transaction is Pending
+	private int quantityReserved;      // The reserved item quantity while the transaction is Pending
 	private Date expiration;
 
 	@Override
 	public Integer getId() {
-		return stockRoomItemId;
+		return stockRoomTransactionItemId;
 	}
 
 	@Override
 	public void setId(Integer id) {
-		stockRoomItemId = id;
+		this.stockRoomTransactionItemId = id;
 	}
 
-	public StockRoom getStockRoom() {
-		return stockRoom;
+	public StockRoomTransaction getTransaction() {
+		return transaction;
 	}
 
-	public void setStockRoom(StockRoom stockRoom) {
-		this.stockRoom = stockRoom;
+	public void setTransaction(StockRoomTransaction transaction) {
+		this.transaction = transaction;
 	}
 
 	public ImportBatch getImportBatch() {
@@ -61,12 +63,28 @@ public class StockRoomItem extends BaseOpenmrsObject {
 		this.item = item;
 	}
 
-	public int getQuantity() {
-		return quantity;
+	public int getQuantityOrdered() {
+		return quantityOrdered;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setQuantityOrdered(int quantityOrdered) {
+		this.quantityOrdered = quantityOrdered;
+	}
+
+	public int getQuantityTransferred() {
+		return quantityTransferred;
+	}
+
+	public void setQuantityTransferred(int quantityTransferred) {
+		this.quantityTransferred = quantityTransferred;
+	}
+
+	public int getQuantityReserved() {
+		return quantityReserved;
+	}
+
+	public void setQuantityReserved(int quantityReserved) {
+		this.quantityReserved = quantityReserved;
 	}
 
 	public Date getExpiration() {
@@ -77,4 +95,3 @@ public class StockRoomItem extends BaseOpenmrsObject {
 		this.expiration = expiration;
 	}
 }
-
