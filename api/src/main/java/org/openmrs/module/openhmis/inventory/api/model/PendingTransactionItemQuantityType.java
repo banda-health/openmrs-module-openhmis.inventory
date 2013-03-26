@@ -11,9 +11,8 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.openhmis.inventory.api;
+package org.openmrs.module.openhmis.inventory.api.model;
 
-public class TestConstants {
-	public static final String BASE_DATASET_DIR = "org/openmrs/module/openhmis/inventory/api/include/";
-	public static final String CORE_DATASET = BASE_DATASET_DIR + "CoreTest.xml";
+public enum PendingTransactionItemQuantityType {
+	TRANSFERRED(), RESERVED()
 }

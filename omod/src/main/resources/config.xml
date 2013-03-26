@@ -35,6 +35,7 @@
 		Item.hbm.xml
 		Department.hbm.xml
 		Category.hbm.xml
+		StockRoom.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

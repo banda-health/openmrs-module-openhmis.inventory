@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
+import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 
 import java.util.Arrays;
@@ -79,17 +80,14 @@ public class ICategoryDataServiceTest extends IMetadataDataServiceTest<ICategory
 		if (expected.getCategories() == null) {
 			Assert.assertNull(actual.getCategories());
 		} else {
-			Assert.assertEquals(expected.getCategories().size(), actual.getCategories().size());
-			Category[] expectedChildren = new Category[expected.getCategories().size()];
-			expected.getCategories().toArray(expectedChildren);
-			Category[] actualChildren = new Category[actual.getCategories().size()];
-			actual.getCategories().toArray(actualChildren);
-			for (int i = 0; i < expected.getCategories().size(); i++) {
-				Assert.assertEquals(expectedChildren[i].getId(), actualChildren[i].getId());
-				Assert.assertEquals(expectedChildren[i].getName(), actualChildren[i].getName());
+			assertCollection(expected.getCategories(), actual.getCategories(), new Action2<Category, Category>() {
+				@Override
+				public void apply(Category expectedCategory, Category actualCategory) {
+					assertOpenmrsMetadata(expectedCategory, actualCategory);
 
-				assertEntity(expectedChildren[i], actualChildren[i]);
-			}
+					assertEntity(expectedCategory, actualCategory);
+				}
+			});
 		}
 	}
 

@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
+import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 
 import java.math.BigDecimal;
@@ -123,27 +124,25 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Assert.assertNotNull(actual.getDepartment());
 		Assert.assertEquals(expected.getDepartment().getId(), actual.getDepartment().getId());
 
-		Assert.assertEquals(expected.getCodes().size(), actual.getCodes().size());
-		ItemCode[] expectedCodes = new ItemCode[expected.getCodes().size()];
-		expected.getCodes().toArray(expectedCodes);
-		ItemCode[] actualCodes = new ItemCode[actual.getCodes().size()];
-		actual.getCodes().toArray(actualCodes);
-		for (int i = 0; i < expected.getCodes().size(); i++) {
-			Assert.assertEquals(expectedCodes[i].getId(), actualCodes[i].getId());
-			Assert.assertEquals(expectedCodes[i].getName(), actualCodes[i].getName());
-			Assert.assertEquals(expectedCodes[i].getCode(), actualCodes[i].getCode());
-		}
+		assertCollection(expected.getCodes(), actual.getCodes(), new Action2<ItemCode, ItemCode>() {
+			@Override
+			public void apply(ItemCode expectedCode, ItemCode actualCode) {
+				assertOpenmrsMetadata(expectedCode, actualCode);
 
-		Assert.assertEquals(expected.getPrices().size(), actual.getPrices().size());
-		ItemPrice[] expectedPrices = new ItemPrice[expected.getPrices().size()];
-		expected.getPrices().toArray(expectedPrices);
-		ItemPrice[] actualPrices = new ItemPrice[actual.getPrices().size()];
-		actual.getPrices().toArray(actualPrices);
-		for (int i = 0; i < expected.getPrices().size(); i++) {
-			Assert.assertEquals(expectedPrices[i].getId(), actualPrices[i].getId());
-			Assert.assertEquals(expectedPrices[i].getName(), actualPrices[i].getName());
-			Assert.assertEquals(expectedPrices[i].getPrice(), actualPrices[i].getPrice());
-		}
+				Assert.assertEquals(expectedCode.getName(), actualCode.getName());
+				Assert.assertEquals(expectedCode.getCode(), actualCode.getCode());
+			}
+		});
+
+		assertCollection(expected.getPrices(), actual.getPrices(), new Action2<ItemPrice, ItemPrice>() {
+			@Override
+			public void apply(ItemPrice expectedPrice, ItemPrice actualPrice) {
+				assertOpenmrsMetadata(expectedPrice, actualPrice);
+
+				Assert.assertEquals(expectedPrice.getName(), actualPrice.getName());
+				Assert.assertEquals(expectedPrice.getPrice(), actualPrice.getPrice());
+			}
+		});
 	}
 
 	/**

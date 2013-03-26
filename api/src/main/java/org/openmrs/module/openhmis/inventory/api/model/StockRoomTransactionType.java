@@ -22,6 +22,7 @@ public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 
 	private Integer stockRoomTransferTypeId;
 	private List<StockRoomTransactionTypeAttributeType> attributeTypes;
+	private PendingTransactionItemQuantityType quantityType;
 	private boolean sourceRequired;
 	private boolean destinationRequired;
 	private boolean authorized;
@@ -42,6 +43,14 @@ public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 
 	public void setAttributeTypes(List<StockRoomTransactionTypeAttributeType> attributeTypes) {
 		this.attributeTypes = attributeTypes;
+	}
+
+	public PendingTransactionItemQuantityType getQuantityType() {
+		return quantityType;
+	}
+
+	public void setQuantityType(PendingTransactionItemQuantityType quantityType) {
+		this.quantityType = quantityType;
 	}
 
 	public boolean isSourceRequired() {
@@ -68,3 +77,4 @@ public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 		this.authorized = authorized;
 	}
 }
+

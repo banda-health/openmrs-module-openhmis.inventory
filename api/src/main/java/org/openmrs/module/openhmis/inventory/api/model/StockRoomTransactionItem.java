@@ -17,12 +17,13 @@ import org.openmrs.BaseOpenmrsObject;
 
 import java.util.Date;
 
-public class StockRoomTransactionItem extends BaseOpenmrsObject {
+public class StockRoomTransactionItem extends BaseOpenmrsObject
+	implements Comparable<StockRoomTransactionItem> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransactionItemId;
 	private StockRoomTransaction transaction;
-	private ImportBatch importBatch;
+	private StockRoomTransaction importTransaction;
 	private Item item;
 	private int quantityOrdered;       // The item quantity requested for this transaction
 	private int quantityTransferred;   // The transferred item quantity while the transaction is Pending
@@ -47,12 +48,12 @@ public class StockRoomTransactionItem extends BaseOpenmrsObject {
 		this.transaction = transaction;
 	}
 
-	public ImportBatch getImportBatch() {
-		return importBatch;
+	public StockRoomTransaction getImportTransaction() {
+		return importTransaction;
 	}
 
-	public void setImportBatch(ImportBatch importBatch) {
-		this.importBatch = importBatch;
+	public void setImportTransaction(StockRoomTransaction importTransaction) {
+		this.importTransaction = importTransaction;
 	}
 
 	public Item getItem() {
@@ -93,5 +94,11 @@ public class StockRoomTransactionItem extends BaseOpenmrsObject {
 
 	public void setExpiration(Date expiration) {
 		this.expiration = expiration;
+	}
+
+	@Override
+	public int compareTo(StockRoomTransactionItem o) {
+		// The default sorting uses the item name
+		return this.getItem().getName().compareTo(o.getItem().getName());
 	}
 }

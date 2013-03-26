@@ -16,8 +16,10 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
 
 import java.util.Set;
+import java.util.TreeSet;
 
-public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<StockRoomTransactionAttribute> {
+public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<StockRoomTransactionAttribute>
+	implements Comparable<StockRoomTransaction> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferId;
@@ -27,6 +29,7 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 	private StockRoom source;
 	private StockRoom destination;
 	private Set<StockRoomTransactionItem> items;
+	private Boolean isImportTransaction;
 
 	@Override
 	public Integer getId() {
@@ -84,5 +87,45 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 
 	public void setItems(Set<StockRoomTransactionItem> items) {
 		this.items = items;
+	}
+
+	public void addItem(StockRoomTransactionItem item) {
+		if (item != null) {
+			if (items == null) {
+				items = new TreeSet<StockRoomTransactionItem>();
+			}
+
+			item.setTransaction(this);
+			items.add(item);
+		}
+	}
+
+	public void removeItem(StockRoomTransactionItem item) {
+		if (item != null) {
+			if (items == null) {
+				return;
+			}
+
+			item.setTransaction(null);
+			items.remove(item);
+		}
+	}
+
+	public Boolean isImportTransaction() {
+		return getImportTransaction();
+	}
+
+	public Boolean getImportTransaction() {
+		return isImportTransaction;
+	}
+
+	public void setImportTransaction(Boolean importTransaction) {
+		isImportTransaction = importTransaction;
+	}
+
+	@Override
+	public int compareTo(StockRoomTransaction o) {
+		// The default sorting uses the transaction creation date
+		return this.getDateCreated().compareTo(o.getDateCreated());
 	}
 }

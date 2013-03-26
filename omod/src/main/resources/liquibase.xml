@@ -191,18 +191,10 @@
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 			<column name="stock_room_id" type="int"><constraints nullable="false" /></column>
-			<column name="import_batch_id" type="int"><constraints nullable="false" /></column>
+			<column name="import_transaction_id" type="int"><constraints nullable="false" /></column>
 			<column name="item_id" type="int"><constraints nullable="false" /></column>
 			<column name="quantity" type="int"><constraints nullable="false"/></column>
 			<column name="expiration" type="DATE" />
-			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
-		</createTable>
-		<createTable tableName="inv_import_batch">
-			<column name="import_batch_id" autoIncrement="true" type="int">
-				<constraints nullable="false" primaryKey="true"/>
-			</column>
-			<column name="batch_number" type="varchar(50)"><constraints nullable="false" /></column>
-			<column name="transaction_type_id" type="int"><constraints nullable="false" /></column>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
 		<createTable tableName="inv_stock_room_transaction">
@@ -210,7 +202,7 @@
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 
-			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
+			<column defaultValue="" name="name" type="varchar(255)" />
 			<column defaultValue="" name="description" type="varchar(1024)" />
 
 			<column name="transaction_number" type="varchar(50)"><constraints nullable="false" /></column>
@@ -241,7 +233,7 @@
 			</column>
 
 			<column name="transaction_id" type="int"><constraints nullable="false" /></column>
-			<column name="import_batch_id" type="int"><constraints nullable="false" /></column>
+			<column name="import_transaction_id" type="int"><constraints nullable="false" /></column>
 			<column name="item_id" type="int"><constraints nullable="false" /></column>
 			<column name="quantity_ordered" type="int"><constraints nullable="false" /></column>
 			<column name="quantity_transferred" type="int" />
@@ -256,6 +248,7 @@
 			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
 			<column defaultValue="" name="description" type="varchar(1024)" />
 
+			<column name="quantity_type" type="varchar(50)"><constraints nullable="false" /></column>
 			<column name="source_required" type="boolean" defaultValueBoolean="false" />
 			<column name="destination_required" type="boolean" defaultValueBoolean="false" />
 			<column name="authorized" type="boolean" />
@@ -333,6 +326,10 @@
 			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
+		<createTable tableName="inv_stock_room_transactions">
+			<column name="stock_room_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
+			<column name="transaction_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
+		</createTable>
 
 		<createIndex indexName="inv_item_name_idx" tableName="inv_item" unique="false">
 			<column name="name"/>
@@ -363,6 +360,10 @@
 		<createIndex indexName="inv_stock_room_transaction_attribute_idx" tableName="inv_stock_room_transaction_attribute" unique="false">
 			<column name="transaction_id"/>
 			<column name="attribute_type_id" />
+		</createIndex>
+		<createIndex tableName="inv_stock_room_transactions" indexName="inv_stock_room_transactions_idx" unique="true">
+			<column name="stock_room_id" />
+			<column name="transaction_id" />
 		</createIndex>
 
 		<addForeignKeyConstraint constraintName="inv_item_creator_fk"
@@ -484,12 +485,8 @@
 		<addForeignKeyConstraint constraintName="inv_stock_room_item_item_fk"
 		                         baseTableName="inv_stock_room_item" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_item_import_batch_fk"
-		                         baseTableName="inv_stock_room_item" baseColumnNames="import_batch_id"
-		                         referencedTableName="inv_import_batch" referencedColumnNames="import_batch_id"/>
-
-		<addForeignKeyConstraint constraintName="inv_import_batch_transaction_fk"
-		                         baseTableName="inv_import_batch" baseColumnNames="transaction_id"
+		<addForeignKeyConstraint constraintName="inv_stock_room_item_import_transaction_fk"
+		                         baseTableName="inv_stock_room_item" baseColumnNames="import_transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
 
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_transfer_type_fk"
@@ -514,9 +511,9 @@
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_item_transaction_fk"
 		                         baseTableName="inv_stock_room_transaction_item" baseColumnNames="transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_item_import_batch_fk"
-		                         baseTableName="inv_stock_room_transaction_item" baseColumnNames="import_batch_id"
-		                         referencedTableName="inv_import_batch" referencedColumnNames="import_batch_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_item_import_transaction_fk"
+		                         baseTableName="inv_stock_room_transaction_item" baseColumnNames="import_transaction_id"
+		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_item_item_fk"
 		                         baseTableName="inv_stock_room_transaction_item" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
@@ -531,7 +528,7 @@
 		                         baseTableName="inv_stock_room_transaction_type" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_transfer_type_fk"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_transaction_type_fk"
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="transaction_type_id"
 		                         referencedTableName="inv_stock_room_transaction_type" referencedColumnNames="stock_room_transaction_type_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_creator_fk"
@@ -544,7 +541,7 @@
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_transfer_fk"
+		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_transaction_fk"
 		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_attribute_type_fk"
@@ -559,5 +556,12 @@
 		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_retired_by_fk"
 		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_stock_room_transactions_stock_room_fk"
+		                         baseTableName="inv_stock_room_transactions" baseColumnNames="stock_room_id"
+		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_room_transactions_transaction_fk"
+		                         baseTableName="inv_stock_room_transactions" baseColumnNames="transaction_id"
+		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
 	</changeSet>
 </databaseChangeLog>

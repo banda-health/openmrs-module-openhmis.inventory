@@ -16,25 +16,24 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Location;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class StockRoom extends BaseOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
-	private Integer storeRoomId;
+	private Integer stockRoomId;
 	private Location location;
 	private Set<StockRoomItem> items;
-	private List<StockRoomTransaction> transfers;
+	private Set<StockRoomTransaction> transactions;
 
 	@Override
 	public Integer getId() {
-		return storeRoomId;
+		return stockRoomId;
 	}
 
 	@Override
 	public void setId(Integer id) {
-		storeRoomId = id;
+		stockRoomId = id;
 	}
 
 	public Location getLocation() {
@@ -53,11 +52,53 @@ public class StockRoom extends BaseOpenmrsMetadata {
 		this.items = items;
 	}
 
-	public List<StockRoomTransaction> getTransfers() {
-		return transfers;
+	public void addItem(StockRoomItem item) {
+		if (item != null) {
+			if (items == null) {
+				items = new TreeSet<StockRoomItem>();
+			}
+
+			item.setStockRoom(this);
+			items.add(item);
+		}
 	}
 
-	public void setTransfers(List<StockRoomTransaction> transfers) {
-		this.transfers = transfers;
+	public void removeItem(StockRoomItem item) {
+		if (item != null) {
+			if (items == null) {
+				return;
+			}
+
+			item.setStockRoom(null);
+			items.remove(item);
+		}
+	}
+
+	public Set<StockRoomTransaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Set<StockRoomTransaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public void addTransaction(StockRoomTransaction transaction) {
+		if (transaction != null) {
+			if (transactions == null) {
+				transactions = new TreeSet<StockRoomTransaction>();
+			}
+
+			transactions.add(transaction);
+		}
+	}
+
+	public void removeTransaction(StockRoomTransaction transaction) {
+		if (transaction != null) {
+			if (transactions == null) {
+				return;
+			}
+
+			transactions.remove(transaction);
+		}
 	}
 }

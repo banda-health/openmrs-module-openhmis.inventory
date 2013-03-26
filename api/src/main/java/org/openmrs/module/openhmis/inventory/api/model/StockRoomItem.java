@@ -17,12 +17,13 @@ import org.openmrs.BaseOpenmrsObject;
 
 import java.util.Date;
 
-public class StockRoomItem extends BaseOpenmrsObject {
+public class StockRoomItem extends BaseOpenmrsObject
+	implements Comparable<StockRoomItem> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomItemId;
 	private StockRoom stockRoom;
-	private ImportBatch importBatch;
+	private StockRoomTransaction importTransaction;
 	private Item item;
 	private int quantity;
 	private Date expiration;
@@ -45,12 +46,12 @@ public class StockRoomItem extends BaseOpenmrsObject {
 		this.stockRoom = stockRoom;
 	}
 
-	public ImportBatch getImportBatch() {
-		return importBatch;
+	public StockRoomTransaction getImportTransaction() {
+		return importTransaction;
 	}
 
-	public void setImportBatch(ImportBatch importBatch) {
-		this.importBatch = importBatch;
+	public void setImportTransaction(StockRoomTransaction importTransaction) {
+		this.importTransaction = importTransaction;
 	}
 
 	public Item getItem() {
@@ -75,6 +76,12 @@ public class StockRoomItem extends BaseOpenmrsObject {
 
 	public void setExpiration(Date expiration) {
 		this.expiration = expiration;
+	}
+
+	@Override
+	public int compareTo(StockRoomItem o) {
+		// The default sorting uses the item name
+		return this.getItem().getName().compareTo(o.getItem().getName());
 	}
 }
 
