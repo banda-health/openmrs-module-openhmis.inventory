@@ -23,9 +23,11 @@
 .idea/workspace.xml
 .idea/misc.xml
 .idea/libraries
-.idea/dataSources.*
+.idea/*datasources.*
 .idea/encodings.xml
 .idea/dictionaries/*
+.idea/modules.xml
+.idea/vcs.xml
 
 # building
 target
