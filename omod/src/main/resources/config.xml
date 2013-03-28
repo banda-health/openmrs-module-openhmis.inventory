@@ -18,6 +18,7 @@
 	<require_modules>
 		<require_module version="1.1">org.openmrs.module.webservices.rest</require_module>
 		<require_module version="1.5">org.openmrs.module.openhmis.commons</require_module>
+		<require_module version="1.0-SNAPSHOT">org.openmrs.module.openhmis.backboneforms</require_module>
 	</require_modules>
 	
 	<!-- Module Activator -->
@@ -54,5 +55,37 @@
 	</messages>
 	<!-- /Internationalization -->
 
+	<!-- Privileges -->
+	<!--  Items  -->
+	<privilege>
+		<name>View Inventory Items</name>
+		<description>Able to view inventory items</description>
+	</privilege>
+
+	<privilege>
+		<name>Manage Inventory Items</name>
+		<description>Able to add/edit/delete inventory items</description>
+	</privilege>
+
+	<privilege>
+		<name>Purge Inventory Items</name>
+		<description>Able to purge inventory items</description>
+	</privilege>
+
+	<!--  Metadata  -->
+	<privilege>
+		<name>View Inventory Metadata</name>
+		<description>Able to view inventory module metadata</description>
+	</privilege>
+
+	<privilege>
+		<name>Manage Inventory Metadata</name>
+		<description>Able to add/edit/delete inventory module metadata</description>
+	</privilege>
+
+	<privilege>
+		<name>Purge Inventory Metadata</name>
+		<description>Able to purge inventory module metadata</description>
+	</privilege>
 </module>
 

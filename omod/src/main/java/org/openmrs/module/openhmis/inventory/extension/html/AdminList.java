@@ -13,18 +13,14 @@
  */
 package org.openmrs.module.openhmis.inventory.extension.html;
 
+import org.openmrs.module.Extension;
+import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
+import org.openmrs.module.web.extension.AdministrationSectionExt;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.openmrs.module.Extension;
-import org.openmrs.module.web.extension.AdministrationSectionExt;
-
-/**
- * This class defines the links that will appear on the administration page under the
- * "openhmis.inventory.title" heading. 
- */
 public class AdminList extends AdministrationSectionExt {
-	
 	/**
 	 * @see AdministrationSectionExt#getMediaType()
 	 */
@@ -44,8 +40,10 @@ public class AdminList extends AdministrationSectionExt {
 	 */
 	public Map<String, String> getLinks() {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("/module/openhmis.inventory/manage.form", "openhmis.inventory.manage");
+
+		map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");
+		map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
+
 		return map;
 	}
-	
 }

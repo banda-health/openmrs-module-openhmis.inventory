@@ -13,24 +13,22 @@
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.context.Context;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-/**
- * The main controller.
- */
+import java.io.IOException;
+
 @Controller
-public class  OpenHMISInventoryModuleManageController {
-	
-	protected final Log log = LogFactory.getLog(getClass());
-	
-	@RequestMapping(value = "/module/openhmis.inventory/manage", method = RequestMethod.GET)
-	public void manage(ModelMap model) {
-		model.addAttribute("user", Context.getAuthenticatedUser());
+@RequestMapping(ModuleWebConstants.DEPARTMENTS_ROOT)
+public class DepartmentsController {
+	@RequestMapping(method = RequestMethod.GET)
+	public void departments(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
+		model.addAttribute("modelBase", "openhmis.inventory.department");
 	}
 }
+
