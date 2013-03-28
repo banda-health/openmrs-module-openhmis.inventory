@@ -3,8 +3,8 @@ define(
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/lib/backbone',
 		openhmis.url.backboneBase + 'js/lib/underscore',
-		openhmis.url.cashierBase + 'js/model/item',
-		openhmis.url.cashierBase + 'js/model/department',
+		openhmis.url.moduleBase + 'js/model/item',
+		openhmis.url.moduleBase + 'js/model/department',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.backboneBase + 'js/lib/labelOver',
 		openhmis.url.backboneBase + 'js/view/editors'
@@ -25,7 +25,7 @@ define(
 		editors.Item = editors.Base.extend({
 			tagName: "span",
 			className: "editor",
-			tmplFile: openhmis.url.cashierBase + 'template/editors.html',
+			tmplFile: openhmis.url.moduleBase + 'template/editors.html',
 			tmplSelector: '#item-editor',
 			departmentCollection: function() {
 				var collection = new openhmis.GenericCollection([], { model: openhmis.Department });
