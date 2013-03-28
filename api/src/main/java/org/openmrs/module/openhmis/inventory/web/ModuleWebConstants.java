@@ -20,9 +20,11 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MODULE_ROOT = WebConstants.MODULE_BASE + ModuleConstants.MODULE_NAME + "/";
 	public static final String MODULE_RESOURCE_ROOT = WebConstants.MODULE_RESOURCE_BASE + ModuleConstants.MODULE_NAME + "/";
 
-	public static final String ITEMS_PAGE = MODULE_ROOT + "items.form";
+	public static final String ITEMS_ROOT = MODULE_ROOT + "items";
+	public static final String ITEMS_PAGE = ITEMS_ROOT + ".form";
 
-	public static final String DEPARTMENTS_PAGE = MODULE_ROOT + "departments.form";
+	public static final String DEPARTMENTS_ROOT = MODULE_ROOT + "departments";
+	public static final String DEPARTMENTS_PAGE = DEPARTMENTS_ROOT + ".form";
 
 	/**
 	 * Returns the full page url for a module page.
