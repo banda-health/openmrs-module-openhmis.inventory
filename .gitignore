@@ -24,6 +24,7 @@
 .idea/misc.xml
 .idea/libraries
 .idea/*datasources.*
+.idea/*dataSources.*
 .idea/encodings.xml
 .idea/dictionaries/*
 .idea/modules.xml
