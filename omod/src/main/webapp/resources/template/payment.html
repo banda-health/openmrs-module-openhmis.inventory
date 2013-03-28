@@ -1,0 +1,16 @@
+<script id="payment-view" type="text/template">
+	<div id="paymentList"></div>
+	<form id="paymentAttributes" class="bbf-form">
+	</form>
+	<? if (!readOnly) { ?>
+		<input type="button" id="processPayment" value="<?= __('Process Payment') ?>" />
+	<? } ?>
+</script>
+
+<script id="payment-attributes" type="text/template">
+	<? for (attr in attributes) {
+		if (attr > 0)
+			print("&nbsp;&nbsp;");
+		print(attributes[attr].get("display"));
+	} ?>
+</script>

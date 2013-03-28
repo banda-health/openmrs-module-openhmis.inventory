@@ -1,0 +1,11 @@
+<script id="bill-totals" type="text/template">
+	<tr class="bill-total"><td></td><td class="label"><?= __("Total") ?>:</td><td class="total"><?= formatPrice(total) ?></td></tr>
+	<? if (totalPaid > 0) { ?>
+		<tr class="payment-total"><td></td><td class="label"><?= __("Tendered") ?>:</td><td class="total"><?= formatPrice(totalPaid) ?></td></tr>
+	<? } ?>
+	<? if (totalPaid < total) { ?>
+		<tr class="due-total"><td></td><td class="label"><?= __("Amount Due") ?>:</td><td class="total"><?= formatPrice(total - totalPaid) ?></td></tr>
+	<? } else if (totalPaid > total) { ?>
+		<tr class="change-total"><td></td><td class="label"><?= __("Change Due") ?>:</td><td class="total"><?= formatPrice(totalPaid - total) ?></td></tr>
+	<? } ?>
+</script>

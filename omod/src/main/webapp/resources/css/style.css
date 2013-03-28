@@ -1,0 +1,53 @@
+/* Item editor styles */
+.editor .item-name { position: relative; z-index: 1; }
+
+/* Input hint styles */
+span.label-hint { position: relative; }
+.label-hint label { position: absolute; bottom: 0px; left: 3px; font-style: italic; color: #999; cursor: text; z-index: 0; }
+
+/* Bill styles */
+ul#bill-info { font-size: 10pt; }
+ul#bill-info li { margin: 0 3em 10px 0; }
+
+table.bill th.field-quantity, table.bill th.field-price, table.bill th.field-total {
+	width: 13%;
+}
+table.bill td.field-quantity select, table.bill td.field-price select {
+	max-width: 100px;
+}
+table.bill td input[type="text"], table.bill td input[type="number"] {
+	width: 100%;
+	background-color: transparent;
+}
+
+table.bill td input, table.bill td select {
+	border: 1px solid transparent;
+	background-color: transparent;
+}
+
+table.bill td, table.bill th {
+	padding: 0px 5px;
+	border-right: 1px solid #aaa;
+}
+table.bill td.end, table.bill th.end { border-right: none; }
+
+table.bill .field-item .editor .department-name { width: 31%; }
+table.bill .field-item .editor .item-name { width: 66%; }
+
+table.totals { width: 100%; }
+table.totals td.total { width: 13%; text-align: right; }
+table.totals td.label { width: 13%; }
+table.totals td.label, table.totals td.total { padding: 3px 7px 3px 10px; font-weight: bold; }
+
+/* Exception for form style */
+li.bbf-field.field-cashPoint div.bbf-editor { margin-left: 7em; }
+
+
+div.box, div.combineBoxes { margin-bottom: 1em; }
+.combineBoxes div.box { margin-bottom: 0; }
+
+#paymentList { font-size: inherit; }
+#paymentList b.boxHeader, #paymentList div.box { width: auto; }
+.paymentList .field-amountFmt, .paymentList .field-amountTenderedFmt,
+.paymentList .field-paymentMode, .paymentList .field-dateCreatedFmt { width: 13%; }
+.paymentList td.field-Details { color: #777; }
