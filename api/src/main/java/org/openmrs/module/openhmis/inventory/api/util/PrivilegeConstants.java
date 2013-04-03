@@ -27,4 +27,5 @@ public class PrivilegeConstants {
 	public static final String PURGE_TRANSFERS = "Purge Inventory Transfers";
 
 	public static final String ITEM_PAGE_PRIVILEGES = MANAGE_ITEMS + ", " + VIEW_ITEMS;
+	public static final String DEPARTMENT_PAGE_PRIVILEGES = MANAGE_METADATA + ", " + VIEW_METADATA;
 }

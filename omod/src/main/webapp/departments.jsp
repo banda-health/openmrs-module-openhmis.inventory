@@ -1,7 +1,7 @@
 <%@ page import="org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants" %>
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
 <%@ include file="/WEB-INF/template/include.jsp"%>
-<openmrs:require allPrivileges="Manage Inventory Metadata, View Inventory Metadata" otherwise="/login.htm"
+<openmrs:require allPrivileges="<%= PrivilegeConstants.DEPARTMENT_PAGE_PRIVILEGES %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.DEPARTMENTS_PAGE %>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
