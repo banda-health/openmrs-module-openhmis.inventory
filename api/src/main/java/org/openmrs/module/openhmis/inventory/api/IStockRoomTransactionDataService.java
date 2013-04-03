@@ -43,7 +43,9 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @param paging The paging information or {@code null} to return all results.
 	 * @return The pending transactions for the specified user.
 	 * @should return all pending transactions for specified user
-	 * @should return all pending transactions for specified user role
+	 * @should return pending transactions created by user
+	 * @should return pending transactions with user as attribute type user
+	 * @should return pending transaction with user role as attribute type role
 	 * @should not return any completed or cancelled transactions
 	 * @should return empty list when no transactions
 	 * @should return paged transactions when paging is specified

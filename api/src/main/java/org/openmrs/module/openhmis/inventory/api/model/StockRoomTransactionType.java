@@ -15,6 +15,7 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.BaseOpenmrsMetadata;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StockRoomTransactionType extends BaseOpenmrsMetadata {
@@ -75,6 +76,28 @@ public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 
 	public void setAuthorized(boolean authorized) {
 		this.authorized = authorized;
+	}
+
+	public void addAttributeType(StockRoomTransactionTypeAttributeType type) {
+		if (type != null) {
+			if (attributeTypes == null) {
+				attributeTypes = new ArrayList<StockRoomTransactionTypeAttributeType>();
+			}
+
+			type.setOwner(this);
+			attributeTypes.add(type);
+		}
+	}
+
+	public void removeAttributeType(StockRoomTransactionTypeAttributeType type) {
+		if (type != null) {
+			if (attributeTypes == null) {
+				return;
+			}
+
+			type.setOwner(null);
+			attributeTypes.remove(type);
+		}
 	}
 }
 

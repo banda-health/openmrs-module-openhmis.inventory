@@ -271,6 +271,9 @@
 			<column name="foreign_key" type="int" />
 			<column name="reg_exp" type="varchar(255)" />
 			<column name="required" type="boolean" defaultValueBoolean="false" />
+			<column name="user_id" type="int" />
+			<column name="role" type="varchar(50)" />
+			<column name="patient_id" type="int" />
 
 			<column name="creator" type="int" defaultValueNumeric="0" >
 				<constraints nullable="false"/>
@@ -497,6 +500,15 @@
 		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_transaction_type_fk"
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="transaction_type_id"
 		                         referencedTableName="inv_stock_room_transaction_type" referencedColumnNames="stock_room_transaction_type_id"/>
+		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_user_id_fk"
+		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="user_id"
+		                         referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_role_fk"
+		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="role"
+		                         referencedTableName="role" referencedColumnNames="role"/>
+		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_patient_id_fk"
+		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="patient_id"
+		                         referencedTableName="patient" referencedColumnNames="patient_id"/>
 		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_creator_fk"
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>

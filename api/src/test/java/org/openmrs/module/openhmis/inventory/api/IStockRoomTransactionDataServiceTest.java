@@ -3,21 +3,20 @@ package org.openmrs.module.openhmis.inventory.api;
 import liquibase.util.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataServiceTest;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionItem;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 
 import java.util.*;
 
 public class IStockRoomTransactionDataServiceTest
 		extends IObjectDataServiceTest<IStockRoomTransactionDataService, StockRoomTransaction> {
 	protected IStockRoomDataService stockRoomService;
+	protected IStockRoomTransactionTypeDataService typeService;
 	protected IItemDataService itemService;
 
 	@Override
@@ -25,6 +24,7 @@ public class IStockRoomTransactionDataServiceTest
 		super.before();
 
 		itemService = Context.getService(IItemDataService.class);
+		typeService = Context.getService(IStockRoomTransactionTypeDataService.class);
 		stockRoomService = Context.getService(IStockRoomDataService.class);
 
 		executeDataSet(TestConstants.CORE_DATASET);
@@ -341,15 +341,6 @@ public class IStockRoomTransactionDataServiceTest
 	}
 
 	/**
-	 * @verifies return all pending transactions for specified user role
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnAllPendingTransactionsForSpecifiedUserRole() throws Exception {
-		Assert.fail("Not yet implemented");
-	}
-
-	/**
 	 * @verifies not return any completed or cancelled transactions
 	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
@@ -436,5 +427,89 @@ public class IStockRoomTransactionDataServiceTest
 	@Test(expected = NullPointerException.class)
 	public void getUserPendingTransactions_shouldThrowNullPointerExceptionWhenUserIsNull() throws Exception {
 		service.getUserPendingTransactions(null, null);
+	}
+
+	/**
+	 * @verifies return pending transactions created by user
+	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserPendingTransactions_shouldReturnPendingTransactionsCreatedByUser() throws Exception {
+		User user = Context.getUserService().getUser(3);
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(user);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies return pending transactions with user as attribute type user
+	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserAsAttributeTypeUser() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(3);
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("user");
+		type.setUser(user);
+		type.setRequired(true);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies return pending transaction with user role as attribute type role
+	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserPendingTransactions_shouldReturnPendingTransactionWithUserRoleAsAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		Set<Role> roles = baseUser.getRoles();
+		Role[] roleArray = new Role[roles.size()];
+		roles.toArray(roleArray);
+
+		User user = Context.getUserService().getUser(3);
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(user);
+
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+
+		type.setRole(roleArray[0]);
+		type.setRequired(true);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(baseUser, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
 	}
 }

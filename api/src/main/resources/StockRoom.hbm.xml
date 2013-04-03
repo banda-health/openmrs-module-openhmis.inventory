@@ -178,6 +178,10 @@
 		<property name="regExp" type="java.lang.String" column="reg_exp" length="255" />
 		<property name="required" type="boolean" column="required" length="1" not-null="true" />
 
+		<many-to-one name="user" class="org.openmrs.User" column="user_id" />
+		<many-to-one name="role" class="org.openmrs.Role" column="role" />
+		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" />
+
 		<many-to-one name="owner" class="StockRoomTransactionType" not-null="true" column="transaction_id" />
 
 		<!-- bi-directional many-to-one association to User -->

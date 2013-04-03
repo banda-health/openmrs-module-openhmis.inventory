@@ -2,6 +2,8 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
@@ -11,6 +13,8 @@ import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
 import org.openmrs.module.openhmis.inventory.api.security.TransactionAuthorizationPrivileges;
 
 import java.util.List;
@@ -60,7 +64,35 @@ public class StockRoomTransactionDataServiceImpl
 	}
 
 	@Override
-	public List<StockRoomTransaction> getUserPendingTransactions(User user, PagingInfo paging) {
-		return null;
+	public List<StockRoomTransaction> getUserPendingTransactions(final User user, PagingInfo paging) {
+		if (user == null) {
+			throw new NullPointerException("The user must be defined.");
+		}
+
+		return executeCriteria(StockRoomTransaction.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				// First find any transactions types that have attribute types which are for the specified user or role
+				DetachedCriteria subQuery = DetachedCriteria.forClass(StockRoomTransactionType.class);
+				subQuery.createAlias("attributeTypes", "at")
+						.add(Restrictions.or(
+								// Transaction types that require user approval
+								Restrictions.eq("at.user", user),
+								// Transaction types that require role approval
+								Restrictions.in("at.role", user.getRoles())
+						))
+						.setProjection(Property.forName("id"));
+
+				// Join the above criteria as a sub-query to the transaction transaction type
+				criteria.add(Restrictions.and(
+						Restrictions.eq("status", StockRoomTransactionStatus.PENDING),
+						Restrictions.or(
+								// Transactions created by the user
+								Restrictions.eq("creator", user),
+								Property.forName("transactionType").in(subQuery)
+						)
+				));
+			}
+		});
 	}
 }
