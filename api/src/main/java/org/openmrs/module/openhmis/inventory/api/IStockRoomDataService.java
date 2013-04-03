@@ -18,3 +18,4 @@ import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 
 public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 }
+

@@ -202,9 +202,6 @@
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 
-			<column defaultValue="" name="name" type="varchar(255)" />
-			<column defaultValue="" name="description" type="varchar(1024)" />
-
 			<column name="transaction_number" type="varchar(50)"><constraints nullable="false" /></column>
 			<column name="transaction_type_id" type="int"><constraints nullable="false" /></column>
 			<column name="status" type="varchar(50)"><constraints nullable="false" /></column>
@@ -217,14 +214,6 @@
 			<column name="date_created" type="DATETIME">
 				<constraints nullable="false"/>
 			</column>
-			<column name="changed_by" type="int"/>
-			<column name="date_changed" type="DATETIME"/>
-			<column defaultValueBoolean="false" name="retired" type="BOOLEAN">
-				<constraints nullable="false"/>
-			</column>
-			<column name="retired_by" type="int"/>
-			<column name="date_retired" type="DATETIME"/>
-			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
 		<createTable tableName="inv_stock_room_transaction_item">
@@ -303,27 +292,10 @@
 			<column name="stock_room_transaction_attribute_id" autoIncrement="true" type="int">
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
-			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
-			<column defaultValue="" name="description" type="varchar(1024)" />
-
 			<column name="transaction_id" type="int"><constraints nullable="false" /></column>
 			<column name="attribute_type_id" type="int"><constraints nullable="false" /></column>
 			<column name="value_reference" type="text"><constraints nullable="false" /></column>
 
-			<column name="creator" type="int" defaultValueNumeric="0" >
-				<constraints nullable="false"/>
-			</column>
-			<column name="date_created" type="DATETIME">
-				<constraints nullable="false"/>
-			</column>
-			<column name="changed_by" type="int"/>
-			<column name="date_changed" type="DATETIME"/>
-			<column defaultValueBoolean="false" name="retired" type="BOOLEAN">
-				<constraints nullable="false"/>
-			</column>
-			<column name="retired_by" type="int"/>
-			<column name="date_retired" type="DATETIME"/>
-			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
 		<createTable tableName="inv_stock_room_transactions">
@@ -353,11 +325,11 @@
 			<column name="stock_room_id"/>
 			<column name="item_id" />
 		</createIndex>
-		<createIndex indexName="inv_stock_room_transaction_type_attribute_type_idx" tableName="inv_stock_room_transaction_type_attribute_type" unique="false">
+		<createIndex indexName="inv_sr_tt_attribute_type_idx" tableName="inv_stock_room_transaction_type_attribute_type" unique="false">
 			<column name="transaction_type_id"/>
 			<column name="attribute_order" />
 		</createIndex>
-		<createIndex indexName="inv_stock_room_transaction_attribute_idx" tableName="inv_stock_room_transaction_attribute" unique="false">
+		<createIndex indexName="inv_sr_transaction_attribute_idx" tableName="inv_stock_room_transaction_attribute" unique="false">
 			<column name="transaction_id"/>
 			<column name="attribute_type_id" />
 		</createIndex>
@@ -489,79 +461,131 @@
 		                         baseTableName="inv_stock_room_item" baseColumnNames="import_transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_transfer_type_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_transfer_type_fk"
 		                         baseTableName="inv_stock_room_transaction" baseColumnNames="transaction_type_id"
 		                         referencedTableName="inv_stock_room_transaction_type" referencedColumnNames="stock_room_transaction_type_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_source_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_source_fk"
 		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_source_id"
 		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_destination_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_destination_fk"
 		                         baseTableName="inv_stock_room_transaction" baseColumnNames="stock_room_destination_id"
 		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_creator_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_creator_fk"
 		                         baseTableName="inv_stock_room_transaction" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_changed_by_fk"
-		                         baseTableName="inv_stock_room_transaction" baseColumnNames="changed_by"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_retired_by_fk"
-		                         baseTableName="inv_stock_room_transaction" baseColumnNames="retired_by"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_item_transaction_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_item_transaction_fk"
 		                         baseTableName="inv_stock_room_transaction_item" baseColumnNames="transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_item_import_transaction_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_item_import_transaction_fk"
 		                         baseTableName="inv_stock_room_transaction_item" baseColumnNames="import_transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_item_item_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_item_item_fk"
 		                         baseTableName="inv_stock_room_transaction_item" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_creator_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_type_creator_fk"
 		                         baseTableName="inv_stock_room_transaction_type" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_changed_by_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_type_changed_by_fk"
 		                         baseTableName="inv_stock_room_transaction_type" baseColumnNames="changed_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_retired_by_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_type_retired_by_fk"
 		                         baseTableName="inv_stock_room_transaction_type" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_transaction_type_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_transaction_type_fk"
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="transaction_type_id"
 		                         referencedTableName="inv_stock_room_transaction_type" referencedColumnNames="stock_room_transaction_type_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_creator_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_creator_fk"
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_changed_by_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_changed_by_fk"
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="changed_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_type_attribute_type_retired_by_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_tt_attribute_type_retired_by_fk"
 		                         baseTableName="inv_stock_room_transaction_type_attribute_type" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_transaction_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_attribute_transaction_fk"
 		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_attribute_type_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transaction_attribute_attribute_type_fk"
 		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="attribute_type_id"
 		                         referencedTableName="inv_stock_room_transaction_type_attribute_type" referencedColumnNames="stock_room_transaction_type_attribute_type_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_creator_fk"
-		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="creator"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_changed_by_fk"
-		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="changed_by"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transaction_attribute_retired_by_fk"
-		                         baseTableName="inv_stock_room_transaction_attribute" baseColumnNames="retired_by"
-		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_transactions_stock_room_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transactions_stock_room_fk"
 		                         baseTableName="inv_stock_room_transactions" baseColumnNames="stock_room_id"
 		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_transactions_transaction_fk"
+		<addForeignKeyConstraint constraintName="inv_sr_transactions_transaction_fk"
 		                         baseTableName="inv_stock_room_transactions" baseColumnNames="transaction_id"
 		                         referencedTableName="inv_stock_room_transaction" referencedColumnNames="stock_room_transaction_id"/>
+
+		<insert tableName="inv_stock_room_transaction_type">
+			<column name="name">Initial</column>
+			<column name="description">Transaction to record the initial item stock quantities.</column>
+			<column name="quantity_type">TRANSFERRED</column>
+			<column name="source_required">0</column>
+			<column name="destination_required">1</column>
+			<column name="authorized">0</column>
+			<column name="creator">1</column>
+			<column name="date_created">2013-01-01</column>
+			<column name="uuid">2f2e072a-9c72-41d8-b1d0-ab50c01b6e4d</column>
+		</insert>
+		<insert tableName="inv_stock_room_transaction_type">
+			<column name="name">Intake</column>
+			<column name="description">Transaction to acquire items from an outside supplier.</column>
+			<column name="quantity_type">RESERVED</column>
+			<column name="source_required">0</column>
+			<column name="destination_required">1</column>
+			<column name="authorized">0</column>
+			<column name="creator">1</column>
+			<column name="date_created">2013-01-01</column>
+			<column name="uuid">8eb783b4-260b-43fd-ab83-2d3c413bfa56</column>
+		</insert>
+		<insert tableName="inv_stock_room_transaction_type">
+			<column name="name">Transfer</column>
+			<column name="description">Transaction to transfer items from one stock room to another.</column>
+			<column name="quantity_type">TRANSFERRED</column>
+			<column name="source_required">1</column>
+			<column name="destination_required">1</column>
+			<column name="authorized">0</column>
+			<column name="creator">1</column>
+			<column name="date_created">2013-01-01</column>
+			<column name="uuid">b61cabfb-93e9-4cab-97a2-3b682cdb8c96</column>
+		</insert>
+		<insert tableName="inv_stock_room_transaction_type">
+			<column name="name">Distribution</column>
+			<column name="description">Transaction to distribute items to a patient or other outside destination.</column>
+			<column name="quantity_type">RESERVED</column>
+			<column name="source_required">1</column>
+			<column name="destination_required">0</column>
+			<column name="authorized">0</column>
+			<column name="creator">1</column>
+			<column name="date_created">2013-01-01</column>
+			<column name="uuid">09bdbc0c-306d-484e-8a0e-61811152a1d8</column>
+		</insert>
+		<insert tableName="inv_stock_room_transaction_type">
+			<column name="name">Correction</column>
+			<column name="description">Transaction to update item quantity to reflect current stock.</column>
+			<column name="quantity_type">TRANSFERRED</column>
+			<column name="source_required">1</column>
+			<column name="destination_required">1</column>
+			<column name="authorized">0</column>
+			<column name="creator">1</column>
+			<column name="date_created">2013-01-01</column>
+			<column name="uuid">b20c2a24-29e4-405a-9e56-054351cbf5f7</column>
+		</insert>
+		<insert tableName="inv_stock_room_transaction_type">
+			<column name="name">Expiration</column>
+			<column name="description">Transaction to remove items from stock because they have expired.</column>
+			<column name="quantity_type">RESERVED</column>
+			<column name="source_required">1</column>
+			<column name="destination_required">0</column>
+			<column name="authorized">0</column>
+			<column name="creator">1</column>
+			<column name="date_created">2013-01-01</column>
+			<column name="uuid">c4f258a9-8ed2-4faf-b4ab-e3894c5d1c60</column>
+		</insert>
 	</changeSet>
 </databaseChangeLog>

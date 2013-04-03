@@ -78,7 +78,7 @@
 		<many-to-one name="destination" class="StockRoom" column="stock_room_destination_id" />
 
 		<set name="items" lazy="true" inverse="true" batch-size="100"
-		     cascade="all-delete-orphan" sort="natural">
+		     cascade="all-delete-orphan" sort="natural" access="field">
 			<key column="transaction_id" />
 			<one-to-many class="StockRoomTransactionItem" />
 		</set>
@@ -86,12 +86,6 @@
 		<!-- bi-directional many-to-one association to User -->
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
 		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
-		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
-		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
-		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
-		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
-		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
-		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
 	<class name="StockRoomTransactionAttribute" table="inv_stock_room_transaction_attribute">
@@ -106,16 +100,6 @@
 		<many-to-one name="owner" class="StockRoomTransaction" column="transaction_id" />
 		<many-to-one name="attributeType" class="StockRoomTransactionTypeAttributeType" column="attribute_type_id" />
 		<property name="value" type="text" access="field" column="value_reference" length="65535" />
-
-		<!-- bi-directional many-to-one association to User -->
-		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
-		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
-		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
-		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
-		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
-		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
-		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
-		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
 	<class name="StockRoomTransactionItem" table="inv_stock_room_transaction_item">

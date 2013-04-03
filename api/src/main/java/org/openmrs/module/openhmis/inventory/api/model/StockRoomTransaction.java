@@ -13,12 +13,14 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
+import org.openmrs.User;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceObject;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<StockRoomTransactionAttribute>
+public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRoomTransactionAttribute>
 	implements Comparable<StockRoomTransaction> {
 	public static final long serialVersionUID = 0L;
 
@@ -30,6 +32,8 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 	private StockRoom destination;
 	private Set<StockRoomTransactionItem> items;
 	private Boolean isImportTransaction;
+	private User creator;
+	private Date dateCreated;
 
 	@Override
 	public Integer getId() {
@@ -121,6 +125,22 @@ public class StockRoomTransaction extends BaseCustomizableInstanceMetadata<Stock
 
 	public void setImportTransaction(Boolean importTransaction) {
 		isImportTransaction = importTransaction;
+	}
+
+	public User getCreator() {
+		return creator;
+	}
+
+	public void setCreator(User creator) {
+		this.creator = creator;
+	}
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 	@Override

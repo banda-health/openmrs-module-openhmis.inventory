@@ -22,6 +22,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
@@ -86,19 +87,20 @@ public class CategoryDataServiceImpl
 	 * @return The root categories.
 	 */
 	@Override
-	public List<Category> getAll(boolean includeRetired, PagingInfo pagingInfo) {
+	public List<Category> getAll(final boolean includeRetired, PagingInfo pagingInfo) {
 		IMetadataAuthorizationPrivileges privileges = getPrivileges();
 		if (privileges != null && !StringUtils.isEmpty(privileges.getGetPrivilege())) {
 			Context.requirePrivilege(privileges.getGetPrivilege());
 		}
 
-		Criteria criteria = repository.createCriteria(Category.class);
-		criteria.add(Restrictions.isNull("parentCategory"));
-		if (!includeRetired) {
-			criteria.add(Restrictions.eq("retired", false));
-		}
-
-		loadPagingTotal(pagingInfo, criteria);
-		return repository.select(getEntityClass(), createPagingCriteria(pagingInfo, criteria));
+		return executeCriteria(Category.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.isNull("parentCategory"));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
 	}
 }

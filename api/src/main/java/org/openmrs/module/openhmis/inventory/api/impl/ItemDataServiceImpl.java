@@ -23,6 +23,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
@@ -77,19 +78,20 @@ public class ItemDataServiceImpl
 	}
 
 	@Override
-	public List<Item> getItemsByDepartment(Department department, boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
 
-		Criteria criteria = repository.createCriteria(getEntityClass());
-		criteria.add(Restrictions.eq("department", department));
-		if (!includeRetired) {
-			criteria.add(Restrictions.eq("retired", false));
-		}
-
-		loadPagingTotal(pagingInfo, criteria);
-		return repository.select(getEntityClass(), createPagingCriteria(pagingInfo, criteria));
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("department", department));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
 	}
 
 	@Override
@@ -102,7 +104,7 @@ public class ItemDataServiceImpl
 	@Override
 	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
 	@Transactional(readOnly = true)
-	public List<Item> findItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> findItems(final Department department, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -113,16 +115,17 @@ public class ItemDataServiceImpl
 			throw new IllegalArgumentException("The item code must be less than 256 characters.");
 		}
 
-		Criteria criteria = repository.createCriteria(getEntityClass());
-		criteria.add(Restrictions.eq("department", department))
-				.add(Restrictions.ilike("name", name, MatchMode.START));
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("department", department))
+						.add(Restrictions.ilike("name", name, MatchMode.START));
 
-		if (!includeRetired) {
-			criteria.add(Restrictions.eq("retired", false));
-		}
-
-		loadPagingTotal(pagingInfo, criteria);
-		return repository.select(getEntityClass(), criteria);
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
 	}
 
 	@Override

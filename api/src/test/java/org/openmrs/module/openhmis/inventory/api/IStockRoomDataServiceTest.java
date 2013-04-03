@@ -131,7 +131,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		assertCollection(expected.getTransactions(), actual.getTransactions(), new Action2<StockRoomTransaction, StockRoomTransaction>() {
 			@Override
 			public void apply(StockRoomTransaction expectedTrans, StockRoomTransaction actualTrans) {
-				assertOpenmrsMetadata(expectedTrans, actualTrans);
+				assertOpenmrsObject(expectedTrans, actualTrans);
 
 				Assert.assertEquals(expectedTrans.getTransactionType(), actualTrans.getTransactionType());
 				Assert.assertEquals(expectedTrans.getTransactionNumber(), actualTrans.getTransactionNumber());
