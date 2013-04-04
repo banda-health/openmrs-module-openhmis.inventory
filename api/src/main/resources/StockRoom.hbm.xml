@@ -74,8 +74,8 @@
 		</property>
 
 		<many-to-one name="transactionType" class="StockRoomTransactionType" not-null="true" column="transaction_type_id" />
-		<many-to-one name="source" class="StockRoom" column="stock_room_source_id" />
-		<many-to-one name="destination" class="StockRoom" column="stock_room_destination_id" />
+		<many-to-one name="source" class="StockRoom" column="stock_room_source_id" access="field" />
+		<many-to-one name="destination" class="StockRoom" column="stock_room_destination_id" access="field" />
 
 		<set name="items" lazy="true" inverse="true" batch-size="100"
 		     cascade="all-delete-orphan" sort="natural" access="field">

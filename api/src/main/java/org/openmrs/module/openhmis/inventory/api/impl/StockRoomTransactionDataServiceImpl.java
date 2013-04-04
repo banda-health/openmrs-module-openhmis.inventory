@@ -30,7 +30,20 @@ public class StockRoomTransactionDataServiceImpl
 	}
 
 	@Override
-	protected void validate(StockRoomTransaction object) throws APIException {
+	protected void validate(StockRoomTransaction transaction) throws APIException {
+	}
+
+	@Override
+	public void purge(StockRoomTransaction transaction) throws APIException {
+		// Ensure that the source and destination stock rooms don't hang onto a reference to this transaction
+		if (transaction != null && transaction.getSource() != null) {
+			transaction.getSource().removeTransaction(transaction);
+		}
+		if (transaction != null && transaction.getDestination() != null) {
+			transaction.getDestination().removeTransaction(transaction);
+		}
+
+		super.purge(transaction);
 	}
 
 	@Override

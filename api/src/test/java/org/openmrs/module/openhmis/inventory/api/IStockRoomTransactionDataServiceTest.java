@@ -44,6 +44,8 @@ public class IStockRoomTransactionDataServiceTest
 		transaction.setTransactionType(WellKnownTransactionTypes.getIntake());
 		transaction.setDestination(stockRoomService.getById(0));
 		transaction.setStatus(StockRoomTransactionStatus.PENDING);
+		transaction.setCreator(Context.getAuthenticatedUser());
+		transaction.setDateCreated(new Date());
 
 		StockRoomTransactionItem transactionItem = new StockRoomTransactionItem();
 		transactionItem.setImportTransaction(service.getById(0));
@@ -180,6 +182,7 @@ public class IStockRoomTransactionDataServiceTest
 		service.save(transaction);
 		Context.flushSession();
 
+		transaction = service.getById(transaction.getId());
 		source = stockRoomService.getById(0);
 		destination = stockRoomService.getById(1);
 
@@ -218,10 +221,55 @@ public class IStockRoomTransactionDataServiceTest
 
 		service.save(transaction);
 
+		transaction = service.getById(transaction.getId());
 		source = stockRoomService.getById(0);
 		destination = stockRoomService.getById(1);
 
 		Assert.assertFalse(source.getTransactions().contains(transaction));
+		Assert.assertFalse(destination.getTransactions().contains(transaction));
+	}
+
+	@Test
+	public void save_shouldUpdatePreviousRoomWhenSourceOrDestinationIsChanged() throws Exception {
+		StockRoomTransaction transaction = new StockRoomTransaction();
+		transaction.setTransactionNumber("123");
+		transaction.setTransactionType(WellKnownTransactionTypes.getTransfer());
+		transaction.setStatus(StockRoomTransactionStatus.PENDING);
+		transaction.setCreator(Context.getAuthenticatedUser());
+
+		StockRoom source = stockRoomService.getById(0);
+		StockRoom destination = stockRoomService.getById(1);
+
+		transaction.setSource(source);
+		transaction.setDestination(destination);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		source = stockRoomService.getById(0);
+		destination = stockRoomService.getById(1);
+
+		Assert.assertTrue(source.getTransactions().contains(transaction));
+		Assert.assertTrue(destination.getTransactions().contains(transaction));
+
+		StockRoom newSource = stockRoomService.getById(2);
+
+		transaction.setSource(newSource);
+		transaction.setDestination(null);
+
+		Assert.assertFalse(source.getTransactions().contains(transaction));
+		Assert.assertTrue(newSource.getTransactions().contains(transaction));
+		Assert.assertFalse(destination.getTransactions().contains(transaction));
+
+		service.save(transaction);
+
+		transaction = service.getById(transaction.getId());
+		source = stockRoomService.getById(0);
+		newSource = stockRoomService.getById(2);
+		destination = stockRoomService.getById(1);
+
+		Assert.assertFalse(source.getTransactions().contains(transaction));
+		Assert.assertTrue(newSource.getTransactions().contains(transaction));
 		Assert.assertFalse(destination.getTransactions().contains(transaction));
 	}
 

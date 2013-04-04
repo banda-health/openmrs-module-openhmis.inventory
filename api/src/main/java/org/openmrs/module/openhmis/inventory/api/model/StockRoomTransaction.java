@@ -73,16 +73,46 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 		return source;
 	}
 
-	public void setSource(StockRoom source) {
-		this.source = source;
+	public void setSource(StockRoom newSource) {
+		if (this.source == newSource) {
+			return;
+		}
+
+		// If source exists then remove this transaction from it
+		if (this.source != null && this.source != this.destination) {
+			this.source.removeTransaction(this);
+		}
+
+		// Update the source
+		this.source = newSource;
+
+		// If the new source is not null then add this transaction to it
+		if (this.source != null) {
+			this.source.addTransaction(this);
+		}
 	}
 
 	public StockRoom getDestination() {
 		return destination;
 	}
 
-	public void setDestination(StockRoom destination) {
-		this.destination = destination;
+	public void setDestination(StockRoom newDestination) {
+		if (this.destination == newDestination) {
+			return;
+		}
+
+		// If destination exists then remove this transaction from it
+		if (this.destination != null && this.destination != this.source) {
+			this.destination.removeTransaction(this);
+		}
+
+		// Update the destination
+		this.destination = newDestination;
+
+		// If the new destination is not null then add this transaction to it
+		if (this.destination != null) {
+			this.destination.addTransaction(this);
+		}
 	}
 
 	public Set<StockRoomTransactionItem> getItems() {
@@ -146,6 +176,10 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 	@Override
 	public int compareTo(StockRoomTransaction o) {
 		// The default sorting uses the transaction creation date
+		if (this.getDateCreated() == null || this.getDateCreated() == null) {
+			return 0;
+		}
+		
 		return this.getDateCreated().compareTo(o.getDateCreated());
 	}
 }
