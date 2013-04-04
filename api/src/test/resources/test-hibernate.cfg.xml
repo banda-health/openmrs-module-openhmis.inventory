@@ -18,11 +18,11 @@
 
 <hibernate-configuration>
 	<session-factory>
-		<!-- Uncomment for hibernate debugging -->
+		<!-- Uncomment for hibernate debugging
 		<property name="show_sql">true</property>
 		<property name="format_sql">true</property>
 		<property name="use_sql_comments">true</property>
-		<!-- -->
+		-->
 
 		<mapping resource="Department.hbm.xml" />
 		<mapping resource="Category.hbm.xml" />

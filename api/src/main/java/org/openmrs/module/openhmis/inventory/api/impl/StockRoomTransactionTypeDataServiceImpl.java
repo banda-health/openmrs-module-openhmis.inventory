@@ -32,3 +32,4 @@ public class StockRoomTransactionTypeDataServiceImpl
 	protected void validate(StockRoomTransactionType object) throws APIException {
 	}
 }
+

@@ -144,7 +144,7 @@
 		<property name="destinationRequired" not-null="true" type="boolean" column="destination_required" />
 		<property name="authorized" not-null="true" type="boolean" column="authorized" />
 
-		<list name="attributeTypes" lazy="true" inverse="true" cascade="all-delete-orphan">
+		<list name="attributeTypes" lazy="false" inverse="true" cascade="all-delete-orphan" access="field">
 			<key column="transaction_type_id" />
 			<list-index column="attribute_order" />
 			<one-to-many class="StockRoomTransactionTypeAttributeType" />
@@ -182,7 +182,7 @@
 		<many-to-one name="role" class="org.openmrs.Role" column="role" />
 		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" />
 
-		<many-to-one name="owner" class="StockRoomTransactionType" not-null="true" column="transaction_id" />
+		<many-to-one name="owner" class="StockRoomTransactionType" not-null="true" column="transaction_type_id" />
 
 		<!-- bi-directional many-to-one association to User -->
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />

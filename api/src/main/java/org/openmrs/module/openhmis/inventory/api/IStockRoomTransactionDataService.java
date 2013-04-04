@@ -45,7 +45,11 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @should return all pending transactions for specified user
 	 * @should return pending transactions created by user
 	 * @should return pending transactions with user as attribute type user
-	 * @should return pending transaction with user role as attribute type role
+	 * @should return pending transactions with user role as attribute type role
+	 * @should return pending transactions with user role as child role of attribute type role
+	 * @should return pending transactions with user role as grandchild role of attribute type role
+	 * @should not return transactions when user role not descendant of attribute type role
+	 * @should not return transactions when user role is parent of attribute type role
 	 * @should not return any completed or cancelled transactions
 	 * @should return empty list when no transactions
 	 * @should return paged transactions when paging is specified

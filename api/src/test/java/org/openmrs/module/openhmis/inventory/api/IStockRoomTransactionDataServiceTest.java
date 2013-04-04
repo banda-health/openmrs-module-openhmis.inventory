@@ -156,12 +156,73 @@ public class IStockRoomTransactionDataServiceTest
 
 	@Test
 	public void save_shouldAddMapRecordsToSourceAndDestinationStockRooms() throws Exception {
-		Assert.fail("Not implemented");
+		StockRoomTransaction transaction = new StockRoomTransaction();
+		transaction.setTransactionNumber("123");
+		transaction.setTransactionType(WellKnownTransactionTypes.getTransfer());
+		transaction.setStatus(StockRoomTransactionStatus.PENDING);
+		transaction.setCreator(Context.getAuthenticatedUser());
+
+		service.save(transaction);
+		Context.flushSession();
+
+		StockRoom source = stockRoomService.getById(0);
+		StockRoom destination = stockRoomService.getById(1);
+
+		Assert.assertFalse(source.getTransactions().contains(transaction));
+		Assert.assertFalse(destination.getTransactions().contains(transaction));
+
+		transaction.setSource(source);
+		transaction.setDestination(destination);
+
+		Assert.assertTrue(source.getTransactions().contains(transaction));
+		Assert.assertTrue(destination.getTransactions().contains(transaction));
+
+		service.save(transaction);
+		Context.flushSession();
+
+		source = stockRoomService.getById(0);
+		destination = stockRoomService.getById(1);
+
+		Assert.assertTrue(source.getTransactions().contains(transaction));
+		Assert.assertTrue(destination.getTransactions().contains(transaction));
 	}
 
 	@Test
 	public void save_shouldRemoveMapRecordsFromNullSourceOrDestinationStockRooms() throws Exception {
-		Assert.fail("Not implemented");
+		StockRoomTransaction transaction = new StockRoomTransaction();
+		transaction.setTransactionNumber("123");
+		transaction.setTransactionType(WellKnownTransactionTypes.getTransfer());
+		transaction.setStatus(StockRoomTransactionStatus.PENDING);
+		transaction.setCreator(Context.getAuthenticatedUser());
+
+		StockRoom source = stockRoomService.getById(0);
+		StockRoom destination = stockRoomService.getById(1);
+
+		transaction.setSource(source);
+		transaction.setDestination(destination);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		source = stockRoomService.getById(0);
+		destination = stockRoomService.getById(1);
+
+		Assert.assertTrue(source.getTransactions().contains(transaction));
+		Assert.assertTrue(destination.getTransactions().contains(transaction));
+
+		transaction.setSource(null);
+		transaction.setDestination(null);
+
+		Assert.assertFalse(source.getTransactions().contains(transaction));
+		Assert.assertFalse(destination.getTransactions().contains(transaction));
+
+		service.save(transaction);
+
+		source = stockRoomService.getById(0);
+		destination = stockRoomService.getById(1);
+
+		Assert.assertFalse(source.getTransactions().contains(transaction));
+		Assert.assertFalse(destination.getTransactions().contains(transaction));
 	}
 
 	/**
@@ -435,7 +496,7 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void getUserPendingTransactions_shouldReturnPendingTransactionsCreatedByUser() throws Exception {
-		User user = Context.getUserService().getUser(3);
+		User user = Context.getUserService().getUser(5506);
 
 		StockRoomTransaction transaction = createEntity(true);
 		transaction.setCreator(user);
@@ -457,7 +518,7 @@ public class IStockRoomTransactionDataServiceTest
 	@Test
 	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserAsAttributeTypeUser() throws Exception {
 		User baseUser = Context.getUserService().getUser(0);
-		User user = Context.getUserService().getUser(3);
+		User user = Context.getUserService().getUser(5506);
 
 		StockRoomTransaction transaction = createEntity(true);
 		transaction.setCreator(baseUser);
@@ -466,6 +527,44 @@ public class IStockRoomTransactionDataServiceTest
 		type.setName("user");
 		type.setUser(user);
 		type.setRequired(true);
+		type.setAttributeOrder(0);
+		type.setOwner(transaction.getTransactionType());
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		typeService.save(transaction.getTransactionType());
+		service.save(transaction);
+		Context.flushSession();
+
+		transaction = service.getById(transaction.getId());
+
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies return pending transactions with user role as attribute type role
+	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserRoleAsAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+		Set<Role> roles = user.getRoles();
+		Role[] roleArray = new Role[roles.size()];
+		roles.toArray(roleArray);
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(roleArray[0]);
+		type.setRequired(true);
+		type.setAttributeOrder(0);
 
 		transaction.getTransactionType().addAttributeType(type);
 
@@ -480,36 +579,144 @@ public class IStockRoomTransactionDataServiceTest
 	}
 
 	/**
-	 * @verifies return pending transaction with user role as attribute type role
+	 * @verifies return pending transactions with user role as child role of attribute type role
 	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void getUserPendingTransactions_shouldReturnPendingTransactionWithUserRoleAsAttributeTypeRole() throws Exception {
+	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserRoleAsChildRoleOfAttributeTypeRole() throws Exception {
 		User baseUser = Context.getUserService().getUser(0);
-		Set<Role> roles = baseUser.getRoles();
-		Role[] roleArray = new Role[roles.size()];
-		roles.toArray(roleArray);
 
-		User user = Context.getUserService().getUser(3);
+		// This user has the Child Role which is a child of the Parent role
+		User user = Context.getUserService().getUser(5506);
 
 		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(user);
+		transaction.setCreator(baseUser);
 
+		// Set up this transaction type to be for users of the Parent role
 		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
 		type.setName("role");
-
-		type.setRole(roleArray[0]);
+		type.setRole(Context.getUserService().getRole("Parent"));
 		type.setRequired(true);
+		type.setAttributeOrder(0);
 
 		transaction.getTransactionType().addAttributeType(type);
 
 		service.save(transaction);
 		Context.flushSession();
 
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(baseUser, null);
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
 
 		Assert.assertNotNull(transactions);
 		Assert.assertEquals(1, transactions.size());
 		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies return pending transactions with user role as grandchild role of attribute type role
+	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserRoleAsGrandchildRoleOfAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Context.getUserService().getRole("Grandchild"));
+		user.setRoles(roles);
+		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.flushSession();
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+
+		// Set up this transaction type to be for users of the Parent role
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(Context.getUserService().getRole("Parent"));
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies not return transactions when user role not descendant of attribute type role
+	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserPendingTransactions_shouldNotReturnTransactionsWhenUserRoleNotDescendantOfAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Context.getUserService().getRole("Other"));
+		user.setRoles(roles);
+		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.flushSession();
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+
+		// Set up this transaction type to be for users of the Parent role
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(Context.getUserService().getRole("Parent"));
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
+	}
+
+	/**
+	 * @verifies not return transactions when user role is parent of attribute type role
+	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserPendingTransactions_shouldNotReturnTransactionsWhenUserRoleIsParentOfAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Context.getUserService().getRole("Parent"));
+		user.setRoles(roles);
+		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.flushSession();
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+
+		// Set up this transaction type to be for users of the Parent role
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(Context.getUserService().getRole("Child"));
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
 	}
 }

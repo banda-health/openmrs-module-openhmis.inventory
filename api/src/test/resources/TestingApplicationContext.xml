@@ -31,4 +31,14 @@
 	<bean id="genericRepository" class="org.openmrs.module.openhmis.commons.api.entity.db.hibernate.HibernateRepository">
 		<constructor-arg name="sessionFactory" ref="sessionFactory" />
 	</bean>
+
+	<!-- If we want to test something with the repository directly we can use this bean. -->
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
+				<value>org.openmrs.module.openhmis.commons.api.entity.db.hibernate.IHibernateRepository</value>
+				<ref bean="genericRepository" />
+			</list>
+		</property>
+	</bean>
 </beans>

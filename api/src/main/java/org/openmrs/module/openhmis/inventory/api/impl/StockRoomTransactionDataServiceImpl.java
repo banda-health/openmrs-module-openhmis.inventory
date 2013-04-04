@@ -5,6 +5,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -18,6 +19,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
 import org.openmrs.module.openhmis.inventory.api.security.TransactionAuthorizationPrivileges;
 
 import java.util.List;
+import java.util.Set;
 
 public class StockRoomTransactionDataServiceImpl
 		extends BaseCustomizableObjectDataServiceImpl<StockRoomTransaction, TransactionAuthorizationPrivileges>
@@ -69,19 +71,28 @@ public class StockRoomTransactionDataServiceImpl
 			throw new NullPointerException("The user must be defined.");
 		}
 
+		// Get all the roles for this user (this traverses the role relationships to get any parent roles)
+		final Set<Role> roles = user.getAllRoles();
+
 		return executeCriteria(StockRoomTransaction.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				// First find any transactions types that have attribute types which are for the specified user or role
 				DetachedCriteria subQuery = DetachedCriteria.forClass(StockRoomTransactionType.class);
-				subQuery.createAlias("attributeTypes", "at")
-						.add(Restrictions.or(
-								// Transaction types that require user approval
-								Restrictions.eq("at.user", user),
-								// Transaction types that require role approval
-								Restrictions.in("at.role", user.getRoles())
-						))
-						.setProjection(Property.forName("id"));
+				subQuery.createAlias("attributeTypes", "at");
+				subQuery.setProjection(Property.forName("id"));
+
+				if (roles != null && roles.size() > 0) {
+					subQuery.add(Restrictions.or(
+						// Transaction types that require user approval
+						Restrictions.eq("at.user", user),
+						// Transaction types that require role approval
+						Restrictions.in("at.role", roles)
+					));
+				} else {
+					// Transaction types that require user approval
+					subQuery.add(Restrictions.eq("at.user", user));
+				}
 
 				// Join the above criteria as a sub-query to the transaction transaction type
 				criteria.add(Restrictions.and(

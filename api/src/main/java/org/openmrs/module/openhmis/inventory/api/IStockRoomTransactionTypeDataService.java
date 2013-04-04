@@ -6,3 +6,4 @@ import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
 public interface IStockRoomTransactionTypeDataService extends IMetadataDataService<StockRoomTransactionType> {
 
 }
+
