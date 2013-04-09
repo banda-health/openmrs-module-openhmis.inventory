@@ -15,25 +15,21 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
-import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Category;
-import org.openmrs.module.openhmis.inventory.api.model.Department;
+import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 
-@Resource("department")
-@Handler(supports = { Department.class }, order = 0)
-public class DepartmentResource extends BaseRestMetadataResource<Department> {
+@Resource("stockRoom")
+@Handler(supports = { StockRoom.class }, order = 0)
+public class StockRoomResource extends BaseRestMetadataResource<StockRoom> {
 
 	@Override
-	public Department newDelegate() {
-		return new Department();
+	public StockRoom newDelegate() {
+		return new StockRoom();
 	}
 
 	@Override
-	public Class<? extends IMetadataDataService<Department>> getServiceClass() {
-		return IDepartmentDataService.class;
+	public Class<? extends IMetadataDataService<StockRoom>> getServiceClass() {
+		return IStockRoomDataService.class;
 	}
 }
-
-

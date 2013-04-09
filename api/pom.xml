@@ -11,7 +11,7 @@
 	<artifactId>openhmis.inventory-api</artifactId>
 	<packaging>jar</packaging>
 	<name>OpenHMIS Inventory Module Module API</name>
-	<description>API project for OpenHMISInventoryModule</description>
+	<description>API project for the OpenHMIS inventory module</description>
 
 	<dependencies>
 	

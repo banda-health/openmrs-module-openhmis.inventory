@@ -20,7 +20,7 @@ curl(
 				listView: openhmis.GenericSearchableListView,
 				searchView: openhmis.DepartmentAndNameSearchView,
 				addEditViewType: openhmis.ItemAddEditView,
-				listFields: ['name', 'department', 'codes', 'defaultPrice']
+				listFields: ['name', 'department', 'category', 'codes', 'defaultPrice']
 			});
 		});
 	}

@@ -6,17 +6,17 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServi
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class StockRoomDataServiceImpl
 		extends BaseMetadataDataServiceImpl<StockRoom>
-		implements IStockRoomDataService {
+		implements IStockRoomDataService, IMetadataAuthorizationPrivileges {
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
-		return new BasicMetadataAuthorizationPrivileges();
+		return this;
 	}
 
 	@Override
@@ -31,5 +31,25 @@ public class StockRoomDataServiceImpl
 		results.addAll(entity.getItems());
 
 		return results;
+	}
+
+	@Override
+	public String getRetirePrivilege() {
+		return PrivilegeConstants.MANAGE_STOCK_ROOMS;
+	}
+
+	@Override
+	public String getSavePrivilege() {
+		return PrivilegeConstants.MANAGE_STOCK_ROOMS;
+	}
+
+	@Override
+	public String getPurgePrivilege() {
+		return PrivilegeConstants.PURGE_STOCK_ROOMS;
+	}
+
+	@Override
+	public String getGetPrivilege() {
+		return PrivilegeConstants.VIEW_STOCK_ROOMS;
 	}
 }

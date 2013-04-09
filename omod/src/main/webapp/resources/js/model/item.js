@@ -70,6 +70,14 @@ define(
 					}),
 					objRef: true
 				},
+                category: {
+                    type: 'CategorySelect',
+                    options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Category,
+                        url: '/category'
+                    }),
+                    objRef: true
+                },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }
