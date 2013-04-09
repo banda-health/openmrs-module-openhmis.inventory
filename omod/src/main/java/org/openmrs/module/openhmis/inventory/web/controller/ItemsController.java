@@ -15,7 +15,6 @@ package org.openmrs.module.openhmis.inventory.web.controller;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,7 +29,5 @@ public class ItemsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void items(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.item");
-		model.addAttribute("privileges", PrivilegeConstants.ITEM_PAGE_PRIVILEGES);
-		model.addAttribute("itemPage", ModuleWebConstants.ITEMS_PAGE);
 	}
 }

@@ -10,7 +10,7 @@ define(
 		openhmis.DepartmentAndNameSearchView = openhmis.BaseSearchView.extend(
 		/** @lends DepartmentAndNameSearchView.prototype */
 		{
-			tmplFile: openhmis.url.cashierBase + 'template/search.html',
+			tmplFile: openhmis.url.inventoryBase + 'template/search.html',
 			tmplSelector: '#department-name-search',
 			
 			/**

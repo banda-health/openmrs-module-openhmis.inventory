@@ -24,11 +24,21 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="openhmis.backboneforms-api" />
+        <module name="openhmis.backboneforms-omod" />
+        <module name="openhmis.commons-api" />
+        <module name="openhmis.commons-omod" />
         <module name="openhmis.inventory-api" />
         <module name="openhmis.inventory-omod" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="openhmis.backboneforms" target="1.6" />
+      <module name="openhmis.backboneforms-api" target="1.6" />
+      <module name="openhmis.backboneforms-omod" target="1.6" />
+      <module name="openhmis.commons" target="1.6" />
+      <module name="openhmis.commons-api" target="1.6" />
+      <module name="openhmis.commons-omod" target="1.6" />
       <module name="openhmis.inventory" target="1.6" />
       <module name="openhmis.inventory-api" target="1.6" />
       <module name="openhmis.inventory-omod" target="1.6" />

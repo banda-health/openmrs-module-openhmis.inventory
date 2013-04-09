@@ -3,7 +3,7 @@ define(
 		openhmis.url.backboneBase + 'js/lib/underscore',
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
-		openhmis.url.cashierBase + 'js/model/department'
+		openhmis.url.moduleBase + 'js/model/department'
 	],
 	function(_, openhmis, __) {
 		openhmis.ItemCode = openhmis.GenericModel.extend({

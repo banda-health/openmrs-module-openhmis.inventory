@@ -19,7 +19,7 @@ define(
 			},
 			
 			validate: function(attrs, options) {
-				if (!attrs.name) return { name: __("A name is required.")}
+				if (!attrs.name) return { name: __("A name is required.") };
 				return null;
 			},
 			
