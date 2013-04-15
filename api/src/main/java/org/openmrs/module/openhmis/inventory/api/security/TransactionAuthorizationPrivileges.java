@@ -19,21 +19,21 @@ import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 public class TransactionAuthorizationPrivileges implements IMetadataAuthorizationPrivileges {
 	@Override
 	public String getRetirePrivilege() {
-		return PrivilegeConstants.MANAGE_TRANSFERS;
+		return PrivilegeConstants.MANAGE_TRANSACTIONS;
 	}
 
 	@Override
 	public String getSavePrivilege() {
-		return PrivilegeConstants.MANAGE_TRANSFERS;
+		return PrivilegeConstants.MANAGE_TRANSACTIONS;
 	}
 
 	@Override
 	public String getPurgePrivilege() {
-		return PrivilegeConstants.PURGE_TRANSFERS;
+		return PrivilegeConstants.PURGE_TRANSACTIONS;
 	}
 
 	@Override
 	public String getGetPrivilege() {
-		return PrivilegeConstants.VIEW_TRANSFERS;
+		return PrivilegeConstants.VIEW_TRANSACTIONS;
 	}
 }

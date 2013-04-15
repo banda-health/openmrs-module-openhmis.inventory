@@ -16,7 +16,7 @@
 	<!-- / Module Properties -->
 
 	<require_modules>
-		<require_module version="1.1">org.openmrs.module.webservices.rest</require_module>
+		<require_module version="2.0">org.openmrs.module.webservices.rest</require_module>
 		<require_module version="1.5">org.openmrs.module.openhmis.commons</require_module>
 		<require_module version="1.0-SNAPSHOT">org.openmrs.module.openhmis.backboneforms</require_module>
 	</require_modules>
@@ -64,12 +64,44 @@
 
 	<privilege>
 		<name>Manage Inventory Items</name>
-		<description>Able to add/edit/delete inventory items</description>
+		<description>Able to add/edit/retire inventory items</description>
 	</privilege>
 
 	<privilege>
 		<name>Purge Inventory Items</name>
 		<description>Able to purge inventory items</description>
+	</privilege>
+
+	<!--  Stock Rooms  -->
+	<privilege>
+		<name>View Inventory Stock Rooms</name>
+		<description>Able to view inventory stock rooms</description>
+	</privilege>
+
+	<privilege>
+		<name>Manage Inventory Stock Rooms</name>
+		<description>Able to add/edit/retire inventory stock rooms</description>
+	</privilege>
+
+	<privilege>
+		<name>Purge Inventory Stock Rooms</name>
+		<description>Able to purge inventory stock rooms</description>
+	</privilege>
+
+	<!--  Stock Room Transactions  -->
+	<privilege>
+		<name>View Inventory Transactions</name>
+		<description>Able to view inventory transactions</description>
+	</privilege>
+
+	<privilege>
+		<name>Manage Inventory Transactions</name>
+		<description>Able to add/edit/retire inventory transactions</description>
+	</privilege>
+
+	<privilege>
+		<name>Purge Inventory Transactions</name>
+		<description>Able to purge inventory transactions</description>
 	</privilege>
 
 	<!--  Metadata  -->
@@ -80,7 +112,7 @@
 
 	<privilege>
 		<name>Manage Inventory Metadata</name>
-		<description>Able to add/edit/delete inventory module metadata</description>
+		<description>Able to add/edit/retire inventory module metadata</description>
 	</privilege>
 
 	<privilege>

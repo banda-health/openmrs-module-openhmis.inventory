@@ -15,13 +15,12 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
+import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 
-@Resource("department")
+@Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass=Department.class, supportedOpenmrsVersions={"1.9"})
 @Handler(supports = { Department.class }, order = 0)
 public class DepartmentResource extends BaseRestMetadataResource<Department> {
 

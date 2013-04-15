@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 
-@Controller
+@Controller(value="invStockRoomsController")
+//@Controller
 @RequestMapping(ModuleWebConstants.STOCK_ROOMS_ROOT)
 public class StockRoomsController {
 	@RequestMapping(method = RequestMethod.GET)

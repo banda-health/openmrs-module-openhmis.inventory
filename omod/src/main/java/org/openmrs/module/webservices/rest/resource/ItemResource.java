@@ -13,91 +13,27 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.annotation.Handler;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
-import org.openmrs.module.webservices.rest.SimpleObject;
-import org.openmrs.module.webservices.rest.web.RequestContext;
+import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
-import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@Resource("item")
-@Handler(supports = { Item.class }, order = 0)
+@Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9"})
 public class ItemResource extends BaseRestMetadataResource<Item> {
 
-	@Override
-	public SimpleObject search(String query, RequestContext context) throws ResponseException {
-		IItemDataService service = (IItemDataService) Context.getService(getServiceClass());
-		// Try searching by code
-		SimpleObject resultByCode = searchByCode(query, context, service);
-		if (resultByCode != null) return resultByCode;
-
-		// Do a name search
-		PagingInfo pagingInfo = MetadataSearcher.getPagingInfoFromContext(context);
-		List<Item> items = service.findByName(query, context.getIncludeAll(), pagingInfo);
-		AlreadyPagedWithLength<Item> results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-		return results.toSimpleObject();
-	}
- 
-	public SimpleObject search(String query, String department_uuid, RequestContext context) throws ResponseException {
-		IItemDataService service = (IItemDataService) Context.getService(getServiceClass());
-		IDepartmentDataService deptService = (IDepartmentDataService) Context.getService(IDepartmentDataService.class);
-		Department department = deptService.getByUuid(department_uuid);
-		
-		// Try searching by code
-		SimpleObject resultByCode = searchByCode(query, context, service);
-		if (resultByCode != null) return resultByCode;
-		
-		// Do a name + department search
-		PagingInfo pagingInfo = MetadataSearcher.getPagingInfoFromContext(context);
-		List<Item> items = service.findItems(department, query, context.getIncludeAll(), pagingInfo);
-		PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-		return results.toSimpleObject();
-	}
-	
-	protected SimpleObject searchByCode(String query, RequestContext context, IItemDataService service) throws ResponseException {
-		if (service == null) service = (IItemDataService) Context.getService(getServiceClass());
-		Item itemByCode = service.getItemByCode(query);
-		if (itemByCode != null) {
-			List<Item> list = new ArrayList<Item>(1);
-			list.add(itemByCode);
-			return new AlreadyPaged<Item>(context, list, false).toSimpleObject();
-		}
-		return null;
-	}
-	
-	public SimpleObject searchByDepartment(String department_uuid, RequestContext context) throws ResponseException {
-		IItemDataService service = (IItemDataService) Context.getService(getServiceClass());
-		IDepartmentDataService deptService = (IDepartmentDataService) Context.getService(IDepartmentDataService.class);
-		Department department = deptService.getByUuid(department_uuid);
-		
-		PagingInfo pagingInfo = MetadataSearcher.getPagingInfoFromContext(context);
-		List<Item> items = service.getItemsByDepartment(department, context.getIncludeAll(), pagingInfo);
-		PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-		return results.toSimpleObject();
-	}
-	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(
 			Representation rep) {
@@ -105,6 +41,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 		if (rep instanceof RefRepresentation) {
 			description.addProperty("codes", Representation.REF);
 			description.addProperty("department", Representation.REF);
+			description.addProperty("category", Representation.REF);
 			description.addProperty("defaultPrice", Representation.REF);
 		}
 		else if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
@@ -112,11 +49,12 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 			description.addProperty("codes", Representation.REF);
 			description.addProperty("prices", Representation.REF);
 			description.addProperty("department", Representation.REF);
+			description.addProperty("category", Representation.REF);
 			description.addProperty("defaultPrice", Representation.REF);
 		}
 		return description;
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		DelegatingResourceDescription description = super.getCreatableProperties();
@@ -124,9 +62,10 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 		description.addProperty("codes");
 		description.addProperty("prices");
 		description.addProperty("department");
+		description.addProperty("category");
 		description.addProperty("defaultPrice");
 		return description;
-	}	
+	}
 
 	@PropertySetter(value="codes")
 	public void setItemCodes(Item instance, Set<ItemCode> codes) {
@@ -147,13 +86,13 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 			price.setItem(instance);
 		}
 	}
-	
+
 	/**
 	 * Set the default price.
-	 * 
+	 *
 	 * Typically will use a uuid, but in the case of creating a new price (not
-	 * yet having a uuid), we compare price strings.  Dubious? 
-	 * 
+	 * yet having a uuid), we compare price strings.  Dubious?
+	 *
 	 * @param instance
 	 * @param uuidOrPrice
 	 */
@@ -175,7 +114,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 		ItemPrice defaultPrice = new ItemPrice(new BigDecimal(uuidOrPrice), "");
 		instance.setDefaultPrice(defaultPrice);
 	}
-	
+
 	@Override
 	public Item save(Item delegate) {
 		// Check that default price has been properly set now that the item's
@@ -199,7 +138,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 	public Item newDelegate() {
 		return new Item();
 	}
-	
+
 	@Override
 	public Class<? extends IMetadataDataService<Item>> getServiceClass() {
 		return IItemDataService.class;

@@ -13,13 +13,17 @@
  */
 package org.openmrs.module.webservices.rest.web.controller;
 
-import org.openmrs.module.webservices.rest.resource.CategoryResource;
-import org.openmrs.module.webservices.rest.resource.StockRoomResource;
-import org.openmrs.module.webservices.rest.web.v1_0.controller.BaseCrudController;
+import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "/rest/category")
-public class CategoryController extends BaseCrudController<CategoryResource> { }
+@RequestMapping("/rest/" + ModuleRestConstants.MODULE_REST_ROOT)
+public class InventoryResourceController extends MainResourceController {
+	@Override
+	public String getNamespace() {
+		return ModuleRestConstants.MODULE_REST_ROOT;
+	}
+}
 
