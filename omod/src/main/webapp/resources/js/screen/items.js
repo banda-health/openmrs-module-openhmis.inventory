@@ -6,6 +6,7 @@ curl(
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.moduleBase + 'js/model/item',
 		openhmis.url.moduleBase + 'js/model/department',
+        openhmis.url.moduleBase + 'js/model/category',
 		openhmis.url.backboneBase + 'js/view/generic',
 		openhmis.url.backboneBase + 'js/view/list',
 		openhmis.url.backboneBase + 'js/view/editors',

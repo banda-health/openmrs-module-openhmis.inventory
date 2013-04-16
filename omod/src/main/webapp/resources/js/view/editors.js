@@ -5,6 +5,7 @@ define(
 		openhmis.url.backboneBase + 'js/lib/underscore',
 		openhmis.url.moduleBase + 'js/model/item',
 		openhmis.url.moduleBase + 'js/model/department',
+        openhmis.url.moduleBase + 'js/model/category',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.backboneBase + 'js/lib/labelOver',
 		openhmis.url.backboneBase + 'js/view/editors'
@@ -16,6 +17,11 @@ define(
 			modelType: openhmis.Department,
 			displayAttr: "name"
 		});
+
+        editors.CategorySelect = editors.GenericModelSelect.extend({
+            modelType: openhmis.Category,
+            displayAttr: "name"
+        });
 		
 		editors.ItemPriceSelect = editors.GenericModelSelect.extend({
 			modelType: openhmis.ItemPrice,

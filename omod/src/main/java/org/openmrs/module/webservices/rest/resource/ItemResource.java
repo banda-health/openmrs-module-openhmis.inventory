@@ -33,10 +33,8 @@ import java.util.Set;
 
 @Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9"})
 public class ItemResource extends BaseRestMetadataResource<Item> {
-
 	@Override
-	public DelegatingResourceDescription getRepresentationDescription(
-			Representation rep) {
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		if (rep instanceof RefRepresentation) {
 			description.addProperty("codes", Representation.REF);

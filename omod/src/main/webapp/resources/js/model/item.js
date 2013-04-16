@@ -3,7 +3,8 @@ define(
 		openhmis.url.backboneBase + 'js/lib/underscore',
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
-		openhmis.url.moduleBase + 'js/model/department'
+		openhmis.url.moduleBase + 'js/model/department',
+        openhmis.url.moduleBase + 'js/model/category'
 	],
 	function(_, openhmis, __) {
 		openhmis.ItemCode = openhmis.GenericModel.extend({
@@ -58,7 +59,7 @@ define(
 				name: "Item",
 				namePlural: "Items",
 				openmrsType: 'metadata',
-				restUrl: 'item'
+				restUrl: openhmis.url.moduleModelBase + 'item'
 			},
 			schema: {
 				name: { type: 'Text' },
@@ -66,7 +67,7 @@ define(
 					type: 'DepartmentSelect',
 					options: new openhmis.GenericCollection(null, {
 						model: openhmis.Department,
-						url: '/department'
+						url: openhmis.url.moduleModelBase + '/department'
 					}),
 					objRef: true
 				},
@@ -74,7 +75,7 @@ define(
                     type: 'CategorySelect',
                     options: new openhmis.GenericCollection(null, {
                         model: openhmis.Category,
-                        url: '/category'
+                        url: openhmis.url.moduleModelBase + '/category'
                     }),
                     objRef: true
                 },
