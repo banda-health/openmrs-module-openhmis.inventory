@@ -15,11 +15,12 @@ package org.openmrs.module.openhmis.inventory.api;
 
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
-import org.openmrs.module.openhmis.inventory.api.model.Department;
-import org.openmrs.module.openhmis.inventory.api.model.Item;
-import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Department;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -90,5 +91,28 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
 	List<Item> findItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	List<Item> findItems(ItemSearch itemSearch);
+
+	/**
+	 * Finds all items using the specified {@link ItemSearch} settings.
+	 * @param itemSearch The item search settings.
+	 * @return The items found or an empty list if no items were found.
+	 * @should throw NullPointerException if item search is null
+	 * @should throw NullPointerException if item search template object is null
+	 * @should return an empty list if no items are found via the search
+	 * @should return items filtered by department
+	 * @should return items filtered by category
+	 * @should return items filtered by concept
+	 * @should return items filtered by drug
+	 * @should return all items if paging is null
+	 * @should return paged items if paging is specified
+	 * @should not return retired items from search unless specified
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	List<Item> findItems(ItemSearch itemSearch, PagingInfo pagingInfo);
 }
 

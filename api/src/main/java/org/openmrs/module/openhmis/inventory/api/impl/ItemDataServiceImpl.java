@@ -27,6 +27,7 @@ import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,6 +125,29 @@ public class ItemDataServiceImpl
 				if (!includeRetired) {
 					criteria.add(Restrictions.eq("retired", false));
 				}
+			}
+		});
+	}
+
+	@Override
+	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	public List<Item> findItems(ItemSearch itemSearch) {
+		return findItems(itemSearch, null);
+	}
+
+	@Override
+	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	public List<Item> findItems(final ItemSearch itemSearch, PagingInfo pagingInfo) {
+		if (itemSearch == null) {
+			throw new NullPointerException("The item search must be defined.");
+		} else if (itemSearch.getTemplate() == null) {
+			throw new NullPointerException("The item search template must be defined.");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				itemSearch.updateCriteria(criteria);
 			}
 		});
 	}

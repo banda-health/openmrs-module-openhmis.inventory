@@ -17,10 +17,14 @@ package org.openmrs.module.openhmis.inventory.api;
 import liquibase.util.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.openmrs.Concept;
+import org.openmrs.Drug;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -29,6 +33,7 @@ import java.util.Set;
 
 public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataService, Item> {
 	IDepartmentDataService departmentService;
+	ICategoryDataService categoryService;
 
 	public static final String ITEM_DATASET = TestConstants.BASE_DATASET_DIR + "ItemTest.xml";
 
@@ -37,8 +42,10 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		super.before();
 
 		departmentService = Context.getService(IDepartmentDataService.class);
+		categoryService = Context.getService(ICategoryDataService.class);
 
 		executeDataSet(IDepartmentDataServiceTest.DEPARTMENT_DATASET);
+		executeDataSet(ICategoryDataServiceTest.CATEGORY_DATASET);
 		executeDataSet(ITEM_DATASET);
 	}
 
@@ -58,6 +65,10 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		}
 
 		item.setDescription("Test Description");
+
+		item.setCategory(categoryService.getById(0));
+		item.setConcept(Context.getConceptService().getConcept(0));
+		item.setDrug(Context.getConceptService().getDrug(0));
 
 		item.addCode("one", "Test Code 010");
 		item.addCode("two", "Test Code 011");
@@ -124,6 +135,24 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Assert.assertNotNull(actual.getDepartment());
 		Assert.assertEquals(expected.getDepartment().getId(), actual.getDepartment().getId());
 
+		if (expected.getConcept() == null) {
+			Assert.assertNull(actual.getConcept());
+		} else {
+			Assert.assertEquals(expected.getConcept().getId(), actual.getConcept().getId());
+		}
+
+		if (expected.getDrug() == null) {
+			Assert.assertNull(actual.getDrug());
+		} else {
+			Assert.assertEquals(expected.getDrug().getId(), actual.getDrug().getId());
+		}
+
+		if (expected.getCategory() == null) {
+			Assert.assertNull(actual.getCategory());
+		} else {
+			Assert.assertEquals(expected.getCategory().getId(), actual.getCategory().getId());
+		}
+
 		assertCollection(expected.getCodes(), actual.getCodes(), new Action2<ItemCode, ItemCode>() {
 			@Override
 			public void apply(ItemCode expectedCode, ItemCode actualCode) {
@@ -189,7 +218,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsNull() throws Exception {
@@ -198,7 +227,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is null
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsNull() throws Exception {
@@ -207,7 +236,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is empty
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsEmpty() throws Exception {
@@ -216,7 +245,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is longer than 255 characters
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsLongerThan255Characters() throws Exception {
@@ -225,7 +254,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return an empty list if no items are found
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnAnEmptyListIfNoItemsAreFound() throws Exception {
@@ -237,7 +266,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies not return retired items unless specified
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldNotReturnRetiredItemsUnlessSpecified() throws Exception {
@@ -258,7 +287,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items that start with the specified name
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsThatStartWithTheSpecifiedName() throws Exception {
@@ -272,7 +301,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items for only the specified department
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.cashier.api.model.Department, String, boolean)
+	 * @see IItemDataService#findItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsForOnlyTheSpecifiedDepartment() throws Exception {
@@ -287,7 +316,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(Department, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void getItemsByDepartment_shouldThrowNullPointerExceptionIfTheDepartmentIsNull() throws Exception {
@@ -296,7 +325,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return an empty list if the department has no items
-	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(Department, boolean)
 	 */
 	@Test
 	public void getItemsByDepartment_shouldReturnAnEmptyListIfTheDepartmentHasNoItems() throws Exception {
@@ -310,7 +339,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies not return retired items unless specified
-	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(Department, boolean)
 	 */
 	@Test
 	public void getItemsByDepartment_shouldNotReturnRetiredItemsUnlessSpecified() throws Exception {
@@ -339,7 +368,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return all items for the specified department
-	 * @see IItemDataService#getItemsByDepartment(org.openmrs.module.openhmis.cashier.api.model.Department, boolean)
+	 * @see IItemDataService#getItemsByDepartment(Department, boolean)
 	 */
 	@Test
 	public void getItemsByDepartment_shouldReturnAllItemsForTheSpecifiedDepartment() throws Exception {
@@ -438,5 +467,187 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		for (ItemPrice child : item.getPrices()) {
 			Assert.assertEquals(false, child.getRetired());
 		}
+	}
+
+	/**
+	 * @verifies throw NullPointerException if item search is null
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findItems_shouldThrowNullPointerExceptionIfItemSearchIsNull() throws Exception {
+		service.findItems(null, null);
+	}
+
+	/**
+	 * @verifies throw NullPointerException if item search template object is null
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findItems_shouldThrowNullPointerExceptionIfItemSearchTemplateObjectIsNull() throws Exception {
+		ItemSearch search = new ItemSearch(null);
+
+		service.findItems(search, null);
+	}
+
+	/**
+	 * @verifies return an empty list if no items are found via the search
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnAnEmptyListIfNoItemsAreFoundViaTheSearch() throws Exception {
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setConcept(Context.getConceptService().getConcept(0));
+
+		List<Item> result = service.findItems(search, null);
+
+		Assert.assertNotNull(result);
+		Assert.assertEquals(0, result.size());
+	}
+
+	/**
+	 * @verifies return items filtered by department
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByDepartment() throws Exception {
+		Department department2 = departmentService.getById(2);
+		Item item = service.getById(2);
+		item.setDepartment(department2);
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(department2);
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by category
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByCategory() throws Exception {
+		Category category = categoryService.getById(0);
+		Item item = service.getById(0);
+		item.setCategory(category);
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setCategory(category);
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by concept
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByConcept() throws Exception {
+		Concept concept = Context.getConceptService().getConcept(0);
+
+		Item item = service.getById(0);
+		item.setConcept(concept);
+
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setConcept(concept);
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by drug
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByDrug() throws Exception {
+		Drug drug = Context.getConceptService().getDrug(0);
+
+		Item item = service.getById(0);
+		item.setDrug(drug);
+
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDrug(drug);
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return all items if paging is null
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnAllItemsIfPagingIsNull() throws Exception {
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+	}
+
+	/**
+	 * @verifies return paged items if paging is specified
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+		PagingInfo pagingInfo = new PagingInfo(1, 1);
+
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		List<Item> results = service.findItems(search, pagingInfo);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(3, (long)pagingInfo.getTotalRecordCount());
+	}
+
+	/**
+	 * @verifies not return retired items from search unless specified
+	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
+		Item item = service.getById(0);
+		item.setRetired(true);
+		item.setRetireReason("something");
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		List<Item> results = service.findItems(search, null);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
+
+		search.setIncludeRetired(true);
+		results = service.findItems(search, null);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
 	}
 }

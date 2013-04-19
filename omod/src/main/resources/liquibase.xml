@@ -600,4 +600,17 @@
 			<column name="uuid">c4f258a9-8ed2-4faf-b4ab-e3894c5d1c60</column>
 		</insert>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.0-2" author="ibewes">
+		<addColumn tableName="inv_item">
+			<column name="concept_id" type="int" />
+			<column name="drug_id" type="int" />
+		</addColumn>
+
+		<addForeignKeyConstraint constraintName="inv_item_concept_id_fk"
+		                         baseTableName="inv_item" baseColumnNames="concept_id"
+		                         referencedTableName="concept" referencedColumnNames="concept_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_drug_id_fk"
+		                         baseTableName="inv_item" baseColumnNames="drug"
+		                         referencedTableName="drug" referencedColumnNames="drug_id"/>
+	</changeSet>
 </databaseChangeLog>

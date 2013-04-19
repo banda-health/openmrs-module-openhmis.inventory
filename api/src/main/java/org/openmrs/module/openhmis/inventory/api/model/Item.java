@@ -15,6 +15,8 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.BaseCustomizableMetadata;
+import org.openmrs.Concept;
+import org.openmrs.Drug;
 import org.openmrs.customdatatype.Customizable;
 
 import java.math.BigDecimal;
@@ -32,6 +34,8 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Set<ItemPrice> prices;
 	private Department department;
 	private Category category;
+	private Concept concept;
+	private Drug drug;
 	private ItemPrice defaultPrice;
 	private boolean hasExpiration;
 
@@ -159,6 +163,22 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public Concept getConcept() {
+		return concept;
+	}
+
+	public void setConcept(Concept concept) {
+		this.concept = concept;
+	}
+
+	public Drug getDrug() {
+		return drug;
+	}
+
+	public void setDrug(Drug drug) {
+		this.drug = drug;
 	}
 
 	public boolean isHasExpiration() {
