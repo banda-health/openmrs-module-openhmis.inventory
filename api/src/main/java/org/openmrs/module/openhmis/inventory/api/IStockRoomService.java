@@ -5,7 +5,6 @@ import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
 
-import java.util.Date;
 import java.util.List;
 
 public interface IStockRoomService {
@@ -15,15 +14,30 @@ public interface IStockRoomService {
 
 	List<StockRoomTransaction> getTransactions(StockRoom stockRoom);
 
-	List<StockRoomTransaction> getTransactions(Date from, Date to);
+	/**
+	 * Creates a new {@link StockRoomTransaction} and validates the settings.
+	 * @param type The transaction type.
+	 * @param source The optional source {@link StockRoom}.
+	 * @param destination The optional destination {@link StockRoom}.
+	 * @return A newly created {@link StockRoomTransaction}.
+	 */
+	StockRoomTransaction createTransaction(StockRoomTransactionType type, StockRoom source, StockRoom destination) throws APIException;
 
 	/**
-	 * Validates and submits the specified {@link StockRoomTransaction}. The transaction may be completed if all the required
-	 * attributes are defined, otherwise the status will be PENDING.
+	 * Validates and submits the specified {@link StockRoomTransaction}. This will subtract the item quantities from the
+	 * source stock room, if one is defined.  The transaction may be completed if all the required
+	 * attributes are defined, otherwise the status will be PENDING.  If the transaction is completed the item quantities
+	 * will added to the destination stock room, if one is defined.
 	 * @param transaction The {@link StockRoomTransaction} to submit.
 	 * @throws APIException
 	 */
 	void submitTransaction(StockRoomTransaction transaction) throws APIException;
 
+	/**
+	 * Validates and completes the specified {@link StockRoomTransaction}.  This will add the transaction item quantities
+	 * to the destination stock room, if one is defined.
+	 * @param transaction The {@link StockRoomTransaction} to complete.
+	 * @throws APIException
+	 */
 	void completeTransaction(StockRoomTransaction transaction) throws APIException;
 }
