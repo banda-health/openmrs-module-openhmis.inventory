@@ -70,9 +70,9 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 
 	/**
 	 * Finds all items in the specified {@link Department} that start with the specified name.
-	 * @param department The department to search within
-	 * @param name The item name fragment
-	 * @param includeRetired Whether retired items should be included in the results
+	 * @param department The department to search within.
+	 * @param name The item name fragment.
+	 * @param includeRetired Whether retired items should be included in the results.
 	 * @return All items in the specified {@link Department} that start with the specified name.
 	 * @throws APIException
 	 * @should throw NullPointerException if the department is null
@@ -88,10 +88,24 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
 	List<Item> findItems(Department department, String name, boolean includeRetired) throws APIException;
 
+	/**
+	 * Finds all items in the specified {@link Department} that start with the specified name.
+	 * @param department The department to search within.
+	 * @param name The item name fragment.
+	 * @param includeRetired Whether retired items should be included in the results.
+	 * @param pagingInfo The paging information.
+	 * @return All items in the specified {@link Department} that start with the specified name.
+	 * @throws APIException
+	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
 	List<Item> findItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 
+	/**
+	 * Finds all items using the specified {@link ItemSearch} settings.
+	 * @param itemSearch The item search settings.
+	 * @return The items found or an empty list if no items were found.
+	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
 	List<Item> findItems(ItemSearch itemSearch);
@@ -99,6 +113,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	/**
 	 * Finds all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
+	 * @param pagingInfo The paging information.
 	 * @return The items found or an empty list if no items were found.
 	 * @should throw NullPointerException if item search is null
 	 * @should throw NullPointerException if item search template object is null

@@ -10,7 +10,7 @@ define(
 				name: __("Stock Room"),
 				namePlural: __("Stock Rooms"),
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.moduleModelBase + 'stockRoom'
+				restUrl: openhmis.url.inventoryModelBase + 'stockRoom'
 			},
 			
 			schema: {

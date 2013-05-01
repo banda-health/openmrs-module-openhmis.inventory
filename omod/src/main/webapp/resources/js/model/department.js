@@ -10,7 +10,7 @@ define(
 				name: __("Department"),
 				namePlural: __("Departments"),
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.moduleModelBase + 'department'
+				restUrl: openhmis.url.inventoryModelBase + 'department'
 			},
 			
 			schema: {

@@ -10,7 +10,7 @@ define(
 				name: __("Category"),
 				namePlural: __("Categories"),
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.moduleModelBase + 'category'
+				restUrl: openhmis.url.inventoryModelBase + 'category'
 			},
 			
 			schema: {

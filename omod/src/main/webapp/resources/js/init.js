@@ -1,5 +1,5 @@
 (function() {
-	openhmis.url.moduleBase = "inventory/";
-    openhmis.url.moduleModelBase = "v2/" + openhmis.url.moduleBase;
-	openhmis.url.module = openhmis.url.resources + openhmis.url.moduleBase;
+	openhmis.url.inventoryBase = "inventory/";
+    openhmis.url.inventoryModelBase = "v2/" + openhmis.url.inventoryBase;
+	openhmis.url.inventory = openhmis.url.resources + openhmis.url.inventoryBase;
 })();

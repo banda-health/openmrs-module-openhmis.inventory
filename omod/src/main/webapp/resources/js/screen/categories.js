@@ -4,7 +4,7 @@ curl(
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/openhmis',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
-		openhmis.url.moduleBase + 'js/model/category',
+		openhmis.url.inventoryBase + 'js/model/category',
 		openhmis.url.backboneBase + 'js/view/generic'
 	],
 	function($, openhmis) {

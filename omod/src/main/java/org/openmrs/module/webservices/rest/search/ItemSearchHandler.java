@@ -109,3 +109,4 @@ public class ItemSearchHandler implements SearchHandler {
 		return searchConfig;
 	}
 }
+

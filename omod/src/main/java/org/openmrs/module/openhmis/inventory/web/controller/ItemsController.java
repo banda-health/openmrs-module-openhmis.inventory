@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 
-// The non-standard controller name is to avoid name conflicts with old versions of the cashier module
+// The non-standard controller name is to avoid name conflicts with old versions of the cashier inventory
 @Controller(value="invItemsController")
 //@Controller
 @RequestMapping(ModuleWebConstants.ITEMS_ROOT)

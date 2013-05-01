@@ -4,16 +4,16 @@ curl(
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/openhmis',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
-		openhmis.url.moduleBase + 'js/model/item',
-		openhmis.url.moduleBase + 'js/model/department',
-        openhmis.url.moduleBase + 'js/model/category',
+		openhmis.url.inventoryBase + 'js/model/item',
+		openhmis.url.inventoryBase + 'js/model/department',
+        openhmis.url.inventoryBase + 'js/model/category',
 		openhmis.url.backboneBase + 'js/view/generic',
 		openhmis.url.backboneBase + 'js/view/list',
 		openhmis.url.backboneBase + 'js/view/editors',
-		openhmis.url.moduleBase + 'js/view/editors',
+		openhmis.url.inventoryBase + 'js/view/editors',
 		openhmis.url.backboneBase + 'js/view/search',
-		openhmis.url.moduleBase + 'js/view/search',
-		openhmis.url.moduleBase + 'js/view/item'
+		openhmis.url.inventoryBase + 'js/view/search',
+		openhmis.url.inventoryBase + 'js/view/item'
 	],
 	function($, openhmis) {
 		$(function() {

@@ -11,3 +11,9 @@
 <h2>
 	<spring:message code="openhmis.inventory.admin.stockRooms" />
 </h2>
+
+<div id="stockRoomContent" style="width: 100%;">
+	<div id="stockRoomList" style="width: 58%; float: left"></div>
+	<div id="stockRoomInfo" style="width: 40%; float: right"></div>
+</div>
+

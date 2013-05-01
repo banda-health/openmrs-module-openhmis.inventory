@@ -610,7 +610,7 @@
 		                         baseTableName="inv_item" baseColumnNames="concept_id"
 		                         referencedTableName="concept" referencedColumnNames="concept_id"/>
 		<addForeignKeyConstraint constraintName="inv_item_drug_id_fk"
-		                         baseTableName="inv_item" baseColumnNames="drug"
+		                         baseTableName="inv_item" baseColumnNames="drug_id"
 		                         referencedTableName="drug" referencedColumnNames="drug_id"/>
 	</changeSet>
 </databaseChangeLog>
