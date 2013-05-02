@@ -82,9 +82,6 @@ public class StockRoomServiceImpl
 		if (transaction == null) {
 			throw new NullPointerException("The transaction to submit must be defined.");
 		}
-		if (transaction.getId() != null) {
-			throw new APIException("A transaction cannot be submitted more than once.");
-		}
 
 		validate(transaction, true);
 

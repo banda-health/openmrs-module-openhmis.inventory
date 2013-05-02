@@ -52,6 +52,6 @@
 	<inv_stock_room_item stock_room_item_id="2" stock_room_id="1" import_transaction_id="0" item_id="2" quantity="12"
 	                     expiration="2025-01-01" uuid="FF8081813DA1353F013DA1359D580003" />
 
-	<inv_stock_room_item stock_room_item_id="2" stock_room_id="2" import_transaction_id="0" item_id="2" quantity="6"
+	<inv_stock_room_item stock_room_item_id="3" stock_room_id="2" import_transaction_id="0" item_id="2" quantity="6"
 	                     expiration="2025-01-01" uuid="FF8081813DA1353F013DA135A7A80004" />
 </dataset>

@@ -65,7 +65,7 @@
 			</generator>
 		</id>
 
-		<property name="transactionNumber" type="java.lang.String" not-null="true" column="transaction_number" length="50" />
+		<property name="transactionNumber" type="java.lang.String" not-null="false" column="transaction_number" length="50" />
 		<property name="status" not-null="true" column="status">
 			<type name="org.hibernate.type.EnumType">
 				<param name="enumClass">org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus</param>
