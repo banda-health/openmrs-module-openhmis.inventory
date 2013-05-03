@@ -30,6 +30,13 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @param itemSearch The {@link ItemSearch} settings.
 	 * @param paging The paging information.
 	 * @return The stock room items found or and empty list if none were found.
+	 * @should return items filtered by template and stock room
+	 * @should not return items for other stock rooms
+	 * @should return all found items if paging is null
+	 * @should return paged items if paging is specified
+	 * @should return retired items from search unless specified
+	 * @should throw NullReferenceException if stock room is null
+	 * @should throw NullReferenceException if item search is null
 	 */
 	List<StockRoomItem> findItems(StockRoom stockRoom, ItemSearch itemSearch, PagingInfo paging);
 
@@ -39,6 +46,13 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @param item The {@link Item} to find.
 	 * @param expiration The optional item expiration to search for.
 	 * @return The {@link StockRoomItem} or {@code null} if not found.
+	 * @should return the stock room item
+	 * @should not return items from other stock rooms
+	 * @should return null when item is not found
+	 * @should return item with expiration when specified
+	 * @should return the item without an expiration what not specified
+	 * @should throw NullReferenceException when stock room is null
+	 * @should throw NullReferenceException when item is null
 	 */
 	StockRoomItem getItem(StockRoom stockRoom, Item item, Date expiration);
 }
