@@ -29,6 +29,7 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -43,12 +44,13 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Find all items by stock room.")
-							.withRequiredParams on teters("stock_room_uuid").build()
+							.withRequiredParameters("stock_room_uuid").build()
 			)
 	);
 
 	private IStockRoomDataService stockRoomDataService;
 
+	@Autowired
 	public StockRoomItemSearchHandler(IStockRoomDataService stockRoomDataService) {
 		this.stockRoomDataService = stockRoomDataService;
 	}
