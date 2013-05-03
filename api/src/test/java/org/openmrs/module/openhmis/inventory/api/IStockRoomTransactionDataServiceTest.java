@@ -38,10 +38,10 @@ public class IStockRoomTransactionDataServiceTest
 		StockRoomTransaction transaction = new StockRoomTransaction();
 
 		if (valid) {
-			transaction.setTransactionNumber(UUID.randomUUID().toString());
+			transaction.setTransactionType(WellKnownTransactionTypes.getIntake());
 		}
 
-		transaction.setTransactionType(WellKnownTransactionTypes.getIntake());
+		transaction.setTransactionNumber(UUID.randomUUID().toString());
 		transaction.setDestination(stockRoomService.getById(0));
 		transaction.setStatus(StockRoomTransactionStatus.PENDING);
 		transaction.setCreator(Context.getAuthenticatedUser());

@@ -182,6 +182,10 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 
 	public void addItem(StockRoomTransactionItem item) {
 		if (item != null) {
+			if (item.getQuantityOrdered() <= 0) {
+				throw new APIException("The item quantity must be larger than zero.");
+			}
+
 			if (items == null) {
 				items = new TreeSet<StockRoomTransactionItem>();
 			}
