@@ -48,7 +48,14 @@ public class StockRoomDataServiceImpl
 			throw new NullPointerException("The stock room must be defined.");
 		}
 		if (itemSearch == null) {
-			throw new NullPointerException("The item must be defined.");
+			throw new NullPointerException("The item search must be defined.");
+		}
+
+		// To allow a method to exclude retired items from the result callers can set IncludeRetired to null
+		//  and specify the retired status on the template object itself
+		if (itemSearch.getIncludeRetired() != null) {
+			// We want all the stock room items regardless of if they are retired
+			itemSearch.setIncludeRetired(true);
 		}
 
 		return executeCriteria(StockRoomItem.class, paging, new Action1<Criteria>() {
