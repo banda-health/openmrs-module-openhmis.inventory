@@ -52,6 +52,22 @@ public class StockRoom extends BaseOpenmrsMetadata {
 		this.items = items;
 	}
 
+	public StockRoomItem addItem(StockRoomTransactionItem transactionItem) {
+		if (transactionItem == null) {
+			throw new NullPointerException("The item to add must be defined.");
+		}
+
+		StockRoomItem item = new StockRoomItem();
+		item.setItem(transactionItem.getItem());
+		item.setExpiration(transactionItem.getExpiration());
+		item.setQuantity(transactionItem.getQuantityOrdered());
+		item.setImportTransaction(transactionItem.getImportTransaction());
+
+		addItem(item);
+
+		return item;
+	}
+
 	public void addItem(StockRoomItem item) {
 		if (item != null) {
 			if (items == null) {

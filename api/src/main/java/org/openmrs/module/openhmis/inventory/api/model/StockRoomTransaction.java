@@ -14,6 +14,7 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.User;
+import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceObject;
 
 import java.util.Date;
@@ -123,8 +124,64 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 		this.items = items;
 	}
 
+	public StockRoomTransactionItem addItem(StockRoomItem item, int quantity) {
+		if (item == null) {
+			throw new NullPointerException("The item to add must be defined.");
+		}
+
+		StockRoomTransactionType txType = getTransactionType();
+		if (txType == null) {
+			throw new APIException("This method can only be called after the transaction type has been set.");
+		}
+
+		if (this.getSource() == null) {
+			throw new APIException("You cannot add stock room items when no transaction source stock room has been defined.");
+		} else if (item.getStockRoom() != this.getSource()) {
+			throw new APIException("You cannot add items that are not from the source stock room.");
+		}
+
+		StockRoomTransactionItem transactionItem = new StockRoomTransactionItem();
+		transactionItem.setItem(item.getItem());
+		transactionItem.setExpiration(item.getExpiration());
+		transactionItem.setImportTransaction(item.getImportTransaction());
+		transactionItem.setQuantityOrdered(quantity);
+
+		addItem(transactionItem);
+
+		return transactionItem;
+	}
+
+	public StockRoomTransactionItem addItem(Item item, Date expiration, int quantity) {
+		if (item == null) {
+			throw new NullPointerException("The item to add must be defined.");
+		}
+
+		StockRoomTransactionType txType = getTransactionType();
+		if (txType == null) {
+			throw new APIException("This method can only be called after the transaction type has been set.");
+		}
+
+		if (this.getSource() != null) {
+			throw new APIException("You cannot add items that are not from the source stock room.");
+		}
+
+		StockRoomTransactionItem transactionItem = new StockRoomTransactionItem();
+		transactionItem.setItem(item);
+		transactionItem.setExpiration(expiration);
+		transactionItem.setImportTransaction(this);
+		transactionItem.setQuantityOrdered(quantity);
+
+		addItem(transactionItem);
+
+		return transactionItem;
+	}
+
 	public void addItem(StockRoomTransactionItem item) {
 		if (item != null) {
+			if (item.getQuantityOrdered() <= 0) {
+				throw new APIException("The item quantity must be larger than zero.");
+			}
+
 			if (items == null) {
 				items = new TreeSet<StockRoomTransactionItem>();
 			}

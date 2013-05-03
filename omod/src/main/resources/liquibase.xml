@@ -613,4 +613,9 @@
 		                         baseTableName="inv_item" baseColumnNames="drug_id"
 		                         referencedTableName="drug" referencedColumnNames="drug_id"/>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.0-3" author="ibewes">
+		<modifyColumn tableName="inv_stock_room_transaction">
+			<column name="transaction_number"  type="varchar(50)"><constraints nullable="true"/></column>
+		</modifyColumn>
+	</changeSet>
 </databaseChangeLog>

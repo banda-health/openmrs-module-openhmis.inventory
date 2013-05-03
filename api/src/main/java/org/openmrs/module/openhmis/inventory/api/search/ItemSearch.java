@@ -25,11 +25,11 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 		this(itemTemplate, StringComparisonType.EQUAL, false);
 	}
 
-	public ItemSearch(Item itemTemplate, boolean includeRetired) {
+	public ItemSearch(Item itemTemplate, Boolean includeRetired) {
 		this(itemTemplate, StringComparisonType.EQUAL, includeRetired);
 	}
 
-	public ItemSearch(Item itemTemplate, StringComparisonType nameComparisonType, boolean includeRetired) {
+	public ItemSearch(Item itemTemplate, StringComparisonType nameComparisonType, Boolean includeRetired) {
 		super(itemTemplate, nameComparisonType, includeRetired);
 	}
 

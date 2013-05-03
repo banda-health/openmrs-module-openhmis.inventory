@@ -1,19 +1,22 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import org.junit.Assert;
+import org.junit.Test;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRoomDataService, StockRoom> {
 	public static final String DATASET = TestConstants.BASE_DATASET_DIR + "StockRoomTest.xml";
 
 	protected IItemDataService itemService;
+	protected IDepartmentDataService departmentService;
+	protected ICategoryDataService categoryService;
 	protected IStockRoomTransactionDataService transactionService;
 	protected IStockRoomTransactionTypeDataService transactionTypeService;
 
@@ -22,11 +25,14 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		super.before();
 
 		itemService = Context.getService(IItemDataService.class);
+		departmentService = Context.getService(IDepartmentDataService.class);
+		categoryService = Context.getService(ICategoryDataService.class);
 		transactionService = Context.getService(IStockRoomTransactionDataService.class);
 		transactionTypeService = Context.getService(IStockRoomTransactionTypeDataService.class);
 
 		executeDataSet(TestConstants.CORE_DATASET);
 		executeDataSet(IDepartmentDataServiceTest.DEPARTMENT_DATASET);
+		executeDataSet(ICategoryDataServiceTest.CATEGORY_DATASET);
 		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
 		executeDataSet(DATASET);
 	}
@@ -169,5 +175,277 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 				Assert.assertEquals(expectedStockItem.getExpiration(), actualStockItem.getExpiration());
 			}
 		});
+	}
+
+	/**
+	 * @verifies return items filtered by template and stock room
+	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByTemplateAndStockRoom() throws Exception {
+		StockRoom stockRoom = service.getById(1);
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		List<StockRoomItem> results = service.findItems(stockRoom, search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+
+		StockRoomItem item = results.get(0);
+		item.getItem().setDepartment(departmentService.getById(1));
+		item.getItem().setCategory(categoryService.getById(1));
+
+		itemService.save(item.getItem());
+		Context.flushSession();
+
+		search.getTemplate().setDepartment(item.getItem().getDepartment());
+		search.getTemplate().setCategory(item.getItem().getCategory());
+
+		results = service.findItems(stockRoom, search, null);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(item.getId(), results.get(0).getId());
+	}
+
+	/**
+	 * @verifies not return items for other stock rooms
+	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldNotReturnItemsForOtherStockRooms() throws Exception {
+		StockRoom stockRoom = service.getById(2);
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		List<StockRoomItem> results = service.findItems(stockRoom, search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+	}
+
+	/**
+	 * @verifies return all found items if paging is null
+	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnAllFoundItemsIfPagingIsNull() throws Exception {
+		StockRoom stockRoom = service.getById(1);
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		List<StockRoomItem> results = service.findItems(stockRoom, search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+	}
+
+	/**
+	 * @verifies return paged items if paging is specified
+	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+		StockRoom stockRoom = service.getById(1);
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		PagingInfo paging = new PagingInfo(1, 1);
+		List<StockRoomItem> results = service.findItems(stockRoom, search, paging);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(3, (long)paging.getTotalRecordCount());
+	}
+
+	/**
+	 * @verifies return retired items from search unless specified
+	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
+		Item item = itemService.getById(0);
+		itemService.retire(item, "Just cuz");
+		Context.flushSession();
+
+		StockRoom stockRoom = service.getById(1);
+		ItemSearch search = new ItemSearch(new Item());
+		search.getTemplate().setDepartment(departmentService.getById(0));
+
+		List<StockRoomItem> results = service.findItems(stockRoom, search, null);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+
+		search.setIncludeRetired(null);
+		search.getTemplate().setRetired(false);
+		results = service.findItems(stockRoom, search, null);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
+	}
+
+	/**
+	 * @verifies throw NullReferenceException if stock room is null
+	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findItems_shouldThrowNullReferenceExceptionIfStockRoomIsNull() throws Exception {
+		service.findItems(null, new ItemSearch(new Item()), null);
+	}
+
+	/**
+	 * @verifies throw NullReferenceException if item search is null
+	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findItems_shouldThrowNullReferenceExceptionIfItemSearchIsNull() throws Exception {
+		StockRoom stockRoom = service.getById(1);
+		service.findItems(stockRoom, null, null);
+	}
+
+	/**
+	 * @verifies return the stock room item
+	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date)
+	 */
+	@Test
+	public void getItem_shouldReturnTheStockRoomItem() throws Exception {
+		StockRoom room = service.getById(1);
+
+		StockRoomItem result = service.getItem(room, itemService.getById(0), null);
+
+		Assert.assertNotNull(result);
+
+		StockRoomItem item = null;
+		for (StockRoomItem roomItem : room.getItems()) {
+			if (roomItem.getItem().getId().equals(result.getItem().getId())) {
+				item = roomItem;
+				break;
+			}
+		}
+
+		Assert.assertNotNull(item);
+		Assert.assertEquals(item.getId(), result.getId());
+		Assert.assertEquals(item.getExpiration(), result.getExpiration());
+		Assert.assertEquals(item.getQuantity(), result.getQuantity());
+	}
+
+	/**
+	 * @verifies not return items from other stock rooms
+	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date)
+	 */
+	@Test
+	public void getItem_shouldNotReturnItemsFromOtherStockRooms() throws Exception {
+		StockRoom room = service.getById(2);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(2025, Calendar.JANUARY, 1, 0, 0, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		StockRoomItem result = service.getItem(room, itemService.getById(2), cal.getTime());
+		Assert.assertNotNull(result);
+
+		StockRoomItem item = null;
+		for (StockRoomItem roomItem : room.getItems()) {
+			if (roomItem.getItem().getId().equals(result.getItem().getId())) {
+				item = roomItem;
+				break;
+			}
+		}
+
+		Assert.assertNotNull(item);
+		Assert.assertEquals(item.getId(), result.getId());
+		Assert.assertEquals(item.getExpiration(), result.getExpiration());
+		Assert.assertEquals(item.getQuantity(), result.getQuantity());
+	}
+
+	/**
+	 * @verifies return null when item is not found
+	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date)
+	 */
+	@Test
+	public void getItem_shouldReturnNullWhenItemIsNotFound() throws Exception {
+		StockRoom room = service.getById(2);
+
+		StockRoomItem result = service.getItem(room, itemService.getById(0), null);
+		Assert.assertNull(result);
+	}
+
+	/**
+	 * @verifies return item with expiration when specified
+	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date)
+	 */
+	@Test
+	public void getItem_shouldReturnItemWithExpirationWhenSpecified() throws Exception {
+		StockRoom room = service.getById(1);
+
+		StockRoomItem result = service.getItem(room, itemService.getById(2), null);
+		Assert.assertNull(result);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(2025, Calendar.JANUARY, 1, 0, 0, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		result = service.getItem(room, itemService.getById(2), cal.getTime());
+		Assert.assertNotNull(result);
+
+		StockRoomItem item = null;
+		for (StockRoomItem roomItem : room.getItems()) {
+			if (roomItem.getItem().getId().equals(result.getItem().getId())) {
+				item = roomItem;
+				break;
+			}
+		}
+
+		Assert.assertNotNull(item);
+		Assert.assertEquals(item.getId(), result.getId());
+		Assert.assertEquals(item.getExpiration(), result.getExpiration());
+		Assert.assertEquals(item.getQuantity(), result.getQuantity());
+	}
+
+	/**
+	 * @verifies return the item without an expiration what not specified
+	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date)
+	 */
+	@Test
+	public void getItem_shouldReturnTheItemWithoutAnExpirationWhatNotSpecified() throws Exception {
+		StockRoom room = service.getById(1);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(2025, Calendar.JANUARY, 1, 0, 0, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		StockRoomItem result = service.getItem(room, itemService.getById(1), cal.getTime());
+		Assert.assertNull(result);
+
+		result = service.getItem(room, itemService.getById(1), null);
+		Assert.assertNotNull(result);
+
+		StockRoomItem item = null;
+		for (StockRoomItem roomItem : room.getItems()) {
+			if (roomItem.getItem().getId().equals(result.getItem().getId())) {
+				item = roomItem;
+				break;
+			}
+		}
+
+		Assert.assertNotNull(item);
+		Assert.assertEquals(item.getId(), result.getId());
+		Assert.assertEquals(item.getExpiration(), result.getExpiration());
+		Assert.assertEquals(item.getQuantity(), result.getQuantity());
+	}
+
+	/**
+	 * @verifies throw NullReferenceException when stock room is null
+	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void getItem_shouldThrowNullReferenceExceptionWhenStockRoomIsNull() throws Exception {
+		service.getItem(null, itemService.getById(0), null);
+	}
+
+	/**
+	 * @verifies throw NullReferenceException when item is null
+	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void getItem_shouldThrowNullReferenceExceptionWhenItemIsNull() throws Exception {
+		StockRoom room = service.getById(0);
+		service.getItem(room, null, null);
 	}
 }
