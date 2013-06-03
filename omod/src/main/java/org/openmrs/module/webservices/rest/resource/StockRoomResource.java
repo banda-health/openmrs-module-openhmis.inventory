@@ -17,12 +17,53 @@ import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 @Resource(name = ModuleRestConstants.STOCK_ROOM_RESOURCE, supportedClass=StockRoom.class, supportedOpenmrsVersions={"1.9"})
 @Handler(supports = { StockRoom.class }, order = 0)
 public class StockRoomResource extends BaseRestMetadataResource<StockRoom> {
+	@Override
+	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
+		DelegatingResourceDescription desc = super.getDefaultRepresentationDescription();
+
+		return desc;
+	}
+
+	@Override
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+
+		if (rep instanceof RefRepresentation) {
+			description.addProperty("location", Representation.REF);
+		} else if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
+			description.addProperty("location", Representation.REF);
+			description.addProperty("items", Representation.REF);
+			description.addProperty("transactions", Representation.REF);
+		}
+
+		return description;
+	}
+
+	@Override
+	public DelegatingResourceDescription getCreatableProperties() {
+		DelegatingResourceDescription description = super.getCreatableProperties();
+		description.addProperty("name");
+		description.addProperty("location");
+
+		return description;
+	}
 
 	@Override
 	public StockRoom newDelegate() {
@@ -32,5 +73,27 @@ public class StockRoomResource extends BaseRestMetadataResource<StockRoom> {
 	@Override
 	public Class<? extends IMetadataDataService<StockRoom>> getServiceClass() {
 		return IStockRoomDataService.class;
+	}
+
+	@PropertySetter(value="items")
+	public void setItems(StockRoom instance, Set<StockRoomItem> items) {
+		if (instance.getItems() == null) {
+			instance.setItems(new TreeSet<StockRoomItem>());
+		}
+
+		BaseRestDataResource.updateCollection(instance.getItems(), items);
+
+		for (StockRoomItem item : instance.getItems()) {
+			item.setStockRoom(instance);
+		}
+	}
+
+	@PropertySetter(value="transactions")
+	public void setTransactions(StockRoom instance, Set<StockRoomTransaction> transactions) {
+		if (instance.getTransactions() == null) {
+			instance.setTransactions(new TreeSet<StockRoomTransaction>());
+		}
+
+		BaseRestDataResource.updateCollection(instance.getTransactions(), transactions);
 	}
 }

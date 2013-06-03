@@ -1,0 +1,15 @@
+<script id="transactionDialog" type="text/template">
+    <b class="boxHeader">TRN Type: <?= model.transactionType().modelName() ?> | Number: <?= model.number() ?></b>
+    <div class="box form">
+        <ul class="bbf-list">
+            <li>Created On: <?= model.createdOn() ?></li>
+	        <li>Transaction <? if (model.transactionType().destinationRequired()) {
+		            print('from ' + model.from().name());
+		          }
+		          if (model.transactionType().sourceRequired()) {
+		            print(' to ' + model.to().name());
+		          } ?>
+	        </li>
+        </ul>
+    </div>
+</script>

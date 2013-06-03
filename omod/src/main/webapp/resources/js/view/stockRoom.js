@@ -19,6 +19,19 @@ define(
             tmplSelector: '#add-edit-template'
         });
 
+        openhmis.StockRoomDetailView = openhmis.GenericAddEditView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
+            tmplSelector: '#detail-template',
+
+	        edit: function(model) {
+		        openhmis.GenericAddEditView.prototype.edit.call(this, model);
+
+		        var tabs = $("#detailTabs");
+		        tabs.tabs();
+		        tabs.show();
+	        }
+        });
+
         return openhmis;
     }
 );

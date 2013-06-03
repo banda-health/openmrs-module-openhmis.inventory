@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRoomTransactionAttribute>
+public class    StockRoomTransaction extends BaseCustomizableInstanceObject<StockRoomTransactionAttribute>
 	implements Comparable<StockRoomTransaction> {
 	public static final long serialVersionUID = 0L;
 

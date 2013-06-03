@@ -13,7 +13,9 @@
 </h2>
 
 <div id="stockRoomContent" style="width: 100%;">
-	<div id="stockRoomList" style="width: 58%; float: left"></div>
-	<div id="stockRoomInfo" style="width: 40%; float: right"></div>
+	<div id="stockRoomList" style="width: 30%; float: left"></div>
+	<div id="stockRoomInfo" style="width: 68%; float: right"></div>
+	<div style="float: none"></div>
 </div>
+
 

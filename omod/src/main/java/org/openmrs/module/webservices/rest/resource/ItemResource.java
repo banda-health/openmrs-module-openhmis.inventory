@@ -41,8 +41,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 			description.addProperty("department", Representation.REF);
 			description.addProperty("category", Representation.REF);
 			description.addProperty("defaultPrice", Representation.REF);
-		}
-		else if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
+		} else if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
 			description.addProperty("name");
 			description.addProperty("codes", Representation.REF);
 			description.addProperty("prices", Representation.REF);

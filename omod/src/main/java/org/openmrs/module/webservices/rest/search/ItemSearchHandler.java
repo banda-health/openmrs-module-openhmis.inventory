@@ -22,7 +22,7 @@ import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
-import org.openmrs.module.webservices.rest.resource.MetadataSearcher;
+import org.openmrs.module.webservices.rest.resource.PagingUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
@@ -62,7 +62,7 @@ public class ItemSearchHandler implements SearchHandler {
 
 		if (department_uuid == null) {
 			// Do a name search
-			PagingInfo pagingInfo = MetadataSearcher.getPagingInfoFromContext(context);
+			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 			List<Item> items = service.findByName(query, context.getIncludeAll(), pagingInfo);
 			AlreadyPagedWithLength<Item> results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 			return results;
@@ -74,7 +74,7 @@ public class ItemSearchHandler implements SearchHandler {
 			if (query == null)
 				return searchByDepartment(department_uuid, context);
 			// Do a name + department search
-			PagingInfo pagingInfo = MetadataSearcher.getPagingInfoFromContext(context);
+			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 			List<Item> items = service.findItems(department, query, context.getIncludeAll(), pagingInfo);
 			PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 			return results;
@@ -98,7 +98,7 @@ public class ItemSearchHandler implements SearchHandler {
 		IDepartmentDataService deptService = Context.getService(IDepartmentDataService.class);
 		Department department = deptService.getByUuid(department_uuid);
 
-		PagingInfo pagingInfo = MetadataSearcher.getPagingInfoFromContext(context);
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		List<Item> items = service.getItemsByDepartment(department, context.getIncludeAll(), pagingInfo);
 		PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		return results;

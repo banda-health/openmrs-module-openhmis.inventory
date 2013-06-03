@@ -10,17 +10,30 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
-			openhmis.startAddEditScreen(openhmis.StockRoom, {
+			var stockRoomList = $("#stockRoomList");
+            var stockRoomInfo = $("#stockRoomInfo");
+            var stockRoomEdit = $("#stockRoomEdit");
+
+			// Display current stock rooms into list
+            openhmis.startAddEditScreen(openhmis.StockRoom, {
 				listFields: ['name', 'description'],
-                listElement: $("#stockRoomList"),
-                addEditViewType: openhmis.StockRoomAddEditView,
-                addEditElement: $("#stockRoomInfo")
+                listElement: stockRoomList,
+                addEditViewType: openhmis.StockRoomDetailView,
+                addEditElement: stockRoomInfo
 			});
+
+            // Configure Add/Edit stock room
+            //addEditView.on("cancel", listView.blur);
+
+            // Set to be dialog
+
+            // Set detail to use tabs
+			//stockRoomInfo.on("focus", $("#detailTabs").tabs());
 
             var stockRoomItemListView = new openhmis.GenericListView();
 
-            stockRoomItemListView,setElement($("#stockRoomList"));
-            $("#stockRoomList").append(stockRoomItemListView.render().el);
+            stockRoomItemListView.setElement(stockRoomList);
+            stockRoomList.append(stockRoomItemListView.render().el);
 		});
 	}
 );

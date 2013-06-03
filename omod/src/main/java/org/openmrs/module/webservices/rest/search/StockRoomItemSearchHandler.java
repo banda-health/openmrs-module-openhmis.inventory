@@ -21,7 +21,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
-import org.openmrs.module.webservices.rest.resource.MetadataSearcher;
+import org.openmrs.module.webservices.rest.resource.PagingUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
@@ -71,7 +71,7 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 			return new EmptySearchResult();
 		}
 
-		PagingInfo pagingInfo = MetadataSearcher.getPagingInfoFromContext(context);
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 		List<StockRoomItem> items = new ArrayList<StockRoomItem>(stockRoom.getItems());
 		return new AlreadyPagedWithLength<StockRoomItem>(context, items,
