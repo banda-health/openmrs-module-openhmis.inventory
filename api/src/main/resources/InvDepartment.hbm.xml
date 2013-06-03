@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.openmrs.module.openhmis.inventory.api.model">
+<hibernate-mapping package="org.openmrs.module.openhmis.inventory.api.model" auto-import="false">
 	<class name="Department" table="inv_department">
 		<cache usage="read-write"/>
 

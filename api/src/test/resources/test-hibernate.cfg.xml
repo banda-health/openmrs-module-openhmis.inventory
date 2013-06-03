@@ -24,9 +24,9 @@
 		<property name="use_sql_comments">true</property>
 		-->
 
-		<mapping resource="Department.hbm.xml" />
-		<mapping resource="Category.hbm.xml" />
-		<mapping resource="Item.hbm.xml" />
-		<mapping resource="StockRoom.hbm.xml" />
+		<mapping resource="InvDepartment.hbm.xml" />
+		<mapping resource="InvCategory.hbm.xml" />
+		<mapping resource="InvItem.hbm.xml" />
+		<mapping resource="InvStockRoom.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>
