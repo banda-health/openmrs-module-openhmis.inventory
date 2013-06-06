@@ -15,19 +15,17 @@ package org.openmrs.module.webservices.rest.search;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
-import org.openmrs.module.webservices.rest.resource.PagingUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,13 +35,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class StockRoomItemSearchHandler implements SearchHandler {
+public class StockRoomTransactionSearchHandler implements SearchHandler {
 	protected Log log = LogFactory.getLog(getClass());
 
-	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.STOCK_ROOM_ITEM_RESOURCE,
+	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.TRANSACTION_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find all items by stock room.")
+					new SearchQuery.Builder("Find all transactions by stock room.")
 							.withRequiredParameters("stock_room_uuid").build()
 			)
 	);
@@ -51,7 +49,7 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 	private IStockRoomDataService stockRoomDataService;
 
 	@Autowired
-	public StockRoomItemSearchHandler(IStockRoomDataService stockRoomDataService) {
+	public StockRoomTransactionSearchHandler(IStockRoomDataService stockRoomDataService) {
 		this.stockRoomDataService = stockRoomDataService;
 	}
 
@@ -71,11 +69,11 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 			return new EmptySearchResult();
 		}
 
-		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-
-		List<StockRoomItem> items = new ArrayList<StockRoomItem>(stockRoom.getItems());
-		return new AlreadyPagedWithLength<StockRoomItem>(context, items,
-				pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+		List<StockRoomTransaction> transactions = new ArrayList<StockRoomTransaction>(stockRoom.getTransactions());
+		if (transactions.size() == 0) {
+			return new EmptySearchResult();
+		} else {
+			return new NeedsPaging<StockRoomTransaction>(transactions, context);
+		}
 	}
 }
-

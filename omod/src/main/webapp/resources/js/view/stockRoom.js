@@ -1,6 +1,7 @@
 define(
     [
-        openhmis.url.backboneBase + 'js/view/generic'
+        openhmis.url.backboneBase + 'js/view/generic',
+	    openhmis.url.inventoryBase + 'js/model/transaction'
     ],
     function(openhmis) {
 
@@ -23,12 +24,33 @@ define(
             tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
             tmplSelector: '#detail-template',
 
-	        edit: function(model) {
-		        openhmis.GenericAddEditView.prototype.edit.call(this, model);
+	        initialize: function(options) {
+		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
+		        this.transactionsView = new openhmis.GenericListView({
+			        model: new openhmis.GenericCollection([], {
+				        model: openhmis.Transaction
+			        }),
+			        showRetiredOption: false,
+			        listFields: ['dateCreated', 'transactionNumber', 'status', 'transactionType']
+		        });
+	        },
+
+	        render: function() {
+		        openhmis.GenericAddEditView.prototype.render.call(this);
 
 		        var tabs = $("#detailTabs");
-		        tabs.tabs();
-		        tabs.show();
+		        if (this.model.id) {
+			        tabs.tabs();
+			        tabs.show();
+
+			        this.transactionsView.model.search("stock_room_uuid=" + this.model.id);
+			        var transactions = $("#transactions");
+			        transactions.append(
+				        this.transactionsView.el
+			        );
+			    } else {
+			        tabs.hide();
+		        }
 	        }
         });
 

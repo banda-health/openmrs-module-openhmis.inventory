@@ -23,9 +23,9 @@
 		</set>
 
 		<set name="transactions" lazy="true" table="inv_stock_room_transactions"
-		     cascade="all-delete-orphan" order-by="transaction_id">
+		     cascade="all-delete-orphan" >
 			<key column="stock_room_id" />
-			<many-to-many column="transaction_id"  class="StockRoomTransaction" />
+			<many-to-many column="transaction_id"  class="StockRoomTransaction" order-by="dateCreated DESC" />
 		</set>
 
 		<!-- bi-directional many-to-one association to User -->

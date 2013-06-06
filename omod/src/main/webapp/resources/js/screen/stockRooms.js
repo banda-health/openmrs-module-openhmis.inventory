@@ -30,10 +30,10 @@ curl(
             // Set detail to use tabs
 			//stockRoomInfo.on("focus", $("#detailTabs").tabs());
 
-            var stockRoomItemListView = new openhmis.GenericListView();
+            /*var stockRoomItemListView = new openhmis.GenericListView();
 
             stockRoomItemListView.setElement(stockRoomList);
-            stockRoomList.append(stockRoomItemListView.render().el);
+            stockRoomList.append(stockRoomItemListView.render().el);*/
 		});
 	}
 );
