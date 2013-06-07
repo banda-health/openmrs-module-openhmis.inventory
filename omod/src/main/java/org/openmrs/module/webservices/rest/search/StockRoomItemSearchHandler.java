@@ -32,7 +32,6 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -72,10 +71,13 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 		}
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-
-		List<StockRoomItem> items = new ArrayList<StockRoomItem>(stockRoom.getItems());
-		return new AlreadyPagedWithLength<StockRoomItem>(context, items,
-				pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+		List<StockRoomItem> items = stockRoomDataService.getItemsByRoom(stockRoom, pagingInfo);
+		if (items == null || items.size() == 0) {
+			return new EmptySearchResult();
+		} else {
+			return new AlreadyPagedWithLength<StockRoomItem>(context, items,
+					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+		}
 	}
 }
 

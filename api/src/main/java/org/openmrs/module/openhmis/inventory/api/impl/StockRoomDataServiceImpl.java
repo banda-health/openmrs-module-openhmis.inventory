@@ -43,6 +43,20 @@ public class StockRoomDataServiceImpl
 	}
 
 	@Override
+	public List<StockRoomItem> getItemsByRoom(final StockRoom stockRoom, PagingInfo paging) {
+		if (stockRoom == null) {
+			throw new NullPointerException("The stock room must be defined");
+		}
+
+		return executeCriteria(StockRoomItem.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("stockRoom", stockRoom));
+			}
+		});
+	}
+
+	@Override
 	public List<StockRoomItem> findItems(final StockRoom stockRoom, final ItemSearch itemSearch, PagingInfo paging) {
 		if (stockRoom == null) {
 			throw new NullPointerException("The stock room must be defined.");

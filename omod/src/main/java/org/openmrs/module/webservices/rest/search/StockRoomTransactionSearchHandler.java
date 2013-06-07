@@ -15,22 +15,24 @@ package org.openmrs.module.webservices.rest.search;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
+import org.openmrs.module.webservices.rest.resource.PagingUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,10 +49,13 @@ public class StockRoomTransactionSearchHandler implements SearchHandler {
 	);
 
 	private IStockRoomDataService stockRoomDataService;
+	private IStockRoomTransactionDataService transactionDataService;
 
 	@Autowired
-	public StockRoomTransactionSearchHandler(IStockRoomDataService stockRoomDataService) {
+	public StockRoomTransactionSearchHandler(IStockRoomDataService stockRoomDataService,
+	                                         IStockRoomTransactionDataService transactionDataService) {
 		this.stockRoomDataService = stockRoomDataService;
+		this.transactionDataService = transactionDataService;
 	}
 
 	@Override
@@ -62,18 +67,20 @@ public class StockRoomTransactionSearchHandler implements SearchHandler {
 	public PageableResult search(RequestContext context) throws ResponseException {
 		String stockRoomUuid = context.getParameter("stock_room_uuid");
 		StockRoom stockRoom = stockRoomDataService.getByUuid(stockRoomUuid);
-
 		if (stockRoom == null) {
 			log.warn("Could not find stock room '" + stockRoomUuid + "'");
 
 			return new EmptySearchResult();
 		}
 
-		List<StockRoomTransaction> transactions = new ArrayList<StockRoomTransaction>(stockRoom.getTransactions());
-		if (transactions.size() == 0) {
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+		List<StockRoomTransaction> transactions = transactionDataService.getTransactionsByRoom(stockRoom, pagingInfo);
+
+		if (transactions == null || transactions.size() == 0) {
 			return new EmptySearchResult();
 		} else {
-			return new NeedsPaging<StockRoomTransaction>(transactions, context);
+			return new AlreadyPagedWithLength<StockRoomTransaction>(context, transactions,
+					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		}
 	}
 }

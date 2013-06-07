@@ -10,7 +10,7 @@ define(
 				name: __("Transaction Type"),
 				namePlural: __("Transaction Types"),
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'transactionType'
+				restUrl: openhmis.url.inventoryModelBase + 'stockRoomTransactionType'
 			},
 
 			schema: {

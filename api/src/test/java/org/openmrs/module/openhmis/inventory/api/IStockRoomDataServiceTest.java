@@ -448,4 +448,54 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		StockRoom room = service.getById(0);
 		service.getItem(room, null, null);
 	}
+
+	/**
+	 * @verifies return all the items in the stock room
+	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getItemsByRoom_shouldReturnAllTheItemsInTheStockRoom() throws Exception {
+		StockRoom stockRoom = service.getById(1);
+		List<StockRoomItem> results = service.getItemsByRoom(stockRoom, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+	}
+
+	/**
+	 * @verifies return an empty list if there are no items in the stock room
+	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getItemsByRoom_shouldReturnAnEmptyListIfThereAreNoItemsInTheStockRoom() throws Exception {
+		StockRoom stockRoom = service.getById(0);
+		List<StockRoomItem> results = service.getItemsByRoom(stockRoom, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+	}
+
+	/**
+	 * @verifies return paged items if paging is specified
+	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getItemsByRoom_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+		StockRoom stockRoom = service.getById(1);
+		PagingInfo paging = new PagingInfo(1, 1);
+		List<StockRoomItem> results = service.getItemsByRoom(stockRoom, paging);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(3, (long)paging.getTotalRecordCount());
+	}
+
+	/**
+	 * @verifies throw NullReferenceException if the stock room is null
+	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void getItemsByRoom_shouldThrowNullReferenceExceptionIfTheStockRoomIsNull() throws Exception {
+		service.getItemsByRoom(null, null);
+	}
 }

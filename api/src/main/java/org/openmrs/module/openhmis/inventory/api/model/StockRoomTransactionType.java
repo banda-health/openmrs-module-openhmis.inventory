@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openmrs.BaseOpenmrsMetadata;
 
 import java.util.ArrayList;
@@ -98,6 +99,12 @@ public class StockRoomTransactionType extends BaseOpenmrsMetadata {
 			type.setOwner(null);
 			attributeTypes.remove(type);
 		}
+	}
+
+	@Override
+	@JsonIgnore
+	public Boolean getRetired() {
+		return isRetired();
 	}
 }
 

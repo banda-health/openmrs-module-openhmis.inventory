@@ -75,7 +75,7 @@ define(
 	        },
 
             toString: function() {
-                return this.get('name');
+                return this.get('transactionNumber');
             }
         });
 

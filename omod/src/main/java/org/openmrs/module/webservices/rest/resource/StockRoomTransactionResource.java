@@ -2,9 +2,9 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionItem;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -26,7 +26,7 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 
 	@Override
 	public Class<? extends IObjectDataService<StockRoomTransaction>> getServiceClass() {
-		return null;
+		return IStockRoomTransactionDataService.class;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 			description.addProperty("source", Representation.REF);
 			description.addProperty("destination", Representation.REF);
 			description.addProperty("items", Representation.REF);
-			description.addProperty("isImportTransaction", Representation.DEFAULT);
+			description.addProperty("importTransaction", Representation.DEFAULT);
 			description.addProperty("creator", Representation.REF);
 		}
 
@@ -63,7 +63,7 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 		description.addProperty("source");
 		description.addProperty("destination");
 		description.addProperty("items");
-		description.addProperty("isImportTransaction");
+		description.addProperty("importTransaction");
 		description.addProperty("creator");
 
 		return description;

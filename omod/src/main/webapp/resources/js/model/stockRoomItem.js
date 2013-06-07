@@ -1,0 +1,82 @@
+define(
+    [
+        openhmis.url.backboneBase + 'js/openhmis',
+        openhmis.url.backboneBase + 'js/lib/i18n',
+        openhmis.url.backboneBase + 'js/model/generic',
+	    openhmis.url.inventoryBase + 'js/model/item',
+	    openhmis.url.inventoryBase + 'js/model/stockRoom',
+	    openhmis.url.inventoryBase + 'js/model/transaction'
+    ],
+    function(openhmis, __) {
+        openhmis.StockRoomItem = openhmis.GenericModel.extend({
+            meta: {
+                name: __("Stock Room Item"),
+                namePlural: __("Stock Room Items"),
+                openmrsType: 'metadata',
+                restUrl: openhmis.url.inventoryModelBase + 'stockRoomItem'
+            },
+
+            schema: {
+                quantity: 'BasicNumber',
+	            expiration: 'Date',
+	            item: {
+		            type: 'ItemSelect',
+		            options: new openhmis.GenericCollection(null, {
+			            model: openhmis.Item,
+			            url: openhmis.url.inventoryModelBase + '/item'
+		            }),
+		            objRef: true
+	            },
+	            stockRoom: {
+		            type: 'StockRoomSelect',
+		            options: new openhmis.GenericCollection(null, {
+			            model: openhmis.StockRoom,
+			            url: openhmis.url.inventoryModelBase + '/stockRoom'
+		            }),
+		            objRef: true
+	            },
+	            importTransaction: {
+		            type: 'TransactionSelect',
+		            options: new openhmis.GenericCollection(null, {
+			            model: openhmis.Transaction,
+			            url: openhmis.url.inventoryModelBase + '/stockRoomTransaction'
+		            }),
+		            objRef: true
+	            }
+            },
+
+            validate: function(attrs, options) {
+                if (!attrs.quantity) return { quantity: __("An item quantity is required.") };
+	            if (!attrs.item || !attrs.item.id) return { item: __("Please choose an item") };
+
+                return null;
+            },
+
+	        parse: function(resp) {
+		        if (resp) {
+			        if (resp.item && _.isObject(resp.item)) {
+				        resp.item = new openhmis.Item(resp.item);
+			        }
+			        if (resp.stockRoom && _.isObject(resp.stockRoom)) {
+				        resp.stockRoom = new openhmis.StockRoom(resp.stockRoom);
+			        }
+			        if (resp.importTransaction && _.isObject(resp.importTransaction)) {
+				        resp.importTransaction = new openhmis.Transaction(resp.importTransaction);
+			        }
+
+			        if (resp.expiration) {
+				        resp.expiration = new Date(resp.expiration).toLocaleString();
+			        }
+		        }
+
+		        return resp;
+	        },
+
+            toString: function() {
+                return this.get('name');
+            }
+        });
+
+        return openhmis;
+    }
+);
