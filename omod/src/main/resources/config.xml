@@ -33,10 +33,10 @@
 	
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-		Item.hbm.xml
-		Department.hbm.xml
-		Category.hbm.xml
-		StockRoom.hbm.xml
+		InvItem.hbm.xml
+		InvDepartment.hbm.xml
+		InvCategory.hbm.xml
+		InvStockRoom.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->
