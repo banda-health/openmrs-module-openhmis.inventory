@@ -6,7 +6,7 @@ import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionTypeDataSe
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -39,7 +39,7 @@ public class StockRoomTransactionTypeResource extends BaseRestMetadataResource<S
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 
-		if (!(rep instanceof RefRepresentation)) {
+		if (rep instanceof FullRepresentation) {
 			description.addProperty("attributeTypes", Representation.REF);
 		}
 

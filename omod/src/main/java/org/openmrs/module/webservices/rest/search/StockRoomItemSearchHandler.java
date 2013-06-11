@@ -61,8 +61,12 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
+		return doSearch(stockRoomDataService, context);
+	}
+
+	public static PageableResult doSearch(IStockRoomDataService service, RequestContext context) {
 		String stockRoomUuid = context.getParameter("stock_room_uuid");
-		StockRoom stockRoom = stockRoomDataService.getByUuid(stockRoomUuid);
+		StockRoom stockRoom = service.getByUuid(stockRoomUuid);
 
 		if (stockRoom == null) {
 			log.warn("Could not find stock room '" + stockRoomUuid + "'");
@@ -71,7 +75,7 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 		}
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<StockRoomItem> items = stockRoomDataService.getItemsByRoom(stockRoom, pagingInfo);
+		List<StockRoomItem> items = service.getItemsByRoom(stockRoom, pagingInfo);
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
 		} else {

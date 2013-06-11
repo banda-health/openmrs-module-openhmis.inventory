@@ -2,13 +2,12 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionItem;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -26,7 +25,7 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 
 	@Override
 	public Class<? extends IObjectDataService<StockRoomTransaction>> getServiceClass() {
-		return IStockRoomTransactionDataService.class;
+		return null;
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 
-		if (!(rep instanceof RefRepresentation)) {
+		if (rep instanceof FullRepresentation) {
 			description.addProperty("source", Representation.REF);
 			description.addProperty("destination", Representation.REF);
 			description.addProperty("items", Representation.REF);
