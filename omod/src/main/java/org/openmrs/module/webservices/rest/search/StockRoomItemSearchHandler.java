@@ -37,7 +37,7 @@ import java.util.List;
 
 @Component
 public class StockRoomItemSearchHandler implements SearchHandler {
-	protected Log log = LogFactory.getLog(getClass());
+	private static Log log = LogFactory.getLog(StockRoomItemSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.STOCK_ROOM_ITEM_RESOURCE,
 			Arrays.asList("1.9.*"),

@@ -16,10 +16,18 @@ define(
             return "stockRoomUuid=" + this.stockRoomUuid;
         };
 
-        openhmis.StockRoomAddEditView = openhmis.GenericAddEditView.extend({
-            tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
-            tmplSelector: '#add-edit-template'
-        });
+	    openhmis.StockRoomItemPaginateView = openhmis.PaginateView.extend({
+		    getFetchOptions: function(options) {
+			    openhmis.PaginateView.prototype.getFetchOptions.call(this, options);
+
+			    options.queryString = openhmis.addQueryStringParameter(options.queryString, "stock_room_uuid" + options.parent.id);
+		    }
+	    });
+
+	    openhmis.StockRoomAddEditView = openhmis.GenericAddEditView.extend({
+		    tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
+		    tmplSelector: '#add-edit-template'
+		});
 
         openhmis.StockRoomDetailView = openhmis.GenericAddEditView.extend({
             tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
@@ -44,7 +52,10 @@ define(
 			        showRetiredOption: false,
 			        showRetired: true,
 			        listFields: ['item', 'quantity', 'expiration', 'importTransaction']
-		        })
+		        });
+
+		        this.transactionsView.on("fetch", this.fetch);
+		        this.itemsView.on("fetch", this.fetch);
 	        },
 
 	        render: function() {
@@ -58,7 +69,9 @@ define(
 			        this.transactionsView.fetch({
 				        queryString: "stock_room_uuid=" + this.model.id
 			        });
+
 			        this.itemsView.fetch({
+				        parent: this.model,
 				        queryString: "stock_room_uuid=" + this.model.id
 			        });
 
@@ -69,6 +82,10 @@ define(
 			    } else {
 			        tabs.hide();
 		        }
+	        },
+
+	        fetch: function(options) {
+		        options.queryString = openhmis.addQueryStringParameter(options.queryString, "stock_room_uuid=" + this.model.id);
 	        }
         });
 
