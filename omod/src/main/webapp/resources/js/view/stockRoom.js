@@ -32,6 +32,7 @@ define(
         openhmis.StockRoomDetailView = openhmis.GenericAddEditView.extend({
             tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
             tmplSelector: '#detail-template',
+	        selectedTab: null,
 
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
@@ -63,7 +64,16 @@ define(
 
 		        var tabs = $("#detailTabs");
 		        if (this.model.id) {
-			        tabs.tabs();
+			        if (this.selectedTab) {
+				        tabs.tabs({
+					        active: this.selectedTab,
+					        activate: this.activateTab
+				        });
+			        } else {
+				        tabs.tabs({
+					        activate: this.activateTab
+				        });
+			        }
 			        tabs.show();
 
 			        this.transactionsView.fetch({
@@ -86,6 +96,10 @@ define(
 
 	        fetch: function(options) {
 		        options.queryString = openhmis.addQueryStringParameter(options.queryString, "stock_room_uuid=" + this.model.id);
+	        },
+
+	        activateTab: function(event, ui) {
+				this.selectedTab = ui.newTab.index();
 	        }
         });
 
