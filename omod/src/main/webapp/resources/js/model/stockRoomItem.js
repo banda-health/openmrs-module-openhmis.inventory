@@ -17,8 +17,13 @@ define(
             },
 
             schema: {
-                quantity: 'BasicNumber',
-	            expiration: 'Date',
+                quantity: {
+	                type: 'BasicNumber'
+                },
+	            expiration: {
+		            type: 'Date',
+		            format: openhmis.dateFormatLocale
+	            },
 	            item: {
 		            type: 'ItemSelect',
 		            options: new openhmis.GenericCollection(null, {
@@ -64,9 +69,9 @@ define(
 				        resp.importTransaction = new openhmis.Transaction(resp.importTransaction);
 			        }
 
-			        if (resp.expiration) {
-				        resp.expiration = new Date(resp.expiration).toLocaleString();
-			        }
+			        /*if (resp.expiration) {
+				        resp.expiration = new Date(resp.expiration).toLocaleDateString();
+			        }*/
 		        }
 
 		        return resp;

@@ -28,7 +28,10 @@ define(
 					}),
 					objRef: true
 				},
-	            dateCreated: 'DateTime',
+	            dateCreated: {
+		            type: 'DateTime',
+		            format: openhmis.dateTimeFormatLocale
+	            },
 	            transactionType: {
 		            type: 'TransactionTypeSelect',
 		            options: new openhmis.GenericCollection(null, {
@@ -66,9 +69,9 @@ define(
 				        resp.transactionType = new openhmis.TransactionType(resp.transactionType);
 			        }
 
-			        if (resp.dateCreated) {
+			        /*if (resp.dateCreated) {
 				        resp.dateCreated = new Date(resp.dateCreated).toLocaleString();
-			        }
+			        }*/
 		        }
 
 		        return resp;

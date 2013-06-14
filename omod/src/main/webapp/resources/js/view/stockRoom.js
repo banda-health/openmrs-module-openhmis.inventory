@@ -16,14 +16,6 @@ define(
             return "stockRoomUuid=" + this.stockRoomUuid;
         };
 
-	    openhmis.StockRoomItemPaginateView = openhmis.PaginateView.extend({
-		    getFetchOptions: function(options) {
-			    openhmis.PaginateView.prototype.getFetchOptions.call(this, options);
-
-			    options.queryString = openhmis.addQueryStringParameter(options.queryString, "stock_room_uuid" + options.parent.id);
-		    }
-	    });
-
 	    openhmis.StockRoomAddEditView = openhmis.GenericAddEditView.extend({
 		    tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
 		    tmplSelector: '#add-edit-template'
@@ -72,6 +64,7 @@ define(
 			        } else {
 				        tabs.tabs({
 					        activate: this.activateTab
+
 				        });
 			        }
 			        tabs.show();
