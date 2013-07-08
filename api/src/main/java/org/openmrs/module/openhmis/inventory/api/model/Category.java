@@ -14,12 +14,12 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class Category extends BaseOpenmrsMetadata {
+public class Category extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer categoryId;

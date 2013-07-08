@@ -13,12 +13,13 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Location;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class StockRoom extends BaseOpenmrsMetadata {
+public class StockRoom extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomId;

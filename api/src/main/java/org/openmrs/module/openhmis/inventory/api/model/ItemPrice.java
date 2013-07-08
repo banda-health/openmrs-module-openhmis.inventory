@@ -13,14 +13,14 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 import java.math.BigDecimal;
 
 /**
  * Model class to represent the price of an {@link Item}.
  */
-public class ItemPrice extends BaseOpenmrsMetadata {
+public class ItemPrice extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer itemPriceId;

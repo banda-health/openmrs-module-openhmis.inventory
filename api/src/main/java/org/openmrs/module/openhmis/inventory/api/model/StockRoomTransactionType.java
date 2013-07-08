@@ -14,12 +14,12 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StockRoomTransactionType extends BaseOpenmrsMetadata {
+public class StockRoomTransactionType extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferTypeId;

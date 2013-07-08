@@ -13,12 +13,12 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 /**
  * Model class to represent an externally defined code for an {@link Item}.
  */
-public class ItemCode extends BaseOpenmrsMetadata {
+public class ItemCode extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer itemCodeId;

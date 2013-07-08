@@ -14,6 +14,7 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openmrs.BaseCustomizableMetadata;
 import org.openmrs.Concept;
 import org.openmrs.Drug;
@@ -187,5 +188,11 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setHasExpiration(boolean hasExpiration) {
 		this.hasExpiration = hasExpiration;
+	}
+
+	@Override
+	@JsonIgnore
+	public Boolean getRetired() {
+		return isRetired();
 	}
 }

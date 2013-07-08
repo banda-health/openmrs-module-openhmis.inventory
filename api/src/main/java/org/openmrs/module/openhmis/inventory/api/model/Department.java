@@ -13,12 +13,12 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 /**
  * Model class that represents an institutional department.
  */
-public class Department extends BaseOpenmrsMetadata {
+public class Department extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer departmentId;
