@@ -5,18 +5,7 @@ define(
 	    openhmis.url.inventoryBase + 'js/model/stockRoomItem'
     ],
     function(openhmis) {
-
-        openhmis.ItemFetchable = function(options) {
-            if (options) {
-                this.stockRoomUuid = options.stockRoomUuid;
-            }
-        };
-
-        openhmis.ItemFetchable.prototype.getFetchOptions = function() {
-            return "stockRoomUuid=" + this.stockRoomUuid;
-        };
-
-	    openhmis.StockRoomAddEditView = openhmis.GenericAddEditView.extend({
+ 	    openhmis.StockRoomAddEditView = openhmis.GenericAddEditView.extend({
 		    tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
 		    tmplSelector: '#add-edit-template'
 		});
@@ -69,14 +58,8 @@ define(
 			        }
 			        tabs.show();
 
-			        this.transactionsView.fetch({
-				        queryString: "stock_room_uuid=" + this.model.id
-			        });
-
-			        this.itemsView.fetch({
-				        parent: this.model,
-				        queryString: "stock_room_uuid=" + this.model.id
-			        });
+			        this.transactionsView.fetch(null);
+			        this.itemsView.fetch(null);
 
 			        var transactions = $("#transactions");
 			        transactions.append(this.transactionsView.el);

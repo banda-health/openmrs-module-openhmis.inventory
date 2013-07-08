@@ -21,19 +21,6 @@ curl(
                 addEditViewType: openhmis.StockRoomDetailView,
                 addEditElement: stockRoomInfo
 			});
-
-            // Configure Add/Edit stock room
-            //addEditView.on("cancel", listView.blur);
-
-            // Set to be dialog
-
-            // Set detail to use tabs
-			//stockRoomInfo.on("focus", $("#detailTabs").tabs());
-
-            /*var stockRoomItemListView = new openhmis.GenericListView();
-
-            stockRoomItemListView.setElement(stockRoomList);
-            stockRoomList.append(stockRoomItemListView.render().el);*/
 		});
 	}
 );
