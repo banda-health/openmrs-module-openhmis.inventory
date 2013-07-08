@@ -11,7 +11,8 @@ define(
 			meta: {
 				name: "Item Code",
 				namePlural: "Item Codes",
-				openmrsType: 'metadata'
+				openmrsType: 'metadata',
+				restUrl: openhmis.url.inventoryModelBase + 'itemCode'
 			},
 			schema: {
 				code: { type: 'Text' }
@@ -23,7 +24,8 @@ define(
 			meta: {
 				name: "Item Price",
 				namePlural: "Item Prices",
-				openmrsType: 'metadata'
+				openmrsType: 'metadata',
+				restUrl: openhmis.url.inventoryModelBase + 'itemPrice'
 			},
 			schema: {
 				name: { type: "Text" },
@@ -67,7 +69,7 @@ define(
 					type: 'DepartmentSelect',
 					options: new openhmis.GenericCollection(null, {
 						model: openhmis.Department,
-						url: openhmis.url.inventoryModelBase + '/department'
+						url: openhmis.url.inventoryModelBase + 'department'
 					}),
 					objRef: true
 				},
@@ -75,12 +77,26 @@ define(
                     type: 'CategorySelect',
                     options: new openhmis.GenericCollection(null, {
                         model: openhmis.Category,
-                        url: openhmis.url.inventoryModelBase + '/category'
+                        url: openhmis.url.inventoryModelBase + 'category'
                     }),
                     objRef: true
                 },
-				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
-				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
+				codes: {
+					type: 'List',
+					options: new openhmis.GenericCollection(null, {
+							itemType: 'NestedModel',
+							model: openhmis.ItemCode,
+							url: openhmis.url.inventoryModelBase + "itemCode"
+					})
+				},
+				prices: {
+					type: 'List',
+					options: new openhmis.GenericCollection(null, {
+						itemType: 'NestedModel',
+						model: openhmis.ItemPrice,
+						url: openhmis.url.inventoryModelBase + "itemPrice"
+					})
+				},
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }
 			},
 			

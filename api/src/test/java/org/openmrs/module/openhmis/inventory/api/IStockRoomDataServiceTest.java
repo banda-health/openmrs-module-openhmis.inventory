@@ -450,16 +450,20 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 	}
 
 	/**
-	 * @verifies return all the items in the stock room
+	 * @verifies return all the items in the stock room ordered by item name
 	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void getItemsByRoom_shouldReturnAllTheItemsInTheStockRoom() throws Exception {
+	public void getItemsByRoom_shouldReturnAllTheItemsInTheStockRoomOrderedByItemName() throws Exception {
 		StockRoom stockRoom = service.getById(1);
 		List<StockRoomItem> results = service.getItemsByRoom(stockRoom, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
+
+		Assert.assertEquals(0, (int)results.get(0).getId());
+		Assert.assertEquals(2, (int)results.get(1).getId());
+		Assert.assertEquals(1, (int)results.get(2).getId());
 	}
 
 	/**

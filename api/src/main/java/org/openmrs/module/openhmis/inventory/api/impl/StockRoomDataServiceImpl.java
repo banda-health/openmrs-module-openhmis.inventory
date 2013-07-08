@@ -1,7 +1,6 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
@@ -53,9 +52,10 @@ public class StockRoomDataServiceImpl
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq("stockRoom", stockRoom));
-				criteria.createAlias("item", "i");
+				//criteria.createAlias("item", "i");
 			}
-		}, Order.asc("i.name"));
+		});
+		//, Order.asc("i.name"));
 	}
 
 	@Override

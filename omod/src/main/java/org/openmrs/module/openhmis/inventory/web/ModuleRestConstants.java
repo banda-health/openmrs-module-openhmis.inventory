@@ -19,6 +19,8 @@ public class ModuleRestConstants extends ModuleWebConstants {
 	public static final String MODULE_REST_ROOT = RestConstants.VERSION_2 + "/inventory/";
 
 	public static final String ITEM_RESOURCE = MODULE_REST_ROOT + "item";
+	public static final String ITEM_PRICE_RESOURCE = MODULE_REST_ROOT + "itemPrice";
+	public static final String ITEM_CODE_RESOURCE = MODULE_REST_ROOT + "itemCode";
 	public static final String DEPARTMENT_RESOURCE = MODULE_REST_ROOT + "department";
 	public static final String CATEGORY_RESOURCE = MODULE_REST_ROOT + "category";
 	public static final String STOCK_ROOM_RESOURCE = MODULE_REST_ROOT + "stockRoom";

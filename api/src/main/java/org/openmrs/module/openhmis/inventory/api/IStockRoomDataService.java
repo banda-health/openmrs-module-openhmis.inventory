@@ -29,7 +29,7 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @param stockRoom The {@link StockRoom}.
 	 * @param paging The paging information.
 	 * @return A list containing all of the stock room items.
-	 * @should return all the items in the stock room
+	 * @should return all the items in the stock room ordered by item name
 	 * @should return an empty list if there are no items in the stock room
 	 * @should return paged items if paging is specified
 	 * @should throw NullReferenceException if the stock room is null
