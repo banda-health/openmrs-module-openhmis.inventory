@@ -13,16 +13,20 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
+import org.openmrs.Attributable;
 import org.openmrs.User;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceObject;
+import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRoomTransactionAttribute>
-	implements Comparable<StockRoomTransaction> {
+	implements Comparable<StockRoomTransaction>, Attributable<StockRoomTransaction> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferId;
@@ -235,4 +239,25 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 		
 		return this.getDateCreated().compareTo(o.getDateCreated());
 	}
+
+	@Override
+	public StockRoomTransaction hydrate(String s) {
+		return Context.getService(IStockRoomTransactionDataService.class).getById(Integer.parseInt(s));
+	}
+
+	@Override
+	public String serialize() {
+		if (getId() != null)
+			return "" + getId();
+		return "";
+	}
+
+	@Override
+	public List<StockRoomTransaction> getPossibleValues() { return null; }
+
+	@Override
+	public List<StockRoomTransaction> findPossibleValues(String searchText) { return null; }
+
+	@Override
+	public String getDisplayString() { return null; }
 }
