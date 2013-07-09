@@ -5,12 +5,7 @@ define(
 	    openhmis.url.inventoryBase + 'js/model/stockRoomItem'
     ],
     function(openhmis) {
- 	    openhmis.StockRoomAddEditView = openhmis.GenericAddEditView.extend({
-		    tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
-		    tmplSelector: '#add-edit-template'
-		});
-
-        openhmis.StockRoomDetailView = openhmis.GenericAddEditView.extend({
+ 	    openhmis.StockRoomDetailView = openhmis.GenericAddEditView.extend({
             tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
             tmplSelector: '#detail-template',
 	        selectedTab: null,

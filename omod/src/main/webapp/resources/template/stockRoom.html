@@ -1,76 +1,38 @@
 <script id="detail-template" type="text/template">
     <b class="boxHeader title" style="display: none"><?= __("%s Details", model.modelName()) ?> (<a href="">edit</a>)</b>
-    <div id="detailTabs">
-        <ul>
-            <li><a href="#items">Items</a></li>
-            <li><a href="#transactions">Transactions</a></li>
-        </ul>
-        <div id="items">
-        </div>
-        <div id="transactions">
-        </div>
-    </div>
-
-    <div id="addEditDialog" style="display: none">
-        <div class="box form" style="display: none">
-            <input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
-            <button class="cancel"><?= __("Cancel") ?></button>
-        </div>
-        <br />
-        <div class="retireVoidPurge" style="display: none;">
-            <div class="box">
-                <? var strRetireOrVoid = model.getDataType() === "data" ? "Void" : "Retire" ?>
-                <? if (model.isRetired()) { ?>
-                <? var strUnretire = "Un" + strRetireOrVoid.toLowerCase() ?>
-                <h4><?= __(strUnretire + " %s", model.modelName()) ?></h4>
-                <button class="unretireOrUnvoid"><?= __(strUnretire) ?></button>
-                <? } else { ?>
-                <h4><?= __(strRetireOrVoid + " %s", model.modelName()) ?></h4>
-                <label for="reason">Reason</label> <input name="reason" id="reason" class="reason" type="text" /><br />
-                <button class="retireOrVoid"><?= __(strRetireOrVoid) ?></button>
-                <? } ?>
-            </div>
-            <br />
-            <div class="box">
-                <h4><?= __("Purge %s", model.modelName()) ?></h4>
-                <button class="purge"><?= __("Purge") ?></button>
-            </div>
-        </div>
-    </div>
-</script>
-
-<script id="stockRoomItem-list" type="text/template">
-	<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?></b>
-	<div class="box">
-		<? if (listLength === 0) { ?>
-		<p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
-		<? } else { ?>
-		<table class="display" width="100%">
-			<thead>
-			<tr>
-				<? if (options.itemActions.length > 0) { ?><th class="item-actions end" style="width: <?= options.itemActions.length * 10 ?>px;"></td> <? } ?>
-				<? for (var field in fields) { if (modelSchema[fields[field]] && modelSchema[fields[field]].hidden) continue; ?>
-				<? var fieldClassName = "field-" + fields[field]; ?>
-				<th class="<?= fieldClassName ?>">
-					<? if (modelSchema[fields[field]] !== undefined) {
-						print(modelSchema[fields[field]].title === undefined ? helpers.keyToTitle(fields[field]) : modelSchema[fields[field]].title);
-					}
-					else
-						print(fields[field]);
-					?>
-				</th>
+	<div class="box form" style="display: none">
+		<input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
+		<button class="cancel"><?= __("Cancel") ?></button>
+		<br /><br />
+		<div id="detailTabs">
+			<ul>
+				<li><a href="#items">Items</a></li>
+				<li><a href="#transactions">Transactions</a></li>
+			</ul>
+			<div id="items">
+			</div>
+			<div id="transactions">
+			</div>
+		</div>
+		<br />
+		<div class="retireVoidPurge" style="width: 95%">
+			<div>
+				<? var strRetireOrVoid = model.getDataType() === "data" ? "Void" : "Retire" ?>
+				<? if (model.isRetired()) { ?>
+				<? var strUnretire = "Un" + strRetireOrVoid.toLowerCase() ?>
+				<h4><?= __(strUnretire + " %s", model.modelName()) ?></h4>
+				<button class="unretireOrUnvoid"><?= __(strUnretire) ?></button>
+				<? } else { ?>
+				<h4><?= __(strRetireOrVoid + " %s", model.modelName()) ?></h4>
+				<label for="reason">Reason</label> <input name="reason" id="reason" class="reason" type="text" /><br />
+				<button class="retireOrVoid"><?= __(strRetireOrVoid) ?></button>
 				<? } ?>
-			</tr>
-			</thead>
-			<tbody class="list"></tbody>
-			<tfoot></tfoot>
-		</table>
-		<? } ?>
-		<? if (pagingEnabled) { ?>
-		<div class="paging-container ui-helper-clearfix"></div>
-		<? } ?>
-		<? var strRetiredOrVoided = (modelMeta.openmrsType === 'data') ? "voided" : "retired" ?>
-		<? if (pagingEnabled) { ?><span class="pageSize"></span><? } ?>
-		<? if (options.showRetiredOption) { ?><span class="showRetired"><input id="showRetired" type="checkbox"<?= showRetired ? ' checked="checked"' : '' ?>/><label for="showRetired"><?= __("Show " + strRetiredOrVoided) ?></label></span><? } ?>
+			</div>
+			<br />
+			<div>
+				<h4><?= __("Purge %s", model.modelName()) ?></h4>
+				<button class="purge"><?= __("Purge") ?></button>
+			</div>
+		</div>
 	</div>
 </script>

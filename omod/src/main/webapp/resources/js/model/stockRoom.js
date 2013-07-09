@@ -2,7 +2,8 @@ define(
 	[
 		openhmis.url.backboneBase + 'js/openhmis',
 		openhmis.url.backboneBase + 'js/lib/i18n',
-		openhmis.url.backboneBase + 'js/model/generic'
+		openhmis.url.backboneBase + 'js/model/generic',
+		openhmis.url.backboneBase + 'js/model/location'
 	],
 	function(openhmis, __) {
 		openhmis.StockRoom = openhmis.GenericModel.extend({
@@ -14,8 +15,16 @@ define(
 			},
 			
 			schema: {
-				name: 'Text',
-				description: 'Text'
+				name: { type: 'Text' },
+				description: { type: 'Text' },
+				location: {
+					type: 'LocationSelect',
+					options: new openhmis.GenericCollection(null, {
+						model: openhmis.Location,
+						url: 'v1/location'
+					}),
+					objRef: true
+				}
 			},
 			
 			validate: function(attrs, options) {
