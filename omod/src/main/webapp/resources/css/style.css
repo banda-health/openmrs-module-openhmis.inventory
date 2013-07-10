@@ -63,3 +63,10 @@ div.box, div.combineBoxes { margin-bottom: 1em; }
 .ui-tabs .ui-tabs-panel { padding: 0.1em; }
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { font-weight: normal; color: #000000; }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { font-weight: bold; color: #000000; }
+.ui-widget {
+    font-size: 13px;
+}
+
+.ui-widget .ui-tabs-nav {
+    font-size: 16px;
+}

@@ -15,6 +15,8 @@ define(
             tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
             tmplSelector: '#detail-template',
 	        selectedTab: null,
+	        titleSelector: '#detailTabs',
+	        formSelector: '#stockRoomDetails',
 
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
