@@ -2,9 +2,15 @@ define(
     [
         openhmis.url.backboneBase + 'js/view/generic',
 	    openhmis.url.inventoryBase + 'js/model/transaction',
-	    openhmis.url.inventoryBase + 'js/model/stockRoomItem'
+	    openhmis.url.inventoryBase + 'js/model/stockRoomItem',
+	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
     function(openhmis) {
+	    openhmis.StockRoomDetailList = openhmis.GenericListView.extend({
+		    tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
+		    tmplSelector: '#stockRoom-list'
+	    });
+
  	    openhmis.StockRoomDetailView = openhmis.GenericAddEditView.extend({
             tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
             tmplSelector: '#detail-template',
@@ -13,7 +19,7 @@ define(
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-		        this.transactionsView = new openhmis.GenericListView({
+		        this.transactionsView = new openhmis.StockRoomDetailList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.Transaction
 			        }),
@@ -22,7 +28,7 @@ define(
 			        listFields: ['dateCreated', 'transactionNumber', 'status', 'transactionType']
 		        });
 
-		        this.itemsView = new openhmis.GenericListView({
+		        this.itemsView = new openhmis.StockRoomDetailList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.StockRoomItem
 			        }),
