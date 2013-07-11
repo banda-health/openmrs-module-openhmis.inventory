@@ -21,4 +21,4 @@
 	<div style="float: none"></div>
 </div>
 
-
+<div id="txDialog" style="display: none"></div>

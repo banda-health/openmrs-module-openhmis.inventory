@@ -19,6 +19,10 @@ define(
 	        formSelector: '#stockRoomDetails',
 
 	        initialize: function(options) {
+		        this.events = _.extend(this.events, {
+			        'click a.createTxLink': 'createTransaction'
+		        });
+
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
 		        this.transactionsView = new openhmis.StockRoomDetailList({
@@ -79,6 +83,15 @@ define(
 
 	        activateTab: function(event, ui) {
 				this.selectedTab = ui.newTab.index();
+	        },
+
+	        createTransaction: function() {
+				var tx = new openhmis.Transaction();
+		        var txDialog = $('#txDialog');
+
+		        var txForm = openhmis.GenericAddEditView.prototype.prepareModelForm.call(this, tx);
+		        txDialog.prepend(txForm.el);
+		        txDialog.dialog("open");
 	        }
         });
 
