@@ -16,6 +16,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
+import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
 import org.openmrs.module.openhmis.inventory.api.security.TransactionAuthorizationPrivileges;
 
 import java.util.List;
@@ -118,5 +119,10 @@ public class StockRoomTransactionDataServiceImpl
 				));
 			}
 		});
+	}
+
+	@Override
+	public List<StockRoomTransaction> findTransactions(StockRoomTransactionSearch transactionSearch, PagingInfo paging) {
+		return null;
 	}
 }

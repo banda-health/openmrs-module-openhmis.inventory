@@ -618,4 +618,11 @@
 			<column name="transaction_number"  type="varchar(50)"><constraints nullable="true"/></column>
 		</modifyColumn>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.0.4" author="ibewes">
+		<addColumn tableName="inv_stock_room_transaction">
+			<column defaultValueBoolean="false" name="is_import_transaction" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

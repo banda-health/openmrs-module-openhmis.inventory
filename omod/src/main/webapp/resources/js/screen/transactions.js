@@ -11,24 +11,16 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
-			var stockRoomList = $("#stockRoomList");
-			var stockRoomInfo = $("#stockRoomInfo");
-			var stockRoomEdit = $("#stockRoomEdit");
+			var pendingList = $("#stockRoomList");
+			var completedList = $("#stockRoomInfo");
+
+			$('#detailTabs').tabs();
 
 			// Display current stock rooms into list
-			openhmis.startAddEditScreen(openhmis.StockRoom, {
-				listFields: ['name', 'description'],
-				listElement: stockRoomList,
-				addEditViewType: openhmis.StockRoomDetailView,
-				addEditElement: stockRoomInfo
+			openhmis.startAddEditScreen(openhmis.Transaction, {
+				listFields: ['name', 'number', 'to', 'from'],
+				listElement: pendingList
 			});
-
-			var collection = new openhmis.GenericCollection([], {
-				url: openhmis.Transaction.prototype.meta.restUrl,
-				model: openhmis.Transaction
-			});
-			var txView = new openhmis.TransactionView({ collection: collection });
-			txView.setElement($('#txDialog'));
 		});
 	}
 );

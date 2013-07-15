@@ -5,6 +5,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
+import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
 
 import java.util.List;
 
@@ -57,5 +58,25 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @should throw NullPointerException when user is null
 	 */
 	List<StockRoomTransaction> getUserPendingTransactions(User user, PagingInfo paging);
+
+	/**
+	 * Finds all {@link StockRoomTransaction}s using the specified {@link StockRoomTransactionSearch} settings.
+	 * @param transactionSearch The transaction search settings.
+	 * @param paging The paging information.
+	 * @return The transactions found or an empty list if no transactions were found.
+	 * @should throw NullPointerException if transaction search is null
+	 * @should throw NullPointerException if transaction search template object is null
+	 * @should return an empty list if no transaction are found via the search
+	 * @should return items filtered by transaction number
+	 * @should return items filtered by transaction status
+	 * @should return items filtered by transaction type
+	 * @should return items filtered by source stock room
+	 * @should return items filtered by destination stock room
+	 * @should return items filtered by import transaction
+	 * @should return all items if paging is null
+	 * @should return paged items if paging is specified
+	 * @should not return retired items from search unless specified
+	 */
+	List<StockRoomTransaction> findTransactions(StockRoomTransactionSearch transactionSearch, PagingInfo paging);
 }
 

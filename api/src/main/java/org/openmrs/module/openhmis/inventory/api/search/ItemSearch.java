@@ -73,3 +73,4 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 		}
 	}
 }
+

@@ -56,6 +56,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		transaction.setCreator(Context.getAuthenticatedUser());
 		transaction.setDateCreated(new Date());
 		transaction.setStatus(StockRoomTransactionStatus.COMPLETED);
+		transaction.setImportTransaction(true);
 
 		StockRoomTransactionItem transactionItem = new StockRoomTransactionItem();
 		transactionItem.setImportTransaction(transaction);
@@ -97,6 +98,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		transaction.setCreator(Context.getAuthenticatedUser());
 		transaction.setDateCreated(new Date());
 		transaction.setStatus(StockRoomTransactionStatus.COMPLETED);
+		transaction.setImportTransaction(false);
 
 		StockRoomTransactionItem transactionItem = new StockRoomTransactionItem();
 		transactionItem.setItem(itemService.getById(0));
@@ -145,6 +147,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 				Assert.assertEquals(expectedTrans.getSource(), actualTrans.getSource());
 				Assert.assertEquals(expectedTrans.getDestination(), actualTrans.getDestination());
 				Assert.assertEquals(expectedTrans.getTransactionType(), actualTrans.getTransactionType());
+				Assert.assertEquals(expectedTrans.isImportTransaction(), actualTrans.isImportTransaction());
 
 				assertCollection(expectedTrans.getItems(), actualTrans.getItems(), new Action2<StockRoomTransactionItem, StockRoomTransactionItem>() {
 					@Override

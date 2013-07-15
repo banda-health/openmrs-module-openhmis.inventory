@@ -33,7 +33,7 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String STOCK_ROOMS_PAGE = STOCK_ROOMS_ROOT + ".form";
 
 	public static final String TRANSACTIONS_ROOT = MODULE_ROOT + "transactions";
-	public static final String TRNASACTIONS_PAGE = TRANSACTIONS_ROOT + ".form";
+	public static final String TRANSACTIONS_PAGE = TRANSACTIONS_ROOT + ".form";
 
 	public static final String MODULE_INIT_JS = MODULE_RESOURCE_ROOT + "js/init.js";
 

@@ -48,14 +48,16 @@ public class StockRoomDataServiceImpl
 			throw new NullPointerException("The stock room must be defined");
 		}
 
-		return executeCriteria(StockRoomItem.class, paging, new Action1<Criteria>() {
+		List<StockRoomItem> result = executeCriteria(StockRoomItem.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq("stockRoom", stockRoom));
-				//criteria.createAlias("item", "i");
 			}
 		});
-		//, Order.asc("i.name"));
+
+		// Force the results to be sorted by the stock room item name (see StockRoomItem.compareTo)
+		java.util.Collections.sort(result);
+		return result;
 	}
 
 	@Override

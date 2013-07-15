@@ -8,8 +8,10 @@ import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataServiceTest;
+import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
 
 import java.util.*;
 
@@ -766,5 +768,203 @@ public class IStockRoomTransactionDataServiceTest
 
 		Assert.assertNotNull(transactions);
 		Assert.assertEquals(0, transactions.size());
+	}
+
+	/**
+	 * @verifies throw NullPointerException if transaction search is null
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findTransactions_shouldThrowNullPointerExceptionIfTransactionSearchIsNull() throws Exception {
+		service.findTransactions(null, null);
+	}
+
+	/**
+	 * @verifies throw NullPointerException if transaction search template object is null
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findTransactions_shouldThrowNullPointerExceptionIfTransactionSearchTemplateObjectIsNull() throws Exception {
+		service.findTransactions(new StockRoomTransactionSearch(null), null);
+	}
+
+	/**
+	 * @verifies return an empty list if no transaction are found via the search
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnAnEmptyListIfNoTransactionAreFoundViaTheSearch() throws Exception {
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setStatus(StockRoomTransactionStatus.CANCELLED);
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+	}
+
+	/**
+	 * @verifies return items filtered by transaction number
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnItemsFilteredByTransactionNumber() throws Exception {
+		StockRoomTransaction tx = service.getById(0);
+		tx.setTransactionNumber("ABCD-1234");
+
+		service.save(tx);
+		Context.flushSession();
+
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setTransactionNumber("ABCD-1234");
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(tx, results.get(0));
+
+		search.setTransactionNumberComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
+		search.getTemplate().setTransactionNumber("AB%");
+
+		results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(tx, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by transaction status
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnItemsFilteredByTransactionStatus() throws Exception {
+		StockRoomTransaction tx = service.getById(0);
+		tx.setStatus(StockRoomTransactionStatus.CANCELLED);
+
+		service.save(tx);
+		Context.flushSession();
+
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setStatus(StockRoomTransactionStatus.CANCELLED);
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(tx, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by transaction type
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnItemsFilteredByTransactionType() throws Exception {
+		StockRoomTransaction tx = service.getById(0);
+		tx.setTransactionType(WellKnownTransactionTypes.getIntake());
+
+		service.save(tx);
+		Context.flushSession();
+
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setTransactionType(WellKnownTransactionTypes.getIntake());
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(tx, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by source stock room
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnItemsFilteredBySourceStockRoom() throws Exception {
+		StockRoomTransaction tx = service.getById(1);
+		StockRoom room = tx.getSource();
+
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setSource(room);
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(tx, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by destination stock room
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnItemsFilteredByDestinationStockRoom() throws Exception {
+		StockRoomTransaction tx = service.getById(0);
+		StockRoom room = tx.getDestination();
+
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setDestination(room);
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(tx, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by import transaction
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnItemsFilteredByImportTransaction() throws Exception {
+		StockRoomTransaction tx = service.getById(0);
+		tx.setTransactionType(WellKnownTransactionTypes.getCorrection());
+
+		service.save(tx);
+		Context.flushSession();
+
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setStatus(StockRoomTransactionStatus.CANCELLED);
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(tx, results.get(0));
+	}
+
+	/**
+	 * @verifies return all items if paging is null
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnAllItemsIfPagingIsNull() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies return paged items if paging is specified
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
+	}
+
+	/**
+	 * @verifies not return retired items from search unless specified
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
+		//TODO auto-generated
+		Assert.fail("Not yet implemented");
 	}
 }

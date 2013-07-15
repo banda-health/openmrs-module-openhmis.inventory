@@ -4,7 +4,7 @@
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <openmrs:require allPrivileges="<%= PrivilegeConstants.TRANSACTION_PAGE_PRIVILEGES %>" otherwise="/login.htm"
-                 redirect="<%= ModuleWebConstants.TRNASACTIONS_PAGE%>" />
+                 redirect="<%= ModuleWebConstants.TRANSACTIONS_PAGE%>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 
@@ -15,10 +15,11 @@
 	<spring:message code="openhmis.inventory.admin.transactions" />
 </h2>
 
-<div id="stockRoomContent" style="width: 100%;">
-	<div id="stockRoomList" style="width: 30%; float: left"></div>
-	<div id="stockRoomInfo" style="width: 68%; float: right"></div>
-	<div style="float: none"></div>
+<div id="detailTabs">
+	<ul id="detailTabList">
+		<li><a href="#pending">Pending</a></li>
+		<li><a href="#completed">Completed</a></li>
+	</ul>
+	<div id="pending"></div>
+	<div id="completed"></div>
 </div>
-
-<div id="txDialog" style="display: none"></div>
