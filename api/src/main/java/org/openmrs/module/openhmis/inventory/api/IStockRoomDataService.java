@@ -13,12 +13,15 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
+import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -34,6 +37,8 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should return paged items if paging is specified
 	 * @should throw NullReferenceException if the stock room is null
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
 	List<StockRoomItem> getItemsByRoom(StockRoom stockRoom, PagingInfo paging);
 
 	/**
@@ -50,6 +55,8 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should throw NullReferenceException if stock room is null
 	 * @should throw NullReferenceException if item search is null
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
 	List<StockRoomItem> findItems(StockRoom stockRoom, ItemSearch itemSearch, PagingInfo paging);
 
 	/**
@@ -66,6 +73,8 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should throw NullReferenceException when stock room is null
 	 * @should throw NullReferenceException when item is null
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
 	StockRoomItem getItem(StockRoom stockRoom, Item item, Date expiration);
 }
 

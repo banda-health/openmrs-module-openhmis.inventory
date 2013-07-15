@@ -1,9 +1,12 @@
 package org.openmrs.module.openhmis.inventory.api;
 
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +17,8 @@ public interface IStockRoomService {
 	 * @should return all the stock rooms
 	 * @should return an empty list if there are no stock rooms
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
 	List<StockRoom> getStockRooms();
 
 	/**
@@ -21,6 +26,8 @@ public interface IStockRoomService {
 	 * @return A list containing all the {@link StockRoomTransactionType}s.
 	 * @should return all the transaction types
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
 	List<StockRoomTransactionType> getTransactionTypes();
 
 	/**
@@ -32,6 +39,8 @@ public interface IStockRoomService {
 	 * @should return an empty list if there are no transactions
 	 * @should throw a NullReferenceException if the stock room is null
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
 	List<StockRoomTransaction> getTransactions(StockRoom stockRoom);
 
 	/**
@@ -45,6 +54,8 @@ public interface IStockRoomService {
 	 * @should throw an APIException if the type requires a source and the source is null
 	 * @should throw an APIException if the type requires a destination and the destination is null
 	 */
+	@Transactional
+	@Authorized( {PrivilegeConstants.MANAGE_TRANSACTIONS})
 	StockRoomTransaction createTransaction(StockRoomTransactionType type, StockRoom source, StockRoom destination) throws APIException;
 
 	/**
@@ -63,6 +74,8 @@ public interface IStockRoomService {
 	 * @should throw an APIException if the transaction type requires a source and the source is null
 	 * @should throw an APIException if the transaction type requires a destination and the destination is null
 	 */
+	@Transactional
+	@Authorized( {PrivilegeConstants.MANAGE_TRANSACTIONS})
 	void submitTransaction(StockRoomTransaction transaction) throws APIException;
 
 	/**
@@ -79,5 +92,7 @@ public interface IStockRoomService {
 	 * @should throw an APIException if the transaction type requires a source and the source is null
 	 * @should throw an APIException if the transaction type requires a destination and the destination is null
 	 */
+	@Transactional
+	@Authorized( {PrivilegeConstants.MANAGE_TRANSACTIONS})
 	void completeTransaction(StockRoomTransaction transaction) throws APIException;
 }

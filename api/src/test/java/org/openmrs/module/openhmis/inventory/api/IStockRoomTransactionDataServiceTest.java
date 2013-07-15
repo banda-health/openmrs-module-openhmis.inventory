@@ -922,20 +922,14 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void findTransactions_shouldReturnItemsFilteredByImportTransaction() throws Exception {
-		StockRoomTransaction tx = service.getById(0);
-		tx.setTransactionType(WellKnownTransactionTypes.getCorrection());
-
-		service.save(tx);
-		Context.flushSession();
-
 		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
-		search.getTemplate().setStatus(StockRoomTransactionStatus.CANCELLED);
+		search.getTemplate().setImportTransaction(true);
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
-		assertEntity(tx, results.get(0));
+		assertEntity(service.getById(0), results.get(0));
 	}
 
 	/**
@@ -944,8 +938,13 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void findTransactions_shouldReturnAllItemsIfPagingIsNull() throws Exception {
-		//TODO auto-generated
-		Assert.fail("Not yet implemented");
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setStatus(StockRoomTransactionStatus.COMPLETED);
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
 	}
 
 	/**
@@ -954,17 +953,14 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void findTransactions_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
-		//TODO auto-generated
-		Assert.fail("Not yet implemented");
-	}
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		search.getTemplate().setStatus(StockRoomTransactionStatus.COMPLETED);
 
-	/**
-	 * @verifies not return retired items from search unless specified
-	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void findTransactions_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
-		//TODO auto-generated
-		Assert.fail("Not yet implemented");
+		PagingInfo pagingInfo = new PagingInfo(1, 1);
+		List<StockRoomTransaction> results = service.findTransactions(search, pagingInfo);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(2, (long)pagingInfo.getTotalRecordCount());
 	}
 }

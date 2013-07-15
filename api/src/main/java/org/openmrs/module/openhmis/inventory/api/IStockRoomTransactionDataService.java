@@ -1,11 +1,14 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import org.openmrs.User;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +24,8 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @should throw IllegalArgumentException if transaction number is empty
 	 * @should throw IllegalArgumentException is transaction number is longer than 50 characters
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
 	StockRoomTransaction getTransactionByNumber(String transactionNumber);
 
 	/**
@@ -35,6 +40,8 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @should return transactions with any status
 	 * @should throw NullPointerException when stock room is null
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
 	List<StockRoomTransaction> getTransactionsByRoom(StockRoom stockRoom, PagingInfo paging);
 
 	/**
@@ -57,6 +64,8 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @should return all transactions when paging is null
 	 * @should throw NullPointerException when user is null
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
 	List<StockRoomTransaction> getUserPendingTransactions(User user, PagingInfo paging);
 
 	/**
@@ -75,8 +84,9 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @should return items filtered by import transaction
 	 * @should return all items if paging is null
 	 * @should return paged items if paging is specified
-	 * @should not return retired items from search unless specified
 	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
 	List<StockRoomTransaction> findTransactions(StockRoomTransactionSearch transactionSearch, PagingInfo paging);
 }
 
