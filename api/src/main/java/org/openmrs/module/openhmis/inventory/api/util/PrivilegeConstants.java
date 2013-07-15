@@ -34,4 +34,5 @@ public class PrivilegeConstants {
 	public static final String DEPARTMENT_PAGE_PRIVILEGES = MANAGE_METADATA + ", " + VIEW_METADATA;
 	public static final String CATEGORY_PAGE_PRIVILEGES = MANAGE_METADATA + ", " + VIEW_METADATA;
 	public static final String STOCK_ROOM_PAGE_PRIVILEGES = MANAGE_STOCK_ROOMS + ", " + VIEW_STOCK_ROOMS;
+	public static final String TRANSACTION_PAGE_PRIVILEGES = STOCK_ROOM_PAGE_PRIVILEGES;
 }

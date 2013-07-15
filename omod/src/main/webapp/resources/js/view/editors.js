@@ -27,7 +27,18 @@ define(
 			modelType: openhmis.ItemPrice,
 			displayAttr: "price"
 		});
-		
+
+		editors.StockRoomSelect = editors.GenericModelSelect.extend({
+			modelType: openhmis.StockRoom,
+			displayAttr: "name",
+			allowNull: true
+		});
+
+		editors.TransactionTypeSelect = editors.GenericModelSelect.extend({
+			modelType: openhmis.TransactionType,
+			displayAttr: "name"
+		});
+
 		editors.Item = editors.Base.extend({
 			tagName: "span",
 			className: "editor",

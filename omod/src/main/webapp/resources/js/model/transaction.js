@@ -5,7 +5,8 @@ define(
         openhmis.url.backboneBase + 'js/model/generic',
 	    openhmis.url.backboneBase + 'js/model/user',
 	    openhmis.url.inventoryBase + 'js/model/stockRoom',
-	    openhmis.url.inventoryBase + 'js/model/transactionType'
+	    openhmis.url.inventoryBase + 'js/model/transactionType',
+	    openhmis.url.inventoryBase + 'js/view/editors'
     ],
     function(openhmis, __) {
         openhmis.Transaction = openhmis.GenericModel.extend({
@@ -19,17 +20,13 @@ define(
             schema: {
                 name: 'Text',
                 transactionNumber: 'Text',
-                status: 'Text',
-				createdBy: {
-					type: 'UserSelect',
-					options: new openhmis.GenericCollection(null, {
-						model: openhmis.User,
-						url: 'v1/user'
-					}),
-					objRef: true
-				},
+                status: {
+	                type: 'Text',
+	                readonly: 'readonly'
+                },
 	            dateCreated: {
 		            type: 'DateTime',
+		            readonly: 'readonly',
 		            format: openhmis.dateTimeFormatLocale
 	            },
 	            transactionType: {
@@ -57,6 +54,20 @@ define(
 		            objRef: true
 	            }
             },
+
+	        TransactionStatus: {
+		        PENDING:	"PENDING",
+		        CANCELLED:	"CANCELLED",
+		        COMPLETED:	"COMPLETED"
+	        },
+
+	        initialize: function(attrs, options) {
+		        openhmis.GenericModel.prototype.initialize.call(this, attrs, options);
+
+		        if (!this.get("status")) {
+			        this.set("status", this.TransactionStatus.PENDING);
+		        }
+	        },
 
             validate: function(attrs, options) {
                 if (!attrs.name) return { name: __("A name is required.") };

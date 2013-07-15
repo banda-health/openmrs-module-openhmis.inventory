@@ -1,11 +1,10 @@
 <script id="detail-template" type="text/template">
 	<p>
 		<a class="addLink" href="#"><?= __("Add %s", model.modelName()) ?></a> |
-		<a class="createTxLink" href="#">Create Transaction</a>
+		<a class="txDialog createTxLink" href="#">Create Transaction</a>
 	</p>
-	<!--<b class="boxHeader title" style="display: none"><?= __("%s Details", model.modelName()) ?> (<a href="">edit</a>)</b>-->
 	<div id="detailTabs" style="display: none">
-		<ul>
+		<ul id="detailTabList" style="display: none">
 			<li><a href="#stockRoomDetails">Details</a></li>
 			<li><a href="#items">Items</a></li>
 			<li><a href="#transactions">Transactions</a></li>
