@@ -12,10 +12,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableObjectDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
 import org.openmrs.module.openhmis.inventory.api.security.TransactionAuthorizationPrivileges;
 
@@ -122,7 +119,23 @@ public class StockRoomTransactionDataServiceImpl
 	}
 
 	@Override
-	public List<StockRoomTransaction> findTransactions(StockRoomTransactionSearch transactionSearch, PagingInfo paging) {
-		return null;
+	public List<StockRoomTransaction> findTransactions(StockRoomTransactionSearch transactionSearch) {
+		return findTransactions(transactionSearch, null);
+	}
+
+	@Override
+	public List<StockRoomTransaction> findTransactions(final StockRoomTransactionSearch transactionSearch, PagingInfo paging) {
+		if (transactionSearch == null) {
+			throw new NullPointerException("The item search must be defined.");
+		} else if (transactionSearch.getTemplate() == null) {
+			throw new NullPointerException("The item search template must be defined.");
+		}
+
+		return executeCriteria(StockRoomTransaction.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				transactionSearch.updateCriteria(criteria);
+			}
+		});
 	}
 }

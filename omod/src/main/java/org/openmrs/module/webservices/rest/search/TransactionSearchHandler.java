@@ -16,10 +16,11 @@ package org.openmrs.module.webservices.rest.search;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus;
+import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
+import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionTemplate;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -62,12 +63,13 @@ public class TransactionSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
-		String status = context.getParameter("status");
-
-		transactionDataService.
+		String statusText = context.getParameter("status");
+		StockRoomTransactionStatus status = StockRoomTransactionStatus.valueOf(statusText);
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<StockRoomTransaction> transactions = transactionDataService.getTransactionsByRoom(stockRoom, pagingInfo);
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
+		search.getTemplate().setStatus(status);
+		List<StockRoomTransaction> transactions = transactionDataService.findTransactions(search, pagingInfo);
 
 		if (transactions == null || transactions.size() == 0) {
 			return new EmptySearchResult();

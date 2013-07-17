@@ -33,10 +33,10 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 	private String transactionNumber;
 	private StockRoomTransactionType transactionType;
 	private StockRoomTransactionStatus status;
-	private StockRoom source;
-	private StockRoom destination;
+	protected StockRoom source;
+	protected StockRoom destination;
 	private Set<StockRoomTransactionItem> items;
-	private boolean importTransaction;
+	private Boolean importTransaction;
 	private User creator;
 	private Date dateCreated;
 
@@ -206,11 +206,11 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 		}
 	}
 
-	public boolean isImportTransaction() {
+	public Boolean isImportTransaction() {
 		return importTransaction;
 	}
 
-	public void setImportTransaction(boolean importTransaction) {
+	public void setImportTransaction(Boolean importTransaction) {
 		this.importTransaction = importTransaction;
 	}
 

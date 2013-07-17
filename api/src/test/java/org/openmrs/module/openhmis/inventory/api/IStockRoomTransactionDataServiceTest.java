@@ -12,6 +12,7 @@ import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateS
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
+import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionTemplate;
 
 import java.util.*;
 
@@ -794,7 +795,7 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void findTransactions_shouldReturnAnEmptyListIfNoTransactionAreFoundViaTheSearch() throws Exception {
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setStatus(StockRoomTransactionStatus.CANCELLED);
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
@@ -815,7 +816,7 @@ public class IStockRoomTransactionDataServiceTest
 		service.save(tx);
 		Context.flushSession();
 
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setTransactionNumber("ABCD-1234");
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
@@ -846,7 +847,7 @@ public class IStockRoomTransactionDataServiceTest
 		service.save(tx);
 		Context.flushSession();
 
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setStatus(StockRoomTransactionStatus.CANCELLED);
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
@@ -868,7 +869,7 @@ public class IStockRoomTransactionDataServiceTest
 		service.save(tx);
 		Context.flushSession();
 
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setTransactionType(WellKnownTransactionTypes.getIntake());
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
@@ -887,8 +888,16 @@ public class IStockRoomTransactionDataServiceTest
 		StockRoomTransaction tx = service.getById(1);
 		StockRoom room = tx.getSource();
 
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		Context.flushSession();
+
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setSource(room);
+
+		Context.flushSession();
+
+		List<StockRoomTransaction> test = service.getAll();
+		Assert.assertNotNull(test);
+		Assert.assertEquals(3, test.size());
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
 
@@ -906,7 +915,7 @@ public class IStockRoomTransactionDataServiceTest
 		StockRoomTransaction tx = service.getById(0);
 		StockRoom room = tx.getDestination();
 
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setDestination(room);
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
@@ -922,7 +931,7 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void findTransactions_shouldReturnItemsFilteredByImportTransaction() throws Exception {
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setImportTransaction(true);
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
@@ -938,7 +947,7 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void findTransactions_shouldReturnAllItemsIfPagingIsNull() throws Exception {
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setStatus(StockRoomTransactionStatus.COMPLETED);
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
@@ -953,7 +962,7 @@ public class IStockRoomTransactionDataServiceTest
 	 */
 	@Test
 	public void findTransactions_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransaction());
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
 		search.getTemplate().setStatus(StockRoomTransactionStatus.COMPLETED);
 
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
@@ -962,5 +971,21 @@ public class IStockRoomTransactionDataServiceTest
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (long)pagingInfo.getTotalRecordCount());
+	}
+
+	/**
+	 * @verifies return items filtered by creation date
+	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findTransactions_shouldReturnItemsFilteredByCreationDate() throws Exception {
+		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
+		search.getTemplate().setDateCreated(service.getById(0).getDateCreated());
+		search.setDateCreatedComparisonType(BaseObjectTemplateSearch.DateComparisonType.GREATER_THAN_EQUAL);
+
+		List<StockRoomTransaction> results = service.findTransactions(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
 	}
 }

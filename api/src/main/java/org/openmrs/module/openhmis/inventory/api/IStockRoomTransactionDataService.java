@@ -71,6 +71,15 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	/**
 	 * Finds all {@link StockRoomTransaction}s using the specified {@link StockRoomTransactionSearch} settings.
 	 * @param transactionSearch The transaction search settings.
+	 * @return The transactions found or an empty list if no transactions were found.
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
+	List<StockRoomTransaction> findTransactions(StockRoomTransactionSearch transactionSearch);
+
+	/**
+	 * Finds all {@link StockRoomTransaction}s using the specified {@link StockRoomTransactionSearch} settings.
+	 * @param transactionSearch The transaction search settings.
 	 * @param paging The paging information.
 	 * @return The transactions found or an empty list if no transactions were found.
 	 * @should throw NullPointerException if transaction search is null
@@ -82,6 +91,7 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	 * @should return items filtered by source stock room
 	 * @should return items filtered by destination stock room
 	 * @should return items filtered by import transaction
+	 * @should return items filtered by creation date
 	 * @should return all items if paging is null
 	 * @should return paged items if paging is specified
 	 */
