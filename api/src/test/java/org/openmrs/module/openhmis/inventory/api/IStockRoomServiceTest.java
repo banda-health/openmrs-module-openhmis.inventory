@@ -74,7 +74,7 @@ public class IStockRoomServiceTest extends BaseModuleContextSensitiveTest {
 		List<StockRoomTransactionType> results = service.getTransactionTypes();
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(3, results.size());
+		Assert.assertEquals(4, results.size());
 	}
 
 	/**
