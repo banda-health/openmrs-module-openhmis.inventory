@@ -15,6 +15,9 @@
 	<inv_stock_room_transaction_type stock_room_transaction_type_id="2" name="Distribution" source_required="true" destination_required="false"
 	                                 authorized="false" quantity_type="RESERVED"
 	                                 creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="09bdbc0c-306d-484e-8a0e-61811152a1d8" />
+	<inv_stock_room_transaction_type stock_room_transaction_type_id="3" name="Correction" source_required="true" destination_required="true"
+	                                 authorized="false" quantity_type="TRANSFERRED"
+	                                 creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="b20c2a24-29e4-405a-9e56-054351cbf5f7" />
 
 	<inv_stock_room_transaction stock_room_transaction_id="0" transaction_number="T101" transaction_type_id="0"
 	                            status="COMPLETED" stock_room_destination_id="1" is_import_transaction="true"

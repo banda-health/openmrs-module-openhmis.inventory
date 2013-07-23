@@ -3,6 +3,7 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Role;
@@ -77,7 +78,12 @@ public class StockRoomTransactionDataServiceImpl
 	}
 
 	@Override
-	public List<StockRoomTransaction> getUserPendingTransactions(final User user, PagingInfo paging) {
+	public List<StockRoomTransaction> getUserTransactions(final User user, PagingInfo paging) {
+		return getUserTransactions(user, null, paging);
+	}
+
+	@Override
+	public List<StockRoomTransaction> getUserTransactions(final User user, final StockRoomTransactionStatus status, PagingInfo paging) {
 		if (user == null) {
 			throw new NullPointerException("The user must be defined.");
 		}
@@ -95,10 +101,10 @@ public class StockRoomTransactionDataServiceImpl
 
 				if (roles != null && roles.size() > 0) {
 					subQuery.add(Restrictions.or(
-						// Transaction types that require user approval
-						Restrictions.eq("at.user", user),
-						// Transaction types that require role approval
-						Restrictions.in("at.role", roles)
+							// Transaction types that require user approval
+							Restrictions.eq("at.user", user),
+							// Transaction types that require role approval
+							Restrictions.in("at.role", roles)
 					));
 				} else {
 					// Transaction types that require user approval
@@ -106,16 +112,26 @@ public class StockRoomTransactionDataServiceImpl
 				}
 
 				// Join the above criteria as a sub-query to the transaction transaction type
-				criteria.add(Restrictions.and(
-						Restrictions.eq("status", StockRoomTransactionStatus.PENDING),
-						Restrictions.or(
-								// Transactions created by the user
-								Restrictions.eq("creator", user),
-								Property.forName("transactionType").in(subQuery)
-						)
-				));
+				if (status != null) {
+					criteria.add(Restrictions.and(
+							Restrictions.eq("status", status),
+							Restrictions.or(
+									// Transactions created by the user
+									Restrictions.eq("creator", user),
+									Property.forName("transactionType").in(subQuery)
+							)
+					));
+				} else {
+					criteria.add(Restrictions.or(
+							// Transactions created by the user
+							Restrictions.eq("creator", user),
+							Property.forName("transactionType").in(subQuery)
+					)
+					);
+				}
 			}
-		});
+		}, Order.desc("dateCreated")
+		);
 	}
 
 	@Override

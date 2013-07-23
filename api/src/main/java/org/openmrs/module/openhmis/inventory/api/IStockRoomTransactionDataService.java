@@ -6,6 +6,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus;
 import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,28 +46,38 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 	List<StockRoomTransaction> getTransactionsByRoom(StockRoom stockRoom, PagingInfo paging);
 
 	/**
-	 * Returns the {@link StockRoomTransaction}s that are pending and can be completed by the specified
-	 * {@link User}.
+	 * Returns the {@link StockRoomTransaction}s that are associated with the specified user.
 	 * @param user The {@link User}.
+	 * @param paging The paging information of {@code null} to return all results.
+	 * @return The transactions associated with the specified user.
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
+	List<StockRoomTransaction> getUserTransactions(User user, PagingInfo paging);
+
+	/**
+	 * Returns the {@link StockRoomTransaction}s with the specified status for the specified user.
+	 * @param user The {link User}.
+	 * @param status The {@link StockRoomTransactionStatus}.
 	 * @param paging The paging information or {@code null} to return all results.
-	 * @return The pending transactions for the specified user.
-	 * @should return all pending transactions for specified user
-	 * @should return pending transactions created by user
-	 * @should return pending transactions with user as attribute type user
-	 * @should return pending transactions with user role as attribute type role
-	 * @should return pending transactions with user role as child role of attribute type role
-	 * @should return pending transactions with user role as grandchild role of attribute type role
+	 * @return The transactions associated with the specified user with the specified status.
+	 * @should return all transactions with the specified status for specified user
+	 * @should return specified transactions created by user
+	 * @should return specified transactions with user as attribute type user
+	 * @should return specified transactions with user role as attribute type role
+	 * @should return specified transactions with user role as child role of attribute type role
+	 * @should return specified transactions with user role as grandchild role of attribute type role
 	 * @should not return transactions when user role not descendant of attribute type role
 	 * @should not return transactions when user role is parent of attribute type role
-	 * @should not return any completed or cancelled transactions
 	 * @should return empty list when no transactions
 	 * @should return paged transactions when paging is specified
 	 * @should return all transactions when paging is null
 	 * @should throw NullPointerException when user is null
+	 * @should return all transactions for user when status is null
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_TRANSACTIONS})
-	List<StockRoomTransaction> getUserPendingTransactions(User user, PagingInfo paging);
+	List<StockRoomTransaction> getUserTransactions(User user, StockRoomTransactionStatus status, PagingInfo paging);
 
 	/**
 	 * Finds all {@link StockRoomTransaction}s using the specified {@link StockRoomTransactionSearch} settings.

@@ -437,341 +437,6 @@ public class IStockRoomTransactionDataServiceTest
 	}
 
 	/**
-	 * @verifies return all pending transactions for specified user
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnAllPendingTransactionsForSpecifiedUser() throws Exception {
-		User user = Context.getUserService().getUser(1);
-
-		List<StockRoomTransaction> results = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
-
-		assertEntity(service.getById(2), results.get(0));
-	}
-
-	/**
-	 * @verifies not return any completed or cancelled transactions
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldNotReturnAnyCompletedOrCancelledTransactions() throws Exception {
-		User user = Context.getUserService().getUser(1);
-
-		List<StockRoomTransaction> results = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(StockRoomTransactionStatus.PENDING, results.get(0).getStatus());
-	}
-
-	/**
-	 * @verifies return empty list when no transactions
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnEmptyListWhenNoTransactions() throws Exception {
-		User user = Context.getUserService().getUser(1);
-
-		StockRoomTransaction transaction = service.getById(2);
-		transaction.setStatus(StockRoomTransactionStatus.COMPLETED);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> results = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(results);
-		Assert.assertEquals(0, results.size());
-	}
-
-	/**
-	 * @verifies return paged transactions when paging is specified
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnPagedTransactionsWhenPagingIsSpecified() throws Exception {
-		User user = Context.getUserService().getUser(1);
-		StockRoomTransaction transaction = service.getById(1);
-		transaction.setStatus(StockRoomTransactionStatus.PENDING);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		PagingInfo paging = new PagingInfo(1, 1);
-		List<StockRoomTransaction> results = service.getUserPendingTransactions(user, paging);
-		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(2, (long)paging.getTotalRecordCount());
-		int id = results.get(0).getId();
-
-		paging.setPage(2);
-		results = service.getUserPendingTransactions(user, paging);
-		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
-		Assert.assertFalse(id == results.get(0).getId());
-	}
-
-	/**
-	 * @verifies return all transactions when paging is null
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnAllTransactionsWhenPagingIsNull() throws Exception {
-		User user = Context.getUserService().getUser(1);
-		StockRoomTransaction transaction = service.getById(1);
-		transaction.setStatus(StockRoomTransactionStatus.PENDING);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> results = service.getUserPendingTransactions(user, null);
-		Assert.assertNotNull(results);
-		Assert.assertEquals(2, results.size());
-	}
-
-	/**
-	 * @verifies throw NullPointerException when user is null
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test(expected = NullPointerException.class)
-	public void getUserPendingTransactions_shouldThrowNullPointerExceptionWhenUserIsNull() throws Exception {
-		service.getUserPendingTransactions(null, null);
-	}
-
-	/**
-	 * @verifies return pending transactions created by user
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnPendingTransactionsCreatedByUser() throws Exception {
-		User user = Context.getUserService().getUser(5506);
-
-		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(user);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
-	}
-
-	/**
-	 * @verifies return pending transactions with user as attribute type user
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserAsAttributeTypeUser() throws Exception {
-		User baseUser = Context.getUserService().getUser(0);
-		User user = Context.getUserService().getUser(5506);
-
-		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(baseUser);
-
-		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
-		type.setName("user");
-		type.setUser(user);
-		type.setRequired(true);
-		type.setAttributeOrder(0);
-		type.setOwner(transaction.getTransactionType());
-
-		transaction.getTransactionType().addAttributeType(type);
-
-		typeService.save(transaction.getTransactionType());
-		service.save(transaction);
-		Context.flushSession();
-
-		transaction = service.getById(transaction.getId());
-
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
-	}
-
-	/**
-	 * @verifies return pending transactions with user role as attribute type role
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserRoleAsAttributeTypeRole() throws Exception {
-		User baseUser = Context.getUserService().getUser(0);
-		User user = Context.getUserService().getUser(5506);
-		Set<Role> roles = user.getRoles();
-		Role[] roleArray = new Role[roles.size()];
-		roles.toArray(roleArray);
-
-		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(baseUser);
-
-		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
-		type.setName("role");
-		type.setRole(roleArray[0]);
-		type.setRequired(true);
-		type.setAttributeOrder(0);
-
-		transaction.getTransactionType().addAttributeType(type);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
-	}
-
-	/**
-	 * @verifies return pending transactions with user role as child role of attribute type role
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserRoleAsChildRoleOfAttributeTypeRole() throws Exception {
-		User baseUser = Context.getUserService().getUser(0);
-
-		// This user has the Child Role which is a child of the Parent role
-		User user = Context.getUserService().getUser(5506);
-
-		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(baseUser);
-
-		// Set up this transaction type to be for users of the Parent role
-		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
-		type.setName("role");
-		type.setRole(Context.getUserService().getRole("Parent"));
-		type.setRequired(true);
-		type.setAttributeOrder(0);
-
-		transaction.getTransactionType().addAttributeType(type);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
-	}
-
-	/**
-	 * @verifies return pending transactions with user role as grandchild role of attribute type role
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldReturnPendingTransactionsWithUserRoleAsGrandchildRoleOfAttributeTypeRole() throws Exception {
-		User baseUser = Context.getUserService().getUser(0);
-		User user = Context.getUserService().getUser(5506);
-
-		Set<Role> roles = new HashSet<Role>();
-		roles.add(Context.getUserService().getRole("Grandchild"));
-		user.setRoles(roles);
-		Context.getUserService().saveUser(user, "1wWhatever");
-		Context.flushSession();
-
-		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(baseUser);
-
-		// Set up this transaction type to be for users of the Parent role
-		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
-		type.setName("role");
-		type.setRole(Context.getUserService().getRole("Parent"));
-		type.setRequired(true);
-		type.setAttributeOrder(0);
-
-		transaction.getTransactionType().addAttributeType(type);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
-	}
-
-	/**
-	 * @verifies not return transactions when user role not descendant of attribute type role
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldNotReturnTransactionsWhenUserRoleNotDescendantOfAttributeTypeRole() throws Exception {
-		User baseUser = Context.getUserService().getUser(0);
-		User user = Context.getUserService().getUser(5506);
-
-		Set<Role> roles = new HashSet<Role>();
-		roles.add(Context.getUserService().getRole("Other"));
-		user.setRoles(roles);
-		Context.getUserService().saveUser(user, "1wWhatever");
-		Context.flushSession();
-
-		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(baseUser);
-
-		// Set up this transaction type to be for users of the Parent role
-		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
-		type.setName("role");
-		type.setRole(Context.getUserService().getRole("Parent"));
-		type.setRequired(true);
-		type.setAttributeOrder(0);
-
-		transaction.getTransactionType().addAttributeType(type);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
-	}
-
-	/**
-	 * @verifies not return transactions when user role is parent of attribute type role
-	 * @see IStockRoomTransactionDataService#getUserPendingTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
-	 */
-	@Test
-	public void getUserPendingTransactions_shouldNotReturnTransactionsWhenUserRoleIsParentOfAttributeTypeRole() throws Exception {
-		User baseUser = Context.getUserService().getUser(0);
-		User user = Context.getUserService().getUser(5506);
-
-		Set<Role> roles = new HashSet<Role>();
-		roles.add(Context.getUserService().getRole("Parent"));
-		user.setRoles(roles);
-		Context.getUserService().saveUser(user, "1wWhatever");
-		Context.flushSession();
-
-		StockRoomTransaction transaction = createEntity(true);
-		transaction.setCreator(baseUser);
-
-		// Set up this transaction type to be for users of the Parent role
-		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
-		type.setName("role");
-		type.setRole(Context.getUserService().getRole("Child"));
-		type.setRequired(true);
-		type.setAttributeOrder(0);
-
-		transaction.getTransactionType().addAttributeType(type);
-
-		service.save(transaction);
-		Context.flushSession();
-
-		List<StockRoomTransaction> transactions = service.getUserPendingTransactions(user, null);
-
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
-	}
-
-	/**
 	 * @verifies throw NullPointerException if transaction search is null
 	 * @see IStockRoomTransactionDataService#findTransactions(org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
@@ -987,5 +652,415 @@ public class IStockRoomTransactionDataServiceTest
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
+	}
+
+	/**
+	 * @verifies return transactions created by user
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnTransactionsCreatedByUser() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		List<StockRoomTransaction> results = service.getUserTransactions(user, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+	}
+
+	/**
+	 * @verifies return all transactions with the specified status for specified user
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnAllTransactionsWithTheSpecifiedStatusForSpecifiedUser() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		List<StockRoomTransaction> results = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+
+		Assert.assertEquals(service.getById(1).getId(), results.get(0).getId());
+		Assert.assertEquals(service.getById(0).getId(), results.get(1).getId());
+		Assert.assertEquals(service.getById(2).getId(), results.get(2).getId());
+
+		results = service.getUserTransactions(user, StockRoomTransactionStatus.COMPLETED, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
+
+		Assert.assertEquals(service.getById(1).getId(), results.get(0).getId());
+		Assert.assertEquals(service.getById(0).getId(), results.get(1).getId());
+
+		results = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+
+		Assert.assertEquals(service.getById(2).getId(), results.get(0).getId());
+	}
+
+	/**
+	 * @verifies return specified transactions created by user
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnSpecifiedTransactionsCreatedByUser() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		List<StockRoomTransaction> results = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+
+		results = service.getUserTransactions(user, StockRoomTransactionStatus.COMPLETED, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
+
+		results = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+	}
+
+	/**
+	 * @verifies return specified transactions with user as attribute type user
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnSpecifiedTransactionsWithUserAsAttributeTypeUser() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("user");
+		type.setUser(user);
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+		type.setOwner(transaction.getTransactionType());
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		typeService.save(transaction.getTransactionType());
+		service.save(transaction);
+		Context.flushSession();
+
+		transaction = service.getById(transaction.getId());
+
+		List<StockRoomTransaction> transactions = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.COMPLETED, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies return specified transactions with user role as attribute type role
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnSpecifiedTransactionsWithUserRoleAsAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+		Set<Role> roles = user.getRoles();
+		Role[] roleArray = new Role[roles.size()];
+		roles.toArray(roleArray);
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(roleArray[0]);
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.COMPLETED, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies return specified transactions with user role as child role of attribute type role
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnSpecifiedTransactionsWithUserRoleAsChildRoleOfAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+
+		// This user has the Child Role which is a child of the Parent role
+		User user = Context.getUserService().getUser(5506);
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+
+		// Set up this transaction type to be for users of the Parent role
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(Context.getUserService().getRole("Parent"));
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.COMPLETED, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies return specified transactions with user role as grandchild role of attribute type role
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnSpecifiedTransactionsWithUserRoleAsGrandchildRoleOfAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Context.getUserService().getRole("Grandchild"));
+		user.setRoles(roles);
+		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.flushSession();
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+
+		// Set up this transaction type to be for users of the Parent role
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(Context.getUserService().getRole("Parent"));
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.COMPLETED, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
+
+		transactions = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+		Assert.assertEquals(transaction.getId(), transactions.get(0).getId());
+	}
+
+	/**
+	 * @verifies not return transactions when user role not descendant of attribute type role
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldNotReturnTransactionsWhenUserRoleNotDescendantOfAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Context.getUserService().getRole("Other"));
+		user.setRoles(roles);
+		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.flushSession();
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+
+		// Set up this transaction type to be for users of the Parent role
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(Context.getUserService().getRole("Parent"));
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
+	}
+
+	/**
+	 * @verifies not return transactions when user role is parent of attribute type role
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldNotReturnTransactionsWhenUserRoleIsParentOfAttributeTypeRole() throws Exception {
+		User baseUser = Context.getUserService().getUser(0);
+		User user = Context.getUserService().getUser(5506);
+
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Context.getUserService().getRole("Parent"));
+		user.setRoles(roles);
+		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.flushSession();
+
+		StockRoomTransaction transaction = createEntity(true);
+		transaction.setCreator(baseUser);
+
+		// Set up this transaction type to be for users of the Parent role
+		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
+		type.setName("role");
+		type.setRole(Context.getUserService().getRole("Child"));
+		type.setRequired(true);
+		type.setAttributeOrder(0);
+
+		transaction.getTransactionType().addAttributeType(type);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> transactions = service.getUserTransactions(user, null, null);
+
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(0, transactions.size());
+	}
+
+	/**
+	 * @verifies return empty list when no transactions
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnEmptyListWhenNoTransactions() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		StockRoomTransaction transaction = service.getById(2);
+		transaction.setStatus(StockRoomTransactionStatus.COMPLETED);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		List<StockRoomTransaction> results = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+	}
+
+	/**
+	 * @verifies return paged transactions when paging is specified
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnPagedTransactionsWhenPagingIsSpecified() throws Exception {
+		User user = Context.getUserService().getUser(1);
+		StockRoomTransaction transaction = service.getById(1);
+		transaction.setStatus(StockRoomTransactionStatus.PENDING);
+
+		service.save(transaction);
+		Context.flushSession();
+
+		PagingInfo paging = new PagingInfo(1, 1);
+		List<StockRoomTransaction> results = service.getUserTransactions(user, StockRoomTransactionStatus.PENDING, paging);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(2, (long)paging.getTotalRecordCount());
+		int id = results.get(0).getId();
+
+		paging.setPage(2);
+		results = service.getUserTransactions(user, paging);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertFalse(id == results.get(0).getId());
+	}
+
+	/**
+	 * @verifies return all transactions when paging is null
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnAllTransactionsWhenPagingIsNull() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		List<StockRoomTransaction> results = service.getUserTransactions(user, null, null);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+	}
+
+	/**
+	 * @verifies throw NullPointerException when user is null
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void getUserTransactions_shouldThrowNullPointerExceptionWhenUserIsNull() throws Exception {
+		service.getUserTransactions(null, null, null);
+	}
+
+	/**
+	 * @verifies return all transactions for user when status is null
+	 * @see IStockRoomTransactionDataService#getUserTransactions(org.openmrs.User, StockRoomTransactionStatus, PagingInfo)
+	 */
+	@Test
+	public void getUserTransactions_shouldReturnAllTransactionsForUserWhenStatusIsNull() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		List<StockRoomTransaction> results = service.getUserTransactions(user, null, null);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
 	}
 }
