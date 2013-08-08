@@ -58,7 +58,6 @@ define(
 			        } else {
 				        tabs.tabs({
 					        activate: this.activateTab
-
 				        });
 			        }
 			        tabs.show();
@@ -76,6 +75,29 @@ define(
 		        }
 	        },
 
+	        edit: function(model) {
+		        // TODO: Fix this crappy copy-paste hack to hide the details when another tab is selected
+
+		        this.model = model;
+		        var self = this;
+		        this.model.fetch({
+			        success: function(model, resp) {
+				        self.render();
+				        $(self.titleEl).show();
+				        self.modelForm = self.prepareModelForm(self.model);
+				        $(self.formEl).prepend(self.modelForm.el);
+
+				        if (this.selectedTab == 0) {
+				            $(self.formEl).show();
+				        }
+
+				         $(self.retireVoidPurgeEl).show();
+				        $(self.formEl).find('input')[0].focus();
+			        },
+			        error: openhmis.error
+		        });
+	        },
+
 	        fetch: function(options) {
 		        options.queryString = openhmis.addQueryStringParameter(options.queryString, "stock_room_uuid=" + this.model.id);
 	        },
@@ -91,68 +113,6 @@ define(
 	        }
         });
 
-	    openhmis.TransactionView = openhmis.GenericAddEditView.extend({
-		    className: 'txDialog',
-
-		    initialize: function(options) {
-			    this.events = _.extend(this.events, {
-				    'click a.createTxLink': 'createTransaction',
-				    'click button.submitTransaction': 'saveTransaction'
-			    });
-
-			    openhmis.GenericAddEditView.prototype.initialize.call(this, options);
-		    },
-
-		    createTransaction: function() {
-			    this.currentTx = new openhmis.Transaction();
-			    var txDialog = $('#txDialog');
-			    txDialog.empty();
-
-			    this.currentTxForm = openhmis.GenericAddEditView.prototype.prepareModelForm.call(this, this.currentTx);
-			    txDialog.prepend(this.currentTxForm.el);
-			    txDialog.dialog({
-				    modal: true,
-				    width: 500,
-				    buttons: [{ text: 'Submit', click: function() { this.saveTransaction() }}],
-				    title: "Create New Transaction"
-			    });
-		    },
-		    editTransaction: function(tx) {
-			    this.currentTx = tx;
-			    var txDialog = $('#txDialog');
-			    txDialog.empty();
-
-			    this.currentTxForm = openhmis.GenericAddEditView.prototype.prepareModelForm.call(this, this.currentTx);
-			    txDialog.prepend(this.currentTxForm.el);
-			    txDialog.dialog({
-				    modal: true,
-				    width: 500,
-				    buttons: { class: 'submitTransaction', text: 'Submit' },
-				    title: "Edit Transaction"
-			    });
-		    },
-
-		    saveTransaction: function(event) {
-			    if (event) event.preventDefault();
-
-			    var errors = this.currentTxForm.commit();
-			    if (errors) return;
-
-			    var view = this;
-			    this.currentTx.save(null, {
-				    success: function(model, resp) {
-					    if (model.collection === undefined) {
-						    view.collection.add(model);
-					    }
-
-					    model.trigger("sync");
-					    $('#txDialog').close();
-				    },
-				    error: function(model, resp) { openhmis.error(resp); }
-			    });
-		    }
-	    });
-
-        return openhmis;
+	   return openhmis;
     }
 );

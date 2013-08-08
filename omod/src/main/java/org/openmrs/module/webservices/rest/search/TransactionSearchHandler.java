@@ -41,7 +41,7 @@ import java.util.List;
 public class TransactionSearchHandler implements SearchHandler {
 	protected Log log = LogFactory.getLog(getClass());
 
-	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.TRANSACTION_RESOURCE,
+	private final SearchConfig searchConfig = new SearchConfig("trans", ModuleRestConstants.TRANSACTION_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Find all transactions by optional status.")

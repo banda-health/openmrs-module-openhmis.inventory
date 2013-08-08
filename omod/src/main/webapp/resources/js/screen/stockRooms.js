@@ -21,13 +21,6 @@ curl(
                 addEditViewType: openhmis.StockRoomDetailView,
                 addEditElement: stockRoomInfo
 			});
-
-			var collection = new openhmis.GenericCollection([], {
-				url: openhmis.Transaction.prototype.meta.restUrl,
-				model: openhmis.Transaction
-			});
-			var txView = new openhmis.TransactionView({ collection: collection });
-			txView.setElement($('#txDialog'));
 		});
 	}
 );
