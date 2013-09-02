@@ -21,6 +21,10 @@ import org.openmrs.module.openhmis.inventory.api.model.Item;
 public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 	public static final long serialVersionUID = 0L;
 
+	public ItemSearch() {
+		this(new Item(), StringComparisonType.EQUAL, false);
+	}
+
 	public ItemSearch(Item itemTemplate) {
 		this(itemTemplate, StringComparisonType.EQUAL, false);
 	}

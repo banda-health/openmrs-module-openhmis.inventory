@@ -19,6 +19,10 @@ import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateS
 import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 
 public class StockRoomTransactionSearch extends BaseObjectTemplateSearch<StockRoomTransactionTemplate> {
+	public StockRoomTransactionSearch() {
+		this(new StockRoomTransactionTemplate());
+	}
+
 	public StockRoomTransactionSearch(StockRoomTransactionTemplate template) {
 		super(template);
 	}
