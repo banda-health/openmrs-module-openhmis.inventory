@@ -70,7 +70,7 @@ public interface IStockRoomTransactionDataService extends IObjectDataService<Sto
 
 	/**
 	 * Returns the {@link StockRoomTransaction}s with the specified status for the specified user.
-	 * @param user The {link User}.
+	 * @param user The {@link User}.
 	 * @param status The {@link StockRoomTransactionStatus}.
 	 * @param paging The paging information or {@code null} to return all results.
 	 * @return The transactions associated with the specified user with the specified status.
