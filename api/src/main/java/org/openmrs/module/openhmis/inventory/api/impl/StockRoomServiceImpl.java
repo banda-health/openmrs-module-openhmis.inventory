@@ -71,7 +71,7 @@ public class StockRoomServiceImpl
 		tx.setCreator(Context.getAuthenticatedUser());
 		tx.setDateCreated(new Date());
 		tx.setStatus(StockRoomTransactionStatus.PENDING);
-		tx.setTransactionType(type);
+		tx.setInstanceType(type);
 		tx.setSource(source);
 		tx.setDestination(destination);
 		tx.setImportTransaction(source == null);
@@ -98,7 +98,7 @@ public class StockRoomServiceImpl
 
 		validate(transaction, true);
 
-		StockRoomTransactionType txType = transaction.getTransactionType();
+		StockRoomTransactionType txType = transaction.getInstanceType();
 		if (transaction.getSource() != null) {
 			StockRoom source = transaction.getSource();
 
@@ -205,17 +205,17 @@ public class StockRoomServiceImpl
 	}
 
 	protected void validate(StockRoomTransaction transaction, boolean checkHasItems) throws APIException {
-		if (transaction.getTransactionType() == null) {
+		if (transaction.getInstanceType() == null) {
 			throw new APIException("The transaction type must be defined.");
 		}
 
-		if (transaction.getTransactionType().isSourceRequired() && transaction.getSource() == null) {
-			throw new APIException("The specified transaction type " + transaction.getTransactionType().getName() +
+		if (transaction.getInstanceType().isSourceRequired() && transaction.getSource() == null) {
+			throw new APIException("The specified transaction type " + transaction.getInstanceType().getName() +
 				" requires a source stock room.");
 		}
 
-		if (transaction.getTransactionType().isDestinationRequired() && transaction.getDestination() == null) {
-			throw new APIException("The specified transaction type " + transaction.getTransactionType().getName() +
+		if (transaction.getInstanceType().isDestinationRequired() && transaction.getDestination() == null) {
+			throw new APIException("The specified transaction type " + transaction.getInstanceType().getName() +
 					" requires a destination stock room.");
 		}
 

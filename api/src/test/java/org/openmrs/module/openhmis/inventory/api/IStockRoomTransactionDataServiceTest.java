@@ -41,7 +41,7 @@ public class IStockRoomTransactionDataServiceTest
 		StockRoomTransaction transaction = new StockRoomTransaction();
 
 		if (valid) {
-			transaction.setTransactionType(WellKnownTransactionTypes.getIntake());
+			transaction.setInstanceType(WellKnownTransactionTypes.getIntake());
 		}
 
 		transaction.setTransactionNumber(UUID.randomUUID().toString());
@@ -109,7 +109,7 @@ public class IStockRoomTransactionDataServiceTest
 		super.assertEntity(expected, actual);
 
 		Assert.assertEquals(expected.getTransactionNumber(), actual.getTransactionNumber());
-		Assert.assertEquals(expected.getTransactionType(), actual.getTransactionType());
+		Assert.assertEquals(expected.getInstanceType(), actual.getInstanceType());
 		Assert.assertEquals(expected.getStatus(), actual.getStatus());
 		Assert.assertEquals(expected.getSource(), actual.getSource());
 		Assert.assertEquals(expected.getDestination(), actual.getDestination());
@@ -163,7 +163,7 @@ public class IStockRoomTransactionDataServiceTest
 	public void save_shouldAddMapRecordsToSourceAndDestinationStockRooms() throws Exception {
 		StockRoomTransaction transaction = new StockRoomTransaction();
 		transaction.setTransactionNumber("123");
-		transaction.setTransactionType(WellKnownTransactionTypes.getTransfer());
+		transaction.setInstanceType(WellKnownTransactionTypes.getTransfer());
 		transaction.setStatus(StockRoomTransactionStatus.PENDING);
 		transaction.setCreator(Context.getAuthenticatedUser());
 
@@ -197,7 +197,7 @@ public class IStockRoomTransactionDataServiceTest
 	public void save_shouldRemoveMapRecordsFromNullSourceOrDestinationStockRooms() throws Exception {
 		StockRoomTransaction transaction = new StockRoomTransaction();
 		transaction.setTransactionNumber("123");
-		transaction.setTransactionType(WellKnownTransactionTypes.getTransfer());
+		transaction.setInstanceType(WellKnownTransactionTypes.getTransfer());
 		transaction.setStatus(StockRoomTransactionStatus.PENDING);
 		transaction.setCreator(Context.getAuthenticatedUser());
 
@@ -236,7 +236,7 @@ public class IStockRoomTransactionDataServiceTest
 	public void save_shouldUpdatePreviousRoomWhenSourceOrDestinationIsChanged() throws Exception {
 		StockRoomTransaction transaction = new StockRoomTransaction();
 		transaction.setTransactionNumber("123");
-		transaction.setTransactionType(WellKnownTransactionTypes.getTransfer());
+		transaction.setInstanceType(WellKnownTransactionTypes.getTransfer());
 		transaction.setStatus(StockRoomTransactionStatus.PENDING);
 		transaction.setCreator(Context.getAuthenticatedUser());
 
@@ -529,13 +529,13 @@ public class IStockRoomTransactionDataServiceTest
 	@Test
 	public void findTransactions_shouldReturnItemsFilteredByTransactionType() throws Exception {
 		StockRoomTransaction tx = service.getById(0);
-		tx.setTransactionType(WellKnownTransactionTypes.getIntake());
+		tx.setInstanceType(WellKnownTransactionTypes.getIntake());
 
 		service.save(tx);
 		Context.flushSession();
 
 		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
-		search.getTemplate().setTransactionType(WellKnownTransactionTypes.getIntake());
+		search.getTemplate().setInstanceType(WellKnownTransactionTypes.getIntake());
 
 		List<StockRoomTransaction> results = service.findTransactions(search, null);
 
@@ -736,18 +736,18 @@ public class IStockRoomTransactionDataServiceTest
 
 		StockRoomTransaction transaction = createEntity(true);
 		transaction.setCreator(baseUser);
-		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+		transaction.setInstanceType(WellKnownTransactionTypes.getCorrection());
 
 		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
 		type.setName("user");
 		type.setUser(user);
 		type.setRequired(true);
 		type.setAttributeOrder(0);
-		type.setOwner(transaction.getTransactionType());
+		type.setOwner(transaction.getInstanceType());
 
-		transaction.getTransactionType().addAttributeType(type);
+		transaction.getInstanceType().addAttributeType(type);
 
-		typeService.save(transaction.getTransactionType());
+		typeService.save(transaction.getInstanceType());
 		service.save(transaction);
 		Context.flushSession();
 
@@ -785,7 +785,7 @@ public class IStockRoomTransactionDataServiceTest
 
 		StockRoomTransaction transaction = createEntity(true);
 		transaction.setCreator(baseUser);
-		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+		transaction.setInstanceType(WellKnownTransactionTypes.getCorrection());
 
 		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
 		type.setName("role");
@@ -793,7 +793,7 @@ public class IStockRoomTransactionDataServiceTest
 		type.setRequired(true);
 		type.setAttributeOrder(0);
 
-		transaction.getTransactionType().addAttributeType(type);
+		transaction.getInstanceType().addAttributeType(type);
 
 		service.save(transaction);
 		Context.flushSession();
@@ -829,7 +829,7 @@ public class IStockRoomTransactionDataServiceTest
 
 		StockRoomTransaction transaction = createEntity(true);
 		transaction.setCreator(baseUser);
-		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+		transaction.setInstanceType(WellKnownTransactionTypes.getCorrection());
 
 		// Set up this transaction type to be for users of the Parent role
 		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
@@ -838,7 +838,7 @@ public class IStockRoomTransactionDataServiceTest
 		type.setRequired(true);
 		type.setAttributeOrder(0);
 
-		transaction.getTransactionType().addAttributeType(type);
+		transaction.getInstanceType().addAttributeType(type);
 
 		service.save(transaction);
 		Context.flushSession();
@@ -878,7 +878,7 @@ public class IStockRoomTransactionDataServiceTest
 
 		StockRoomTransaction transaction = createEntity(true);
 		transaction.setCreator(baseUser);
-		transaction.setTransactionType(WellKnownTransactionTypes.getCorrection());
+		transaction.setInstanceType(WellKnownTransactionTypes.getCorrection());
 
 		// Set up this transaction type to be for users of the Parent role
 		StockRoomTransactionTypeAttributeType type = new StockRoomTransactionTypeAttributeType();
@@ -887,7 +887,7 @@ public class IStockRoomTransactionDataServiceTest
 		type.setRequired(true);
 		type.setAttributeOrder(0);
 
-		transaction.getTransactionType().addAttributeType(type);
+		transaction.getInstanceType().addAttributeType(type);
 
 		service.save(transaction);
 		Context.flushSession();
@@ -935,7 +935,7 @@ public class IStockRoomTransactionDataServiceTest
 		type.setRequired(true);
 		type.setAttributeOrder(0);
 
-		transaction.getTransactionType().addAttributeType(type);
+		transaction.getInstanceType().addAttributeType(type);
 
 		service.save(transaction);
 		Context.flushSession();
@@ -971,7 +971,7 @@ public class IStockRoomTransactionDataServiceTest
 		type.setRequired(true);
 		type.setAttributeOrder(0);
 
-		transaction.getTransactionType().addAttributeType(type);
+		transaction.getInstanceType().addAttributeType(type);
 
 		service.save(transaction);
 		Context.flushSession();

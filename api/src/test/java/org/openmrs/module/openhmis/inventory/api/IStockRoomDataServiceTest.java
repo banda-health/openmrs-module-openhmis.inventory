@@ -50,7 +50,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		room.setDateCreated(new Date());
 
 		StockRoomTransaction transaction = new StockRoomTransaction();
-		transaction.setTransactionType(transactionTypeService.getById(0));
+		transaction.setInstanceType(transactionTypeService.getById(0));
 		transaction.setDestination(room);
 		transaction.setTransactionNumber("something");
 		transaction.setCreator(Context.getAuthenticatedUser());
@@ -92,7 +92,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 		// Add a distribution transaction
 		StockRoomTransaction transaction = new StockRoomTransaction();
-		transaction.setTransactionType(transactionTypeService.getById(2));
+		transaction.setInstanceType(transactionTypeService.getById(2));
 		transaction.setSource(room);
 		transaction.setTransactionNumber("something2");
 		transaction.setCreator(Context.getAuthenticatedUser());
@@ -141,12 +141,12 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 			public void apply(StockRoomTransaction expectedTrans, StockRoomTransaction actualTrans) {
 				assertOpenmrsObject(expectedTrans, actualTrans);
 
-				Assert.assertEquals(expectedTrans.getTransactionType(), actualTrans.getTransactionType());
+				Assert.assertEquals(expectedTrans.getInstanceType(), actualTrans.getInstanceType());
 				Assert.assertEquals(expectedTrans.getTransactionNumber(), actualTrans.getTransactionNumber());
 				Assert.assertEquals(expectedTrans.getStatus(), actualTrans.getStatus());
 				Assert.assertEquals(expectedTrans.getSource(), actualTrans.getSource());
 				Assert.assertEquals(expectedTrans.getDestination(), actualTrans.getDestination());
-				Assert.assertEquals(expectedTrans.getTransactionType(), actualTrans.getTransactionType());
+				Assert.assertEquals(expectedTrans.getInstanceType(), actualTrans.getInstanceType());
 				Assert.assertEquals(expectedTrans.isImportTransaction(), actualTrans.isImportTransaction());
 
 				assertCollection(expectedTrans.getItems(), actualTrans.getItems(), new Action2<StockRoomTransactionItem, StockRoomTransactionItem>() {

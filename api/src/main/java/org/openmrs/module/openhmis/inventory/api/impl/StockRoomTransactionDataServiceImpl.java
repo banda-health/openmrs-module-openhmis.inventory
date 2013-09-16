@@ -131,14 +131,14 @@ public class StockRoomTransactionDataServiceImpl
 							Restrictions.or(
 									// Transactions created by the user
 									Restrictions.eq("creator", user),
-									Property.forName("transactionType").in(subQuery)
+									Property.forName("instanceType").in(subQuery)
 							)
 					));
 				} else {
 					criteria.add(Restrictions.or(
 							// Transactions created by the user
 							Restrictions.eq("creator", user),
-							Property.forName("transactionType").in(subQuery)
+							Property.forName("instanceType").in(subQuery)
 					)
 					);
 				}

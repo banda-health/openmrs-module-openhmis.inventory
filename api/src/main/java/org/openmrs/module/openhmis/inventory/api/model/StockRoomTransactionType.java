@@ -13,17 +13,12 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class StockRoomTransactionType extends BaseSerializableOpenmrsMetadata {
+public class StockRoomTransactionType extends BaseCustomizableInstanceType<StockRoomTransactionTypeAttributeType> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferTypeId;
-	private List<StockRoomTransactionTypeAttributeType> attributeTypes;
 	private PendingTransactionItemQuantityType quantityType;
 	private boolean sourceRequired;
 	private boolean destinationRequired;
@@ -37,14 +32,6 @@ public class StockRoomTransactionType extends BaseSerializableOpenmrsMetadata {
 	@Override
 	public void setId(Integer id) {
 		stockRoomTransferTypeId = id;
-	}
-
-	public List<StockRoomTransactionTypeAttributeType> getAttributeTypes() {
-		return attributeTypes;
-	}
-
-	public void setAttributeTypes(List<StockRoomTransactionTypeAttributeType> attributeTypes) {
-		this.attributeTypes = attributeTypes;
 	}
 
 	public PendingTransactionItemQuantityType getQuantityType() {
@@ -77,34 +64,6 @@ public class StockRoomTransactionType extends BaseSerializableOpenmrsMetadata {
 
 	public void setAuthorized(boolean authorized) {
 		this.authorized = authorized;
-	}
-
-	public void addAttributeType(StockRoomTransactionTypeAttributeType type) {
-		if (type != null) {
-			if (attributeTypes == null) {
-				attributeTypes = new ArrayList<StockRoomTransactionTypeAttributeType>();
-			}
-
-			type.setOwner(this);
-			attributeTypes.add(type);
-		}
-	}
-
-	public void removeAttributeType(StockRoomTransactionTypeAttributeType type) {
-		if (type != null) {
-			if (attributeTypes == null) {
-				return;
-			}
-
-			type.setOwner(null);
-			attributeTypes.remove(type);
-		}
-	}
-
-	@Override
-	@JsonIgnore
-	public Boolean getRetired() {
-		return isRetired();
 	}
 }
 

@@ -74,7 +74,7 @@
 			</type>
 		</property>
 
-		<many-to-one name="transactionType" class="StockRoomTransactionType" not-null="true" column="transaction_type_id" />
+		<many-to-one name="instanceType" class="StockRoomTransactionType" not-null="true" column="transaction_type_id" />
 		<many-to-one name="source" class="StockRoom" column="stock_room_source_id" access="field" />
 		<many-to-one name="destination" class="StockRoom" column="stock_room_destination_id" access="field" />
 

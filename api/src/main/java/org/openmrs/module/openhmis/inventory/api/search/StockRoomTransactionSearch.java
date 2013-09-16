@@ -72,8 +72,8 @@ public class StockRoomTransactionSearch extends BaseObjectTemplateSearch<StockRo
 		if (tx.getTransactionNumber() != null) {
 			criteria.add(createCriterion("transactionNumber", tx.getTransactionNumber(), transactionNumberComparisonType));
 		}
-		if (tx.getTransactionType() != null) {
-			criteria.add(Restrictions.eq("transactionType", tx.getTransactionType()));
+		if (tx.getInstanceType() != null) {
+			criteria.add(Restrictions.eq("instanceType", tx.getInstanceType()));
 		}
 		if (tx.getStatus() != null) {
 			criteria.add(Restrictions.eq("status", tx.getStatus()));

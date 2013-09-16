@@ -145,7 +145,7 @@ public class IStockRoomServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertNotNull(result);
 		Assert.assertNull(result.getId());
 		Assert.assertNull(result.getItems());
-		Assert.assertEquals(WellKnownTransactionTypes.getTransfer(), result.getTransactionType());
+		Assert.assertEquals(WellKnownTransactionTypes.getTransfer(), result.getInstanceType());
 		Assert.assertEquals(source, result.getSource());
 		Assert.assertEquals(destination, result.getDestination());
 		Assert.assertEquals(StockRoomTransactionStatus.PENDING, result.getStatus());
@@ -301,7 +301,7 @@ public class IStockRoomServiceTest extends BaseModuleContextSensitiveTest {
 	public void submitTransaction_shouldThrowAnAPIExceptionIfTheTransactionTypeIsNull() throws Exception {
 		StockRoom source = stockRoomDataService.getById(1);
 		StockRoomTransaction tx = service.createTransaction(WellKnownTransactionTypes.getDistribution(), source, null);
-		tx.setTransactionType(null);
+		tx.setInstanceType(null);
 		tx.addItem(itemService.getById(0), null, 10);
 
 		service.submitTransaction(tx);
@@ -490,7 +490,7 @@ public class IStockRoomServiceTest extends BaseModuleContextSensitiveTest {
 	public void completeTransaction_shouldThrowAnAPIExceptionReferenceExceptionIfTheTransactionTypeIsNull() throws Exception {
 		StockRoom destination = stockRoomDataService.getById(1);
 		StockRoomTransaction tx = service.createTransaction(WellKnownTransactionTypes.getIntake(), null, destination);
-		tx.setTransactionType(null);
+		tx.setInstanceType(null);
 
 		tx.addItem(itemService.getById(0), null, 10);
 

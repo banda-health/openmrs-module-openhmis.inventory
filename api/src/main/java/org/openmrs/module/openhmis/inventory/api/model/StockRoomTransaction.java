@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRoomTransactionAttribute>
+public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRoomTransactionType, StockRoomTransactionAttribute>
 	implements Comparable<StockRoomTransaction>, Attributable<StockRoomTransaction> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer stockRoomTransferId;
 	private String transactionNumber;
-	private StockRoomTransactionType transactionType;
 	private StockRoomTransactionStatus status;
 	protected StockRoom source;
 	protected StockRoom destination;
@@ -56,14 +55,6 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 
 	public void setTransactionNumber(String transactionNumber) {
 		this.transactionNumber = transactionNumber;
-	}
-
-	public StockRoomTransactionType getTransactionType() {
-		return transactionType;
-	}
-
-	public void setTransactionType(StockRoomTransactionType transactionType) {
-		this.transactionType = transactionType;
 	}
 
 	public StockRoomTransactionStatus getStatus() {
@@ -133,7 +124,7 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 			throw new NullPointerException("The item to add must be defined.");
 		}
 
-		StockRoomTransactionType txType = getTransactionType();
+		StockRoomTransactionType txType = getInstanceType();
 		if (txType == null) {
 			throw new APIException("This method can only be called after the transaction type has been set.");
 		}
@@ -160,7 +151,7 @@ public class StockRoomTransaction extends BaseCustomizableInstanceObject<StockRo
 			throw new NullPointerException("The item to add must be defined.");
 		}
 
-		StockRoomTransactionType txType = getTransactionType();
+		StockRoomTransactionType txType = getInstanceType();
 		if (txType == null) {
 			throw new APIException("This method can only be called after the transaction type has been set.");
 		}
