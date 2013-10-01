@@ -9,7 +9,7 @@
 <%@ include file="template/localHeader.jsp"%>
 
 
-<openmrs:htmlInclude file="<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/stockRooms.js" %>" />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/stockRooms.js" %>' />
 
 <h2>
 	<spring:message code="openhmis.inventory.admin.stockRooms" />

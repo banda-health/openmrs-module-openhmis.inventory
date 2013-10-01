@@ -6,7 +6,7 @@
                  redirect="<%= ModuleWebConstants.DEPARTMENTS_PAGE %>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
-<openmrs:htmlInclude file="<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/departments.js" %>" />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/departments.js" %>' />
 
 <h2>
 	<spring:message code="openhmis.inventory.admin.departments" />

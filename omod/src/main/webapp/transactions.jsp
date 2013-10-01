@@ -9,17 +9,20 @@
 <%@ include file="template/localHeader.jsp"%>
 
 
-<openmrs:htmlInclude file="<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/transactions.js" %>" />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/transactions.js" %>' />
 
 <h2>
 	<spring:message code="openhmis.inventory.admin.transactions" />
 </h2>
 
 <div id="detailTabs">
+	<div id="create" style="display: none"></div>
 	<ul id="detailTabList">
-		<li><a href="#pending">Pending</a></li>
+		<li><a href="#my">My Pending</a></li>
+		<li><a href="#pending">All Pending</a></li>
 		<li><a href="#completed">Completed</a></li>
 	</ul>
+	<div id="my"></div>
 	<div id="pending"></div>
 	<div id="completed"></div>
 </div>
