@@ -11,19 +11,13 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.openhmis.inventory.api.search;
+package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
+/**
+ * The returned operation type is for items that get added back into the system as the result of a purchaser needing to
+ * return the items. Only the items that are put back into stock should be part of this operation.  Functionally it is
+ * the same as a receipt operation, this type is mostly here for reporting purposes.
+ */
+public class ReturnOperationType extends ReceiptOperationType {
 
-public class StockRoomTransactionTemplate extends StockRoomTransaction {
-	@Override
-	public void setSource(StockRoom newSource) {
-		this.source = newSource;
-	}
-
-	@Override
-	public void setDestination(StockRoom newDestination) {
-		this.destination = newDestination;
-	}
 }

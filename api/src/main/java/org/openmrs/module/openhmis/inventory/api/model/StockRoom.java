@@ -16,6 +16,7 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.Location;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,7 +26,7 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 	private Integer stockRoomId;
 	private Location location;
 	private Set<StockRoomItem> items;
-	private Set<StockRoomTransaction> transactions;
+	private Set<StockOperation> operations;
 
 	@Override
 	public Integer getId() {
@@ -53,22 +54,6 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 		this.items = items;
 	}
 
-	public StockRoomItem addItem(StockRoomTransactionItem transactionItem) {
-		if (transactionItem == null) {
-			throw new NullPointerException("The item to add must be defined.");
-		}
-
-		StockRoomItem item = new StockRoomItem();
-		item.setItem(transactionItem.getItem());
-		item.setExpiration(transactionItem.getExpiration());
-		item.setQuantity(transactionItem.getQuantityOrdered());
-		item.setImportTransaction(transactionItem.getImportTransaction());
-
-		addItem(item);
-
-		return item;
-	}
-
 	public void addItem(StockRoomItem item) {
 		if (item != null) {
 			if (items == null) {
@@ -91,31 +76,31 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 		}
 	}
 
-	public Set<StockRoomTransaction> getTransactions() {
-		return transactions;
+	public Set<StockOperation> getOperations() {
+		return operations;
 	}
 
-	public void setTransactions(Set<StockRoomTransaction> transactions) {
-		this.transactions = transactions;
+	public void setOperations(Set<StockOperation> operations) {
+		this.operations = operations;
 	}
 
-	public void addTransaction(StockRoomTransaction transaction) {
-		if (transaction != null) {
-			if (transactions == null) {
-				transactions = new TreeSet<StockRoomTransaction>();
+	public void addOperation(StockOperation operation) {
+		if (operation != null) {
+			if (operations == null) {
+				operations = new TreeSet<StockOperation>();
 			}
 
-			transactions.add(transaction);
+			operations.add(operation);
 		}
 	}
 
-	public void removeTransaction(StockRoomTransaction transaction) {
-		if (transaction != null) {
-			if (transactions == null) {
+	public void removeOperation(StockOperation operation) {
+		if (operation != null) {
+			if (operations == null) {
 				return;
 			}
 
-			transactions.remove(transaction);
+			operations.remove(operation);
 		}
 	}
 }

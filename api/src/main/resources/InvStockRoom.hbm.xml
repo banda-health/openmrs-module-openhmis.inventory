@@ -22,10 +22,9 @@
 			<one-to-many class="StockRoomItem" />
 		</set>
 
-		<set name="transactions" lazy="true" table="inv_stock_room_transactions"
-		     cascade="all-delete-orphan" >
-			<key column="stock_room_id" />
-			<many-to-many column="transaction_id"  class="StockRoomTransaction" order-by="dateCreated DESC" />
+		<set name="operations" lazy="true" table="inv_stockroom_operations" cascade="all-delete-orphan"  >
+			<key column="stockroom_id" />
+			<many-to-many column="operation_id"  class="StockOperation" order-by="dateCreated DESC" />
 		</set>
 
 		<!-- bi-directional many-to-one association to User -->
@@ -48,7 +47,6 @@
 			</generator>
 		</id>
 
-		<many-to-one name="importTransaction" class="StockRoomTransaction" column="import_transaction_id" />
 		<many-to-one name="stockRoom" class="StockRoom" not-null="true" column="stock_room_id" />
 		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
 		<property name="quantity" type="int" not-null="true" column="quantity" />
@@ -56,102 +54,37 @@
 
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
-	<class name="StockRoomTransaction" table="inv_stock_room_transaction">
+	<class name="IStockOperationType" table="inv_stock_operation_type">
 		<cache usage="read-write"/>
 
-		<id name="id" type="int" column="stock_room_transaction_id">
+		<id name="id" type="int" column="stock_operation_type_id">
 			<generator class="native">
-				<param name="sequence">inv_stock_room_transaction_stock_room_transaction_id_seq</param>
+				<param name="sequence">inv_stock_operation_type_stock_operation_type_id_seq</param>
 			</generator>
 		</id>
 
-		<property name="transactionNumber" type="java.lang.String" not-null="false" column="transaction_number" length="50" />
-		<property name="importTransaction" type="boolean" column="is_import_transaction" length="1" />
-		<property name="status" not-null="true" column="status">
-			<type name="org.hibernate.type.EnumType">
-				<param name="enumClass">org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus</param>
-				<param name="type">12</param> <!-- Set the type to be varchar -->
-			</type>
-		</property>
+		<!-- Operation Type Subclass discriminator -->
+		<discriminator column="operation_type" type="java.lang.String" />
 
-		<many-to-one name="instanceType" class="StockRoomTransactionType" not-null="true" column="transaction_type_id" />
-		<many-to-one name="source" class="StockRoom" column="stock_room_source_id" access="field" />
-		<many-to-one name="destination" class="StockRoom" column="stock_room_destination_id" access="field" />
+		<property name="name" type="java.lang.String" column="name" length="255" />
+		<property name="description" type="java.lang.String" column="description" length="255" />
+		<property name="availableWhenReserved" type="java.lang.Boolean" column="available_when_reserved" />
+		<property name="hasSource" type="java.lang.Boolean" column="has_source" />
+		<property name="hasDestination" type="java.lang.Boolean" column="has_destination" />
+		<property name="hasPatient" type="java.lang.Boolean" column="has_patient" />
+		<property name="patientRequired" type="java.lang.Boolean" column="patient_required" />
 
-		<set name="items" lazy="true" inverse="true" batch-size="100"
-		     cascade="all-delete-orphan" sort="natural" access="field">
-			<key column="transaction_id" />
-			<one-to-many class="StockRoomTransactionItem" />
-		</set>
+		<many-to-one name="user" class="org.openmrs.User" column="user_id" />
+		<many-to-one name="role" class="org.openmrs.Role" column="role" />
 
-		<!-- bi-directional many-to-one association to User -->
-		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
-		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
-		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
-	</class>
-	<class name="StockRoomTransactionAttribute" table="inv_stock_room_transaction_attribute">
-		<cache usage="read-write"/>
-
-		<id name="id" type="int" column="stock_room_transaction_attribute_id">
-			<generator class="native">
-				<param name="sequence">inv_stock_room_transaction_attribute_stock_room_transaction_attribute_id_seq</param>
-			</generator>
-		</id>
-
-		<many-to-one name="owner" class="StockRoomTransaction" column="transaction_id" />
-		<many-to-one name="attributeType" class="StockRoomTransactionTypeAttributeType" column="attribute_type_id" />
-		<property name="value" type="text" access="field" column="value_reference" length="65535" />
-		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
-	</class>
-	<class name="StockRoomTransactionItem" table="inv_stock_room_transaction_item">
-		<cache usage="read-write"/>
-
-		<id name="id" type="int" column="stock_room_transaction_item_id">
-			<generator class="native">
-				<param name="sequence">inv_stock_room_transaction_item_stock_room_transaction_item_id_seq</param>
-			</generator>
-		</id>
-
-		<many-to-one name="transaction" class="StockRoomTransaction" not-null="true" column="transaction_id" />
-		<many-to-one name="importTransaction" class="StockRoomTransaction" column="import_transaction_id" />
-		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
-
-		<property name="quantityOrdered" type="int" not-null="true" column="quantity_ordered" />
-		<property name="quantityTransferred" type="int" not-null="true" column="quantity_transferred" />
-		<property name="quantityReserved" type="int" not-null="true" column="quantity_reserved" />
-		<property name="expiration" type="java.util.Date" column="expiration" />
-
-		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
-	</class>
-	<class name="StockRoomTransactionType" table="inv_stock_room_transaction_type">
-		<cache usage="read-write"/>
-
-		<id name="id" type="int" column="stock_room_transaction_type_id">
-			<generator class="native">
-				<param name="sequence">inv_stock_room_transaction_type_stock_room_transaction_type_id_seq</param>
-			</generator>
-		</id>
-
-		<property name="name" type="java.lang.String" column="name" not-null="true" length="255" />
-		<property name="description" type="java.lang.String" column="description" length="1024" />
-
-		<property name="quantityType" not-null="true"  column="quantity_type">
-			<type name="org.hibernate.type.EnumType">
-				<param name="enumClass">org.openmrs.module.openhmis.inventory.api.model.PendingTransactionItemQuantityType</param>
-				<param name="type">12</param> <!-- Set the type to be varchar -->
-			</type>
-		</property>
-		<property name="sourceRequired" not-null="true" type="boolean" column="source_required" />
-		<property name="destinationRequired" not-null="true" type="boolean" column="destination_required" />
-		<property name="authorized" not-null="true" type="boolean" column="authorized" />
-
-		<list name="attributeTypes" lazy="false" inverse="true" cascade="all-delete-orphan" access="field">
-			<key column="transaction_type_id" />
+		<!-- Attribute Type List -->
+		<list name="attributeTypes" lazy="false" inverse="true" cascade="all-delete-orphan">
+			<key column="operation_type_id" />
 			<list-index column="attribute_order" />
-			<one-to-many class="StockRoomTransactionTypeAttributeType" />
+			<one-to-many class="StockOperationAttributeType" />
 		</list>
 
-		<!-- bi-directional many-to-one association to User -->
+		<!-- Metadata fields -->
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
 		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
 		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
@@ -159,15 +92,23 @@
 		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
 		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
 		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
-		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" access="property" />
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+
+		<!-- Subclass setup -->
+		<subclass name="AdjustmentOperationType" discriminator-value="adjustment" />
+		<subclass name="DisposedOperationType" discriminator-value="disposed" />
+		<subclass name="DistributionOperationType" discriminator-value="distribution" />
+		<subclass name="ReceiptOperationType" discriminator-value="receipt" />
+		<subclass name="ReturnOperationType" discriminator-value="return" />
+		<subclass name="TransferOperationType" discriminator-value="transfer" />
 	</class>
-	<class name="StockRoomTransactionTypeAttributeType" table="inv_stock_room_transaction_type_attribute_type">
+	<class name="StockOperationAttributeType" table="inv_stock_operation_attribute_type">
 		<cache usage="read-write"/>
 
-		<id name="id" type="int" column="stock_room_transaction_type_attribute_type_id">
+		<id name="id" type="int" column="stock_operation_attribute_type_id">
 			<generator class="native">
-				<param name="sequence">inv_stock_room_transaction_type_stock_room_transaction_type_id_seq</param>
+				<param name="sequence">inv_stock_operation_attribute_type_stock_operation_attribute_type_id_seq</param>
 			</generator>
 		</id>
 
@@ -179,11 +120,7 @@
 		<property name="regExp" type="java.lang.String" column="reg_exp" length="255" />
 		<property name="required" type="boolean" column="required" length="1" not-null="true" />
 
-		<many-to-one name="user" class="org.openmrs.User" column="user_id" />
-		<many-to-one name="role" class="org.openmrs.Role" column="role" />
-		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" />
-
-		<many-to-one name="owner" class="StockRoomTransactionType" not-null="true" column="transaction_type_id" />
+		<many-to-one name="owner" class="IStockOperationType" not-null="true" column="transaction_type_id" />
 
 		<!-- bi-directional many-to-one association to User -->
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
@@ -194,6 +131,114 @@
 		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
 		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
 		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+	<class name="StockOperation" table="inv_stock_operation">
+		<cache usage="read-write"/>
+
+		<id name="id" type="int" column="stock_operation_id">
+			<generator class="native">
+				<param name="sequence">inv_stock_operation_stock_operation_id_seq</param>
+			</generator>
+		</id>
+
+		<property name="status" not-null="true" column="status">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus</param>
+				<param name="type">12</param> <!-- Set the type to be varchar -->
+			</type>
+		</property>
+
+		<property name="name" type="java.lang.String" column="name" />
+		<property name="description" type="java.lang.String" column="description" />
+		<property name="operationNumber" type="java.lang.String" column="operation_number" />
+
+		<many-to-one name="instanceType" class="IStockOperationType" not-null="true" column="operation_type_id" />
+
+		<!-- Access properties via the field so setter code is not run -->
+		<many-to-one name="source" class="StockRoom" column="source_stockroom_id" access="field" />
+		<many-to-one name="destination" class="StockRoom" column="destination_stockroom_id" access="field" />
+		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" access="field" />
+
+		<set name="reserved" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field">
+			<key column="operation_id" />
+			<one-to-many class="ReservedTransaction" />
+		</set>
+		<set name="transactions" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field">
+			<key column="operation_id" />
+			<one-to-many class="StockOperationTransaction" />
+		</set>
+		<set name="attributes" lazy="true" inverse="true" batch-size="100" cascade="all-delete-orphan">
+			<key column="stock_operation_id" />
+			<one-to-many class="StockOperationAttribute" />
+		</set>
+
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+	<class name="StockOperationAttribute" table="inv_stock_operation_attribute">
+		<cache usage="read-write"/>
+
+		<id name="id" type="int" column="stock_operation_attribute_id">
+			<generator class="native">
+				<param name="sequence">inv_stock_operation_attribute_stock_operation_attribute_id_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="owner" class="StockOperation" column="transaction_id" />
+		<many-to-one name="attributeType" class="StockOperationAttributeType" column="attribute_type_id" />
+		<property name="value" type="text" access="field" column="value_reference" length="65535" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+	<class name="ReservedTransaction" table="inv_reserved_transaction">
+		<cache usage="read-write"/>
+
+		<id name="id" type="int" column="reserved_transaction_id">
+			<generator class="native">
+				<param name="sequence">inv_reserved_transaction_reserved_transaction_id_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="operation" class="StockOperation" not-null="true" column="stock_operation_id" />
+		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
+		<property name="quantity" type="int" not-null="true" column="quantity" />
+		<property name="expiration" type="java.util.Date" column="expiration" />
+
+		<property name="available" type="java.lang.Boolean" column="is_available" />
+
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+	<class name="StockOperationTransaction" table="inv_transaction">
+		<cache usage="read-write"/>
+
+		<id name="id" type="int" column="transaction_id">
+			<generator class="native">
+				<param name="sequence">inv_transaction_transaction_id_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="operation" class="StockOperation" not-null="true" column="stock_operation_id" />
+		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
+		<property name="quantity" type="int" not-null="true" column="quantity" />
+		<property name="expiration" type="java.util.Date" column="expiration" />
+
+		<many-to-one name="stockRoom" class="StockRoom" column="stockroom_id" />
+		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" />
+
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
 </hibernate-mapping>

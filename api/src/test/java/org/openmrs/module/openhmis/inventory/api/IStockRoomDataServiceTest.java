@@ -17,8 +17,6 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 	protected IItemDataService itemService;
 	protected IDepartmentDataService departmentService;
 	protected ICategoryDataService categoryService;
-	protected IStockRoomTransactionDataService transactionService;
-	protected IStockRoomTransactionTypeDataService transactionTypeService;
 
 	@Override
 	public void before() throws Exception {
@@ -27,8 +25,6 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		itemService = Context.getService(IItemDataService.class);
 		departmentService = Context.getService(IDepartmentDataService.class);
 		categoryService = Context.getService(ICategoryDataService.class);
-		transactionService = Context.getService(IStockRoomTransactionDataService.class);
-		transactionTypeService = Context.getService(IStockRoomTransactionTypeDataService.class);
 
 		executeDataSet(TestConstants.CORE_DATASET);
 		executeDataSet(IDepartmentDataServiceTest.DEPARTMENT_DATASET);
@@ -49,27 +45,25 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		room.setCreator(Context.getAuthenticatedUser());
 		room.setDateCreated(new Date());
 
-		StockRoomTransaction transaction = new StockRoomTransaction();
-		transaction.setInstanceType(transactionTypeService.getById(0));
-		transaction.setDestination(room);
-		transaction.setTransactionNumber("something");
-		transaction.setCreator(Context.getAuthenticatedUser());
-		transaction.setDateCreated(new Date());
-		transaction.setStatus(StockRoomTransactionStatus.COMPLETED);
-		transaction.setImportTransaction(true);
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setDestination(room);
+		operation.setOperationNumber("op number");
+		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setDateCreated(new Date());
+		operation.setStatus(StockOperationStatus.COMPLETED);
 
-		StockRoomTransactionItem transactionItem = new StockRoomTransactionItem();
-		transactionItem.setImportTransaction(transaction);
-		transactionItem.setItem(itemService.getById(0));
-		transactionItem.setQuantityOrdered(5);
+		StockOperationTransaction tx = new StockOperationTransaction();
+		tx.setItem(itemService.getById(0));
+		tx.setQuantity(5);
 
-		transaction.addItem(transactionItem);
-		room.addTransaction(transaction);
+		operation.addTransaction(tx);
+		room.addOperation(operation);
 
 		StockRoomItem roomItem = new StockRoomItem();
 		roomItem.setStockRoom(room);
-		roomItem.setImportTransaction(transaction);
-		roomItem.setItem(transactionItem.getItem());
+		roomItem.setBatchOperation(operation);
+		roomItem.setItem(tx.getItem());
 		roomItem.setQuantity(5);
 
 		room.addItem(roomItem);
@@ -91,22 +85,20 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		room.setDateChanged(new Date());
 
 		// Add a distribution transaction
-		StockRoomTransaction transaction = new StockRoomTransaction();
-		transaction.setInstanceType(transactionTypeService.getById(2));
-		transaction.setSource(room);
-		transaction.setTransactionNumber("something2");
-		transaction.setCreator(Context.getAuthenticatedUser());
-		transaction.setDateCreated(new Date());
-		transaction.setStatus(StockRoomTransactionStatus.COMPLETED);
-		transaction.setImportTransaction(false);
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
+		operation.setSource(room);
+		operation.setOperationNumber("op number 2");
+		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setDateCreated(new Date());
+		operation.setStatus(StockOperationStatus.COMPLETED);
 
-		StockRoomTransactionItem transactionItem = new StockRoomTransactionItem();
-		transactionItem.setItem(itemService.getById(0));
-		transactionItem.setQuantityOrdered(3);
-		transactionItem.setImportTransaction(transactionService.getById(0));
+		StockOperationTransaction tx = new StockOperationTransaction();
+		tx.setItem(itemService.getById(0));
+		tx.setQuantity(3);
 
-		transaction.addItem(transactionItem);
-		room.addTransaction(transaction);
+		operation.addTransaction(tx);
+		room.addOperation(operation);
 
 		Set<StockRoomItem> items = room.getItems();
 		if (items.size() > 0) {
@@ -136,33 +128,10 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 			Assert.assertEquals(expected.getLocation().getId(), actual.getLocation().getId());
 		}
 
-		assertCollection(expected.getTransactions(), actual.getTransactions(), new Action2<StockRoomTransaction, StockRoomTransaction>() {
+		assertCollection(expected.getOperations(), actual.getOperations(), new Action2<StockOperation, StockOperation>() {
 			@Override
-			public void apply(StockRoomTransaction expectedTrans, StockRoomTransaction actualTrans) {
-				assertOpenmrsObject(expectedTrans, actualTrans);
-
-				Assert.assertEquals(expectedTrans.getInstanceType(), actualTrans.getInstanceType());
-				Assert.assertEquals(expectedTrans.getTransactionNumber(), actualTrans.getTransactionNumber());
-				Assert.assertEquals(expectedTrans.getStatus(), actualTrans.getStatus());
-				Assert.assertEquals(expectedTrans.getSource(), actualTrans.getSource());
-				Assert.assertEquals(expectedTrans.getDestination(), actualTrans.getDestination());
-				Assert.assertEquals(expectedTrans.getInstanceType(), actualTrans.getInstanceType());
-				Assert.assertEquals(expectedTrans.isImportTransaction(), actualTrans.isImportTransaction());
-
-				assertCollection(expectedTrans.getItems(), actualTrans.getItems(), new Action2<StockRoomTransactionItem, StockRoomTransactionItem>() {
-					@Override
-					public void apply(StockRoomTransactionItem expectedTransItem, StockRoomTransactionItem actualTransItem) {
-						assertOpenmrsObject(expectedTransItem, actualTransItem);
-
-						Assert.assertEquals(expectedTransItem.getTransaction().getId(), actualTransItem.getTransaction().getId());
-						Assert.assertEquals(expectedTransItem.getImportTransaction().getId(), actualTransItem.getImportTransaction().getId());
-						Assert.assertEquals(expectedTransItem.getItem().getId(), actualTransItem.getItem().getId());
-						Assert.assertEquals(expectedTransItem.getQuantityOrdered(), actualTransItem.getQuantityOrdered());
-						Assert.assertEquals(expectedTransItem.getQuantityReserved(), actualTransItem.getQuantityReserved());
-						Assert.assertEquals(expectedTransItem.getQuantityTransferred(), actualTransItem.getQuantityTransferred());
-						Assert.assertEquals(expectedTransItem.getExpiration(), actualTransItem.getExpiration());
-					}
-				});
+			public void apply(StockOperation expectedOp, StockOperation actualOp) {
+				IStockOperationDataServiceTest.assertStockOperation(expectedOp, actualOp);
 			}
 		});
 
@@ -172,7 +141,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 				assertOpenmrsObject(expectedStockItem, actualStockItem);
 
 				Assert.assertEquals(expectedStockItem.getStockRoom().getId(), actualStockItem.getStockRoom().getId());
-				Assert.assertEquals(expectedStockItem.getImportTransaction().getId(), actualStockItem.getImportTransaction().getId());
+				Assert.assertEquals(expectedStockItem.getBatchOperation().getId(), actualStockItem.getBatchOperation().getId());
 				Assert.assertEquals(expectedStockItem.getItem().getId(), actualStockItem.getItem().getId());
 				Assert.assertEquals(expectedStockItem.getQuantity(), actualStockItem.getQuantity());
 				Assert.assertEquals(expectedStockItem.getExpiration(), actualStockItem.getExpiration());

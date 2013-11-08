@@ -16,11 +16,10 @@ package org.openmrs.module.webservices.rest.search;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionStatus;
-import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionSearch;
-import org.openmrs.module.openhmis.inventory.api.search.StockRoomTransactionTemplate;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -38,22 +37,22 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class TransactionSearchHandler implements SearchHandler {
+public class StockOperationSearchHandler implements SearchHandler {
 	protected Log log = LogFactory.getLog(getClass());
 
-	private final SearchConfig searchConfig = new SearchConfig("trans", ModuleRestConstants.TRANSACTION_RESOURCE,
+	private final SearchConfig searchConfig = new SearchConfig("trans", ModuleRestConstants.OPERATION_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find all transactions by optional status.")
+					new SearchQuery.Builder("Finds stock operations with an optional status.")
 							.withOptionalParameters("status").build()
 			)
 	);
 
-	private IStockRoomTransactionDataService transactionDataService;
+	private IStockOperationDataService operationDataService;
 
 	@Autowired
-	public TransactionSearchHandler(IStockRoomTransactionDataService transactionDataService) {
-		this.transactionDataService = transactionDataService;
+	public StockOperationSearchHandler(IStockOperationDataService operationDataService) {
+		this.operationDataService = operationDataService;
 	}
 
 	@Override
@@ -64,18 +63,18 @@ public class TransactionSearchHandler implements SearchHandler {
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
 		String statusText = context.getParameter("status");
-		StockRoomTransactionStatus status = StockRoomTransactionStatus.valueOf(statusText);
+		StockOperationStatus status = StockOperationStatus.valueOf(statusText);
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		StockRoomTransactionSearch search = new StockRoomTransactionSearch(new StockRoomTransactionTemplate());
+		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(status);
-		List<StockRoomTransaction> transactions = transactionDataService.findTransactions(search, pagingInfo);
+		List<StockOperation> operations = operationDataService.findOperations(search, pagingInfo);
 
-		if (transactions == null || transactions.size() == 0) {
+		if (operations == null || operations.size() == 0) {
 			return new EmptySearchResult();
 		} else {
-			return new AlreadyPagedWithLength<StockRoomTransaction>(context, transactions,
-					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			return new AlreadyPagedWithLength<StockOperation>(context, operations, pagingInfo.hasMoreResults(),
+					pagingInfo.getTotalRecordCount());
 		}
 	}
 }

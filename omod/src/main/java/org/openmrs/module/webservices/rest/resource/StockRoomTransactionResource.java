@@ -15,8 +15,9 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionItem;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
+import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -27,24 +28,25 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import java.util.Set;
 import java.util.TreeSet;
 
-@Resource(name = ModuleRestConstants.TRANSACTION_RESOURCE, supportedClass=StockRoomTransaction.class, supportedOpenmrsVersions={"1.9"})
-@Handler(supports = { StockRoomTransaction.class }, order = 0)
-public class StockRoomTransactionResource extends BaseRestObjectResource<StockRoomTransaction> {
+@Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
+@Handler(supports = { StockOperation.class }, order = 0)
+public class StockRoomTransactionResource extends BaseRestObjectResource<StockOperation> {
 
 	@Override
-	public StockRoomTransaction newDelegate() {
-		return new StockRoomTransaction();
+	public StockOperation newDelegate() {
+		return new StockOperation();
 	}
 
 	@Override
-	public Class<? extends IObjectDataService<StockRoomTransaction>> getServiceClass() {
-		return null;
+	public Class<? extends IObjectDataService<StockOperation>> getServiceClass() {
+		return IStockOperationDataService.class;
 	}
 
 	@Override
 	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
 		DelegatingResourceDescription description = super.getDefaultRepresentationDescription();
 
+		// TODO: Update for stock operation fields
 		description.addProperty("transactionNumber", Representation.DEFAULT);
 		description.addProperty("transactionType", Representation.DEFAULT);
 		description.addProperty("status", Representation.DEFAULT);
@@ -57,6 +59,7 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 
+		// TODO: Update for stock operation fields
 		if (rep instanceof FullRepresentation) {
 			description.addProperty("source", Representation.REF);
 			description.addProperty("destination", Representation.REF);
@@ -70,6 +73,8 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
+		// TODO: Update for stock operation fields
+
 		DelegatingResourceDescription description = super.getCreatableProperties();
 
 		description.addProperty("source");
@@ -81,16 +86,16 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockRo
 		return description;
 	}
 
-	@PropertySetter(value="items")
-	public void setItems(StockRoomTransaction instance, Set<StockRoomTransactionItem> items) {
-		if (instance.getItems() == null) {
-			instance.setItems(new TreeSet<StockRoomTransactionItem>());
+	@PropertySetter(value="reserved")
+	public void setReserved(StockOperation instance, Set<ReservedTransaction> reserved) {
+		if (instance.getReserved() == null) {
+			instance.setReserved(new TreeSet<ReservedTransaction>());
 		}
 
-		BaseRestDataResource.updateCollection(instance.getItems(), items);
+		BaseRestDataResource.updateCollection(instance.getReserved(), reserved);
 
-		for (StockRoomTransactionItem item : instance.getItems()) {
-			item.setTransaction(instance);
+		for (ReservedTransaction tx : instance.getReserved()) {
+			tx.setOperation(instance);
 		}
 	}
 }

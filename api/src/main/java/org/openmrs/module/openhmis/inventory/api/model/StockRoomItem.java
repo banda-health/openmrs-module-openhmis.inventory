@@ -23,7 +23,7 @@ public class StockRoomItem extends BaseOpenmrsObject
 
 	private Integer stockRoomItemId;
 	private StockRoom stockRoom;
-	private StockRoomTransaction importTransaction;
+	private StockOperation batchOperation;
 	private Item item;
 	private int quantity;
 	private Date expiration;
@@ -46,12 +46,12 @@ public class StockRoomItem extends BaseOpenmrsObject
 		this.stockRoom = stockRoom;
 	}
 
-	public StockRoomTransaction getImportTransaction() {
-		return importTransaction;
+	public StockOperation getBatchOperation() {
+		return batchOperation;
 	}
 
-	public void setImportTransaction(StockRoomTransaction importTransaction) {
-		this.importTransaction = importTransaction;
+	public void setBatchOperation(StockOperation batchOperation) {
+		this.batchOperation = batchOperation;
 	}
 
 	public Item getItem() {
@@ -80,8 +80,14 @@ public class StockRoomItem extends BaseOpenmrsObject
 
 	@Override
 	public int compareTo(StockRoomItem o) {
-		// The default sorting uses the item name
-		return this.getItem().getName().compareTo(o.getItem().getName());
+		// The default sorting uses the item name and then uuid if the name is the same
+		int result = this.getItem().getName().compareTo(o.getItem().getName());
+
+		if (result == 0) {
+			result = this.getUuid().compareTo(o.getUuid());
+		}
+
+		return result;
 	}
 }
 

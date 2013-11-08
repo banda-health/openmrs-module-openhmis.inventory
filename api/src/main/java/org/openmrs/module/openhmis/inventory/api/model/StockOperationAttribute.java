@@ -13,9 +13,9 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-public enum StockRoomTransactionStatus {
-	PENDING(), CANCELLED(), COMPLETED();
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceAttributeObject;
 
-	private StockRoomTransactionStatus() {
-	}
+public class StockOperationAttribute
+		extends BaseInstanceAttributeObject<StockOperation, StockOperationAttributeType> {
+	public static final long serialVersionUID = 0L;
 }

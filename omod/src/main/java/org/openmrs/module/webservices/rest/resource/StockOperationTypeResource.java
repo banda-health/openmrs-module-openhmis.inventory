@@ -15,31 +15,32 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.TRANSACTION_TYPE_RESOURCE, supportedClass=StockRoomTransactionType.class, supportedOpenmrsVersions={"1.9"})
-@Handler(supports = { StockRoomTransactionType.class }, order = 0)
-public class StockRoomTransactionTypeResource extends BaseRestMetadataResource<StockRoomTransactionType> {
+@Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=IStockOperationType.class, supportedOpenmrsVersions={"1.9"})
+@Handler(supports = { IStockOperationType.class }, order = 0)
+public class StockOperationTypeResource extends BaseRestMetadataResource<IStockOperationType> {
 	@Override
-	public StockRoomTransactionType newDelegate() {
-		return new StockRoomTransactionType();
+	public IStockOperationType newDelegate() {
+		return null;
 	}
 
 	@Override
-	public Class<? extends IMetadataDataService<StockRoomTransactionType>> getServiceClass() {
-		return IStockRoomTransactionTypeDataService.class;
+	public Class<? extends IMetadataDataService<IStockOperationType>> getServiceClass() {
+		return IStockOperationTypeDataService.class;
 	}
 
 	@Override
 	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
 		DelegatingResourceDescription description =  super.getDefaultRepresentationDescription();
 
+		// TODO: Update for Stock Opertion Type fields
 		description.addProperty("quantityType", Representation.DEFAULT);
 		description.addProperty("sourceRequired", Representation.DEFAULT);
 		description.addProperty("destinationRequired", Representation.DEFAULT);

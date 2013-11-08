@@ -49,7 +49,7 @@ public class StockRoomDataServiceImpl
 	protected Collection<? extends OpenmrsObject> getRelatedObjects(StockRoom entity) {
 		ArrayList<OpenmrsObject> results = new ArrayList<OpenmrsObject>();
 
-		results.addAll(entity.getTransactions());
+		results.addAll(entity.getOperations());
 		results.addAll(entity.getItems());
 
 		return results;

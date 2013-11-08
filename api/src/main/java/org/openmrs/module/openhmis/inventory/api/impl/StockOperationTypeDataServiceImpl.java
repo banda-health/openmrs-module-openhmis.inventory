@@ -16,20 +16,31 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransactionType;
-import org.openmrs.module.openhmis.inventory.api.security.TransactionAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 
-public class StockRoomTransactionTypeDataServiceImpl
-	extends BaseMetadataDataServiceImpl<StockRoomTransactionType>
-	implements IStockRoomTransactionTypeDataService {
+public class StockOperationTypeDataServiceImpl
+	extends BaseMetadataDataServiceImpl<IStockOperationType>
+	implements IStockOperationTypeDataService {
+
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
-		return new TransactionAuthorizationPrivileges();
+		return new BasicMetadataAuthorizationPrivileges();
 	}
 
 	@Override
-	protected void validate(StockRoomTransactionType object) throws APIException {
+	protected void validate(IStockOperationType object) throws APIException {
+	}
+
+	@Override
+	public IStockOperationType save(IStockOperationType type) throws APIException {
+		// Check to see if this is a new entity
+		if (type.getId() == null) {
+			throw new UnsupportedOperationException("New stock operation types can not be created.");
+		}
+
+		// Update the existing entity
+		return super.save(type);
 	}
 }
-

@@ -16,10 +16,10 @@ package org.openmrs.module.webservices.rest.search;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomTransactionDataService;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomTransaction;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -37,25 +37,25 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class StockRoomTransactionSearchHandler implements SearchHandler {
+public class StockRoomOperationSearchHandler implements SearchHandler {
 	protected Log log = LogFactory.getLog(getClass());
 
-	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.TRANSACTION_RESOURCE,
+	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find all transactions by stock room.")
+					new SearchQuery.Builder("Find stock operations by stock room.")
 							.withRequiredParameters("stock_room_uuid").build()
 			)
 	);
 
 	private IStockRoomDataService stockRoomDataService;
-	private IStockRoomTransactionDataService transactionDataService;
+	private IStockOperationDataService stockOperationDataService;
 
 	@Autowired
-	public StockRoomTransactionSearchHandler(IStockRoomDataService stockRoomDataService,
-	                                         IStockRoomTransactionDataService transactionDataService) {
+	public StockRoomOperationSearchHandler(IStockRoomDataService stockRoomDataService,
+	                                       IStockOperationDataService stockOperationDataService) {
 		this.stockRoomDataService = stockRoomDataService;
-		this.transactionDataService = transactionDataService;
+		this.stockOperationDataService = stockOperationDataService;
 	}
 
 	@Override
@@ -74,13 +74,13 @@ public class StockRoomTransactionSearchHandler implements SearchHandler {
 		}
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<StockRoomTransaction> transactions = transactionDataService.getTransactionsByRoom(stockRoom, pagingInfo);
+		List<StockOperation> operations = stockOperationDataService.getOperationsByRoom(stockRoom, pagingInfo);
 
-		if (transactions == null || transactions.size() == 0) {
+		if (operations == null || operations.size() == 0) {
 			return new EmptySearchResult();
 		} else {
-			return new AlreadyPagedWithLength<StockRoomTransaction>(context, transactions,
-					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			return new AlreadyPagedWithLength<StockOperation>(context, operations, pagingInfo.hasMoreResults(),
+					pagingInfo.getTotalRecordCount());
 		}
 	}
 }

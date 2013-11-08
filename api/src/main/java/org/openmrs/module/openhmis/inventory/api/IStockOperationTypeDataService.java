@@ -11,14 +11,11 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.openhmis.inventory.api.model;
+package org.openmrs.module.openhmis.inventory.api;
 
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseObjectInstanceAttribute;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 
-public class StockRoomTransactionAttribute
-		extends BaseObjectInstanceAttribute<StockRoomTransaction,StockRoomTransactionTypeAttributeType> {
-	public static final long serialVersionUID = 0L;
-
+public interface IStockOperationTypeDataService extends IMetadataDataService<IStockOperationType> {
 
 }
-

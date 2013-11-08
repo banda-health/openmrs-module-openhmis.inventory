@@ -177,3 +177,4 @@ public class ItemDataServiceImpl
 		return PrivilegeConstants.MANAGE_ITEMS;
 	}
 }
+

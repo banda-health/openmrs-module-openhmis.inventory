@@ -56,6 +56,13 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	@Override
 	protected Item createEntity(boolean valid) {
+		if (departmentService == null) {
+			departmentService = Context.getService(IDepartmentDataService.class);
+		}
+		if (categoryService == null) {
+			categoryService = Context.getService(ICategoryDataService.class);
+		}
+
 		Item item = new Item();
 		item.setDepartment(departmentService.getById(0));
 		item.setCreator(Context.getAuthenticatedUser());
