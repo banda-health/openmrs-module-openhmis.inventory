@@ -22,7 +22,8 @@ import java.util.Set;
  * operation type.
  */
 public class StockOperation
-		extends BaseCustomizableInstanceMetadata<IStockOperationType, StockOperationAttribute> {
+		extends BaseCustomizableInstanceMetadata<IStockOperationType, StockOperationAttribute>
+		implements Comparable<StockOperation> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer id;
@@ -193,6 +194,25 @@ public class StockOperation
 
 	public void setTransactions(Set<StockOperationTransaction> transactions) {
 		this.transactions = transactions;
+	}
+
+	@Override
+	public int compareTo(StockOperation o) {
+		if (o == null) {
+			return 1;
+		}
+
+		int result = 0;
+
+		if (getId() != null && o.getId() != null) {
+			result = getId().compareTo(o.getId());
+		}
+
+		if (result == 0) {
+			result = getUuid().compareTo(o.getUuid());
+		}
+
+		return result;
 	}
 }
 

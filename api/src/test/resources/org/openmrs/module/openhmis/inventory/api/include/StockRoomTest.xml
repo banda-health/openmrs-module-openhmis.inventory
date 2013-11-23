@@ -76,8 +76,8 @@
 	<inv_stock_room_item stock_room_item_id="2" stock_room_id="0" item_id="2" quantity="6" expiration="2025-01-01" uuid="FF8081814250C1CD014250D47D720011" />
 
 	<inv_stock_room_item stock_room_item_id="3" stock_room_id="1" item_id="0" quantity="6" uuid="FF8081814250C1CD014250D49CFD0012" />
-	<inv_stock_room_item stock_room_item_id="4" stock_room_id="1" item_id="1" quantity="5" uuid="FF8081814250C1CD014250D4A4CF0013" />
-	<inv_stock_room_item stock_room_item_id="5" stock_room_id="1" item_id="2" quantity="4" expiration="2025-01-01" uuid="FF8081814250C1CD014250D4AFE80014" />
+	<inv_stock_room_item stock_room_item_id="4" stock_room_id="1" item_id="2" quantity="4" expiration="2025-01-01" uuid="FF8081814250C1CD014250D4A4CF0013" />
+	<inv_stock_room_item stock_room_item_id="5" stock_room_id="1" item_id="1" quantity="5" uuid="FF8081814250C1CD014250D4AFE80014" />
 
 	<inv_stock_room_item stock_room_item_id="6" stock_room_id="2" item_id="2" quantity="6"
 	                     expiration="2025-01-01" uuid="FF8081813DA1353F013DA135A7A80004" />

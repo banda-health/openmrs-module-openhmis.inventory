@@ -75,7 +75,7 @@
 		<property name="patientRequired" type="java.lang.Boolean" column="patient_required" />
 
 		<many-to-one name="user" class="org.openmrs.User" column="user_id" />
-		<many-to-one name="role" class="org.openmrs.Role" column="role" />
+		<many-to-one name="role" class="org.openmrs.module.openhmis.commons.api.entity.model.LazyRole" column="role" />
 
 		<!-- Attribute Type List -->
 		<list name="attributeTypes" lazy="false" inverse="true" cascade="all-delete-orphan">

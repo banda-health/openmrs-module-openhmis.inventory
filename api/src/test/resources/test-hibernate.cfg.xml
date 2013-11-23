@@ -28,5 +28,8 @@
 		<mapping resource="InvCategory.hbm.xml" />
 		<mapping resource="InvItem.hbm.xml" />
 		<mapping resource="InvStockRoom.hbm.xml" />
+
+		<!-- Import LazyRole mapping from commons -->
+		<mapping resource="LazyRole.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>
