@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
@@ -27,7 +30,9 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,9 +71,11 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 
 	@PropertySetter(value="codes")
 	public void setItemCodes(Item instance, Set<ItemCode> codes) {
-		if (instance.getCodes() == null)
+		if (instance.getCodes() == null) {
 			instance.setCodes(new HashSet<ItemCode>());
-		BaseRestDataResource.updateCollection(instance.getCodes(), codes);
+		}
+
+		BaseRestDataResource.syncCollection(instance.getCodes(), codes);
 		for (ItemCode code : instance.getCodes()) {
 			code.setItem(instance);
 		}
@@ -76,9 +83,11 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 
 	@PropertySetter(value="prices")
 	public void setItemPrices(Item instance, Set<ItemPrice> prices) {
-		if (instance.getPrices() == null)
+		if (instance.getPrices() == null) {
 			instance.setPrices(new HashSet<ItemPrice>());
-		BaseRestDataResource.updateCollection(instance.getPrices(), prices);
+		}
+
+		BaseRestDataResource.syncCollection(instance.getPrices(), prices);
 		for (ItemPrice price : instance.getPrices()) {
 			price.setItem(instance);
 		}
@@ -94,41 +103,51 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 	 * @param uuidOrPrice
 	 */
 	@PropertySetter(value="defaultPrice")
-	public void setDefaultPrice(Item instance, String uuidOrPrice) {
-		for (ItemPrice price : instance.getPrices()) {
-			if (price.getUuid().equals(uuidOrPrice)) {
-				instance.setDefaultPrice(price);
-				return;
+	public void setDefaultPrice(Item instance, final String uuidOrPrice) {
+		Collection<ItemPrice> results = Collections2.filter(instance.getPrices(), new Predicate<ItemPrice>() {
+			@Override
+			public boolean apply(@Nullable ItemPrice price) {
+				if (price != null) {
+					if (price.getUuid().equals(uuidOrPrice) || price.getPrice().toPlainString().equals(uuidOrPrice)) {
+						return true;
+					}
+				}
+
+				return false;
 			}
-			else if (price.getPrice().toPlainString().equals(uuidOrPrice)) {
-				instance.setDefaultPrice(price);
-				return;
-			}
+		});
+
+
+		if (results != null && results.size() > 0) {
+			instance.setDefaultPrice(Iterables.getOnlyElement(results));
+		} else {
+			// If there are no matches in the current price set, save the price in a new ItemPrice to hopefully be
+			// updated later, in case we haven't set new prices yet.
+			instance.setDefaultPrice(new ItemPrice(new BigDecimal(uuidOrPrice), ""));
 		}
-		// If there are no matches in the current price set, save the price in
-		// a new ItemPrice to hopefully be updated later, in case we haven't
-		// set new prices yet.
-		ItemPrice defaultPrice = new ItemPrice(new BigDecimal(uuidOrPrice), "");
-		instance.setDefaultPrice(defaultPrice);
 	}
 
 	@Override
-	public Item save(Item delegate) {
+	public Item save(Item item) {
 		// Check that default price has been properly set now that the item's
 		// prices have definitely been set
-		if (!delegate.getPrices().contains(delegate.getDefaultPrice())) {
-			if (delegate.getDefaultPrice().getId() == null)
-				setDefaultPrice(delegate, delegate.getDefaultPrice().getPrice().toString());
+		if (!item.getPrices().contains(item.getDefaultPrice())) {
+			if (item.getDefaultPrice().getId() == null) {
+				setDefaultPrice(item, item.getDefaultPrice().getPrice().toString());
+			}
+
 			// If it's still not set to one of the item's prices, set it to the
 			// first available price, or null.
-			if (!delegate.getPrices().contains(delegate.getDefaultPrice())) {
-				if (delegate.getPrices().size() > 0)
-					delegate.setDefaultPrice(delegate.getPrices().toArray(new ItemPrice[0])[0]);
-				else
-					delegate.setDefaultPrice(null);
+			if (!item.getPrices().contains(item.getDefaultPrice())) {
+				if (item.getPrices().size() > 0) {
+					Set<ItemPrice> prices = item.getPrices();
+					item.setDefaultPrice(prices.toArray(new ItemPrice[prices.size()])[0]);
+				} else {
+					item.setDefaultPrice(null);
+				}
 			}
 		}
-		return super.save(delegate);
+		return super.save(item);
 	}
 
 	@Override

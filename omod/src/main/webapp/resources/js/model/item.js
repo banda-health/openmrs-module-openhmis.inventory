@@ -94,6 +94,9 @@ define(
                     }),
                     objRef: true
                 },
+				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
+				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
+				/*
 				codes: {
 					type: 'List',
 					options: new openhmis.GenericCollection(null, {
@@ -109,7 +112,7 @@ define(
 						model: openhmis.ItemPrice,
 						url: openhmis.url.inventoryModelBase + "itemPrice"
 					})
-				},
+				}, */
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }
 			},
 			
@@ -123,7 +126,7 @@ define(
 			
 			_getDefaultPriceFromPricesIfAvailable: function(id) {
 				var prices = this.get("prices");
-				for (price in prices) {
+				for (var price in prices) {
 					if (prices[price].id !== undefined) {
 						if (prices[price].id === id) {
 							this.attributes["defaultPrice"] = new openhmis.ItemPrice(prices[price]);
