@@ -159,7 +159,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void applyTransactions_shouldNotThrowExceptionIfTransactionsIsNull() throws Exception {
-		service.applyTransactions(null);
+		service.applyTransactions((StockOperationTransaction)null);
 	}
 
 	/**
