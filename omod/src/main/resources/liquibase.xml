@@ -647,4 +647,94 @@
 			<column name="uuid">db40707f-9175-4199-8df2-a5702f41ec7d</column>
 		</insert>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.0.0-2" author="ibewes">
+		<createTable tableName="inv_item_stock">
+			<column name="item_stock_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+
+			<column name="stockroom_id" type="int"><constraints nullable="false" /></column>
+			<column name="item_id" type="int"><constraints nullable="false" /></column>
+			<column name="quantity" type="int"><constraints nullable="false" /></column>
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_item_stock_detail">
+			<column name="item_stock_detail_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+
+			<column name="stock_item_id" type="int"><constraints nullable="false" /></column>
+			<column name="stockroom_id" type="int"><constraints nullable="false" /></column>
+			<column name="item_id" type="int"><constraints nullable="false" /></column>
+			<column name="expiration" type="DATETIME" />
+			<column name="batch_operation_id" type="int" />
+			<column name="quantity" type="int" />
+
+			<column name="calculated_expiration" type="boolean" defaultValueBoolean="true">
+				<constraints nullable="false" />
+			</column>
+			<column name="calculated_batch" type="boolean" defaultValueBoolean="true">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		
+		<createIndex tableName="inv_item_stock" indexName="inv_item_stock_item_stockroom_idx" unique="true">
+			<column name="stockroom_id" />
+			<column name="item_id" />
+		</createIndex>
+		<createIndex tableName="inv_item_stock_detail" indexName="inv_item_stock_detail_item_stockroom_idx" unique="false">
+			<column name="stockroom_id" />
+			<column name="item_id" />
+		</createIndex>
+
+		<addForeignKeyConstraint constraintName="inv_item_stock_operation_fk"
+		                         baseTableName="inv_item_stock" baseColumnNames="operation_id"
+		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_stock_item_fk"
+		                         baseTableName="inv_item_stock" baseColumnNames="item_id"
+		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_item_stock_detail_operation_fk"
+		                         baseTableName="inv_item_stock_detail" baseColumnNames="operation_id"
+		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_stock_detail_item_fk"
+		                         baseTableName="inv_item_stock_detail" baseColumnNames="item_id"
+		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_stock_detail_batch_fk"
+		                         baseTableName="inv_item_stock_detail" baseColumnNames="batch_operation_id"
+		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+
+		<dropTable tableName="inv_stock_room_item" />
+
+		<addColumn tableName="inv_transaction">
+			<column name="batch_operation_id" type="int" />
+		</addColumn>
+		<addColumn tableName="inv_reserved_transaction">
+			<column name="batch_operation_id" type="int" />
+		</addColumn>
+
+		<addForeignKeyConstraint constraintName="inv_transaction_batch_fk"
+		                         baseTableName="inv_transaction" baseColumnNames="batch_operation_id"
+		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+		<addForeignKeyConstraint constraintName="inv_reserved_transaction_fk"
+		                         baseTableName="inv_reserved_transaction" baseColumnNames="batch_operation_id"
+		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+	</changeSet>
+	<changeSet id="openhmis.inventory-1.0.0-3" author="ibewes">
+		<addColumn tableName="inv_transaction">
+			<column name="calculated_expiration" type="boolean" defaultValueBoolean="true" />
+			<column name="calculated_batch" type="boolean" defaultValueBoolean="true" />
+		</addColumn>
+		<addColumn tableName="inv_reserved_transaction">
+			<column name="calculated_expiration" type="boolean" defaultValueBoolean="true" />
+			<column name="calculated_batch" type="boolean" defaultValueBoolean="true" />
+		</addColumn>
+
+		<modifyColumn tableName="inv_item_stock_detail">
+			<column name="calculated_expiration" type="boolean" defaultValueBoolean="true" />
+			<column name="calculated_batch" type="boolean" defaultValueBoolean="true" />
+		</modifyColumn>
+	</changeSet>
 </databaseChangeLog>

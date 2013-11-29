@@ -19,6 +19,9 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpen
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Model class that represents a hierarchical item classification.
+ */
 public class Category extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 

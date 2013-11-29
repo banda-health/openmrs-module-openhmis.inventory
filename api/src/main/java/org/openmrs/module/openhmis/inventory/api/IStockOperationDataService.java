@@ -54,12 +54,13 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @param transactions The transactions to apply.
 	 * @should not throw exception if transactions is null
 	 * @should not throw exception if transactions is empty
-	 * @should add source stockroom item stock if no item stock found
-	 * @should update source stockroom item stock if item exists
-	 * @should add source stockroom item stock if no item with same expiration is found
-	 * @should update source stockroom item stock if item with same expiration is found
+	 * @should add source stockroom item stock and detail if no item stock found
+	 * @should update source stockroom item stock and detail if item exists
+	 * @should update source stockroom item stock and create detail if needed
 	 * @should add source stockroom item stock with negative quantity when transaction quantity is negative and stock not found
+	 * @should add item stock detail with no expiration or batch when item stock quantity is negative
 	 * @should remove item stock if quantity is zero
+	 * @should remove item stock detail if quantity is zero
 	 */
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
 	void applyTransactions(Collection<StockOperationTransaction> transactions) throws APIException;

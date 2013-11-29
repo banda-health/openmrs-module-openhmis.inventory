@@ -15,18 +15,23 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.BaseOpenmrsObject;
 
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-public class StockRoomItem extends BaseOpenmrsObject
-	implements Comparable<StockRoomItem> {
-	public static final long serialVersionUID = 0L;
+/**
+ * Model class that represents item stock in a stockroom.  The item stock quantity is the overall item quantity in the
+ * stockroom and is not qualified (that is, broken down) by expiration or batch operation. Those quantities are stored
+ * in the item stock details.
+ */
+public class ItemStock extends BaseOpenmrsObject
+	implements Comparable<ItemStock> {
+	public static final long serialVersionUID = 1L;
 
 	private Integer stockRoomItemId;
 	private StockRoom stockRoom;
-	private StockOperation batchOperation;
 	private Item item;
 	private int quantity;
-	private Date expiration;
+	private Set<ItemStockDetail> details;
 
 	@Override
 	public Integer getId() {
@@ -46,14 +51,6 @@ public class StockRoomItem extends BaseOpenmrsObject
 		this.stockRoom = stockRoom;
 	}
 
-	public StockOperation getBatchOperation() {
-		return batchOperation;
-	}
-
-	public void setBatchOperation(StockOperation batchOperation) {
-		this.batchOperation = batchOperation;
-	}
-
 	public Item getItem() {
 		return item;
 	}
@@ -70,16 +67,42 @@ public class StockRoomItem extends BaseOpenmrsObject
 		this.quantity = quantity;
 	}
 
-	public Date getExpiration() {
-		return expiration;
+	public ItemStockDetail addDetail(ItemStockDetail detail) {
+		if (detail == null) {
+			throw new IllegalArgumentException("The detail record to add must be defined");
+		}
+
+		if (details == null) {
+			details = new HashSet<ItemStockDetail>();
+		}
+
+		detail.setItemStock(this);
+		details.add(detail);
+
+		return detail;
 	}
 
-	public void setExpiration(Date expiration) {
-		this.expiration = expiration;
+	public void removeDetail(ItemStockDetail detail) {
+		if (detail!= null) {
+			if (details == null) {
+				return;
+			}
+
+			detail.setItemStock(null);
+			details.remove(detail);
+		}
+	}
+
+	public Set<ItemStockDetail> getDetails() {
+		return details;
+	}
+
+	public void setDetails(Set<ItemStockDetail> details) {
+		this.details = details;
 	}
 
 	@Override
-	public int compareTo(StockRoomItem o) {
+	public int compareTo(ItemStock o) {
 		// The default sorting uses the item name and then uuid if the name is the same
 		int result = this.getItem().getName().compareTo(o.getItem().getName());
 

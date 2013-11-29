@@ -16,10 +16,9 @@
 		<property name="description" type="java.lang.String" column="description" length="1024" />
 		<many-to-one name="location" class="org.openmrs.Location" column="location_id" />
 
-		<set name="items" lazy="true" inverse="true" batch-size="100"
-		     cascade="all-delete-orphan" sort="natural">
-			<key column="stock_room_id" />
-			<one-to-many class="StockRoomItem" />
+		<set name="items" lazy="true" inverse="true" cascade="all-delete-orphan">
+			<key column="stockroom_id" />
+			<one-to-many class="ItemStock" />
 		</set>
 
 		<set name="operations" lazy="true" table="inv_stockroom_operations" cascade="all-delete-orphan"  >
@@ -38,19 +37,47 @@
 		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
-	<class name="StockRoomItem" table="inv_stock_room_item">
+	<class name="ItemStock" table="inv_item_stock">
 		<cache usage="read-write"/>
 
-		<id name="id" type="int" column="stock_room_item_id">
+		<id name="id" type="int" column="item_stock_id">
 			<generator class="native">
-				<param name="sequence">inv_stock_room_item_stock_room_item_id_seq</param>
+				<param name="sequence">inv_item_stock_item_stock_id_seq</param>
 			</generator>
 		</id>
 
-		<many-to-one name="stockRoom" class="StockRoom" not-null="true" column="stock_room_id" />
+		<many-to-one name="stockRoom" class="StockRoom" not-null="true" column="stockroom_id" />
+		<many-to-one name="item" class="Item" not-null="true" lazy="false" column="item_id" />
+		<property name="quantity" type="int" not-null="true" column="quantity" />
+
+		<set name="details" lazy="true" inverse="true" cascade="all-delete-orphan" order-by="id asc">
+			<key column="item_stock_id"/>
+			<one-to-many class="ItemStockDetail" />
+		</set>
+
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+	<class name="ItemStockDetail" table="inv_item_stock_detail">
+		<cache usage="read-write"/>
+
+		<id name="id" type="int" column="item_stock_detail_id">
+			<generator class="native">
+				<param name="sequence">inv_item_stock_detail_item_stock_detail_id_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="itemStock" class="ItemStock" not-null="true" column="item_stock_id" />
+		<many-to-one name="stockRoom" class="StockRoom" not-null="true" column="stockroom_id" />
 		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
 		<property name="quantity" type="int" not-null="true" column="quantity" />
 		<property name="expiration" type="java.util.Date" column="expiration" />
+		<many-to-one name="batchOperation" class="StockOperation" column="batch_operation_id" />
+		<property name="calculatedExpiration" type="boolean">
+			<column name="calculated_expiration" default="true" />
+		</property>
+		<property name="calculatedBatch" type="boolean">
+			<column name="calculated_batch" default="true" />
+		</property>
 
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
@@ -73,6 +100,7 @@
 		<property name="hasDestination" type="java.lang.Boolean" column="has_destination" />
 		<property name="hasPatient" type="java.lang.Boolean" column="has_patient" />
 		<property name="patientRequired" type="java.lang.Boolean" column="patient_required" />
+
 
 		<many-to-one name="user" class="org.openmrs.User" column="user_id" />
 		<many-to-one name="role" class="org.openmrs.module.openhmis.commons.api.entity.model.LazyRole" column="role" />
@@ -211,6 +239,13 @@
 		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
 		<property name="quantity" type="int" not-null="true" column="quantity" />
 		<property name="expiration" type="java.util.Date" column="expiration" />
+		<many-to-one name="batchOperation" class="StockOperation" column="batch_operation_id" />
+		<property name="calculatedExpiration" type="boolean">
+			<column name="calculated_expiration" default="true" />
+		</property>
+		<property name="calculatedBatch" type="boolean">
+			<column name="calculated_batch" default="true" />
+		</property>
 
 		<property name="available" type="java.lang.Boolean" column="is_available" />
 
@@ -232,6 +267,13 @@
 		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
 		<property name="quantity" type="int" not-null="true" column="quantity" />
 		<property name="expiration" type="java.util.Date" column="expiration" />
+		<many-to-one name="batchOperation" class="StockOperation" column="batch_operation_id" />
+		<property name="calculatedExpiration" type="boolean">
+			<column name="calculated_expiration" default="true" />
+		</property>
+		<property name="calculatedBatch" type="boolean">
+			<column name="calculated_batch" default="true" />
+		</property>
 
 		<many-to-one name="stockRoom" class="StockRoom" column="stockroom_id" />
 		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" />

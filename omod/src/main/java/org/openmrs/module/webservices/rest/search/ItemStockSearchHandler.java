@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -36,13 +36,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class StockRoomItemSearchHandler implements SearchHandler {
-	private static Log log = LogFactory.getLog(StockRoomItemSearchHandler.class);
+public class ItemStockSearchHandler implements SearchHandler {
+	private static Log log = LogFactory.getLog(ItemStockSearchHandler.class);
 
-	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.STOCK_ROOM_ITEM_RESOURCE,
+	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_STOCK_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find all items by stock room.")
+					new SearchQuery.Builder("Find all item stock by stock room.")
 							.withRequiredParameters("stock_room_uuid").build()
 			)
 	);
@@ -50,7 +50,7 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 	private IStockRoomDataService stockRoomDataService;
 
 	@Autowired
-	public StockRoomItemSearchHandler(IStockRoomDataService stockRoomDataService) {
+	public ItemStockSearchHandler(IStockRoomDataService stockRoomDataService) {
 		this.stockRoomDataService = stockRoomDataService;
 	}
 
@@ -75,11 +75,11 @@ public class StockRoomItemSearchHandler implements SearchHandler {
 		}
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<StockRoomItem> items = service.getItemsByRoom(stockRoom, pagingInfo);
+		List<ItemStock> items = service.getItemsByRoom(stockRoom, pagingInfo);
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
 		} else {
-			return new AlreadyPagedWithLength<StockRoomItem>(context, items,
+			return new AlreadyPagedWithLength<ItemStock>(context, items,
 					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		}
 	}

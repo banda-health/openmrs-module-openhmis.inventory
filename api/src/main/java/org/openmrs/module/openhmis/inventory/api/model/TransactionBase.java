@@ -16,6 +16,9 @@ public abstract class TransactionBase
 	private Item item;
 	private Integer quantity;
 	private Date expiration;
+	private StockOperation batchOperation;
+	private boolean calculatedExpiration;
+	private boolean calculatedBatch;
 
 	private User creator;
 	private Date dateCreated = new Date();
@@ -27,7 +30,10 @@ public abstract class TransactionBase
 
 		item = tx.item;
 		expiration = tx.expiration;
+		batchOperation = tx.batchOperation;
 		quantity = tx.quantity;
+		calculatedExpiration = tx.calculatedExpiration;
+		calculatedBatch = tx.calculatedBatch;
 	}
 
 	public Integer getId() {
@@ -68,6 +74,30 @@ public abstract class TransactionBase
 
 	public void setExpiration(Date expiration) {
 		this.expiration = expiration;
+	}
+
+	public StockOperation getBatchOperation() {
+		return batchOperation;
+	}
+
+	public void setBatchOperation(StockOperation batchOperation) {
+		this.batchOperation = batchOperation;
+	}
+
+	public boolean isCalculatedExpiration() {
+		return calculatedExpiration;
+	}
+
+	public void setCalculatedExpiration(boolean calculatedExpiration) {
+		this.calculatedExpiration = calculatedExpiration;
+	}
+
+	public boolean isCalculatedBatch() {
+		return calculatedBatch;
+	}
+
+	public void setCalculatedBatch(boolean calculatedBatch) {
+		this.calculatedBatch = calculatedBatch;
 	}
 
 	public User getCreator() {

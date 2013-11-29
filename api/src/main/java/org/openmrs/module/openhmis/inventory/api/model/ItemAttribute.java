@@ -15,6 +15,10 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.attribute.BaseAttribute;
 
+/**
+ * A value for a user-defined {@link ItemAttributeType} that is stored on an {@link Item}.
+ * @see org.openmrs.attribute.Attribute
+ */
 public class ItemAttribute extends BaseAttribute<ItemAttributeType, Item> {
 	public static final long serialVersionUID = 0L;
 

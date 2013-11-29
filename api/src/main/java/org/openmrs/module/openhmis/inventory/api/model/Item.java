@@ -25,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Model class that represents an item that can be billed by an institution.
+ * Model class that represents a product or service that can be tracked by an institution.
  */
 public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
 	public static final long serialVersionUID = 0L;
@@ -71,7 +71,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		}
 
 		ItemCode itemCode = new ItemCode(code, codeName);
-		itemCode.setItem(this);
 
 		addCode(itemCode);
 
@@ -84,6 +83,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 				codes = new HashSet<ItemCode>();
 			}
 
+			code.setItem(this);
 			codes.add(code);
 		}
 	}
@@ -115,7 +115,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		}
 
 		ItemPrice itemPrice = new ItemPrice(price, priceName);
-		itemPrice.setItem(this);
 
 		addPrice(itemPrice);
 
@@ -128,6 +127,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 				prices = new HashSet<ItemPrice>();
 			}
 
+			price.setItem(this);
 			prices.add(price);
 		}
 	}
@@ -182,7 +182,11 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		this.drug = drug;
 	}
 
-	public boolean isHasExpiration() {
+	public boolean hasExpiration() {
+		return hasExpiration;
+	}
+
+	boolean isHasExpiration() {
 		return hasExpiration;
 	}
 

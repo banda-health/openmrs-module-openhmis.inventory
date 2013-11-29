@@ -67,8 +67,13 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should return the stock room item
 	 * @should not return items from other stock rooms
 	 * @should return null when item is not found
+<<<<<<< HEAD
+	 * @should throw NullReferenceException when stock room is null
+	 * @should throw NullReferenceException when item is null
+=======
 	 * @should throw IllegalArgumentException when stock room is null
 	 * @should throw IllegalArgumentException when item is null
+>>>>>>> d3314d1... Implemented remaining tests for applyTransactions, getStockroomItemDetail, and ItemStock sorting.
 	 */
 	@Transactional(readOnly = true)
 	@Authorized({PrivilegeConstants.VIEW_STOCKROOMS})

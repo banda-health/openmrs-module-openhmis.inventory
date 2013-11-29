@@ -13,7 +13,10 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import com.google.common.collect.Iterators;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -26,15 +29,14 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
+import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class StockOperationDataServiceImpl
 		extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
@@ -43,29 +45,6 @@ public class StockOperationDataServiceImpl
 	@Override
 	protected BasicMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
-	}
-
-	@Override
-	public StockOperation submitOperation(StockOperation operation) throws IllegalArgumentException, APIException {
-		validate(operation);
-
-		if (operation.getReserved() == null || operation.getReserved().size() <= 0) {
-			throw new APIException("The operation must have at least one reserved transaction item defined.");
-		}
-
-		switch (operation.getStatus()) {
-			case PENDING:
-				operation.getInstanceType().onPending(operation);
-				break;
-			case CANCELLED:
-				operation.getInstanceType().onCancelled(operation);
-				break;
-			case COMPLETED:
-				operation.getInstanceType().onCompleted(operation);
-				break;
-		}
-
-		return save(operation);
 	}
 
 	/**
@@ -104,6 +83,33 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
+	public StockOperation submitOperation(StockOperation operation) throws IllegalArgumentException, APIException {
+		validate(operation);
+
+		if (operation.getReserved() == null || operation.getReserved().size() <= 0) {
+			throw new APIException("The operation must have at least one reserved transaction item defined.");
+		}
+
+		// TODO: Calculate any required expiration or batch operation qualifiers
+
+		// TODO: Provide locking (on source stockroom uuid?) to ensure that concurrent operations don't screw things up
+
+		switch (operation.getStatus()) {
+			case PENDING:
+				operation.getInstanceType().onPending(operation);
+				break;
+			case CANCELLED:
+				operation.getInstanceType().onCancelled(operation);
+				break;
+			case COMPLETED:
+				operation.getInstanceType().onCompleted(operation);
+				break;
+		}
+
+		return save(operation);
+	}
+
+	@Override
 	public void applyTransactions(Collection<StockOperationTransaction> transactions) {
 		if (transactions != null && transactions.size() > 0) {
 			StockOperationTransaction[] tx = new StockOperationTransaction[transactions.size() - 1];
@@ -122,36 +128,110 @@ public class StockOperationDataServiceImpl
 			return;
 		}
 
-		IStockRoomDataService stockroomService = Context.getService(IStockRoomDataService.class);
+		// TODO: Refactor method, it is too complex and long right now
+		// TODO: Work properly with locking in submit stockroom
 
+		// Note that we don't touch the stockroom operations, transactions, or item stock because that could result
+		//  in loading a large number of records from the database that we don't need for this. This means that
+		//  any existing stockroom objects must be refreshed before the data updated below will be seen.
+
+		IStockRoomDataService stockroomService = Context.getService(IStockRoomDataService.class);
+		IItemStockDataService itemStockService = Context.getService(IItemStockDataService.class);
+
+		// Create a map to store the tx grouped by item and stockroom
+		Map<Pair<Item, StockRoom>, List<StockOperationTransaction>> grouped = new HashMap<Pair<Item, StockRoom>, List<StockOperationTransaction>>();
 		for (StockOperationTransaction tx : transactions) {
 			if (tx == null) {
-				// Skip any null transactions
 				continue;
 			}
 
-			// Get the stockroom for the tx
-			StockRoom stockroom = tx.getStockRoom();
+			Pair<Item, StockRoom> key = new ImmutablePair<Item, StockRoom>(tx.getItem(), tx.getStockRoom());
+			if (!grouped.containsKey(key)) {
+				grouped.put(key, new ArrayList<StockOperationTransaction>());
+			}
 
-			// See if the item exists
-			StockRoomItem stock = stockroomService.getItem(stockroom, tx.getItem(), tx.getExpiration());
+			grouped.get(key).add(tx);
+		}
 
-			// Add or update the item stock
-			if (stock == null) {
-				// Add a new item stock record
-				stock = new StockRoomItem();
-				stock.setItem(tx.getItem());
-				stock.setQuantity(tx.getQuantity());
-				stock.setExpiration(tx.getExpiration());
-				stock.setStockRoom(stockroom);
+		for (Pair<Item, StockRoom> key : grouped.keySet()) {
+			Item item = key.getKey();
+			StockRoom stockRoom = key.getValue();
+			List<StockOperationTransaction> itemTxs = grouped.get(key);
 
-				stockroom.addItem(stock);
-			} else if (stock.getQuantity() + tx.getQuantity() > 0) {
-				// Update the item stock record
-				stock.setQuantity(stock.getQuantity() + tx.getQuantity());
+			// Get the item stock from the stockroom
+			ItemStock stock = stockroomService.getItem(stockRoom, item);
+
+			// For each item transaction
+			int totalQty = 0;
+			for (StockOperationTransaction tx : itemTxs) {
+				// Sum the total quantity for the item
+				totalQty += tx.getQuantity();
+
+				ItemStockDetail detail = null;
+				if (stock == null) {
+					// Item stock does not exist so create it and then create detail
+					stock = new ItemStock();
+					stock.setStockRoom(tx.getStockRoom());
+					stock.setItem(tx.getItem());
+					stock.setQuantity(0);
+
+					detail = new ItemStockDetail(stock, tx);
+					stock.addDetail(detail);
+				} else {
+					// The stock already exists so try and find the detail
+					detail = findDetail(stock, tx);
+					if (detail == null) {
+						// Could not find the detail so create a new one
+						detail = new ItemStockDetail(stock, tx);
+						stock.addDetail(detail);
+					} else {
+						// Found the detail, just update the quantity
+						detail.setQuantity(detail.getQuantity() + tx.getQuantity());
+					}
+				}
+
+				// If the detail quantity is zero then remove the record. Note, details with quantities less than zero
+				//      still need to be tracked.
+				if(detail.getQuantity() == 0) {
+					stock.getDetails().remove(detail);
+				}
+			}
+
+			// Update the item quantity
+			stock.setQuantity(stock.getQuantity() + totalQty);
+
+			// Handle the special-case where the stock quantity is negative and ensure that there is only a single
+			//  detail with no qualifiers and the negative quantity
+			if (stock.getQuantity() < 0) {
+				ItemStockDetail detail = null;
+				if (stock.getDetails().size() > 1) {
+					// Other detail records exist that should not be around anymore.  Clear them and create a single
+					//  detail record for the unknown stock that has been removed from the stockroom.
+					stock.getDetails().clear();
+
+					detail = new ItemStockDetail();
+					stock.addDetail(detail);
+				} else {
+					// Use this single record as the unqualified detail record
+					detail = Iterators.get(stock.getDetails().iterator(), 0);
+				}
+
+				detail.setItemStock(stock);
+				detail.setStockRoom(stock.getStockRoom());
+				detail.setItem(stock.getItem());
+				detail.setExpiration(null);
+				detail.setBatchOperation(null);
+				detail.setCalculatedExpiration(true);
+				detail.setCalculatedBatch(true);
+				detail.setQuantity(stock.getQuantity());
+			}
+
+			if (stock.getQuantity() == 0) {
+				// Remove the stock if the quantity is zero
+				itemStockService.purge(stock);
 			} else {
-				// Delete the item stock record because the quantity is now zero
-				stockroom.removeItem(stock);
+				// Save the stock if the quantity is something other than zero (positive or negative)
+				itemStockService.save(stock);
 			}
 		}
 	}
@@ -275,4 +355,27 @@ public class StockOperationDataServiceImpl
 
 		super.purge(operation);
 	}
+
+	private ItemStockDetail findDetail(ItemStock stock, StockOperationTransaction tx) {
+		if (stock == null || stock.getDetails() == null || stock.getDetails().size() == 0) {
+			return null;
+		}
+
+		// Loop through each detail record and find the first detail with the same expiration and batch operation
+		for (ItemStockDetail detail : stock.getDetails()) {
+			if  (
+					(
+						(detail.getExpiration() == null && tx.getExpiration() == null) || detail.getExpiration().equals(tx.getExpiration())
+					) && (
+						(detail.getBatchOperation() == null && tx.getBatchOperation() == null) ||
+						(tx.getBatchOperation() != null && detail.getBatchOperation().getId().equals(tx.getBatchOperation().getId()))
+					)
+				){
+				return detail;
+			}
+		}
+
+		return null;
+	}
 }
+

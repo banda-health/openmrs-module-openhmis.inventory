@@ -16,24 +16,26 @@ package org.openmrs.module.webservices.rest.resource;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
-import org.openmrs.module.webservices.rest.search.StockRoomItemSearchHandler;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
+import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.search.ItemStockSearchHandler;
 import org.openmrs.module.webservices.rest.web.RequestContext;
-import org.openmrs.module.webservices.rest.web.annotation.SubResource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.openmrs.module.webservices.rest.web.annotation.Resource;
 
-@SubResource(parent = StockRoomResource.class, path = "item_stock", supportedClass=StockRoomItem.class, supportedOpenmrsVersions={"1.9"})
-public class StockRoomItemResource extends BaseRestObjectResource<StockRoomItem> {
+
+@Resource(name = ModuleRestConstants.ITEM_STOCK_RESOURCE, supportedClass=ItemStock.class, supportedOpenmrsVersions={"1.9"})
+public class ItemStockResource extends BaseRestObjectResource<ItemStock> {
 	@Override
-	public StockRoomItem newDelegate() {
-		return new StockRoomItem();
+	public ItemStock newDelegate() {
+		return new ItemStock();
 	}
 
 	@Override
-	public Class<? extends IObjectDataService<StockRoomItem>> getServiceClass() {
+	public Class<? extends IObjectDataService<ItemStock>> getServiceClass() {
 		return null;
 	}
 
@@ -42,17 +44,16 @@ public class StockRoomItemResource extends BaseRestObjectResource<StockRoomItem>
 		DelegatingResourceDescription description = super.getDefaultRepresentationDescription();
 
 		description.addProperty("stockRoom", Representation.DEFAULT);
-		description.addProperty("importTransaction", Representation.DEFAULT);
 		description.addProperty("item", Representation.DEFAULT);
 		description.addProperty("quantity", Representation.DEFAULT);
-		description.addProperty("expiration", Representation.DEFAULT);
+		description.addProperty("details", Representation.DEFAULT);
 
 		return description;
 	}
 
 	@Override
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-		return StockRoomItemSearchHandler.doSearch(Context.getService(IStockRoomDataService.class), context);
+		return ItemStockSearchHandler.doSearch(Context.getService(IStockRoomDataService.class), context);
 	}
 }
 

@@ -14,6 +14,7 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
@@ -22,9 +23,7 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServi
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Item;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
@@ -56,30 +55,27 @@ public class StockRoomDataServiceImpl
 	}
 
 	@Override
-	public List<StockRoomItem> getItemsByRoom(final StockRoom stockRoom, PagingInfo paging) {
+	public List<ItemStock> getItemsByRoom(final StockRoom stockRoom, PagingInfo paging) {
 		if (stockRoom == null) {
-			throw new NullPointerException("The stock room must be defined");
+			throw new IllegalArgumentException("The stock room must be defined");
 		}
 
-		List<StockRoomItem> result = executeCriteria(StockRoomItem.class, paging, new Action1<Criteria>() {
+		return executeCriteria(ItemStock.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
+				criteria.createAlias("item", "i");
 				criteria.add(Restrictions.eq("stockRoom", stockRoom));
 			}
-		});
-
-		// Force the results to be sorted by the stock room item name (see StockRoomItem.compareTo)
-		java.util.Collections.sort(result);
-		return result;
+		}, Order.asc("i.name"));
 	}
 
 	@Override
-	public List<StockRoomItem> findItems(final StockRoom stockRoom, final ItemSearch itemSearch, PagingInfo paging) {
+	public List<ItemStock> findItems(final StockRoom stockRoom, final ItemSearch itemSearch, PagingInfo paging) {
 		if (stockRoom == null) {
-			throw new NullPointerException("The stock room must be defined.");
+			throw new IllegalArgumentException("The stock room must be defined.");
 		}
 		if (itemSearch == null) {
-			throw new NullPointerException("The item search must be defined.");
+			throw new IllegalArgumentException("The item search must be defined.");
 		}
 
 		// To allow a method to exclude retired items from the result callers can set IncludeRetired to null
@@ -89,27 +85,43 @@ public class StockRoomDataServiceImpl
 			itemSearch.setIncludeRetired(true);
 		}
 
-		return executeCriteria(StockRoomItem.class, paging, new Action1<Criteria>() {
+		return executeCriteria(ItemStock.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq("stockRoom", stockRoom));
 
-				itemSearch.updateCriteria(criteria.createCriteria("item"));
+				itemSearch.updateCriteria(criteria.createCriteria("item", "i"));
 			}
-		});
+		}, Order.asc("i.name"));
 	}
 
 	@Override
-	public StockRoomItem getItem(StockRoom stockRoom, Item item, Date expiration) {
+	public ItemStock getItem(StockRoom stockRoom, Item item) {
 		if (stockRoom == null) {
-			throw new NullPointerException("The stock room must be defined.");
+			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
 		if (item == null) {
-			throw new NullPointerException("The item must be defined.");
+			throw new IllegalArgumentException("The item must be defined.");
 		}
 
-		Criteria criteria = repository.createCriteria(StockRoomItem.class);
+		Criteria criteria = repository.createCriteria(ItemStock.class);
 		criteria.add(Restrictions.eq("stockRoom", stockRoom));
+		criteria.add(Restrictions.eq("item", item));
+
+		return repository.selectSingle(ItemStock.class, criteria);
+	}
+
+	@Override
+	public ItemStockDetail getStockroomItemDetail(StockRoom stockroom, Item item, Date expiration, StockOperation batchOperation) {
+		if (stockroom == null) {
+			throw new IllegalArgumentException("The stockroom must be defined.");
+		}
+		if (item == null) {
+			throw new IllegalArgumentException("The item must be defined.");
+		}
+
+		Criteria criteria = repository.createCriteria(ItemStockDetail.class);
+		criteria.add(Restrictions.eq("stockRoom", stockroom));
 		criteria.add(Restrictions.eq("item", item));
 
 		if (expiration == null) {
@@ -118,7 +130,13 @@ public class StockRoomDataServiceImpl
 			criteria.add(Restrictions.eq("expiration", expiration));
 		}
 
-		return repository.selectSingle(StockRoomItem.class, criteria);
+		if (batchOperation == null) {
+			criteria.add(Restrictions.isNull("batchOperation"));
+		} else {
+			criteria.add(Restrictions.eq("batchOperation", batchOperation));
+		}
+
+		return repository.selectSingle(ItemStockDetail.class, criteria);
 	}
 
 	@Override
@@ -141,3 +159,4 @@ public class StockRoomDataServiceImpl
 		return PrivilegeConstants.VIEW_STOCKROOMS;
 	}
 }
+
