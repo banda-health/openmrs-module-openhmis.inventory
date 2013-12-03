@@ -38,11 +38,11 @@ define(
 
 		        this.transactionsView = new openhmis.StockRoomDetailList({
 			        model: new openhmis.GenericCollection([], {
-				        model: openhmis.Transaction
+				        model: openhmis.Operation
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['dateCreated', 'transactionNumber', 'status', 'transactionType']
+			        listFields: ['dateCreated', 'transactionNumber', 'status', 'operationType']
 		        });
 
 		        this.itemsView = new openhmis.StockRoomDetailList({

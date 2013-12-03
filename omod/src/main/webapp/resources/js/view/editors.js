@@ -47,8 +47,8 @@ define(
 			allowNull: true
 		});
 
-		editors.TransactionTypeSelect = editors.GenericModelSelect.extend({
-			modelType: openhmis.TransactionType,
+		editors.OperationTypeSelect = editors.GenericModelSelect.extend({
+			modelType: openhmis.OperationType,
 			displayAttr: "name"
 		});
 

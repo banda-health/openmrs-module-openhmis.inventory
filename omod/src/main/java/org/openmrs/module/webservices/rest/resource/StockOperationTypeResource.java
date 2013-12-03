@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
@@ -24,7 +23,6 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=IStockOperationType.class, supportedOpenmrsVersions={"1.9"})
-@Handler(supports = { IStockOperationType.class }, order = 0)
 public class StockOperationTypeResource extends BaseRestMetadataResource<IStockOperationType> {
 	@Override
 	public IStockOperationType newDelegate() {
@@ -40,11 +38,13 @@ public class StockOperationTypeResource extends BaseRestMetadataResource<IStockO
 	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
 		DelegatingResourceDescription description =  super.getDefaultRepresentationDescription();
 
-		// TODO: Update for Stock Opertion Type fields
-		description.addProperty("quantityType", Representation.DEFAULT);
-		description.addProperty("sourceRequired", Representation.DEFAULT);
-		description.addProperty("destinationRequired", Representation.DEFAULT);
-		description.addProperty("authorized", Representation.DEFAULT);
+		description.addProperty("hasSource", Representation.DEFAULT);
+		description.addProperty("hasDestination", Representation.DEFAULT);
+		description.addProperty("hasPatient", Representation.DEFAULT);
+		description.addProperty("patientRequired", Representation.DEFAULT);
+		description.addProperty("availableWhenReserved", Representation.DEFAULT);
+		description.addProperty("user", Representation.DEFAULT);
+		description.addProperty("role", Representation.DEFAULT);
 
 		return description;
 	}

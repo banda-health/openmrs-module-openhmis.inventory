@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
@@ -23,7 +22,6 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name = ModuleRestConstants.STOCK_ROOM_RESOURCE, supportedClass=StockRoom.class, supportedOpenmrsVersions={"1.9"})
-@Handler(supports = { StockRoom.class }, order = 0)
 public class StockRoomResource extends BaseRestMetadataResource<StockRoom> {
 	@Override
 	protected DelegatingResourceDescription getDefaultRepresentationDescription() {

@@ -56,7 +56,7 @@ define(
 	            importTransaction: {
 		            type: 'TransactionSelect',
 		            options: new openhmis.GenericCollection(null, {
-			            model: openhmis.Transaction,
+			            model: openhmis.Operation,
 			            url: openhmis.url.inventoryModelBase + '/stockRoomTransaction'
 		            }),
 		            objRef: true
@@ -79,7 +79,7 @@ define(
 				        resp.stockRoom = new openhmis.StockRoom(resp.stockRoom);
 			        }
 			        if (resp.importTransaction && _.isObject(resp.importTransaction)) {
-				        resp.importTransaction = new openhmis.Transaction(resp.importTransaction);
+				        resp.importTransaction = new openhmis.Operation(resp.importTransaction);
 			        }
 
 			        /*if (resp.expiration) {
