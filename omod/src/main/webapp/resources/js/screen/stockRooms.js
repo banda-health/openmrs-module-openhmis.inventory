@@ -16,13 +16,55 @@ curl(
 	[
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/openhmis',
+		openhmis.url.backboneBase + 'js/lib/backbone',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.inventoryBase + 'js/model/stockRoom',
         openhmis.url.inventoryBase + 'js/view/stockRoom',
 		openhmis.url.backboneBase + 'js/view/generic'
 	],
-	function($, openhmis) {
+	function($, openhmis, Backbone) {
+		/* FOR REFERENCE UNTIL NOT NEEDED
+		var StockroomView = Backbone.View.extend({
+			tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
+			tmplSelector: '#stockroom-select',
+
+			events: {
+				'change #srSelect': 'selected'
+			},
+
+			initialize: function(options) {
+				this.template = this.getTemplate(this.tmplFile, this.tmplSelector);
+				this.collection = options.collection;
+			},
+
+			render: function() {
+				var that = this;
+				this.collection.fetch({
+					success: function() {
+						that.$el.html(that.template({
+							model: that.collection
+						}));
+					}
+				});
+			},
+
+			selected: function() {
+				// render the selected stockroom
+				console.log('SELECTED!')
+			}
+		});
+		*/
 		$(function() {
+			/*var stockrooms = new openhmis.GenericCollection([], {
+				model: openhmis.StockRoom
+			});
+			var stockroomView = new StockroomView({
+				el: $('#srSelect'),
+				collection: stockrooms
+			});
+			stockroomView.render();
+			*/
+
 			var stockRoomList = $("#stockRoomList");
             var stockRoomInfo = $("#stockRoomInfo");
             var stockRoomEdit = $("#stockRoomEdit");

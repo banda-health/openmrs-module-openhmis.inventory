@@ -18,9 +18,9 @@ public class PrivilegeConstants {
 	public static final String VIEW_ITEMS = "View Inventory Items";
 	public static final String PURGE_ITEMS = "Purge Inventory Items";
 
-	public static final String MANAGE_STOCK_ROOMS = "Manage Inventory Stock Rooms";
-	public static final String VIEW_STOCK_ROOMS = "View Inventory Stock Rooms";
-	public static final String PURGE_STOCK_ROOMS = "Purge Inventory Stock Rooms";
+	public static final String MANAGE_STOCKROOMS = "Manage Inventory Stockrooms";
+	public static final String VIEW_STOCKROOMS = "View Inventory Stockrooms";
+	public static final String PURGE_STOCKROOMS = "Purge Inventory Stockrooms";
 
 	public static final String MANAGE_METADATA = "Manage Inventory Metadata";
 	public static final String VIEW_METADATA = "View Inventory Metadata";
@@ -37,6 +37,6 @@ public class PrivilegeConstants {
 	public static final String ITEM_PAGE_PRIVILEGES = MANAGE_ITEMS + ", " + VIEW_ITEMS;
 	public static final String DEPARTMENT_PAGE_PRIVILEGES = MANAGE_METADATA + ", " + VIEW_METADATA;
 	public static final String CATEGORY_PAGE_PRIVILEGES = MANAGE_METADATA + ", " + VIEW_METADATA;
-	public static final String STOCK_ROOM_PAGE_PRIVILEGES = MANAGE_STOCK_ROOMS + ", " + VIEW_STOCK_ROOMS;
-	public static final String TRANSACTION_PAGE_PRIVILEGES = STOCK_ROOM_PAGE_PRIVILEGES;
+	public static final String STOCKROOM_PAGE_PRIVILEGES = MANAGE_STOCKROOMS + ", " + VIEW_STOCKROOMS;
+	public static final String TRANSACTION_PAGE_PRIVILEGES = STOCKROOM_PAGE_PRIVILEGES;
 }

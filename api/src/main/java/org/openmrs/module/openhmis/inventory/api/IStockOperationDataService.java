@@ -92,7 +92,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should throw IllegalArgumentException when stockroom is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCK_ROOMS})
+	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS})
 	List<StockOperation> getOperationsByRoom(StockRoom stockroom, PagingInfo paging) throws IllegalArgumentException, APIException;
 
 	/**

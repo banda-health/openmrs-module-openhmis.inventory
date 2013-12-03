@@ -12,10 +12,12 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   -->
 <script id="detail-template" type="text/template">
-	<p>
+	<div>
+		<h2>
 		<a class="addLink" href="#"><?= __("Add %s", model.modelName()) ?></a> |
 		<!--<a class="txDialog createTxLink" href="#">Create Transaction</a>-->
-	</p>
+		</h2>
+	</div>
 	<div id="detailTabs" style="display: none">
 		<ul id="detailTabList" style="display: none">
 			<li><a href="#stockRoomDetails">Details</a></li>
@@ -84,4 +86,16 @@
 		<? if (pagingEnabled) { ?><span class="pageSize"></span><? } ?>
 		<? if (options.showRetiredOption) { ?><span class="showRetired"><input id="showRetired" type="checkbox"<?= showRetired ? ' checked="checked"' : '' ?>/><label for="showRetired"><?= __("Show " + strRetiredOrVoided) ?></label></span><? } ?>
 	</div>
+</script>
+
+<script id="stockroom-select" type="text/template">
+	<select id="srSelect">
+		<option value=""><em>Select a Stockroom</em></option>
+		<? console.log(model.length); ?>
+		<? model.each(function(stockroom) { ?>
+		<? console.log('test inside'); ?>
+		<option value="<?= stockroom.id ?>"><?= stockroom.get("name") ?></option>
+		<? }); ?>
+	</select>
+	<a class="addLink" href="#">Add Stockroom</a>
 </script>
