@@ -19,6 +19,7 @@ define(
 		openhmis.url.inventoryBase + 'js/model/item',
 		openhmis.url.inventoryBase + 'js/model/department',
         openhmis.url.inventoryBase + 'js/model/category',
+        openhmis.url.inventoryBase + 'js/view/search',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.backboneBase + 'js/lib/labelOver',
 		openhmis.url.backboneBase + 'js/view/editors'
