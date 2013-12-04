@@ -199,6 +199,17 @@ define(
 				return this;
 			}
 		});
+		
+		editors.ItemListSelect = editors.ListSelect.extend({
+			modalWidth: 750,
+			initListView: function() {
+		    	var options = this.schema.editorOptions || {};
+		    	options.model = this.schema.options;
+		    	options.searchView = openhmis.DepartmentAndNameSearchView;
+		    	this.listView = new openhmis.GenericSearchableListView(options);
+			}
+		});
+		
 		return editors;
 	}
 )
