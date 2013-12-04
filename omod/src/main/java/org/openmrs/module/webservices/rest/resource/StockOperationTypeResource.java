@@ -15,22 +15,22 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=IStockOperationType.class, supportedOpenmrsVersions={"1.9"})
-public class StockOperationTypeResource extends BaseRestMetadataResource<IStockOperationType> {
+@Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=StockOperationTypeBase.class, supportedOpenmrsVersions={"1.9"})
+public class StockOperationTypeResource extends BaseRestMetadataResource<StockOperationTypeBase> {
 	@Override
-	public IStockOperationType newDelegate() {
+	public StockOperationTypeBase newDelegate() {
 		return null;
 	}
 
 	@Override
-	public Class<? extends IMetadataDataService<IStockOperationType>> getServiceClass() {
+	public Class<? extends IMetadataDataService<StockOperationTypeBase>> getServiceClass() {
 		return IStockOperationTypeDataService.class;
 	}
 

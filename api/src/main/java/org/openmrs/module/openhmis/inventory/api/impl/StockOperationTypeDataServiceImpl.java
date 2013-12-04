@@ -17,11 +17,11 @@ import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 
 public class StockOperationTypeDataServiceImpl
-	extends BaseMetadataDataServiceImpl<IStockOperationType>
+	extends BaseMetadataDataServiceImpl<StockOperationTypeBase>
 	implements IStockOperationTypeDataService {
 
 	@Override
@@ -30,11 +30,11 @@ public class StockOperationTypeDataServiceImpl
 	}
 
 	@Override
-	protected void validate(IStockOperationType object) throws APIException {
+	protected void validate(StockOperationTypeBase object) throws APIException {
 	}
 
 	@Override
-	public IStockOperationType save(IStockOperationType type) throws APIException {
+	public StockOperationTypeBase save(StockOperationTypeBase type) throws APIException {
 		// Check to see if this is a new entity
 		if (type.getId() == null) {
 			throw new UnsupportedOperationException("New stock operation types can not be created.");

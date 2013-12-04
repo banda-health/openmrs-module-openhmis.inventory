@@ -24,12 +24,3 @@
 </div>
 
 <div id="txDialog" style="display: none"></div>
-
-<!--
-<div id="srContent" style="width: 100%;">
-    <div id="srSelect" style="width: 100%;"></div>
-    <div id="srDetail" style="width: 30%; float: left"></div>
-	<div id="srLists" style="width: 68%; float: right"></div>
-	<div style="float: none"></div>
-</div>
--->

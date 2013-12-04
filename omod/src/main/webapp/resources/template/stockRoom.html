@@ -87,15 +87,3 @@
 		<? if (options.showRetiredOption) { ?><span class="showRetired"><input id="showRetired" type="checkbox"<?= showRetired ? ' checked="checked"' : '' ?>/><label for="showRetired"><?= __("Show " + strRetiredOrVoided) ?></label></span><? } ?>
 	</div>
 </script>
-
-<script id="stockroom-select" type="text/template">
-	<select id="srSelect">
-		<option value=""><em>Select a Stockroom</em></option>
-		<? console.log(model.length); ?>
-		<? model.each(function(stockroom) { ?>
-		<? console.log('test inside'); ?>
-		<option value="<?= stockroom.id ?>"><?= stockroom.get("name") ?></option>
-		<? }); ?>
-	</select>
-	<a class="addLink" href="#">Add Stockroom</a>
-</script>

@@ -1077,7 +1077,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getInstanceType().setUser(user);
 		operation.setSource(stockRoomService.getById(0));
 
-		typeService.save(operation.getInstanceType());
+		typeService.save((StockOperationTypeBase)operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
 
