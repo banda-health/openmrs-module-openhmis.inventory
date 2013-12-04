@@ -29,7 +29,6 @@ define(
 			
 			schema: {
 				name: { type: 'Text' },
-				//description: { type: 'Text' },
 				location: {
 					type: 'LocationSelect',
 					options: new openhmis.GenericCollection(null, {
@@ -49,7 +48,62 @@ define(
 				return this.get('name');
 			}
 		});
-		
+
+		openhmis.StockRoomItem = openhmis.GenericModel.extend({
+			meta: {
+				name: __("Item Stock"),
+				namePlural: __("Item Stock"),
+				openmrsType: 'metadata',
+				restUrl: openhmis.url.inventoryModelBase + 'stockRoomItem'
+			},
+
+			schema: {
+				stockRoom: {
+					type: 'StockRoomSelect',
+					options: new openhmis.GenericCollection(null, {
+						model: openhmis.StockRoom,
+						url: openhmis.url.inventoryModelBase + '/stockRoom'
+					}),
+					objRef: true
+				},
+				item: {
+					type: 'ItemSelect',
+					options: new openhmis.GenericCollection(null, {
+						model: openhmis.Item,
+						url: openhmis.url.inventoryModelBase + '/item'
+					}),
+					objRef: true
+				},
+				quantity: {
+					type: 'BasicNumber'
+				}
+			},
+
+			validate: function(attrs, options) {
+				if (!attrs.quantity) return { quantity: __("An item quantity is required.") };
+				if (!attrs.item || !attrs.item.id) return { item: __("Please choose an item") };
+
+				return null;
+			},
+
+			parse: function(resp) {
+				if (resp) {
+					if (resp.item && _.isObject(resp.item)) {
+						resp.item = new openhmis.Item(resp.item);
+					}
+					if (resp.stockRoom && _.isObject(resp.stockRoom)) {
+						resp.stockRoom = new openhmis.StockRoom(resp.stockRoom);
+					}
+				}
+
+				return resp;
+			},
+
+			toString: function() {
+				return this.get('item.name');
+			}
+		});
+
 		return openhmis;
 	}
 );

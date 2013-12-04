@@ -22,7 +22,7 @@
 		<ul id="detailTabList" style="display: none">
 			<li><a href="#stockRoomDetails">Details</a></li>
 			<li><a href="#items">Items</a></li>
-			<li><a href="#transactions">Transactions</a></li>
+			<li><a href="#operations">Operations</a></li>
 		</ul>
 		<div class="form" id="stockRoomDetails">
 			<input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
@@ -49,7 +49,7 @@
 			</div>
 		</div>
 		<div id="items"></div>
-		<div id="transactions"></div>
+		<div id="operations"></div>
 	</div>
 </script>
 

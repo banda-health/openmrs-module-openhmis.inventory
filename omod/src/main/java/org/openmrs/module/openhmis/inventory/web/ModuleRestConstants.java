@@ -21,12 +21,16 @@ public class ModuleRestConstants extends ModuleWebConstants {
 	public static final String ITEM_RESOURCE = MODULE_REST_ROOT + "item";
 	public static final String ITEM_PRICE_RESOURCE = MODULE_REST_ROOT + "itemPrice";
 	public static final String ITEM_CODE_RESOURCE = MODULE_REST_ROOT + "itemCode";
+
 	public static final String DEPARTMENT_RESOURCE = MODULE_REST_ROOT + "department";
 	public static final String CATEGORY_RESOURCE = MODULE_REST_ROOT + "category";
+
 	public static final String STOCK_ROOM_RESOURCE = MODULE_REST_ROOT + "stockRoom";
 	public static final String STOCK_ROOM_ITEM_RESOURCE = MODULE_REST_ROOT + "stockRoomItem";
+
 	public static final String OPERATION_RESOURCE = MODULE_REST_ROOT + "stockOperation";
 	public static final String OPERATION_TYPE_RESOURCE = MODULE_REST_ROOT + "stockOperationType";
 	public static final String OPERATION_TRANSACTION_RESOURCE = MODULE_REST_ROOT + "stockOperationTransaction";
+
 	public static final String RESERVATION_TRANSACTION_RESOURCE = MODULE_REST_ROOT + "reservationTransaction";
 }

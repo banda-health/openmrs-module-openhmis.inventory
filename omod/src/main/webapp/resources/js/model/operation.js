@@ -18,7 +18,6 @@ define(
         openhmis.url.backboneBase + 'js/model/generic',
 	    openhmis.url.backboneBase + 'js/model/user',
 	    openhmis.url.inventoryBase + 'js/model/stockRoom',
-	    openhmis.url.inventoryBase + 'js/model/operationType',
 	    openhmis.url.inventoryBase + 'js/view/editors'
     ],
     function(openhmis, __) {
@@ -95,7 +94,7 @@ define(
                 name: __("Operation"),
                 namePlural: __("Operations"),
                 openmrsType: 'metadata',
-                restUrl: openhmis.url.inventoryModelBase + 'stockOperation'
+	            restUrl: openhmis.url.inventoryModelBase + 'stockOperation'
             },
 
             schema: {

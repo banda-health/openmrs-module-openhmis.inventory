@@ -14,7 +14,7 @@
 define(
     [
         openhmis.url.backboneBase + 'js/view/generic',
-	    openhmis.url.inventoryBase + 'js/model/transaction',
+	    openhmis.url.inventoryBase + 'js/model/operation',
 	    openhmis.url.inventoryBase + 'js/model/stockRoomItem',
 	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
@@ -36,13 +36,13 @@ define(
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-		        this.transactionsView = new openhmis.StockRoomDetailList({
+		        this.operationsView = new openhmis.StockRoomDetailList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.Operation
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['dateCreated', 'transactionNumber', 'status', 'operationType']
+			        listFields: ['dateCreated', 'operationNumber', 'status', 'operationType']
 		        });
 
 		        this.itemsView = new openhmis.StockRoomDetailList({
@@ -51,10 +51,10 @@ define(
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['item', 'quantity', 'expiration', 'importTransaction']
+			        listFields: ['item', 'quantity']
 		        });
 
-		        this.transactionsView.on("fetch", this.fetch);
+		        this.operationsView.on("fetch", this.fetch);
 		        this.itemsView.on("fetch", this.fetch);
 	        },
 
@@ -76,11 +76,11 @@ define(
 			        tabs.show();
 			        $('#detailTabList').show();
 
-			        this.transactionsView.fetch(null);
+			        this.operationsView.fetch(null);
 			        this.itemsView.fetch(null);
 
 			        var transactions = $("#transactions");
-			        transactions.append(this.transactionsView.el);
+			        transactions.append(this.operationsView.el);
 			        var items = $("#items");
 			        items.append(this.itemsView.el);
 			    } else {
