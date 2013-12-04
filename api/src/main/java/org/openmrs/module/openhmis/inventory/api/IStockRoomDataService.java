@@ -38,7 +38,7 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should throw NullReferenceException if the stock room is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
+	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
 	List<StockRoomItem> getItemsByRoom(StockRoom stockRoom, PagingInfo paging);
 
 	/**
@@ -56,7 +56,7 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should throw NullReferenceException if item search is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
+	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
 	List<StockRoomItem> findItems(StockRoom stockRoom, ItemSearch itemSearch, PagingInfo paging);
 
 	/**
@@ -74,7 +74,7 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should throw NullReferenceException when item is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCK_ROOMS})
+	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
 	StockRoomItem getItem(StockRoom stockRoom, Item item, Date expiration);
 }
 

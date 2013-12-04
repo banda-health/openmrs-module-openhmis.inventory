@@ -13,24 +13,23 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
+import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
-@Handler(supports = { StockOperation.class }, order = 0)
-public class StockRoomTransactionResource extends BaseRestObjectResource<StockOperation> {
+public class StockOperationResource extends BaseRestObjectResource<StockOperation> {
 
 	@Override
 	public StockOperation newDelegate() {
@@ -46,57 +45,36 @@ public class StockRoomTransactionResource extends BaseRestObjectResource<StockOp
 	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
 		DelegatingResourceDescription description = super.getDefaultRepresentationDescription();
 
-		// TODO: Update for stock operation fields
-		description.addProperty("transactionNumber", Representation.DEFAULT);
-		description.addProperty("transactionType", Representation.DEFAULT);
 		description.addProperty("status", Representation.DEFAULT);
-		description.addProperty("dateCreated", Representation.DEFAULT);
-
-		return description;
-	}
-
-	@Override
-	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
-		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-
-		// TODO: Update for stock operation fields
-		if (rep instanceof FullRepresentation) {
-			description.addProperty("source", Representation.REF);
-			description.addProperty("destination", Representation.REF);
-			description.addProperty("items", Representation.REF);
-			description.addProperty("importTransaction", Representation.DEFAULT);
-			description.addProperty("creator", Representation.REF);
-		}
-
-		return description;
-	}
-
-	@Override
-	public DelegatingResourceDescription getCreatableProperties() {
-		// TODO: Update for stock operation fields
-
-		DelegatingResourceDescription description = super.getCreatableProperties();
-
-		description.addProperty("source");
-		description.addProperty("destination");
-		description.addProperty("items");
-		description.addProperty("importTransaction");
-		description.addProperty("creator");
+		description.addProperty("reserved", Representation.DEFAULT);
+		description.addProperty("transactions", Representation.DEFAULT);
+		description.addProperty("operationNumber", Representation.DEFAULT);
+		description.addProperty("source", Representation.DEFAULT);
+		description.addProperty("destination", Representation.DEFAULT);
+		description.addProperty("patient", Representation.DEFAULT);
 
 		return description;
 	}
 
 	@PropertySetter(value="reserved")
-	public void setReserved(StockOperation instance, Set<ReservedTransaction> reserved) {
+	public void setReserved(final StockOperation instance, Set<ReservedTransaction> reserved) {
 		if (instance.getReserved() == null) {
 			instance.setReserved(new TreeSet<ReservedTransaction>());
 		}
 
-		BaseRestDataResource.updateCollection(instance.getReserved(), reserved);
-
-		for (ReservedTransaction tx : instance.getReserved()) {
-			tx.setOperation(instance);
-		}
+		BaseRestDataResource.syncCollection(instance.getReserved(), reserved,
+				new Action2<Collection<ReservedTransaction>, ReservedTransaction>() {
+					@Override
+					public void apply(Collection<ReservedTransaction> collection, ReservedTransaction reserved) {
+						instance.addReserved(reserved);
+					}
+				},
+				new Action2<Collection<ReservedTransaction>, ReservedTransaction>() {
+					@Override
+					public void apply(Collection<ReservedTransaction> collection, ReservedTransaction reserved) {
+						instance.removeReserved(reserved);
+					}
+				});
 	}
 }
 

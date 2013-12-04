@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -21,10 +20,8 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Handler(supports = ItemCode.class, order = 0)
 @Resource(name= ModuleRestConstants.ITEM_CODE_RESOURCE, supportedClass=ItemCode.class, supportedOpenmrsVersions={"1.9"})
 public class ItemCodeResource extends BaseRestMetadataResource<ItemCode> implements IMetadataDataServiceResource<ItemCode> {
-
 	@Override
 	public ItemCode newDelegate() {
 		return new ItemCode();

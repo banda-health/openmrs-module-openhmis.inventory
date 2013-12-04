@@ -29,8 +29,8 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String CATEGORIES_ROOT = MODULE_ROOT + "categories";
 	public static final String CATEGORIES_PAGE = CATEGORIES_ROOT + ".form";
 
-	public static final String STOCK_ROOMS_ROOT = MODULE_ROOT + "stockRooms";
-	public static final String STOCK_ROOMS_PAGE = STOCK_ROOMS_ROOT + ".form";
+	public static final String STOCKROOMS_ROOT = MODULE_ROOT + "stockRooms";
+	public static final String STOCKROOMS_PAGE = STOCKROOMS_ROOT + ".form";
 
 	public static final String TRANSACTIONS_ROOT = MODULE_ROOT + "transactions";
 	public static final String TRANSACTIONS_PAGE = TRANSACTIONS_ROOT + ".form";

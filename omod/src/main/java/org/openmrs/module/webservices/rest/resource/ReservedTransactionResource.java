@@ -13,27 +13,22 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
-import org.openmrs.module.webservices.rest.search.StockRoomItemSearchHandler;
-import org.openmrs.module.webservices.rest.web.RequestContext;
-import org.openmrs.module.webservices.rest.web.annotation.SubResource;
+import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
+import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@SubResource(parent = StockRoomResource.class, path = "item_stock", supportedClass=StockRoomItem.class, supportedOpenmrsVersions={"1.9"})
-public class StockRoomItemResource extends BaseRestObjectResource<StockRoomItem> {
+@Resource(name = ModuleRestConstants.RESERVATION_TRANSACTION_RESOURCE, supportedClass=ReservedTransaction.class, supportedOpenmrsVersions={"1.9"})
+public class ReservedTransactionResource extends BaseRestObjectResource<ReservedTransaction> {
 	@Override
-	public StockRoomItem newDelegate() {
-		return new StockRoomItem();
+	public ReservedTransaction newDelegate() {
+		return new ReservedTransaction();
 	}
 
 	@Override
-	public Class<? extends IObjectDataService<StockRoomItem>> getServiceClass() {
+	public Class<? extends IObjectDataService<ReservedTransaction>> getServiceClass() {
 		return null;
 	}
 
@@ -41,18 +36,14 @@ public class StockRoomItemResource extends BaseRestObjectResource<StockRoomItem>
 	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
 		DelegatingResourceDescription description = super.getDefaultRepresentationDescription();
 
-		description.addProperty("stockRoom", Representation.DEFAULT);
-		description.addProperty("importTransaction", Representation.DEFAULT);
+		description.addProperty("operation", Representation.DEFAULT);
 		description.addProperty("item", Representation.DEFAULT);
 		description.addProperty("quantity", Representation.DEFAULT);
 		description.addProperty("expiration", Representation.DEFAULT);
+		description.addProperty("creator", Representation.DEFAULT);
+		description.addProperty("dateCreated", Representation.DEFAULT);
+		description.addProperty("available", Representation.DEFAULT);
 
 		return description;
 	}
-
-	@Override
-	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-		return StockRoomItemSearchHandler.doSearch(Context.getService(IStockRoomDataService.class), context);
-	}
 }
-

@@ -27,4 +27,6 @@ public class ModuleRestConstants extends ModuleWebConstants {
 	public static final String STOCK_ROOM_ITEM_RESOURCE = MODULE_REST_ROOT + "stockRoomItem";
 	public static final String OPERATION_RESOURCE = MODULE_REST_ROOT + "stockOperation";
 	public static final String OPERATION_TYPE_RESOURCE = MODULE_REST_ROOT + "stockOperationType";
+	public static final String OPERATION_TRANSACTION_RESOURCE = MODULE_REST_ROOT + "stockOperationTransaction";
+	public static final String RESERVATION_TRANSACTION_RESOURCE = MODULE_REST_ROOT + "reservationTransaction";
 }

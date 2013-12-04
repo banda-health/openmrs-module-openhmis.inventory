@@ -16,13 +16,15 @@ curl(
 	[
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/openhmis',
+		openhmis.url.backboneBase + 'js/lib/backbone',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.inventoryBase + 'js/model/stockRoom',
         openhmis.url.inventoryBase + 'js/view/stockRoom',
 		openhmis.url.backboneBase + 'js/view/generic'
 	],
-	function($, openhmis) {
+	function($, openhmis, Backbone) {
 		$(function() {
+
 			var stockRoomList = $("#stockRoomList");
             var stockRoomInfo = $("#stockRoomInfo");
             var stockRoomEdit = $("#stockRoomEdit");

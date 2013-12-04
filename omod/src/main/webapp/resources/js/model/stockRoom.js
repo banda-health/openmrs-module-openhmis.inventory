@@ -29,7 +29,7 @@ define(
 			
 			schema: {
 				name: { type: 'Text' },
-				description: { type: 'Text' },
+				//description: { type: 'Text' },
 				location: {
 					type: 'LocationSelect',
 					options: new openhmis.GenericCollection(null, {

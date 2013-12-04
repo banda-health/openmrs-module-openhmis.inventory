@@ -1,10 +1,8 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.Patient;
-import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -159,6 +157,16 @@ public class StockOperation
 		reserved.add(tx);
 
 		return tx;
+	}
+
+	public void removeReserved(ReservedTransaction tx) {
+		if (tx != null) {
+			if (reserved == null) {
+				return;
+			}
+
+			reserved.remove(tx);
+		}
 	}
 
 	public Set<ReservedTransaction> getReserved() {

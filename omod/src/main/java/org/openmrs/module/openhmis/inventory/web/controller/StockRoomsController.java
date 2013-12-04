@@ -25,7 +25,7 @@ import java.io.IOException;
 
 @Controller(value="invStockRoomsController")
 //@Controller
-@RequestMapping(ModuleWebConstants.STOCK_ROOMS_ROOT)
+@RequestMapping(ModuleWebConstants.STOCKROOMS_ROOT)
 public class StockRoomsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {

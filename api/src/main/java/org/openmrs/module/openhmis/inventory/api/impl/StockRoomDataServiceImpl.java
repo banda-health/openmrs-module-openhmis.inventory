@@ -123,21 +123,21 @@ public class StockRoomDataServiceImpl
 
 	@Override
 	public String getRetirePrivilege() {
-		return PrivilegeConstants.MANAGE_STOCK_ROOMS;
+		return PrivilegeConstants.MANAGE_STOCKROOMS;
 	}
 
 	@Override
 	public String getSavePrivilege() {
-		return PrivilegeConstants.MANAGE_STOCK_ROOMS;
+		return PrivilegeConstants.MANAGE_STOCKROOMS;
 	}
 
 	@Override
 	public String getPurgePrivilege() {
-		return PrivilegeConstants.PURGE_STOCK_ROOMS;
+		return PrivilegeConstants.PURGE_STOCKROOMS;
 	}
 
 	@Override
 	public String getGetPrivilege() {
-		return PrivilegeConstants.VIEW_STOCK_ROOMS;
+		return PrivilegeConstants.VIEW_STOCKROOMS;
 	}
 }

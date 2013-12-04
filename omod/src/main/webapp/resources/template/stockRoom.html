@@ -12,10 +12,12 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   -->
 <script id="detail-template" type="text/template">
-	<p>
+	<div>
+		<h2>
 		<a class="addLink" href="#"><?= __("Add %s", model.modelName()) ?></a> |
-		<!--<a class="txDialog createTxLink" href="#">Create Transaction</a>-->
-	</p>
+		<!--<a class="txDialog createTxLink" href="#">Create Operation</a>-->
+		</h2>
+	</div>
 	<div id="detailTabs" style="display: none">
 		<ul id="detailTabList" style="display: none">
 			<li><a href="#stockRoomDetails">Details</a></li>

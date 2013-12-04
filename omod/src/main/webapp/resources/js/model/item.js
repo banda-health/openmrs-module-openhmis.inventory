@@ -96,23 +96,6 @@ define(
                 },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
-				/*
-				codes: {
-					type: 'List',
-					options: new openhmis.GenericCollection(null, {
-							itemType: 'NestedModel',
-							model: openhmis.ItemCode,
-							url: openhmis.url.inventoryModelBase + "itemCode"
-					})
-				},
-				prices: {
-					type: 'List',
-					options: new openhmis.GenericCollection(null, {
-						itemType: 'NestedModel',
-						model: openhmis.ItemPrice,
-						url: openhmis.url.inventoryModelBase + "itemPrice"
-					})
-				}, */
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }
 			},
 			
