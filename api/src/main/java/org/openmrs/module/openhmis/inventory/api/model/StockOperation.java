@@ -115,18 +115,19 @@ public class StockOperation
 	}
 
 	public ReservedTransaction addReserved(Item item, int quantity) {
-		return addReserved(item, null, quantity);
+		return addReserved(item, quantity, null);
 	}
 
 	/**
 	 * Adds a new reserved item.
 	 *
+	 *
 	 * @param item The item to add.
-	 * @param expiration The item expiration or {@code null} if none.
 	 * @param quantity The item quantity.
+	 * @param expiration The item expiration or {@code null} if none.
 	 * @return The newly created reserved item transaction.
 	 */
-	public ReservedTransaction addReserved(Item item, Date expiration, int quantity) {
+	public ReservedTransaction addReserved(Item item, int quantity, Date expiration) {
 		// Do checks and stuff
 
 		ReservedTransaction tx = new ReservedTransaction();
