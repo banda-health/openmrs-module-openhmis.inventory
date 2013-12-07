@@ -18,7 +18,9 @@ public abstract class TransactionBase
 	private Date expiration;
 	private StockOperation batchOperation;
 	private boolean calculatedExpiration;
+	private boolean sourceCalculatedExpiration;
 	private boolean calculatedBatch;
+	private boolean sourceCalculatedBatch;
 
 	private User creator;
 	private Date dateCreated = new Date();
@@ -92,12 +94,28 @@ public abstract class TransactionBase
 		this.calculatedExpiration = calculatedExpiration;
 	}
 
+	public boolean isSourceCalculatedExpiration() {
+		return sourceCalculatedExpiration;
+	}
+
+	public void setSourceCalculatedExpiration(boolean sourceCalculatedExpiration) {
+		this.sourceCalculatedExpiration = sourceCalculatedExpiration;
+	}
+
 	public boolean isCalculatedBatch() {
 		return calculatedBatch;
 	}
 
 	public void setCalculatedBatch(boolean calculatedBatch) {
 		this.calculatedBatch = calculatedBatch;
+	}
+
+	public boolean isSourceCalculatedBatch() {
+		return sourceCalculatedBatch;
+	}
+
+	public void setSourceCalculatedBatch(boolean sourceCalculatedBatch) {
+		this.sourceCalculatedBatch = sourceCalculatedBatch;
 	}
 
 	public User getCreator() {

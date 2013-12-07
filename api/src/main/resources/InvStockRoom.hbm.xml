@@ -243,8 +243,14 @@
 		<property name="calculatedExpiration" type="boolean">
 			<column name="calculated_expiration" default="true" />
 		</property>
+		<property name="sourceCalculatedExpiration" type="boolean">
+			<column name="source_calculated_expiration" default="true" />
+		</property>
 		<property name="calculatedBatch" type="boolean">
 			<column name="calculated_batch" default="true" />
+		</property>
+		<property name="sourceCalculatedBatch" type="boolean">
+			<column name="source_calculated_batch" default="true" />
 		</property>
 
 		<property name="available" type="java.lang.Boolean" column="is_available" />
@@ -271,8 +277,14 @@
 		<property name="calculatedExpiration" type="boolean">
 			<column name="calculated_expiration" default="true" />
 		</property>
+		<property name="sourceCalculatedExpiration" type="boolean">
+			<column name="source_calculated_expiration" default="true" />
+		</property>
 		<property name="calculatedBatch" type="boolean">
 			<column name="calculated_batch" default="true" />
+		</property>
+		<property name="sourceCalculatedBatch" type="boolean">
+			<column name="source_calculated_batch" default="true" />
 		</property>
 
 		<many-to-one name="stockRoom" class="StockRoom" column="stockroom_id" />
