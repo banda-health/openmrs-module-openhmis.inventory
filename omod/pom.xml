@@ -198,6 +198,25 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>${project.parent.groupId}</groupId>																	
+							<artifactId>openhmis.backboneforms-omod</artifactId>
+							<overWrite>true</overWrite>
+							<outputDirectory>${project.build.directory}/jasmine/backboneforms</outputDirectory>
+							<includes>web/module/resources/**</includes>
+						</artifactItem>
+						<artifactItem>
+							<groupId>${project.parent.groupId}</groupId>																	
+							<artifactId>openhmis.backboneforms-omod</artifactId>
+							<type>test-jar</type>
+							<overWrite>true</overWrite>
+							<outputDirectory>${project.build.directory}/jasmine/backboneforms/test</outputDirectory>
+							<includes>js/**</includes>
+						</artifactItem>
+					</artifactItems>
+				</configuration>
 				<executions>
 					<execution>
 						<id>Expand moduleApplicationContext and messages</id>
@@ -216,6 +235,52 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+		        <groupId>com.github.searls</groupId>
+		        <artifactId>jasmine-maven-plugin</artifactId>
+		        <version>1.2.0.0</version>
+		        <extensions>true</extensions>
+<!-- Execution disabled because tests don't run properly outside of a browser -->
+<!-- 		        <executions> -->
+<!-- 		          <execution> -->
+<!-- 		            <goals> -->
+<!-- 		              <goal>test</goal> -->
+<!-- 		            </goals> -->
+<!-- 		          </execution> -->
+<!-- 		        </executions> -->
+		        <configuration>
+		        	<customRunnerTemplate>${project.basedir}/src/test/webapp/resources/js/BlankSpecRunner.htmltemplate</customRunnerTemplate>
+		        	<jsSrcDir>${project.basedir}/src/main/webapp/resources/js</jsSrcDir>
+		       		<jsTestSrcDir>${project.basedir}/src/test/webapp/resources/js</jsTestSrcDir>
+		       		<preloadSources>
+		         		<include>/target/jasmine/backboneforms/web/module/resources/js/curl.js</include>
+		         		<include>/src/test/webapp/resources/js/test-init.js</include>
+		         		<include>/target/jasmine/backboneforms/test/js/test-utils.js</include>
+		         		<include>/src/test/webapp/resources/js/test-data.js</include>
+		         		<include>/src/test/webapp/resources/js/start-tests.js</include>
+		       		</preloadSources>
+		      		<sourceIncludes />
+		     		<specIncludes />
+		        </configuration>
+	      </plugin>
+	      <plugin>
+		      <groupId>net.alchim31.maven</groupId>
+              <artifactId>yuicompressor-maven-plugin</artifactId>
+              <executions>
+                  <execution>
+                      <goals>
+                          <goal>compress</goal>
+                      </goals>
+                  </execution>
+              </executions>        
+              <configuration>
+                  <!-- <verbose>true</verbose> -->
+                  <nosuffix>true</nosuffix>
+                  <excludes>
+                      <exclude>**/*.min.js</exclude>
+                  </excludes>
+              </configuration>
+          </plugin>
 		</plugins>
 	</build>
 
