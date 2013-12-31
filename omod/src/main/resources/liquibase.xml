@@ -689,16 +689,16 @@
 			<column name="item_id" />
 		</createIndex>
 
-		<addForeignKeyConstraint constraintName="inv_item_stock_operation_fk"
-		                         baseTableName="inv_item_stock" baseColumnNames="operation_id"
-		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_stock_stockroom_fk"
+		                         baseTableName="inv_item_stock" baseColumnNames="stockroom_id"
+		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
 		<addForeignKeyConstraint constraintName="inv_item_stock_item_fk"
 		                         baseTableName="inv_item_stock" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_item_stock_detail_operation_fk"
-		                         baseTableName="inv_item_stock_detail" baseColumnNames="operation_id"
-		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_stock_detail_stockroom_fk"
+		                         baseTableName="inv_item_stock" baseColumnNames="stockroom_id"
+		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
 		<addForeignKeyConstraint constraintName="inv_item_stock_detail_item_fk"
 		                         baseTableName="inv_item_stock_detail" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
