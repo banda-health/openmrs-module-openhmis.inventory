@@ -41,7 +41,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 	}
 
 	@Override
-	protected StockRoom createEntity(boolean valid) {
+	public StockRoom createEntity(boolean valid) {
 		StockRoom room = new StockRoom();
 
 		if (valid) {

@@ -32,7 +32,7 @@
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="db40707f-9175-4199-8df2-a5702f41ec7d" />
 
 	<inv_stock_operation stock_operation_id="0" status="COMPLETED" operation_type_id="3" operation_number="t101"
-						 destination_id="0" name="Test Op 1"
+						 destination_id="0" name="Test Op 1" operation_date="2012-01-03 00:00:00.0"
 						 creator="1" date_created="2012-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0000"/>
 	<inv_transaction transaction_id="0" operation_id="0" item_id="0" quantity="10"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CE7DB50003" />
@@ -43,7 +43,7 @@
 	<inv_stockroom_operations operation_id="0" stockroom_id="0" />
 
 	<inv_stock_operation stock_operation_id="1" status="COMPLETED" operation_type_id="5"
-	                     source_id="0" destination_id="1" name="Test Op 2"
+	                     source_id="0" destination_id="1" name="Test Op 2" operation_date="2012-01-02 00:00:00.0"
 	                     creator="1" date_created="2012-01-02 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C378CD0001" />
 	<inv_transaction transaction_id="3" operation_id="0" item_id="0" quantity="-6"
 	                                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D1F3440006"/>
@@ -61,7 +61,7 @@
 	<inv_stockroom_operations operation_id="1" stockroom_id="1" />
 
 	<inv_stock_operation stock_operation_id="2" status="PENDING" operation_type_id="2"
-	                     source_id="1" patient_id="1" name="Test Op 3"
+	                     source_id="1" patient_id="1" name="Test Op 3" operation_date="2012-01-05 00:00:00.0"
 	                     creator="1" date_created="2012-01-05 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C388660002"/>
 	<inv_reserved_transaction reserved_transaction_id="0" operation_id="0" item_id="0" quantity="1"
 	                          is_available="false" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2BB00000C" />

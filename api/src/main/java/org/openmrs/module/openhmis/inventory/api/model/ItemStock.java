@@ -33,6 +33,22 @@ public class ItemStock extends BaseOpenmrsObject
 	private int quantity;
 	private Set<ItemStockDetail> details;
 
+	public ItemStock() {}
+
+	public ItemStock(ItemStock base) {
+		this.stockRoom = base.stockRoom;
+		this.item = base.item;
+		this.quantity = base.quantity;
+
+		if (base.details != null) {
+			this.details = new HashSet<ItemStockDetail>(base.details.size());
+
+			for (ItemStockDetail baseDetail : base.details) {
+				this.details.add(new ItemStockDetail(baseDetail));
+			}
+		}
+	}
+
 	@Override
 	public Integer getId() {
 		return stockRoomItemId;

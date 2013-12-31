@@ -30,6 +30,7 @@ public class StockOperation
 	private Set<StockOperationTransaction> transactions;
 
 	private String operationNumber;
+	private Date operationDate;
 	protected StockRoom source;
 	protected StockRoom destination;
 	protected Patient patient;
@@ -58,6 +59,14 @@ public class StockOperation
 
 	public void setOperationNumber(String operationNumber) {
 		this.operationNumber = operationNumber;
+	}
+
+	public Date getOperationDate() {
+		return operationDate;
+	}
+
+	public void setOperationDate(Date operationDate) {
+		this.operationDate = operationDate;
 	}
 
 	public StockRoom getSource() {
@@ -120,15 +129,15 @@ public class StockOperation
 
 	/**
 	 * Adds a new reserved item.
-	 *
-	 *
 	 * @param item The item to add.
 	 * @param quantity The item quantity.
 	 * @param expiration The item expiration or {@code null} if none.
 	 * @return The newly created reserved item transaction.
 	 */
 	public ReservedTransaction addReserved(Item item, int quantity, Date expiration) {
-		// Do checks and stuff
+		if (item == null) {
+			throw new IllegalArgumentException("The item must be defined.");
+		}
 
 		ReservedTransaction tx = new ReservedTransaction();
 		tx.setItem(item);
@@ -146,7 +155,9 @@ public class StockOperation
 	 * @return The saved reserved item transaction.
 	 */
 	public ReservedTransaction addReserved(ReservedTransaction tx) {
-		// Do checks and stuff
+		if (tx == null) {
+			throw new IllegalArgumentException("The transaction to add must be defined.");
+		}
 
 		if (reserved == null) {
 			reserved = new HashSet<ReservedTransaction>();
@@ -179,6 +190,9 @@ public class StockOperation
 	}
 
 	public StockOperationTransaction addTransaction(StockOperationTransaction tx) {
+		if (tx == null) {
+			throw new IllegalArgumentException("The transaction to add must be defined.");
+		}
 		if (tx.getItem() == null) {
 			throw new IllegalArgumentException("The transaction item must be defined.");
 		}

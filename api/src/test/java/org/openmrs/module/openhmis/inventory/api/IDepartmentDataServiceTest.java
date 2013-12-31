@@ -33,7 +33,7 @@ public class IDepartmentDataServiceTest extends IMetadataDataServiceTest<IDepart
 	}
 
 	@Override
-	protected Department createEntity(boolean valid) {
+	public Department createEntity(boolean valid) {
 		Department department = new Department();
 
 		if (valid) {

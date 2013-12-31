@@ -30,6 +30,9 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should set the correct availability for the reserved stock quantity
 	 * @should update the destination stockroom item stock quantities
 	 * @should add the destination stockroom item stock if not found
+	 * @should calculate expiration if not defined for expirable item
+	 * @should calculate batch operation if not defined
+	 * @should throw APIException if the operation type is receipt and expiration is not defined for expirable items
 	 * @should throw an IllegalArgumentException if the operation is null
 	 * @should throw an APIException if the operation type is null
 	 * @should throw an APIException if the operation has no reserved transactions
