@@ -180,6 +180,7 @@
 		<property name="name" type="java.lang.String" column="name" />
 		<property name="description" type="java.lang.String" column="description" />
 		<property name="operationNumber" type="java.lang.String" column="operation_number" />
+		<property name="operationDate" type="java.util.Date" column="operation_date" not-null="true" />
 
 		<many-to-one name="instanceType" class="StockOperationTypeBase" not-null="true" lazy="false" column="operation_type_id" />
 
@@ -243,8 +244,14 @@
 		<property name="calculatedExpiration" type="boolean">
 			<column name="calculated_expiration" default="true" />
 		</property>
+		<property name="sourceCalculatedExpiration" type="boolean">
+			<column name="source_calculated_expiration" default="true" />
+		</property>
 		<property name="calculatedBatch" type="boolean">
 			<column name="calculated_batch" default="true" />
+		</property>
+		<property name="sourceCalculatedBatch" type="boolean">
+			<column name="source_calculated_batch" default="true" />
 		</property>
 
 		<property name="available" type="java.lang.Boolean" column="is_available" />
@@ -271,8 +278,14 @@
 		<property name="calculatedExpiration" type="boolean">
 			<column name="calculated_expiration" default="true" />
 		</property>
+		<property name="sourceCalculatedExpiration" type="boolean">
+			<column name="source_calculated_expiration" default="true" />
+		</property>
 		<property name="calculatedBatch" type="boolean">
 			<column name="calculated_batch" default="true" />
+		</property>
+		<property name="sourceCalculatedBatch" type="boolean">
+			<column name="source_calculated_batch" default="true" />
 		</property>
 
 		<many-to-one name="stockRoom" class="StockRoom" column="stockroom_id" />

@@ -41,7 +41,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 
 	@Override
-	protected StockOperation createEntity(boolean valid) {
+	public StockOperation createEntity(boolean valid) {
 		StockOperation op = new StockOperation();
 
 		if (valid) {

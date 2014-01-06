@@ -17,7 +17,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 	}
 
 	@Override
-	protected StockOperationTypeBase createEntity(boolean valid) {
+	public StockOperationTypeBase createEntity(boolean valid) {
 		StockOperationTypeBase type = new TestOperationType();
 
 		if (valid) {

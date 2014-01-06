@@ -23,7 +23,7 @@ public class ICategoryDataServiceTest extends IMetadataDataServiceTest<ICategory
 	}
 
 	@Override
-	protected Category createEntity(boolean valid) {
+	public Category createEntity(boolean valid) {
 		Category category = new Category();
 		if (valid) {
 			category.setName("new category");

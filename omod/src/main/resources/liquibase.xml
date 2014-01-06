@@ -725,11 +725,20 @@
 	<changeSet id="openhmis.inventory-1.0.0-3" author="ibewes">
 		<addColumn tableName="inv_transaction">
 			<column name="calculated_expiration" type="boolean" defaultValueBoolean="true" />
+			<column name="source_calculated_expiration" type="boolean" defaultValueBoolean="true" />
 			<column name="calculated_batch" type="boolean" defaultValueBoolean="true" />
+			<column name="source_calculated_batch" type="boolean" defaultValueBoolean="true" />
 		</addColumn>
+
 		<addColumn tableName="inv_reserved_transaction">
 			<column name="calculated_expiration" type="boolean" defaultValueBoolean="true" />
+			<column name="source_calculated_expiration" type="boolean" defaultValueBoolean="true" />
 			<column name="calculated_batch" type="boolean" defaultValueBoolean="true" />
+			<column name="source_calculated_batch" type="boolean" defaultValueBoolean="true" />
+		</addColumn>
+
+		<addColumn tableName="inv_stock_operation">
+			<column name="operation_date" type="DATETIME"><constraints nullable="false" /></column>
 		</addColumn>
 
 		<modifyColumn tableName="inv_item_stock_detail">
