@@ -1,6 +1,9 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
+import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +13,7 @@ import org.openmrs.module.openhmis.inventory.api.*;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
+import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,6 +38,16 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		//service = new StockOperationDataServiceImpl(stockRoomDataService, itemStockDataService);
 
 		itemTest = new IItemDataServiceTest();
+	}
+
+	//@Test
+	public void dateTest() throws Exception {
+		DateTime baseTime = new DateTime();
+		DateTime o1Time = baseTime.plusDays(100);
+		DateTime o2Time = baseTime.minusDays(100);
+
+		int i = Seconds.secondsBetween(baseTime, o1Time).getSeconds();
+		int i2= Seconds.secondsBetween(baseTime, o2Time).getSeconds();
 	}
 
 	/**
@@ -86,12 +100,12 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
-		ReservedTransaction tx = operation.addReserved(item0, 3);
+		final ReservedTransaction tx = operation.addReserved(item0, 3);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		tx = operation.addReserved(item2, 10);
-		tx.setCalculatedBatch(true);
-		tx.setCalculatedExpiration(true);
+		final ReservedTransaction tx2 = operation.addReserved(item2, 10);
+		tx2.setCalculatedBatch(true);
+		tx2.setCalculatedExpiration(true);
 
 		// Calculate the reservations
 		service.calculateReservations(operation);
@@ -100,14 +114,24 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		Assert.assertEquals(2, operation.getReserved().size());
 
 		// Ensure that no expiration was set as the item is not expirable
-		tx = Iterators.get(operation.getReserved().iterator(), 0);
-		Assert.assertEquals(item0, tx.getItem());
-		Assert.assertNull(tx.getExpiration());
+		ReservedTransaction testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx;
+			}
+		});
+		Assert.assertEquals(item0, testTx.getItem());
+		Assert.assertNull(testTx.getExpiration());
 
 		// Ensure that the closest expiration stock was selected
-		tx = Iterators.get(operation.getReserved().iterator(), 1);
-		Assert.assertEquals(item2, tx.getItem());
-		Assert.assertEquals(calendar2.getTime(), tx.getExpiration());
+		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx2;
+			}
+		});
+		Assert.assertEquals(item2, testTx.getItem());
+		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
 	}
 
 	/**
@@ -160,7 +184,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		service.calculateReservations(operation);
 
 		// Ensure that no new transactions were created
-		Assert.assertEquals(2, operation.getReserved().size());
+		Assert.assertEquals(1, operation.getReserved().size());
 
 		// Ensure that the correct (oldest) batch operation was set
 		tx = Iterators.get(operation.getReserved().iterator(), 0);
@@ -289,8 +313,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail3.setBatchOperation(service.getById(1));
 		Calendar calendar3 = Calendar.getInstance();
 		calendar3.add(Calendar.YEAR, 1);
-
-		detail3.setExpiration(calendar2.getTime());
+		detail3.setExpiration(calendar3.getTime());
 
 		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, item2);
 		stock2.addDetail(detail1);
@@ -318,6 +341,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		Assert.assertEquals(1, operation.getReserved().size());
 
 		// Ensure that the closest expiration stock was selected
+		tx = Iterators.get(operation.getReserved().iterator(), 0);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(calendar3.getTime(), tx.getExpiration());
 	}
@@ -371,7 +395,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
-		ReservedTransaction tx = operation.addReserved(item2, 25);
+		final ReservedTransaction tx = operation.addReserved(item2, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
 
@@ -381,17 +405,28 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		Assert.assertEquals(2, operation.getReserved().size());
 
 		// Ensure that the closest expiration stock was selected
-		Assert.assertEquals(item2, tx.getItem());
-		Assert.assertEquals(calendar2.getTime(), tx.getExpiration());
-		Assert.assertEquals(1, (int)tx.getBatchOperation().getId());
-		Assert.assertEquals(20, (int)tx.getQuantity());
+		ReservedTransaction testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx;
+			}
+		});
+		Assert.assertEquals(item2, testTx.getItem());
+		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
+		Assert.assertEquals(1, (int)testTx.getBatchOperation().getId());
+		Assert.assertEquals(20, (int)testTx.getQuantity());
 
 		// And then the next closest
-		tx = Iterators.get(operation.getReserved().iterator(), 1);
-		Assert.assertEquals(item2, tx.getItem());
-		Assert.assertEquals(calendar1.getTime(), tx.getExpiration());
-		Assert.assertEquals(2, (int)tx.getBatchOperation().getId());
-		Assert.assertEquals(5, (int)tx.getQuantity());
+		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input != tx;
+			}
+		});
+		Assert.assertEquals(item2, testTx.getItem());
+		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertEquals(2, (int)testTx.getBatchOperation().getId());
+		Assert.assertEquals(5, (int)testTx.getQuantity());
 	}
 
 	/**
@@ -417,6 +452,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		Context.flushSession();
 
 		ItemStockDetail detail1 = new ItemStockDetail();
+		stock.addDetail(detail1);
 		detail1.setItem(newItem);
 		detail1.setStockRoom(sourceRoom);
 		detail1.setQuantity(10);
@@ -427,10 +463,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, newItem);
-		stock2.addDetail(detail1);
-
-		itemStockDataService.save(stock2);
+		itemStockDataService.save(stock);
 		Context.flushSession();
 
 		// Create the stock operation
@@ -441,7 +474,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
-		ReservedTransaction tx = operation.addReserved(newItem, 25);
+		final ReservedTransaction tx = operation.addReserved(newItem, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
 
@@ -450,18 +483,32 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Ensure that a new transaction was created
 		Assert.assertEquals(2, operation.getReserved().size());
 
-		// Ensure that the closest expiration stock was selected
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertEquals(calendar1.getTime(), tx.getExpiration());
-		Assert.assertEquals(1, (int)tx.getBatchOperation().getId());
-		Assert.assertEquals(10, (int)tx.getQuantity());
+		// Ensure that the existing stock detail was used
+
+		ReservedTransaction testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return tx == input;
+			}
+		});
+		Assert.assertEquals(newItem, testTx.getItem());
+		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertEquals(2, (int)testTx.getBatchOperation().getId());
+		Assert.assertEquals(10, (int)testTx.getQuantity());
 
 		// Ensure that another reservation was created with no expiration or batch for the remaining items
-		tx = Iterators.get(operation.getReserved().iterator(), 1);
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertNull(tx.getExpiration());
-		Assert.assertNull(tx.getBatchOperation().getId());
-		Assert.assertEquals(15, (int)tx.getQuantity());
+		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return tx != input;
+			}
+		});
+		Assert.assertEquals(newItem, testTx.getItem());
+		Assert.assertTrue(testTx.isCalculatedExpiration());
+		Assert.assertNull(testTx.getExpiration());
+		Assert.assertTrue(testTx.isCalculatedBatch());
+		Assert.assertNull(testTx.getBatchOperation());
+		Assert.assertEquals(15, (int)testTx.getQuantity());
 	}
 
 	/**
@@ -695,6 +742,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		Context.flushSession();
 
 		ItemStockDetail detail1 = new ItemStockDetail();
+		stock.addDetail(detail1);
 		detail1.setItem(newItem);
 		detail1.setStockRoom(sourceRoom);
 		detail1.setQuantity(10);
@@ -705,10 +753,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, newItem);
-		stock2.addDetail(detail1);
-
-		itemStockDataService.save(stock2);
+		itemStockDataService.save(stock);
 		Context.flushSession();
 
 		// Create the stock operation
@@ -719,43 +764,58 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
-		ReservedTransaction tx = operation.addReserved(newItem, 15);
+		final ReservedTransaction tx = operation.addReserved(newItem, 15);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		tx = operation.addReserved(newItem, 5, calendar1.getTime());
-		tx.setCalculatedBatch(true);
-		tx.setCalculatedExpiration(false);
+		final ReservedTransaction tx2  = operation.addReserved(newItem, 5, calendar1.getTime());
+		tx2.setCalculatedBatch(true);
+		tx2.setCalculatedExpiration(false);
 
 		service.calculateReservations(operation);
 
 		// Ensure that there are now 3 transactions
 		Assert.assertEquals(3, operation.getReserved().size());
 
-		tx = Iterators.get(operation.getReserved().iterator(), 0);
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertEquals(5, (int)tx.getQuantity());
-		Assert.assertEquals(calendar1.getTime(), tx.getExpiration());
-		Assert.assertFalse(tx.isCalculatedExpiration());
+		ReservedTransaction testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx;
+			}
+		});
+		Assert.assertEquals(newItem, testTx.getItem());
+		Assert.assertEquals(5, (int)testTx.getQuantity());
+		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(testTx.isCalculatedExpiration());
 
-		tx = Iterators.get(operation.getReserved().iterator(), 1);
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertEquals(5, (int)tx.getQuantity());
-		Assert.assertEquals(calendar1.getTime(), tx.getExpiration());
-		Assert.assertTrue(tx.isCalculatedExpiration());
+		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx2;
+			}
+		});
+		Assert.assertEquals(newItem, testTx.getItem());
+		Assert.assertEquals(5, (int)testTx.getQuantity());
+		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertFalse(testTx.isCalculatedExpiration());
 
-		tx = Iterators.get(operation.getReserved().iterator(), 2);
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertEquals(10, (int)tx.getQuantity());
-		Assert.assertNull(tx.getExpiration());
-		Assert.assertTrue(tx.isCalculatedExpiration());
+		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input != tx && input != tx2;
+			}
+		});
+		Assert.assertEquals(newItem, testTx.getItem());
+		Assert.assertEquals(10, (int)testTx.getQuantity());
+		Assert.assertNull(testTx.getExpiration());
+		Assert.assertTrue(testTx.isCalculatedExpiration());
 	}
 
 	/**
-	 * @verifies set the transaction calculated flag if the source was calculated
+	 * @verifies set the transaction source calculated flags if the source was calculated
 	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
-	public void calculateReservations_shouldSetTheTransactionCalculatedFlagIfTheSourceWasCalculated() throws Exception {
+	public void calculateReservations_shouldSetTheTransactionSourceCalculatedFlagsIfTheSourceWasCalculated() throws Exception {
 		StockRoom sourceRoom = stockRoomDataService.getById(0);
 		StockRoom destRoom = stockRoomDataService.getById(1);
 
@@ -798,6 +858,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
 		ReservedTransaction tx = operation.addReserved(newItem, 5);
+		tx.setExpiration(detail1.getExpiration());
 		tx.setBatchOperation(detail1.getBatchOperation());
 		tx.setCalculatedBatch(false);
 		tx.setCalculatedExpiration(false);
@@ -808,8 +869,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 		Assert.assertEquals(newItem, tx.getItem());
 		Assert.assertEquals(5, (int)tx.getQuantity());
-		Assert.assertTrue(tx.isCalculatedBatch());
-		Assert.assertTrue(tx.isCalculatedExpiration());
+		Assert.assertTrue(tx.isSourceCalculatedBatch());
+		Assert.assertTrue(tx.isSourceCalculatedExpiration());
 	}
 
 	/**
@@ -837,7 +898,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
 		detail1.setStockRoom(sourceRoom);
-		detail1.setQuantity(10);
+		detail1.setQuantity(20);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
 		detail1.setBatchOperation(service.getById(2));
@@ -871,46 +932,43 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
-		ReservedTransaction tx = operation.addReserved(newItem, 5);
+		final ReservedTransaction tx = operation.addReserved(newItem, 5);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
 
-		tx = operation.addReserved(newItem, 5);
-		tx.setExpiration(calendar1.getTime());
-		tx.setBatchOperation(detail1.getBatchOperation());
-		tx.setCalculatedBatch(false);
-		tx.setCalculatedExpiration(false);
-
-		tx = operation.addReserved(newItem, 5);
-		tx.setExpiration(calendar1.getTime());
-		tx.setBatchOperation(detail1.getBatchOperation());
-		tx.setCalculatedBatch(false);
-		tx.setCalculatedExpiration(false);
+		final ReservedTransaction tx2 = operation.addReserved(newItem, 10);
+		tx2.setExpiration(calendar2.getTime());
+		tx2.setBatchOperation(detail1.getBatchOperation());
+		tx2.setCalculatedBatch(false);
+		tx2.setCalculatedExpiration(false);
 
 		service.calculateReservations(operation);
 
-		Assert.assertEquals(3, operation.getReserved().size());
+		Assert.assertEquals(2, operation.getReserved().size());
 
-		tx = Iterators.get(operation.getReserved().iterator(), 0);
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertEquals(5, (int)tx.getQuantity());
-		Assert.assertEquals(calendar2.getTime(), tx.getExpiration());
-		Assert.assertTrue(tx.isCalculatedBatch());
-		Assert.assertTrue(tx.isCalculatedExpiration());
+		ReservedTransaction testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx;
+			}
+		});
+		Assert.assertEquals(newItem, testTx.getItem());
+		Assert.assertEquals(5, (int)testTx.getQuantity());
+		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(testTx.isCalculatedBatch());
+		Assert.assertTrue(testTx.isCalculatedExpiration());
 
-		tx = Iterators.get(operation.getReserved().iterator(), 1);
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertEquals(5, (int)tx.getQuantity());
-		Assert.assertEquals(calendar1.getTime(), tx.getExpiration());
-		Assert.assertFalse(tx.isCalculatedBatch());
-		Assert.assertFalse(tx.isCalculatedExpiration());
-
-		tx = Iterators.get(operation.getReserved().iterator(), 2);
-		Assert.assertEquals(newItem, tx.getItem());
-		Assert.assertEquals(5, (int)tx.getQuantity());
-		Assert.assertEquals(calendar1.getTime(), tx.getExpiration());
-		Assert.assertFalse(tx.isCalculatedBatch());
-		Assert.assertFalse(tx.isCalculatedExpiration());
+		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx2;
+			}
+		});
+		Assert.assertEquals(newItem, testTx.getItem());
+		Assert.assertEquals(10, (int)testTx.getQuantity());
+		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
+		Assert.assertFalse(testTx.isCalculatedBatch());
+		Assert.assertFalse(testTx.isCalculatedExpiration());
 	}
 
 	/**
@@ -928,6 +986,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Create a stock operation in the future
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 
