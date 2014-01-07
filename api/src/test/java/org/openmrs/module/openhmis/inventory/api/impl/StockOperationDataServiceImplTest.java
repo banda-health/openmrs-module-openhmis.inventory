@@ -35,7 +35,6 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		itemDataService = Context.getService(IItemDataService.class);
 		itemStockDataService = Context.getService(IItemStockDataService.class);
 		service = Context.getService(ITestableStockOperationDataService.class);
-		//service = new StockOperationDataServiceImpl(stockRoomDataService, itemStockDataService);
 
 		itemTest = new IItemDataServiceTest();
 	}

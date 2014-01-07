@@ -51,6 +51,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		op.setDestination(stockRoomService.getById(0));
 		op.setStatus(StockOperationStatus.PENDING);
 		op.setOperationNumber("Operation Number");
+		op.setOperationDate(new Date());
 
 		ReservedTransaction item = new ReservedTransaction();
 		item.setItem(itemService.getById(0));
@@ -721,6 +722,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setOperationDate(new Date());
 
 		StockRoom source = stockRoomService.getById(0);
 		StockRoom destination = stockRoomService.getById(1);
@@ -751,6 +753,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setOperationDate(new Date());
 
 		StockRoom source = stockRoomService.getById(0);
 		StockRoom destination = stockRoomService.getById(1);
@@ -781,6 +784,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setOperationDate(new Date());
 
 		StockRoom source = stockRoomService.getById(0);
 		StockRoom destination = stockRoomService.getById(1);
