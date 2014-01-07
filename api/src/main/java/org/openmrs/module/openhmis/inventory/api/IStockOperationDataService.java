@@ -65,6 +65,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should remove item stock if quantity is zero
 	 * @should remove item stock detail if quantity is zero
 	 */
+	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
 	void applyTransactions(Collection<StockOperationTransaction> transactions) throws APIException;
 
