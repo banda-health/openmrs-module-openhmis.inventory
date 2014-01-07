@@ -383,7 +383,7 @@ public class StockOperationDataServiceImpl
 	 * @should set the batch operation to the specified operation if there is no source stockroom
 	 * @should combine transactions for the same item stock and qualifiers
 	 * @should handle multiple transactions for the same item but with different qualifiers
-	 * @should set the transaction calculated flag if the source was calculated
+	 * @should set the transaction source calculated flags if the source was calculated
 	 * @should process non-calculated transactions before calculated transactions
 	 * @should set batch operation to past operations before future operations
 	 * @should throw APIException if source stockroom is null and the expiration are not specified for an expirable item
@@ -540,6 +540,10 @@ public class StockOperationDataServiceImpl
 	}
 
 	private ItemStockDetail findCalculatedDetail(StockOperation operation, ItemStock stock, ReservedTransaction tx) {
+		if (stock == null) {
+			return null;
+		}
+
 		ItemStockDetail detail = null;
 
 		if (stock.getItem().hasExpiration() && tx.isCalculatedExpiration()) {

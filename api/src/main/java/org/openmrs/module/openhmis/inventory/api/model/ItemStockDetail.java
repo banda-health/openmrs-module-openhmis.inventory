@@ -74,7 +74,9 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 		this.itemStock = base.itemStock;
 		this.stockRoom = base.stockRoom;
 		this.item = base.item;
-		this.expiration = (Date)base.expiration.clone();
+		if (base.expiration != null) {
+			this.expiration = (Date)base.expiration.clone();
+		}
 		this.batchOperation = base.batchOperation;
 		this.calculatedBatch = base.calculatedBatch;
 		this.calculatedExpiration = base.calculatedExpiration;

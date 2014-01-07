@@ -59,6 +59,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		operation.setCreator(Context.getAuthenticatedUser());
 		operation.setDateCreated(new Date());
 		operation.setStatus(StockOperationStatus.COMPLETED);
+		operation.setOperationDate(new Date());
 
 		StockOperationTransaction tx = new StockOperationTransaction();
 		tx.setItem(itemService.getById(0));
@@ -106,6 +107,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		operation.setCreator(Context.getAuthenticatedUser());
 		operation.setDateCreated(new Date());
 		operation.setStatus(StockOperationStatus.COMPLETED);
+		operation.setOperationDate(new Date());
 
 		StockOperationTransaction tx = new StockOperationTransaction();
 		tx.setItem(itemService.getById(0));
