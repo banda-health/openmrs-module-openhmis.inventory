@@ -54,18 +54,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 			description.addProperty("category", Representation.REF);
 			description.addProperty("defaultPrice", Representation.REF);
 		}
-		return description;
-	}
 
-	@Override
-	public DelegatingResourceDescription getCreatableProperties() {
-		DelegatingResourceDescription description = super.getCreatableProperties();
-		description.addProperty("name");
-		description.addProperty("codes");
-		description.addProperty("prices");
-		description.addProperty("department");
-		description.addProperty("category");
-		description.addProperty("defaultPrice");
 		return description;
 	}
 

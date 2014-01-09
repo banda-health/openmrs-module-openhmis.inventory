@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
@@ -23,7 +24,6 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 @Resource(name = ModuleRestConstants.CATEGORY_RESOURCE, supportedClass=Category.class, supportedOpenmrsVersions={"1.9"})
 @Handler(supports = { Category.class }, order = 0)
 public class CategoryResource extends BaseRestMetadataResource<Category> {
-
 	@Override
 	public Category newDelegate() {
 		return new Category();
@@ -32,6 +32,11 @@ public class CategoryResource extends BaseRestMetadataResource<Category> {
 	@Override
 	public Class<? extends IMetadataDataService<Category>> getServiceClass() {
 		return ICategoryDataService.class;
+	}
+
+	@Override
+	public Category getByUniqueId(String uniqueId) {
+		return StringUtils.isEmpty(uniqueId) ? null : super.getByUniqueId(uniqueId);
 	}
 }
 

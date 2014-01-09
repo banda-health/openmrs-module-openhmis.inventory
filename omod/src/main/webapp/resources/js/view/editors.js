@@ -34,7 +34,8 @@ define(
 
         editors.CategorySelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Category,
-            displayAttr: "name"
+            displayAttr: "name",
+	        allowNull: true
         });
 		
 		editors.ItemPriceSelect = editors.GenericModelSelect.extend({

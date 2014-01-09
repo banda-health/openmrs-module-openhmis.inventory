@@ -90,7 +90,8 @@ define(
                     type: 'CategorySelect',
                     options: new openhmis.GenericCollection(null, {
                         model: openhmis.Category,
-                        url: openhmis.url.inventoryModelBase + 'category'
+                        url: openhmis.url.inventoryModelBase + 'category',
+	                    allowNull: true
                     }),
                     objRef: true
                 },

@@ -28,22 +28,14 @@ public class ItemCodeResource extends BaseRestMetadataResource<ItemCode> impleme
 	}
 
 	@Override
-	public DelegatingResourceDescription getRepresentationDescription(
-			Representation rep) {
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.removeProperty("name");
 		description.addProperty("code");
-		return description;
-	}
-	
-	@Override
-	public DelegatingResourceDescription getCreatableProperties() {
-		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("code");
+
 		return description;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Class<? extends IMetadataDataService<ItemCode>> getServiceClass() {
 		return null;

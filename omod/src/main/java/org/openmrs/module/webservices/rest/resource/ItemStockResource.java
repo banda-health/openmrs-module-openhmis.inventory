@@ -20,6 +20,7 @@ import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.search.ItemStockSearchHandler;
 import org.openmrs.module.webservices.rest.web.RequestContext;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
@@ -40,13 +41,14 @@ public class ItemStockResource extends BaseRestObjectResource<ItemStock> {
 	}
 
 	@Override
-	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
-		DelegatingResourceDescription description = super.getDefaultRepresentationDescription();
-
-		description.addProperty("stockRoom", Representation.DEFAULT);
-		description.addProperty("item", Representation.DEFAULT);
-		description.addProperty("quantity", Representation.DEFAULT);
-		description.addProperty("details", Representation.DEFAULT);
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		if (!(rep instanceof RefRepresentation)) {
+			description.addProperty("stockRoom", Representation.DEFAULT);
+			description.addProperty("item", Representation.DEFAULT);
+			description.addProperty("quantity", Representation.DEFAULT);
+			description.addProperty("details", Representation.DEFAULT);
+		}
 
 		return description;
 	}
