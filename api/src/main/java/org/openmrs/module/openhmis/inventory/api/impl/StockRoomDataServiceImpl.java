@@ -64,6 +64,7 @@ public class StockRoomDataServiceImpl
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.createAlias("item", "i");
+				criteria.setResultTransformer(Criteria.ROOT_ENTITY);
 				criteria.add(Restrictions.eq("stockRoom", stockRoom));
 			}
 		}, Order.asc("i.name"));

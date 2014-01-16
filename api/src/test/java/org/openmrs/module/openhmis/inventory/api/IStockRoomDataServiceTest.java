@@ -239,7 +239,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		results = service.findItems(stockRoom, search, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(item.getId(), results.get(0).getId());
+		assertItemStock(item, results.get(0));
 	}
 
 	/**
@@ -437,9 +437,9 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
 
-		Assert.assertEquals(0, (int)results.get(0).getItem().getId());
-		Assert.assertEquals(1, (int)results.get(1).getItem().getId());
-		Assert.assertEquals(2, (int)results.get(2).getItem().getId());
+		assertItemStock(itemStockService.getById(3), results.get(0));
+		assertItemStock(itemStockService.getById(5), results.get(1));
+		assertItemStock(itemStockService.getById(4), results.get(2));
 	}
 
 	/**
@@ -472,7 +472,16 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
+		Assert.assertNotNull(paging.getTotalRecordCount());
 		Assert.assertEquals(3, (long)paging.getTotalRecordCount());
+		assertItemStock(itemStockService.getById(3), results.get(0));
+
+		paging.setPage(2);
+		results = service.getItemsByRoom(stockRoom, paging);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(3, (long)paging.getTotalRecordCount());
+		assertItemStock(itemStockService.getById(5), results.get(0));
 	}
 
 	/**
