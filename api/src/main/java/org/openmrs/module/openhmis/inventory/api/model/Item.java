@@ -39,6 +39,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Drug drug;
 	private ItemPrice defaultPrice;
 	private boolean hasExpiration;
+	private boolean hasPhysicalInventory;
 
 	public Item() {
 	}
@@ -192,6 +193,18 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setHasExpiration(boolean hasExpiration) {
 		this.hasExpiration = hasExpiration;
+	}
+
+	public boolean hasPhysicalInventory() {
+		return hasPhysicalInventory;
+	}
+
+	boolean isHasPhysicalInventory() {
+		return hasPhysicalInventory;
+	}
+
+	public void setHasPhysicalInventory(boolean hasPhysicalInventory) {
+		this.hasPhysicalInventory = hasPhysicalInventory;
 	}
 
 	@Override
