@@ -24,8 +24,6 @@ import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
-import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
@@ -46,13 +44,15 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 			description.addProperty("department", Representation.REF);
 			description.addProperty("category", Representation.REF);
 			description.addProperty("defaultPrice", Representation.REF);
-		} else if (rep instanceof DefaultRepresentation || rep instanceof FullRepresentation) {
+		} else {
 			description.addProperty("name");
 			description.addProperty("codes", Representation.REF);
 			description.addProperty("prices", Representation.REF);
 			description.addProperty("department", Representation.REF);
 			description.addProperty("category", Representation.REF);
 			description.addProperty("defaultPrice", Representation.REF);
+			description.addProperty("hasExpiration");
+			description.addProperty("hasPhysicalInventory");
 		}
 
 		return description;

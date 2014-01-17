@@ -76,6 +76,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		item.setCategory(categoryService.getById(0));
 		item.setConcept(Context.getConceptService().getConcept(0));
 		item.setDrug(Context.getConceptService().getDrug(0));
+		item.setHasPhysicalInventory(true);
 
 		item.addCode("one", "Test Code 010");
 		item.addCode("two", "Test Code 011");
@@ -92,6 +93,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		item.setDepartment(departmentService.getById(1));
 		item.setDescription(item.getDescription() + " Updated");
 		item.setName(item.getName() + " Updated");
+		item.setHasPhysicalInventory(!item.hasPhysicalInventory());
 
 		Set<ItemCode> codes = item.getCodes();
 		if (codes.size() > 0) {
@@ -141,6 +143,8 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Assert.assertNotNull(expected.getDepartment());
 		Assert.assertNotNull(actual.getDepartment());
 		Assert.assertEquals(expected.getDepartment().getId(), actual.getDepartment().getId());
+		Assert.assertEquals(expected.hasExpiration(), actual.hasExpiration());
+		Assert.assertEquals(expected.hasPhysicalInventory(), actual.hasPhysicalInventory());
 
 		if (expected.getConcept() == null) {
 			Assert.assertNull(actual.getConcept());

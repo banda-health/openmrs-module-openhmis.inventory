@@ -746,4 +746,15 @@
 			<column name="calculated_batch" type="boolean" defaultValueBoolean="true" />
 		</modifyColumn>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.0.0-4" author="ibewes">
+		<addColumn tableName="inv_item">
+			<column name="has_physical_inventory" type="boolean" defaultValueBoolean="true"/>
+		</addColumn>
+
+		<renameColumn tableName="inv_item_stock_detail" oldColumnName="stock_item_id" newColumnName="item_stock_id" />
+
+		<addForeignKeyConstraint constraintName="inv_item_stock_detail_item_stock_fk"
+		                         baseTableName="inv_item_stock_detail" baseColumnNames="item_stock_id"
+		                         referencedTableName="inv_item_stock" referencedColumnNames="item_stock_id"/>
+	</changeSet>
 </databaseChangeLog>

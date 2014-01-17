@@ -95,6 +95,8 @@ define(
                     }),
                     objRef: true
                 },
+				hasExpiration: { type: "Checkbox" },
+				hasPhysicalInventory: { type: "Checkbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }
