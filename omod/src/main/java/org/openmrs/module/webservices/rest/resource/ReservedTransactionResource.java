@@ -17,6 +17,7 @@ import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -33,16 +34,17 @@ public class ReservedTransactionResource extends BaseRestObjectResource<Reserved
 	}
 
 	@Override
-	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
-		DelegatingResourceDescription description = super.getDefaultRepresentationDescription();
-
-		description.addProperty("operation", Representation.DEFAULT);
-		description.addProperty("item", Representation.DEFAULT);
-		description.addProperty("quantity", Representation.DEFAULT);
-		description.addProperty("expiration", Representation.DEFAULT);
-		description.addProperty("creator", Representation.DEFAULT);
-		description.addProperty("dateCreated", Representation.DEFAULT);
-		description.addProperty("available", Representation.DEFAULT);
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		if (!(rep instanceof RefRepresentation)) {
+			description.addProperty("operation", Representation.DEFAULT);
+			description.addProperty("item", Representation.DEFAULT);
+			description.addProperty("quantity", Representation.DEFAULT);
+			description.addProperty("expiration", Representation.DEFAULT);
+			description.addProperty("creator", Representation.DEFAULT);
+			description.addProperty("dateCreated", Representation.DEFAULT);
+			description.addProperty("available", Representation.DEFAULT);
+		}
 
 		return description;
 	}

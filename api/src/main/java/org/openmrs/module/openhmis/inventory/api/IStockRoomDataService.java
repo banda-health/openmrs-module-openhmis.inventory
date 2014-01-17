@@ -16,9 +16,7 @@ package org.openmrs.module.openhmis.inventory.api;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Item;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoomItem;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,18 +26,19 @@ import java.util.List;
 
 public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	/**
-	 * Gets all {@link StockRoomItem}'s in the specified {@link StockRoom}.
+	 * Gets all {@link ItemStock}'s in the specified {@link StockRoom}.
 	 * @param stockRoom The {@link StockRoom}.
 	 * @param paging The paging information.
 	 * @return A list containing all of the stock room items.
 	 * @should return all the items in the stock room ordered by item name
 	 * @should return an empty list if there are no items in the stock room
 	 * @should return paged items if paging is specified
-	 * @should throw NullReferenceException if the stock room is null
+	 * @should return item stock sorted by item name
+	 * @should throw IllegalArgumentException if the stock room is null
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-	List<StockRoomItem> getItemsByRoom(StockRoom stockRoom, PagingInfo paging);
+	List<ItemStock> getItemsByRoom(StockRoom stockRoom, PagingInfo paging);
 
 	/**
 	 * Finds all the items in the stock room that match the {@link ItemSearch} settings.
@@ -52,29 +51,47 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 * @should return all found items if paging is null
 	 * @should return paged items if paging is specified
 	 * @should return retired items from search unless specified
-	 * @should throw NullReferenceException if stock room is null
-	 * @should throw NullReferenceException if item search is null
+	 * @should return item stock sorted by item name
+	 * @should throw IllegalArgumentException if stock room is null
+	 * @should throw IllegalArgumentException if item search is null
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-	List<StockRoomItem> findItems(StockRoom stockRoom, ItemSearch itemSearch, PagingInfo paging);
+	List<ItemStock> findItems(StockRoom stockRoom, ItemSearch itemSearch, PagingInfo paging);
 
 	/**
-	 * Gets the {@link StockRoomItem} for the specified {@link Item} with the optionally defined expiration.
+	 * Gets the {@link ItemStock} for the specified {@link Item} with the optionally defined expiration.
 	 * @param stockRoom The {@link StockRoom} items to search.
 	 * @param item The {@link Item} to find.
-	 * @param expiration The optional item expiration to search for.
-	 * @return The {@link StockRoomItem} or {@code null} if not found.
+	 * @return The {@link ItemStock} or {@code null} if not found.
 	 * @should return the stock room item
 	 * @should not return items from other stock rooms
 	 * @should return null when item is not found
-	 * @should return item with expiration when specified
-	 * @should return the item without an expiration what not specified
-	 * @should throw NullReferenceException when stock room is null
-	 * @should throw NullReferenceException when item is null
+	 * @should throw IllegalArgumentException when stock room is null
+	 * @should throw IllegalArgumentException when item is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-	StockRoomItem getItem(StockRoom stockRoom, Item item, Date expiration);
+	@Authorized({PrivilegeConstants.VIEW_STOCKROOMS})
+	ItemStock getItem(StockRoom stockRoom, Item item);
+
+	/**
+	 * Gets the {@link ItemStockDetail} for the specified {@link Item} and qualifiers.
+	 * @param stockroom The stockroom item details to search.
+	 * @param item The item to find.
+	 * @param expiration The optional expiration date to search for.
+	 * @param batchOperation The optional batch operation to search for.
+	 * @return The item stock detail or {@code null} if not found.
+	 * @should return the stock room item detail
+	 * @should not return details for other stock rooms
+	 * @should return null when the details is not found
+	 * @should return detail with expiration and batch when specified
+	 * @should return detail without an expiration when not specified
+	 * @should return detail without a batch when not specified
+	 * @should throw IllegalArgumentException when stock room is null
+	 * @should throw IllegalArgumentException when item is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({PrivilegeConstants.VIEW_STOCKROOMS})
+	ItemStockDetail getStockroomItemDetail(StockRoom stockroom, Item item, Date expiration, StockOperation batchOperation);
 }
 

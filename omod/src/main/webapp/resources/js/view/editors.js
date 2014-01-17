@@ -19,6 +19,7 @@ define(
 		openhmis.url.inventoryBase + 'js/model/item',
 		openhmis.url.inventoryBase + 'js/model/department',
         openhmis.url.inventoryBase + 'js/model/category',
+        openhmis.url.inventoryBase + 'js/view/search',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.backboneBase + 'js/lib/labelOver',
 		openhmis.url.backboneBase + 'js/view/editors'
@@ -33,7 +34,8 @@ define(
 
         editors.CategorySelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Category,
-            displayAttr: "name"
+            displayAttr: "name",
+	        allowNull: true
         });
 		
 		editors.ItemPriceSelect = editors.GenericModelSelect.extend({
@@ -199,6 +201,17 @@ define(
 				return this;
 			}
 		});
+		
+		editors.ItemListSelect = editors.ListSelect.extend({
+			modalWidth: 750,
+			initListView: function() {
+		    	var options = this.schema.editorOptions || {};
+		    	options.model = this.schema.options;
+		    	options.searchView = openhmis.DepartmentAndNameSearchView;
+		    	this.listView = new openhmis.GenericSearchableListView(options);
+			}
+		});
+		
 		return editors;
 	}
 )

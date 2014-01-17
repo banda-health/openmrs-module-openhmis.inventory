@@ -16,48 +16,79 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.Location;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class StockRoom extends BaseSerializableOpenmrsMetadata {
-	public static final long serialVersionUID = 0L;
+	public static final long serialVersionUID = 1L;
 
 	private Integer stockRoomId;
 	private Location location;
-	private Set<StockRoomItem> items;
+	private Set<ItemStock> items;
 	private Set<StockOperation> operations;
 
+	/**
+	 * Gets the unique database record identifier.
+	 * @return The record identifier or {@code null} if the object is new.
+	 */
 	@Override
 	public Integer getId() {
 		return stockRoomId;
 	}
 
+	/**
+	 * Sets the unique database record identifier.
+	 * @param id The record identifier.
+	 */
 	@Override
 	public void setId(Integer id) {
 		stockRoomId = id;
 	}
 
+	/**
+	 * Gets the optional {@link org.openmrs.Location} where this stockroom is located.
+	 * @return The stockroom location.
+	 */
 	public Location getLocation() {
 		return location;
 	}
 
+	/**
+	 * Sets the optional {@link org.openmrs.Location} where this stockroom is located.
+	 * @param location The stockroom location.
+	 */
 	public void setLocation(Location location) {
 		this.location = location;
 	}
 
-	public Set<StockRoomItem> getItems() {
+	/**
+	 * Gets the set of item stock for this stockroom.
+	 * @return The item stock.
+	 */
+	public Set<ItemStock> getItems() {
 		return items;
 	}
 
-	public void setItems(Set<StockRoomItem> items) {
+	/**
+	 * Sets the set of item stock for this stockroom.
+	 * @param items The item stock set.
+	 */
+	public void setItems(Set<ItemStock> items) {
 		this.items = items;
 	}
 
-	public void addItem(StockRoomItem item) {
+	/**
+	 * Adds new item stock to the stockroom.
+	 *
+	 * Note that this will result in the full item list being loaded and should
+	 * only be used when that is needed. A better alternative to add item stock is to use the
+	 * {@link org.openmrs.module.openhmis.inventory.api.IItemStockDataService#save(org.openmrs.OpenmrsObject)} method.
+	 * @param item The item stock to add to this stock room.
+	 */
+	public void addItem(ItemStock item) {
 		if (item != null) {
 			if (items == null) {
-				items = new TreeSet<StockRoomItem>();
+				items = new TreeSet<ItemStock>();
 			}
 
 			item.setStockRoom(this);
@@ -65,7 +96,15 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 		}
 	}
 
-	public void removeItem(StockRoomItem item) {
+	/**
+	 * Removes item stock from the stockroom.
+	 *
+	 * Note that this will result in the full item list being loaded and should
+	 * only be used when that is needed. A better alternative to remove item stock is to use the
+	 * {@link org.openmrs.module.openhmis.inventory.api.IItemStockDataService#purge(org.openmrs.OpenmrsObject)} method.
+	 * @param item The item stock to remove.
+	 */
+	public void removeItem(ItemStock item) {
 		if (item != null) {
 			if (items == null) {
 				return;
@@ -76,14 +115,33 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 		}
 	}
 
+	/**
+	 * Gets the set of operations for this stockroom.
+	 * @return The stockroom operations.
+	 */
 	public Set<StockOperation> getOperations() {
 		return operations;
 	}
 
+	/**
+	 * Sets the set of operations for this stockroom.
+	 * @param operations The stockroom operations.
+	 */
 	public void setOperations(Set<StockOperation> operations) {
 		this.operations = operations;
 	}
 
+	/**
+	 * Adds an operation to this stockroom.
+	 *
+	 * This will not apply the operation or otherwise process it.  To apply the operation use the
+	 * {@link org.openmrs.module.openhmis.inventory.api.IStockOperationDataService#applyTransactions(java.util.Collection)}
+	 * method.
+	 *
+	 * Note that this will result in the full set of operations being loaded and should only be used when that is needed.
+	 * The correct way to add operations is to apply them and let the records be created through the normal processing.
+	 * @param operation The operation to add to this stockroom.
+	 */
 	public void addOperation(StockOperation operation) {
 		if (operation != null) {
 			if (operations == null) {
@@ -94,6 +152,12 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 		}
 	}
 
+	/**
+	 * Removes an operation from this stockroom.
+	 *
+	 * Note that this will result in the full set of operations being loaded and should only be used when that is needed.
+	 * @param operation The operation to remove from this stockroom.
+	 */
 	public void removeOperation(StockOperation operation) {
 		if (operation != null) {
 			if (operations == null) {

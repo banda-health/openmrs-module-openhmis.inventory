@@ -30,6 +30,9 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should set the correct availability for the reserved stock quantity
 	 * @should update the destination stockroom item stock quantities
 	 * @should add the destination stockroom item stock if not found
+	 * @should calculate expiration if not defined for expirable item
+	 * @should calculate batch operation if not defined
+	 * @should throw APIException if the operation type is receipt and expiration is not defined for expirable items
 	 * @should throw an IllegalArgumentException if the operation is null
 	 * @should throw an APIException if the operation type is null
 	 * @should throw an APIException if the operation has no reserved transactions
@@ -54,13 +57,15 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @param transactions The transactions to apply.
 	 * @should not throw exception if transactions is null
 	 * @should not throw exception if transactions is empty
-	 * @should add source stockroom item stock if no item stock found
-	 * @should update source stockroom item stock if item exists
-	 * @should add source stockroom item stock if no item with same expiration is found
-	 * @should update source stockroom item stock if item with same expiration is found
+	 * @should add source stockroom item stock and detail if no item stock found
+	 * @should update source stockroom item stock and detail if item exists
+	 * @should update source stockroom item stock and create detail if needed
 	 * @should add source stockroom item stock with negative quantity when transaction quantity is negative and stock not found
+	 * @should add item stock detail with no expiration or batch when item stock quantity is negative
 	 * @should remove item stock if quantity is zero
+	 * @should remove item stock detail if quantity is zero
 	 */
+	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
 	void applyTransactions(Collection<StockOperationTransaction> transactions) throws APIException;
 

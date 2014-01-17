@@ -1,5 +1,6 @@
 package org.openmrs.module.openhmis.inventory.api;
 
+import com.google.common.collect.Iterators;
 import liquibase.util.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 
 	@Override
-	protected StockOperation createEntity(boolean valid) {
+	public StockOperation createEntity(boolean valid) {
 		StockOperation op = new StockOperation();
 
 		if (valid) {
@@ -50,6 +51,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		op.setDestination(stockRoomService.getById(0));
 		op.setStatus(StockOperationStatus.PENDING);
 		op.setOperationNumber("Operation Number");
+		op.setOperationDate(new Date());
 
 		ReservedTransaction item = new ReservedTransaction();
 		item.setItem(itemService.getById(0));
@@ -163,11 +165,24 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 
 	/**
-	 * @verifies add source stockroom item stock if no item stock found
+	 * @verifies not throw exception if transactions is empty
 	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
 	 */
 	@Test
-	public void applyTransactions_shouldAddSourceStockroomItemStockIfNoItemStockFound() throws Exception {
+	public void applyTransactions_shouldNotThrowExceptionIfTransactionsIsEmpty() throws Exception {
+		// Empty params list
+		service.applyTransactions();
+
+		// Empty list
+		service.applyTransactions(new ArrayList<StockOperationTransaction>());
+	}
+
+	/**
+	 * @verifies add source stockroom item stock and detail if no item stock found
+	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
+	 */
+	@Test
+	public void applyTransactions_shouldAddSourceStockroomItemStockAndDetailIfNoItemStockFound() throws Exception {
 		// Create a new item
 		Item item = itemTest.createEntity(true);
 		itemService.save(item);
@@ -179,8 +194,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockRoom stockroom = stockRoomService.getById(0);
 
 		// Ensure that the stockroom does not have any item stock for the created item2
-		Assert.assertNull(stockRoomService.getItem(stockroom, item, null));
-		Assert.assertNull(stockRoomService.getItem(stockroom, item2, null));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item2));
 
 		// Create a new empty operation
 		StockOperation operation = createEntity(true);
@@ -195,11 +210,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		tx.setItem(item);
 		tx.setStockRoom(stockroom);
 		tx.setQuantity(10);
+		tx.setBatchOperation(operation);
 		tx.setOperation(operation);
 		StockOperationTransaction tx2 = new StockOperationTransaction();
 		tx2.setItem(item2);
 		tx2.setStockRoom(stockroom);
 		tx2.setQuantity(20);
+		tx2.setBatchOperation(operation);
 		tx2.setOperation(operation);
 
 		operation.addTransaction(tx);
@@ -209,37 +226,57 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.applyTransactions(tx, tx2);
 		Context.flushSession();
 
-		// Check that the stockroom now has this item stock
+		// Check that the stockroom now has this item stock and details
 		stockroom = stockRoomService.getById(0);
-		StockRoomItem stock = stockRoomService.getItem(stockroom, item, null);
+		ItemStock stock = stockRoomService.getItem(stockroom, item);
 		Assert.assertNotNull(stock);
 		Assert.assertEquals(item, stock.getItem());
 		Assert.assertEquals(10, stock.getQuantity());
 
-		stock = stockRoomService.getItem(stockroom, item2, null);
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
+		ItemStockDetail detail = stock.getDetails().iterator().next();
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(10, detail.getQuantity());
+		Assert.assertEquals(operation, detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
+
+		stock = stockRoomService.getItem(stockroom, item2);
 		Assert.assertNotNull(stock);
 		Assert.assertEquals(item2, stock.getItem());
 		Assert.assertEquals(20, stock.getQuantity());
+
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = stock.getDetails().iterator().next();
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(20, detail.getQuantity());
+		Assert.assertEquals(operation, detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
 	}
 
 	/**
-	 * @verifies update source stockroom item stock if item exists
+	 * @verifies update source stockroom item stock and detail if item exists
 	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
 	 */
 	@Test
-	public void applyTransactions_shouldUpdateSourceStockroomItemStockIfItemExists() throws Exception {
+	public void applyTransactions_shouldUpdateSourceStockroomItemStockAndDetailIfItemExists() throws Exception {
 		Item item = itemService.getById(0);
 		Item item2 = itemService.getById(1);
+
+		StockOperation batchOperation = service.getById(0);
 
 		// Get a stockroom
 		StockRoom stockroom = stockRoomService.getById(0);
 
 		// Ensure that the stockroom has stock for the created items
-		StockRoomItem stock = stockRoomService.getItem(stockroom, item, null);
+		ItemStock stock = stockRoomService.getItem(stockroom, item);
 		Assert.assertNotNull(stock);
 		int qty = stock.getQuantity();
 		Assert.assertTrue(qty > 0);
-		StockRoomItem stock2 = stockRoomService.getItem(stockroom, item2, null);
+		ItemStock stock2 = stockRoomService.getItem(stockroom, item2);
 		Assert.assertNotNull(stock2);
 		int qty2 = stock2.getQuantity();
 		Assert.assertTrue(qty2 > 0);
@@ -257,11 +294,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		tx.setItem(item);
 		tx.setStockRoom(stockroom);
 		tx.setQuantity(10);
+		tx.setBatchOperation(batchOperation);
 		tx.setOperation(operation);
 		StockOperationTransaction tx2 = new StockOperationTransaction();
 		tx2.setItem(item2);
 		tx2.setStockRoom(stockroom);
 		tx2.setQuantity(20);
+		tx2.setBatchOperation(batchOperation);
 		tx2.setOperation(operation);
 
 		operation.addTransaction(tx);
@@ -271,136 +310,40 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.applyTransactions(tx, tx2);
 		Context.flushSession();
 
-		// Check that the stockroom now has this item stock
+		// Check that the stockroom has the item stock
 		stockroom = stockRoomService.getById(0);
-		stock = stockRoomService.getItem(stockroom, item, null);
+		stock = stockRoomService.getItem(stockroom, item);
 		Assert.assertNotNull(stock);
 		Assert.assertEquals(item, stock.getItem());
 		Assert.assertEquals(10 + qty, stock.getQuantity());
 
-		stock = stockRoomService.getItem(stockroom, item2, null);
+		// Check the stock detail
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
+
+		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(qty + 10, detail.getQuantity());
+		Assert.assertEquals(batchOperation, detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
+
+		// Check that the stockroom has the item stock
+		stock = stockRoomService.getItem(stockroom, item2);
 		Assert.assertNotNull(stock);
 		Assert.assertEquals(item2, stock.getItem());
 		Assert.assertEquals(20 + qty2, stock.getQuantity());
-	}
 
-	/**
-	 * @verifies add source stockroom item stock if no item with same expiration is found
-	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
-	 */
-	@Test
-	public void applyTransactions_shouldAddSourceStockroomItemStockIfNoItemWithSameExpirationIsFound() throws Exception {
-		// Get a stockroom
-		StockRoom stockroom = stockRoomService.getById(0);
+		// Check the stock detail
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
 
-		Item item = itemService.getById(2);
-		StockRoomItem stock = stockRoomService.getItem(stockroom, item, new Date(2025 - 1900, 0, 1));
-		Assert.assertNotNull(stock);
-		Assert.assertNotNull(stock.getExpiration());
-		int qty = stock.getQuantity();
-		Assert.assertTrue(qty > 0);
-
-		// Ensure that the stockroom does not have any item stock for the created item2
-		Assert.assertNull(stockRoomService.getItem(stockroom, item, null));
-
-		// Create a new empty operation
-		StockOperation operation = createEntity(true);
-		if (operation.getTransactions() != null) operation.getTransactions().clear();
-		if (operation.getReserved() != null) operation.getReserved().clear();
-		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
-		operation.setStatus(StockOperationStatus.COMPLETED);
-		operation.setDestination(stockroom);
-
-		// Create the transactions
-		StockOperationTransaction tx = new StockOperationTransaction();
-		tx.setItem(item);
-		tx.setStockRoom(stockroom);
-		tx.setQuantity(10);
-		tx.setOperation(operation);
-
-		// Add a day to the expiration
-		Calendar c = Calendar.getInstance();
-		c.setTime(stock.getExpiration());
-		c.add(Calendar.DATE, 1);
-		tx.setExpiration(c.getTime());
-
-		operation.addTransaction(tx);
-
-		service.save(operation);
-		service.applyTransactions(tx);
-		Context.flushSession();
-
-		// Check that the stockroom now has this item stock
-		stockroom = stockRoomService.getById(0);
-		stock = stockRoomService.getItem(stockroom, item, c.getTime());
-		Assert.assertNotNull(stock);
-		Assert.assertEquals(item, stock.getItem());
-		Assert.assertEquals(10, stock.getQuantity());
-		Assert.assertEquals(c.getTime(), stock.getExpiration());
-	}
-
-	/**
-	 * @verifies update source stockroom item stock if item with same expiration is found
-	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
-	 */
-	@Test
-	public void applyTransactions_shouldUpdateSourceStockroomItemStockIfItemWithSameExpirationIsFound() throws Exception {
-	// Get a stockroom
-		StockRoom stockroom = stockRoomService.getById(0);
-
-		Item item = itemService.getById(2);
-		StockRoomItem stock = stockRoomService.getItem(stockroom, item, new Date(2025 - 1900, 0, 1));
-		Assert.assertNotNull(stock);
-		Date exp = stock.getExpiration();
-		Assert.assertNotNull(exp);
-		int qty = stock.getQuantity();
-		Assert.assertTrue(qty > 0);
-
-		// Ensure that the stockroom does not have any item stock for the created item2
-		Assert.assertNull(stockRoomService.getItem(stockroom, item, null));
-
-		// Create a new empty operation
-		StockOperation operation = createEntity(true);
-		if (operation.getTransactions() != null) operation.getTransactions().clear();
-		if (operation.getReserved() != null) operation.getReserved().clear();
-		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
-		operation.setStatus(StockOperationStatus.COMPLETED);
-		operation.setDestination(stockroom);
-
-		// Create the transactions
-		StockOperationTransaction tx = new StockOperationTransaction();
-		tx.setItem(item);
-		tx.setStockRoom(stockroom);
-		tx.setQuantity(10);
-		tx.setOperation(operation);
-		tx.setExpiration(exp);
-
-		operation.addTransaction(tx);
-
-		service.save(operation);
-		service.applyTransactions(tx);
-		Context.flushSession();
-
-		// Check that the stockroom now has this item stock
-		stockroom = stockRoomService.getById(0);
-		stock = stockRoomService.getItem(stockroom, item, exp);
-		Assert.assertNotNull(stock);
-		Assert.assertEquals(item, stock.getItem());
-		Assert.assertEquals(10 + qty, stock.getQuantity());
-		Assert.assertEquals(exp, stock.getExpiration());
-	}
-
-	/**
-	 * @verifies not throw exception if transactions is empty
-	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
-	 */
-	@Test
-	public void applyTransactions_shouldNotThrowExceptionIfTransactionsIsEmpty() throws Exception {
-		// Empty params list
-		service.applyTransactions();
-
-		// Empty list
-		service.applyTransactions(new ArrayList<StockOperationTransaction>());
+		detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(qty2 + 20, detail.getQuantity());
+		Assert.assertEquals(batchOperation, detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
 	}
 
 	/**
@@ -420,8 +363,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockRoom stockroom = stockRoomService.getById(0);
 
 		// Ensure that the stockroom does not have any item stock for the created item2
-		Assert.assertNull(stockRoomService.getItem(stockroom, item, null));
-		Assert.assertNull(stockRoomService.getItem(stockroom, item2, null));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item2));
 
 		// Create a new empty operation
 		StockOperation operation = createEntity(true);
@@ -450,15 +393,201 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		// Check that the stockroom now has the item stock with negative qty
 		stockroom = stockRoomService.getById(0);
-		StockRoomItem stock = stockRoomService.getItem(stockroom, item, null);
+		ItemStock stock = stockRoomService.getItem(stockroom, item);
 		Assert.assertNotNull(stock);
 		Assert.assertEquals(item, stock.getItem());
 		Assert.assertEquals(-10, stock.getQuantity());
 
-		stock = stockRoomService.getItem(stockroom, item2, null);
+		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(-10, detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
+
+		stock = stockRoomService.getItem(stockroom, item2);
 		Assert.assertNotNull(stock);
 		Assert.assertEquals(item2, stock.getItem());
 		Assert.assertEquals(-20, stock.getQuantity());
+
+		detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(-20, detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
+	}
+
+	/**
+	 * @verifies update source stockroom item stock and create detail if needed
+	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
+	 */
+	@Test
+	public void applyTransactions_shouldUpdateSourceStockroomItemStockAndCreateDetailIfNeeded() throws Exception {
+		Item item = itemService.getById(0);
+		Item item2 = itemService.getById(1);
+
+		// Get a stockroom
+		StockRoom stockroom = stockRoomService.getById(0);
+
+		// Ensure that the stockroom has stock for the created items
+		ItemStock stock = stockRoomService.getItem(stockroom, item);
+		Assert.assertNotNull(stock);
+		int qty = stock.getQuantity();
+		Assert.assertTrue(qty > 0);
+		ItemStock stock2 = stockRoomService.getItem(stockroom, item2);
+		Assert.assertNotNull(stock2);
+		int qty2 = stock2.getQuantity();
+		Assert.assertTrue(qty2 > 0);
+
+		// Create a new empty operation
+		StockOperation operation = createEntity(true);
+		if (operation.getTransactions() != null) operation.getTransactions().clear();
+		if (operation.getReserved() != null) operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setStatus(StockOperationStatus.COMPLETED);
+		operation.setDestination(stockroom);
+
+		// Create the transactions
+		StockOperationTransaction tx = new StockOperationTransaction();
+		tx.setItem(item);
+		tx.setStockRoom(stockroom);
+		tx.setQuantity(10);
+		tx.setBatchOperation(operation);
+		tx.setOperation(operation);
+		StockOperationTransaction tx2 = new StockOperationTransaction();
+		tx2.setItem(item2);
+		tx2.setStockRoom(stockroom);
+		tx2.setQuantity(20);
+		tx2.setBatchOperation(operation);
+		tx2.setOperation(operation);
+
+		operation.addTransaction(tx);
+		operation.addTransaction(tx2);
+
+		service.save(operation);
+		service.applyTransactions(tx, tx2);
+		Context.flushSession();
+
+		// Check that the stockroom now has this item stock
+		stockroom = stockRoomService.getById(0);
+		stock = stockRoomService.getItem(stockroom, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(item, stock.getItem());
+		Assert.assertEquals(10 + qty, stock.getQuantity());
+
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(2, stock.getDetails().size());
+
+		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(qty, detail.getQuantity());
+		Assert.assertEquals(0, (int)detail.getBatchOperation().getId());
+		Assert.assertEquals(stock, detail.getItemStock());
+
+		detail = Iterators.get(stock.getDetails().iterator(), 1);
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(10, detail.getQuantity());
+		Assert.assertEquals(operation, detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
+
+		stock = stockRoomService.getItem(stockroom, item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(item2, stock.getItem());
+		Assert.assertEquals(20 + qty2, stock.getQuantity());
+
+		detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(qty2, detail.getQuantity());
+		Assert.assertEquals(0, (int)detail.getBatchOperation().getId());
+		Assert.assertEquals(stock, detail.getItemStock());
+
+		detail = Iterators.get(stock.getDetails().iterator(), 1);
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertEquals(20, detail.getQuantity());
+		Assert.assertEquals(operation, detail.getBatchOperation());
+		Assert.assertEquals(stock, detail.getItemStock());
+	}
+
+	/**
+	 * @verifies add item stock detail with no expiration or batch when item stock quantity is negative
+	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
+	 */
+	@Test
+	public void applyTransactions_shouldAddItemStockDetailWithNoExpirationOrBatchWhenItemStockQuantityIsNegative() throws Exception {
+		Item item = itemService.getById(0);
+		Item item2 = itemService.getById(2);
+
+		// Get a stockroom
+		StockRoom stockroom = stockRoomService.getById(0);
+
+		// Ensure that the stockroom has stock for the item stock
+		ItemStock stock = stockRoomService.getItem(stockroom, item);
+		Assert.assertNotNull(stock);
+		int qty = stock.getQuantity();
+		Assert.assertTrue(qty > 0);
+		ItemStock stock2 = stockRoomService.getItem(stockroom, item2);
+		Assert.assertNotNull(stock2);
+		int qty2 = stock2.getQuantity();
+		Assert.assertTrue(qty2 > 0);
+
+		// Create a new empty operation
+		StockOperation operation = createEntity(true);
+		if (operation.getTransactions() != null) operation.getTransactions().clear();
+		if (operation.getReserved() != null) operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
+		operation.setStatus(StockOperationStatus.COMPLETED);
+		operation.setSource(stockroom);
+
+		// Create the transactions to remove more than all stock for each item
+		StockOperationTransaction tx = new StockOperationTransaction();
+		tx.setItem(item);
+		tx.setStockRoom(stockroom);
+		tx.setQuantity((qty + 10) * -1);
+		tx.setOperation(operation);
+		StockOperationTransaction tx2 = new StockOperationTransaction();
+		tx2.setItem(item2);
+		tx2.setStockRoom(stockroom);
+		tx2.setQuantity((qty2 + 20) * -1);
+		tx2.setOperation(operation);
+
+		operation.addTransaction(tx);
+		operation.addTransaction(tx2);
+
+		service.save(operation);
+		service.applyTransactions(tx, tx2);
+		Context.flushSession();
+
+		// Check that the stockroom still has these item stock
+		stockroom = stockRoomService.getById(0);
+		stock = stockRoomService.getItem(stockroom, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-10, stock.getQuantity());
+
+		// Check that there is a single detail with no qualifiers
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
+		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertNotNull(detail);
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+		Assert.assertEquals(-10, detail.getQuantity());
+
+		stock = stockRoomService.getItem(stockroom, item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-20, stock.getQuantity());
+
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = Iterators.get(stock.getDetails().iterator(), 0);
+		Assert.assertNotNull(detail);
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+		Assert.assertEquals(-20, detail.getQuantity());
 	}
 
 	/**
@@ -474,11 +603,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockRoom stockroom = stockRoomService.getById(0);
 
 		// Ensure that the stockroom has stock for the created items
-		StockRoomItem stock = stockRoomService.getItem(stockroom, item, null);
+		ItemStock stock = stockRoomService.getItem(stockroom, item);
 		Assert.assertNotNull(stock);
 		int qty = stock.getQuantity();
 		Assert.assertTrue(qty > 0);
-		StockRoomItem stock2 = stockRoomService.getItem(stockroom, item2, null);
+		ItemStock stock2 = stockRoomService.getItem(stockroom, item2);
 		Assert.assertNotNull(stock2);
 		int qty2 = stock2.getQuantity();
 		Assert.assertTrue(qty2 > 0);
@@ -487,9 +616,9 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperation operation = createEntity(true);
 		if (operation.getTransactions() != null) operation.getTransactions().clear();
 		if (operation.getReserved() != null) operation.getReserved().clear();
-		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.COMPLETED);
-		operation.setDestination(stockroom);
+		operation.setSource(stockroom);
 
 		// Create the transactions to remove all stock for each item
 		StockOperationTransaction tx = new StockOperationTransaction();
@@ -512,11 +641,78 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		// Check that the stockroom no longer has these items
 		stockroom = stockRoomService.getById(0);
-		stock = stockRoomService.getItem(stockroom, item, null);
+		stock = stockRoomService.getItem(stockroom, item);
 		Assert.assertNull(stock);
 
-		stock = stockRoomService.getItem(stockroom, item2, null);
+		stock = stockRoomService.getItem(stockroom, item2);
 		Assert.assertNull(stock);
+	}
+
+	/**
+	 * @verifies remove item stock detail if quantity is zero
+	 * @see IStockOperationDataService#applyTransactions(java.util.Collection)
+	 */
+	@Test
+	public void applyTransactions_shouldRemoveItemStockDetailIfQuantityIsZero() throws Exception {
+		Item item = itemService.getById(0);
+		Item item2 = itemService.getById(1);
+
+		// Get a stockroom
+		StockRoom stockroom = stockRoomService.getById(0);
+
+		// Ensure that the stockroom has stock for the created items
+		ItemStock stock = stockRoomService.getItem(stockroom, item);
+		Assert.assertNotNull(stock);
+		int qty = stock.getQuantity();
+		Assert.assertTrue(qty > 0);
+		ItemStockDetail stockDetail = Iterators.get(stock.getDetails().iterator(), 0);
+		ItemStock stock2 = stockRoomService.getItem(stockroom, item2);
+		Assert.assertNotNull(stock2);
+		int qty2 = stock2.getQuantity();
+		Assert.assertTrue(qty2 > 0);
+		ItemStockDetail stockDetail2 = Iterators.get(stock2.getDetails().iterator(), 0);
+
+		// Create a new empty operation
+		StockOperation operation = createEntity(true);
+		if (operation.getTransactions() != null) operation.getTransactions().clear();
+		if (operation.getReserved() != null) operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
+		operation.setStatus(StockOperationStatus.COMPLETED);
+		operation.setSource(stockroom);
+
+		// Create the transactions to remove all stock for each item
+		StockOperationTransaction tx = new StockOperationTransaction();
+		tx.setItem(item);
+		tx.setStockRoom(stockroom);
+		tx.setQuantity(qty * -1);
+		tx.setOperation(operation);
+		StockOperationTransaction tx2 = new StockOperationTransaction();
+		tx2.setItem(item2);
+		tx2.setStockRoom(stockroom);
+		tx2.setQuantity(qty2 * -1);
+		tx2.setOperation(operation);
+
+		operation.addTransaction(tx);
+		operation.addTransaction(tx2);
+
+		service.save(operation);
+		service.applyTransactions(tx, tx2);
+		Context.flushSession();
+
+		// Check that the stockroom no longer has these items
+		stockroom = stockRoomService.getById(0);
+		stock = stockRoomService.getItem(stockroom, item);
+		Assert.assertNull(stock);
+
+		stock = stockRoomService.getItem(stockroom, item2);
+		Assert.assertNull(stock);
+
+		// Check that the stockroom no longer has these details
+		ItemStockDetail detail = stockRoomService.getStockroomItemDetail(stockroom, item, stockDetail.getExpiration(), stockDetail.getBatchOperation());
+		Assert.assertNull(detail);
+
+		detail = stockRoomService.getStockroomItemDetail(stockroom, item2, stockDetail2.getExpiration(), stockDetail2.getBatchOperation());
+		Assert.assertNull(detail);
 	}
 
 	@Test
@@ -526,6 +722,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setOperationDate(new Date());
 
 		StockRoom source = stockRoomService.getById(0);
 		StockRoom destination = stockRoomService.getById(1);
@@ -556,6 +753,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setOperationDate(new Date());
 
 		StockRoom source = stockRoomService.getById(0);
 		StockRoom destination = stockRoomService.getById(1);
@@ -586,6 +784,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
+		operation.setOperationDate(new Date());
 
 		StockRoom source = stockRoomService.getById(0);
 		StockRoom destination = stockRoomService.getById(1);
@@ -1387,8 +1586,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		ReservedTransaction tx2 = operation.addReserved(item2, 3);
 
 		// Get the current stockroom item quantities
-		int itemQty = stockRoomService.getItem(source, item, null).getQuantity();
-		int item2Qty = stockRoomService.getItem(source, item2, null).getQuantity();
+		int itemQty = stockRoomService.getItem(source, item).getQuantity();
+		int item2Qty = stockRoomService.getItem(source, item2).getQuantity();
 
 		// Submit the operation (this will apply the item reservations)
 		service.submitOperation(operation);
@@ -1399,8 +1598,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(3, (int)tx2.getQuantity());
 
 		// Check that the reservation quantities were removed from the source stock room
-		Assert.assertEquals(itemQty - tx.getQuantity(), stockRoomService.getItem(source, item, null).getQuantity());
-		Assert.assertEquals(item2Qty - tx2.getQuantity(), stockRoomService.getItem(source, item2, null).getQuantity());
+		Assert.assertEquals(itemQty - tx.getQuantity(), stockRoomService.getItem(source, item).getQuantity());
+		Assert.assertEquals(item2Qty - tx2.getQuantity(), stockRoomService.getItem(source, item2).getQuantity());
 
 		// Update the status to completed and submit again
 		operation.setStatus(StockOperationStatus.COMPLETED);
@@ -1456,8 +1655,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setPatient(patient);
 
 		// Get the current stockroom item quantities
-		int itemQty = stockRoomService.getItem(source, item, null).getQuantity();
-		int item2Qty = stockRoomService.getItem(source, item2, null).getQuantity();
+		int itemQty = stockRoomService.getItem(source, item).getQuantity();
+		int item2Qty = stockRoomService.getItem(source, item2).getQuantity();
 
 		// Create the operation reservations for the total stockroom item quantities
 		ReservedTransaction tx = operation.addReserved(item, itemQty);
@@ -1472,8 +1671,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(item2Qty, (int)tx2.getQuantity());
 
 		// Check that the reservation quantities caused the item stock to be removed from the stockroom
-		Assert.assertNull(stockRoomService.getItem(source, item, null));
-		Assert.assertNull(stockRoomService.getItem(source, item2, null));
+		Assert.assertNull(stockRoomService.getItem(source, item));
+		Assert.assertNull(stockRoomService.getItem(source, item2));
 	}
 
 	/**
@@ -1523,8 +1722,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item2 = itemService.getById(1);
 
 		// Get the current stockroom item quantities
-		int itemQty = stockRoomService.getItem(stockroom, item, null).getQuantity();
-		int item2Qty = stockRoomService.getItem(stockroom, item2, null).getQuantity();
+		int itemQty = stockRoomService.getItem(stockroom, item).getQuantity();
+		int item2Qty = stockRoomService.getItem(stockroom, item2).getQuantity();
 
 		// Create the operation
 		StockOperation operation = createEntity(true);
@@ -1541,16 +1740,16 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Context.flushSession();
 
 		// Check that the destination quantities have not yet been updated
-		Assert.assertEquals(itemQty, stockRoomService.getItem(stockroom, item, null).getQuantity());
-		Assert.assertEquals(item2Qty, stockRoomService.getItem(stockroom, item2, null).getQuantity());
+		Assert.assertEquals(itemQty, stockRoomService.getItem(stockroom, item).getQuantity());
+		Assert.assertEquals(item2Qty, stockRoomService.getItem(stockroom, item2).getQuantity());
 
 		operation.setStatus(StockOperationStatus.COMPLETED);
 		service.submitOperation(operation);
 		Context.flushSession();
 
 		// Check the destination stockroom quantities have now been updated
-		Assert.assertEquals(itemQty + 1, stockRoomService.getItem(stockroom, item, null).getQuantity());
-		Assert.assertEquals(item2Qty + 3, stockRoomService.getItem(stockroom, item2, null).getQuantity());
+		Assert.assertEquals(itemQty + 1, stockRoomService.getItem(stockroom, item).getQuantity());
+		Assert.assertEquals(item2Qty + 3, stockRoomService.getItem(stockroom, item2).getQuantity());
 	}
 
 	/**
@@ -1568,8 +1767,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item2 = itemService.getById(1);
 
 		// Ensure that there is not stock for these items
-		Assert.assertNull(stockRoomService.getItem(stockroom, item, null));
-		Assert.assertNull(stockRoomService.getItem(stockroom, item2, null));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item2));
 
 		// Create the operation
 		StockOperation operation = createEntity(true);
@@ -1588,16 +1787,16 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		// We didn't get an exception so it didn't try to update the source stockroom
 
 		// Check that the destination stock has not yet been created
-		Assert.assertNull(stockRoomService.getItem(stockroom, item, null));
-		Assert.assertNull(stockRoomService.getItem(stockroom, item2, null));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item));
+		Assert.assertNull(stockRoomService.getItem(stockroom, item2));
 
 		operation.setStatus(StockOperationStatus.COMPLETED);
 		service.submitOperation(operation);
 		Context.flushSession();
 
 		// Check that the destination stockroom stock and quantity has now been created
-		Assert.assertEquals(1, stockRoomService.getItem(stockroom, item, null).getQuantity());
-		Assert.assertEquals(3, stockRoomService.getItem(stockroom, item2, null).getQuantity());
+		Assert.assertEquals(1, stockRoomService.getItem(stockroom, item).getQuantity());
+		Assert.assertEquals(3, stockRoomService.getItem(stockroom, item2).getQuantity());
 	}
 
 	/**

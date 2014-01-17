@@ -40,7 +40,7 @@ import java.util.List;
 public class StockOperationSearchHandler implements SearchHandler {
 	protected Log log = LogFactory.getLog(getClass());
 
-	private final SearchConfig searchConfig = new SearchConfig("trans", ModuleRestConstants.OPERATION_RESOURCE,
+	private final SearchConfig searchConfig = new SearchConfig("operation", ModuleRestConstants.OPERATION_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Finds stock operations with an optional status.")

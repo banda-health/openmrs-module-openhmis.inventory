@@ -15,6 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.attribute.BaseAttributeType;
 
+/**
+ * A user-defined extension to the {@link Item} class.
+ */
 public class ItemAttributeType extends BaseAttributeType<Item> {
 	public static final long serialVersionUID = 0L;
 

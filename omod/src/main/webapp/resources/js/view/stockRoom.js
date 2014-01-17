@@ -47,7 +47,7 @@ define(
 
 		        this.itemsView = new openhmis.StockRoomDetailList({
 			        model: new openhmis.GenericCollection([], {
-				        model: openhmis.StockRoomItem
+				        model: openhmis.ItemStock
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,

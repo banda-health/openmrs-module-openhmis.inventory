@@ -90,7 +90,8 @@ define(
                     type: 'CategorySelect',
                     options: new openhmis.GenericCollection(null, {
                         model: openhmis.Category,
-                        url: openhmis.url.inventoryModelBase + 'category'
+                        url: openhmis.url.inventoryModelBase + 'category',
+	                    allowNull: true
                     }),
                     objRef: true
                 },
@@ -176,7 +177,7 @@ define(
 				return resp;
 			},
 			
-			toJSON: function() {
+			toJSON: function(options) {
 				if (this.attributes.codes !== undefined) {
 					// Can't set these, so need to remove them from JSON
 					for (var code in this.attributes.codes)
@@ -184,16 +185,18 @@ define(
 					for (var price in this.attributes.prices)
 						delete this.attributes.prices[price].resourceVersion;
 				}
-				var json = openhmis.GenericModel.prototype.toJSON.call(this);
+				var json = openhmis.GenericModel.prototype.toJSON.call(this, options);
 				if (json.defaultPrice instanceof openhmis.ItemPrice)
 					json.defaultPrice = json.defaultPrice.get("price").toString();
 				return json;
 			},
 			
 			toString: function() {
-				if (this.get("codes").length > 0)
+				if (this.get("codes") && this.get("codes").length > 0)
 					return this.get("codes")[0].code + ' - ' + this.get("name");
-				return this.get("name");
+				if (this.get("name"))
+					return this.get("name");
+				return openhmis.GenericModel.prototype.toString.call(this);
 			}
 		});
 		return openhmis;

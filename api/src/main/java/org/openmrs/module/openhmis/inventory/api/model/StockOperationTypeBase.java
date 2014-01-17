@@ -13,7 +13,7 @@ import java.util.TreeSet;
 public abstract class StockOperationTypeBase
 		extends BaseCustomizableInstanceType<StockOperationAttributeType>
 		implements IStockOperationType {
-	public static final long serialVersionUID = 0L;
+	private static final long serialVersionUID = 0L;
 
 	private Integer id;
 	private Boolean hasSource;

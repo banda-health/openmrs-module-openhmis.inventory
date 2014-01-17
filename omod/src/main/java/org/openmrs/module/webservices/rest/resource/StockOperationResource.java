@@ -13,14 +13,14 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -29,7 +29,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
-public class StockOperationResource extends BaseRestObjectResource<StockOperation> {
+public class StockOperationResource
+		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, IStockOperationType, StockOperationAttributeType, StockOperationAttribute> {
 
 	@Override
 	public StockOperation newDelegate() {
@@ -37,21 +38,22 @@ public class StockOperationResource extends BaseRestObjectResource<StockOperatio
 	}
 
 	@Override
-	public Class<? extends IObjectDataService<StockOperation>> getServiceClass() {
+	public Class<? extends IMetadataDataService<StockOperation>> getServiceClass() {
 		return IStockOperationDataService.class;
 	}
 
 	@Override
-	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
-		DelegatingResourceDescription description = super.getDefaultRepresentationDescription();
-
-		description.addProperty("status", Representation.DEFAULT);
-		description.addProperty("reserved", Representation.DEFAULT);
-		description.addProperty("transactions", Representation.DEFAULT);
-		description.addProperty("operationNumber", Representation.DEFAULT);
-		description.addProperty("source", Representation.DEFAULT);
-		description.addProperty("destination", Representation.DEFAULT);
-		description.addProperty("patient", Representation.DEFAULT);
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		if (!(rep instanceof RefRepresentation)) {
+			description.addProperty("status", Representation.DEFAULT);
+			description.addProperty("reserved", Representation.DEFAULT);
+			description.addProperty("transactions", Representation.DEFAULT);
+			description.addProperty("operationNumber", Representation.DEFAULT);
+			description.addProperty("source", Representation.DEFAULT);
+			description.addProperty("destination", Representation.DEFAULT);
+			description.addProperty("patient", Representation.DEFAULT);
+		}
 
 		return description;
 	}

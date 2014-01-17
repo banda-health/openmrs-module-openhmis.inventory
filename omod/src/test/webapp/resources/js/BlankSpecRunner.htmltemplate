@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=$sourceEncoding$">
+  <title>Jasmine Spec Runner</title>
+  $cssDependencies$
+  $javascriptDependencies$
+  $sources$
+</head>
+<body>
+</body>
+</html>

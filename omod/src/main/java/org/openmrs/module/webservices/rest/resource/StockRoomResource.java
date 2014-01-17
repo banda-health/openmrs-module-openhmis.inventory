@@ -24,13 +24,6 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 @Resource(name = ModuleRestConstants.STOCK_ROOM_RESOURCE, supportedClass=StockRoom.class, supportedOpenmrsVersions={"1.9"})
 public class StockRoomResource extends BaseRestMetadataResource<StockRoom> {
 	@Override
-	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
-		DelegatingResourceDescription desc = super.getDefaultRepresentationDescription();
-
-		return desc;
-	}
-
-	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("location", Representation.REF);

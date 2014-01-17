@@ -41,21 +41,13 @@ public class ItemPriceResource extends BaseRestMetadataResource<ItemPrice> imple
 	}
 	
 	@Override
-	public DelegatingResourceDescription getRepresentationDescription(
-			Representation rep) {
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("price");
-		return description;
-	}
-	
-	@Override
-	public DelegatingResourceDescription getCreatableProperties() {
-		DelegatingResourceDescription description = new DelegatingResourceDescription();
-		description.addProperty("price");
+
 		return description;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Class<IMetadataDataService<ItemPrice>> getServiceClass() {
 		return null;

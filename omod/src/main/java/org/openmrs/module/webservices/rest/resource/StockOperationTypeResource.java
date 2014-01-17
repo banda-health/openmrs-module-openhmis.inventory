@@ -18,7 +18,7 @@ import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -35,25 +35,17 @@ public class StockOperationTypeResource extends BaseRestMetadataResource<StockOp
 	}
 
 	@Override
-	protected DelegatingResourceDescription getDefaultRepresentationDescription() {
-		DelegatingResourceDescription description =  super.getDefaultRepresentationDescription();
-
-		description.addProperty("hasSource", Representation.DEFAULT);
-		description.addProperty("hasDestination", Representation.DEFAULT);
-		description.addProperty("hasPatient", Representation.DEFAULT);
-		description.addProperty("patientRequired", Representation.DEFAULT);
-		description.addProperty("availableWhenReserved", Representation.DEFAULT);
-		description.addProperty("user", Representation.DEFAULT);
-		description.addProperty("role", Representation.DEFAULT);
-
-		return description;
-	}
-
-	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 
-		if (rep instanceof FullRepresentation) {
+		if (!(rep instanceof RefRepresentation)) {
+			description.addProperty("hasSource", Representation.DEFAULT);
+			description.addProperty("hasDestination", Representation.DEFAULT);
+			description.addProperty("hasPatient", Representation.DEFAULT);
+			description.addProperty("patientRequired", Representation.DEFAULT);
+			description.addProperty("availableWhenReserved", Representation.DEFAULT);
+			description.addProperty("user", Representation.DEFAULT);
+			description.addProperty("role", Representation.DEFAULT);
 			description.addProperty("attributeTypes", Representation.REF);
 		}
 
