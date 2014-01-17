@@ -15,7 +15,7 @@ define(
     [
         openhmis.url.backboneBase + 'js/view/generic',
 	    openhmis.url.inventoryBase + 'js/model/operation',
-	    openhmis.url.inventoryBase + 'js/model/stockRoomItem',
+	    openhmis.url.inventoryBase + 'js/model/stockRoom',
 	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
     function(openhmis) {
@@ -36,15 +36,6 @@ define(
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-		        this.operationsView = new openhmis.StockRoomDetailList({
-			        model: new openhmis.GenericCollection([], {
-				        model: openhmis.Operation
-			        }),
-			        showRetiredOption: false,
-			        showRetired: true,
-			        listFields: ['dateCreated', 'operationNumber', 'status', 'operationType']
-		        });
-
 		        this.itemsView = new openhmis.StockRoomDetailList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.ItemStock
@@ -53,9 +44,26 @@ define(
 			        showRetired: true,
 			        listFields: ['item', 'quantity']
 		        });
+		        this.operationsView = new openhmis.StockRoomDetailList({
+			        model: new openhmis.GenericCollection([], {
+				        model: openhmis.Operation
+			        }),
+			        showRetiredOption: false,
+			        showRetired: true,
+			        listFields: ['dateCreated', 'operationNumber', 'status', 'operationType']
+		        });
+		        this.transactionsView = new openhmis.StockRoomDetailList({
+			        model: new openhmis.GenericCollection([], {
+				        model: openhmis.OperationTransaction
+			        }),
+			        showRetiredOption: false,
+			        showRetired: true,
+			        listFields: ['dateCreated', 'item', 'expiration', 'batchOperation', 'quantity']
+		        })
 
-		        this.operationsView.on("fetch", this.fetch);
 		        this.itemsView.on("fetch", this.fetch);
+		        this.operationsView.on("fetch", this.fetch);
+		        this.transactionsView.on("fetch", this.fetch);
 	        },
 
 	        render: function() {
@@ -76,13 +84,16 @@ define(
 			        tabs.show();
 			        $('#detailTabList').show();
 
-			        this.operationsView.fetch(null);
 			        this.itemsView.fetch(null);
+			        this.operationsView.fetch(null);
+			        this.transactionsView.fetch(null);
 
-			        var transactions = $("#transactions");
-			        transactions.append(this.operationsView.el);
 			        var items = $("#items");
 			        items.append(this.itemsView.el);
+			        var operations = $("#operations");
+			        operations.append(this.operationsView.el);
+			        var transactions = $("#transactions");
+			        transactions.append(this.transactionsView.el);
 			    } else {
 			        tabs.hide();
 		        }
