@@ -751,7 +751,8 @@
 			<column name="has_physical_inventory" type="boolean" defaultValueBoolean="true"/>
 		</addColumn>
 
-		<renameColumn tableName="inv_item_stock_detail" oldColumnName="stock_item_id" newColumnName="item_stock_id" />
+		<renameColumn tableName="inv_item_stock_detail"
+		              oldColumnName="stock_item_id" newColumnName="item_stock_id" columnDataType="int" />
 
 		<addForeignKeyConstraint constraintName="inv_item_stock_detail_item_stock_fk"
 		                         baseTableName="inv_item_stock_detail" baseColumnNames="item_stock_id"
