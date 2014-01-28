@@ -26,7 +26,7 @@ define(
 	],
 	function($, Backbone, _, openhmis) {
 		var editors = Backbone.Form.editors;
-		
+
 		editors.DepartmentSelect = editors.GenericModelSelect.extend({
 			modelType: openhmis.Department,
 			displayAttr: "name"
@@ -37,7 +37,7 @@ define(
             displayAttr: "name",
 	        allowNull: true
         });
-		
+
 		editors.ItemPriceSelect = editors.GenericModelSelect.extend({
 			modelType: openhmis.ItemPrice,
 			displayAttr: "price"
@@ -64,7 +64,7 @@ define(
 				collection.fetch();
 				return collection;
 			}(),
-			
+
 			initialize: function(options) {
 				_.bindAll(this);
 				editors.Base.prototype.initialize.call(this, options);
@@ -72,30 +72,29 @@ define(
 				this.cache = {};
 				this.departmentCollection.on("reset", this.render);
 			},
-			
+
 			events: {
 				'change select.department': 'modified',
 				'change input.item-name' : 'modified',
 				'focus select': 'handleFocus',
 				'focus .item-name': 'handleFocus',
 				'blur select': 'handleBlur',
-				'blur .item-name': 'handleBlur',
 				'keypress .item-name': 'onItemNameKeyPress'
 			},
-			
+
 			getUuid: function() {
 				return this.$('.item-uuid').val();
 			},
-			
+
 			getValue: function() {
 				return this.value;
 			},
-			
+
 			handleFocus: function(event) {
 				if (this.hasFocus) return;
 				this.trigger("focus", this);
 			},
-			
+
 			handleBlur: function(event) {
 				if (!this.hasFocus) return;
 				var self = this;
@@ -113,19 +112,19 @@ define(
 					self.trigger("blur", self);
 				}, 0);
 			},
-			
+
 			onItemNameKeyPress: function(event) {
-				if (event.keyCode === 13) {	
+				if (event.keyCode === 13) {
 					if (this.itemUpdating !== undefined)
 						event.stopPropagation();
 				}
 			},
-			
+
 			modified: function(event) {
 				// TODO: Some logic to handle messing with the form after
 				//       successful validation
 			},
-			
+
 			doItemSearch: function(request, response) {
 				var term = request.term;
 				var department_uuid = this.$('.department').val();
@@ -133,7 +132,7 @@ define(
 				if (department_uuid) query += "&department_uuid=" + encodeURIComponent(department_uuid);
 				this.doSearch(request, response, openhmis.Item, query);
 			},
-			
+
 			doSearch: function(request, response, model, query) {
 				var term = request.term;
 				if (query in this.cache) {
@@ -157,7 +156,7 @@ define(
 					}
 				});
 			},
-			
+
 			selectItem: function(event, ui) {
 				this.itemUpdating = true;
 				var uuid = ui.item.val;
@@ -173,13 +172,13 @@ define(
 					delete view.itemUpdating;
 				}});
 			},
-			
+
 			departmentKeyDown: function(event) {
 				if (event.keyCode === 8) {
 					$(event.target).val('');
 				}
 			},
-			
+
 			render: function() {
 				this.$el.html(this.template({
 					departments: this.departmentCollection,
@@ -201,7 +200,7 @@ define(
 				return this;
 			}
 		});
-		
+
 		editors.ItemListSelect = editors.ListSelect.extend({
 			modalWidth: 750,
 			initListView: function() {
@@ -211,7 +210,7 @@ define(
 		    	this.listView = new openhmis.GenericSearchableListView(options);
 			}
 		});
-		
+
 		return editors;
 	}
 )
