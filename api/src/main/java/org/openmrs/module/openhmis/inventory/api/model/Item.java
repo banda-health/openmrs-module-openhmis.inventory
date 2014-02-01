@@ -195,6 +195,10 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		this.hasExpiration = hasExpiration;
 	}
 
+	public boolean getHasExpiration() {
+		return hasExpiration;
+	}
+
 	public boolean hasPhysicalInventory() {
 		return hasPhysicalInventory;
 	}
@@ -205,6 +209,10 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setHasPhysicalInventory(boolean hasPhysicalInventory) {
 		this.hasPhysicalInventory = hasPhysicalInventory;
+	}
+
+	public boolean getHasPhysicalInventory() {
+		return hasPhysicalInventory;
 	}
 
 	@Override
