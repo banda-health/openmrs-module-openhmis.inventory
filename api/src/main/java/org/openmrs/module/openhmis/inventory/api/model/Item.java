@@ -38,8 +38,8 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Concept concept;
 	private Drug drug;
 	private ItemPrice defaultPrice;
-	private Boolean hasExpiration;
-	private Boolean hasPhysicalInventory;
+	private boolean hasExpiration;
+	private boolean hasPhysicalInventory;
 
 	public Item() {
 	}
@@ -179,11 +179,11 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	}
 
 	public boolean hasPhysicalInventory() {
-		return getHasPhysicalInventory() != null ? getHasPhysicalInventory() : false;
+		return hasPhysicalInventory();
 	}
 
 	public void setHasPhysicalInventory(Boolean hasPhysicalInventory) {
-		this.hasPhysicalInventory = hasPhysicalInventory;
+		this.hasPhysicalInventory = hasPhysicalInventory == null? false : hasPhysicalInventory;
 	}
 
 	public Boolean getHasExpiration() {
@@ -191,11 +191,11 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	}
 
 	public boolean hasExpiration() {
-		return getHasExpiration() != null ? getHasExpiration() : false;
+		return getHasExpiration();
 	}
 
 	public void setHasExpiration(Boolean hasExpiration) {
-		this.hasExpiration = hasExpiration;
+		this.hasExpiration = hasExpiration == null? false : hasExpiration;
 	}
 
 	@Override
