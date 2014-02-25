@@ -70,9 +70,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		if (StringUtils.isEmpty(code)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
-
 		ItemCode itemCode = new ItemCode(code, codeName);
-
 		addCode(itemCode);
 
 		return itemCode;
@@ -83,7 +81,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 			if (codes == null) {
 				codes = new HashSet<ItemCode>();
 			}
-
 			code.setItem(this);
 			codes.add(code);
 		}
@@ -94,7 +91,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 			if (codes == null) {
 				return;
 			}
-
 			codes.remove(code);
 		}
 	}
@@ -114,11 +110,8 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		if (price == null) {
 			throw new NullPointerException("The item price must be defined.");
 		}
-
 		ItemPrice itemPrice = new ItemPrice(price, priceName);
-
 		addPrice(itemPrice);
-
 		return itemPrice;
 	}
 
@@ -127,7 +120,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 			if (prices == null) {
 				prices = new HashSet<ItemPrice>();
 			}
-
 			price.setItem(this);
 			prices.add(price);
 		}
@@ -138,7 +130,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 			if (prices == null) {
 				return;
 			}
-
 			prices.remove(price);
 		}
 	}
@@ -183,28 +174,28 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		this.drug = drug;
 	}
 
-	public boolean hasExpiration() {
-		return hasExpiration;
-	}
-
-	boolean isHasExpiration() {
-		return hasExpiration;
-	}
-
-	public void setHasExpiration(boolean hasExpiration) {
-		this.hasExpiration = hasExpiration;
+	public Boolean getHasPhysicalInventory() {
+		return hasPhysicalInventory;
 	}
 
 	public boolean hasPhysicalInventory() {
 		return hasPhysicalInventory;
 	}
 
-	boolean isHasPhysicalInventory() {
-		return hasPhysicalInventory;
+	public void setHasPhysicalInventory(Boolean hasPhysicalInventory) {
+		this.hasPhysicalInventory = hasPhysicalInventory == null? false : hasPhysicalInventory;
 	}
 
-	public void setHasPhysicalInventory(boolean hasPhysicalInventory) {
-		this.hasPhysicalInventory = hasPhysicalInventory;
+	public Boolean getHasExpiration() {
+		return hasExpiration;
+	}
+
+	public boolean hasExpiration() {
+		return hasExpiration;
+	}
+
+	public void setHasExpiration(Boolean hasExpiration) {
+		this.hasExpiration = hasExpiration == null? false : hasExpiration;
 	}
 
 	@Override
