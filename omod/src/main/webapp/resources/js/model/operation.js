@@ -58,7 +58,10 @@ define(
 				    type: 'Date',
 				    format: openhmis.dateFormatLocale
 			    },
-			    available: { type: 'BasicNumber' }
+			    batchOperation: { type: 'NestedModel', model: openhmis.Operation, objRef: true },
+			    calculatedExpiration: {type: 'checkbox'},
+			    calculatedBatch: {type: 'checkbox'},
+			    available: { type: 'checkbox' }
 		    }
 	    });
 
@@ -77,6 +80,9 @@ define(
 				    type: 'Date',
 				    format: openhmis.dateFormatLocale
 			    },
+			    batchOperation: { type: 'NestedModel', model: openhmis.Operation, objRef: true },
+			    calculatedExpiration: {type: 'checkbox'},
+			    calculatedBatch: {type: 'checkbox'},
 			    stockroom: {
 				    type: 'StockRoomSelect',
 				    options: new openhmis.GenericCollection(null, {
