@@ -40,7 +40,7 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 		return IDepartmentDataService.class;
 	}
 
-	@Override
+    @Override
     public void purge(Department department, RequestContext context) throws ResponseException {
         try {
             super.purge(department, context);
@@ -49,9 +49,8 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
             throw new ResponseException("Can't purge department with name <" +  department.getName() + "> as it is still in use") {
                 private static final long serialVersionUID = 1L;
             };
-	    }
-
-	}
+        }
+    }
 }
 
 
