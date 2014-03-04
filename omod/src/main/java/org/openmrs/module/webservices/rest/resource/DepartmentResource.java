@@ -13,16 +13,22 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass=Department.class, supportedOpenmrsVersions={"1.9"})
 @Handler(supports = { Department.class }, order = 0)
 public class DepartmentResource extends BaseRestMetadataResource<Department> {
+
+    private static Log LOG = LogFactory.getLog(DepartmentResource.class);
 
 	@Override
 	public Department newDelegate() {
@@ -32,6 +38,19 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 	@Override
 	public Class<? extends IMetadataDataService<Department>> getServiceClass() {
 		return IDepartmentDataService.class;
+	}
+
+	@Override
+    public void purge(Department department, RequestContext context) throws ResponseException {
+        try {
+            super.purge(department, context);
+        } catch(Exception e) {
+            LOG.error("Exception occured when trying to purge department <" + department.getName() + ">", e);
+            throw new ResponseException("Can't purge department with name <" +  department.getName() + "> as it is still in use") {
+                private static final long serialVersionUID = 1L;
+            };
+	    }
+
 	}
 }
 
