@@ -30,6 +30,10 @@
 		<point>org.openmrs.admin.list</point>
 		<class>${project.parent.groupId}.${project.parent.artifactId}.extension.html.AdminList</class>
 	</extension>
+	<extension>
+        <point>org.openmrs.headerFull.userBar</point>
+        <class>org.openmrs.module.openhmis.inventory.extension.html.InventoryLinkExt</class>
+    </extension>
 	
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
@@ -74,34 +78,34 @@
 
 	<!--  Stock Rooms  -->
 	<privilege>
-		<name>View Inventory Stock Rooms</name>
+		<name>View Inventory Stockrooms</name>
 		<description>Able to view inventory stock rooms</description>
 	</privilege>
 
 	<privilege>
-		<name>Manage Inventory Stock Rooms</name>
+		<name>Manage Inventory Stockrooms</name>
 		<description>Able to add/edit/retire inventory stock rooms</description>
 	</privilege>
 
 	<privilege>
-		<name>Purge Inventory Stock Rooms</name>
+		<name>Purge Inventory Stockrooms</name>
 		<description>Able to purge inventory stock rooms</description>
 	</privilege>
 
 	<!--  Stock Room Transactions  -->
 	<privilege>
-		<name>View Inventory Transactions</name>
-		<description>Able to view inventory transactions</description>
+		<name>View Inventory Operations</name>
+		<description>Able to view inventory operations</description>
 	</privilege>
 
 	<privilege>
-		<name>Manage Inventory Transactions</name>
-		<description>Able to add/edit/retire inventory transactions</description>
+		<name>Manage Inventory Operations</name>
+		<description>Able to add/edit/retire inventory operations</description>
 	</privilege>
 
 	<privilege>
-		<name>Purge Inventory Transactions</name>
-		<description>Able to purge inventory transactions</description>
+		<name>Purge Inventory Operations</name>
+		<description>Able to purge inventory operations</description>
 	</privilege>
 
 	<!--  Metadata  -->
