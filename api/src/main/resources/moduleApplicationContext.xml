@@ -48,8 +48,8 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.openhmis.inventory.api.IStockRoomDataService</value>
-				<ref bean="invStockRoomDataService" />
+				<value>org.openmrs.module.openhmis.inventory.api.IStockroomDataService</value>
+				<ref bean="invStockroomDataService" />
 			</list>
 		</property>
 	</bean>
@@ -109,10 +109,10 @@
 		<property name="preInterceptors" ref="serviceInterceptors" />
 		<property name="transactionAttributeSource" ref="transactionAttributeSource" />
 	</bean>
-	<bean id="invStockRoomDataService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	<bean id="invStockroomDataService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target">
-			<bean class="org.openmrs.module.openhmis.inventory.api.impl.StockRoomDataServiceImpl">
+			<bean class="org.openmrs.module.openhmis.inventory.api.impl.StockroomDataServiceImpl">
 				<property name="repository" ref="genericRepository" />
 			</bean>
 		</property>

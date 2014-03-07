@@ -27,14 +27,14 @@ public class AdminList extends AdministrationSectionExt {
 	public Extension.MEDIA_TYPE getMediaType() {
 		return Extension.MEDIA_TYPE.html;
 	}
-	
+
 	/**
 	 * @see AdministrationSectionExt#getTitle()
 	 */
 	public String getTitle() {
 		return "openhmis.inventory.title";
 	}
-	
+
 	/**
 	 * @see AdministrationSectionExt#getLinks()
 	 */
@@ -44,7 +44,7 @@ public class AdminList extends AdministrationSectionExt {
 		map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
 		map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");
 		map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
-		map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockRooms");
+		map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
 
 		return map;
 	}

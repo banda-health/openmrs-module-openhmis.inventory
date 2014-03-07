@@ -8,7 +8,7 @@ public class DistributionOperationType extends StockOperationTypeBase {
 		executeCopyReserved(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
-				tx.setStockRoom(operation.getSource());
+				tx.setStockroom(operation.getSource());
 				tx.setPatient(operation.getPatient());
 
 				// Negate the quantity because the item stock needs to be removed from the source stockroom
@@ -22,7 +22,7 @@ public class DistributionOperationType extends StockOperationTypeBase {
 		executeCopyReservedAndClear(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
-				tx.setStockRoom(operation.getSource());
+				tx.setStockroom(operation.getSource());
 			}
 		});
 	}

@@ -27,7 +27,7 @@
 		<mapping resource="InvDepartment.hbm.xml" />
 		<mapping resource="InvCategory.hbm.xml" />
 		<mapping resource="InvItem.hbm.xml" />
-		<mapping resource="InvStockRoom.hbm.xml" />
+		<mapping resource="InvStockroom.hbm.xml" />
 
 		<!-- Import LazyRole mapping from commons -->
 		<mapping resource="LazyRole.hbm.xml" />

@@ -1,9 +1,9 @@
 <dataset>
-	<inv_stock_room stock_room_id="0" name="Test Stock Room 1" location_id="1"
+	<inv_stockroom stockroom_id="0" name="Test Stock Room 1" location_id="1"
 	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C2DA2D0000" />
-	<inv_stock_room stock_room_id="1" name="Test Stock Room 2"
+	<inv_stockroom stockroom_id="1" name="Test Stock Room 2"
 	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C533230002" />
-	<inv_stock_room stock_room_id="2" name="Test Stock Room 3"
+	<inv_stockroom stockroom_id="2" name="Test Stock Room 3"
 	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C53F5B0003" />
 
 	<inv_stock_operation_type stock_operation_type_id="0" name="Test Adjustment" operation_type="adjustment"

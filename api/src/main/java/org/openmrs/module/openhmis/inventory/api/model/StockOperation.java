@@ -31,8 +31,8 @@ public class StockOperation
 
 	private String operationNumber;
 	private Date operationDate;
-	protected StockRoom source;
-	protected StockRoom destination;
+	protected Stockroom source;
+	protected Stockroom destination;
 	protected Patient patient;
 
 	@Override
@@ -69,11 +69,11 @@ public class StockOperation
 		this.operationDate = operationDate;
 	}
 
-	public StockRoom getSource() {
+	public Stockroom getSource() {
 		return source;
 	}
 
-	public void setSource(StockRoom newSource) {
+	public void setSource(Stockroom newSource) {
 		if (this.source == newSource) {
 			return;
 		}
@@ -92,11 +92,11 @@ public class StockOperation
 		}
 	}
 
-	public StockRoom getDestination() {
+	public Stockroom getDestination() {
 		return destination;
 	}
 
-	public void setDestination(StockRoom newDestination) {
+	public void setDestination(Stockroom newDestination) {
 		if (this.destination == newDestination) {
 			return;
 		}

@@ -19,7 +19,7 @@ public class ReceiptOperationType extends StockOperationTypeBase {
 		executeCopyReservedAndClear(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
-				tx.setStockRoom(operation.getDestination());
+				tx.setStockroom(operation.getDestination());
 			}
 		});
 	}

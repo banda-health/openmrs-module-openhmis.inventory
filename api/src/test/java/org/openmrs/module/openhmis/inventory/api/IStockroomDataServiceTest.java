@@ -14,8 +14,8 @@ import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRoomDataService, StockRoom> {
-	public static final String DATASET = TestConstants.BASE_DATASET_DIR + "StockRoomTest.xml";
+public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockroomDataService, Stockroom> {
+	public static final String DATASET = TestConstants.BASE_DATASET_DIR + "StockroomTest.xml";
 
 	protected IItemDataService itemService;
 	protected IDepartmentDataService departmentService;
@@ -41,8 +41,8 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 	}
 
 	@Override
-	public StockRoom createEntity(boolean valid) {
-		StockRoom room = new StockRoom();
+	public Stockroom createEntity(boolean valid) {
+		Stockroom room = new Stockroom();
 
 		if (valid) {
 			room.setName("New Stock Room");
@@ -69,14 +69,14 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		room.addOperation(operation);
 
 		ItemStock roomItem = new ItemStock();
-		roomItem.setStockRoom(room);
+		roomItem.setStockroom(room);
 		roomItem.setItem(tx.getItem());
 		roomItem.setQuantity(5);
 
 		ItemStockDetail detail = new ItemStockDetail();
 		detail.setItemStock(roomItem);
 		detail.setItem(tx.getItem());
-		detail.setStockRoom(room);
+		detail.setStockroom(room);
 		detail.setBatchOperation(operation);
 		detail.setQuantity(5);
 
@@ -92,7 +92,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 	}
 
 	@Override
-	protected void updateEntityFields(StockRoom room) {
+	protected void updateEntityFields(Stockroom room) {
 		room.setName(room.getName() + "updated");
 		room.setDescription(room.getDescription() + "updated");
 		room.setLocation(Context.getLocationService().getLocation(0));
@@ -143,7 +143,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		}
 	}
 
-	public static void assertStockroom(StockRoom expected, StockRoom actual) {
+	public static void assertStockroom(Stockroom expected, Stockroom actual) {
 		assertOpenmrsMetadata(expected, actual);
 
 		Assert.assertEquals(expected.getName(), actual.getName());
@@ -176,7 +176,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 	public static void assertItemStock(ItemStock expected, ItemStock actual) {
 		assertOpenmrsObject(expected, actual);
 
-		Assert.assertEquals(expected.getStockRoom().getId(), actual.getStockRoom().getId());
+		Assert.assertEquals(expected.getStockroom().getId(), actual.getStockroom().getId());
 		Assert.assertEquals(expected.getItem().getId(), actual.getItem().getId());
 		Assert.assertEquals(expected.getQuantity(), actual.getQuantity());
 
@@ -197,7 +197,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 		Assert.assertEquals(expected.getItemStock(), actual.getItemStock());
 		Assert.assertEquals(expected.getItem(), actual.getItem());
-		Assert.assertEquals(expected.getStockRoom(), actual.getStockRoom());
+		Assert.assertEquals(expected.getStockroom(), actual.getStockroom());
 		Assert.assertEquals(expected.getItem(), actual.getItem());
 		Assert.assertEquals(expected.getQuantity(), actual.getQuantity());
 		Assert.assertEquals(expected.getExpiration(), actual.getExpiration());
@@ -207,17 +207,17 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 	}
 
 	@Override
-	protected void assertEntity(StockRoom expected, StockRoom actual) {
+	protected void assertEntity(Stockroom expected, Stockroom actual) {
 		assertStockroom(expected, actual);
 	}
 
 	/**
 	 * @verifies return items filtered by template and stock room
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsFilteredByTemplateAndStockRoom() throws Exception {
-		StockRoom stockRoom = service.getById(1);
+		Stockroom stockRoom = service.getById(1);
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
@@ -244,12 +244,12 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies not return items for other stock rooms
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldNotReturnItemsForOtherStockRooms() throws Exception {
-		StockRoom room0 = service.getById(0);
-		StockRoom room1 = service.getById(1);
+		Stockroom room0 = service.getById(0);
+		Stockroom room1 = service.getById(1);
 
 		ItemSearch search = new ItemSearch();
 		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.EQUAL);
@@ -273,11 +273,11 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return all found items if paging is null
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnAllFoundItemsIfPagingIsNull() throws Exception {
-		StockRoom stockRoom = service.getById(1);
+		Stockroom stockRoom = service.getById(1);
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
@@ -289,11 +289,11 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return paged items if paging is specified
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
-		StockRoom stockRoom = service.getById(1);
+		Stockroom stockRoom = service.getById(1);
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
@@ -307,7 +307,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return retired items from search unless specified
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
@@ -315,7 +315,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		itemService.retire(item, "Just cuz");
 		Context.flushSession();
 
-		StockRoom stockRoom = service.getById(1);
+		Stockroom stockRoom = service.getById(1);
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
@@ -332,7 +332,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies throw IllegalArgumentException if stock room is null
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfStockRoomIsNull() throws Exception {
@@ -341,21 +341,21 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies throw IllegalArgumentException if item search is null
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfItemSearchIsNull() throws Exception {
-		StockRoom stockRoom = service.getById(1);
+		Stockroom stockRoom = service.getById(1);
 		service.findItems(stockRoom, null, null);
 	}
 
 	/**
 	 * @verifies return the stock room item
-	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item)
+	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test
 	public void getItem_shouldReturnTheStockRoomItem() throws Exception {
-		StockRoom room = service.getById(1);
+		Stockroom room = service.getById(1);
 
 		ItemStock result = service.getItem(room, itemService.getById(0));
 		Assert.assertNotNull(result);
@@ -374,12 +374,12 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies not return items from other stock rooms
-	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item)
+	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test
 	public void getItem_shouldNotReturnItemsFromOtherStockRooms() throws Exception {
-		StockRoom room0 = service.getById(0);
-		StockRoom room1 = service.getById(1);
+		Stockroom room0 = service.getById(0);
+		Stockroom room1 = service.getById(1);
 
 		Item item = itemService.getById(2);
 
@@ -396,11 +396,11 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return null when item is not found
-	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item)
+	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test
 	public void getItem_shouldReturnNullWhenItemIsNotFound() throws Exception {
-		StockRoom room = service.getById(2);
+		Stockroom room = service.getById(2);
 
 		ItemStock result = service.getItem(room, itemService.getById(0));
 		Assert.assertNull(result);
@@ -408,7 +408,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies throw IllegalArgumentException when stock room is null
-	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item)
+	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getItem_shouldThrowIllegalArgumentExceptionWhenStockRoomIsNull() throws Exception {
@@ -417,21 +417,21 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies throw IllegalArgumentException when item is null
-	 * @see IStockRoomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item)
+	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getItem_shouldThrowIllegalArgumentExceptionWhenItemIsNull() throws Exception {
-		StockRoom room = service.getById(0);
+		Stockroom room = service.getById(0);
 		service.getItem(room, null);
 	}
 
 	/**
 	 * @verifies return all the items in the stock room ordered by item name
-	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void getItemsByRoom_shouldReturnAllTheItemsInTheStockRoomOrderedByItemName() throws Exception {
-		StockRoom stockRoom = service.getById(1);
+		Stockroom stockRoom = service.getById(1);
 		List<ItemStock> results = service.getItemsByRoom(stockRoom, null);
 
 		Assert.assertNotNull(results);
@@ -444,12 +444,12 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return an empty list if there are no items in the stock room
-	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void getItemsByRoom_shouldReturnAnEmptyListIfThereAreNoItemsInTheStockRoom() throws Exception {
 		// Create a new stockroom with no items
-		StockRoom stockRoom = createEntity(true);
+		Stockroom stockRoom = createEntity(true);
 		stockRoom.getItems().clear();
 		service.save(stockRoom);
 		Context.flushSession();
@@ -462,11 +462,11 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return paged items if paging is specified
-	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void getItemsByRoom_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
-		StockRoom stockRoom = service.getById(1);
+		Stockroom stockRoom = service.getById(1);
 		PagingInfo paging = new PagingInfo(1, 1);
 		List<ItemStock> results = service.getItemsByRoom(stockRoom, paging);
 
@@ -486,7 +486,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies throw IllegalArgumentException if the stock room is null
-	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getItemsByRoom_shouldThrowIllegalArgumentExceptionIfTheStockRoomIsNull() throws Exception {
@@ -495,18 +495,18 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return the stock room item detail
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void getStockroomItemDetail_shouldReturnTheStockRoomItemDetail() throws Exception {
 		Item item = itemService.getById(0);
-		StockRoom stockroom = service.getById(0);
+		Stockroom stockroom = service.getById(0);
 		StockOperation batchOperation = operationService.getById(0);
 
 		ItemStockDetail detail = service.getStockroomItemDetail(stockroom, item, null, batchOperation);
 
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(stockroom, detail.getStockRoom());
+		Assert.assertEquals(stockroom, detail.getStockroom());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(batchOperation, detail.getBatchOperation());
 		Assert.assertNull(detail.getExpiration());
@@ -515,27 +515,27 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies not return details for other stock rooms
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void getStockroomItemDetail_shouldNotReturnDetailsForOtherStockRooms() throws Exception {
 		Item item = itemService.getById(0);
-		StockRoom stockroom0 = service.getById(0);
-		StockRoom stockroom1 = service.getById(1);
+		Stockroom stockroom0 = service.getById(0);
+		Stockroom stockroom1 = service.getById(1);
 		StockOperation batchOperation = operationService.getById(0);
 
 		ItemStockDetail detail0 = service.getStockroomItemDetail(stockroom0, item, null, batchOperation);
 		ItemStockDetail detail1 = service.getStockroomItemDetail(stockroom1, item, null, batchOperation);
 
 		Assert.assertNotNull(detail0);
-		Assert.assertEquals(stockroom0, detail0.getStockRoom());
+		Assert.assertEquals(stockroom0, detail0.getStockroom());
 		Assert.assertEquals(item, detail0.getItem());
 		Assert.assertEquals(batchOperation, detail0.getBatchOperation());
 		Assert.assertNull(detail0.getExpiration());
 		Assert.assertEquals(4, detail0.getQuantity());
 
 		Assert.assertNotNull(detail1);
-		Assert.assertEquals(stockroom1, detail1.getStockRoom());
+		Assert.assertEquals(stockroom1, detail1.getStockroom());
 		Assert.assertEquals(item, detail1.getItem());
 		Assert.assertEquals(batchOperation, detail1.getBatchOperation());
 		Assert.assertNull(detail1.getExpiration());
@@ -546,12 +546,12 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return null when the details is not found
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void getStockroomItemDetail_shouldReturnNullWhenTheDetailsIsNotFound() throws Exception {
 		Item item = itemService.getById(0);
-		StockRoom stockroom = service.getById(0);
+		Stockroom stockroom = service.getById(0);
 
 		// This is not a valid batch operation
 		StockOperation batchOperation = operationService.getById(1);
@@ -563,13 +563,13 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return detail with expiration and batch when specified
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void getStockroomItemDetail_shouldReturnDetailWithExpirationAndBatchWhenSpecified() throws Exception {
 		// This is an item with an expiration
 		Item item = itemService.getById(2);
-		StockRoom stockroom = service.getById(0);
+		Stockroom stockroom = service.getById(0);
 		StockOperation batchOperation = operationService.getById(0);
 
 		ItemStock stock = service.getItem(stockroom, item);
@@ -584,7 +584,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		detail = service.getStockroomItemDetail(stockroom, item, stockDetail.getExpiration(), batchOperation);
 
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(stockroom, detail.getStockRoom());
+		Assert.assertEquals(stockroom, detail.getStockroom());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(batchOperation, detail.getBatchOperation());
 		Assert.assertEquals(stockDetail.getExpiration(), detail.getExpiration());
@@ -593,13 +593,13 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return detail without an expiration when not specified
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void getStockroomItemDetail_shouldReturnDetailWithoutAnExpirationWhenNotSpecified() throws Exception {
 		// This is an item with an expiration
 		Item item = itemService.getById(2);
-		StockRoom stockroom = service.getById(0);
+		Stockroom stockroom = service.getById(0);
 		StockOperation batchOperation = operationService.getById(0);
 
 		ItemStock stock = service.getItem(stockroom, item);
@@ -609,7 +609,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		// Add a new detail with a different expiration
 		ItemStockDetail newDetail = new ItemStockDetail();
 		newDetail.setBatchOperation(batchOperation);
-		newDetail.setStockRoom(stockroom);
+		newDetail.setStockroom(stockroom);
 		newDetail.setQuantity(10);
 		newDetail.setItem(item);
 		newDetail.setItemStock(stock);
@@ -625,7 +625,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		ItemStockDetail detail = service.getStockroomItemDetail(stockroom, item, stockDetail.getExpiration(), batchOperation);
 
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(stockroom, detail.getStockRoom());
+		Assert.assertEquals(stockroom, detail.getStockroom());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(batchOperation, detail.getBatchOperation());
 		Assert.assertEquals(stockDetail.getExpiration(), detail.getExpiration());
@@ -634,7 +634,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		// Check using a null expiration
 		detail = service.getStockroomItemDetail(stockroom, item, null, batchOperation);
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(stockroom, detail.getStockRoom());
+		Assert.assertEquals(stockroom, detail.getStockroom());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(batchOperation, detail.getBatchOperation());
 		Assert.assertEquals(newDetail.getExpiration(), detail.getExpiration());
@@ -643,12 +643,12 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return detail without a batch when not specified
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void getStockroomItemDetail_shouldReturnDetailWithoutABatchWhenNotSpecified() throws Exception {
 		Item item = itemService.getById(0);
-		StockRoom stockroom = service.getById(0);
+		Stockroom stockroom = service.getById(0);
 
 		ItemStock stock = service.getItem(stockroom, item);
 		ItemStockDetail stockDetail = Iterators.get(stock.getDetails().iterator(), 0);
@@ -656,7 +656,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		// Add a new detail with no batch
 		ItemStockDetail newDetail = new ItemStockDetail();
 		newDetail.setBatchOperation(null);
-		newDetail.setStockRoom(stockroom);
+		newDetail.setStockroom(stockroom);
 		newDetail.setQuantity(10);
 		newDetail.setItem(item);
 		newDetail.setItemStock(stock);
@@ -672,7 +672,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		ItemStockDetail detail = service.getStockroomItemDetail(stockroom, item, null, stockDetail.getBatchOperation());
 
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(stockroom, detail.getStockRoom());
+		Assert.assertEquals(stockroom, detail.getStockroom());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(stockDetail.getBatchOperation(), detail.getBatchOperation());
 		Assert.assertEquals(stockDetail.getExpiration(), detail.getExpiration());
@@ -681,7 +681,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		// Check using a null batch
 		detail = service.getStockroomItemDetail(stockroom, item, null, null);
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(stockroom, detail.getStockRoom());
+		Assert.assertEquals(stockroom, detail.getStockroom());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertNull(detail.getBatchOperation());
 		Assert.assertEquals(newDetail.getExpiration(), detail.getExpiration());
@@ -690,7 +690,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies throw IllegalArgumentException when stock room is null
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getStockroomItemDetail_shouldThrowIllegalArgumentExceptionWhenStockRoomIsNull() throws Exception {
@@ -702,11 +702,11 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies throw IllegalArgumentException when item is null
-	 * @see IStockRoomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getStockroomItemDetail_shouldThrowIllegalArgumentExceptionWhenItemIsNull() throws Exception {
-		StockRoom stockroom = service.getById(0);
+		Stockroom stockroom = service.getById(0);
 		StockOperation batchOperation = operationService.getById(0);
 
 		service.getStockroomItemDetail(stockroom, null, new Date(), batchOperation);
@@ -714,7 +714,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return item stock sorted by item name
-	 * @see IStockRoomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void getItemsByRoom_shouldReturnItemStockSortedByItemName() throws Exception {
@@ -748,20 +748,20 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		Context.flushSession();
 
 		// Add some item stock for those new items
-		StockRoom room = service.getById(2);
+		Stockroom room = service.getById(2);
 
 		ItemStock stockX = new ItemStock();
-		stockX.setStockRoom(room);
+		stockX.setStockroom(room);
 		stockX.setItem(newItemX);
 		stockX.setQuantity(10);
 
 		ItemStock stockA = new ItemStock();
-		stockA.setStockRoom(room);
+		stockA.setStockroom(room);
 		stockA.setItem(newItemA);
 		stockA.setQuantity(20);
 
 		ItemStock stockZ = new ItemStock();
-		stockZ.setStockRoom(room);
+		stockZ.setStockroom(room);
 		stockZ.setItem(newItemZ);
 		stockZ.setQuantity(30);
 
@@ -787,7 +787,7 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 
 	/**
 	 * @verifies return item stock sorted by item name
-	 * @see IStockRoomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.StockRoom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnItemStockSortedByItemName() throws Exception {
@@ -821,20 +821,20 @@ public class IStockRoomDataServiceTest extends IMetadataDataServiceTest<IStockRo
 		Context.flushSession();
 
 		// Add some item stock for those new items
-		StockRoom room = service.getById(2);
+		Stockroom room = service.getById(2);
 
 		ItemStock stockX = new ItemStock();
-		stockX.setStockRoom(room);
+		stockX.setStockroom(room);
 		stockX.setItem(newItemX);
 		stockX.setQuantity(10);
 
 		ItemStock stockA = new ItemStock();
-		stockA.setStockRoom(room);
+		stockA.setStockroom(room);
 		stockA.setItem(newItemA);
 		stockA.setQuantity(20);
 
 		ItemStock stockZ = new ItemStock();
-		stockZ.setStockRoom(room);
+		stockZ.setStockroom(room);
 		stockZ.setItem(newItemZ);
 		stockZ.setQuantity(30);
 

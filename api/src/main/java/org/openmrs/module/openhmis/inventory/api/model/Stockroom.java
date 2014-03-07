@@ -19,10 +19,10 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpen
 import java.util.Set;
 import java.util.TreeSet;
 
-public class StockRoom extends BaseSerializableOpenmrsMetadata {
+public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 1L;
 
-	private Integer stockRoomId;
+	private Integer stockroomId;
 	private Location location;
 	private Set<ItemStock> items;
 	private Set<StockOperation> operations;
@@ -33,7 +33,7 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 	 */
 	@Override
 	public Integer getId() {
-		return stockRoomId;
+		return stockroomId;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 	 */
 	@Override
 	public void setId(Integer id) {
-		stockRoomId = id;
+		stockroomId = id;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 				items = new TreeSet<ItemStock>();
 			}
 
-			item.setStockRoom(this);
+			item.setStockroom(this);
 			items.add(item);
 		}
 	}
@@ -110,7 +110,7 @@ public class StockRoom extends BaseSerializableOpenmrsMetadata {
 				return;
 			}
 
-			item.setStockRoom(null);
+			item.setStockroom(null);
 			items.remove(item);
 		}
 	}

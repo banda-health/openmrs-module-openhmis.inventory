@@ -15,7 +15,7 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.search.ItemStockSearchHandler;
@@ -44,7 +44,7 @@ public class ItemStockResource extends BaseRestObjectResource<ItemStock> {
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("stockRoom", Representation.DEFAULT);
+			description.addProperty("stockroom", Representation.DEFAULT);
 			description.addProperty("item", Representation.DEFAULT);
 			description.addProperty("quantity", Representation.DEFAULT);
 			description.addProperty("details", Representation.DEFAULT);
@@ -55,7 +55,7 @@ public class ItemStockResource extends BaseRestObjectResource<ItemStock> {
 
 	@Override
 	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-		return ItemStockSearchHandler.doSearch(Context.getService(IStockRoomDataService.class), context);
+		return ItemStockSearchHandler.doSearch(Context.getService(IStockroomDataService.class), context);
 	}
 }
 

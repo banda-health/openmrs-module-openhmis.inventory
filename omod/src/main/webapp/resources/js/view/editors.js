@@ -43,8 +43,8 @@ define(
 			displayAttr: "price"
 		});
 
-		editors.StockRoomSelect = editors.GenericModelSelect.extend({
-			modelType: openhmis.StockRoom,
+		editors.StockroomSelect = editors.GenericModelSelect.extend({
+			modelType: openhmis.Stockroom,
 			displayAttr: "name",
 			allowNull: true
 		});

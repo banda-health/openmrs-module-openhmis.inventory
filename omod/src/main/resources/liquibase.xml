@@ -164,8 +164,8 @@
 			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
-		<createTable tableName="inv_stock_room">
-			<column name="stock_room_id" autoIncrement="true" type="int">
+		<createTable tableName="inv_stockroom">
+			<column name="stockroom_id" autoIncrement="true" type="int">
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
 			<column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
@@ -188,11 +188,11 @@
 			<column name="retire_reason" type="varchar(255)"/>
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
-		<createTable tableName="inv_stock_room_item">
-			<column name="stock_room_item_id" autoIncrement="true" type="int">
+		<createTable tableName="inv_stockroom_item">
+			<column name="stockroom_item_id" autoIncrement="true" type="int">
 				<constraints nullable="false" primaryKey="true"/>
 			</column>
-			<column name="stock_room_id" type="int"><constraints nullable="false" /></column>
+			<column name="stockroom_id" type="int"><constraints nullable="false" /></column>
 			<column name="batch_operation_id" type="int" />
 			<column name="item_id" type="int"><constraints nullable="false" /></column>
 			<column name="quantity" type="int"><constraints nullable="false"/></column>
@@ -341,8 +341,8 @@
 			<column name="parent_id"/>
 			<column name="retired" />
 		</createIndex>
-		<createIndex indexName="inv_stock_room_item_item_idx" tableName="inv_stock_room_item" unique="true">
-			<column name="stock_room_id"/>
+		<createIndex indexName="inv_stockroom_item_item_idx" tableName="inv_stockroom_item" unique="true">
+			<column name="stockroom_id"/>
 			<column name="item_id" />
 		</createIndex>
 		<createIndex indexName="inv_stock_operation_attribute_type_idx" tableName="inv_stock_operation_attribute_type" unique="false">
@@ -460,27 +460,27 @@
 		                         referencedTableName="inv_category" referencedColumnNames="category_id"
 		                         onDelete="CASCADE" onUpdate="CASCADE"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_location_fk"
-		                         baseTableName="inv_stock_room" baseColumnNames="location_id"
+		<addForeignKeyConstraint constraintName="inv_stockroom_location_fk"
+		                         baseTableName="inv_stockroom" baseColumnNames="location_id"
 		                         referencedTableName="location" referencedColumnNames="location_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_creator_fk"
-		                         baseTableName="inv_stock_room" baseColumnNames="creator"
+		<addForeignKeyConstraint constraintName="inv_stockroom_creator_fk"
+		                         baseTableName="inv_stockroom" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_changed_by_fk"
-		                         baseTableName="inv_stock_room" baseColumnNames="changed_by"
+		<addForeignKeyConstraint constraintName="inv_stockroom_changed_by_fk"
+		                         baseTableName="inv_stockroom" baseColumnNames="changed_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_retired_by_fk"
-		                         baseTableName="inv_stock_room" baseColumnNames="retired_by"
+		<addForeignKeyConstraint constraintName="inv_stockroom_retired_by_fk"
+		                         baseTableName="inv_stockroom" baseColumnNames="retired_by"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_stock_room_item_stock_room_fk"
-		                         baseTableName="inv_stock_room_item" baseColumnNames="stock_room_id"
-		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_item_item_fk"
-		                         baseTableName="inv_stock_room_item" baseColumnNames="item_id"
+		<addForeignKeyConstraint constraintName="inv_stockroom_item_stockroom_fk"
+		                         baseTableName="inv_stockroom_item" baseColumnNames="stockroom_id"
+		                         referencedTableName="inv_stockroom" referencedColumnNames="stockroom_id"/>
+		<addForeignKeyConstraint constraintName="inv_stockroom_item_item_fk"
+		                         baseTableName="inv_stockroom_item" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_room_item_batch_operation_fk"
-		                         baseTableName="inv_stock_room_item" baseColumnNames="batch_operation_id"
+		<addForeignKeyConstraint constraintName="inv_stockroom_item_batch_operation_fk"
+		                         baseTableName="inv_stockroom_item" baseColumnNames="batch_operation_id"
 		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
 
 		<addForeignKeyConstraint constraintName="inv_stock_operation_operation_type_fk"
@@ -488,10 +488,10 @@
 		                         referencedTableName="inv_stock_operation_type" referencedColumnNames="stock_operation_type_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_operation_source_fk"
 		                         baseTableName="inv_stock_operation" baseColumnNames="source_id"
-		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
+		                         referencedTableName="inv_stockroom" referencedColumnNames="stockroom_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_operation_destination_fk"
 		                         baseTableName="inv_stock_operation" baseColumnNames="destination_id"
-		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
+		                         referencedTableName="inv_stockroom" referencedColumnNames="stockroom_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_operation_patient_id_fk"
 		                         baseTableName="inv_stock_operation" baseColumnNames="patient_id"
 		                         referencedTableName="patient" referencedColumnNames="patient_id"/>
@@ -563,7 +563,7 @@
 
 		<addForeignKeyConstraint constraintName="inv_stock_operations_stockroom_fk"
 		                         baseTableName="inv_stockroom_operations" baseColumnNames="stockroom_id"
-		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
+		                         referencedTableName="inv_stockroom" referencedColumnNames="stockroom_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_operations_operation_fk"
 		                         baseTableName="inv_stockroom_operations" baseColumnNames="operation_id"
 		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
@@ -691,14 +691,14 @@
 
 		<addForeignKeyConstraint constraintName="inv_item_stock_stockroom_fk"
 		                         baseTableName="inv_item_stock" baseColumnNames="stockroom_id"
-		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
+		                         referencedTableName="inv_stockroom" referencedColumnNames="stockroom_id"/>
 		<addForeignKeyConstraint constraintName="inv_item_stock_item_fk"
 		                         baseTableName="inv_item_stock" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
 
 		<addForeignKeyConstraint constraintName="inv_item_stock_detail_stockroom_fk"
 		                         baseTableName="inv_item_stock" baseColumnNames="stockroom_id"
-		                         referencedTableName="inv_stock_room" referencedColumnNames="stock_room_id"/>
+		                         referencedTableName="inv_stockroom" referencedColumnNames="stockroom_id"/>
 		<addForeignKeyConstraint constraintName="inv_item_stock_detail_item_fk"
 		                         baseTableName="inv_item_stock_detail" baseColumnNames="item_id"
 		                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
@@ -706,7 +706,7 @@
 		                         baseTableName="inv_item_stock_detail" baseColumnNames="batch_operation_id"
 		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
 
-		<dropTable tableName="inv_stock_room_item" />
+		<dropTable tableName="inv_stockroom_item" />
 
 		<addColumn tableName="inv_transaction">
 			<column name="batch_operation_id" type="int" />

@@ -8,7 +8,7 @@ import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,8 +85,8 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	StockOperation getOperationByNumber(String operationNumber) throws IllegalArgumentException, APIException;
 
 	/**
-	 * Returns the {@link StockOperation}s for the specified {@link StockRoom}.
-	 * @param stockroom The {@link StockRoom} that the transactions occurred in.
+	 * Returns the {@link StockOperation}s for the specified {@link Stockroom}.
+	 * @param stockroom The {@link Stockroom} that the transactions occurred in.
 	 * @param paging The paging information or {@code null} to return all results.
 	 * @return The operations for the specified stock room.
 	 * @should return operations for specified room
@@ -98,7 +98,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS})
-	List<StockOperation> getOperationsByRoom(StockRoom stockroom, PagingInfo paging) throws IllegalArgumentException, APIException;
+	List<StockOperation> getOperationsByRoom(Stockroom stockroom, PagingInfo paging) throws IllegalArgumentException, APIException;
 
 	/**
 	 * Returns the {@link StockOperation}s that are associated with the specified user.

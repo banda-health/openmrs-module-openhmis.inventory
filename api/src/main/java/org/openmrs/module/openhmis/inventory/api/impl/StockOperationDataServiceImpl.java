@@ -32,7 +32,7 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetad
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
@@ -47,11 +47,11 @@ public class StockOperationDataServiceImpl
 	// This is the object that will provide the synchronization
 	private static final UUID OPERATION_LOCK = UUID.randomUUID();
 
-	private IStockRoomDataService stockroomService;
+	private IStockroomDataService stockroomService;
 	private IItemStockDataService itemStockService;
 
 	@Autowired
-	public StockOperationDataServiceImpl(IStockRoomDataService stockroomService,
+	public StockOperationDataServiceImpl(IStockroomDataService stockroomService,
 	                                     IItemStockDataService itemStockService) {
 		this.stockroomService = stockroomService;
 		this.itemStockService = itemStockService;
@@ -156,15 +156,15 @@ public class StockOperationDataServiceImpl
 			//  any existing stockroom objects must be refreshed before the data updated below will be seen.
 
 			// Create a map to store the tx grouped by item and stockroom
-			Map<Pair<Item, StockRoom>, List<StockOperationTransaction>> grouped = createGroupedTransactions(transactions);
+			Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> grouped = createGroupedTransactions(transactions);
 
-			for (Pair<Item, StockRoom> key : grouped.keySet()) {
+			for (Pair<Item, Stockroom> key : grouped.keySet()) {
 				Item item = key.getValue0();
-				StockRoom stockRoom = key.getValue1();
+				Stockroom stockroom = key.getValue1();
 				List<StockOperationTransaction> itemTxs = grouped.get(key);
 
 				// Get the item stock from the stockroom
-				ItemStock stock = stockroomService.getItem(stockRoom, item);
+				ItemStock stock = stockroomService.getItem(stockroom, item);
 
 				// For each item transaction
 				int totalQty = 0;
@@ -176,7 +176,7 @@ public class StockOperationDataServiceImpl
 					if (stock == null) {
 						// Item stock does not exist so create it and then create detail
 						stock = new ItemStock();
-						stock.setStockRoom(tx.getStockRoom());
+						stock.setStockroom(tx.getStockroom());
 						stock.setItem(tx.getItem());
 						stock.setQuantity(0);
 
@@ -238,7 +238,7 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public List<StockOperation> getOperationsByRoom(final StockRoom stockroom, PagingInfo paging) {
+	public List<StockOperation> getOperationsByRoom(final Stockroom stockroom, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
@@ -343,7 +343,7 @@ public class StockOperationDataServiceImpl
 	}
 
 	/**
-	 * THIS SHOULD NOT BE CALLED FROM USER CODE - Code to the interface ({@link IStockRoomDataService}) not this class.
+	 * THIS SHOULD NOT BE CALLED FROM USER CODE - Code to the interface ({@link IStockroomDataService}) not this class.
 	 *
 	 * Calculates the reservation details for the specified {@link StockOperation}. This includes any calculating any
 	 * qualifiers and checking on the details of the source stockroom to create all required transactions to fulfill the
@@ -396,7 +396,7 @@ public class StockOperationDataServiceImpl
 			store copies of the item stock detail and then these copies are then updated so that a running tally can be kept
 			of what is actually available when processing a specific transaction without modifying the actual detail records.
 		 */
-		Map<Pair<StockRoom, Item>, ItemStock> stockMap = new HashMap<Pair<StockRoom, Item>, ItemStock>();
+		Map<Pair<Stockroom, Item>, ItemStock> stockMap = new HashMap<Pair<Stockroom, Item>, ItemStock>();
 		List<ReservedTransaction> newTransactions = new ArrayList<ReservedTransaction>();
 		boolean hasSource = operation.getSource() != null;
 
@@ -588,8 +588,8 @@ public class StockOperationDataServiceImpl
 		return results;
 	}
 
-	private ItemStock findAndCloneStock(Map<Pair<StockRoom, Item>, ItemStock> workingMap, StockRoom stockroom, Item item) {
-		Pair<StockRoom, Item> pair = Pair.with(stockroom, item);
+	private ItemStock findAndCloneStock(Map<Pair<Stockroom, Item>, ItemStock> workingMap, Stockroom stockroom, Item item) {
+		Pair<Stockroom, Item> pair = Pair.with(stockroom, item);
 
 		ItemStock stock = workingMap.get(pair);
 		if(stock == null) {
@@ -647,14 +647,14 @@ public class StockOperationDataServiceImpl
 		});
 	}
 
-	private Map<Pair<Item, StockRoom>, List<StockOperationTransaction>> createGroupedTransactions(StockOperationTransaction[] transactions) {
-		Map<Pair<Item, StockRoom>, List<StockOperationTransaction>> grouped = new HashMap<Pair<Item, StockRoom>, List<StockOperationTransaction>>();
+	private Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> createGroupedTransactions(StockOperationTransaction[] transactions) {
+		Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> grouped = new HashMap<Pair<Item, Stockroom>, List<StockOperationTransaction>>();
 		for (StockOperationTransaction tx : transactions) {
 			if (tx == null) {
 				continue;
 			}
 
-			Pair<Item, StockRoom> key = Pair.with(tx.getItem(), tx.getStockRoom());
+			Pair<Item, Stockroom> key = Pair.with(tx.getItem(), tx.getStockroom());
 			if (!grouped.containsKey(key)) {
 				grouped.put(key, new ArrayList<StockOperationTransaction>());
 			}
@@ -679,7 +679,7 @@ public class StockOperationDataServiceImpl
 		}
 
 		detail.setItemStock(stock);
-		detail.setStockRoom(stock.getStockRoom());
+		detail.setStockroom(stock.getStockroom());
 		detail.setItem(stock.getItem());
 		detail.setExpiration(null);
 		detail.setBatchOperation(null);

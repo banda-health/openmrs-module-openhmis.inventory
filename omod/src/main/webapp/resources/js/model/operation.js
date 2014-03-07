@@ -17,7 +17,7 @@ define(
         openhmis.url.backboneBase + 'js/lib/i18n',
         openhmis.url.backboneBase + 'js/model/generic',
 	    openhmis.url.backboneBase + 'js/model/user',
-	    openhmis.url.inventoryBase + 'js/model/stockRoom',
+	    openhmis.url.inventoryBase + 'js/model/stockroom',
 	    openhmis.url.inventoryBase + 'js/view/editors'
     ],
     function(openhmis, __) {
@@ -26,7 +26,7 @@ define(
 			    name: __("Operation Type"),
 			    namePlural: __("Operation Types"),
 			    openmrsType: 'metadata',
-			    restUrl: openhmis.url.inventoryModelBase + 'stockRoomTransactionType'
+			    restUrl: openhmis.url.inventoryModelBase + 'stockroomTransactionType'
 		    },
 
 		    schema: {
@@ -84,10 +84,10 @@ define(
 			    calculatedExpiration: {type: 'checkbox'},
 			    calculatedBatch: {type: 'checkbox'},
 			    stockroom: {
-				    type: 'StockRoomSelect',
+				    type: 'StockroomSelect',
 				    options: new openhmis.GenericCollection(null, {
-					    model: openhmis.StockRoom,
-					    url: openhmis.url.inventoryModelBase + '/stockRoom'
+					    model: openhmis.Stockroom,
+					    url: openhmis.url.inventoryModelBase + '/stockroom'
 				    }),
 				    objRef: true
 			    },
@@ -126,18 +126,18 @@ define(
 	            reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
 	            transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
 	            source: {
-		            type: 'StockRoomSelect',
+		            type: 'StockroomSelect',
 		            options: new openhmis.GenericCollection(null, {
-			            model: openhmis.StockRoom,
-			            url: openhmis.url.inventoryModelBase + '/stockRoom'
+			            model: openhmis.Stockroom,
+			            url: openhmis.url.inventoryModelBase + '/stockroom'
 		            }),
 		            objRef: true
 	            },
 	            destination: {
-		            type: 'StockRoomSelect',
+		            type: 'StockroomSelect',
 		            options: new openhmis.GenericCollection(null, {
-			            model: openhmis.StockRoom,
-			            url: openhmis.url.inventoryModelBase + '/stockRoom'
+			            model: openhmis.Stockroom,
+			            url: openhmis.url.inventoryModelBase + '/stockroom'
 		            }),
 		            objRef: true
 	            },

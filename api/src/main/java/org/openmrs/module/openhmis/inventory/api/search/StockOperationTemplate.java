@@ -15,16 +15,16 @@ package org.openmrs.module.openhmis.inventory.api.search;
 
 import org.openmrs.Patient;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
 public class StockOperationTemplate extends StockOperation {
 	@Override
-	public void setSource(StockRoom newSource) {
+	public void setSource(Stockroom newSource) {
 		this.source = newSource;
 	}
 
 	@Override
-	public void setDestination(StockRoom newDestination) {
+	public void setDestination(Stockroom newDestination) {
 		this.destination = newDestination;
 	}
 

@@ -36,8 +36,8 @@
     </openmrs:hasPrivilege>
     <openmrs:hasPrivilege privilege="<%= PrivilegeConstants.STOCKROOM_PAGE_PRIVILEGES %>">
         <li>
-            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/stockRooms.form">
-                <openmrs:message code="openhmis.inventory.admin.stockRooms"/>
+            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/stockrooms.form">
+                <openmrs:message code="openhmis.inventory.admin.stockrooms"/>
             </a>
         </li>
     </openmrs:hasPrivilege>

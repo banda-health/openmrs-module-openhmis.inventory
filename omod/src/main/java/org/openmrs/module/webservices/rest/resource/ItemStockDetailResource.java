@@ -13,7 +13,7 @@ public class ItemStockDetailResource extends BaseRestObjectResource<ItemStockDet
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description =  super.getRepresentationDescription(rep);
 		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("stockRoom", Representation.DEFAULT);
+			description.addProperty("stockroom", Representation.DEFAULT);
 			description.addProperty("item", Representation.DEFAULT);
 			description.addProperty("expiration", Representation.DEFAULT);
 			description.addProperty("batchOperation", Representation.DEFAULT);

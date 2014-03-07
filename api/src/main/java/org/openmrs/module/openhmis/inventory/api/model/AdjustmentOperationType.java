@@ -8,7 +8,7 @@ public class AdjustmentOperationType extends StockOperationTypeBase {
 		executeCopyReserved(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
-				tx.setStockRoom(operation.getSource());
+				tx.setStockroom(operation.getSource());
 
 				// Note that the quantity is NOT negated here because the adjustment quantity is the difference
 			}
@@ -20,7 +20,7 @@ public class AdjustmentOperationType extends StockOperationTypeBase {
 		executeCopyReservedAndClear(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
-				tx.setStockRoom(operation.getSource());
+				tx.setStockroom(operation.getSource());
 
 				// Negate the quantity because we want to undo the previously applied quantity difference
 				tx.setQuantity(tx.getQuantity() * -1);

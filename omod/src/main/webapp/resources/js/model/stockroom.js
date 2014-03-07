@@ -19,12 +19,12 @@ define(
 		openhmis.url.backboneBase + 'js/model/location'
 	],
 	function(openhmis, __) {
-		openhmis.StockRoom = openhmis.GenericModel.extend({
+		openhmis.Stockroom = openhmis.GenericModel.extend({
 			meta: {
 				name: __("Stock Room"),
 				namePlural: __("Stock Rooms"),
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'stockRoom'
+				restUrl: openhmis.url.inventoryModelBase + 'stockroom'
 			},
 			
 			schema: {
@@ -58,11 +58,11 @@ define(
 			},
 
 			schema: {
-				stockRoom: {
-					type: 'StockRoomSelect',
+				stockroom: {
+					type: 'StockroomSelect',
 					options: new openhmis.GenericCollection(null, {
-						model: openhmis.StockRoom,
-						url: openhmis.url.inventoryModelBase + '/stockRoom'
+						model: openhmis.Stockroom,
+						url: openhmis.url.inventoryModelBase + '/stockroom'
 					}),
 					objRef: true
 				},
@@ -92,8 +92,8 @@ define(
 					if (resp.item && _.isObject(resp.item)) {
 						resp.item = new openhmis.Item(resp.item);
 					}
-					if (resp.stockRoom && _.isObject(resp.stockRoom)) {
-						resp.stockRoom = new openhmis.StockRoom(resp.stockRoom);
+					if (resp.stockroom && _.isObject(resp.stockroom)) {
+						resp.stockroom = new openhmis.Stockroom(resp.stockroom);
 					}
 				}
 
@@ -114,11 +114,11 @@ define(
 			},
 
 			schema: {
-				stockRoom: {
-					type: 'StockRoomSelect',
+				stockroom: {
+					type: 'StockroomSelect',
 					options: new openhmis.GenericCollection(null, {
-						model: openhmis.StockRoom,
-						url: openhmis.url.inventoryModelBase + '/stockRoom'
+						model: openhmis.Stockroom,
+						url: openhmis.url.inventoryModelBase + '/stockroom'
 					}),
 					objRef: true
 				},

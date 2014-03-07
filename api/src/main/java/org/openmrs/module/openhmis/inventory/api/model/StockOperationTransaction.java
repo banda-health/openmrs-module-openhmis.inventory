@@ -5,7 +5,7 @@ import org.openmrs.Patient;
 public class StockOperationTransaction extends TransactionBase {
 	public static final long serialVersionUID = 0L;
 
-	private StockRoom stockRoom;
+	private Stockroom stockroom;
 	private Patient patient;
 
 	public StockOperationTransaction() {	}
@@ -14,12 +14,12 @@ public class StockOperationTransaction extends TransactionBase {
 		super(tx);
 	}
 
-	public StockRoom getStockRoom() {
-		return stockRoom;
+	public Stockroom getStockroom() {
+		return stockroom;
 	}
 
-	public void setStockRoom(StockRoom stockRoom) {
-		this.stockRoom = stockRoom;
+	public void setStockroom(Stockroom stockroom) {
+		this.stockroom = stockroom;
 	}
 
 	public Patient getPatient() {

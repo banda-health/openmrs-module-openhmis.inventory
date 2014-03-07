@@ -27,8 +27,8 @@ public class ItemStock extends BaseOpenmrsObject
 	implements Comparable<ItemStock> {
 	public static final long serialVersionUID = 1L;
 
-	private Integer stockRoomItemId;
-	private StockRoom stockRoom;
+	private Integer stockroomItemId;
+	private Stockroom stockroom;
 	private Item item;
 	private int quantity;
 	private Set<ItemStockDetail> details;
@@ -36,7 +36,7 @@ public class ItemStock extends BaseOpenmrsObject
 	public ItemStock() {}
 
 	public ItemStock(ItemStock base) {
-		this.stockRoom = base.stockRoom;
+		this.stockroom = base.stockroom;
 		this.item = base.item;
 		this.quantity = base.quantity;
 
@@ -51,20 +51,20 @@ public class ItemStock extends BaseOpenmrsObject
 
 	@Override
 	public Integer getId() {
-		return stockRoomItemId;
+		return stockroomItemId;
 	}
 
 	@Override
 	public void setId(Integer id) {
-		stockRoomItemId = id;
+		stockroomItemId = id;
 	}
 
-	public StockRoom getStockRoom() {
-		return stockRoom;
+	public Stockroom getStockroom() {
+		return stockroom;
 	}
 
-	public void setStockRoom(StockRoom stockRoom) {
-		this.stockRoom = stockRoom;
+	public void setStockroom(Stockroom stockroom) {
+		this.stockroom = stockroom;
 	}
 
 	public Item getItem() {

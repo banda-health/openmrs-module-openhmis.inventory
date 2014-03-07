@@ -19,7 +19,7 @@ import java.util.Date;
 
 public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiveTest {
 	IItemDataService itemDataService;
-	IStockRoomDataService stockRoomDataService;
+	IStockroomDataService stockroomDataService;
 	IItemStockDataService itemStockDataService;
 	ITestableStockOperationDataService service;
 
@@ -29,9 +29,9 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	public void before() throws Exception {
 		executeDataSet(TestConstants.CORE_DATASET);
 		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
-		executeDataSet(IStockRoomDataServiceTest.DATASET);
+		executeDataSet(IStockroomDataServiceTest.DATASET);
 
-		stockRoomDataService = Context.getService(IStockRoomDataService.class);
+		stockroomDataService = Context.getService(IStockroomDataService.class);
 		itemDataService = Context.getService(IItemDataService.class);
 		itemStockDataService = Context.getService(IItemStockDataService.class);
 		service = Context.getService(ITestableStockOperationDataService.class);
@@ -55,8 +55,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldUseClosestExpirationFromTheSourceStockRoom() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item item0 = itemDataService.getById(0);
 		Item item2 = itemDataService.getById(2);
@@ -64,7 +64,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item2);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
@@ -75,7 +75,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item2);
-		detail2.setStockRoom(sourceRoom);
+		detail2.setStockroom(sourceRoom);
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
@@ -84,7 +84,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar2.add(Calendar.YEAR, 1);
 		detail2.setExpiration(calendar2.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, item2);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item2);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
 
@@ -139,15 +139,15 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldUseOldestBatchOperationWithTheCalculatedExpiration() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item item0 = itemDataService.getById(0);
 
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item0);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
@@ -155,13 +155,13 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item0);
-		detail2.setStockRoom(sourceRoom);
+		detail2.setStockroom(sourceRoom);
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
 		detail2.setBatchOperation(service.getById(1));
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, item0);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item0);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
 
@@ -197,8 +197,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheExpirationToNullIfNoValidItemStockCanBeFound() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -231,8 +231,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheBatchToNullIfNoValidItemStockCanBeFound() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -274,15 +274,15 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldUseDateAndTimeForExpirationCalculation() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item item2 = itemDataService.getById(2);
 
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item2);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
@@ -293,7 +293,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item2);
-		detail2.setStockRoom(sourceRoom);
+		detail2.setStockroom(sourceRoom);
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
@@ -305,7 +305,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 		ItemStockDetail detail3 = new ItemStockDetail();
 		detail3.setItem(item2);
-		detail3.setStockRoom(sourceRoom);
+		detail3.setStockroom(sourceRoom);
 		detail3.setQuantity(20);
 		detail3.setCalculatedBatch(false);
 		detail3.setCalculatedExpiration(false);
@@ -314,7 +314,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar3.add(Calendar.YEAR, 1);
 		detail3.setExpiration(calendar3.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, item2);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item2);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
 		stock2.addDetail(detail3);
@@ -351,15 +351,15 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldCreateAdditionalTransactionsWhenWhenMultipleDetailsAreNeedToFulfillRequest() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item item2 = itemDataService.getById(2);
 
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item2);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
@@ -370,7 +370,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item2);
-		detail2.setStockRoom(sourceRoom);
+		detail2.setStockroom(sourceRoom);
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
@@ -379,7 +379,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar2.add(Calendar.YEAR, 1);
 		detail2.setExpiration(calendar2.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, item2);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item2);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
 
@@ -434,8 +434,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldCreateAdditionalNullQualifierTransactionWhenThereIsNotEnoughValidItemStockToFulfillRequest() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -445,7 +445,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
-		stock.setStockRoom(sourceRoom);
+		stock.setStockroom(sourceRoom);
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
@@ -453,7 +453,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		ItemStockDetail detail1 = new ItemStockDetail();
 		stock.addDetail(detail1);
 		detail1.setItem(newItem);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
@@ -516,8 +516,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldCopySourceCalculationSettingsIntoSourceCalculationFields() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -527,14 +527,14 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
-		stock.setStockRoom(sourceRoom);
+		stock.setStockroom(sourceRoom);
 		stock.setQuantity(100);
 		itemStockDataService.save(stock);
 		Context.flushSession();
 
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(100);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(true);
@@ -543,7 +543,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, newItem);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
 
 		itemStockDataService.save(stock2);
@@ -577,8 +577,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test(expected = APIException.class)
 	public void calculateReservations_shouldThrowAPIExceptionIfCalculateExpirationIsFalseAndExpirationIsNullForAnExpirableItem() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -604,7 +604,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheBatchOperationToTheSpecifiedOperationIfThereIsNoSourceStockroom() throws Exception {
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		Context.flushSession();
@@ -634,7 +634,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test(expected = APIException.class)
 	public void calculateReservations_shouldThrowAPIExceptionIfSourceStockroomIsNullAndTheExpirationAreNotSpecifiedForAnExpirableItem() throws Exception {
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -659,8 +659,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldCombineTransactionsForTheSameItemStockAndQualifiers() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -671,14 +671,14 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
-		stock.setStockRoom(sourceRoom);
+		stock.setStockroom(sourceRoom);
 		stock.setQuantity(100);
 		itemStockDataService.save(stock);
 		Context.flushSession();
 
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(100);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(true);
@@ -687,7 +687,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, newItem);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
 
 		itemStockDataService.save(stock2);
@@ -724,8 +724,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldHandleMultipleTransactionsForTheSameItemButWithDifferentQualifiers() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -735,7 +735,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
-		stock.setStockRoom(sourceRoom);
+		stock.setStockroom(sourceRoom);
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
@@ -743,7 +743,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		ItemStockDetail detail1 = new ItemStockDetail();
 		stock.addDetail(detail1);
 		detail1.setItem(newItem);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
@@ -815,8 +815,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheTransactionSourceCalculatedFlagsIfTheSourceWasCalculated() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -826,14 +826,14 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
-		stock.setStockRoom(sourceRoom);
+		stock.setStockroom(sourceRoom);
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
 
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(true);
 		detail1.setCalculatedExpiration(true);
@@ -842,7 +842,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, newItem);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
 
 		itemStockDataService.save(stock2);
@@ -878,8 +878,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldProcessNoncalculatedTransactionsBeforeCalculatedTransactions() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
@@ -889,14 +889,14 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
-		stock.setStockRoom(sourceRoom);
+		stock.setStockroom(sourceRoom);
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
 
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
-		detail1.setStockRoom(sourceRoom);
+		detail1.setStockroom(sourceRoom);
 		detail1.setQuantity(20);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
@@ -907,7 +907,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(newItem);
-		detail2.setStockRoom(sourceRoom);
+		detail2.setStockroom(sourceRoom);
 		detail2.setQuantity(10);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
@@ -916,7 +916,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		calendar2.add(Calendar.YEAR, 10);
 		detail2.setExpiration(calendar2.getTime());
 
-		ItemStock stock2 = stockRoomDataService.getItem(sourceRoom, newItem);
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
 
@@ -976,8 +976,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	 */
 	@Test
 	public void calculateReservations_shouldSetBatchOperationToPastOperationsBeforeFutureOperations() throws Exception {
-		StockRoom sourceRoom = stockRoomDataService.getById(0);
-		StockRoom destRoom = stockRoomDataService.getById(1);
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
 		Context.flushSession();

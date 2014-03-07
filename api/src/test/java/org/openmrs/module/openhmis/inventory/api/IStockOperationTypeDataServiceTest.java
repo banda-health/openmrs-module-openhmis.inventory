@@ -13,7 +13,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 		super.before();
 
 		executeDataSet(TestConstants.CORE_DATASET);
-		executeDataSet(IStockRoomDataServiceTest.DATASET);
+		executeDataSet(IStockroomDataServiceTest.DATASET);
 	}
 
 	@Override

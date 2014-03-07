@@ -23,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 
-@Controller(value="invStockRoomsController")
+@Controller(value="invStockroomsController")
 //@Controller
 @RequestMapping(ModuleWebConstants.STOCKROOMS_ROOT)
-public class StockRoomsController {
+public class StockroomsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
-		model.addAttribute("modelBase", "openhmis.inventory.stockRoom");
+		model.addAttribute("modelBase", "openhmis.inventory.stockroom");
 	}
 }

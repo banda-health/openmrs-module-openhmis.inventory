@@ -17,9 +17,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class StockRoomOperationSearchHandler implements SearchHandler {
+public class StockroomOperationSearchHandler implements SearchHandler {
 	protected Log log = LogFactory.getLog(getClass());
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
@@ -48,13 +48,13 @@ public class StockRoomOperationSearchHandler implements SearchHandler {
 			)
 	);
 
-	private IStockRoomDataService stockRoomDataService;
+	private IStockroomDataService stockroomDataService;
 	private IStockOperationDataService stockOperationDataService;
 
 	@Autowired
-	public StockRoomOperationSearchHandler(IStockRoomDataService stockRoomDataService,
+	public StockroomOperationSearchHandler(IStockroomDataService stockroomDataService,
 	                                       IStockOperationDataService stockOperationDataService) {
-		this.stockRoomDataService = stockRoomDataService;
+		this.stockroomDataService = stockroomDataService;
 		this.stockOperationDataService = stockOperationDataService;
 	}
 
@@ -65,16 +65,16 @@ public class StockRoomOperationSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
-		String stockRoomUuid = context.getParameter("stock_room_uuid");
-		StockRoom stockRoom = stockRoomDataService.getByUuid(stockRoomUuid);
-		if (stockRoom == null) {
-			log.warn("Could not find stock room '" + stockRoomUuid + "'");
+		String stockroomUuid = context.getParameter("stock_room_uuid");
+		Stockroom stockroom = stockroomDataService.getByUuid(stockroomUuid);
+		if (stockroom == null) {
+			log.warn("Could not find stock room '" + stockroomUuid + "'");
 
 			return new EmptySearchResult();
 		}
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<StockOperation> operations = stockOperationDataService.getOperationsByRoom(stockRoom, pagingInfo);
+		List<StockOperation> operations = stockOperationDataService.getOperationsByRoom(stockroom, pagingInfo);
 
 		if (operations == null || operations.size() == 0) {
 			return new EmptySearchResult();

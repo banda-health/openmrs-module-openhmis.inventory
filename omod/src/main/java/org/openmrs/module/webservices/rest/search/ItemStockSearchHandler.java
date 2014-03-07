@@ -16,8 +16,8 @@ package org.openmrs.module.webservices.rest.search;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
@@ -47,11 +47,11 @@ public class ItemStockSearchHandler implements SearchHandler {
 			)
 	);
 
-	private IStockRoomDataService stockRoomDataService;
+	private IStockroomDataService stockroomDataService;
 
 	@Autowired
-	public ItemStockSearchHandler(IStockRoomDataService stockRoomDataService) {
-		this.stockRoomDataService = stockRoomDataService;
+	public ItemStockSearchHandler(IStockroomDataService stockroomDataService) {
+		this.stockroomDataService = stockroomDataService;
 	}
 
 	@Override
@@ -61,21 +61,21 @@ public class ItemStockSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
-		return doSearch(stockRoomDataService, context);
+		return doSearch(stockroomDataService, context);
 	}
 
-	public static PageableResult doSearch(IStockRoomDataService service, RequestContext context) {
-		String stockRoomUuid = context.getParameter("stock_room_uuid");
-		StockRoom stockRoom = service.getByUuid(stockRoomUuid);
+	public static PageableResult doSearch(IStockroomDataService service, RequestContext context) {
+		String stockroomUuid = context.getParameter("stock_room_uuid");
+		Stockroom stockroom = service.getByUuid(stockroomUuid);
 
-		if (stockRoom == null) {
-			log.warn("Could not find stock room '" + stockRoomUuid + "'");
+		if (stockroom == null) {
+			log.warn("Could not find stock room '" + stockroomUuid + "'");
 
 			return new EmptySearchResult();
 		}
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<ItemStock> items = service.getItemsByRoom(stockRoom, pagingInfo);
+		List<ItemStock> items = service.getItemsByRoom(stockroom, pagingInfo);
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
 		} else {

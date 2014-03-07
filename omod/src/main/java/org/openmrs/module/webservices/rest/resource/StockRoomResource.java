@@ -14,15 +14,15 @@
 package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockRoomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockRoom;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.STOCK_ROOM_RESOURCE, supportedClass=StockRoom.class, supportedOpenmrsVersions={"1.9"})
-public class StockRoomResource extends BaseRestMetadataResource<StockRoom> {
+@Resource(name = ModuleRestConstants.STOCK_ROOM_RESOURCE, supportedClass=Stockroom.class, supportedOpenmrsVersions={"1.9"})
+public class StockRoomResource extends BaseRestMetadataResource<Stockroom> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
@@ -41,12 +41,12 @@ public class StockRoomResource extends BaseRestMetadataResource<StockRoom> {
 	}
 
 	@Override
-	public StockRoom newDelegate() {
-		return new StockRoom();
+	public Stockroom newDelegate() {
+		return new Stockroom();
 	}
 
 	@Override
-	public Class<? extends IMetadataDataService<StockRoom>> getServiceClass() {
-		return IStockRoomDataService.class;
+	public Class<? extends IMetadataDataService<Stockroom>> getServiceClass() {
+		return IStockroomDataService.class;
 	}
 }

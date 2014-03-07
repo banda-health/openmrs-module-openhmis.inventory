@@ -15,20 +15,20 @@ define(
     [
         openhmis.url.backboneBase + 'js/view/generic',
 	    openhmis.url.inventoryBase + 'js/model/operation',
-	    openhmis.url.inventoryBase + 'js/model/stockRoom',
+	    openhmis.url.inventoryBase + 'js/model/stockroom',
 	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
     function(openhmis) {
-	    openhmis.StockRoomDetailList = openhmis.GenericListView.extend({
-		    tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
-		    tmplSelector: '#stockRoom-list'
+	    openhmis.StockroomDetailList = openhmis.GenericListView.extend({
+		    tmplFile: openhmis.url.inventoryBase + 'template/stockroom.html',
+		    tmplSelector: '#stockroom-list'
 	    });
 
- 	    openhmis.StockRoomDetailView = openhmis.GenericAddEditView.extend({
-            tmplFile: openhmis.url.inventoryBase + 'template/stockRoom.html',
+ 	    openhmis.StockroomDetailView = openhmis.GenericAddEditView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/stockroom.html',
             tmplSelector: '#detail-template',
 	        titleSelector: '#detailTabs',
-	        formSelector: '#stockRoomDetails',
+	        formSelector: '#stockroomDetails',
 	        selectedTab: null,
 	        currentTx: null,
 	        currentTxForm: null,
@@ -36,7 +36,7 @@ define(
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-		        this.itemsView = new openhmis.StockRoomDetailList({
+		        this.itemsView = new openhmis.StockroomDetailList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.ItemStock
 			        }),
@@ -44,7 +44,7 @@ define(
 			        showRetired: true,
 			        listFields: ['item', 'quantity']
 		        });
-		        this.operationsView = new openhmis.StockRoomDetailList({
+		        this.operationsView = new openhmis.StockroomDetailList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.Operation
 			        }),
@@ -52,7 +52,7 @@ define(
 			        showRetired: true,
 			        listFields: ['dateCreated', 'operationNumber', 'status', 'operationType']
 		        });
-		        this.transactionsView = new openhmis.StockRoomDetailList({
+		        this.transactionsView = new openhmis.StockroomDetailList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.OperationTransaction
 			        }),

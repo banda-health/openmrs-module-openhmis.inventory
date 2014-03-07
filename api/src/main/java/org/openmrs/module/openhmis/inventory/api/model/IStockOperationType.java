@@ -10,25 +10,25 @@ import org.openmrs.module.openhmis.commons.api.entity.model.IInstanceType;
  */
 public interface IStockOperationType extends OpenmrsMetadata, IInstanceType<StockOperationAttributeType> {
 	/**
-	 * Returns whether the operation type has a source {@link StockRoom}.
+	 * Returns whether the operation type has a source {@link Stockroom}.
 	 * @return {@code true} if the operation type has a source stockroom; otherwise, {@code false}.
 	 */
 	Boolean getHasSource();
 
 	/**
-	 * Sets whether the operation type has a source {@link StockRoom}.
+	 * Sets whether the operation type has a source {@link Stockroom}.
 	 * @param hasSource Whether the operation type has a source stockroom.
 	 */
 	void setHasSource(Boolean hasSource);
 
 	/**
-	 * Returns whether the operation type has a destination {@link StockRoom}.
+	 * Returns whether the operation type has a destination {@link Stockroom}.
 	 * @return {@code true} if the operation type has a destination stockroom; otherwise, {@code false}.
 	 */
 	Boolean getHasDestination();
 
 	/**
-	 * Sets whether the operation type has a destination {@link StockRoom}.
+	 * Sets whether the operation type has a destination {@link Stockroom}.
 	 * @param hasDestination Whether the operation type has a destination stockroom.
 	 */
 	void setHasDestination(Boolean hasDestination);

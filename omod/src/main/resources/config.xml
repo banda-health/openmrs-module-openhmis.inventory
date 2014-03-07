@@ -40,7 +40,7 @@
 		InvItem.hbm.xml
 		InvDepartment.hbm.xml
 		InvCategory.hbm.xml
-		InvStockRoom.hbm.xml
+		InvStockroom.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

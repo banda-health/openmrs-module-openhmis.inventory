@@ -24,10 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
-public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
+public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	/**
-	 * Gets all {@link ItemStock}'s in the specified {@link StockRoom}.
-	 * @param stockRoom The {@link StockRoom}.
+	 * Gets all {@link ItemStock}'s in the specified {@link Stockroom}.
+	 * @param stockroom The {@link Stockroom}.
 	 * @param paging The paging information.
 	 * @return A list containing all of the stock room items.
 	 * @should return all the items in the stock room ordered by item name
@@ -38,11 +38,11 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-	List<ItemStock> getItemsByRoom(StockRoom stockRoom, PagingInfo paging);
+	List<ItemStock> getItemsByRoom(Stockroom stockroom, PagingInfo paging);
 
 	/**
 	 * Finds all the items in the stock room that match the {@link ItemSearch} settings.
- 	 * @param stockRoom The {@link StockRoom} items to search.
+ 	 * @param stockroom The {@link Stockroom} items to search.
 	 * @param itemSearch The {@link ItemSearch} settings.
 	 * @param paging The paging information.
 	 * @return The stock room items found or and empty list if none were found.
@@ -57,11 +57,11 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-	List<ItemStock> findItems(StockRoom stockRoom, ItemSearch itemSearch, PagingInfo paging);
+	List<ItemStock> findItems(Stockroom stockroom, ItemSearch itemSearch, PagingInfo paging);
 
 	/**
 	 * Gets the {@link ItemStock} for the specified {@link Item} with the optionally defined expiration.
-	 * @param stockRoom The {@link StockRoom} items to search.
+	 * @param stockroom The {@link Stockroom} items to search.
 	 * @param item The {@link Item} to find.
 	 * @return The {@link ItemStock} or {@code null} if not found.
 	 * @should return the stock room item
@@ -72,7 +72,7 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized({PrivilegeConstants.VIEW_STOCKROOMS})
-	ItemStock getItem(StockRoom stockRoom, Item item);
+	ItemStock getItem(Stockroom stockroom, Item item);
 
 	/**
 	 * Gets the {@link ItemStockDetail} for the specified {@link Item} and qualifiers.
@@ -92,6 +92,6 @@ public interface IStockRoomDataService extends IMetadataDataService<StockRoom> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized({PrivilegeConstants.VIEW_STOCKROOMS})
-	ItemStockDetail getStockroomItemDetail(StockRoom stockroom, Item item, Date expiration, StockOperation batchOperation);
+	ItemStockDetail getStockroomItemDetail(Stockroom stockroom, Item item, Date expiration, StockOperation batchOperation);
 }
 

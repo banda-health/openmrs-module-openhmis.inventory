@@ -23,9 +23,9 @@ import java.util.Date;
 public class ItemStockDetail extends BaseOpenmrsObject {
 	public static final long serialVersionUID = 0L;
 
-	private Integer stockRoomItemId;
+	private Integer stockroomItemId;
 	private ItemStock itemStock;
-	private StockRoom stockRoom;
+	private Stockroom stockroom;
 	private Item item;
 	private int quantity;
 	private Date expiration;
@@ -53,7 +53,7 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 		}
 
 		this.setItemStock(stock);
-		this.setStockRoom(tx.getStockRoom());
+		this.setStockroom(tx.getStockroom());
 		this.setItem(tx.getItem());
 		this.setExpiration(tx.getExpiration());
 		this.setBatchOperation(tx.getBatchOperation());
@@ -72,7 +72,7 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 		}
 
 		this.itemStock = base.itemStock;
-		this.stockRoom = base.stockRoom;
+		this.stockroom = base.stockroom;
 		this.item = base.item;
 		if (base.expiration != null) {
 			this.expiration = (Date)base.expiration.clone();
@@ -89,7 +89,7 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 	 */
 	@Override
 	public Integer getId() {
-		return stockRoomItemId;
+		return stockroomItemId;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 	 */
 	@Override
 	public void setId(Integer id) {
-		stockRoomItemId = id;
+		stockroomItemId = id;
 	}
 
 	/**
@@ -121,16 +121,16 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 	 * Gets the stockroom.
 	 * @return The stockroom.
 	 */
-	public StockRoom getStockRoom() {
-		return stockRoom;
+	public Stockroom getStockroom() {
+		return stockroom;
 	}
 
 	/**
 	 * Sets the stockroom.
-	 * @param stockRoom The stockroom.
+	 * @param stockroom The stockroom.
 	 */
-	public void setStockRoom(StockRoom stockRoom) {
-		this.stockRoom = stockRoom;
+	public void setStockroom(Stockroom stockroom) {
+		this.stockroom = stockroom;
 	}
 
 	/**
