@@ -32,7 +32,7 @@ define(
 			},
 			toString: function() { return this.get('code'); }
 		});
-		
+
 		openhmis.ItemPrice = openhmis.GenericModel.extend({
 			meta: {
 				name: "Item Price",
@@ -44,7 +44,7 @@ define(
 				name: { type: "Text" },
 				price: { type: 'BasicNumber' }
 			},
-			
+
 		    set: function(key, value, options) {
 				if (typeof key === "string") {
 					switch (key) {
@@ -54,7 +54,7 @@ define(
 					}
 				}
 				return openhmis.GenericModel.prototype.set.call(this, key, value, options);
-			},			
+			},
 			format: function(price) {
 				if (price === undefined)
 					return 0;
@@ -62,13 +62,13 @@ define(
 					return price.toString();
 				return price.toFixed(2);
 			},
-			
+
 			toString: function() {
 				var name = this.get("name") ? " (" + this.get("name") + ")" : "";
 				return this.format(this.get('price')) + name;
 			}
 		});
-		
+
 		openhmis.Item = openhmis.GenericModel.extend({
 			meta: {
 				name: "Item",
@@ -101,7 +101,7 @@ define(
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }
 			},
-			
+
 			initialize: function(attributes, options) {
 				openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
 				this.on("change:defaultPrice", function(model, defaultPrice, options) {
@@ -109,7 +109,7 @@ define(
 				});
 				this.setPriceOptions();
 			},
-			
+
 			_getDefaultPriceFromPricesIfAvailable: function(id) {
 				var prices = this.get("prices");
 				for (var price in prices) {
@@ -125,7 +125,7 @@ define(
 					}
 				}
 			},
-			
+
 			fetch: function(options) {
 				options = options || {};
 				var success = options.success;
@@ -136,7 +136,7 @@ define(
 				}
 				return openhmis.GenericModel.prototype.fetch.call(this, options);
 			},
-			
+
 			getCodesList: function(list) {
 				var codes, schema;
 				if (list !== undefined) {
@@ -148,7 +148,7 @@ define(
 				}
 				return openhmis.GenericCollection.prototype.toString.call(codes, schema);
 			},
-			
+
 			setPriceOptions: function(prices) {
 				prices = prices ? prices : this.get('prices');
 				if (prices instanceof openhmis.GenericCollection) prices = prices.models;
@@ -160,7 +160,7 @@ define(
 					}
 				});
 			},
-			
+
 			validate: function(attrs, options) {
 				if (!attrs.name) return { name: __("A name is required") }
 				if (!attrs.department) return { department: __("An item needs to be associated with a department") }
@@ -168,7 +168,7 @@ define(
 				if (!attrs.defaultPrice) return { defaultPrice: "Please specify a default price."}
 				return null;
 			},
-			
+
 			parse: function(resp) {
 				if (resp) {
 					if (resp.department && _.isObject(resp.department))
@@ -178,7 +178,7 @@ define(
 				}
 				return resp;
 			},
-			
+
 			toJSON: function(options) {
 				if (this.attributes.codes !== undefined) {
 					// Can't set these, so need to remove them from JSON
@@ -192,7 +192,7 @@ define(
 					json.defaultPrice = json.defaultPrice.get("price").toString();
 				return json;
 			},
-			
+
 			toString: function() {
 				if (this.get("codes") && this.get("codes").length > 0)
 					return this.get("codes")[0].code + ' - ' + this.get("name");

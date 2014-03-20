@@ -25,22 +25,22 @@ define(
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'department'
 			},
-			
+
 			schema: {
 				name: 'Text',
 				description: 'Text'
 			},
-			
+
 			validate: function(attrs, options) {
 				if (!attrs.name) return { name: __("A name is required.") };
 				return null;
 			},
-			
+
 			toString: function() {
 				return this.get('name');
 			}
 		});
-		
+
 		return openhmis;
 	}
 );

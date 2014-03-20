@@ -22,14 +22,14 @@ define(
 				modelForm.on('prices:change', this.updatePriceOptions);
 				return modelForm;
 			},
-			
+
 			updatePriceOptions: function() {
 				this.model.setPriceOptions(this.modelForm.fields['prices'].getValue());
 				this.modelForm.fields['defaultPrice'].editor.schema.options = this.model.schema.defaultPrice.options;
 				this.modelForm.fields['defaultPrice'].editor.render();
 			}
 		});
-		
+
 		return openhmis;
 	}
 );
