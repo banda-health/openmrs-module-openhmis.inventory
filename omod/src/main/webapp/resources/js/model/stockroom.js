@@ -21,12 +21,12 @@ define(
 	function(openhmis, __) {
 		openhmis.Stockroom = openhmis.GenericModel.extend({
 			meta: {
-				name: __("Stock Room"),
-				namePlural: __("Stock Rooms"),
+				name: __("Stockroom"),
+				namePlural: __("Stockrooms"),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'stockroom'
 			},
-			
+
 			schema: {
 				name: { type: 'Text' },
 				location: {
@@ -38,12 +38,12 @@ define(
 					objRef: true
 				}
 			},
-			
+
 			validate: function(attrs, options) {
 				if (!attrs.name) return { name: __("A name is required.") };
 				return null;
 			},
-			
+
 			toString: function() {
 				return this.get('name');
 			}

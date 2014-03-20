@@ -43,8 +43,8 @@ public class StockroomOperationSearchHandler implements SearchHandler {
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find stock operations by stock room.")
-							.withRequiredParameters("stock_room_uuid").build()
+					new SearchQuery.Builder("Find stock operations by stockroom.")
+							.withRequiredParameters("stockroom_uuid").build()
 			)
 	);
 
@@ -65,10 +65,10 @@ public class StockroomOperationSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
-		String stockroomUuid = context.getParameter("stock_room_uuid");
+		String stockroomUuid = context.getParameter("stockroom_uuid");
 		Stockroom stockroom = stockroomDataService.getByUuid(stockroomUuid);
 		if (stockroom == null) {
-			log.warn("Could not find stock room '" + stockroomUuid + "'");
+			log.warn("Could not find stockroom '" + stockroomUuid + "'");
 
 			return new EmptySearchResult();
 		}

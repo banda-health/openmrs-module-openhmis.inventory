@@ -29,30 +29,30 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * Gets all {@link ItemStock}'s in the specified {@link Stockroom}.
 	 * @param stockroom The {@link Stockroom}.
 	 * @param paging The paging information.
-	 * @return A list containing all of the stock room items.
-	 * @should return all the items in the stock room ordered by item name
-	 * @should return an empty list if there are no items in the stock room
+	 * @return A list containing all of the stockroom items.
+	 * @should return all the items in the stockroom ordered by item name
+	 * @should return an empty list if there are no items in the stockroom
 	 * @should return paged items if paging is specified
 	 * @should return item stock sorted by item name
-	 * @should throw IllegalArgumentException if the stock room is null
+	 * @should throw IllegalArgumentException if the stockroom is null
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
 	List<ItemStock> getItemsByRoom(Stockroom stockroom, PagingInfo paging);
 
 	/**
-	 * Finds all the items in the stock room that match the {@link ItemSearch} settings.
+	 * Finds all the items in the stockroom that match the {@link ItemSearch} settings.
  	 * @param stockroom The {@link Stockroom} items to search.
 	 * @param itemSearch The {@link ItemSearch} settings.
 	 * @param paging The paging information.
-	 * @return The stock room items found or and empty list if none were found.
-	 * @should return items filtered by template and stock room
-	 * @should not return items for other stock rooms
+	 * @return The stockroom items found or and empty list if none were found.
+	 * @should return items filtered by template and stockroom
+	 * @should not return items for other stockrooms
 	 * @should return all found items if paging is null
 	 * @should return paged items if paging is specified
 	 * @should return retired items from search unless specified
 	 * @should return item stock sorted by item name
-	 * @should throw IllegalArgumentException if stock room is null
+	 * @should throw IllegalArgumentException if stockroom is null
 	 * @should throw IllegalArgumentException if item search is null
 	 */
 	@Transactional(readOnly = true)
@@ -64,10 +64,10 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @param stockroom The {@link Stockroom} items to search.
 	 * @param item The {@link Item} to find.
 	 * @return The {@link ItemStock} or {@code null} if not found.
-	 * @should return the stock room item
-	 * @should not return items from other stock rooms
+	 * @should return the stockroom item
+	 * @should not return items from other stockrooms
 	 * @should return null when item is not found
-	 * @should throw IllegalArgumentException when stock room is null
+	 * @should throw IllegalArgumentException when stockroom is null
 	 * @should throw IllegalArgumentException when item is null
 	 */
 	@Transactional(readOnly = true)
@@ -81,13 +81,13 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @param expiration The optional expiration date to search for.
 	 * @param batchOperation The optional batch operation to search for.
 	 * @return The item stock detail or {@code null} if not found.
-	 * @should return the stock room item detail
-	 * @should not return details for other stock rooms
+	 * @should return the stockroom item detail
+	 * @should not return details for other stockrooms
 	 * @should return null when the details is not found
 	 * @should return detail with expiration and batch when specified
 	 * @should return detail without an expiration when not specified
 	 * @should return detail without a batch when not specified
-	 * @should throw IllegalArgumentException when stock room is null
+	 * @should throw IllegalArgumentException when stockroom is null
 	 * @should throw IllegalArgumentException when item is null
 	 */
 	@Transactional(readOnly = true)

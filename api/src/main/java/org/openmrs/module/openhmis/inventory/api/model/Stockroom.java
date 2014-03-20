@@ -83,7 +83,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	 * Note that this will result in the full item list being loaded and should
 	 * only be used when that is needed. A better alternative to add item stock is to use the
 	 * {@link org.openmrs.module.openhmis.inventory.api.IItemStockDataService#save(org.openmrs.OpenmrsObject)} method.
-	 * @param item The item stock to add to this stock room.
+	 * @param item The item stock to add to this stockroom.
 	 */
 	public void addItem(ItemStock item) {
 		if (item != null) {

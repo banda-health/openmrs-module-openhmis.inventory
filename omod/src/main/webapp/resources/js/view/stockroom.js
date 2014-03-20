@@ -123,7 +123,7 @@ define(
 	        },
 
 	        fetch: function(options) {
-		        options.queryString = openhmis.addQueryStringParameter(options.queryString, "stock_room_uuid=" + this.model.id);
+		        options.queryString = openhmis.addQueryStringParameter(options.queryString, "stockroom_uuid=" + this.model.id);
 	        },
 
 	        beginAdd: function() {

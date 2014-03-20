@@ -349,7 +349,7 @@ public class StockOperationDataServiceImpl
 	 * qualifiers and checking on the details of the source stockroom to create all required transactions to fulfill the
 	 * request.
 	 * @param operation The stock operation for this transaction
-	 * @should use closest expiration from the source stock room
+	 * @should use closest expiration from the source stockroom
 	 * @should use oldest batch operation with the calculated expiration
 	 * @should set the expiration to null if no valid item stock can be found
 	 * @should set the batch to null if no valid item stock can be found

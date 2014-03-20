@@ -29,9 +29,9 @@ curl(
             var stockroomInfo = $("#stockroomInfo");
             var stockroomEdit = $("#stockroomEdit");
 
-			// Display current stock rooms into list
+			// Display current stockrooms into list
             openhmis.startAddEditScreen(openhmis.Stockroom, {
-				listFields: ['name', 'description'],
+				listFields: ['name', 'location'],
                 listElement: stockroomList,
                 addEditViewType: openhmis.StockroomDetailView,
                 addEditElement: stockroomInfo

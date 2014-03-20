@@ -72,7 +72,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	/**
 	 * Returns the {@link StockOperation} with the specified operation number.
 	 * @param operationNumber The operation number.
-	 * @return The {@link StockOperation} or {@code null} if there is no stock room with the specified
+	 * @return The {@link StockOperation} or {@code null} if there is no stockroom with the specified
 	 * operation number.
 	 * @should return null if number is not found
 	 * @should return operation with the specified number
@@ -88,7 +88,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * Returns the {@link StockOperation}s for the specified {@link Stockroom}.
 	 * @param stockroom The {@link Stockroom} that the transactions occurred in.
 	 * @param paging The paging information or {@code null} to return all results.
-	 * @return The operations for the specified stock room.
+	 * @return The operations for the specified stockroom.
 	 * @should return operations for specified room
 	 * @should return empty list when no operations
 	 * @should return paged operations when paging is specified
@@ -154,8 +154,8 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should return items filtered by number
 	 * @should return items filtered by status
 	 * @should return items filtered by type
-	 * @should return items filtered by source stock room
-	 * @should return items filtered by destination stock room
+	 * @should return items filtered by source stockroom
+	 * @should return items filtered by destination stockroom
 	 * @should return items filtered by creation date
 	 * @should return all items if paging is null
 	 * @should return paged items if paging is specified

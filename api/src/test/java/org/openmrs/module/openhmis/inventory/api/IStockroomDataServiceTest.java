@@ -45,9 +45,9 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		Stockroom room = new Stockroom();
 
 		if (valid) {
-			room.setName("New Stock Room");
+			room.setName("New Stockroom");
 		}
-		room.setDescription("This is a stock room. It is new.");
+		room.setDescription("This is a stockroom. It is new.");
 		room.setLocation(Context.getLocationService().getLocation(1));
 		room.setCreator(Context.getAuthenticatedUser());
 		room.setDateCreated(new Date());
@@ -135,7 +135,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 			}
 
 			if (items.size() > 1) {
-				// Delete an existing stock room item
+				// Delete an existing stockroom item
 				item = iterator.next();
 
 				items.remove(item);
@@ -212,7 +212,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies return items filtered by template and stock room
+	 * @verifies return items filtered by template and stockroom
 	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
@@ -243,7 +243,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies not return items for other stock rooms
+	 * @verifies not return items for other stockrooms
 	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
@@ -331,7 +331,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies throw IllegalArgumentException if stock room is null
+	 * @verifies throw IllegalArgumentException if stockroom is null
 	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -350,7 +350,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies return the stock room item
+	 * @verifies return the stockroom item
 	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test
@@ -373,7 +373,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies not return items from other stock rooms
+	 * @verifies not return items from other stockrooms
 	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test
@@ -407,7 +407,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies throw IllegalArgumentException when stock room is null
+	 * @verifies throw IllegalArgumentException when stockroom is null
 	 * @see IStockroomDataService#getItem(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item)
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -426,7 +426,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies return all the items in the stock room ordered by item name
+	 * @verifies return all the items in the stockroom ordered by item name
 	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
@@ -443,7 +443,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies return an empty list if there are no items in the stock room
+	 * @verifies return an empty list if there are no items in the stockroom
 	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
@@ -485,7 +485,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies throw IllegalArgumentException if the stock room is null
+	 * @verifies throw IllegalArgumentException if the stockroom is null
 	 * @see IStockroomDataService#getItemsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -494,7 +494,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies return the stock room item detail
+	 * @verifies return the stockroom item detail
 	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
@@ -514,7 +514,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies not return details for other stock rooms
+	 * @verifies not return details for other stockrooms
 	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
@@ -689,7 +689,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 	}
 
 	/**
-	 * @verifies throw IllegalArgumentException when stock room is null
+	 * @verifies throw IllegalArgumentException when stockroom is null
 	 * @see IStockroomDataService#getStockroomItemDetail(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.model.Item, java.util.Date, org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = IllegalArgumentException.class)

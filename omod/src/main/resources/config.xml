@@ -79,20 +79,20 @@
 	<!--  Stock Rooms  -->
 	<privilege>
 		<name>View Inventory Stockrooms</name>
-		<description>Able to view inventory stock rooms</description>
+		<description>Able to view inventory stockrooms</description>
 	</privilege>
 
 	<privilege>
 		<name>Manage Inventory Stockrooms</name>
-		<description>Able to add/edit/retire inventory stock rooms</description>
+		<description>Able to add/edit/retire inventory stockrooms</description>
 	</privilege>
 
 	<privilege>
 		<name>Purge Inventory Stockrooms</name>
-		<description>Able to purge inventory stock rooms</description>
+		<description>Able to purge inventory stockrooms</description>
 	</privilege>
 
-	<!--  Stock Room Transactions  -->
+	<!--  Stockroom Transactions  -->
 	<privilege>
 		<name>View Inventory Operations</name>
 		<description>Able to view inventory operations</description>

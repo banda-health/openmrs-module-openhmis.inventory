@@ -1080,7 +1080,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 
 	/**
-	 * @verifies return items filtered by source stock room
+	 * @verifies return items filtered by source stockroom
 	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
@@ -1107,7 +1107,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 
 	/**
-	 * @verifies return items filtered by destination stock room
+	 * @verifies return items filtered by destination stockroom
 	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
@@ -1597,7 +1597,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(1, (int)tx.getQuantity());
 		Assert.assertEquals(3, (int)tx2.getQuantity());
 
-		// Check that the reservation quantities were removed from the source stock room
+		// Check that the reservation quantities were removed from the source stockroom
 		Assert.assertEquals(itemQty - tx.getQuantity(), stockroomService.getItem(source, item).getQuantity());
 		Assert.assertEquals(item2Qty - tx2.getQuantity(), stockroomService.getItem(source, item2).getQuantity());
 

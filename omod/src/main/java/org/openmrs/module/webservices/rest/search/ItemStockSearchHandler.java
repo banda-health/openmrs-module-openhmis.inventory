@@ -42,8 +42,8 @@ public class ItemStockSearchHandler implements SearchHandler {
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_STOCK_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find all item stock by stock room.")
-							.withRequiredParameters("stock_room_uuid").build()
+					new SearchQuery.Builder("Find all item stock by stockroom.")
+							.withRequiredParameters("stockroom_uuid").build()
 			)
 	);
 
@@ -65,11 +65,11 @@ public class ItemStockSearchHandler implements SearchHandler {
 	}
 
 	public static PageableResult doSearch(IStockroomDataService service, RequestContext context) {
-		String stockroomUuid = context.getParameter("stock_room_uuid");
+		String stockroomUuid = context.getParameter("stockroom_uuid");
 		Stockroom stockroom = service.getByUuid(stockroomUuid);
 
 		if (stockroom == null) {
-			log.warn("Could not find stock room '" + stockroomUuid + "'");
+			log.warn("Could not find stockroom '" + stockroomUuid + "'");
 
 			return new EmptySearchResult();
 		}

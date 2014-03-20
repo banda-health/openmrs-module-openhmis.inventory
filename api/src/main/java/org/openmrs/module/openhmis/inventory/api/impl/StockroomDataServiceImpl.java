@@ -56,7 +56,7 @@ public class StockroomDataServiceImpl
 	@Override
 	public List<ItemStock> getItemsByRoom(final Stockroom stockroom, PagingInfo paging) {
 		if (stockroom == null) {
-			throw new IllegalArgumentException("The stock room must be defined");
+			throw new IllegalArgumentException("The stockroom must be defined");
 		}
 
 		return executeCriteria(ItemStock.class, paging, new Action1<Criteria>() {
@@ -72,7 +72,7 @@ public class StockroomDataServiceImpl
 	@Override
 	public List<ItemStock> findItems(final Stockroom stockroom, final ItemSearch itemSearch, PagingInfo paging) {
 		if (stockroom == null) {
-			throw new IllegalArgumentException("The stock room must be defined.");
+			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
 		if (itemSearch == null) {
 			throw new IllegalArgumentException("The item search must be defined.");
@@ -81,7 +81,7 @@ public class StockroomDataServiceImpl
 		// To allow a method to exclude retired items from the result callers can set IncludeRetired to null
 		//  and specify the retired status on the template object itself
 		if (itemSearch.getIncludeRetired() != null) {
-			// We want all the stock room items regardless of if they are retired
+			// We want all the stockroom items regardless of if they are retired
 			itemSearch.setIncludeRetired(true);
 		}
 

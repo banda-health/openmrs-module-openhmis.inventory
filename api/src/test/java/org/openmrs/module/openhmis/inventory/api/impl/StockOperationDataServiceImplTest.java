@@ -50,7 +50,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 	}
 
 	/**
-	 * @verifies use closest expiration from the source stock room
+	 * @verifies use closest expiration from the source stockroom
 	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
