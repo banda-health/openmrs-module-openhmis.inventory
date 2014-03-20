@@ -44,6 +44,15 @@ define(
 				return null;
 			},
 
+			parse: function(resp) {
+				if (resp) {
+					if (resp.location && _.isObject(resp.location)) {
+						resp.location = new openhmis.Location(resp.location);
+					}
+				}
+				return resp;
+			},
+
 			toString: function() {
 				return this.get('name');
 			}
