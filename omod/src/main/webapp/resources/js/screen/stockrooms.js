@@ -16,25 +16,26 @@ curl(
 	[
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/openhmis',
-		openhmis.url.backboneBase + 'js/lib/backbone',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
+		openhmis.url.backboneBase + 'js/model/location',
 		openhmis.url.inventoryBase + 'js/model/stockroom',
         openhmis.url.inventoryBase + 'js/view/stockroom',
-		openhmis.url.backboneBase + 'js/view/generic'
+		openhmis.url.backboneBase + 'js/view/generic',
+
+		openhmis.url.backboneBase + 'js/view/list',
+		openhmis.url.backboneBase + 'js/view/editors',
+		openhmis.url.inventoryBase + 'js/view/editors',
+		openhmis.url.backboneBase + 'js/view/search',
+		openhmis.url.inventoryBase + 'js/view/search'
 	],
 	function($, openhmis, Backbone) {
 		$(function() {
 
-			var stockroomList = $("#stockroomList");
-            var stockroomInfo = $("#stockroomInfo");
-            var stockroomEdit = $("#stockroomEdit");
-
 			// Display current stockrooms into list
             openhmis.startAddEditScreen(openhmis.Stockroom, {
-				listFields: ['name', 'location'],
-                listElement: stockroomList,
-                addEditViewType: openhmis.StockroomDetailView,
-                addEditElement: stockroomInfo
+            	listView: openhmis.GenericSearchableListView,
+				searchView: openhmis.LocationAndNameSearchView,
+				listFields: ['name', 'location']
 			});
 		});
 	}

@@ -25,7 +25,7 @@ define(
 		{
 			tmplFile: openhmis.url.inventoryBase + 'template/search.html',
 			tmplSelector: '#department-name-search',
-			
+
 			/**
 			 * @class DepartmentAndNameSearchView
 			 * @extends BaseSearchView
@@ -34,7 +34,7 @@ define(
 			 * @constructor DepartmentAndNameSearchView
 			 * @param {map} options View options.  See options for
 			 *     {@link BaseSearchView}.
-			 *     
+			 *
 			 */
 			initialize: function(options) {
 				this.events['change #department_uuid'] = 'onFormSubmit';
@@ -60,7 +60,7 @@ define(
 					data: {}
 				});
 			},
-			
+
 			/** Collect user input */
 			commitForm: function() {
 				var filters = this.form.getValue();
@@ -69,7 +69,7 @@ define(
 				else
 					this.searchFilter = filters;
 			},
-			
+
 			/**
 			 * Get fetch options
 			 *
@@ -85,10 +85,10 @@ define(
 				}
 				return options;
 			},
-			
+
 			/** Focus the search form */
 			focus: function() { this.$("#q").focus(); },
-			
+
 			/**
 			 * Render the view
 			 *
@@ -104,7 +104,80 @@ define(
 				return this;
 			}
 		});
-		
+
+		openhmis.LocationAndNameSearchView = openhmis.BaseSearchView.extend({
+			tmplFile: openhmis.url.inventoryBase + 'template/locationSearch.html',
+			tmplSelector: '#location-name-search',
+
+			initialize: function(options) {
+				this.events['change #location_uuid'] = 'onFormSubmit';
+				openhmis.BaseSearchView.prototype.initialize.call(this, options);
+				var locationCollection = new openhmis.GenericCollection([], { model: openhmis.Location });
+				locationCollection.on("reset", function(collection) {
+					collection.unshift(new openhmis.Location({ name: __("Any") }));
+				});
+				this.form = new Backbone.Form({
+					className: "inline",
+					schema: {
+						location_uuid: {
+							title: __("Location"),
+							type: "Select",
+							options: locationCollection
+						},
+						q: {
+							title: __("%s Identifier or Name", this.model.meta.name),
+							type: "Text",
+							editorClass: "search"
+						}
+					},
+					data: {}
+				});
+			},
+
+			/** Collect user input */
+			commitForm: function() {
+				var filters = this.form.getValue();
+				if (!filters.location_uuid && !filters.q)
+					this.searchFilter = undefined;
+				else
+					this.searchFilter = filters;
+			},
+
+			/**
+			 * Get fetch options
+			 *
+			 * @param {map} options Fetch options from base view
+			 * @returns {map} Map of fetch options
+			 */
+			getFetchOptions: function(options) {
+				options = options ? options : {}
+				if (this.searchFilter) {
+					for (var filter in this.searchFilter)
+						options.queryString = openhmis.addQueryStringParameter(
+							options.queryString, filter + "=" + encodeURIComponent(this.searchFilter[filter]));
+				}
+				return options;
+			},
+
+			/** Focus the search form */
+			focus: function() { this.$("#q").focus(); },
+
+			/**
+			 * Render the view
+			 *
+			 * @returns {View} The rendered view
+			 */
+			render: function() {
+				this.$el.html(this.template({ __: __ }));
+				this.$("div.box").append(this.form.render().el);
+				if (this.searchFilter)
+					this.form.setValue(this.searchFilter);
+				this.$("form").addClass("inline");
+				this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+				return this;
+			}
+		});
+
 		return openhmis;
 	}
 )

@@ -16,7 +16,7 @@ define(
         openhmis.url.backboneBase + 'js/view/generic',
 	    openhmis.url.inventoryBase + 'js/model/operation',
 	    openhmis.url.inventoryBase + 'js/model/stockroom',
-	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
+	    //'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
     function(openhmis) {
 	    openhmis.StockroomDetailList = openhmis.GenericListView.extend({

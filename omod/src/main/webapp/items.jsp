@@ -1,7 +1,3 @@
-<%@ page import="org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants" %>
-<%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
-
-<%@ include file="/WEB-INF/template/include.jsp"%>
 <%--
   ~ The contents of this file are subject to the OpenMRS Public License
   ~ Version 2.0 (the "License"); you may not use this file except in
@@ -15,6 +11,11 @@
   ~
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   --%>
+
+<%@ page import="org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants" %>
+<%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
+
+<%@ include file="/WEB-INF/template/include.jsp"%>
 <openmrs:require allPrivileges="<%= PrivilegeConstants.ITEM_PAGE_PRIVILEGES %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.ITEMS_PAGE %>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
