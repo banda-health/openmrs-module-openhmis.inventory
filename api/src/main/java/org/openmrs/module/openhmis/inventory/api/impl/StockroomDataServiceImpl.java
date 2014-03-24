@@ -13,9 +13,12 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Location;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -137,6 +140,58 @@ public class StockroomDataServiceImpl
 
 		return repository.selectSingle(ItemStockDetail.class, criteria);
 	}
+
+    @Override
+    public List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired) throws APIException {
+        return getStockroomsByLocation(location, includeRetired, null);
+    }
+
+    @Override
+    public List<Stockroom> getStockroomsByLocation(final Location location, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+        if (location == null) {
+            throw new NullPointerException("The location must be defined");
+        }
+
+        return executeCriteria(Stockroom.class, pagingInfo, new Action1<Criteria>() {
+            @Override
+            public void apply(Criteria criteria) {
+                criteria.add(Restrictions.eq("location", location));
+                if (!includeRetired) {
+                    criteria.add(Restrictions.eq("retired", false));
+                }
+            }
+        });
+    }
+
+    @Override
+    public List<Stockroom> findStockrooms(Location location, String name, boolean includeRetired) throws APIException {
+        return findStockrooms(location, name, includeRetired, null);
+    }
+
+    @Override
+    public List<Stockroom> findStockrooms(final Location location, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+        if (location == null) {
+            throw new NullPointerException("The department must be defined");
+        }
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("The stockroom code must be defined.");
+        }
+        if (name.length() > 255) {
+            throw new IllegalArgumentException("The stockroom code must be less than 256 characters.");
+        }
+
+        return executeCriteria(Stockroom.class, pagingInfo, new Action1<Criteria>() {
+            @Override
+            public void apply(Criteria criteria) {
+                criteria.add(Restrictions.eq("location", location))
+                        .add(Restrictions.ilike("name", name, MatchMode.START));
+
+                if (!includeRetired) {
+                    criteria.add(Restrictions.eq("retired", false));
+                }
+            }
+        });
+    }
 
 	@Override
 	public String getRetirePrivilege() {
