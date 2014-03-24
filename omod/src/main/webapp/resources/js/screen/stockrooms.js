@@ -33,9 +33,11 @@ curl(
 
 			// Display current stockrooms into list
             openhmis.startAddEditScreen(openhmis.Stockroom, {
-            	listView: openhmis.GenericSearchableListView,
-				searchView: openhmis.LocationAndNameSearchView,
-				listFields: ['name', 'location']
+                listView: openhmis.GenericSearchableListView,
+                searchView: openhmis.LocationAndNameSearchView,
+                addEditViewType: openhmis.StockroomDetailView,
+                listFields: ['name', 'location'],
+            
 			});
 		});
 	}
