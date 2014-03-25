@@ -5,40 +5,6 @@
 span.label-hint { position: relative; }
 .label-hint label { position: absolute; bottom: 0px; left: 3px; font-style: italic; color: #999; cursor: text; z-index: 0; }
 
-/* Bill styles */
-ul#bill-info { font-size: 10pt; }
-ul#bill-info li { margin: 0 3em 10px 0; }
-
-table.bill th.field-quantity, table.bill th.field-price, table.bill th.field-total {
-	width: 13%;
-}
-table.bill td.field-quantity select, table.bill td.field-price select {
-	max-width: 100px;
-}
-table.bill td input[type="text"], table.bill td input[type="number"] {
-	width: 100%;
-	background-color: transparent;
-}
-
-table.bill td input, table.bill td select {
-	border: 1px solid transparent;
-	background-color: transparent;
-}
-
-table.bill td, table.bill th {
-	padding: 0px 5px;
-	border-right: 1px solid #aaa;
-}
-table.bill td.end, table.bill th.end { border-right: none; }
-
-table.bill .field-item .editor .department-name { width: 31%; }
-table.bill .field-item .editor .item-name { width: 66%; }
-
-table.totals { width: 100%; }
-table.totals td.total { width: 13%; text-align: right; }
-table.totals td.label { width: 13%; }
-table.totals td.label, table.totals td.total { padding: 3px 7px 3px 10px; font-weight: bold; }
-
 /* Exception for form style */
 li.bbf-field.field-cashPoint div.bbf-editor { margin-left: 7em; }
 
@@ -53,15 +19,20 @@ div.box, div.combineBoxes { margin-bottom: 1em; }
 .paymentList td.field-Details { color: #777; }
 
 /* Override default tab rounded corners */
-.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl { -moz-border-radius-topleft: 0px; -webkit-border-top-left-radius: 0px; -khtml-border-top-left-radius: 0px; border-top-left-radius: 0px; }
-.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr { -moz-border-radius-topright: 0px; -webkit-border-top-right-radius: 0px; -khtml-border-top-right-radius: 0px; border-top-right-radius: 0px; }
-.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl { -moz-border-radius-bottomleft: 0px; -webkit-border-bottom-left-radius: 0px; -khtml-border-bottom-left-radius: 0px; border-bottom-left-radius: 0px; }
-.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br { -moz-border-radius-bottomright: 0px; -webkit-border-bottom-right-radius: 0px; -khtml-border-bottom-right-radius: 0px; border-bottom-right-radius: 0px; }
+.ui-tabs, .ui-tabs-nav, li.ui-state-default { -moz-border-radius-topleft: 0px; -webkit-border-top-left-radius: 0px; -khtml-border-top-left-radius: 0px; border-top-left-radius: 0px; }
+.ui-tabs, .ui-tabs-nav, li.ui-state-default { -moz-border-radius-topright: 0px; -webkit-border-top-right-radius: 0px; -khtml-border-top-right-radius: 0px; border-top-right-radius: 0px; }
+.ui-tabs, .ui-tabs-nav { -moz-border-radius-bottomleft: 0px; -webkit-border-bottom-left-radius: 0px; -khtml-border-bottom-left-radius: 0px; border-bottom-left-radius: 0px; }
+.ui-tabs, .ui-tabs-nav { -moz-border-radius-bottomright: 0px; -webkit-border-bottom-right-radius: 0px; -khtml-border-bottom-right-radius: 0px; border-bottom-right-radius: 0px; }
 
 /* Customizations for tab spacing and appearance */
 .ui-tabs { padding: 0.0em; }
 .ui-tabs .ui-tabs-panel { padding: 0.1em; }
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { font-weight: normal; }
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { font-weight: bold; }
+
 .ui-widget { font-size: 13px; }
-.ui-widget .ui-tabs-nav { font-size: 16px; }
+
+.ui-widget-header {
+    background: none rgb(26, 172, 155) !important;
+    border: 1px solid #1AAD9B;
+    color: #FFFFFF;
+    font-weight: bold;
+}

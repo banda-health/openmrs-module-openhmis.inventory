@@ -16,7 +16,7 @@ define(
         openhmis.url.backboneBase + 'js/view/generic',
 	    openhmis.url.inventoryBase + 'js/model/operation',
 	    openhmis.url.inventoryBase + 'js/model/stockroom',
-	    //'link!' + openhmis.url.inventoryBase + 'css/style.css'
+	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
     function(openhmis) {
 	    openhmis.StockroomDetailList = openhmis.GenericListView.extend({
@@ -107,6 +107,7 @@ define(
 		        this.model.fetch({
 			        success: function(model, resp) {
 				        self.render();
+				        $('#addLink').hide();
 				        $(self.titleEl).show();
 				        self.modelForm = self.prepareModelForm(self.model);
 				        $(self.formEl).prepend(self.modelForm.el);
@@ -128,9 +129,14 @@ define(
 
 	        beginAdd: function() {
 		        openhmis.GenericAddEditView.prototype.beginAdd.call(this);
-
+		        $('#addLink').hide();
 		        $('#detailTabList').hide();
 	        },
+
+	        cancel: function() {
+	        	openhmis.GenericAddEditView.prototype.cancel.call(this);
+				$('#addLink').show();
+			},
 
 	        activateTab: function(event, ui) {
 				this.selectedTab = ui.newTab.index();
