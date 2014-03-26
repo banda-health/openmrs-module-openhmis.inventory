@@ -106,7 +106,7 @@ define(
 		});
 
 		openhmis.LocationAndNameSearchView = openhmis.BaseSearchView.extend({
-			tmplFile: openhmis.url.inventoryBase + 'template/locationSearch.html',
+			tmplFile: openhmis.url.inventoryBase + 'template/search.html',
 			tmplSelector: '#location-name-search',
 
 			initialize: function(options) {

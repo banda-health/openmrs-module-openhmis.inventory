@@ -26,15 +26,15 @@
         </ul>
 
         <? if (model.isNew()) { ?>
-            <b style="" class="boxHeader title">Add New Stockroom</b>
+            <b class="boxHeader title">Add New Stockroom</b>
         <? } ?>
 
         <div class="box form" id="stockroomDetails">
-            <input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
-            <button class="cancel"><?= __("Cancel") ?></button>
+                <input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
+                <button class="cancel"><?= __("Cancel") ?></button>
             <br /><br />
-            <div class="retireVoidPurge" style="width: 95%">
-                <div>
+            <div class="retireVoidPurge" style="width: 75%">
+                <div class="box">
                     <? var strRetireOrVoid = model.getDataType() === "data" ? "Void" : "Retire" ?>
                     <? if (model.isRetired()) { ?>
                     <? var strUnretire = "Un" + strRetireOrVoid.toLowerCase() ?>
@@ -47,7 +47,7 @@
                     <? } ?>
                 </div>
                 <br />
-                <div>
+                <div class="box">
                     <h4><?= __("Purge %s", model.modelName()) ?></h4>
                     <button class="purge"><?= __("Purge") ?></button>
                 </div>
