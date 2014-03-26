@@ -178,6 +178,53 @@ define(
 			}
 		});
 
+		openhmis.ByNameSearchView = openhmis.BaseSearchView.extend({
+			tmplFile: openhmis.url.inventoryBase + 'template/search.html',
+			tmplSelector: '#by-name-search',
+
+			initialize: function(options) {
+				openhmis.BaseSearchView.prototype.initialize.call(this, options);
+				this.form = new Backbone.Form({
+					className: "inline",
+					schema: {
+						q: {
+							title: __("%s Name", this.model.meta.name),
+							type: "Text",
+							editorClass: "search"
+						}
+					},
+					data: {}
+				});
+			},
+
+			getFetchOptions: function(options) {
+				options = options ? options : {}
+				if (this.searchFilter) {
+					for (var filter in this.searchFilter)
+						options.queryString = openhmis.addQueryStringParameter(
+							options.queryString, filter + "=" + encodeURIComponent(this.searchFilter[filter]));
+				}
+				return options;
+			},
+
+			focus: function() { this.$("#q").focus(); },
+
+			commitForm: function() {
+				var filters = this.form.getValue();
+				this.searchFilter = filters;
+			},
+
+			render: function() {
+				this.$el.html(this.template({ __: __ }));
+				this.$("div.box").append(this.form.render().el);
+				if (this.searchFilter)
+					this.form.setValue(this.searchFilter);
+				this.$("form").addClass("inline");
+				this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+				return this;
+			}
+		});
+
 		return openhmis;
 	}
 )
