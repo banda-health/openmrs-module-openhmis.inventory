@@ -26,19 +26,3 @@
 <h2>
     <spring:message code="openhmis.inventory.admin.stockrooms" />
 </h2>
-
-<!--
-<div id="stockroomContent" style="width: 100%;">
-    <div>
-        <div>
-            <h2>
-                <spring:message code="openhmis.inventory.admin.stockrooms" />
-            </h2>
-        </div>
-        <div id="stockroomList"></div>
-    </div>
-</div>
-<div id="stockroomInfo"></div>
-
-<div id="txDialog" style="display: none"></div>
- -->
