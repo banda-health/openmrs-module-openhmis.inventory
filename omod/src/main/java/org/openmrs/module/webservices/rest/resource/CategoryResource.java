@@ -23,6 +23,8 @@ import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = ModuleRestConstants.CATEGORY_RESOURCE, supportedClass=Category.class, supportedOpenmrsVersions={"1.9"})
@@ -30,6 +32,14 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 public class CategoryResource extends BaseRestMetadataResource<Category> {
 
     private static Log LOG = LogFactory.getLog(CategoryResource.class);
+
+    @Override
+    public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+        DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+        description.addProperty("description", Representation.REF);
+
+        return description;
+    }
 
 	@Override
 	public Category newDelegate() {
