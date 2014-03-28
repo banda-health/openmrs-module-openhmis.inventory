@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.openhmis.inventory.api.model" auto-import="false">
+    <class name="Purchaser" table="inv_purchaser">
+        <cache usage="read-write"/>
+
+        <id name="id" type="int" column="purchaser_id">
+            <generator class="native">
+                <param name="sequence">inv_purchaser_purchaser_id_seq</param>
+            </generator>
+        </id>
+        <discriminator column="purchaser_id" insert="false" />
+
+        <property name="name" type="java.lang.String" column="name" not-null="true" length="255" />
+        <property name="description" type="java.lang.String" column="description" length="1024" />
+
+        <!-- bi-directional many-to-one association to User -->
+        <many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+        <property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+
+        <many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+        <property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+
+        <many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+        <property name="dateRetired" type="java.util.Date"
+                  column="date_retired" length="19" />
+        <property name="retireReason" type="java.lang.String"
+                  column="retire_reason" length="255" />
+        <property name="retired" type="boolean" column="retired"
+                  length="1" not-null="true" />
+
+        <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+    </class>
+</hibernate-mapping>

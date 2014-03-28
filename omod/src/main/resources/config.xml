@@ -41,6 +41,7 @@
 		InvDepartment.hbm.xml
 		InvCategory.hbm.xml
 		InvStockroom.hbm.xml
+		InvPurchaser.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

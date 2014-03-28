@@ -15,6 +15,7 @@
 	  <mapping file="InvDepartment.hbm.xml" />
 	  <mapping file="InvCategory.hbm.xml" />
 	  <mapping file="InvStockroom.hbm.xml" />
+	  <mapping file="InvPurchaser.hbm.xml" />
 
   </session-factory>
 </hibernate-configuration>

@@ -322,6 +322,30 @@
 			<column name="stockroom_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
 			<column name="operation_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
 		</createTable>
+		
+		<createTable tableName="inv_purchaser">
+            <column name="purchaser_id" autoIncrement="true" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
+            <column defaultValue="" name="description" type="varchar(1024)" />
+
+            <column name="creator" type="int" defaultValueNumeric="0" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="DATETIME"/>
+            <column defaultValueBoolean="false" name="retired" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retired_by" type="int"/>
+            <column name="date_retired" type="DATETIME"/>
+            <column name="retire_reason" type="varchar(255)"/>
+            <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+        </createTable>
 
 		<createIndex indexName="inv_item_name_idx" tableName="inv_item" unique="false">
 			<column name="name"/>
@@ -567,6 +591,16 @@
 		<addForeignKeyConstraint constraintName="inv_stock_operations_operation_fk"
 		                         baseTableName="inv_stockroom_operations" baseColumnNames="operation_id"
 		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_purchaser_creator_fk"
+                                 baseTableName="inv_purchaser" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="inv_purchaser_changed_by_fk"
+                                 baseTableName="inv_purchaser" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="inv_purchaser_retired_by_fk"
+                                 baseTableName="inv_purchaser" baseColumnNames="retired_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
 
 		<insert tableName="inv_stock_operation_type">
 			<column name="name">Adjustment</column>

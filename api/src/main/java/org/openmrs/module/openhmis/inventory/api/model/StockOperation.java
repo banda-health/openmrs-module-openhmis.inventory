@@ -34,6 +34,7 @@ public class StockOperation
 	protected Stockroom source;
 	protected Stockroom destination;
 	protected Patient patient;
+	protected Purchaser purchaser;
 
 	@Override
 	public Integer getId() {
@@ -78,7 +79,6 @@ public class StockOperation
 			return;
 		}
 
-		// If source exists then remove this operation from it
 		if (this.source != null && this.source != this.destination) {
 			this.source.removeOperation(this);
 		}
@@ -86,7 +86,6 @@ public class StockOperation
 		// Update the source
 		this.source = newSource;
 
-		// If the new source is not null then add this operation to it
 		if (this.source != null) {
 			this.source.addOperation(this);
 		}
@@ -101,7 +100,6 @@ public class StockOperation
 			return;
 		}
 
-		// If destination exists then remove this operation from it
 		if (this.destination != null && this.destination != this.source) {
 			this.destination.removeOperation(this);
 		}
@@ -109,7 +107,6 @@ public class StockOperation
 		// Update the destination
 		this.destination = newDestination;
 
-		// If the new destination is not null then add this operation to it
 		if (this.destination != null) {
 			this.destination.addOperation(this);
 		}
@@ -121,6 +118,14 @@ public class StockOperation
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+
+	public Purchaser getPurchaser() {
+		return purchaser;
+	}
+
+	public void setPurchaser(Purchaser purchaser) {
+		this.purchaser = purchaser;
 	}
 
 	public ReservedTransaction addReserved(Item item, int quantity) {
