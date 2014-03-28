@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.IOException;
 
 @Controller(value="invCategoriesController")
-//@Controller
 @RequestMapping(ModuleWebConstants.CATEGORIES_ROOT)
 public class CategoriesController {
 	@RequestMapping(method = RequestMethod.GET)
