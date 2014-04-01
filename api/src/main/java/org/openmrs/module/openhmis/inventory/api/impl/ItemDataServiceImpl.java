@@ -13,6 +13,10 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
@@ -25,15 +29,12 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServi
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Transactional
 public class ItemDataServiceImpl
@@ -74,11 +75,15 @@ public class ItemDataServiceImpl
 	}
 
 	@Override
+	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Transactional(readOnly = true)
 	public List<Item> getItemsByDepartment(Department department, boolean includeRetired) throws APIException {
 		return getItemsByDepartment(department, includeRetired, null);
 	}
 
 	@Override
+	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Transactional(readOnly = true)
 	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
@@ -98,10 +103,126 @@ public class ItemDataServiceImpl
 	@Override
 	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
 	@Transactional(readOnly = true)
+	public List<Item> getItemsByCategory(Category category, boolean includeRetired) throws APIException {
+		return getItemsByCategory(category, includeRetired, null);
+	}
+
+	@Override
+	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Transactional(readOnly = true)
+	public List<Item> getItemsByCategory(final Category category, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+		if (category == null) {
+			throw new NullPointerException("The category must be defined");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("category", category));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
+	}
+
+	@Override
+	public List<Item> getItemsByDepartmentAndCategory(Department department, Category category, boolean includeRetired) throws APIException {
+		return getItemsByDepartmentAndCategory(department, category, includeRetired, null);
+	}
+
+	@Override
+	public List<Item> getItemsByDepartmentAndCategory(final Department department, final Category category, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+		if (department == null) {
+			throw new NullPointerException("The department must be defined");
+		}
+		if (category == null) {
+			throw new NullPointerException("The category must be defined");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("department", department));
+				criteria.add(Restrictions.eq("category", category));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
+	}
+
+	@Override
+	public List<Item> findItems(Category category, String name, boolean includeRetired) throws APIException {
+		return findItems(category, name, includeRetired, null);
+	}
+
+	@Override
+	public List<Item> findItems(final Category category, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+		if (category == null) {
+			throw new NullPointerException("The category must be defined");
+		}
+		if (StringUtils.isEmpty(name)) {
+			throw new IllegalArgumentException("The item code must be defined.");
+		}
+		if (name.length() > 255) {
+			throw new IllegalArgumentException("The item code must be less than 256 characters.");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("category", category))
+						.add(Restrictions.ilike("name", name, MatchMode.START));
+
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
+	}
+
+	@Override
+	public List<Item> findItems(Department department, Category category, String name, boolean includeRetired) throws APIException {
+		return findItems(department, category, name, includeRetired, null);
+	}
+
+	@Override
+	public List<Item> findItems(final Department department, final Category category, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+		if (department == null) {
+			throw new NullPointerException("The department must be defined");
+		}
+		if (category == null) {
+			throw new NullPointerException("The category must be defined");
+		}
+		if (StringUtils.isEmpty(name)) {
+			throw new IllegalArgumentException("The item code must be defined.");
+		}
+		if (name.length() > 255) {
+			throw new IllegalArgumentException("The item code must be less than 256 characters.");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("department", department))
+						.add(Restrictions.eq("category", category))
+						.add(Restrictions.ilike("name", name, MatchMode.START));
+
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
+	}
+
+	@Override
+	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Transactional(readOnly = true)
 	public List<Item> findItems(Department department, String name, boolean includeRetired) throws APIException {
 		return findItems(department, name, includeRetired, null);
 	}
-	
+
 	@Override
 	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
 	@Transactional(readOnly = true)
@@ -176,5 +297,6 @@ public class ItemDataServiceImpl
 	public String getRetirePrivilege() {
 		return PrivilegeConstants.MANAGE_ITEMS;
 	}
+
 }
 

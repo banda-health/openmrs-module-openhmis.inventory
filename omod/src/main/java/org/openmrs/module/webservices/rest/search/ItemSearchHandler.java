@@ -13,10 +13,17 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -32,18 +39,13 @@ import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Component
 public class ItemSearchHandler implements SearchHandler {
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("1.9.*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Find an item by its name or code, optionally filtering by category and department")
 							.withRequiredParameters("q")
-							.withOptionalParameters("category_uuid")
-							.withOptionalParameters("department_uuid").build()
+							.withOptionalParameters("department_uuid", "category_uuid").build()
 			)
 	);
 
@@ -51,34 +53,65 @@ public class ItemSearchHandler implements SearchHandler {
 	public PageableResult search(RequestContext context) throws ResponseException {
 		String query = context.getParameter("q");
 		String department_uuid = context.getParameter("department_uuid");
+		String category_uuid = context.getParameter("category_uuid");
 		query = query.isEmpty() ? null : query;
-		department_uuid = (department_uuid == null || department_uuid.isEmpty()) ? null : department_uuid;
+		department_uuid = StringUtils.isEmpty(department_uuid) ? null : department_uuid;
+		category_uuid = StringUtils.isEmpty(category_uuid) ? null : category_uuid;
 		IItemDataService service = Context.getService(IItemDataService.class);
 
 		// Try searching by code
 		SimpleObject resultByCode = searchByCode(query, context, service);
-		if (resultByCode != null)
+		if (resultByCode != null) {
 			return new AlreadyPaged<SimpleObject>(context, Arrays.asList(resultByCode), false);
+		}
 
-		if (department_uuid == null) {
-			// Do a name search
-			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-			List<Item> items = service.findByName(query, context.getIncludeAll(), pagingInfo);
-			AlreadyPagedWithLength<Item> results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-			return results;
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+		if (department_uuid == null && category_uuid == null) {
+			return doNameSearch(context, query, service, pagingInfo);
 		}
 		else {
-			IDepartmentDataService deptService = Context.getService(IDepartmentDataService.class);
-			Department department = deptService.getByUuid(department_uuid);
-			// Get all items in the department if no name query is given
-			if (query == null)
-				return searchByDepartment(department_uuid, context);
-			// Do a name + department search
-			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-			List<Item> items = service.findItems(department, query, context.getIncludeAll(), pagingInfo);
+			return doParameterSearch(context, query, department_uuid,
+					category_uuid, service, pagingInfo);
+		}
+	}
+
+	private PageableResult doParameterSearch(RequestContext context, String query, String department_uuid, String category_uuid, IItemDataService service, PagingInfo pagingInfo) {
+
+		IDepartmentDataService deptService = Context.getService(IDepartmentDataService.class);
+		ICategoryDataService categoryService = Context.getService(ICategoryDataService.class);
+		Department department = StringUtils.isBlank(department_uuid) ? null : deptService.getByUuid(department_uuid);
+		Category category = StringUtils.isBlank(category_uuid) ? null : categoryService.getByUuid(category_uuid);
+
+		// Get all items in the department or category if no name query is given
+		if (query == null) {
+			List<Item> items;
+			if (department != null && category != null) {
+				items = service.getItemsByDepartmentAndCategory(department, category, context.getIncludeAll(), pagingInfo);
+			} else if (department != null) {
+				items = service.getItemsByDepartment(department, context.getIncludeAll(), pagingInfo);
+			} else {
+				items = service.getItemsByCategory(category, context.getIncludeAll(), pagingInfo);
+			}
+			PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			return results;
+		} else {
+			List<Item> items;
+			if (department != null && category != null) {
+				items = service.findItems(department, category, query, context.getIncludeAll(), pagingInfo);
+			} else if (department != null) {
+				items = service.findItems(department, query, context.getIncludeAll(), pagingInfo);
+			} else {
+				items = service.findItems(category, query, context.getIncludeAll(), pagingInfo);
+			}
 			PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 			return results;
 		}
+	}
+
+	private PageableResult doNameSearch(RequestContext context, String query, IItemDataService service, PagingInfo pagingInfo) {
+		List<Item> items = service.findByName(query, context.getIncludeAll(), pagingInfo);
+		AlreadyPagedWithLength<Item> results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+		return results;
 	}
 
 	protected SimpleObject searchByCode(String query, RequestContext context, IItemDataService service) throws ResponseException {
@@ -91,17 +124,6 @@ public class ItemSearchHandler implements SearchHandler {
 			return new AlreadyPaged<Item>(context, list, false).toSimpleObject();
 		}
 		return null;
-	}
-
-	public PageableResult searchByDepartment(String department_uuid, RequestContext context) throws ResponseException {
-		IItemDataService service = Context.getService(IItemDataService.class);
-		IDepartmentDataService deptService = Context.getService(IDepartmentDataService.class);
-		Department department = deptService.getByUuid(department_uuid);
-
-		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<Item> items = service.getItemsByDepartment(department, context.getIncludeAll(), pagingInfo);
-		PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-		return results;
 	}
 
 	@Override

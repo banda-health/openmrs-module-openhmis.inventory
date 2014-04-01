@@ -233,7 +233,40 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsNull() throws Exception {
-		service.findItems(null, "something", false);
+		Department department = null;
+		service.findItems(department, "something", false);
+	}
+
+	/**
+	 * @verifies throw NullPointerException if the department is null
+	 * @see IItemDataService#findItems(Category, String, boolean)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsDefinedAndCategoryIsNull() throws Exception {
+		Department department = new Department();
+		Category category = null;
+		service.findItems(department, category, "something", false);
+	}
+
+	/**
+	 * @verifies throw NullPointerException if the department is null
+	 * @see IItemDataService#findItems(Category, String, boolean)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsNullAndCategoryIsDefined() throws Exception {
+		Department department = null;
+		Category category = new Category();
+		service.findItems(department, category, "something", false);
+	}
+
+	/**
+	 * @verifies throw NullPointerException if the department is null
+	 * @see IItemDataService#findItems(Category, String, boolean)
+	 */
+	@Test(expected = NullPointerException.class)
+	public void findItems_shouldThrowNullPointerExceptionIfTheCategoryIsNull() throws Exception {
+		Category category= null;
+		service.findItems(category, "something", false);
 	}
 
 	/**
