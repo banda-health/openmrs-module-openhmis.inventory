@@ -43,6 +43,35 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	Item getItemByCode(String itemCode) throws APIException;
 
 	/**
+	 * Gets all items with the specified code or {@code null} if not found.
+	 * This is needed as long as it is not mandatory for codes to be unique
+	 * @param itemCode The item code to find.
+	 * @return All items with the specified item code or {@code null}.
+	 * @param includeRetired Whether retired items should be included in the results.
+	 * @throws APIException
+	 * @should throw IllegalArgumentException if the item code is null
+	 * @should throw IllegalArgumentException if the item code is longer than 255 characters
+	 * @should return the item with the specified item code
+	 * @should return null if the item code is not found
+	 */
+	@Transactional(readOnly =  true)
+	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	List<Item> getItemsByCode(String itemCode, boolean includeRetired) throws APIException;
+
+	/**
+	 * Gets all the items for the specified code.
+	 * This is needed as long as it is not mandatory for codes to be unique
+	 * @param itemCode The item code to find.
+	 * @param includeRetired Whether retired items should be included in the results.
+	 * @param pagingInfo The paging information
+	 * @return All items for the specified code.
+	 * @throws APIException
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	List<Item> getItemsByCode(String itemCode, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+
+	/**
 	 * Gets all the items for the specified {@link Department}.
 	 * @param department The department.
 	 * @param includeRetired Whether retired items should be included in the results.

@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +26,6 @@ import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -35,7 +33,6 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
-import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
 
@@ -51,27 +48,28 @@ public class ItemSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
+
 		String query = context.getParameter("q");
 		String department_uuid = context.getParameter("department_uuid");
 		String category_uuid = context.getParameter("category_uuid");
+
 		query = query.isEmpty() ? null : query;
 		department_uuid = StringUtils.isEmpty(department_uuid) ? null : department_uuid;
 		category_uuid = StringUtils.isEmpty(category_uuid) ? null : category_uuid;
 		IItemDataService service = Context.getService(IItemDataService.class);
 
 		// Try searching by code
-		SimpleObject resultByCode = searchByCode(query, context, service);
-		if (resultByCode != null) {
-			return new AlreadyPaged<SimpleObject>(context, Arrays.asList(resultByCode), false);
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+		List<Item> items = service.getItemsByCode(query, context.getIncludeAll(), pagingInfo);
+		if (items.size() > 0) {
+			return new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		}
 
-		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		if (department_uuid == null && category_uuid == null) {
 			return doNameSearch(context, query, service, pagingInfo);
 		}
 		else {
-			return doParameterSearch(context, query, department_uuid,
-					category_uuid, service, pagingInfo);
+			return doParameterSearch(context, query, department_uuid, category_uuid, service, pagingInfo);
 		}
 	}
 
@@ -112,18 +110,6 @@ public class ItemSearchHandler implements SearchHandler {
 		List<Item> items = service.findByName(query, context.getIncludeAll(), pagingInfo);
 		AlreadyPagedWithLength<Item> results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		return results;
-	}
-
-	protected SimpleObject searchByCode(String query, RequestContext context, IItemDataService service) throws ResponseException {
-		if (query == null) return null;
-		if (service == null) service = Context.getService(IItemDataService.class);
-		Item itemByCode = service.getItemByCode(query);
-		if (itemByCode != null) {
-			List<Item> list = new ArrayList<Item>(1);
-			list.add(itemByCode);
-			return new AlreadyPaged<Item>(context, list, false).toSimpleObject();
-		}
-		return null;
 	}
 
 	@Override

@@ -75,6 +75,33 @@ public class ItemDataServiceImpl
 	}
 
 	@Override
+	@Transactional(readOnly =  true)
+	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	public List<Item> getItemsByCode(String itemCode, boolean includeRetired) throws APIException {
+		return getItemsByCode(itemCode, includeRetired, null);
+	}
+
+	@Override
+	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Transactional(readOnly = true)
+	public List<Item> getItemsByCode(final String itemCode, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+		if (StringUtils.isEmpty(itemCode)) {
+			throw new NullPointerException("The item code must be defined");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.createAlias("codes", "c")
+				.add(Restrictions.eq("c.code", itemCode));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq("retired", false));
+				}
+			}
+		});
+	}
+
+	@Override
 	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
 	@Transactional(readOnly = true)
 	public List<Item> getItemsByDepartment(Department department, boolean includeRetired) throws APIException {
