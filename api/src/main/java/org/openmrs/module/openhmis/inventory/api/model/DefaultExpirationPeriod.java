@@ -5,9 +5,10 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpen
 public class DefaultExpirationPeriod extends BaseSerializableOpenmrsMetadata {
     public static final long serialVersionUID = 0L;
 
-    Integer defaultExpirationPeriodId;
-    Integer timeValue;
-    TimePeriod timePeriod;
+    private Integer defaultExpirationPeriodId;
+    private Integer timeValue;
+    private TimePeriod timePeriod;
+    private Item item;
 
     @Override
     public Integer getId() {
@@ -33,6 +34,14 @@ public class DefaultExpirationPeriod extends BaseSerializableOpenmrsMetadata {
 
     public void setTimePeriod(TimePeriod timePeriod) {
         this.timePeriod = timePeriod;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 
 }

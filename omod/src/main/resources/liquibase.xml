@@ -792,4 +792,26 @@
 		                         baseTableName="inv_item_stock_detail" baseColumnNames="item_stock_id"
 		                         referencedTableName="inv_item_stock" referencedColumnNames="item_stock_id"/>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.0.0-5" author="marios">
+        <createTable tableName="inv_default_expiration_period">
+            <column name="default_expiration_period_id" autoIncrement="true" type="int">
+                <constraints nullable="false" primaryKey="true" />
+            </column>
+            <column name="item_id" type="int"><constraints nullable="false"/></column>
+            <column name="time_value" type="int"><constraints nullable="false"/></column>
+            <column name="time_period" type="varchar(50)"><constraints nullable="false" /></column>
+
+            <column defaultValue="" name="name" type="varchar(255)" />
+
+            <column name="creator" type="int" defaultValueNumeric="0" ><constraints nullable="false"/></column>
+            <column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="DATETIME"/>
+            <column defaultValueBoolean="false" name="retired" type="BOOLEAN"><constraints nullable="false"/></column>
+            <column name="retired_by" type="int"/>
+            <column name="date_retired" type="DATETIME"/>
+            <column name="retire_reason" type="varchar(255)"/>
+            <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

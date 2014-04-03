@@ -17,7 +17,8 @@ define(
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
 		openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category'
+        openhmis.url.inventoryBase + 'js/model/category',
+        openhmis.url.backboneBase + 'js/model/fieldGenHandler'
 	],
 	function(_, openhmis, __) {
 		openhmis.ItemCode = openhmis.GenericModel.extend({
@@ -71,6 +72,26 @@ define(
 			}
 		});
 
+		openhmis.DefaultExpirationPeriod = openhmis.GenericModel.extend({
+			meta: {
+				name: "Default Expiration Period",
+				namePlural: "Default Expiration Periods",
+				openmrsType: 'metadata',
+				restUrl: openhmis.url.inventoryModelBase + 'defaultExpirationPeriod'
+			},
+			schema: {
+				timeValue : {type: 'BasicNumber'},
+				timePeriod: {type: 'Text'},
+			},
+
+			TimePeriod: {
+				DAY:	{value: "DAY", name: "day"},
+				WEEK:	{value: "WEEK", name: "week"},
+				MONTH:	{value: "MONTH", name: "month"},
+				YEAR:	{value: "YEAR", name: "year"}
+			},
+		});
+
 		openhmis.Item = openhmis.GenericModel.extend({
 			meta: {
 				name: "Item",
@@ -98,6 +119,7 @@ define(
                     objRef: true
                 },
 				hasExpiration: { type: "Checkbox" },
+				defaultExpirationPeriod: { type: 'List', itemType: 'NestedModel', model: openhmis.DefaultExpirationPeriod },
 				hasPhysicalInventory: { type: "Checkbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },

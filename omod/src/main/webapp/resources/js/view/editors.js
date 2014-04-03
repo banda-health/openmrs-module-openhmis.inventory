@@ -54,6 +54,10 @@ define(
 			displayAttr: "name"
 		});
 
+		editors.DefaultExpirationPeriod = editors.Base.extend({
+			modelType: openhmis.DefaultExpirationPeriod
+		});
+
 		editors.Item = editors.Base.extend({
 			tagName: "span",
 			className: "editor",
