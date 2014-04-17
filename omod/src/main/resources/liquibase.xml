@@ -794,10 +794,7 @@
 	</changeSet>
 	<changeSet id="openhmis.inventory-v1.0.0-5" author="marios">
         <createTable tableName="inv_default_expiration_period">
-            <column name="default_expiration_period_id" autoIncrement="true" type="int">
-                <constraints nullable="false" primaryKey="true" />
-            </column>
-            <column name="item_id" type="int"><constraints nullable="false"/></column>
+            <column name="item_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
             <column name="time_value" type="int"><constraints nullable="false"/></column>
             <column name="time_period" type="varchar(50)"><constraints nullable="false" /></column>
 
@@ -813,5 +810,8 @@
             <column name="retire_reason" type="varchar(255)"/>
             <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
         </createTable>
+        <addForeignKeyConstraint constraintName="inv_default_expiration_period_fk"
+                         baseTableName="inv_default_expiration_period" baseColumnNames="item_id"
+                         referencedTableName="inv_item" referencedColumnNames="item_id"/>
     </changeSet>
 </databaseChangeLog>

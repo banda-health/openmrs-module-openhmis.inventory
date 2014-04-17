@@ -16,28 +16,18 @@ package org.openmrs.module.webservices.rest.resource;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.helper.Converter;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ConversionException;
 
-import java.math.BigDecimal;
-
 @Resource(name= ModuleRestConstants.ITEM_PRICE_RESOURCE, supportedClass=ItemPrice.class, supportedOpenmrsVersions={"1.9"})
 public class ItemPriceResource extends BaseRestMetadataResource<ItemPrice> implements IMetadataDataServiceResource<ItemPrice> {
 	@PropertySetter(value = "price")
 	public void setPrice(ItemPrice instance, Object price) throws ConversionException {
-		instance.setPrice(objectToBigDecimal(price));
-	}
-	
-	public static BigDecimal objectToBigDecimal(Object number) throws ConversionException {
-		if (Double.class.isAssignableFrom(number.getClass()))
-			return BigDecimal.valueOf((Double) number);
-		else if (Integer.class.isAssignableFrom(number.getClass()))
-			return BigDecimal.valueOf((Integer) number);
-		else
-			throw new ConversionException("Can't convert given number to " + BigDecimal.class.getSimpleName());		
+		instance.setPrice(Converter.objectToBigDecimal(price));
 	}
 	
 	@Override

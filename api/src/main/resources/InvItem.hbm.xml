@@ -181,7 +181,7 @@
         <property name="timePeriod" not-null="true" column="time_period">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">org.openmrs.module.openhmis.inventory.api.model.TimePeriod</param>
-                <param name="type">12</param> <!-- Set the type to be varchar -->
+                <param name="type">12</param> <!-- Set the type to be varchar --> 
             </type>
         </property>
 

@@ -18,7 +18,6 @@ define(
 		openhmis.url.backboneBase + 'js/lib/i18n',
 		openhmis.url.inventoryBase + 'js/model/department',
         openhmis.url.inventoryBase + 'js/model/category',
-        openhmis.url.backboneBase + 'js/model/fieldGenHandler'
 	],
 	function(_, openhmis, __) {
 		openhmis.ItemCode = openhmis.GenericModel.extend({
@@ -84,12 +83,10 @@ define(
 				timePeriod: {type: 'Text'},
 			},
 
-			TimePeriod: {
-				DAY:	{value: "DAY", name: "day"},
-				WEEK:	{value: "WEEK", name: "week"},
-				MONTH:	{value: "MONTH", name: "month"},
-				YEAR:	{value: "YEAR", name: "year"}
+			toString: function() {
+				return this.get('timeValue') + ' ' + this.get('timePeriod');
 			},
+
 		});
 
 		openhmis.Item = openhmis.GenericModel.extend({
@@ -119,7 +116,7 @@ define(
                     objRef: true
                 },
 				hasExpiration: { type: "Checkbox" },
-				defaultExpirationPeriod: { type: 'List', itemType: 'NestedModel', model: openhmis.DefaultExpirationPeriod },
+				defaultExpirationPeriod: { type: 'DefaultExpirationPeriod' },
 				hasPhysicalInventory: { type: "Checkbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
@@ -204,6 +201,17 @@ define(
 				if (!attrs.defaultPrice) {
 					return { defaultPrice: "Please specify a default price."}
 				}
+				if (attrs.defaultExpirationPeriod) {
+					if (!attrs.defaultExpirationPeriod.get('timeValue') && attrs.defaultExpirationPeriod.get('timePeriod')) {
+						return { defaultExpirationPeriod: "Please specify a value."}
+					}
+					if (attrs.defaultExpirationPeriod.get('timeValue') != '' && attrs.defaultExpirationPeriod.get('timeValue') <= 0) {
+						return { defaultExpirationPeriod: "Value must be greater than 0. " + attrs.defaultExpirationPeriod.get('timeValue')}
+					}
+					if (!attrs.defaultExpirationPeriod.get('timePeriod') && attrs.defaultExpirationPeriod.get('timeValue')) {
+						return { defaultExpirationPeriod: "Please specify a period."}
+					}
+				}
 				return null;
 			},
 
@@ -212,15 +220,17 @@ define(
 					if (resp.department && _.isObject(resp.department)) {
 						resp.department = new openhmis.Department(resp.department);
 					}
-					if (resp.category && _.isObject(resp.category)) {
-						resp.category = new openhmis.Category(resp.category);
-					}
+
 					if (resp.prices) {
 						resp.prices = new openhmis.GenericCollection(resp.prices, { model: openhmis.ItemPrice }).models;
 					}
 					if (resp.defaultPrice) {
 						resp.defaultPrice = new openhmis.ItemPrice(resp.defaultPrice);
 					}
+					if (resp.defaultExpirationPeriod && _.isObject(resp.defaultExpirationPeriod)) {
+						resp.defaultExpirationPeriod = new openhmis.DefaultExpirationPeriod(resp.defaultExpirationPeriod);
+					}
+
 				}
 				return resp;
 			},

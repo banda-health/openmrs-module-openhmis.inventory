@@ -14,7 +14,6 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 
 public interface ICategoryDataService extends IMetadataDataService<Category> {
