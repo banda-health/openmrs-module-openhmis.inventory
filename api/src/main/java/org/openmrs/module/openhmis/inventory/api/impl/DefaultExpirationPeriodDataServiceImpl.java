@@ -26,7 +26,7 @@ public class DefaultExpirationPeriodDataServiceImpl
 
     @Override
     protected IMetadataAuthorizationPrivileges getPrivileges() {
-        return this;
+        return new BasicMetadataAuthorizationPrivileges();
     }
 
     @Override
