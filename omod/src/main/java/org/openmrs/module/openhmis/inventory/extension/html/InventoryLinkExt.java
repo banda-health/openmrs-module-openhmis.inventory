@@ -8,7 +8,7 @@ import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.web.extension.LinkExt;
 
-public class InventoryLinkExt extends LinkExt{
+public class InventoryLinkExt extends LinkExt {
 
     private boolean hasInventoryRights = false;
 
