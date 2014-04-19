@@ -24,7 +24,7 @@
 		<many-to-one name="defaultPrice" class="ItemPrice" column="default_price_id" />
 		<many-to-one name="concept" class="org.openmrs.Concept" column="concept_id" />
 		<many-to-one name="drug" class="org.openmrs.Drug" column="drug_id" />
-		<one-to-one name="defaultExpirationPeriod" class="DefaultExpirationPeriod" cascade="save-update" />
+		<one-to-one name="defaultExpirationPeriod" class="DefaultExpirationPeriod" cascade="all-delete-orphan" />
 
 		<set name="attributes" lazy="true" inverse="true" batch-size="100"
 		     cascade="all-delete-orphan" order-by="voided asc">

@@ -15,7 +15,6 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.IDefaultExpirationPeriodDataService;
 import org.openmrs.module.openhmis.inventory.api.model.DefaultExpirationPeriod;
 import org.openmrs.module.openhmis.inventory.api.model.TimePeriod;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -71,7 +70,7 @@ public class DefaultExpirationPeriodResource extends BaseRestMetadataResource<De
 
     @Override
     public Class<? extends IMetadataDataService<DefaultExpirationPeriod>> getServiceClass() {
-        return IDefaultExpirationPeriodDataService.class;
+        return null;
     }
 
 }
