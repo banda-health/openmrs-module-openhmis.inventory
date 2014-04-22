@@ -17,7 +17,7 @@ define(
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
 		openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category',
+        openhmis.url.inventoryBase + 'js/model/category'
 	],
 	function(_, openhmis, __) {
 		openhmis.ItemCode = openhmis.GenericModel.extend({
@@ -227,8 +227,8 @@ define(
 					if (resp.defaultPrice) {
 						resp.defaultPrice = new openhmis.ItemPrice(resp.defaultPrice);
 					}
-					if (resp.defaultExpirationPeriod && _.isObject(resp.defaultExpirationPeriod)) {
-						resp.defaultExpirationPeriod = new openhmis.DefaultExpirationPeriod(resp.defaultExpirationPeriod);
+					if (resp.category && _.isObject(resp.category)) {
+						resp.category = new openhmis.Category(resp.category);
 					}
 
 				}
