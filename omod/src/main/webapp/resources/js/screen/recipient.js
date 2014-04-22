@@ -17,7 +17,7 @@ curl(
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/openhmis',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
-		openhmis.url.inventoryBase + 'js/model/purchaser',
+		openhmis.url.inventoryBase + 'js/model/recipient',
 		openhmis.url.backboneBase + 'js/view/generic',
 
 		openhmis.url.backboneBase + 'js/view/list',
@@ -28,7 +28,7 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
-			openhmis.startAddEditScreen(openhmis.Purchaser, {
+			openhmis.startAddEditScreen(openhmis.Recipient, {
 				listView: openhmis.GenericSearchableListView,
 				searchView: openhmis.ByNameSearchView,
 				listFields: ['name', 'description']

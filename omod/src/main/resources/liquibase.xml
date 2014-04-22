@@ -323,8 +323,8 @@
 			<column name="operation_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
 		</createTable>
 		
-		<createTable tableName="inv_purchaser">
-            <column name="purchaser_id" autoIncrement="true" type="int">
+		<createTable tableName="inv_recipient">
+            <column name="recipient_id" autoIncrement="true" type="int">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column defaultValue="" name="name" type="varchar(255)"><constraints nullable="false"/></column>
@@ -592,14 +592,14 @@
 		                         baseTableName="inv_stockroom_operations" baseColumnNames="operation_id"
 		                         referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
 
-		<addForeignKeyConstraint constraintName="inv_purchaser_creator_fk"
-                                 baseTableName="inv_purchaser" baseColumnNames="creator"
+		<addForeignKeyConstraint constraintName="inv_recipient_creator_fk"
+                                 baseTableName="inv_recipient" baseColumnNames="creator"
                                  referencedTableName="users" referencedColumnNames="user_id"/>
-        <addForeignKeyConstraint constraintName="inv_purchaser_changed_by_fk"
-                                 baseTableName="inv_purchaser" baseColumnNames="changed_by"
+        <addForeignKeyConstraint constraintName="inv_recipient_changed_by_fk"
+                                 baseTableName="inv_recipient" baseColumnNames="changed_by"
                                  referencedTableName="users" referencedColumnNames="user_id"/>
-        <addForeignKeyConstraint constraintName="inv_purchaser_retired_by_fk"
-                                 baseTableName="inv_purchaser" baseColumnNames="retired_by"
+        <addForeignKeyConstraint constraintName="inv_recipient_retired_by_fk"
+                                 baseTableName="inv_recipient" baseColumnNames="retired_by"
                                  referencedTableName="users" referencedColumnNames="user_id"/>
 
 		<insert tableName="inv_stock_operation_type">

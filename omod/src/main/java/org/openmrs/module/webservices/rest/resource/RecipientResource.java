@@ -16,16 +16,16 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.IPurchaserDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Purchaser;
+import org.openmrs.module.openhmis.inventory.api.IRecipientDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Recipient;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.PURCHASER_RESOURCE, supportedClass=Purchaser.class, supportedOpenmrsVersions={"1.9"})
-@Handler(supports = { Purchaser.class }, order = 0)
-public class PurchaserResource extends BaseRestMetadataResource<Purchaser> {
+@Resource(name = ModuleRestConstants.RECIPIENT_RESOURCE, supportedClass=Recipient.class, supportedOpenmrsVersions={"1.9"})
+@Handler(supports = { Recipient.class }, order = 0)
+public class RecipientResource extends BaseRestMetadataResource<Recipient> {
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -36,13 +36,13 @@ public class PurchaserResource extends BaseRestMetadataResource<Purchaser> {
     }
 
     @Override
-    public Purchaser newDelegate() {
-        return new Purchaser();
+    public Recipient newDelegate() {
+        return new Recipient();
     }
 
     @Override
-    public Class<? extends IMetadataDataService<Purchaser>> getServiceClass() {
-        return IPurchaserDataService.class;
+    public Class<? extends IMetadataDataService<Recipient>> getServiceClass() {
+        return IRecipientDataService.class;
     }
 
 }

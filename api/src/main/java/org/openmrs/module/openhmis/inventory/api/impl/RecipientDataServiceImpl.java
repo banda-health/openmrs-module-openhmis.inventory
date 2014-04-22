@@ -17,22 +17,22 @@
 	import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
-import org.openmrs.module.openhmis.inventory.api.IPurchaserDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Purchaser;
+import org.openmrs.module.openhmis.inventory.api.IRecipientDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Recipient;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
 	@Transactional
-	public class PurchaserDataServiceImpl
-			extends BaseMetadataDataServiceImpl<Purchaser>
-			implements IPurchaserDataService {
+	public class RecipientDataServiceImpl
+			extends BaseMetadataDataServiceImpl<Recipient>
+			implements IRecipientDataService {
 		@Override
 		protected IMetadataAuthorizationPrivileges getPrivileges() {
 			return new BasicMetadataAuthorizationPrivileges();
 		}
 
 		@Override
-		protected void validate(Purchaser entity) throws APIException {
+		protected void validate(Recipient entity) throws APIException {
 			return;
 		}
 	}

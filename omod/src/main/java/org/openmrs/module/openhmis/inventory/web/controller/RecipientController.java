@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 //The non-standard controller name is to avoid name conflicts with old versions of the cashier module
-@Controller(value="invPurchaserController")
-@RequestMapping(ModuleWebConstants.PURCHASER_ROOT)
-public class PurchaserController {
+@Controller(value="invRecipientController")
+@RequestMapping(ModuleWebConstants.RECIPIENT_ROOT)
+public class RecipientController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void departments(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
-		model.addAttribute("modelBase", "openhmis.inventory.purchaser");
+		model.addAttribute("modelBase", "openhmis.inventory.recipient");
 	}
 }

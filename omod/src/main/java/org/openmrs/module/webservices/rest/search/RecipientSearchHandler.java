@@ -20,8 +20,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
-import org.openmrs.module.openhmis.inventory.api.IPurchaserDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Purchaser;
+import org.openmrs.module.openhmis.inventory.api.IRecipientDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Recipient;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -34,11 +34,11 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PurchaserSearchHandler implements SearchHandler {
+public class RecipientSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.PURCHASER_RESOURCE, Arrays.asList("1.9.*"),
+    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.RECIPIENT_RESOURCE, Arrays.asList("1.9.*"),
             Arrays.asList(
-                    new SearchQuery.Builder("Find a purchaser by its name")
+                    new SearchQuery.Builder("Find a recipient by its name")
                             .withRequiredParameters("q")
                             .build()
             )
@@ -52,17 +52,17 @@ public class PurchaserSearchHandler implements SearchHandler {
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
         String query = context.getParameter("q");
-        IPurchaserDataService service = Context.getService(IPurchaserDataService.class);
+        IRecipientDataService service = Context.getService(IRecipientDataService.class);
         PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
-        List<Purchaser> purchaser;
+        List<Recipient> recipient;
         if (StringUtils.isBlank(query)) {
-            purchaser = service.getAll(context.getIncludeAll(), pagingInfo);
+            recipient = service.getAll(context.getIncludeAll(), pagingInfo);
         } else {
-            purchaser = service.findByName(query, context.getIncludeAll(), pagingInfo);
+            recipient = service.findByName(query, context.getIncludeAll(), pagingInfo);
         }
 
-        AlreadyPagedWithLength<Purchaser> results = new AlreadyPagedWithLength<Purchaser>(context, purchaser, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+        AlreadyPagedWithLength<Recipient> results = new AlreadyPagedWithLength<Recipient>(context, recipient, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
         return results;
     }
 
