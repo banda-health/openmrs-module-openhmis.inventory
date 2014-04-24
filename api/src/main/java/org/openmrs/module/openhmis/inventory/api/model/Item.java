@@ -39,7 +39,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Drug drug;
 	private ItemPrice defaultPrice;
 	private boolean hasExpiration;
-	private DefaultExpirationPeriod defaultExpirationPeriod;
+	private Integer defaultExpirationPeriod;
 	private boolean hasPhysicalInventory;
 
 	public Item() {
@@ -199,11 +199,11 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		this.hasExpiration = hasExpiration == null? false : hasExpiration;
 	}
 
-	public DefaultExpirationPeriod getDefaultExpirationPeriod() {
+	public Integer getDefaultExpirationPeriod() {
 		return defaultExpirationPeriod;
 	}
 
-	public void setDefaultExpirationPeriod(DefaultExpirationPeriod defaultExpirationPeriod) {
+	public void setDefaultExpirationPeriod(Integer defaultExpirationPeriod) {
 		this.defaultExpirationPeriod = defaultExpirationPeriod;
 	}
 

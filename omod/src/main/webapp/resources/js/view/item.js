@@ -11,9 +11,13 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
+
 define(
 	[
-		openhmis.url.backboneBase + 'js/view/generic'
+
+		openhmis.url.backboneBase + 'js/view/generic',
+		openhmis.url.backboneBase + 'js/view/editors',
+		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 	],
 	function(openhmis) {
 		openhmis.ItemAddEditView = openhmis.GenericAddEditView.extend({

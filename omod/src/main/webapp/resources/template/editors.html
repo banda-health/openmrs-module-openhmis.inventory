@@ -25,13 +25,6 @@
 	<input type="hidden" class="item-uuid" />
 </script>
 
-<script id="defaultExpirationPeriod" type="text/template">
-    <input type="number" id="timeValue" name="timeValue" style="width: 50px" value="<?= (timeValue != null) ? timeValue : '' ?>">
-    <select id="timePeriod" name="timePeriod">
-        <option value=""><em>--period--</em></option>
-        <option value="DAY" <?= (timePeriod === 'DAY') ? ' selected="selected"' : '' ?>><em>Day</em></option>
-        <option value="WEEK" <?= (timePeriod === 'WEEK') ? ' selected="selected"' : '' ?>><em>Week</em></option>
-        <option value="MONTH" <?= (timePeriod === 'MONTH') ? ' selected="selected"' : '' ?>><em>Month</em></option>
-        <option value="YEAR" <?= (timePeriod === 'YEAR') ? ' selected="selected"' : '' ?>><em>Year</em></option>
-    </select>
+<script id="defaultExpirationPeriodStepper-editor" type="text/template">
+    <input type="number" id="defaultExpirationPeriod" name="defaultExpirationPeriod" style="width: 50px" value="<?= (defaultExpirationPeriod != null) ? defaultExpirationPeriod : '' ?>">
 </script>

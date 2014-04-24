@@ -17,6 +17,7 @@
 		<property name="description" type="java.lang.String" column="description" length="1024" />
 		<property name="hasExpiration" type="boolean" column="has_expiration" />
 		<property name="hasPhysicalInventory" type="boolean" column="has_physical_inventory" />
+		<property name="defaultExpirationPeriod" type="int" column="default_expiration_period" />
 
 		<!-- Associations -->
 		<many-to-one name="department" class="Department" column="department_id" />
@@ -24,7 +25,6 @@
 		<many-to-one name="defaultPrice" class="ItemPrice" column="default_price_id" />
 		<many-to-one name="concept" class="org.openmrs.Concept" column="concept_id" />
 		<many-to-one name="drug" class="org.openmrs.Drug" column="drug_id" />
-		<one-to-one name="defaultExpirationPeriod" class="DefaultExpirationPeriod" cascade="all-delete-orphan" />
 
 		<set name="attributes" lazy="true" inverse="true" batch-size="100"
 		     cascade="all-delete-orphan" order-by="voided asc">
@@ -167,35 +167,4 @@
 
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
-	
-	<class name="DefaultExpirationPeriod" table="inv_default_expiration_period">
-        <id name="id" type="int" column="item_id">
-            <generator class="foreign">
-                <param name="property">item</param>
-            </generator>
-        </id>
-        <one-to-one name="item" class="Item" constrained="true"></one-to-one>
-        
-        <property name="name" type="java.lang.String" column="name" not-null="false" length="255" />
-        <property name="timeValue" type="int" column="time_value" />
-        <property name="timePeriod" not-null="true" column="time_period">
-            <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">org.openmrs.module.openhmis.inventory.api.model.TimePeriod</param>
-                <param name="type">12</param> <!-- Set the type to be varchar --> 
-            </type>
-        </property>
-
-        <many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
-        <property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
-
-        <many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
-        <property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
-
-        <property name="retired" type="java.lang.Boolean" column="retired" length="1" not-null="true" />
-        <many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
-        <property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
-        <property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
-
-        <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
-    </class>
 </hibernate-mapping>

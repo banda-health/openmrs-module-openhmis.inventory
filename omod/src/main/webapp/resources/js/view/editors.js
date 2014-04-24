@@ -54,69 +54,70 @@ define(
       displayAttr: "name"
     });
 
-    editors.DefaultExpirationPeriod = editors.Base.extend({
-      tagName: "span",
-      className: "editor",
-      tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
-      tmplSelector: '#defaultExpirationPeriod',
+    editors.DefaultExpirationPeriodStepper = editors.Base.extend({
+        tagName: "span",
+        className: "editor",
+        tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
+        tmplSelector: '#defaultExpirationPeriodStepper-editor',
 
-      initialize: function(options) {
-        _.bindAll(this);
-        editors.Base.prototype.initialize.call(this, options);
-        this.template = this.getTemplate();
-      },
-
-      events: {
-        'change #timeValue': 'update',
-        'change #timePeriod': 'update'
-            },
-
-      getValue: function() {
-        return this.value;
-      },
-
-        setValue: function() {
-          console.log('setValue');
+        initialize: function(options) {
+            this.events = _.extend({}, this.events, {
+                'keypress': 'onKeyPress'
+            });
+            _.bindAll(this);
+            editors.Base.prototype.initialize.call(this, options);
+            this.template = this.getTemplate();
         },
 
-        focus: function() {
-          console.log('focus');
+        events: {
+            'change #defaultExpirationPeriod': 'update'
         },
 
-        blur: function() {
-          console.log('blur');
+        onKeyPress: function(event) {
+            //this is for firefox as arrows are detected as keypress events
+            if ($('input[name=defaultExpirationPeriod]').is(':focus')) {
+                var view = this;
+                if(event.keyCode === 38 /*arrow up*/) {
+                    if (this.value == null) {
+                        this.value = 0;
+                    }
+                    var defaultExpirationPeriod = parseInt(this.value);
+                    this.$('#defaultExpirationPeriod').val(defaultExpirationPeriod + 1)
+                    this.update();
+                }
+                if(event.keyCode === 40 && this.value != null /*arrow down*/) {
+                    var defaultExpirationPeriod = parseInt(this.value);
+                    if (defaultExpirationPeriod > 0) {
+                        this.$('#defaultExpirationPeriod').val(defaultExpirationPeriod - 1)
+                        this.update();
+                    }
+                }
+            }
+        },
+
+        getValue: function() {
+            return this.value;
         },
 
         update: function() {
-          var selectedTimePeriod = this.$('#timePeriod').val();
-          var inputTimeValue = this.$('#timeValue').val();
-          this.value.set('timePeriod', selectedTimePeriod);
-          this.value.set('timeValue', inputTimeValue);
+            this.value = this.$('#defaultExpirationPeriod').val();
         },
 
-      render: function() {
-        var defaultExpirationPeriodHolder;
-        if (this.value != null) {
-          defaultExpirationPeriodHolder = this.value;
-        } else {
-          defaultExpirationPeriodHolder = new openhmis.DefaultExpirationPeriod();
-          this.value = defaultExpirationPeriodHolder;
+        render: function() {
+            this.$el.html(this.template({
+                defaultExpirationPeriod: this.value,
+            }));
+            this.$('input[type=number]').stepper({
+                allowArrows: false,
+                limit: [0, null],
+                onStep: this.update
+            });
+            this.$('#outer-span-stepper').removeClass("ui-widget-content-spinner")
+            .removeClass("ui-spinner-input-spinner")
+            .addClass("ui-spinner-input-spinner-border")
+            .addClass("ui-widget-content-spinner-border");
+            return this;
         }
-        this.$el.html(this.template({
-          timeValue: defaultExpirationPeriodHolder.get('timeValue'),
-          timePeriod: defaultExpirationPeriodHolder.get('timePeriod')
-        }));
-        this.$('input[type=number]').stepper({
-          allowArrows: false,
-          limit: [0, null],
-          onStep: this.update
-        });
-        this.$('#outer-span-stepper').removeClass("ui-widget-content-spinner")
-                .removeClass("ui-spinner-input-spinner")
-                .addClass("ui-spinner-input-spinner-border")
-                .addClass("ui-widget-content-spinner-border");
-        return this;
-      }
     });
 
     editors.Item = editors.Base.extend({

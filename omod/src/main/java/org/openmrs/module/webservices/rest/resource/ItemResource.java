@@ -20,9 +20,9 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
-import org.openmrs.module.openhmis.inventory.api.model.DefaultExpirationPeriod;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
@@ -55,7 +55,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
             description.addProperty("category", Representation.REF);
             description.addProperty("defaultPrice", Representation.REF);
             description.addProperty("hasExpiration");
-            description.addProperty("defaultExpirationPeriod", Representation.REF);
+            description.addProperty("defaultExpirationPeriod");
             description.addProperty("hasPhysicalInventory");
         }
 
@@ -110,7 +110,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
             }
         });
 
-
         if (results != null && results.size() > 0) {
             instance.setDefaultPrice(Iterables.getOnlyElement(results));
         } else {
@@ -121,20 +120,11 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
     }
 
     @PropertySetter(value="defaultExpirationPeriod")
-    public void setDefaultExpirationPeriod(Item instance, DefaultExpirationPeriod defaultExpirationPeriod) {
-        if (defaultExpirationPeriod.hasValidValues()) {
-            if (instance.getDefaultExpirationPeriod() != null) {
-                DefaultExpirationPeriod oldDefaultExpirationPeriod = instance.getDefaultExpirationPeriod();
-                oldDefaultExpirationPeriod.setTimePeriod(defaultExpirationPeriod.getTimePeriod());
-                oldDefaultExpirationPeriod.setTimeValue(defaultExpirationPeriod.getTimeValue());
-            } else {
-                defaultExpirationPeriod.setItem(instance);
-                instance.setDefaultExpirationPeriod(defaultExpirationPeriod);
-            }
+    public void setDefaultExpirationPeriod(Item instance, String period) {
+        if (StringUtils.isBlank(period)) {
+            instance.setDefaultExpirationPeriod(null);
         } else {
-            if (defaultExpirationPeriod.getTimePeriod() == null && defaultExpirationPeriod.getTimeValue() == null) {
-                instance.setDefaultExpirationPeriod(null);
-            }
+            instance.setDefaultExpirationPeriod(Integer.parseInt(period));
         }
     }
 

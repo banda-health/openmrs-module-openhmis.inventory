@@ -11,6 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
+
 define(
 	[
 		openhmis.url.backboneBase + 'js/lib/underscore',
@@ -71,23 +72,6 @@ define(
 			}
 		});
 
-		openhmis.DefaultExpirationPeriod = openhmis.GenericModel.extend({
-			meta: {
-				name: "Default Expiration Period",
-				namePlural: "Default Expiration Periods",
-				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'defaultExpirationPeriod'
-			},
-			schema: {
-				timeValue : {type: 'BasicNumber'},
-				timePeriod: {type: 'Text'},
-			},
-
-			toString: function() {
-				return this.get('timeValue') + ' ' + this.get('timePeriod');
-			},
-
-		});
 
 		openhmis.Item = openhmis.GenericModel.extend({
 			meta: {
@@ -116,7 +100,7 @@ define(
                     objRef: true
                 },
 				hasExpiration: { type: "Checkbox" },
-				defaultExpirationPeriod: { type: 'DefaultExpirationPeriod' },
+				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
 				hasPhysicalInventory: { type: "Checkbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
@@ -201,16 +185,8 @@ define(
 				if (!attrs.defaultPrice) {
 					return { defaultPrice: "Please specify a default price."}
 				}
-				if (attrs.defaultExpirationPeriod) {
-					if (!attrs.defaultExpirationPeriod.get('timeValue') && attrs.defaultExpirationPeriod.get('timePeriod')) {
-						return { defaultExpirationPeriod: "Please specify a value."}
-					}
-					if (attrs.defaultExpirationPeriod.get('timeValue') != '' && attrs.defaultExpirationPeriod.get('timeValue') <= 0) {
-						return { defaultExpirationPeriod: "Value must be greater than 0. " + attrs.defaultExpirationPeriod.get('timeValue')}
-					}
-					if (!attrs.defaultExpirationPeriod.get('timePeriod') && attrs.defaultExpirationPeriod.get('timeValue')) {
-						return { defaultExpirationPeriod: "Please specify a period."}
-					}
+				if (attrs.defaultExpirationPeriod && attrs.defaultExpirationPeriod <= 0) {
+					return { defaultExpirationPeriod: "Value must be greater than 0. "}
 				}
 				return null;
 			},
