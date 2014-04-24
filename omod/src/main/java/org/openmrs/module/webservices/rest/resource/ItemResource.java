@@ -119,15 +119,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         }
     }
 
-    @PropertySetter(value="defaultExpirationPeriod")
-    public void setDefaultExpirationPeriod(Item instance, String period) {
-        if (StringUtils.isBlank(period)) {
-            instance.setDefaultExpirationPeriod(null);
-        } else {
-            instance.setDefaultExpirationPeriod(Integer.parseInt(period));
-        }
-    }
-
     @Override
     public Item save(Item item) {
         // Check that default price has been properly set now that the item's

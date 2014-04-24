@@ -81,12 +81,12 @@ define(
                     if (this.value == null) {
                         this.value = 0;
                     }
-                    var defaultExpirationPeriod = parseInt(this.value);
+                    var defaultExpirationPeriod = this.value;
                     this.$('#defaultExpirationPeriod').val(defaultExpirationPeriod + 1)
                     this.update();
                 }
                 if(event.keyCode === 40 && this.value != null /*arrow down*/) {
-                    var defaultExpirationPeriod = parseInt(this.value);
+                    var defaultExpirationPeriod = this.value;
                     if (defaultExpirationPeriod > 0) {
                         this.$('#defaultExpirationPeriod').val(defaultExpirationPeriod - 1)
                         this.update();
@@ -100,7 +100,12 @@ define(
         },
 
         update: function() {
-            this.value = this.$('#defaultExpirationPeriod').val();
+            var tmp = this.$('#defaultExpirationPeriod').val();
+            if (tmp != null && tmp != '') {
+                this.value = parseInt(tmp);
+            } else {
+                this.value = null;
+            }
         },
 
         render: function() {
