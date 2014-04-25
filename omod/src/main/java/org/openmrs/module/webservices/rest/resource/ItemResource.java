@@ -20,7 +20,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;

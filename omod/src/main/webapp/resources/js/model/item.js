@@ -99,9 +99,9 @@ define(
                     }),
                     objRef: true
                 },
-				hasExpiration: { type: "Checkbox" },
+				hasExpiration: { type: "TrueFalseCheckbox" },
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
-				hasPhysicalInventory: { type: "Checkbox" },
+				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }
