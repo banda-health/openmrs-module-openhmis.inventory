@@ -5,6 +5,11 @@
 	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C533230002" />
 	<inv_stockroom stockroom_id="2" name="Test Stock Room 3"
 	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C53F5B0003" />
+	<inv_stockroom stockroom_id="3" name="Test Stock Room 4"
+                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C53F5B0004" />
+    <inv_stockroom stockroom_id="4" name="Test Stock Room 5"
+                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C53F5B0005" />
+
 
 	<inv_stock_operation_type stock_operation_type_id="0" name="Test Adjustment" operation_type="adjustment"
 	                          description="Physical item quantities that do not match the current system quantity."
@@ -30,6 +35,14 @@
 	                          description="Items that are transferred between two stockrooms."
 	                          has_source="true" has_destination="true" has_patient="false" patient_required="false" available_when_reserved="true"
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="db40707f-9175-4199-8df2-a5702f41ec7d" />
+    <inv_stock_operation_type stock_operation_type_id="6" name="Test_Adjustment _2" operation_type="adjustment"
+                              description="Physical item quantities that do not match the current system quantity."
+                              has_source="true" has_destination="false" has_patient="false" patient_required="false" available_when_reserved="true"
+                              creator="1" date_created="2013-01-01 00:00:00.0" retired="false" uuid="288fd7fe-1374-4f7a-89e6-d5f1ac97d4b5" />
+    <inv_stock_operation_type stock_operation_type_id="7" name="Test_Receipt_2" operation_type="receipt"
+                              description="Items that are added into the inventory system from an outside provider."
+                              has_source="false" has_destination="true" has_patient="false" patient_required="false" available_when_reserved="false"
+                              creator="1" date_created="2013-01-01 00:00:00.0" retired="false" uuid="fce0b4fc-9402-424a-aacb-f99599e51a9g" />
 
 	<inv_stock_operation stock_operation_id="0" status="COMPLETED" operation_type_id="3" operation_number="t101"
 						 destination_id="0" name="Test Op 1" operation_date="2012-01-03 00:00:00.0"
@@ -37,7 +50,7 @@
 	<inv_transaction transaction_id="0" operation_id="0" item_id="0" quantity="10"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CE7DB50003" />
 	<inv_transaction transaction_id="1" operation_id="0" item_id="1" quantity="11"
-	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CE97550004"/>
+	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CE9700004"/>
 	<inv_transaction transaction_id="2" operation_id="0" item_id="2" quantity="12" expiration="2025-01-01"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CEAE9F0005" />
 	<inv_stockroom_operations operation_id="0" stockroom_id="0" />
@@ -70,7 +83,43 @@
 	<inv_reserved_transaction reserved_transaction_id="2" operation_id="0" item_id="2" quantity="3" expiration="2025-01-01"
 	                          is_available="false" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000E" />
 	<inv_stockroom_operations operation_id="2" stockroom_id="1" />
+	
+	<inv_stock_operation stock_operation_id="8" status="PENDING" operation_type_id="5" operation_number="t202"
+                         source_id="3" destination_id="4" name="Test_Op_13" operation_date="2012-01-03 00:00:00.0"
+                         creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0011"/>
+    <inv_reserved_transaction reserved_transaction_id="3" operation_id="8" item_id="2" quantity="5" expiration="2025-01-01"
+                              is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000F" />
 
+    <inv_stock_operation stock_operation_id="3" status="PENDING" operation_type_id="4" operation_number="t303"
+                         source_id="3" destination_id="4" name="Test_Op_14" operation_date="2012-01-03 00:00:00.0"
+                         creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0022"/>
+    <inv_reserved_transaction reserved_transaction_id="4" operation_id="3" item_id="2" quantity="5" expiration="2025-01-01"
+                              is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000G" />
+
+    <inv_stock_operation stock_operation_id="4" status="PENDING" operation_type_id="7" operation_number="t404"
+                         source_id="3" destination_id="4" name="Test_Op_15" operation_date="2012-01-03 00:00:00.0"
+                         creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0021"/>
+    <inv_reserved_transaction reserved_transaction_id="5" operation_id="4" item_id="2" quantity="5" expiration="2025-01-01"
+                              is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000H" />
+
+    <inv_stock_operation stock_operation_id="5" status="PENDING" operation_type_id="2" operation_number="t505"
+                         source_id="3" destination_id="4" name="Test_Op_16" operation_date="2012-01-03 00:00:00.0"
+                         creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0033"/>
+    <inv_reserved_transaction reserved_transaction_id="6" operation_id="5" item_id="2" quantity="5" expiration="2025-01-01"
+                              is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000I" />
+
+    <inv_stock_operation stock_operation_id="6" status="PENDING" operation_type_id="1" operation_number="t606"
+                         source_id="3" destination_id="4" name="Test_Op_17" operation_date="2012-01-03 00:00:00.0"
+                         creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0044"/>
+    <inv_reserved_transaction reserved_transaction_id="7" operation_id="6" item_id="2" quantity="5" expiration="2025-01-01"
+                              is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000K" />
+
+    <inv_stock_operation stock_operation_id="7" status="PENDING" operation_type_id="6" operation_number="t707"
+                         source_id="3" destination_id="4" name="Test_Op_18" operation_date="2012-01-03 00:00:00.0"
+                         creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0055"/>
+    <inv_reserved_transaction reserved_transaction_id="8" operation_id="7" item_id="2" quantity="5" expiration="2025-01-01"
+                              is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000L" />
+	
 	<inv_item_stock item_stock_id="0" stockroom_id="0" item_id="0" quantity="4" uuid="FF8081814250C1CD014250D46D08000F" />
 	<inv_item_stock item_stock_id="1" stockroom_id="0" item_id="1" quantity="5" uuid="FF8081814250C1CD014250D474980010" />
 	<inv_item_stock item_stock_id="2" stockroom_id="0" item_id="2" quantity="8" uuid="FF8081814250C1CD014250D47D720011" />

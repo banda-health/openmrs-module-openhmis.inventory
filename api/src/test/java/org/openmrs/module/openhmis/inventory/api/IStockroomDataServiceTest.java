@@ -88,7 +88,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 
 	@Override
 	protected int getTestEntityCount() {
-		return 3;
+		return 5;
 	}
 
 	@Override

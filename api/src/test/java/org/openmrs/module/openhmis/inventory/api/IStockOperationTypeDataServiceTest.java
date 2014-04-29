@@ -37,7 +37,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 
 	@Override
 	protected int getTestEntityCount() {
-		return 6;
+		return 8;
 	}
 
 	@Override

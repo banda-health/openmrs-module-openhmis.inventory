@@ -70,7 +70,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	@Override
 	protected int getTestEntityCount() {
-		return 3;
+		return 9;
 	}
 
 	@Override
@@ -897,7 +897,6 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Context.flushSession();
 
 		List<StockOperation> results = service.getOperationsByRoom(room, null);
-
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 	}
@@ -1097,7 +1096,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		List<StockOperation> test = service.getAll();
 		Assert.assertNotNull(test);
-		Assert.assertEquals(3, test.size());
+		Assert.assertEquals(9, test.size());
 
 		List<StockOperation> results = service.findOperations(search, null);
 
@@ -1170,7 +1169,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		List<StockOperation> results = service.findOperations(search, null);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(2, results.size());
+		Assert.assertEquals(8, results.size());
 	}
 
 	/**
@@ -1201,7 +1200,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		List<StockOperation> results = service.getUserOperations(user, null);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(3, results.size());
+		Assert.assertEquals(9, results.size());
 	}
 
 	/**
@@ -1215,11 +1214,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		List<StockOperation> results = service.getUserOperations(user, null, null);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(3, results.size());
-
-		Assert.assertEquals(2, (int)results.get(0).getId());
-		Assert.assertEquals(0, (int)results.get(1).getId());
-		Assert.assertEquals(1, (int)results.get(2).getId());
+		Assert.assertEquals(9, results.size());
 
 		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
 
@@ -1232,9 +1227,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		results = service.getUserOperations(user, StockOperationStatus.PENDING, null);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(7, results.size());
 
-		Assert.assertEquals(2, (int)results.get(0).getId());
 	}
 
 	/**
@@ -1248,7 +1242,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		List<StockOperation> results = service.getUserOperations(user, null, null);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(3, results.size());
+		Assert.assertEquals(9, results.size());
 
 		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
 
@@ -1258,7 +1252,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		results = service.getUserOperations(user, StockOperationStatus.PENDING, null);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(7, results.size());
 	}
 
 	/**
@@ -1489,7 +1483,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.PENDING, null);
+		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.REQUESTED, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
@@ -1512,7 +1506,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.PENDING, paging);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
-		Assert.assertEquals(2, (long)paging.getTotalRecordCount());
+		Assert.assertEquals(8, (long)paging.getTotalRecordCount());
 		int id = results.get(0).getId();
 
 		paging.setPage(2);
@@ -1532,7 +1526,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		List<StockOperation> results = service.getUserOperations(user, null, null);
 		Assert.assertNotNull(results);
-		Assert.assertEquals(3, results.size());
+		Assert.assertEquals(9, results.size());
 	}
 
 	/**
@@ -1554,7 +1548,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		List<StockOperation> results = service.getUserOperations(user, null, null);
 		Assert.assertNotNull(results);
-		Assert.assertEquals(3, results.size());
+		Assert.assertEquals(9, results.size());
 	}
 
 	/**
