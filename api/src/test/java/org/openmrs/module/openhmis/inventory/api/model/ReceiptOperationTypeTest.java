@@ -1,7 +1,6 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
 
 import java.util.Set;
 
