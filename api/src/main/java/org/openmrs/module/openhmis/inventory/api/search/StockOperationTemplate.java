@@ -14,7 +14,7 @@
 package org.openmrs.module.openhmis.inventory.api.search;
 
 import org.openmrs.Patient;
-import org.openmrs.module.openhmis.inventory.api.model.Recipient;
+import org.openmrs.module.openhmis.inventory.api.model.Institution;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
@@ -35,7 +35,7 @@ public class StockOperationTemplate extends StockOperation {
 	}
 
 	@Override
-	public void setRecipient(Recipient recipient) {
-		this.recipient = recipient;
+	public void setInstitution(Institution institution) {
+		this.institution = institution;
 	}
 }

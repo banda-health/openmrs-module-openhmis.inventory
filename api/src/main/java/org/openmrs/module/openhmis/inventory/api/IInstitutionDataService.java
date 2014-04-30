@@ -12,24 +12,13 @@
 	 * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
 	 */
 
-package org.openmrs.module.openhmis.inventory.api.model;
+package org.openmrs.module.openhmis.inventory.api;
 
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Institution;
+import org.springframework.transaction.annotation.Transactional;
 
-public class Recipient extends BaseSerializableOpenmrsMetadata {
-
-    public static final long serialVersionUID = 0L;
-
-    private Integer recipientId;
-
-    @Override
-    public Integer getId() {
-        return recipientId;
-    }
-
-    @Override
-    public void setId(Integer id) {
-        recipientId = id;
-    }
+@Transactional
+public interface IInstitutionDataService extends IMetadataDataService<Institution>{
 
 }

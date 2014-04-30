@@ -41,7 +41,7 @@
 		InvDepartment.hbm.xml
 		InvCategory.hbm.xml
 		InvStockroom.hbm.xml
-		InvRecipient.hbm.xml
+		InvInstitution.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

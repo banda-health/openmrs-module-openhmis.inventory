@@ -18,12 +18,12 @@ define(
 		openhmis.url.backboneBase + 'js/model/generic',
 	],
 	function(openhmis, __) {
-		openhmis.Recipient = openhmis.GenericModel.extend({
+		openhmis.Institution = openhmis.GenericModel.extend({
 			meta: {
-				name: __("Recipient"),
-				namePlural: __("Recipients"),
+				name: __("Institution"),
+				namePlural: __("Institutions"),
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'recipient'
+				restUrl: openhmis.url.inventoryModelBase + 'institution'
 			},
 
 			schema: {

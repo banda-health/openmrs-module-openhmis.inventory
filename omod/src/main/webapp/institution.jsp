@@ -15,12 +15,12 @@
   ~
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   --%>
-<openmrs:require allPrivileges="<%= PrivilegeConstants.RECIPIENT_PAGE_PRIVILEGES %>" otherwise="/login.htm"
-                 redirect="<%=ModuleWebConstants.RECIPIENT_PAGE%>" />
+<openmrs:require allPrivileges="<%=PrivilegeConstants.INSTITUTION_PAGE_PRIVILEGES%>" otherwise="/login.htm"
+                 redirect="<%=ModuleWebConstants.INSTITUTION_PAGE%>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/recipient.js" %>' />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/institution.js" %>' />
 
 <h2>
-    <spring:message code="openhmis.inventory.admin.recipient" />
+    <spring:message code="openhmis.inventory.admin.institution" />
 </h2>

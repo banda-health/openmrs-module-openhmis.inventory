@@ -17,22 +17,22 @@
 	import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
-import org.openmrs.module.openhmis.inventory.api.IRecipientDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Recipient;
+import org.openmrs.module.openhmis.inventory.api.IInstitutionDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Institution;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
 	@Transactional
-	public class RecipientDataServiceImpl
-			extends BaseMetadataDataServiceImpl<Recipient>
-			implements IRecipientDataService {
+	public class InstitutionDataServiceImpl
+			extends BaseMetadataDataServiceImpl<Institution>
+			implements IInstitutionDataService {
 		@Override
 		protected IMetadataAuthorizationPrivileges getPrivileges() {
 			return new BasicMetadataAuthorizationPrivileges();
 		}
 
 		@Override
-		protected void validate(Recipient entity) throws APIException {
+		protected void validate(Institution entity) throws APIException {
 			return;
 		}
 	}

@@ -34,7 +34,7 @@ public class StockOperation
 	protected Stockroom source;
 	protected Stockroom destination;
 	protected Patient patient;
-	protected Recipient recipient;
+	protected Institution institution;
 
 	@Override
 	public Integer getId() {
@@ -120,12 +120,12 @@ public class StockOperation
 		this.patient = patient;
 	}
 
-	public Recipient getRecipient() {
-		return recipient;
+	public Institution getInstitution() {
+		return institution;
 	}
 
-	public void setRecipient(Recipient recipient) {
-		this.recipient = recipient;
+	public void setInstitution(Institution institution) {
+		this.institution = institution;
 	}
 
 	public ReservedTransaction addReserved(Item item, int quantity) {

@@ -16,16 +16,16 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.IRecipientDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Recipient;
+import org.openmrs.module.openhmis.inventory.api.IInstitutionDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Institution;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.RECIPIENT_RESOURCE, supportedClass=Recipient.class, supportedOpenmrsVersions={"1.9"})
-@Handler(supports = { Recipient.class }, order = 0)
-public class RecipientResource extends BaseRestMetadataResource<Recipient> {
+@Resource(name = ModuleRestConstants.INSTITUTION_RESOURCE, supportedClass=Institution.class, supportedOpenmrsVersions={"1.9"})
+@Handler(supports = { Institution.class }, order = 0)
+public class InstitutionResource extends BaseRestMetadataResource<Institution> {
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -36,13 +36,13 @@ public class RecipientResource extends BaseRestMetadataResource<Recipient> {
     }
 
     @Override
-    public Recipient newDelegate() {
-        return new Recipient();
+    public Institution newDelegate() {
+        return new Institution();
     }
 
     @Override
-    public Class<? extends IMetadataDataService<Recipient>> getServiceClass() {
-        return IRecipientDataService.class;
+    public Class<? extends IMetadataDataService<Institution>> getServiceClass() {
+        return IInstitutionDataService.class;
     }
 
 }

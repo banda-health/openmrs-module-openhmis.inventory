@@ -80,8 +80,8 @@
 	<bean parent="serviceContext">
         <property name="moduleService">
             <list merge="true">
-                <value>org.openmrs.module.openhmis.inventory.api.IRecipientDataService</value>
-                <ref bean="invRecipientService" />
+                <value>org.openmrs.module.openhmis.inventory.api.IInstitutionDataService</value>
+                <ref bean="invInstitutionService" />
             </list>
         </property>
     </bean>
@@ -157,10 +157,10 @@
 		<property name="preInterceptors" ref="serviceInterceptors" />
 		<property name="transactionAttributeSource" ref="transactionAttributeSource" />
 	</bean>
-	<bean id="invRecipientService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	<bean id="invInstitutionService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager" />
         <property name="target">
-            <bean class="org.openmrs.module.openhmis.inventory.api.impl.RecipientDataServiceImpl">
+            <bean class="org.openmrs.module.openhmis.inventory.api.impl.InstitutionDataServiceImpl">
                 <property name="repository" ref="genericRepository" />
             </bean>
         </property>

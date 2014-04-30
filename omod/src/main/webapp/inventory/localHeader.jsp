@@ -34,10 +34,10 @@
             </a>
         </li>
     </openmrs:hasPrivilege>
-        <openmrs:hasPrivilege privilege="<%= PrivilegeConstants.RECIPIENT_PAGE_PRIVILEGES %>">
+        <openmrs:hasPrivilege privilege="<%= PrivilegeConstants.INSTITUTION_PAGE_PRIVILEGES %>">
         <li>
-            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/recipient.form">
-                <openmrs:message code="openhmis.inventory.admin.recipient"/>
+            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/institution.form">
+                <openmrs:message code="openhmis.inventory.admin.institution"/>
             </a>
         </li>
     </openmrs:hasPrivilege>

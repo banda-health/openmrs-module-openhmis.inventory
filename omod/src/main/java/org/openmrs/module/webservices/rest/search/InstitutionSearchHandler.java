@@ -20,8 +20,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
-import org.openmrs.module.openhmis.inventory.api.IRecipientDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Recipient;
+import org.openmrs.module.openhmis.inventory.api.IInstitutionDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Institution;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -34,11 +34,11 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RecipientSearchHandler implements SearchHandler {
+public class InstitutionSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.RECIPIENT_RESOURCE, Arrays.asList("1.9.*"),
+    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.INSTITUTION_RESOURCE, Arrays.asList("1.9.*"),
             Arrays.asList(
-                    new SearchQuery.Builder("Find a recipient by its name")
+                    new SearchQuery.Builder("Find a institution by its name")
                             .withRequiredParameters("q")
                             .build()
             )
@@ -52,17 +52,17 @@ public class RecipientSearchHandler implements SearchHandler {
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
         String query = context.getParameter("q");
-        IRecipientDataService service = Context.getService(IRecipientDataService.class);
+        IInstitutionDataService service = Context.getService(IInstitutionDataService.class);
         PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
-        List<Recipient> recipient;
+        List<Institution> institution;
         if (StringUtils.isBlank(query)) {
-            recipient = service.getAll(context.getIncludeAll(), pagingInfo);
+            institution = service.getAll(context.getIncludeAll(), pagingInfo);
         } else {
-            recipient = service.findByName(query, context.getIncludeAll(), pagingInfo);
+            institution = service.findByName(query, context.getIncludeAll(), pagingInfo);
         }
 
-        AlreadyPagedWithLength<Recipient> results = new AlreadyPagedWithLength<Recipient>(context, recipient, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+        AlreadyPagedWithLength<Institution> results = new AlreadyPagedWithLength<Institution>(context, institution, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
         return results;
     }
 
