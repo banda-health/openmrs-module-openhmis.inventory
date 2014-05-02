@@ -18,8 +18,8 @@ public abstract class StockOperationTypeBase
 	private Integer id;
 	private Boolean hasSource;
 	private Boolean hasDestination;
-	private Boolean hasPatient;
-	private Boolean patientRequired;
+	private Boolean hasRecipient;
+	private Boolean recipientRequired;
 	private Boolean availableWhenReserved;
 	private User user;
 	private Role role;
@@ -59,20 +59,20 @@ public abstract class StockOperationTypeBase
 		this.hasDestination = hasDestination;
 	}
 
-	public Boolean getHasPatient() {
-		return hasPatient;
+	public Boolean getHasRecipient() {
+		return hasRecipient;
 	}
 
-	public void setHasPatient(Boolean hasPatient) {
-		this.hasPatient = hasPatient;
+	public void setHasRecipient(Boolean hasPatient) {
+		this.hasRecipient = hasPatient;
 	}
 
-	public Boolean getPatientRequired() {
-		return patientRequired;
+	public Boolean getRecipientRequired() {
+		return recipientRequired;
 	}
 
-	public void setPatientRequired(Boolean patientRequired) {
-		this.patientRequired = patientRequired;
+	public void setRecipientRequired(Boolean recipientRequired) {
+		this.recipientRequired = recipientRequired;
 	}
 
 	public Boolean getAvailableWhenReserved() {

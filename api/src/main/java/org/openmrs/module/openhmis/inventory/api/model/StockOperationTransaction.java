@@ -1,12 +1,11 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.Patient;
 
 public class StockOperationTransaction extends TransactionBase {
 	public static final long serialVersionUID = 0L;
 
 	private Stockroom stockroom;
-	private Patient patient;
+	private Recipient recipient;
 
 	public StockOperationTransaction() {	}
 
@@ -22,11 +21,11 @@ public class StockOperationTransaction extends TransactionBase {
 		this.stockroom = stockroom;
 	}
 
-	public Patient getPatient() {
-		return patient;
+	public Recipient getRecipient() {
+		return recipient;
 	}
 
-	public void setPatient(Patient patient) {
-		this.patient = patient;
+	public void setRecipient(Recipient recipient) {
+		this.recipient = recipient;
 	}
 }

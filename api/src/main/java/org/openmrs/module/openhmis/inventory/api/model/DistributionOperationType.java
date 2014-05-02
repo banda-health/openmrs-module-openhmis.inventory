@@ -9,7 +9,7 @@ public class DistributionOperationType extends StockOperationTypeBase {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
 				tx.setStockroom(operation.getSource());
-				tx.setPatient(operation.getPatient());
+				tx.setRecipient(operation.getRecipient());
 
 				// Negate the quantity because the item stock needs to be removed from the source stockroom
 				tx.setQuantity(tx.getQuantity() * -1);

@@ -1,12 +1,11 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.Patient;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
 
 /**
  * This class represents an operation performed on item stock.  Examples of an operation are things like transferring
@@ -33,8 +32,7 @@ public class StockOperation
 	private Date operationDate;
 	protected Stockroom source;
 	protected Stockroom destination;
-	protected Patient patient;
-	protected Institution institution;
+	protected Recipient recipient;
 
 	@Override
 	public Integer getId() {
@@ -112,20 +110,12 @@ public class StockOperation
 		}
 	}
 
-	public Patient getPatient() {
-		return patient;
+	public Recipient getRecipient() {
+		return recipient;
 	}
 
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
-
-	public Institution getInstitution() {
-		return institution;
-	}
-
-	public void setInstitution(Institution institution) {
-		this.institution = institution;
+	public void setRecipient(Recipient recipient) {
+		this.recipient = recipient;
 	}
 
 	public ReservedTransaction addReserved(Item item, int quantity) {

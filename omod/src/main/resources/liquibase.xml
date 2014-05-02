@@ -211,8 +211,8 @@
 
 			<column name="has_source" type="boolean" />
 			<column name="has_destination" type="boolean" />
-			<column name="has_patient" type="boolean" />
-			<column name="patient_required" type="boolean" />
+			<column name="has_recipient" type="boolean" />
+			<column name="recipient_required" type="boolean" />
 			<column name="available_when_reserved" type="boolean"/>
 			<column name="user_id" type="int" />
 			<column name="role" type="varchar(50)" />
@@ -263,7 +263,7 @@
 			<column name="operation_number" type="varchar(255)" />
 			<column name="source_id" type="int" />
 			<column name="destination_id" type="int" />
-			<column name="patient_id" type="int" />
+			<column name="recipient_id" type="int" />
 
 			<column name="creator" type="int" defaultValueNumeric="0" ><constraints nullable="false"/></column>
 			<column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
@@ -296,7 +296,7 @@
 			<column name="expiration" type="DATE" />
 
 			<column name="stockroom_id" type="int" />
-			<column name="patient_id" type="int" />
+			<column name="recipient_id" type="int" />
 
 			<column name="creator" type="int" defaultValueNumeric="0" ><constraints nullable="false"/></column>
 			<column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
@@ -346,6 +346,21 @@
             <column name="retire_reason" type="varchar(255)"/>
             <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
         </createTable>
+        <createTable tableName="inv_recipient">
+            <column name="recipient_id" type="int"><constraints nullable="false" /></column>
+            <column name="patient_id" type="int"><constraints nullable="false" /></column>
+            <column name="institution_id" type="int" />
+
+            <column name="creator" type="int" defaultValueNumeric="0" ><constraints nullable="false"/></column>
+            <column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="DATETIME"/>
+            <column defaultValueBoolean="false" name="retired" type="BOOLEAN"><constraints nullable="false"/></column>
+            <column name="retired_by" type="int"/>
+            <column name="date_retired" type="DATETIME"/>
+            <column name="retire_reason" type="varchar(255)"/>
+            <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+        </createTable>
 
 		<createIndex indexName="inv_item_name_idx" tableName="inv_item" unique="false">
 			<column name="name"/>
@@ -377,6 +392,10 @@
 			<column name="operation_id"/>
 			<column name="attribute_type_id" />
 		</createIndex>
+		<createIndex indexName="inv_recipient_idx" tableName="inv_recipient" unique="false">
+            <column name="recipient_id" />
+            <column name="retired" />
+        </createIndex>
 
 		<addForeignKeyConstraint constraintName="inv_item_creator_fk"
 	                             baseTableName="inv_item" baseColumnNames="creator"
@@ -516,9 +535,9 @@
 		<addForeignKeyConstraint constraintName="inv_stock_operation_destination_fk"
 		                         baseTableName="inv_stock_operation" baseColumnNames="destination_id"
 		                         referencedTableName="inv_stockroom" referencedColumnNames="stockroom_id"/>
-		<addForeignKeyConstraint constraintName="inv_stock_operation_patient_id_fk"
-		                         baseTableName="inv_stock_operation" baseColumnNames="patient_id"
-		                         referencedTableName="patient" referencedColumnNames="patient_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_operation_recipient_id_fk"
+		                         baseTableName="inv_stock_operation" baseColumnNames="recipient_id"
+		                         referencedTableName="inv_recipient" referencedColumnNames="recipient_id"/>
 		<addForeignKeyConstraint constraintName="inv_stock_operation_creator_fk"
 		                         baseTableName="inv_stock_operation" baseColumnNames="creator"
 		                         referencedTableName="users" referencedColumnNames="user_id"/>
@@ -601,6 +620,12 @@
         <addForeignKeyConstraint constraintName="inv_institution_retired_by_fk"
                                  baseTableName="inv_institution" baseColumnNames="retired_by"
                                  referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="inv_recipient_patient_fk"
+                                 baseTableName="inv_recipient" baseColumnNames="patient_id"
+                                 referencedTableName="patient" referencedColumnNames="patient_id"/>
+        <addForeignKeyConstraint constraintName="inv_recipient_institution_fk"
+                                 baseTableName="inv_recipient" baseColumnNames="institution_id"
+                                 referencedTableName="inv_institution" referencedColumnNames="institution_id"/>
 
 		<insert tableName="inv_stock_operation_type">
 			<column name="name">Adjustment</column>
@@ -608,8 +633,8 @@
 			<column name="description">Physical item quantities that do not match the current system quantity.</column>
 			<column name="has_source">1</column>
 			<column name="has_destination">0</column>
-			<column name="has_patient">0</column>
-			<column name="patient_required">0</column>
+			<column name="has_recipient">0</column>
+			<column name="recipient_required">0</column>
 			<column name="available_when_reserved">1</column>
 			<column name="creator">1</column>
 			<column name="date_created">2013-01-01</column>
@@ -621,8 +646,8 @@
 			<column name="description">Item stock quantities that have expired and must be removed from circulation.</column>
 			<column name="has_source">1</column>
 			<column name="has_destination">0</column>
-			<column name="has_patient">0</column>
-			<column name="patient_required">0</column>
+			<column name="has_recipient">0</column>
+			<column name="recipient_required">0</column>
 			<column name="available_when_reserved">1</column>
 			<column name="creator">1</column>
 			<column name="date_created">2013-01-01</column>
@@ -634,8 +659,8 @@
 			<column name="description">Items that are distributed to a patient or other outside destination.</column>
 			<column name="has_source">1</column>
 			<column name="has_destination">0</column>
-			<column name="has_patient">1</column>
-			<column name="patient_required">0</column>
+			<column name="has_recipient">1</column>
+			<column name="recipient_required">0</column>
 			<column name="available_when_reserved">0</column>
 			<column name="creator">1</column>
 			<column name="date_created">2013-01-01</column>
@@ -647,8 +672,8 @@
 			<column name="description">Items that are added into the inventory system from an outside provider.</column>
 			<column name="has_source">0</column>
 			<column name="has_destination">1</column>
-			<column name="has_patient">0</column>
-			<column name="patient_required">0</column>
+			<column name="has_recipient">0</column>
+			<column name="recipient_required">0</column>
 			<column name="available_when_reserved">0</column>
 			<column name="creator">1</column>
 			<column name="date_created">2013-01-01</column>
@@ -660,8 +685,8 @@
 			<column name="description">Items that are returned to the system after a Distribution operation.</column>
 			<column name="has_source">0</column>
 			<column name="has_destination">1</column>
-			<column name="has_patient">1</column>
-			<column name="patient_required">0</column>
+			<column name="has_recipient">1</column>
+			<column name="recipient_required">0</column>
 			<column name="available_when_reserved">0</column>
 			<column name="creator">1</column>
 			<column name="date_created">2013-01-01</column>
@@ -673,8 +698,8 @@
 			<column name="description">Items that are transferred between two stockrooms.</column>
 			<column name="has_source">1</column>
 			<column name="has_destination">1</column>
-			<column name="has_patient">0</column>
-			<column name="patient_required">0</column>
+			<column name="has_recipient">0</column>
+			<column name="recipient_required">0</column>
 			<column name="available_when_reserved">1</column>
 			<column name="creator">1</column>
 			<column name="date_created">2013-01-01</column>

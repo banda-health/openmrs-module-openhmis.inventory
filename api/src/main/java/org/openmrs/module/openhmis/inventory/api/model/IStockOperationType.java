@@ -37,25 +37,25 @@ public interface IStockOperationType extends OpenmrsMetadata, IInstanceType<Stoc
 	 * Returns whether the operation type has an associated {@link org.openmrs.Patient}.
 	 * @return {@code true} if the operation type has an associated patient; otherwise, {@code false}.
 	 */
-	Boolean getHasPatient();
+	Boolean getHasRecipient();
 
 	/**
 	 * Sets whether the operation type has an associated {@link org.openmrs.Patient}.
-	 * @param hasPatient Whether the operation type has an associated patient.
+	 * @param hasRecipient Whether the operation type has an associated patient.
 	 */
-	void setHasPatient(Boolean hasPatient);
+	void setHasRecipient(Boolean hasRecipient);
 
 	/**
-	 * Returns whether the operation type requires an associated {@link org.openmrs.Patient}.
+	 * Returns whether the operation type requires an associated {@link Recipient}.
 	 * @return {@code true} if the operation type requires and associated patient; otherwise, {@code false}.
 	 */
-	Boolean getPatientRequired();
+	Boolean getRecipientRequired();
 
 	/**
-	 * Sets whether the operation type requires an associated {@link org.openmrs.Patient}.
+	 * Sets whether the operation type requires an associated {@link Recipient}.
 	 * @param required Whether the operation type requires an associated patient.
 	 */
-	void setPatientRequired(Boolean required);
+	void setRecipientRequired(Boolean required);
 
 	/**
 	 * Returns whether the operation items are available while reserved.

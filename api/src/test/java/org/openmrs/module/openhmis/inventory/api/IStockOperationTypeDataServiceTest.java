@@ -28,7 +28,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 		type.setAvailableWhenReserved(true);
 		type.setHasDestination(true);
 		type.setHasSource(true);
-		type.setHasPatient(true);
+		type.setHasRecipient(true);
 
 		// TODO: Add attributes
 
@@ -47,7 +47,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 		entity.setAvailableWhenReserved(!entity.getAvailableWhenReserved());
 		entity.setHasDestination(!entity.getHasDestination());
 		entity.setHasSource(!entity.getHasSource());
-		entity.setHasPatient(!entity.getHasPatient());
+		entity.setHasRecipient(!entity.getHasRecipient());
 
 		// TODO: Update attributes
 	}
@@ -59,7 +59,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 		Assert.assertEquals(expected.getAvailableWhenReserved(), actual.getAvailableWhenReserved());
 		Assert.assertEquals(expected.getHasDestination(), actual.getHasDestination());
 		Assert.assertEquals(expected.getHasSource(), actual.getHasSource());
-		Assert.assertEquals(expected.getHasPatient(), actual.getHasPatient());
+		Assert.assertEquals(expected.getHasRecipient(), actual.getHasRecipient());
 
 		//TODO: assert attributes
 	}

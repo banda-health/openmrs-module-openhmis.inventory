@@ -13,35 +13,35 @@
 
 	<inv_stock_operation_type stock_operation_type_id="0" name="Test Adjustment" operation_type="adjustment"
 	                          description="Physical item quantities that do not match the current system quantity."
-	                          has_source="true" has_destination="false" has_patient="false" patient_required="false" available_when_reserved="true"
+	                          has_source="true" has_destination="false" has_recipient="false" recipient_required="false" available_when_reserved="true"
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="288fd7fe-1374-4f7a-89e6-d5f1ac97d4a5" />
 	<inv_stock_operation_type stock_operation_type_id="1" name="Test Disposed" operation_type="disposed"
 	                          description="Item stock quantities that have expired and must be removed from circulation."
-	                          has_source="true" has_destination="false" has_patient="false" patient_required="false" available_when_reserved="true"
+	                          has_source="true" has_destination="false" has_recipient="false" recipient_required="false" available_when_reserved="true"
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="84be0aaf-70cf-4ebb-83e3-088e5d375905" />
 	<inv_stock_operation_type stock_operation_type_id="2" name="Test Distribution" operation_type="distribution"
 	                          description="Items that are distributed to a patient or other outside destination."
-	                          has_source="true" has_destination="false" has_patient="true" patient_required="false" available_when_reserved="false"
+	                          has_source="true" has_destination="false" has_recipient="true" recipient_required="false" available_when_reserved="false"
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="c264f34b-c795-4576-9928-454d1fa20e09" />
 	<inv_stock_operation_type stock_operation_type_id="3" name="Test Receipt" operation_type="receipt"
 	                          description="Items that are added into the inventory system from an outside provider."
-	                          has_source="false" has_destination="true" has_patient="false" patient_required="false" available_when_reserved="false"
+	                          has_source="false" has_destination="true" has_recipient="false" recipient_required="false" available_when_reserved="false"
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="fce0b4fc-9402-424a-aacb-f99599e51a9f" />
 	<inv_stock_operation_type stock_operation_type_id="4" name="Test Return" operation_type="return"
 	                          description="Items that are returned to the system after a Distribution operation."
-	                          has_source="false" has_destination="true" has_patient="true" patient_required="false" available_when_reserved="false"
+	                          has_source="false" has_destination="true" has_recipient="true" recipient_required="false" available_when_reserved="false"
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="128924d7-72ee-414e-ae40-52f1f89d3e7d" />
 	<inv_stock_operation_type stock_operation_type_id="5" name="Test Transfer" operation_type="transfer"
 	                          description="Items that are transferred between two stockrooms."
-	                          has_source="true" has_destination="true" has_patient="false" patient_required="false" available_when_reserved="true"
+	                          has_source="true" has_destination="true" has_recipient="false" recipient_required="false" available_when_reserved="true"
 	                          creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="db40707f-9175-4199-8df2-a5702f41ec7d" />
     <inv_stock_operation_type stock_operation_type_id="6" name="Test_Adjustment _2" operation_type="adjustment"
                               description="Physical item quantities that do not match the current system quantity."
-                              has_source="true" has_destination="false" has_patient="false" patient_required="false" available_when_reserved="true"
+                              has_source="true" has_destination="false" has_recipient="false" recipient_required="false" available_when_reserved="true"
                               creator="1" date_created="2013-01-01 00:00:00.0" retired="false" uuid="288fd7fe-1374-4f7a-89e6-d5f1ac97d4b5" />
     <inv_stock_operation_type stock_operation_type_id="7" name="Test_Receipt_2" operation_type="receipt"
                               description="Items that are added into the inventory system from an outside provider."
-                              has_source="false" has_destination="true" has_patient="false" patient_required="false" available_when_reserved="false"
+                              has_source="false" has_destination="true" has_recipient="false" recipient_required="false" available_when_reserved="false"
                               creator="1" date_created="2013-01-01 00:00:00.0" retired="false" uuid="fce0b4fc-9402-424a-aacb-f99599e51a9g" />
 
 	<inv_stock_operation stock_operation_id="0" status="COMPLETED" operation_type_id="3" operation_number="t101"
@@ -74,7 +74,7 @@
 	<inv_stockroom_operations operation_id="1" stockroom_id="1" />
 
 	<inv_stock_operation stock_operation_id="2" status="PENDING" operation_type_id="2"
-	                     source_id="1" patient_id="1" name="Test Op 3" operation_date="2012-01-05 00:00:00.0"
+	                     source_id="1" recipient_id="0" name="Test Op 3" operation_date="2012-01-05 00:00:00.0"
 	                     creator="1" date_created="2012-01-05 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C388660002"/>
 	<inv_reserved_transaction reserved_transaction_id="0" operation_id="0" item_id="0" quantity="1"
 	                          is_available="false" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2BB00000C" />

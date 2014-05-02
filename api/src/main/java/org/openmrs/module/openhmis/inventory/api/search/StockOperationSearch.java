@@ -30,7 +30,7 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 	private StringComparisonType operationNumberComparisonType;
 	private ComparisonType sourceComparisonType;
 	private ComparisonType destinationComparisonType;
-	private ComparisonType patientComparisonType;
+	private ComparisonType recipientComparisonType;
 	private DateComparisonType dateCreatedComparisonType;
 
 	public void setOperationNumberComparisonType(StringComparisonType operationNumberComparisonType) {
@@ -66,11 +66,11 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 	}
 
 	public ComparisonType getPatientComparisonType() {
-		return patientComparisonType;
+		return recipientComparisonType;
 	}
 
 	public void setPatientComparisonType(ComparisonType patientComparisonType) {
-		this.patientComparisonType = patientComparisonType;
+		this.recipientComparisonType = patientComparisonType;
 	}
 
 	@Override
@@ -95,9 +95,9 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 				(destinationComparisonType != null && destinationComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("destination", operation.getDestination(), destinationComparisonType));
 		}
-		if (operation.getPatient() != null ||
-				(patientComparisonType != null && patientComparisonType != ComparisonType.EQUAL)) {
-			criteria.add(createCriterion("patient", operation.getPatient(), patientComparisonType));
+		if (operation.getRecipient() != null ||
+				(recipientComparisonType != null && recipientComparisonType != ComparisonType.EQUAL)) {
+			criteria.add(createCriterion("recipient", operation.getRecipient(), recipientComparisonType));
 		}
 		if (operation.getDateCreated() != null ||
 				(dateCreatedComparisonType != null && dateCreatedComparisonType != DateComparisonType.EQUAL)) {
