@@ -21,6 +21,34 @@ define(
         openhmis.url.inventoryBase + 'js/model/category'
 	],
 	function(_, openhmis, __) {
+		openhmis.Concept = openhmis.GenericModel.extend({
+			meta: {
+				name: "Concept",
+				namePlural: "Concepts",
+			},
+
+			schema: {
+				display: { type: 'Text' },
+			},
+
+			toString: function() { return this.get('display'); }
+
+		});
+
+		openhmis.Drug = openhmis.GenericModel.extend({
+			meta: {
+				name: "Drug",
+				namePlural: "Drugs",
+			},
+
+			schema: {
+				display: { type: 'Text' },
+			},
+
+			toString: function() { return this.get('display'); }
+
+		});
+
 		openhmis.ItemCode = openhmis.GenericModel.extend({
 			meta: {
 				name: "Item Code",
@@ -101,6 +129,8 @@ define(
                 },
 				hasExpiration: { type: "TrueFalseCheckbox" },
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
+				concept: { type: 'ConceptLink' },
+				drug: { type: 'DrugLink' },
 				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
@@ -206,6 +236,9 @@ define(
 					if (resp.category && _.isObject(resp.category)) {
 						resp.category = new openhmis.Category(resp.category);
 					}
+					if (resp.concept && _.isObject(resp.concept)) {
+						resp.concept = new openhmis.Concept(resp.concept);
+					}
 
 				}
 				return resp;
@@ -238,6 +271,7 @@ define(
 				return openhmis.GenericModel.prototype.toString.call(this);
 			}
 		});
+
 		return openhmis;
 	}
 )

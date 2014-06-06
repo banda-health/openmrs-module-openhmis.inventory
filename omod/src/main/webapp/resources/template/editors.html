@@ -12,19 +12,49 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   -->
 <script id="item-editor" type="text/template">
-	<? var department_uuid = (item && item.get("department")) ? item.get("department").id : null ?>
-	<? var id = item ? item.cid + '-' : "" ?>
-	<select id="<?= id ?>department" class="department">
-		<option value=""><em>--department--</em></option>
-	<? departments.each(function(department) { ?>
-		<option value="<?= department.id ?>"<?= (department.id === department_uuid) ? ' selected="selected"' : '' ?>><?= department.get("name") ?></option>
-	<? }); ?>
-	</select>
-	<input type="hidden" class="department-uuid" />
-	<span class="label-hint"><label for="<?= id ?>item-name">search for item</label><input type="text" class="item-name" id="<?= id ?>item-name" value="<?= (item && item.get('name')) ? item.get('name') : "" ?>" /></span>
-	<input type="hidden" class="item-uuid" />
+  <? var department_uuid = (item && item.get("department")) ? item.get("department").id : null ?>
+  <? var id = item ? item.cid + '-' : "" ?>
+  <select id="<?= id ?>department" class="department">
+    <option value=""><em>--department--</em></option>
+  <? departments.each(function(department) { ?>
+    <option value="<?= department.id ?>"<?= (department.id === department_uuid) ? ' selected="selected"' : '' ?>><?= department.get("name") ?></option>
+  <? }); ?>
+  </select>
+  <input type="hidden" class="department-uuid" />
+  <span class="label-hint"><label for="<?= id ?>item-name">search for item</label><input type="text" class="item-name" id="<?= id ?>item-name" value="<?= (item && item.get('name')) ? item.get('name') : "" ?>" /></span>
+  <input type="hidden" class="item-uuid" />
 </script>
 
 <script id="defaultExpirationPeriodStepper-editor" type="text/template">
     <input type="number" id="defaultExpirationPeriod" name="defaultExpirationPeriod" style="width: 50px" value="<?= (defaultExpirationPeriod != null) ? defaultExpirationPeriod : '' ?>">
+</script>
+
+<script id="conceptLink" type="text/template">
+    <? if (concept != null) { ?>
+        <div id="conceptLink">
+            <button type="button" data-action="remove" class="bbf-remove" title="Remove">×</button>
+            <a href="/openmrs/module/openhmis/backboneforms/concept.form?conceptUuid=<?= concept.attributes.uuid ?>"><?= concept.attributes.display ?></a>
+        </div>
+    <? } ?>
+    <div id="conceptMessage">
+        <? if (concept == null) { ?>
+            No concept linked to this Item
+        <? } ?>
+    </div>
+    <div id="conceptSelect"></div>
+</script>
+
+<script id="drugLink" type="text/template">
+    <? if (drug != null) { ?>
+        <div id="drugLink">
+            <button type="button" data-action="remove" class="bbf-remove" title="Remove">×</button>
+            <a href="/openmrs/module/openhmis/backboneforms/drug.form?drugUuid=<?= drug.uuid ?>" target="_blank"><?= drug.display ?></a>
+        </div>
+    <? } ?>
+    <div id="drugMessage">
+        <? if (drug == null) { ?>
+            No drug linked to this Item
+        <? } ?>
+    </div>
+    <div id="drugSelect"></div>
 </script>

@@ -1,4 +1,5 @@
 /*
+
  * The contents of this file are subject to the OpenMRS Public License
  * Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
@@ -20,6 +21,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
+import org.openmrs.Concept;
+import org.openmrs.Drug;
+import org.openmrs.api.ConceptService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
@@ -56,6 +62,9 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
             description.addProperty("hasExpiration");
             description.addProperty("defaultExpirationPeriod");
             description.addProperty("hasPhysicalInventory");
+            description.addProperty("concept", Representation.REF);
+            description.addProperty("drug", Representation.REF);
+
         }
 
         return description;
@@ -118,8 +127,46 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         }
     }
 
+    @PropertySetter(value="concept")
+    public void setConcept(Item instance, final String uuid) {
+        if(StringUtils.isBlank(uuid)) {
+            instance.setConcept(null);
+            return;
+        }
+
+        if (instance.getConcept() != null && uuid.equals(instance.getConcept().getUuid())) {
+            return;
+        }
+
+        ConceptService conceptService = Context.getConceptService();
+        Concept concept = conceptService.getConceptByUuid(uuid);
+        instance.setConcept(concept);
+
+    }
+
+    @PropertySetter(value="drug")
+    public void setDrug(Item instance, final String uuid) {
+        if(StringUtils.isBlank(uuid)) {
+            instance.setDrug(null);
+            return;
+        }
+
+        if (instance.getDrug() != null && uuid.equals(instance.getDrug().getUuid())) {
+            return;
+        }
+
+        ConceptService conceptService = Context.getConceptService();
+        Drug drug = conceptService.getDrugByUuid(uuid);
+        instance.setDrug(drug);
+    }
+
     @Override
     public Item save(Item item) {
+        checkDefaultPrice(item);
+        return super.save(item);
+    }
+
+    private void checkDefaultPrice(Item item) {
         // Check that default price has been properly set now that the item's
         // prices have definitely been set
         if (!item.getPrices().contains(item.getDefaultPrice())) {
@@ -138,7 +185,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
                 }
             }
         }
-        return super.save(item);
     }
 
     @Override

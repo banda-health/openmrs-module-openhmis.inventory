@@ -15,6 +15,8 @@ package org.openmrs.module.openhmis.inventory.api;
 
 import java.util.List;
 
+import org.openmrs.Concept;
+import org.openmrs.Drug;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -283,5 +285,9 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
 	List<Item> findItems(ItemSearch itemSearch, PagingInfo pagingInfo);
+
+    List<Item> findItemsByConcept(Concept concept);
+
+    List<Item> findItemsByDrug(Drug drug);
 }
 

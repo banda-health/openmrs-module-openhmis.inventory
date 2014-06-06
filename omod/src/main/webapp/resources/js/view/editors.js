@@ -32,11 +32,11 @@ define(
       displayAttr: "name"
     });
 
-        editors.CategorySelect = editors.GenericModelSelect.extend({
-            modelType: openhmis.Category,
-            displayAttr: "name",
-          allowNull: true
-        });
+    editors.CategorySelect = editors.GenericModelSelect.extend({
+        modelType: openhmis.Category,
+        displayAttr: "name",
+        allowNull: true
+    });
 
     editors.ItemPriceSelect = editors.GenericModelSelect.extend({
       modelType: openhmis.ItemPrice,
@@ -50,8 +50,8 @@ define(
     });
 
     editors.OperationTypeSelect = editors.GenericModelSelect.extend({
-      modelType: openhmis.OperationType,
-      displayAttr: "name"
+        modelType: openhmis.OperationType,
+        displayAttr: "name"
     });
 
     editors.DefaultExpirationPeriodStepper = editors.Base.extend({
@@ -122,6 +122,173 @@ define(
             .addClass("ui-spinner-input-spinner-border")
             .addClass("ui-widget-content-spinner-border");
             return this;
+        },
+
+    });
+
+    editors.ConceptLink = editors.Base.extend({
+        tagName: "span",
+        className: "editor",
+        tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
+        tmplSelector: '#conceptLink',
+
+        initialize: function(options) {
+            _.bindAll(this);
+            editors.Base.prototype.initialize.call(this, options);
+            if (this.value == null) {
+                this.collection();
+            };
+            this.template = this.getTemplate();
+        },
+
+        events: {
+            'click [data-action="remove"]': function(event) {
+                event.preventDefault();
+                this.onRemove();
+            },
+            'change #conceptSelect':  function() {
+                this.updateHidden();
+            },
+        },
+
+        onRemove: function() {
+            this.value = null;
+            $(".concept-uuid").val(this.getValue);
+            $('#conceptLink').remove();
+            this.collection();
+        },
+
+        updateHidden: function() {
+          this.value = $(".conceptSelector").val();
+          $(".concept-uuid").val(this.getValue);
+        },
+
+        collection: function() {
+            var term = encodeURIComponent(this.model.attributes.name);
+            var collection = new openhmis.GenericCollection([], {
+                model: openhmis.Concept,
+                url: 'v1/concept?q=' + term
+            });
+
+            var self = this;
+            collection.fetch({
+                success: function(collection, resp) {
+                    if (collection.length > 0) {
+                        self.renderCollection(collection)
+                    }
+                },
+
+            });
+            return collection;
+
+        },
+
+        getValue: function() {
+            return this.value;
+        },
+
+        render: function() {
+            var self = this;
+            this.$el.html(this.template({
+                concept: this.model.attributes.concept,
+                item_id: self.model.cid,
+            }));
+            return this;
+        },
+
+        renderCollection: function(collection) {
+          var id = this.model.cid;
+          var selector = '<select id="' + id + '_concept" class="conceptSelector" >';
+          selector += '<option value=""><em>--Not defined--</em></option>';
+          collection.each(function (entry) {
+            selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
+          });
+          selector += '</select><input type="hidden" class="concept-uuid" name="concept"/>';
+          $('#conceptSelect').append(selector);
+          $('#conceptMessage').hide();
+          return this;
+        }
+    });
+
+    editors.DrugLink = editors.Base.extend({
+        tagName: "span",
+        className: "editor",
+        tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
+        tmplSelector: '#drugLink',
+
+        initialize: function(options) {
+            _.bindAll(this);
+            editors.Base.prototype.initialize.call(this, options);
+            if (this.value == null) {
+              this.collection();
+            };
+            this.template = this.getTemplate();
+        },
+
+        events: {
+            'click [data-action="remove"]': function(event) {
+                event.preventDefault();
+                this.onRemove();
+            },
+            'change #drugSelect':  function() {
+                this.updateHidden();
+            },
+        },
+
+        onRemove: function() {
+            this.value = null;
+            $(".drug-uuid").val(this.getValue);
+            $('#drugLink').remove();
+            this.collection();
+        },
+
+        updateHidden: function() {
+          this.value = $(".drugSelector").val();
+          $(".drug-uuid").val(this.getValue);
+        },
+
+        collection: function() {
+            var term = encodeURIComponent(this.model.attributes.name);
+            var collection = new openhmis.GenericCollection([], {
+                model: openhmis.Drug,
+                url: 'v1/drug?q=' + term
+            });
+
+            var self = this;
+            collection.fetch({
+                success: function(collection, resp) {
+                    if (collection.length > 0) {
+                        self.renderCollection(collection)
+                    }
+                },
+            });
+            return collection;
+        },
+
+        getValue: function() {
+            return this.value;
+        },
+
+        render: function() {
+            var self = this;
+            this.$el.html(this.template({
+                drug: this.model.attributes.drug,
+                item_id: self.model.cid,
+            }));
+            return this;
+        },
+
+        renderCollection: function(collection) {
+          var id = this.model.cid;
+          var selector = '<select id="' + id + '_drug" class="drugSelector" >';
+          selector += '<option value=""><em>--Not defined--</em></option>';
+          collection.each(function (entry) {
+            selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
+          });
+          selector += '</select><input type="hidden" class="drug-uuid" name="drug"/>';
+          $('#drugSelect').append(selector);
+          $('#drugMessage').hide();
+          return this;
         }
     });
 

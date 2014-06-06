@@ -21,6 +21,8 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Concept;
+import org.openmrs.Drug;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
@@ -299,6 +301,26 @@ public class ItemDataServiceImpl
 			}
 		});
 	}
+
+    @Override
+    public List<Item> findItemsByConcept(final Concept concept) {
+        return executeCriteria(Item.class, new Action1<Criteria>() {
+            @Override
+            public void apply(Criteria criteria) {
+                criteria.add(Restrictions.eq("concept", concept));
+            }
+        });
+    }
+
+    @Override
+    public List<Item> findItemsByDrug(final Drug drug) {
+        return executeCriteria(Item.class, new Action1<Criteria>() {
+            @Override
+            public void apply(Criteria criteria) {
+                criteria.add(Restrictions.eq("drug", drug));
+            }
+        });
+    }
 
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
