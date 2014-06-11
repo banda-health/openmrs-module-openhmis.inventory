@@ -13,7 +13,8 @@
  */
 package org.openmrs.module.openhmis.inventory.api.search;
 
-import org.openmrs.module.openhmis.inventory.api.model.Recipient;
+import org.openmrs.Patient;
+import org.openmrs.module.openhmis.inventory.api.model.Institution;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
@@ -29,7 +30,12 @@ public class StockOperationTemplate extends StockOperation {
 	}
 
 	@Override
-	public void setRecipient(Recipient newRecipient) {
-		this.recipient = newRecipient;
+	public void setPatient(Patient newPatient) {
+		this.patient = newPatient;
 	}
+
+    @Override
+    public void setInstitution(Institution newInstitution) {
+        this.institution = newInstitution;
+    }
 }

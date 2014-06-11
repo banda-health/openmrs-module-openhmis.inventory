@@ -187,7 +187,8 @@
 		<!-- Access properties via the field so setter code is not run -->
 		<many-to-one name="source" class="Stockroom" column="source_id" access="field" />
 		<many-to-one name="destination" class="Stockroom" column="destination_id" access="field" />
-		<many-to-one name="recipient" class="Recipient" column="recipient_id" access="field" />
+		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" access="field" />
+        <many-to-one name="institution" class="Institution" column="institution_id" access="field" />
 
 		<set name="reserved" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field">
 			<key column="operation_id" />
@@ -289,36 +290,12 @@
 		</property>
 
 		<many-to-one name="stockroom" class="Stockroom" column="stockroom_id" />
-		<many-to-one name="recipient" class="Recipient" column="recipient_id" />
+        <many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" />
+		<many-to-one name="institution" class="Institution" column="institution_id" />
 
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
 		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
 
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
-	<class name="Recipient" table="inv_recipient">
-        <cache usage="read-write"/>
-
-        <id name="id" type="int" column="recipient_id">
-            <generator class="native">
-                <param name="sequence">inv_recipient_recipient_id_seq</param>
-            </generator>
-        </id>
-
-        <!-- Access properties via the field so setter code is not run -->
-        <many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" access="field" />
-        <many-to-one name="institution" class="Institution" column="institution_id" access="field" />
-
-
-        <!-- bi-directional many-to-one association to User -->
-        <many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
-        <property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
-        <many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
-        <property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
-        <many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
-        <property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
-        <property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
-        <property name="retired" type="boolean" column="retired" length="1" not-null="true" />
-        <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
-    </class>
 </hibernate-mapping>

@@ -91,8 +91,8 @@ public class StockOperationDataServiceImpl
 			throw new APIException("The operation type (" + type.getName() + ") requires a destination " +
 					"stockroom but one has not been defined.");
 		}
-		if (type.getRecipientRequired() && operation.getRecipient() == null) {
-			throw new APIException("The operation type (" + type.getName() + ") requires a patient " +
+		if (type.getRecipientRequired() && (operation.getPatient() == null && operation.getInstitution() == null)) {
+			throw new APIException("The operation type (" + type.getName() + ") requires a patient or institution " +
 					"but one has not been associated.");
 		}
 	}

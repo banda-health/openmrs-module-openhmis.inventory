@@ -20,7 +20,7 @@ public class DistributionOperationTypeTest extends BaseModuleContextSensitiveTes
     IStockOperationTypeDataService stockOperationTypeDataService;
     IStockOperationDataService stockOperationDataService;
     IStockOperationTransactionDataService stockOperationTransactionDataService;
-    Recipient recipient;
+    Patient patient;
 
     @Before
     public void before() throws Exception {
@@ -30,20 +30,15 @@ public class DistributionOperationTypeTest extends BaseModuleContextSensitiveTes
         stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
         stockOperationDataService = Context.getService(IStockOperationDataService.class);
 
-        Patient patient = new Patient();
+        patient = new Patient();
         patient.setId(23);
-        recipient = new Recipient();
-        recipient.setId(1);
-        recipient.setPatient(patient);
-
-
     }
 
     @Test
     public void onPending_shouldNegateQuantityAndSetStockroomAndPatient() throws Exception {
         DistributionOperationType distributionOperationType = (DistributionOperationType) stockOperationTypeDataService.getById(2);
         StockOperation stockOperation = stockOperationDataService.getById(5);
-        stockOperation.setRecipient(recipient);
+        stockOperation.setPatient(patient);
 
         distributionOperationType.onPending(stockOperation);
         Set<StockOperationTransaction> transactions = stockOperation.getTransactions();
@@ -51,8 +46,7 @@ public class DistributionOperationTypeTest extends BaseModuleContextSensitiveTes
         for (StockOperationTransaction transaction : transactions) {
             assertTrue(transaction.getStockroom().getId() == 3);
             assertTrue(transaction.getQuantity() == -5);
-            assertTrue(transaction.getRecipient().getId() == 1);
-            assertTrue(transaction.getRecipient().getPatientId() == 23);
+            assertTrue(transaction.getPatient().getPatientId() == 23);
         }
     }
 

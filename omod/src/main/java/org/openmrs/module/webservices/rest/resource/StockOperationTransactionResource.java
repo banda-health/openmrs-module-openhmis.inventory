@@ -44,7 +44,8 @@ public class StockOperationTransactionResource extends BaseRestObjectResource<St
 			description.addProperty("creator", Representation.DEFAULT);
 			description.addProperty("dateCreated", Representation.DEFAULT);
 			description.addProperty("stockroom", Representation.DEFAULT);
-			description.addProperty("patient", Representation.DEFAULT);
+            description.addProperty("patient", Representation.DEFAULT);
+            description.addProperty("institution", Representation.DEFAULT);
 		}
 
 		return description;

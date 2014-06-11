@@ -91,7 +91,8 @@ define(
 				    }),
 				    objRef: true
 			    },
-			    patient: { type: 'Object', model: openhmis.Patient, objRef: true }
+			    patient: { type: 'Object', model: openhmis.Patient, objRef: true },
+                institution: { type: 'Object', model: openhmis.Institution, objRef: true}
 		    }
 	    });
 
