@@ -18,6 +18,7 @@ import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -27,6 +28,11 @@ public class StockroomResource extends BaseRestMetadataResource<Stockroom> {
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("location", Representation.REF);
+
+        if (!(rep instanceof RefRepresentation)) {
+	        description.addProperty("items", Representation.REF);
+	        description.addProperty("operations", Representation.REF);
+        }
 
 		return description;
 	}

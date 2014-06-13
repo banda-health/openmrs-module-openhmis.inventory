@@ -36,7 +36,9 @@ define(
 						url: 'v1/location'
 					}),
 					objRef: true
-				}
+				},
+				items: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemStock },
+				operations: { type: 'List', itemType: 'NestedModel', model: openhmis.Operation }
 			},
 
 			validate: function(attrs, options) {
