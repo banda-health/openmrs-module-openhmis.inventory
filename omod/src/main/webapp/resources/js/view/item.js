@@ -17,17 +17,11 @@ define(
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/editors',
         openhmis.url.backboneBase + 'js/lib/backbone-forms',
+        openhmis.url.backboneBase + 'js/model/drug',
+        openhmis.url.backboneBase + 'js/model/concept'
     ],
     function(openhmis) {
         openhmis.ItemAddEditView = openhmis.GenericAddEditView.extend({
-
-            initialize: function(options) {
-                this.events = _.extend({}, this.events, {
-                'blur input[name="name"]': 'updateDrugAndConcept',
-            });
-            openhmis.GenericAddEditView.prototype.initialize.call(this, options);
-            _.bindAll(this);
-            },
 
             prepareModelForm: function(model, options) {
                 var modelForm = openhmis.GenericAddEditView.prototype.prepareModelForm.call(this, model, options);
@@ -41,93 +35,80 @@ define(
                 this.modelForm.fields['defaultPrice'].editor.render();
             },
 
-            updateDrugAndConcept: function() {
-                var modelName = this.model.attributes.name;
-                var modelFormName = this.modelForm.fields['name'].getValue();
-                if (!_.isEqual(modelName, modelFormName) && !_.isEmpty(modelFormName)) {
-                    this.collections(modelFormName);
-                }
+            beginAdd: function(event) {
+                openhmis.GenericAddEditView.prototype.beginAdd.call(this, event);
+                this.$('.concept-display').autocomplete({
+                    minLength: 2,
+                    source: this.doConceptSearch,
+                    select: this.selectConcept
+                  })
+                  // Tricky stuff here to get the autocomplete list to render with our custom data
+                  .data("autocomplete")._renderItem = function(ul, concept) {
+                    return $("<li></li>").data("concept.autocomplete", concept)
+                      .append("<a>" + concept.display + "</a>").appendTo(ul);
+                  };
+                return this;
             },
 
-            collections: function(itemName) {
-                var term = itemName;
-                var conceptCollection = new openhmis.GenericCollection([], {
-                    model: openhmis.Concept,
-                    url: 'v1/concept?q=' + term
-                });
-
-                var drugCollection = new openhmis.GenericCollection([], {
-                    model: openhmis.Drug,
-                    url: 'v1/drug?q=' + term
-                });
-
+            edit: function(model) {
+                openhmis.GenericAddEditView.prototype.edit.call(this, model);
                 var self = this;
-                conceptCollection.fetch({
-                    success: function(collection, resp) {
-                    	$('#conceptLink').remove();
-                        $('.conceptSelector').remove();
-                        if (collection.length > 0) {
-                            self.renderConceptCollection(collection)
-                        } else {
-                        	$('#conceptMessage').append('No concept linked to this Item');
-                        }
-                    },
 
-                });
-
-                drugCollection.fetch({
-                    success: function(collection, resp) {
-                        $('#drugLink').remove();
-                        $('.drugSelector').remove();
-                        if (collection.length > 0) {
-                            self.renderDrugCollection(collection)
-                        } else {
-                        	$('#drugMessage').append('No drug linked to this Item');
-                        }
-                    },
-
-                });
-                this.modelForm.fields.concept.editor.value = null;
-                this.modelForm.fields.drug.editor.value = null;
-            },
-
-            renderConceptCollection: function(collection) {
-                var id = this.model.cid;
-                var selector = '<select id="' + id + '_concept" class="conceptSelector" >';
-                selector += '<option value=""><em>--Not defined--</em></option>';
-                collection.each(function (entry) {
-                  selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
-                });
-                selector += '</select><input type="hidden" class="concept-uuid" name="concept"/>';
-                $('#conceptSelect').append(selector);
-                $('#conceptMessage').hide();
-                $('#conceptLink').hide();
                 return this;
+
             },
 
-            renderDrugCollection: function(collection) {
-                var id = this.model.cid;
-                var selector = '<select id="' + id + '_drug" class="drugSelector" >';
-                selector += '<option value=""><em>--Not defined--</em></option>';
-                collection.each(function (entry) {
-                  selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
-                });
-                selector += '</select><input type="hidden" class="drug-uuid" name="drug"/>';
-                $('#drugSelect').append(selector);
-                $('#drugMessage').hide();
-                $('#drugLink').hide();
-                return this;
+            doConceptSearch: function(request, response) {
+                var term = request.term;
+                var query = "?q=" + encodeURIComponent(term);
+                var urlPrefix = "/openmrs/ws/rest/v1/concept";
+                this.doSearch(request, response, openhmis.Concept, urlPrefix, query);
             },
+
+            doSearch: function(request, response, model, urlPrefix, query) {
+                var term = request.term;
+//                if (query in this.cache) {
+//                  response(this.cache[query]);
+//                  return;
+//                }
+                var resultCollection = new openhmis.GenericCollection([], { model: model });
+                var view = this;
+                var fetchQuery = query ? query : "?q=" + encodeURIComponent(term);
+                resultCollection.fetch({
+                  url: urlPrefix + fetchQuery,
+                  success: function(collection, resp) {
+                    var data = collection.map(function(model) { return {
+                      val: model.id,
+                      display: model.get('display'),
+                    }});
+//                    view.cache[query] = data;
+                    response(data);
+                  }
+                });
+              },
+
+              selectConcept: function(event, ui) {
+                var uuid = ui.item.val;
+                var name = ui.item.display;
+                this.$('.concept-display').val(name);
+                this.$('.concept').val(uuid);
+                //this.value = new openhmis.Concept({ uuid: uuid });
+              },
 
             save: function(event) {
                 if(this.modelForm.fields.concept.editor.value && _.isObject(this.modelForm.fields.concept.editor.value)) {
                     this.modelForm.fields.concept.editor.value = this.modelForm.fields.concept.editor.value.uuid
+                } else {
+                    this.modelForm.fields.concept.editor.value = this.$('#concept').val();
                 }
                 if(this.modelForm.fields.drug.editor.value && _.isObject(this.modelForm.fields.drug.editor.value)) {
                     this.modelForm.fields.drug.editor.value = this.modelForm.fields.drug.editor.value.uuid
+                } else {
+                	this.modelForm.fields.drug.editor.value = this.$('#drug').val();
                 }
                 openhmis.GenericAddEditView.prototype.save.call(this, event);
             },
+
 
         });
 

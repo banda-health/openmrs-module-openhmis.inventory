@@ -128,35 +128,35 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
     }
 
     @PropertySetter(value="concept")
-    public void setConcept(Item instance, final String uuid) {
-        if(StringUtils.isBlank(uuid)) {
+    public void setConcept(Item instance, final String conceptId) {
+        if(StringUtils.isBlank(conceptId)) {
             instance.setConcept(null);
             return;
         }
 
-        if (instance.getConcept() != null && uuid.equals(instance.getConcept().getUuid())) {
+        if (instance.getConcept() != null && conceptId.equals(instance.getConcept().getConceptId())) {
             return;
         }
 
         ConceptService conceptService = Context.getConceptService();
-        Concept concept = conceptService.getConceptByUuid(uuid);
+        Concept concept = conceptService.getConceptByIdOrName(conceptId);
         instance.setConcept(concept);
 
     }
 
     @PropertySetter(value="drug")
-    public void setDrug(Item instance, final String uuid) {
-        if(StringUtils.isBlank(uuid)) {
+    public void setDrug(Item instance, final String conceptId) {
+        if(StringUtils.isBlank(conceptId)) {
             instance.setDrug(null);
             return;
         }
 
-        if (instance.getDrug() != null && uuid.equals(instance.getDrug().getUuid())) {
+        if (instance.getDrug() != null && conceptId.equals(instance.getDrug().getDrugId())) {
             return;
         }
 
         ConceptService conceptService = Context.getConceptService();
-        Drug drug = conceptService.getDrugByUuid(uuid);
+        Drug drug = conceptService.getDrugByNameOrId(conceptId);
         instance.setDrug(drug);
     }
 

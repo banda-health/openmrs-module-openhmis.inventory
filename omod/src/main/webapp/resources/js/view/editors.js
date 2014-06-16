@@ -18,11 +18,13 @@ define(
     openhmis.url.backboneBase + 'js/lib/underscore',
     openhmis.url.inventoryBase + 'js/model/item',
     openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category',
-        openhmis.url.inventoryBase + 'js/view/search',
+    openhmis.url.inventoryBase + 'js/model/category',
+    openhmis.url.inventoryBase + 'js/view/search',
     openhmis.url.backboneBase + 'js/lib/backbone-forms',
     openhmis.url.backboneBase + 'js/lib/labelOver',
-    openhmis.url.backboneBase + 'js/view/editors'
+    openhmis.url.backboneBase + 'js/view/editors',
+    openhmis.url.backboneBase + 'js/model/drug',
+    openhmis.url.backboneBase + 'js/model/concept'
   ],
   function($, Backbone, _, openhmis) {
     var editors = Backbone.Form.editors;
@@ -126,18 +128,15 @@ define(
 
     });
 
-    editors.ConceptLink = editors.Base.extend({
+    editors.ConceptInput = editors.Base.extend({
         tagName: "span",
         className: "editor",
         tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
-        tmplSelector: '#conceptLink',
+        tmplSelector: '#conceptInput',
 
         initialize: function(options) {
             _.bindAll(this);
             editors.Base.prototype.initialize.call(this, options);
-            if (this.value == null) {
-                this.collection();
-            };
             this.template = this.getTemplate();
         },
 
@@ -146,41 +145,18 @@ define(
                 event.preventDefault();
                 this.onRemove();
             },
-            'change #conceptSelect':  function() {
-                this.updateHidden();
-            },
         },
 
         onRemove: function() {
             this.value = null;
             $(".concept-uuid").val(this.getValue);
             $('#conceptLink').remove();
-            this.collection();
+            this.renderInput();
         },
 
         updateHidden: function() {
           this.value = $(".conceptSelector").val();
           $(".concept-uuid").val(this.getValue);
-        },
-
-        collection: function() {
-            var term = encodeURIComponent(this.model.attributes.name);
-            var collection = new openhmis.GenericCollection([], {
-                model: openhmis.Concept,
-                url: 'v1/concept?q=' + term
-            });
-
-            var self = this;
-            collection.fetch({
-                success: function(collection, resp) {
-                    if (collection.length > 0) {
-                        self.renderCollection(collection)
-                    }
-                },
-
-            });
-            return collection;
-
         },
 
         getValue: function() {
@@ -196,32 +172,21 @@ define(
             return this;
         },
 
-        renderCollection: function(collection) {
-          var id = this.model.cid;
-          var selector = '<select id="' + id + '_concept" class="conceptSelector" >';
-          selector += '<option value=""><em>--Not defined--</em></option>';
-          collection.each(function (entry) {
-            selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
-          });
-          selector += '</select><input type="hidden" class="concept-uuid" name="concept"/>';
-          $('#conceptSelect').append(selector);
-          $('#conceptMessage').hide();
-          return this;
+        renderInput: function() {
+            $('#conceptBox').append('<input id="conceptInput" type="text" placeholder="Enter concept name or id"><input type="hidden" class="concept-uuid" name="concept"/>');
         }
+
     });
 
-    editors.DrugLink = editors.Base.extend({
+    editors.DrugInput = editors.Base.extend({
         tagName: "span",
         className: "editor",
         tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
-        tmplSelector: '#drugLink',
+        tmplSelector: '#drugInput',
 
         initialize: function(options) {
             _.bindAll(this);
             editors.Base.prototype.initialize.call(this, options);
-            if (this.value == null) {
-              this.collection();
-            };
             this.template = this.getTemplate();
         },
 
@@ -230,39 +195,18 @@ define(
                 event.preventDefault();
                 this.onRemove();
             },
-            'change #drugSelect':  function() {
-                this.updateHidden();
-            },
         },
 
         onRemove: function() {
             this.value = null;
             $(".drug-uuid").val(this.getValue);
             $('#drugLink').remove();
-            this.collection();
+            this.renderInput();
         },
 
         updateHidden: function() {
           this.value = $(".drugSelector").val();
           $(".drug-uuid").val(this.getValue);
-        },
-
-        collection: function() {
-            var term = encodeURIComponent(this.model.attributes.name);
-            var collection = new openhmis.GenericCollection([], {
-                model: openhmis.Drug,
-                url: 'v1/drug?q=' + term
-            });
-
-            var self = this;
-            collection.fetch({
-                success: function(collection, resp) {
-                    if (collection.length > 0) {
-                        self.renderCollection(collection)
-                    }
-                },
-            });
-            return collection;
         },
 
         getValue: function() {
@@ -278,18 +222,10 @@ define(
             return this;
         },
 
-        renderCollection: function(collection) {
-          var id = this.model.cid;
-          var selector = '<select id="' + id + '_drug" class="drugSelector" >';
-          selector += '<option value=""><em>--Not defined--</em></option>';
-          collection.each(function (entry) {
-            selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
-          });
-          selector += '</select><input type="hidden" class="drug-uuid" name="drug"/>';
-          $('#drugSelect').append(selector);
-          $('#drugMessage').hide();
-          return this;
+        renderInput: function() {
+            $('#drugBox').append('<input id="drugInput" type="text" placeholder="Enter drug name or id"><input type="hidden" class="drug-uuid" name="drug"/>');
         }
+
     });
 
     editors.Item = editors.Base.extend({

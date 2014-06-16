@@ -2,6 +2,7 @@ package org.openmrs.module.openhmis.inventory.extension.html;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
@@ -9,6 +10,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 
 public class ItemConceptMappingExt extends Extension {
 
@@ -41,8 +43,8 @@ public class ItemConceptMappingExt extends Extension {
             tableRow += "<td>";
             if (items.size() > 0) {
                 for (Item item : items) {
-                    tableRow += item.getName() + " - ItemUuid: "
-                            + item.getUuid() + "<br>";
+                    Set<ItemCode> codes = item.getCodes();
+                    tableRow += item.getName() + " - ItemCode: " + codes.iterator().next().getCode() + "<br>";
                 }
             } else {
                 tableRow += "No Items";
