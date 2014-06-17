@@ -36,8 +36,7 @@ curl(
                 listView: openhmis.GenericSearchableListView,
                 searchView: openhmis.LocationAndNameSearchView,
                 addEditViewType: openhmis.StockroomDetailView,
-                listFields: ['name', 'location'],
-            
+                listFields: ['name', 'location']
 			});
 		});
 	}
