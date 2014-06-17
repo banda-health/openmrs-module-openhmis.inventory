@@ -45,14 +45,17 @@ public class StockOperationResource
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		description.addProperty("status", Representation.DEFAULT);
+		description.addProperty("operationNumber", Representation.DEFAULT);
+		description.addProperty("dateCreated", Representation.DEFAULT);
+
 		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("status", Representation.DEFAULT);
-			description.addProperty("reserved", Representation.DEFAULT);
-			description.addProperty("transactions", Representation.DEFAULT);
-			description.addProperty("operationNumber", Representation.DEFAULT);
-			description.addProperty("source", Representation.DEFAULT);
-			description.addProperty("destination", Representation.DEFAULT);
-			description.addProperty("patient", Representation.DEFAULT);
+			description.addProperty("reserved", Representation.REF);
+			description.addProperty("transactions", Representation.REF);
+			description.addProperty("source", Representation.REF);
+			description.addProperty("destination", Representation.REF);
+			description.addProperty("patient", Representation.REF);
+			description.addProperty("institution", Representation.REF);
 		}
 
 		return description;

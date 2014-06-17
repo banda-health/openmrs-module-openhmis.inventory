@@ -37,15 +37,15 @@ public class StockOperationTypeResource extends BaseRestMetadataResource<StockOp
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		description.addProperty("hasSource", Representation.DEFAULT);
+		description.addProperty("hasDestination", Representation.DEFAULT);
+		description.addProperty("hasRecipient", Representation.DEFAULT);
+		description.addProperty("recipientRequired", Representation.DEFAULT);
+		description.addProperty("availableWhenReserved", Representation.DEFAULT);
 
 		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("hasSource", Representation.DEFAULT);
-			description.addProperty("hasDestination", Representation.DEFAULT);
-			description.addProperty("hasPatient", Representation.DEFAULT);
-			description.addProperty("patientRequired", Representation.DEFAULT);
-			description.addProperty("availableWhenReserved", Representation.DEFAULT);
-			description.addProperty("user", Representation.DEFAULT);
-			description.addProperty("role", Representation.DEFAULT);
+			description.addProperty("user", Representation.REF);
+			description.addProperty("role", Representation.REF);
 			description.addProperty("attributeTypes", Representation.REF);
 		}
 

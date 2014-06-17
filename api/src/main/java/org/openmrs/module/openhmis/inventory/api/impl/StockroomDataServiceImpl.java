@@ -28,6 +28,7 @@ import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
+import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
 import java.util.ArrayList;
@@ -70,6 +71,40 @@ public class StockroomDataServiceImpl
 				criteria.add(Restrictions.eq("stockroom", stockroom));
 			}
 		}, Order.asc("i.name"));
+	}
+
+	@Override
+	public List<StockOperationTransaction> getTransactionsByRoom(final Stockroom stockroom, PagingInfo paging) {
+		if (stockroom == null) {
+			throw new IllegalArgumentException("The stockroom must be defined");
+		}
+
+		return executeCriteria(StockOperationTransaction.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("stockroom", stockroom));
+			}
+		});
+	}
+
+	@Override
+	public List<StockOperation> findOperations(final Stockroom stockroom, final StockOperationSearch search, PagingInfo paging) {
+		if (stockroom == null) {
+			throw new IllegalArgumentException("The stockroom must be defined");
+		}
+
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				if (search != null) {
+					search.updateCriteria(criteria);
+				}
+				criteria.add(Restrictions.or(
+						Restrictions.eq("source", stockroom),
+						Restrictions.eq("destination", stockroom))
+				);
+			}
+		});
 	}
 
 	@Override

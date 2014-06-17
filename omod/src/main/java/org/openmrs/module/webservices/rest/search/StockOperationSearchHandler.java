@@ -13,12 +13,15 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
@@ -40,18 +43,22 @@ import java.util.List;
 public class StockOperationSearchHandler implements SearchHandler {
 	protected Log log = LogFactory.getLog(getClass());
 
-	private final SearchConfig searchConfig = new SearchConfig("operation", ModuleRestConstants.OPERATION_RESOURCE,
+	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Finds stock operations with an optional status.")
-							.withOptionalParameters("status").build()
+					new SearchQuery.Builder("Finds stock operations with an optional status and/or stockroom.")
+							.withOptionalParameters("status", "stockroom_uuid")
+							.build()
+
 			)
 	);
 
+	private IStockroomDataService stockroomDataService;
 	private IStockOperationDataService operationDataService;
 
 	@Autowired
-	public StockOperationSearchHandler(IStockOperationDataService operationDataService) {
+	public StockOperationSearchHandler(IStockroomDataService stockroomDataService, IStockOperationDataService operationDataService) {
+		this.stockroomDataService = stockroomDataService;
 		this.operationDataService = operationDataService;
 	}
 
@@ -63,12 +70,50 @@ public class StockOperationSearchHandler implements SearchHandler {
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
 		String statusText = context.getParameter("status");
-		StockOperationStatus status = StockOperationStatus.valueOf(statusText);
+		String stockroomText = context.getParameter("stockroom_uuid");
+
+		StockOperationStatus status = null;
+		if (!StringUtils.isEmpty(statusText)) {
+			status = StockOperationStatus.valueOf(statusText);
+
+			if (status == null) {
+				log.warn("Could not parse Stock Operation Status '" + statusText + "'");
+
+				return new EmptySearchResult();
+			}
+		}
+
+		Stockroom stockroom = null;
+		if (!StringUtils.isEmpty(stockroomText)) {
+			stockroom = stockroomDataService.getByUuid(stockroomText);
+
+			if (stockroom == null) {
+				log.warn("Could not find stockroom '" + stockroomText + "'");
+
+				return new EmptySearchResult();
+			}
+		}
+
+		StockOperationSearch search = null;
+		if (status != null) {
+			search = new StockOperationSearch();
+			search.getTemplate().setStatus(status);
+		}
 
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		StockOperationSearch search = new StockOperationSearch();
-		search.getTemplate().setStatus(status);
-		List<StockOperation> operations = operationDataService.findOperations(search, pagingInfo);
+		List<StockOperation> operations;
+		if (stockroom == null) {
+			if (search == null) {
+				// No search was defined so just return everything (excluding retired)
+				operations = operationDataService.getAll(false, pagingInfo);
+			} else {
+				// Return the operations with the specified status
+				operations = operationDataService.findOperations(search, pagingInfo);
+			}
+		} else {
+			// Return the operations for the specified stockroom and status
+			operations = stockroomDataService.findOperations(stockroom, search, pagingInfo);
+		}
 
 		if (operations == null || operations.size() == 0) {
 			return new EmptySearchResult();

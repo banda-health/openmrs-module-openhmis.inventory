@@ -36,17 +36,13 @@ public class StockOperationTransactionResource extends BaseRestObjectResource<St
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("operation", Representation.DEFAULT);
-			description.addProperty("item", Representation.DEFAULT);
-			description.addProperty("quantity", Representation.DEFAULT);
-			description.addProperty("expiration", Representation.DEFAULT);
-			description.addProperty("creator", Representation.DEFAULT);
-			description.addProperty("dateCreated", Representation.DEFAULT);
-			description.addProperty("stockroom", Representation.DEFAULT);
-            description.addProperty("patient", Representation.DEFAULT);
-            description.addProperty("institution", Representation.DEFAULT);
-		}
+		description.addProperty("operation", Representation.REF);
+		description.addProperty("item", Representation.REF);
+		description.addProperty("quantity", Representation.DEFAULT);
+		description.addProperty("expiration", Representation.DEFAULT);
+		description.addProperty("stockroom", Representation.REF);
+        description.addProperty("patient", Representation.REF);
+        description.addProperty("institution", Representation.REF);
 
 		return description;
 	}
