@@ -22,7 +22,18 @@ define(
     ],
     function(openhmis) {
         openhmis.ItemAddEditView = openhmis.GenericAddEditView.extend({
-
+        	
+        	initialize: function(options) {
+				_.bindAll(this);
+				this.events = _.extend({}, this.events, {
+					'click [data-action="remove-concept"]' : 'onRemove',
+					'click [data-action="remove-drug"]' : 'onRemove',
+				});
+				openhmis.GenericAddEditView.prototype.initialize.call(this, options);
+				
+			},
+          
+        	
             prepareModelForm: function(model, options) {
                 var modelForm = openhmis.GenericAddEditView.prototype.prepareModelForm.call(this, model, options);
                 modelForm.on('prices:change', this.updatePriceOptions);
@@ -34,66 +45,58 @@ define(
                 this.modelForm.fields['defaultPrice'].editor.schema.options = this.model.schema.defaultPrice.options;
                 this.modelForm.fields['defaultPrice'].editor.render();
             },
-
-            beginAdd: function(event) {
-                openhmis.GenericAddEditView.prototype.beginAdd.call(this, event);
-                this.$('.concept-display').autocomplete({
-                    minLength: 2,
-                    source: this.doConceptSearch,
-                    select: this.selectConcept
-                  })
-                  // Tricky stuff here to get the autocomplete list to render with our custom data
-                  .data("autocomplete")._renderItem = function(ul, concept) {
-                    return $("<li></li>").data("concept.autocomplete", concept)
-                      .append("<a>" + concept.display + "</a>").appendTo(ul);
-                  };
-                return this;
+            
+            onRemove: function() {
+                $('#conceptLink').hide();
+                $('#conceptMessage').hide();
+                $('#conceptBox').show();
+                $('#drugLink').hide();
+                $('#drugMessage').hide();
+                $('#drugBox').show();
+                this.modelForm.fields.drug.editor.value = '';
+                this.modelForm.fields.concept.editor.value = '';
             },
-
+            
             edit: function(model) {
-                openhmis.GenericAddEditView.prototype.edit.call(this, model);
-                var self = this;
-
-                return this;
-
+            	this.model = model;
+				var self = this;
+				this.model.fetch({
+					success: function(model, resp) {
+						self.render();
+						$(self.titleEl).show();
+						self.modelForm = self.prepareModelForm(self.model);
+						$(self.formEl).prepend(self.modelForm.el);
+						
+						if (model.attributes.concept != null) {
+							var concept = model.attributes.concept;
+		                     $('#drugBox').hide();
+		                     $('#drugLink').hide();
+		                     $('#drugMessage').append("No drug linked to this Item");
+		                     $('#conceptBox').hide();
+		                     $('#conceptLink').append('<button type="button" data-action="remove-concept" class="bbf-remove" title="Remove">×</button>' +
+	                    				'<a href="/openmrs/module/openhmis/backboneforms/concept.form?conceptUuid=' + 
+	                    				concept.attributes.uuid +'" target="_blank">' + concept.attributes.display +'</a>');
+		                }
+		                
+		                if (model.attributes.drug != null) {
+		                	var drug = model.attributes.drug;
+		                    $('#conceptBox').hide();
+		                    $('#conceptLink').hide();
+		                    $('#conceptMessage').append("No concept linked to this Item");
+		                    $('#drugBox').hide();
+		                    $('#drugLink').append('<button type="button" data-action="remove-drug" class="bbf-remove" title="Remove">×</button>' +
+		                    				'<a href="/openmrs/module/openhmis/backboneforms/drug.form?drugUuid=' + 
+		                    				drug.uuid +'" target="_blank">' + drug.display +'</a>');
+		               }
+						
+						$(self.formEl).show();
+						$(self.retireVoidPurgeEl).show();
+						$(self.formEl).find('input')[0].focus();
+					},
+					error: openhmis.error
+				});
+               
             },
-
-            doConceptSearch: function(request, response) {
-                var term = request.term;
-                var query = "?q=" + encodeURIComponent(term);
-                var urlPrefix = "/openmrs/ws/rest/v1/concept";
-                this.doSearch(request, response, openhmis.Concept, urlPrefix, query);
-            },
-
-            doSearch: function(request, response, model, urlPrefix, query) {
-                var term = request.term;
-//                if (query in this.cache) {
-//                  response(this.cache[query]);
-//                  return;
-//                }
-                var resultCollection = new openhmis.GenericCollection([], { model: model });
-                var view = this;
-                var fetchQuery = query ? query : "?q=" + encodeURIComponent(term);
-                resultCollection.fetch({
-                  url: urlPrefix + fetchQuery,
-                  success: function(collection, resp) {
-                    var data = collection.map(function(model) { return {
-                      val: model.id,
-                      display: model.get('display'),
-                    }});
-//                    view.cache[query] = data;
-                    response(data);
-                  }
-                });
-              },
-
-              selectConcept: function(event, ui) {
-                var uuid = ui.item.val;
-                var name = ui.item.display;
-                this.$('.concept-display').val(name);
-                this.$('.concept').val(uuid);
-                //this.value = new openhmis.Concept({ uuid: uuid });
-              },
 
             save: function(event) {
                 if(this.modelForm.fields.concept.editor.value && _.isObject(this.modelForm.fields.concept.editor.value)) {
@@ -108,8 +111,7 @@ define(
                 }
                 openhmis.GenericAddEditView.prototype.save.call(this, event);
             },
-
-
+            
         });
 
         return openhmis;

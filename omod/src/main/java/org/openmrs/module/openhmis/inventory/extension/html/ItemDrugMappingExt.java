@@ -47,7 +47,11 @@ public class ItemDrugMappingExt extends Extension {
         if(items.size() > 0) {
             for (Item item : items) {
                 Set<ItemCode> codes = item.getCodes();
-                tableRow += item.getName() + " - ItemCode: " + codes.iterator().next().getCode() + "<br>";
+                tableRow += item.getName();
+                if (codes.size() > 0) {
+                    tableRow += " - ItemCode: " + codes.iterator().next().getCode();
+                }
+                tableRow += "<br>";
             }
         } else {
             tableRow += "No Items";

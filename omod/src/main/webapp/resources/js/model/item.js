@@ -185,13 +185,16 @@ define(
 					return { department: __("An item needs to be associated with a department") }
 				}
 				if (!attrs.prices || attrs.prices.length < 1) {
-					return { prices: __("An item should have at least one price.") }
+					return { prices: __("An item should have at least one price") }
 				}
 				if (!attrs.defaultPrice) {
-					return { defaultPrice: "Please specify a default price."}
+					return { defaultPrice: "Please specify a default price"}
 				}
 				if (attrs.defaultExpirationPeriod && attrs.defaultExpirationPeriod <= 0) {
-					return { defaultExpirationPeriod: "Value must be greater than 0. "}
+					return { defaultExpirationPeriod: "Value must be greater than 0"}
+				}
+				if (attrs.concept && attrs.concept != '' && attrs.drug && attrs.drug != '') {
+					return { concept: __("Either choose a concept or a drug") }
 				}
 				return null;
 			},
