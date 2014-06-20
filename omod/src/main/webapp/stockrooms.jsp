@@ -21,8 +21,12 @@
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
+
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/stockroom.css" %>' />
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/stockrooms.js" %>' />
 
 <h2>
     <spring:message code="openhmis.inventory.admin.stockrooms" />
 </h2>
+
+<%@ include file="/WEB-INF/template/footer.jsp" %>

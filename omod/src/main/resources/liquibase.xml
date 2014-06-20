@@ -822,4 +822,41 @@
             <column name="default_expiration_period" type="int" />
         </addColumn>
     </changeSet>
+    <changeSet id="openhmis.inventory-v1.0.0-6" author="ibewes">
+        <dropColumn tableName="inv_transaction" columnName="recipient_id" />
+
+        <addColumn tableName="inv_transaction">
+            <column name="institution_id" type="int"><constraints nullable="true" /></column>
+        </addColumn>
+        <addColumn tableName="inv_transaction">
+            <column name="patient_id" type="int"><constraints nullable="true" /></column>
+        </addColumn>
+
+        <addForeignKeyConstraint constraintName="inv_transaction_institution_fk"
+                                 baseTableName="inv_transaction" baseColumnNames="institution_id"
+                                 referencedTableName="inv_institution" referencedColumnNames="institution_id"/>
+        <addForeignKeyConstraint constraintName="inv_transaction_patient_fk"
+                                 baseTableName="inv_transaction" baseColumnNames="patient_id"
+                                 referencedTableName="patient" referencedColumnNames="patient_id"/>
+    </changeSet>
+    <changeSet id="openhmis.inventory-v1.0.0-7" author="ibewes">
+        <dropForeignKeyConstraint baseTableName="inv_stock_operation" constraintName="inv_stock_operation_recipient_id_fk" />
+        <dropColumn tableName="inv_stock_operation" columnName="recipient_id" />
+
+        <dropTable tableName="inv_recipient" />
+
+        <addColumn tableName="inv_stock_operation">
+            <column name="institution_id" type="int"><constraints nullable="true" /></column>
+        </addColumn>
+        <addColumn tableName="inv_stock_operation">
+            <column name="patient_id" type="int"><constraints nullable="true" /></column>
+        </addColumn>
+
+        <addForeignKeyConstraint constraintName="inv_stock_operation_institution_fk"
+                                 baseTableName="inv_stock_operation" baseColumnNames="institution_id"
+                                 referencedTableName="inv_institution" referencedColumnNames="institution_id"/>
+        <addForeignKeyConstraint constraintName="inv_stock_operation_patient_fk"
+                                 baseTableName="inv_stock_operation" baseColumnNames="patient_id"
+                                 referencedTableName="patient" referencedColumnNames="patient_id"/>
+    </changeSet>
 </databaseChangeLog>

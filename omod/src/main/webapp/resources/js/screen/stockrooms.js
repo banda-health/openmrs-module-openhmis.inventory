@@ -19,6 +19,7 @@ curl(
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.backboneBase + 'js/model/location',
 		openhmis.url.inventoryBase + 'js/model/stockroom',
+		openhmis.url.inventoryBase + 'js/model/operation',
         openhmis.url.inventoryBase + 'js/view/stockroom',
 		openhmis.url.backboneBase + 'js/view/generic',
 
@@ -36,8 +37,7 @@ curl(
                 listView: openhmis.GenericSearchableListView,
                 searchView: openhmis.LocationAndNameSearchView,
                 addEditViewType: openhmis.StockroomDetailView,
-                listFields: ['name', 'location'],
-            
+                listFields: ['name', 'location']
 			});
 		});
 	}

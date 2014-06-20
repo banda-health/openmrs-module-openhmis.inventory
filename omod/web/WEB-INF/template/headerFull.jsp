@@ -86,7 +86,7 @@
 			dwr.engine.setWarningHandler(handler);
 		</script>
 
-		<openmrs:extensionPoint pointId="org.openmrs.headerFullIncludeExt" type="html" requiredClass="org.openmrs.module.web.extension.HeaderIncludeExt">
+		<openmrs:extensionPoint pointId="h" type="html" requiredClass="org.openmrs.module.web.extension.HeaderIncludeExt">
 			<c:forEach var="file" items="${extension.headerFiles}">
 				<openmrs:htmlInclude file="${file}" />
 			</c:forEach>

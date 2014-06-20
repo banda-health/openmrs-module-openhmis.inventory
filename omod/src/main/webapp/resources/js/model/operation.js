@@ -26,24 +26,55 @@ define(
 			    name: __("Operation Type"),
 			    namePlural: __("Operation Types"),
 			    openmrsType: 'metadata',
-			    restUrl: openhmis.url.inventoryModelBase + 'stockroomTransactionType'
+			    restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
 		    schema: {
-			    name: 'Text'
+			    name: { type: 'Text' }
 		    },
 
-		    validate: function(attrs, options) {
+			validate: function(attrs, options) {
 			    if (!attrs.name) return { name: __("A name is required.") };
 			    return null;
 		    },
 
 		    toString: function() {
-			    return this.get('name');
+			    if (this.get("name")) {
+				    return this.get("name");
+			    }
+
+			    return openhmis.GenericModel.prototype.toString.call(this);
 		    }
 	    });
 
-	    openhmis.ReservedTransaction = openhmis.GenericModel.extend({
+	    openhmis.TransactionBase = openhmis.GenericModel.extend({
+		    initialize: function(attributes, options) {
+			    openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
+
+			    this.schema.item = { type: 'NestedModel', model: openhmis.Item, objRef: true };
+			    this.schema.quantity = { type: 'BasicNumber' };
+			    this.schema.expiration = { type: 'Date', format: openhmis.dateFormatLocale };
+			    this.schema.dateCreated = { type: 'Date', format: openhmis.dateTimeFormatLocale };
+			    this.schema.batchOperation = { type: 'NestedModel', model: openhmis.Operation, objRef: true };
+			    this.schema.calculatedExpiration = {type: 'checkbox'};
+			    this.schema.calculatedBatch = {type: 'checkbox'};
+		    },
+
+		    parse: function(resp) {
+			    if (resp) {
+				    if (resp.batchOperation && _.isObject(resp.batchOperation)) {
+					    resp.batchOperation = new openhmis.Operation(resp.batchOperation);
+				    }
+				    if (resp.item && _.isObject(resp.item)) {
+					    resp.item = new openhmis.Item(resp.item);
+				    }
+			    }
+
+			    return resp;
+		    }
+	    });
+
+	    openhmis.ReservedTransaction = openhmis.TransactionBase.extend({
 		    meta: {
 			    name: __("Reservation Transaction"),
 			    namePlural: __("Reservation Transactions"),
@@ -51,21 +82,12 @@ define(
 			    restUrl: openhmis.url.inventoryModelBase + 'reservationTransaction'
 		    },
 
-		    schema: {
-			    item: { type: 'NestedModel', model: openhmis.Item, objRef: true },
-			    quantity: { type: 'BasicNumber' },
-			    expiration: {
-				    type: 'Date',
-				    format: openhmis.dateFormatLocale
-			    },
-			    batchOperation: { type: 'NestedModel', model: openhmis.Operation, objRef: true },
-			    calculatedExpiration: {type: 'checkbox'},
-			    calculatedBatch: {type: 'checkbox'},
-			    available: { type: 'checkbox' }
-		    }
+			schema: {
+				available: { type: 'checkbox' }
+			}
 	    });
 
-	    openhmis.OperationTransaction = openhmis.GenericModel.extend({
+	    openhmis.OperationTransaction = openhmis.TransactionBase.extend({
 		    meta: {
 			    name: __("Operation Transaction"),
 			    namePlural: __("Operation Transactions"),
@@ -74,15 +96,6 @@ define(
 		    },
 
 		    schema: {
-			    item: { type: 'NestedModel', model: openhmis.Item, objRef: true },
-			    quantity: { type: 'BasicNumber' },
-			    expiration: {
-				    type: 'Date',
-				    format: openhmis.dateFormatLocale
-			    },
-			    batchOperation: { type: 'NestedModel', model: openhmis.Operation, objRef: true },
-			    calculatedExpiration: {type: 'checkbox'},
-			    calculatedBatch: {type: 'checkbox'},
 			    stockroom: {
 				    type: 'StockroomSelect',
 				    options: new openhmis.GenericCollection(null, {
@@ -91,7 +104,28 @@ define(
 				    }),
 				    objRef: true
 			    },
-			    patient: { type: 'Object', model: openhmis.Patient, objRef: true }
+			    patient: { type: 'Object', model: openhmis.Patient, objRef: true },
+                institution: { type: 'Object', model: openhmis.Institution, objRef: true}
+		    },
+
+		    parse: function(resp) {
+			    openhmis.TransactionBase.prototype.parse.call(this, resp);
+
+			    if (resp) {
+				    if (resp.stockroom && _.isObject(resp.stockroom)) {
+					    resp.stockroom = new openhmis.Stockroom(resp.stockroom);
+				    }
+
+				    if (resp.patient && _.isObject(resp.patient)) {
+					    resp.patient = new openhmis.Patient(resp.patient);
+				    }
+
+				    if (resp.institution && _.isObject(resp.institution)) {
+					    resp.institution = new openhmis.Institution(resp.institution);
+				    }
+			    }
+
+			    return resp;
 		    }
 	    });
 
@@ -115,8 +149,9 @@ define(
 		            readonly: 'readonly',
 		            format: openhmis.dateTimeFormatLocale
 	            },
-	            operationType: {
+	            instanceType: {
 		            type: 'OperationTypeSelect',
+		            title: 'Operation Type',
 		            options: new openhmis.GenericCollection(null, {
 			            model: openhmis.OperationType,
 			            url: openhmis.url.inventoryModelBase + '/stockOperationType'
@@ -165,20 +200,21 @@ define(
 
 	        parse: function(resp) {
 		        if (resp) {
-			        if (resp.operationType && _.isObject(resp.operationType)) {
-				        resp.operationType = new openhmis.OperationType(resp.operationType);
+			        if (resp.instanceType && _.isObject(resp.instanceType)) {
+				        resp.instanceType = new openhmis.OperationType(resp.instanceType);
 			        }
-
-			        /*if (resp.dateCreated) {
-				        resp.dateCreated = new Date(resp.dateCreated).toLocaleString();
-			        }*/
 		        }
 
 		        return resp;
 	        },
 
             toString: function() {
-                return this.get('operationNumber');
+	            if (this.get("operationNumber")) {
+		            return this.get("operationNumber");
+	            } else {
+		            return "Operation";
+	            }
+
             }
         });
 
