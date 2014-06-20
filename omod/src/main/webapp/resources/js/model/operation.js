@@ -26,20 +26,24 @@ define(
 			    name: __("Operation Type"),
 			    namePlural: __("Operation Types"),
 			    openmrsType: 'metadata',
-			    restUrl: openhmis.url.inventoryModelBase + 'stockroomTransactionType'
+			    restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
 		    schema: {
-			    name: 'Text'
+			    name: { type: 'Text' }
 		    },
 
-		    validate: function(attrs, options) {
+			validate: function(attrs, options) {
 			    if (!attrs.name) return { name: __("A name is required.") };
 			    return null;
 		    },
 
 		    toString: function() {
-			    return this.get('name');
+			    if (this.get("name")) {
+				    return this.get("name");
+			    }
+
+			    return openhmis.GenericModel.prototype.toString.call(this);
 		    }
 	    });
 
@@ -116,8 +120,9 @@ define(
 		            readonly: 'readonly',
 		            format: openhmis.dateTimeFormatLocale
 	            },
-	            operationType: {
+	            instanceType: {
 		            type: 'OperationTypeSelect',
+		            title: 'Operation Type',
 		            options: new openhmis.GenericCollection(null, {
 			            model: openhmis.OperationType,
 			            url: openhmis.url.inventoryModelBase + '/stockOperationType'
@@ -166,13 +171,9 @@ define(
 
 	        parse: function(resp) {
 		        if (resp) {
-			        if (resp.operationType && _.isObject(resp.operationType)) {
-				        resp.operationType = new openhmis.OperationType(resp.operationType);
+			        if (resp.instanceType && _.isObject(resp.instanceType)) {
+				        resp.instanceType = new openhmis.OperationType(resp.instanceType);
 			        }
-
-			        /*if (resp.dateCreated) {
-				        resp.dateCreated = new Date(resp.dateCreated).toLocaleString();
-			        }*/
 		        }
 
 		        return resp;
