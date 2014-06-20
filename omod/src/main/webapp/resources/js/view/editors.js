@@ -18,11 +18,13 @@ define(
     openhmis.url.backboneBase + 'js/lib/underscore',
     openhmis.url.inventoryBase + 'js/model/item',
     openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category',
-        openhmis.url.inventoryBase + 'js/view/search',
+    openhmis.url.inventoryBase + 'js/model/category',
+    openhmis.url.inventoryBase + 'js/view/search',
     openhmis.url.backboneBase + 'js/lib/backbone-forms',
     openhmis.url.backboneBase + 'js/lib/labelOver',
-    openhmis.url.backboneBase + 'js/view/editors'
+    openhmis.url.backboneBase + 'js/view/editors',
+    openhmis.url.backboneBase + 'js/model/drug',
+    openhmis.url.backboneBase + 'js/model/concept'
   ],
   function($, Backbone, _, openhmis) {
     var editors = Backbone.Form.editors;
@@ -126,65 +128,67 @@ define(
 
     });
 
-    editors.ConceptLink = editors.Base.extend({
+    editors.ConceptInput = editors.Base.extend({
         tagName: "span",
         className: "editor",
         tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
-        tmplSelector: '#conceptLink',
+        tmplSelector: '#conceptInput',
 
         initialize: function(options) {
             _.bindAll(this);
             editors.Base.prototype.initialize.call(this, options);
-            if (this.value == null) {
-                this.collection();
-            };
+            this.cache = {};
             this.template = this.getTemplate();
         },
 
         events: {
-            'click [data-action="remove"]': function(event) {
-                event.preventDefault();
-                this.onRemove();
-            },
-            'change #conceptSelect':  function() {
-                this.updateHidden();
-            },
+            'blur .concept-display': 'handleBlur',
         },
-
-        onRemove: function() {
-            this.value = null;
-            $(".concept-uuid").val(this.getValue);
-            $('#conceptLink').remove();
-            this.collection();
-        },
-
-        updateHidden: function() {
-          this.value = $(".conceptSelector").val();
-          $(".concept-uuid").val(this.getValue);
-        },
-
-        collection: function() {
-            var term = encodeURIComponent(this.model.attributes.name);
-            var collection = new openhmis.GenericCollection([], {
-                model: openhmis.Concept,
-                url: 'v1/concept?q=' + term
-            });
-
-            var self = this;
-            collection.fetch({
-                success: function(collection, resp) {
-                    if (collection.length > 0) {
-                        self.renderCollection(collection)
-                    }
-                },
-
-            });
-            return collection;
-
+        
+        handleBlur: function() {
+            if ($('.concept-display').val() == '') {
+                $('.concept').val('');
+            }
         },
 
         getValue: function() {
             return this.value;
+        },
+        
+        doConceptSearch: function(request, response) {
+            var term = request.term;
+            var query = "?q=" + encodeURIComponent(term);
+            this.doSearch(request, response, openhmis.Concept, query);
+          },
+
+        doSearch: function(request, response, model, query) {
+            var term = request.term;
+            if (query in this.cache) {
+              response(this.cache[query]);
+              return;
+            }
+            var resultCollection = new openhmis.GenericCollection([], { model: model });
+            var view = this;
+            var fetchQuery = query ? query : "?q=" + encodeURIComponent(term);
+            resultCollection.fetch({
+              url: "/openmrs/ws/rest/v1/concept" + fetchQuery,
+              success: function(collection, resp) {
+                var data = collection.map(function(model) { return {
+                  val: model.id,
+                  display: model.get('display'),
+                }});
+                view.cache[query] = data;
+                response(data);
+              }
+            });
+        },
+
+        selectConcept: function(event, ui) {
+            var uuid = ui.item.val;
+            var name = ui.item.display;
+            this.$('.concept-display').val(name);
+            this.$('.concept').val(uuid);
+            event.preventDefault();
         },
 
         render: function() {
@@ -193,81 +197,87 @@ define(
                 concept: this.model.attributes.concept,
                 item_id: self.model.cid,
             }));
+            this.$('.concept-display').autocomplete({
+                minLength: 2,
+                source: this.doConceptSearch,
+                select: this.selectConcept
+              })
+              // Tricky stuff here to get the autocomplete list to render with our custom data
+              .data("autocomplete")._renderItem = function(ul, concept) {
+                return $("<li></li>").data("concept.autocomplete", concept)
+                  .append("<a>" + concept.display + "</a>").appendTo(ul);
+              };
             return this;
         },
 
-        renderCollection: function(collection) {
-          var id = this.model.cid;
-          var selector = '<select id="' + id + '_concept" class="conceptSelector" >';
-          selector += '<option value=""><em>--Not defined--</em></option>';
-          collection.each(function (entry) {
-            selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
-          });
-          selector += '</select><input type="hidden" class="concept-uuid" name="concept"/>';
-          $('#conceptSelect').append(selector);
-          $('#conceptMessage').hide();
-          return this;
+        renderInput: function() {
+            $('#conceptBox').append('<input id="conceptInput" type="text" placeholder="Enter concept name or id"><input type="hidden" class="concept-uuid" name="concept"/>');
         }
+
     });
 
-    editors.DrugLink = editors.Base.extend({
+    editors.DrugInput = editors.Base.extend({
         tagName: "span",
         className: "editor",
         tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
-        tmplSelector: '#drugLink',
+        tmplSelector: '#drugInput',
 
         initialize: function(options) {
             _.bindAll(this);
             editors.Base.prototype.initialize.call(this, options);
-            if (this.value == null) {
-              this.collection();
-            };
+            this.cache = {};
             this.template = this.getTemplate();
         },
 
         events: {
-            'click [data-action="remove"]': function(event) {
-                event.preventDefault();
-                this.onRemove();
-            },
-            'change #drugSelect':  function() {
-                this.updateHidden();
-            },
+            'blur .drug-display': 'handleBlur',
         },
-
-        onRemove: function() {
-            this.value = null;
-            $(".drug-uuid").val(this.getValue);
-            $('#drugLink').remove();
-            this.collection();
-        },
-
-        updateHidden: function() {
-          this.value = $(".drugSelector").val();
-          $(".drug-uuid").val(this.getValue);
-        },
-
-        collection: function() {
-            var term = encodeURIComponent(this.model.attributes.name);
-            var collection = new openhmis.GenericCollection([], {
-                model: openhmis.Drug,
-                url: 'v1/drug?q=' + term
-            });
-
-            var self = this;
-            collection.fetch({
-                success: function(collection, resp) {
-                    if (collection.length > 0) {
-                        self.renderCollection(collection)
-                    }
-                },
-            });
-            return collection;
+        
+        handleBlur: function() {
+            if ($('.drug-display').val() == '') {
+                $('.drug').val('');
+            }
         },
 
         getValue: function() {
             return this.value;
         },
+        
+        doDrugSearch: function(request, response) {
+            var term = request.term;
+            var query = "?q=" + encodeURIComponent(term);
+            this.doSearch(request, response, openhmis.Drug, query);
+          },
+
+          doSearch: function(request, response, model, query) {
+            var term = request.term;
+            if (query in this.cache) {
+              response(this.cache[query]);
+              return;
+            }
+            var resultCollection = new openhmis.GenericCollection([], { model: model });
+            var view = this;
+            var fetchQuery = query ? query : "?q=" + encodeURIComponent(term);
+            resultCollection.fetch({
+              url: "/openmrs/ws/rest/v1/drug" + fetchQuery,
+              success: function(collection, resp) {
+                var data = collection.map(function(model) { return {
+                  val: model.id,
+                  display: model.get('display'),
+                }});
+                view.cache[query] = data;
+                response(data);
+              }
+            });
+          },
+
+          selectDrug: function(event, ui) {
+            var uuid = ui.item.val;
+            var name = ui.item.display;
+            this.$('.drug-display').val(name);
+            this.$('.drug').val(uuid);
+            event.preventDefault();
+          },
 
         render: function() {
             var self = this;
@@ -275,20 +285,18 @@ define(
                 drug: this.model.attributes.drug,
                 item_id: self.model.cid,
             }));
+            var self = this;
+            this.$('.drug-display').autocomplete({
+              minLength: 2,
+              source: this.doDrugSearch,
+              select: this.selectDrug
+            })
+            // Tricky stuff here to get the autocomplete list to render with our custom data
+            .data("autocomplete")._renderItem = function(ul, drug) {
+              return $("<li></li>").data("drug.autocomplete", drug)
+                .append("<a>" + drug.display + "</a>").appendTo(ul);
+            };
             return this;
-        },
-
-        renderCollection: function(collection) {
-          var id = this.model.cid;
-          var selector = '<select id="' + id + '_drug" class="drugSelector" >';
-          selector += '<option value=""><em>--Not defined--</em></option>';
-          collection.each(function (entry) {
-            selector += '<option value="' + entry.id + '">' + entry.get("display")+'</option>';
-          });
-          selector += '</select><input type="hidden" class="drug-uuid" name="drug"/>';
-          $('#drugSelect').append(selector);
-          $('#drugMessage').hide();
-          return this;
         }
     });
 

@@ -2,6 +2,7 @@ package org.openmrs.module.openhmis.inventory.extension.html;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Drug;
@@ -10,6 +11,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 
 public class ItemDrugMappingExt extends Extension {
 
@@ -44,7 +46,12 @@ public class ItemDrugMappingExt extends Extension {
         tableRow += "<td>";
         if(items.size() > 0) {
             for (Item item : items) {
-                tableRow += item.getName() + " - ItemUuid: " + item.getUuid() + "<br>";
+                Set<ItemCode> codes = item.getCodes();
+                tableRow += item.getName();
+                if (codes.size() > 0) {
+                    tableRow += " - ItemCode: " + codes.iterator().next().getCode();
+                }
+                tableRow += "<br>";
             }
         } else {
             tableRow += "No Items";

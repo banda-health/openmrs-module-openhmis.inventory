@@ -18,36 +18,11 @@ define(
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
 		openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category'
+        openhmis.url.inventoryBase + 'js/model/category',
+        openhmis.url.backboneBase + 'js/model/drug',
+        openhmis.url.backboneBase + 'js/model/concept'
 	],
 	function(_, openhmis, __) {
-		openhmis.Concept = openhmis.GenericModel.extend({
-			meta: {
-				name: "Concept",
-				namePlural: "Concepts",
-			},
-
-			schema: {
-				display: { type: 'Text' },
-			},
-
-			toString: function() { return this.get('display'); }
-
-		});
-
-		openhmis.Drug = openhmis.GenericModel.extend({
-			meta: {
-				name: "Drug",
-				namePlural: "Drugs",
-			},
-
-			schema: {
-				display: { type: 'Text' },
-			},
-
-			toString: function() { return this.get('display'); }
-
-		});
 
 		openhmis.ItemCode = openhmis.GenericModel.extend({
 			meta: {
@@ -129,8 +104,8 @@ define(
                 },
 				hasExpiration: { type: "TrueFalseCheckbox" },
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
-				concept: { type: 'ConceptLink' },
-				drug: { type: 'DrugLink' },
+				concept: { type: 'ConceptInput'},
+				drug: { type: 'DrugInput' },
 				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
@@ -210,13 +185,16 @@ define(
 					return { department: __("An item needs to be associated with a department") }
 				}
 				if (!attrs.prices || attrs.prices.length < 1) {
-					return { prices: __("An item should have at least one price.") }
+					return { prices: __("An item should have at least one price") }
 				}
 				if (!attrs.defaultPrice) {
-					return { defaultPrice: "Please specify a default price."}
+					return { defaultPrice: "Please specify a default price"}
 				}
 				if (attrs.defaultExpirationPeriod && attrs.defaultExpirationPeriod <= 0) {
-					return { defaultExpirationPeriod: "Value must be greater than 0. "}
+					return { defaultExpirationPeriod: "Value must be greater than 0"}
+				}
+				if (attrs.concept && attrs.concept != '' && attrs.drug && attrs.drug != '') {
+					return { concept: __("Either choose a concept or a drug") }
 				}
 				return null;
 			},
