@@ -83,6 +83,9 @@ public class StockroomDataServiceImpl
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq("stockroom", stockroom));
+
+				criteria.addOrder(Order.desc("dateCreated"));
+				criteria.addOrder(Order.desc("id"));
 			}
 		});
 	}

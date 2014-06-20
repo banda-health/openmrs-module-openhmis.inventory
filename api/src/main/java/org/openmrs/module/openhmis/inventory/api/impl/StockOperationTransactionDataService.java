@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import org.hibernate.criterion.Order;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTransactionDataService;
@@ -30,5 +31,10 @@ public class StockOperationTransactionDataService
 
 	@Override
 	protected void validate(StockOperationTransaction object) throws APIException {
+	}
+
+	@Override
+	protected Order[] getDefaultSort() {
+		return new Order[] { Order.desc("dateCreated"), Order.desc("id") };
 	}
 }

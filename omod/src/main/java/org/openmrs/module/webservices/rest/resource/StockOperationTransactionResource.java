@@ -15,6 +15,7 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.TransactionBase;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
@@ -22,7 +23,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name = ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE, supportedClass=StockOperationTransaction.class, supportedOpenmrsVersions={"1.9"})
-public class StockOperationTransactionResource extends BaseRestObjectResource<StockOperationTransaction> {
+public class StockOperationTransactionResource extends TransactionBaseResource<StockOperationTransaction> {
 	@Override
 	public StockOperationTransaction newDelegate() {
 		return new StockOperationTransaction();
@@ -36,13 +37,11 @@ public class StockOperationTransactionResource extends BaseRestObjectResource<St
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		description.addProperty("operation", Representation.REF);
-		description.addProperty("item", Representation.REF);
-		description.addProperty("quantity", Representation.DEFAULT);
-		description.addProperty("expiration", Representation.DEFAULT);
-		description.addProperty("stockroom", Representation.REF);
-        description.addProperty("patient", Representation.REF);
-        description.addProperty("institution", Representation.REF);
+		if (!(rep instanceof RefRepresentation)) {
+			description.addProperty("stockroom", Representation.REF);
+			description.addProperty("patient", Representation.REF);
+			description.addProperty("institution", Representation.REF);
+		}
 
 		return description;
 	}

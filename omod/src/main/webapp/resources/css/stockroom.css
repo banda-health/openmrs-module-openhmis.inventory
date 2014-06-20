@@ -5,4 +5,7 @@
 #items { width: 500px; }
 #items td.field-item { width: 85%; }
 
-#transactions { width: 500px; }
+#transactions { width: 800px; }
+#transactions td.field-dateCreated { width: 175px; }
+#transactions td.field-batchOperation { width: 125px; }
+#transactions td.field-item { width: 300px; }

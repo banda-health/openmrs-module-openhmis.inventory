@@ -22,7 +22,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name = ModuleRestConstants.RESERVATION_TRANSACTION_RESOURCE, supportedClass=ReservedTransaction.class, supportedOpenmrsVersions={"1.9"})
-public class ReservedTransactionResource extends BaseRestObjectResource<ReservedTransaction> {
+public class ReservedTransactionResource extends TransactionBaseResource<ReservedTransaction> {
 	@Override
 	public ReservedTransaction newDelegate() {
 		return new ReservedTransaction();
@@ -36,15 +36,8 @@ public class ReservedTransactionResource extends BaseRestObjectResource<Reserved
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("operation", Representation.DEFAULT);
-			description.addProperty("item", Representation.DEFAULT);
-			description.addProperty("quantity", Representation.DEFAULT);
-			description.addProperty("expiration", Representation.DEFAULT);
-			description.addProperty("creator", Representation.DEFAULT);
-			description.addProperty("dateCreated", Representation.DEFAULT);
-			description.addProperty("available", Representation.DEFAULT);
-		}
+		description.addProperty("available", Representation.DEFAULT);
+
 
 		return description;
 	}
