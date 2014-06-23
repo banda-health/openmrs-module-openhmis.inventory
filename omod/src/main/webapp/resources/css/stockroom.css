@@ -9,3 +9,7 @@
 #transactions td.field-dateCreated { width: 175px; }
 #transactions td.field-batchOperation { width: 125px; }
 #transactions td.field-item { width: 300px; }
+
+/*
+	TODO: Fix tab formatting (inv-93)
+*/
