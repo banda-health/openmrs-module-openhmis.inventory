@@ -23,7 +23,6 @@ import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
-import org.openmrs.module.openhmis.inventory.api.model.Recipient;
 import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
@@ -127,7 +126,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(expected.getStatus(), actual.getStatus());
 		Assert.assertEquals(expected.getSource(), actual.getSource());
 		Assert.assertEquals(expected.getDestination(), actual.getDestination());
-		Assert.assertEquals(expected.getRecipient(), actual.getRecipient());
+		Assert.assertEquals(expected.getPatient(), actual.getPatient());
+        Assert.assertEquals(expected.getInstitution(), actual.getInstitution());
 
 		assertCollection(expected.getReserved(), actual.getReserved(), new Action2<ReservedTransaction, ReservedTransaction>() {
 			@Override
@@ -153,7 +153,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 				Assert.assertEquals(expected.getItem().getId(), actual.getItem().getId());
 				Assert.assertEquals(expected.getQuantity(), actual.getQuantity());
 				Assert.assertEquals(expected.getStockroom(), actual.getStockroom());
-				Assert.assertEquals(expected.getRecipient(), actual.getRecipient());
+				Assert.assertEquals(expected.getPatient(), actual.getPatient());
+                Assert.assertEquals(expected.getInstitution(), actual.getInstitution());
 				Assert.assertEquals(expected.getExpiration(), actual.getExpiration());
 				Assert.assertEquals(expected.getCreator(), actual.getCreator());
 				Assert.assertEquals(expected.getDateCreated(), actual.getDateCreated());
@@ -1194,16 +1195,15 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredByPatient() throws Exception {
-		StockOperationSearch search = new StockOperationSearch();
-		IRecipientDataService recipientDataService = Context.getService(IRecipientDataService.class);
-		Recipient recipient = recipientDataService.getById(0);
-		search.getTemplate().setRecipient(recipient);
+        StockOperationSearch search = new StockOperationSearch();
+        Patient patient = Context.getPatientService().getPatient(1);
+        search.getTemplate().setPatient(patient);
 
-		List<StockOperation> results = service.findOperations(search, null);
+        List<StockOperation> results = service.findOperations(search, null);
 
-		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
-		assertEntity(service.getById(2), results.get(0));
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        assertEntity(service.getById(2), results.get(0));
 	}
 
 	/**
@@ -1574,8 +1574,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void submitOperation_shouldUpdateTheSourceStockroomItemStockQuantities() throws Exception {
-		// Get the recipient this operation will be distributing to
-		Recipient recipient = Context.getService(IRecipientDataService.class).getById(0);
+        // Get the patient this operation will be distributing to
+        Patient patient = Context.getPatientService().getPatient(1);
 
 		// Get the source stockroom
 		Stockroom source = stockroomService.getById(0);
@@ -1590,7 +1590,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getReserved().clear();
 		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setSource(source);
-		operation.setRecipient(recipient);
+		operation.setPatient(patient);
 
 		// Create the operation reservations
 		ReservedTransaction tx = operation.addReserved(item, 1);
@@ -1627,7 +1627,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		// Check that the operation transaction have the correct data
 		for (StockOperationTransaction operationTx : operation.getTransactions()) {
-			Assert.assertEquals(recipient, operationTx.getRecipient());
+			Assert.assertEquals(patient, operationTx.getPatient());
 			Assert.assertEquals(operation, operationTx.getOperation());
 			Assert.assertNotNull(operationTx.getStockroom());
 
@@ -1647,8 +1647,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void submitOperation_shouldRemoveEmptyItemStockFromTheSourceStockroom() throws Exception {
-		// Get the recipient this operation will be distributing to
-		Recipient recipient = Context.getService(IRecipientDataService.class).getById(0);
+        // Get the patient this operation will be distributing to
+        Patient patient = Context.getPatientService().getPatient(1);
 
 		// Get the source stockroom
 		Stockroom source = stockroomService.getById(0);
@@ -1663,7 +1663,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getReserved().clear();
 		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setSource(source);
-		operation.setRecipient(recipient);
+		operation.setPatient(patient);
 
 		// Get the current stockroom item quantities
 		int itemQty = stockroomService.getItem(source, item).getQuantity();
@@ -1692,8 +1692,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void submitOperation_shouldSetTheCorrectAvailabilityForTheReservedStockQuantity() throws Exception {
-		// Get the recipient this operation will be distributing to
-		Recipient recipient = Context.getService(IRecipientDataService.class).getById(0);
+        // Get the patient this operation will be distributing to
+        Patient patient = Context.getPatientService().getPatient(1);
 
 		// Get the source stockroom
 		Stockroom source = stockroomService.getById(0);
@@ -1708,7 +1708,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getReserved().clear();
 		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setSource(source);
-		operation.setRecipient(recipient);
+		operation.setPatient(patient);
 
 		// Create the operation reservations
 		ReservedTransaction tx = operation.addReserved(item, 1);
@@ -1892,7 +1892,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getReserved().clear();
 		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setSource(stockroomService.getById(0));
-		operation.setRecipient(null);;
+		operation.setPatient(null);
+        operation.setInstitution(null);
 
 		Item item = itemService.getById(0);
 		operation.addReserved(item, 10);

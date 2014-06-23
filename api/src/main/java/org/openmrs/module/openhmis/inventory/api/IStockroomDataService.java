@@ -20,6 +20,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
+import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +44,22 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	List<ItemStock> getItemsByRoom(Stockroom stockroom, PagingInfo paging);
 
 	/**
+	 * Gets all {@link StockOperationTransaction}'s in the specified {@link Stockroom}.
+	 * @param stockroom The {@link Stockroom}.
+	 * @param paging The paging information.
+	 * @return A list containing all of the stockroom transactions.
+	 * @should return all the transactions in the stockroom ordered by the transaction date
+	 * @should return an empty list if there are not transactions
+	 * @should return paged items if paging is specified
+	 * @should throw IllegalArgumentException if the stockroom is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	List<StockOperationTransaction> getTransactionsByRoom(Stockroom stockroom, PagingInfo paging);
+
+	/**
 	 * Finds all the items in the stockroom that match the {@link ItemSearch} settings.
- 	 * @param stockroom The {@link Stockroom} items to search.
+ 	 * @param stockroom The {@link Stockroom} items to search within.
 	 * @param itemSearch The {@link ItemSearch} settings.
 	 * @param paging The paging information.
 	 * @return The stockroom items found or and empty list if none were found.
@@ -60,6 +75,25 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
 	List<ItemStock> findItems(Stockroom stockroom, ItemSearch itemSearch, PagingInfo paging);
+
+	/**
+	 * Finds all operations associated with the stockroom that match the {@link StockOperationSearch} settings.
+	 * @param stockroom The {@link Stockroom} operations to search within.
+	 * @param search The {@link StockOperationSearch} settings
+	 * @param paging The paging information.
+	 * @return The stock operations found or an empty list if none were found.
+	 * @should return operations filtered by template and stockroom
+	 * @should not return operations for other stockrooms
+	 * @should return all found operations if paging is null
+	 * @should return paged operations if paging is specified
+	 * @should return retired operations from search unless specified
+	 * @should return operations sorted by last modified date
+	 * @should throw IllegalArgumentException if stockroom is null
+	 * @should not throw IllegalArgumentException if operation search is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	List<StockOperation> findOperations(Stockroom stockroom, StockOperationSearch search, PagingInfo paging);
 
 	/**
 	 * Gets the {@link ItemStock} for the specified {@link Item} with the optionally defined expiration.

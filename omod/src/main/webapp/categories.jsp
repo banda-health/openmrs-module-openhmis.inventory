@@ -24,3 +24,5 @@
 <h2>
 	<spring:message code="openhmis.inventory.admin.categories" />
 </h2>
+
+<%@ include file="/WEB-INF/template/footer.jsp" %>

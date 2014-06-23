@@ -30,7 +30,8 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 	private StringComparisonType operationNumberComparisonType;
 	private ComparisonType sourceComparisonType;
 	private ComparisonType destinationComparisonType;
-	private ComparisonType recipientComparisonType;
+	private ComparisonType patientComparisonType;
+    private ComparisonType institutionComparisonType;
 	private DateComparisonType dateCreatedComparisonType;
 
 	public void setOperationNumberComparisonType(StringComparisonType operationNumberComparisonType) {
@@ -66,14 +67,22 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 	}
 
 	public ComparisonType getPatientComparisonType() {
-		return recipientComparisonType;
+		return patientComparisonType;
 	}
 
 	public void setPatientComparisonType(ComparisonType patientComparisonType) {
-		this.recipientComparisonType = patientComparisonType;
+		this.patientComparisonType = patientComparisonType;
 	}
 
-	@Override
+    public ComparisonType getInstitutionComparisonType() {
+        return institutionComparisonType;
+    }
+
+    public void setInstitutionComparisonType(ComparisonType institutionComparisonType) {
+        this.institutionComparisonType = institutionComparisonType;
+    }
+
+    @Override
 	public void updateCriteria(Criteria criteria) {
 		super.updateCriteria(criteria);
 
@@ -95,10 +104,14 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 				(destinationComparisonType != null && destinationComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("destination", operation.getDestination(), destinationComparisonType));
 		}
-		if (operation.getRecipient() != null ||
-				(recipientComparisonType != null && recipientComparisonType != ComparisonType.EQUAL)) {
-			criteria.add(createCriterion("recipient", operation.getRecipient(), recipientComparisonType));
-		}
+		if (operation.getPatient() != null ||
+				(patientComparisonType != null && patientComparisonType != ComparisonType.EQUAL)) {
+			criteria.add(createCriterion("patient", operation.getPatient(), patientComparisonType));
+        }
+        if (operation.getInstitution() != null ||
+                (institutionComparisonType != null && institutionComparisonType != ComparisonType.EQUAL)) {
+            criteria.add(createCriterion("institution", operation.getInstitution(), institutionComparisonType));
+        }
 		if (operation.getDateCreated() != null ||
 				(dateCreatedComparisonType != null && dateCreatedComparisonType != DateComparisonType.EQUAL)) {
 			criteria.add(createCriterion("dateCreated", operation.getDateCreated(), dateCreatedComparisonType));

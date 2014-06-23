@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
 
@@ -32,7 +33,8 @@ public class StockOperation
 	private Date operationDate;
 	protected Stockroom source;
 	protected Stockroom destination;
-	protected Recipient recipient;
+	protected Patient patient;
+    protected Institution institution;
 
 	@Override
 	public Integer getId() {
@@ -110,15 +112,23 @@ public class StockOperation
 		}
 	}
 
-	public Recipient getRecipient() {
-		return recipient;
-	}
+    public Patient getPatient() {
+        return patient;
+    }
 
-	public void setRecipient(Recipient recipient) {
-		this.recipient = recipient;
-	}
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
-	public ReservedTransaction addReserved(Item item, int quantity) {
+    public Institution getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(Institution institution) {
+        this.institution = institution;
+    }
+
+    public ReservedTransaction addReserved(Item item, int quantity) {
 		return addReserved(item, quantity, null);
 	}
 

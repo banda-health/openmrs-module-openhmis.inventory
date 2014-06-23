@@ -27,6 +27,7 @@ import org.joda.time.Seconds;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
+import org.openmrs.logic.op.Or;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
@@ -91,8 +92,8 @@ public class StockOperationDataServiceImpl
 			throw new APIException("The operation type (" + type.getName() + ") requires a destination " +
 					"stockroom but one has not been defined.");
 		}
-		if (type.getRecipientRequired() && operation.getRecipient() == null) {
-			throw new APIException("The operation type (" + type.getName() + ") requires a patient " +
+		if (type.getRecipientRequired() && (operation.getPatient() == null && operation.getInstitution() == null)) {
+			throw new APIException("The operation type (" + type.getName() + ") requires a patient or institution " +
 					"but one has not been associated.");
 		}
 	}
