@@ -28,6 +28,7 @@ define(
 				this.events = _.extend({}, this.events, {
 					'click [data-action="remove-concept"]' : 'onRemove',
 					'click [data-action="remove-drug"]' : 'onRemove',
+					'change [name="hasExpiration"]' : 'showDefaultExpirationPeriodField'
 				});
 				openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 				
@@ -66,6 +67,7 @@ define(
 						$(self.titleEl).show();
 						self.modelForm = self.prepareModelForm(self.model);
 						$(self.formEl).prepend(self.modelForm.el);
+						self.showDefaultExpirationPeriodField();
 						
 						if (model.attributes.concept != null) {
 							var concept = model.attributes.concept;
@@ -97,7 +99,28 @@ define(
 				});
                
             },
-
+            
+            showDefaultExpirationPeriodField: function() {
+                if (this.modelForm.fields['hasExpiration'].getValue() === true) {
+                    $('.field-defaultExpirationPeriod').show();
+                    $('#outer-span-stepper').show();
+                    $('#defaultExpirationPeriodText').hide();
+                } else if (this.modelForm.fields['defaultExpirationPeriod'].getValue() != null && this.modelForm.fields['defaultExpirationPeriod'].getValue() != '') {
+                    $('#outer-span-stepper').hide();
+                    $('#defaultExpirationPeriodText').contents().remove();
+                    $('#defaultExpirationPeriodText').append(this.modelForm.fields['defaultExpirationPeriod'].getValue());
+                    $('#defaultExpirationPeriodText').show();
+                } else {
+                    $('.field-defaultExpirationPeriod').hide();
+                	
+                }
+            },
+            
+            beginAdd: function() {
+                openhmis.GenericAddEditView.prototype.beginAdd.call(this);
+                this.showDefaultExpirationPeriodField();
+            },
+            
             save: function(event) {
                 if(this.modelForm.fields.concept.editor.value && _.isObject(this.modelForm.fields.concept.editor.value)) {
                     this.modelForm.fields.concept.editor.value = this.modelForm.fields.concept.editor.value.uuid
