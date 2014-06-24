@@ -42,8 +42,10 @@ public class AdminList extends AdministrationSectionExt {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 
 		map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
+		map.put(ModuleWebConstants.ITEMS_TO_DRUG_CONCEPT_MAPPING_PAGE, "openhmis.inventory.admin.items.concept.drug.mapping");
 		map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");
 		map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
+		map.put(ModuleWebConstants.INSTITUTION_PAGE, "openhmis.inventory.admin.institution");
 		map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
 
 		return map;
