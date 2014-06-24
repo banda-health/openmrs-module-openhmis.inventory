@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(ModuleWebConstants.INSTITUTION_ROOT)
 public class InstitutionController {
 	@RequestMapping(method = RequestMethod.GET)
-	public void departments(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
+	public void institutions(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.institution");
 	}
 }
