@@ -19,6 +19,11 @@
                 <openmrs:message code="openhmis.inventory.admin.items"/>
             </a>
         </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/itemsDrugConceptMapping.form">
+                <openmrs:message code="openhmis.inventory.admin.items.concept.drug.mapping"/>
+            </a>
+        </li>
     </openmrs:hasPrivilege>
     <openmrs:hasPrivilege privilege="<%= PrivilegeConstants.DEPARTMENT_PAGE_PRIVILEGES %>">
         <li>
