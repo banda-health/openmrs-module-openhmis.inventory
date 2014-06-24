@@ -59,8 +59,8 @@ public class ItemSearchHandler implements SearchHandler {
 		IItemDataService service = Context.getService(IItemDataService.class);
 
 		// Try searching by code
-		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		if (query != null) {
+		    PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 			List<Item> items = service.getItemsByCode(query, context.getIncludeAll(), pagingInfo);
 			if (items.size() > 0) {
 				return new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
@@ -68,9 +68,11 @@ public class ItemSearchHandler implements SearchHandler {
 		}
 
 		if (department_uuid == null && category_uuid == null) {
+		    PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 			return doNameSearch(context, query, service, pagingInfo);
 		}
 		else {
+		    PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 			return doParameterSearch(context, query, department_uuid, category_uuid, service, pagingInfo);
 		}
 	}
