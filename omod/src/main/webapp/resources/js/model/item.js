@@ -19,7 +19,6 @@ define(
 		openhmis.url.backboneBase + 'js/lib/i18n',
 		openhmis.url.inventoryBase + 'js/model/department',
         openhmis.url.inventoryBase + 'js/model/category',
-        openhmis.url.backboneBase + 'js/model/drug',
         openhmis.url.backboneBase + 'js/model/concept'
 	],
 	function(_, openhmis, __) {
@@ -105,7 +104,6 @@ define(
 				hasExpiration: { type: "TrueFalseCheckbox" },
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
 				concept: { type: 'ConceptInput'},
-				drug: { type: 'DrugInput' },
 				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
@@ -192,9 +190,6 @@ define(
 				}
 				if (attrs.defaultExpirationPeriod && attrs.defaultExpirationPeriod <= 0) {
 					return { defaultExpirationPeriod: "Value must be greater than 0"}
-				}
-				if (attrs.concept && attrs.concept != '' && attrs.drug && attrs.drug != '') {
-					return { concept: __("Either choose a concept or a drug") }
 				}
 				return null;
 			},

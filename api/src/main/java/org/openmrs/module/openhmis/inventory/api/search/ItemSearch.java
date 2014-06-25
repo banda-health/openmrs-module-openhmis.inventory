@@ -71,10 +71,6 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 				(conceptComparisonType != null && conceptComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("concept", item.getConcept(), conceptComparisonType));
 		}
-		if (item.getDrug() != null ||
-				(drugComparisonType != null && drugComparisonType != ComparisonType.EQUAL)) {
-			criteria.add(createCriterion("drug", item.getDrug(), drugComparisonType));
-		}
 	}
 }
 
