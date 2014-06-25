@@ -38,11 +38,6 @@
         <point>org.openmrs.dictionary.conceptFooter</point>
         <class>org.openmrs.module.openhmis.inventory.extension.html.ItemConceptMappingExt</class>
     </extension>
-	<extension>
-        <point>org.openmrs.admin.concepts.conceptDrugForm.inForm</point>
-        <class>org.openmrs.module.openhmis.inventory.extension.html.ItemDrugMappingExt</class>
-    </extension>
-    
 	
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
