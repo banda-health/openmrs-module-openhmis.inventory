@@ -10,12 +10,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+
 //The non-standard controller name is to avoid name conflicts with old versions of the cashier module
-@Controller(value="invInstitutionController")
-@RequestMapping(ModuleWebConstants.INSTITUTION_ROOT)
-public class InstitutionController {
-	@RequestMapping(method = RequestMethod.GET)
-	public void institutions(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
-		model.addAttribute("modelBase", "openhmis.inventory.institution");
-	}
+@Controller(value="invItemToConstantDrugMappingPageController")
+@RequestMapping(ModuleWebConstants.ITEMS_TO_DRUG_CONCEPT_MAPPING_ROOT)
+public class ConceptDrugItemMappingPageController {
+    @RequestMapping(method = RequestMethod.GET)
+    public void itemsDrugConceptMapping(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
+        model.addAttribute("modelBase", "openhmis.inventory.institution");
+    }
 }

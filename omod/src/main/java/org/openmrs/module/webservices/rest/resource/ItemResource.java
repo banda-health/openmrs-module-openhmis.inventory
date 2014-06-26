@@ -23,7 +23,6 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
-import org.openmrs.Drug;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
@@ -63,7 +62,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
             description.addProperty("defaultExpirationPeriod");
             description.addProperty("hasPhysicalInventory");
             description.addProperty("concept", Representation.REF);
-            description.addProperty("drug", Representation.REF);
 
         }
 
@@ -142,22 +140,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         Concept concept = conceptService.getConceptByUuid(uuid);
         instance.setConcept(concept);
 
-    }
-
-    @PropertySetter(value="drug")
-    public void setDrug(Item instance, final String uuid) {
-        if(StringUtils.isBlank(uuid)) {
-            instance.setDrug(null);
-            return;
-        }
-
-        if (instance.getDrug() != null && uuid.equals(instance.getDrug().getUuid())) {
-            return;
-        }
-
-        ConceptService conceptService = Context.getConceptService();
-        Drug drug = conceptService.getDrugByUuid(uuid);
-        instance.setDrug(drug);
     }
 
     @Override

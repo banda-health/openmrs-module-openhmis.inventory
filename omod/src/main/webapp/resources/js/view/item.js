@@ -17,7 +17,6 @@ define(
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/editors',
         openhmis.url.backboneBase + 'js/lib/backbone-forms',
-        openhmis.url.backboneBase + 'js/model/drug',
         openhmis.url.backboneBase + 'js/model/concept'
     ],
     function(openhmis) {
@@ -27,7 +26,6 @@ define(
 				_.bindAll(this);
 				this.events = _.extend({}, this.events, {
 					'click [data-action="remove-concept"]' : 'onRemove',
-					'click [data-action="remove-drug"]' : 'onRemove',
 					'change [name="hasExpiration"]' : 'showDefaultExpirationPeriodField'
 				});
 				openhmis.GenericAddEditView.prototype.initialize.call(this, options);
@@ -51,10 +49,6 @@ define(
                 $('#conceptLink').hide();
                 $('#conceptMessage').hide();
                 $('#conceptBox').show();
-                $('#drugLink').hide();
-                $('#drugMessage').hide();
-                $('#drugBox').show();
-                this.modelForm.fields.drug.editor.value = '';
                 this.modelForm.fields.concept.editor.value = '';
             },
             
@@ -71,26 +65,12 @@ define(
 						
 						if (model.attributes.concept != null) {
 							var concept = model.attributes.concept;
-		                     $('#drugBox').hide();
-		                     $('#drugLink').hide();
-		                     $('#drugMessage').append("No drug linked to this Item");
 		                     $('#conceptBox').hide();
 		                     $('#conceptLink').append('<button type="button" data-action="remove-concept" class="bbf-remove" title="Remove">×</button>' +
 	                    				'<a href="/openmrs/module/openhmis/backboneforms/concept.form?conceptUuid=' + 
 	                    				concept.attributes.uuid +'" target="_blank">' + concept.attributes.display +'</a>');
 		                }
 		                
-		                if (model.attributes.drug != null) {
-		                	var drug = model.attributes.drug;
-		                    $('#conceptBox').hide();
-		                    $('#conceptLink').hide();
-		                    $('#conceptMessage').append("No concept linked to this Item");
-		                    $('#drugBox').hide();
-		                    $('#drugLink').append('<button type="button" data-action="remove-drug" class="bbf-remove" title="Remove">×</button>' +
-		                    				'<a href="/openmrs/module/openhmis/backboneforms/drug.form?drugUuid=' + 
-		                    				drug.uuid +'" target="_blank">' + drug.display +'</a>');
-		               }
-						
 						$(self.formEl).show();
 						$(self.retireVoidPurgeEl).show();
 						$(self.formEl).find('input')[0].focus();
@@ -126,11 +106,6 @@ define(
                     this.modelForm.fields.concept.editor.value = this.modelForm.fields.concept.editor.value.uuid
                 } else {
                     this.modelForm.fields.concept.editor.value = this.$('#concept').val();
-                }
-                if(this.modelForm.fields.drug.editor.value && _.isObject(this.modelForm.fields.drug.editor.value)) {
-                    this.modelForm.fields.drug.editor.value = this.modelForm.fields.drug.editor.value.uuid
-                } else {
-                	this.modelForm.fields.drug.editor.value = this.$('#drug').val();
                 }
                 openhmis.GenericAddEditView.prototype.save.call(this, event);
             },

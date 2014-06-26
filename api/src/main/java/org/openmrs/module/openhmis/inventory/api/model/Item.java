@@ -13,16 +13,15 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openmrs.BaseCustomizableMetadata;
 import org.openmrs.Concept;
-import org.openmrs.Drug;
 import org.openmrs.customdatatype.Customizable;
-
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Model class that represents a product or service that can be tracked by an institution.
@@ -36,7 +35,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Department department;
 	private Category category;
 	private Concept concept;
-	private Drug drug;
 	private ItemPrice defaultPrice;
 	private boolean hasExpiration;
 	private Integer defaultExpirationPeriod;
@@ -165,14 +163,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setConcept(Concept concept) {
 		this.concept = concept;
-	}
-
-	public Drug getDrug() {
-		return drug;
-	}
-
-	public void setDrug(Drug drug) {
-		this.drug = drug;
 	}
 
 	public Boolean getHasPhysicalInventory() {

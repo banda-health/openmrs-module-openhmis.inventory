@@ -23,7 +23,6 @@ define(
     openhmis.url.backboneBase + 'js/lib/backbone-forms',
     openhmis.url.backboneBase + 'js/lib/labelOver',
     openhmis.url.backboneBase + 'js/view/editors',
-    openhmis.url.backboneBase + 'js/model/drug',
     openhmis.url.backboneBase + 'js/model/concept'
   ],
   function($, Backbone, _, openhmis) {
@@ -214,90 +213,6 @@ define(
             $('#conceptBox').append('<input id="conceptInput" type="text" placeholder="Enter concept name or id"><input type="hidden" class="concept-uuid" name="concept"/>');
         }
 
-    });
-
-    editors.DrugInput = editors.Base.extend({
-        tagName: "span",
-        className: "editor",
-        tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
-        tmplSelector: '#drugInput',
-
-        initialize: function(options) {
-            _.bindAll(this);
-            editors.Base.prototype.initialize.call(this, options);
-            this.cache = {};
-            this.template = this.getTemplate();
-        },
-
-        events: {
-            'blur .drug-display': 'handleBlur',
-        },
-        
-        handleBlur: function() {
-            if ($('.drug-display').val() == '') {
-                $('.drug').val('');
-            }
-        },
-
-        getValue: function() {
-            return this.value;
-        },
-        
-        doDrugSearch: function(request, response) {
-            var term = request.term;
-            var query = "?q=" + encodeURIComponent(term);
-            this.doSearch(request, response, openhmis.Drug, query);
-          },
-
-          doSearch: function(request, response, model, query) {
-            var term = request.term;
-            if (query in this.cache) {
-              response(this.cache[query]);
-              return;
-            }
-            var resultCollection = new openhmis.GenericCollection([], { model: model });
-            var view = this;
-            var fetchQuery = query ? query : "?q=" + encodeURIComponent(term);
-            resultCollection.fetch({
-              url: "/openmrs/ws/rest/v1/drug" + fetchQuery,
-              success: function(collection, resp) {
-                var data = collection.map(function(model) { return {
-                  val: model.id,
-                  display: model.get('display'),
-                }});
-                view.cache[query] = data;
-                response(data);
-              }
-            });
-          },
-
-          selectDrug: function(event, ui) {
-            var uuid = ui.item.val;
-            var name = ui.item.display;
-            this.$('.drug-display').val(name);
-            this.$('.drug').val(uuid);
-            event.preventDefault();
-          },
-
-        render: function() {
-            var self = this;
-            this.$el.html(this.template({
-                drug: this.model.attributes.drug,
-                item_id: self.model.cid,
-            }));
-            var self = this;
-            this.$('.drug-display').autocomplete({
-              minLength: 2,
-              source: this.doDrugSearch,
-              select: this.selectDrug
-            })
-            // Tricky stuff here to get the autocomplete list to render with our custom data
-            .data("autocomplete")._renderItem = function(ul, drug) {
-              return $("<li></li>").data("drug.autocomplete", drug)
-                .append("<a>" + drug.display + "</a>").appendTo(ul);
-            };
-            return this;
-        }
     });
 
     editors.Item = editors.Base.extend({

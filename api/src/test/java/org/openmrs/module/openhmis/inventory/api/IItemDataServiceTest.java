@@ -14,22 +14,26 @@
 
 package org.openmrs.module.openhmis.inventory.api;
 
-import liquibase.util.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.openmrs.Concept;
-import org.openmrs.Drug;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.PagingInfo;
-import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
-import org.openmrs.module.openhmis.commons.api.f.Action2;
-import org.openmrs.module.openhmis.inventory.api.model.*;
-import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
-
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import liquibase.util.StringUtils;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.openmrs.Concept;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
+import org.openmrs.module.openhmis.commons.api.f.Action2;
+import org.openmrs.module.openhmis.inventory.api.model.Category;
+import org.openmrs.module.openhmis.inventory.api.model.Department;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
+import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
+import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 
 public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataService, Item> {
 	IDepartmentDataService departmentService;
@@ -75,7 +79,6 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 		item.setCategory(categoryService.getById(0));
 		item.setConcept(Context.getConceptService().getConcept(0));
-		item.setDrug(Context.getConceptService().getDrug(0));
 		item.setHasPhysicalInventory(true);
 
 		item.addCode("one", "Test Code 010");
@@ -150,12 +153,6 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 			Assert.assertNull(actual.getConcept());
 		} else {
 			Assert.assertEquals(expected.getConcept().getId(), actual.getConcept().getId());
-		}
-
-		if (expected.getDrug() == null) {
-			Assert.assertNull(actual.getDrug());
-		} else {
-			Assert.assertEquals(expected.getDrug().getId(), actual.getDrug().getId());
 		}
 
 		if (expected.getCategory() == null) {
@@ -607,27 +604,6 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setConcept(concept);
-
-		List<Item> results = service.findItems(search, null);
-
-		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
-		assertEntity(item, results.get(0));
-	}
-
-	/**
-	 * @verifies return items filtered by drug
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
-	 */
-	@Test
-	public void findItems_shouldReturnItemsFilteredByDrug() throws Exception {
-		Drug drug = Context.getConceptService().getDrug(0);
-
-		Item item = service.getById(0);
-		item.setDrug(drug);
-
-		ItemSearch search = new ItemSearch(new Item());
-		search.getTemplate().setDrug(drug);
 
 		List<Item> results = service.findItems(search, null);
 

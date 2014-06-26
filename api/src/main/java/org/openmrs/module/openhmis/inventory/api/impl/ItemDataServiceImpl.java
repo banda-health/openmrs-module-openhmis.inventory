@@ -318,16 +318,6 @@ public class ItemDataServiceImpl
         });
     }
 
-    @Override
-    public List<Item> findItemsByDrug(final Drug drug) {
-        return executeCriteria(Item.class, new Action1<Criteria>() {
-            @Override
-            public void apply(Criteria criteria) {
-                criteria.add(Restrictions.eq("drug", drug));
-            }
-        });
-    }
-
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return this;
