@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
 import org.openmrs.Drug;
@@ -56,6 +57,11 @@ public class ItemDataServiceImpl
 		results.addAll(entity.getAttributes());
 
 		return results;
+	}
+
+	@Override
+	protected Order[] getDefaultSort() {
+		return new Order[] { Order.desc("name") };
 	}
 
 	@Override
