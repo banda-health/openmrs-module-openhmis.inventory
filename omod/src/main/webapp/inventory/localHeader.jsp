@@ -20,8 +20,8 @@
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/itemsDrugConceptMapping.form">
-                <openmrs:message code="openhmis.inventory.admin.items.concept.drug.mapping"/>
+            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/itemsToConceptMapping.form">
+                <openmrs:message code="openhmis.inventory.admin.items.concept.mapping"/>
             </a>
         </li>
     </openmrs:hasPrivilege>

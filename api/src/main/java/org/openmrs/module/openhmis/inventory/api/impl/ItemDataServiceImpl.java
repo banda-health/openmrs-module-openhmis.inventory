@@ -22,7 +22,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
-import org.openmrs.Drug;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
@@ -308,6 +307,17 @@ public class ItemDataServiceImpl
             @Override
             public void apply(Criteria criteria) {
                 criteria.add(Restrictions.eq("concept", concept));
+            }
+        });
+    }
+
+    @Override
+    public List<Item> getAllWithoutConcept() {
+        return executeCriteria(Item.class, new Action1<Criteria>() {
+            @Override
+            public void apply(Criteria criteria) {
+                criteria.add(Restrictions.isNull("concept"))
+                        .add(Restrictions.eq("retired", false));
             }
         });
     }

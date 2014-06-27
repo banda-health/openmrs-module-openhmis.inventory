@@ -25,4 +25,10 @@
     <spring:message code="openhmis.inventory.admin.items.concept.drug.mapping" />
 </h2>
 
+<form method="POST">
+    <div id=itemToConceptMappingList></div>
+    <input type="submit" value="Save Items">
+    <button class="cancel"><?= __("Cancel") ?></button>
+</form>
+
 <%@ include file="/WEB-INF/template/footer.jsp" %>
