@@ -31,3 +31,4 @@ public class StockroomsController {
 		model.addAttribute("modelBase", "openhmis.inventory.stockroom");
 	}
 }
+
