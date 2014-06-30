@@ -1,12 +1,12 @@
 package org.openmrs.module.openhmis.inventory.extension.html;
 
-import java.util.Map;
-
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.web.extension.LinkExt;
+
+import java.util.Map;
 
 public class InventoryLinkExt extends LinkExt {
 

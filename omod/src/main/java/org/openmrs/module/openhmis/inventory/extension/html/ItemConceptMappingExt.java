@@ -1,9 +1,5 @@
 package org.openmrs.module.openhmis.inventory.extension.html;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
@@ -11,6 +7,10 @@ import org.openmrs.module.Extension;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ItemConceptMappingExt extends Extension {
 

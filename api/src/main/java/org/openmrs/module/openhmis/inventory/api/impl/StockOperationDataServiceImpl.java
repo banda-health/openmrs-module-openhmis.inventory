@@ -27,7 +27,6 @@ import org.joda.time.Seconds;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
-import org.openmrs.logic.op.Or;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
@@ -346,7 +345,7 @@ public class StockOperationDataServiceImpl
 	/**
 	 * THIS SHOULD NOT BE CALLED FROM USER CODE - Code to the interface ({@link IStockroomDataService}) not this class.
 	 *
-	 * Calculates the reservation details for the specified {@link StockOperation}. This includes any calculating any
+	 * Calculates the reservation details for the specified {@link StockOperation}. This includes calculating any
 	 * qualifiers and checking on the details of the source stockroom to create all required transactions to fulfill the
 	 * request.
 	 * @param operation The stock operation for this transaction
