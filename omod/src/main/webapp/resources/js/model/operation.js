@@ -30,7 +30,40 @@ define(
 		    },
 
 		    schema: {
-			    name: { type: 'Text' }
+			    name: { type: 'Text' },
+			    description: { type: 'Text' },
+			    hasSource: {
+				    type: 'TrueFalseCheckbox',
+				    editorAttrs: { disabled: true }
+			    },
+			    hasDestination: {
+				    type: 'TrueFalseCheckbox',
+				    editorAttrs: { disabled: true }
+			    },
+			    hasRecipient: {
+				    type: 'TrueFalseCheckbox',
+				    editorAttrs: { disabled: true }
+			    },
+			    availableWhenReserved: {
+				    type: 'TrueFalseCheckbox',
+			    editorAttrs: { disabled: true }
+			    },
+			    user: {
+				    type: 'UserSelect',
+				    options: new openhmis.GenericCollection(null, {
+					    model: openhmis.User,
+					    url: 'v1/user'
+				    }),
+				    objRef: true
+			    },
+			    role: {
+				    type: 'RoleSelect',
+				    options: new openhmis.GenericCollection(null, {
+					    model: openhmis.Role,
+					    url: 'v1/role'
+				    }),
+				    objRef: true
+			    }
 		    },
 
 			validate: function(attrs, options) {
