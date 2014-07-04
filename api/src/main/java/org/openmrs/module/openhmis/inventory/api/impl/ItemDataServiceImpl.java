@@ -317,6 +317,17 @@ public class ItemDataServiceImpl
         });
     }
 
+    @Override
+    public List<Item> getAllWithoutConcept() {
+        return executeCriteria(Item.class, new Action1<Criteria>() {
+            @Override
+            public void apply(Criteria criteria) {
+                criteria.add(Restrictions.isNull("concept"))
+                        .add(Restrictions.eq("retired", false));
+            }
+        });
+    }
+
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return this;

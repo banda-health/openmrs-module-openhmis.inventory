@@ -38,7 +38,6 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 	}
 
 	private ComparisonType conceptComparisonType;
-	private ComparisonType drugComparisonType;
 
 	public ComparisonType getConceptComparisonType() {
 		return conceptComparisonType;
@@ -46,14 +45,6 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 
 	public void setConceptComparisonType(ComparisonType conceptComparisonType) {
 		this.conceptComparisonType = conceptComparisonType;
-	}
-
-	public ComparisonType getDrugComparisonType() {
-		return drugComparisonType;
-	}
-
-	public void setDrugComparisonType(ComparisonType drugComparisonType) {
-		this.drugComparisonType = drugComparisonType;
 	}
 
 	@Override

@@ -286,5 +286,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	List<Item> findItems(ItemSearch itemSearch, PagingInfo pagingInfo);
 
     List<Item> findItemsByConcept(Concept concept);
+
+    List<Item> getAllWithoutConcept();
 }
 
