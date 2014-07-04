@@ -23,50 +23,18 @@ define(
 	    openhmis.url.inventoryBase + 'js/view/editors'
     ],
     function(openhmis, __) {
-		openhmis.OperationAttributeType = openhmis.GenericModel.extend({
+		openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
 			meta: {
-				name: "Attribute Type",
-				namePlural: "Attribute Types",
-				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType'
-			},
-
-			schema: {
-				name: { type: 'Text' },
-				format: {
-					type: 'Select',
-					options: new openhmis.FieldFormatCollection()
-				},
-				foreignKey: { type: 'BasicNumber' },
-				regExp: { type: 'Text' },
-				required: { type: 'Checkbox' }
-			},
-
-			/*meta: {
-				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType'
-			}*/
-
-			validate: function (attrs, options) {
-				if (!attrs.name) {
-					return { name: __("A name is required") }
-				}
-				return null;
-			},
-
-			toString: function () {
-				return this.get('name');
 			}
 		});
 
-	    openhmis.OperationType = openhmis.GenericModel.extend({
+	    openhmis.OperationType = openhmis.CustomizableInstanceTypeBase.extend({
 		    meta: {
-			    name: __("Operation Type"),
-			    namePlural: __("Operation Types"),
-			    openmrsType: 'metadata',
-			    restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
+				restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
-		    //attributeType: openhmis.OperationAttributeType,
+		    attributeType: openhmis.OperationAttributeType,
 
 			schema: {
 			    name: { type: 'Text' },
@@ -102,35 +70,13 @@ define(
 					    url: 'v1/role'
 				    }),
 				    objRef: true
-			    },
-				attributeTypes: {
-					type: 'List',
-					itemType: 'NestedModel',
-					model: openhmis.OperationAttributeType
-				}
+			    }
 		    },
 
 			validate: function(attrs, options) {
 			    if (!attrs.name) return { name: __("A name is required.") };
 			    return null;
 		    },
-
-			parse: function(resp) {
-				if (resp.attributesTypes) {
-					var attributeTypes = resp.attributesTypes;
-					resp.attributesTypes = [];
-
-					for (var attrType in attributeTypes) {
-						var type = new openhmis.OperationAttributeType(attributeTypes[attrType], { parse: true });
-						if (attributeTypes[attrType].order !== undefined) {
-							resp.attributeTypes[attributeTypes[attrType].order] = type;
-						} else {
-							resp.attributeTypes.push(type);
-						}
-					}
-				}
-				return resp;
-			},
 
 		    toString: function() {
 			    if (this.get("name")) {
