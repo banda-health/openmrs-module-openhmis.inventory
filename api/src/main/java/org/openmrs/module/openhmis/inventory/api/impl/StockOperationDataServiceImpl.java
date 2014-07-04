@@ -271,7 +271,7 @@ public class StockOperationDataServiceImpl
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				DetachedCriteria subQuery = DetachedCriteria.forClass(StockOperationTypeBase.class);
+				DetachedCriteria subQuery = DetachedCriteria.forClass(IStockOperationType.class);
 				subQuery.setProjection(Property.forName("id"));
 
 				// Add user/role filter

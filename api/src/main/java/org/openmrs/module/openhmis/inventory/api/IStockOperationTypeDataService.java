@@ -14,8 +14,7 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 
-public interface IStockOperationTypeDataService extends IMetadataDataService<StockOperationTypeBase> {
-
+public interface IStockOperationTypeDataService extends IMetadataDataService<IStockOperationType> {
 }

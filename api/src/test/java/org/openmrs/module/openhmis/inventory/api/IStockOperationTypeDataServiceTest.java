@@ -4,10 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 
-public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest<IStockOperationTypeDataService, StockOperationTypeBase> {
+public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest<IStockOperationTypeDataService, IStockOperationType> {
 	@Override
 	public void before() throws Exception {
 		super.before();
@@ -17,8 +18,8 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 	}
 
 	@Override
-	public StockOperationTypeBase createEntity(boolean valid) {
-		StockOperationTypeBase type = new TestOperationType();
+	public IStockOperationType createEntity(boolean valid) {
+		IStockOperationType type = new TestOperationType();
 
 		if (valid) {
 			type.setName("Test Type");
@@ -41,7 +42,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 	}
 
 	@Override
-	protected void updateEntityFields(StockOperationTypeBase entity) {
+	protected void updateEntityFields(IStockOperationType entity) {
 		entity.setName(entity.getName() + " updated");
 		entity.setDescription(entity.getDescription() + " updated");
 		entity.setAvailableWhenReserved(!entity.getAvailableWhenReserved());
@@ -53,7 +54,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 	}
 
 	@Override
-	protected void assertEntity(StockOperationTypeBase expected, StockOperationTypeBase actual) {
+	protected void assertEntity(IStockOperationType expected, IStockOperationType actual) {
 		super.assertEntity(expected, actual);
 
 		Assert.assertEquals(expected.getAvailableWhenReserved(), actual.getAvailableWhenReserved());
@@ -84,7 +85,7 @@ public class IStockOperationTypeDataServiceTest extends IMetadataDataServiceTest
 
 	@Override
 	public void purge_shouldDeleteTheSpecifiedObject() throws Exception {
-		StockOperationTypeBase result = service.getById(0);
+		IStockOperationType result = service.getById(0);
 		Assert.assertNotNull(result);
 
 		service.purge(result);
