@@ -31,6 +31,8 @@ define(
 
 	    openhmis.OperationType = openhmis.CustomizableInstanceTypeBase.extend({
 		    meta: {
+				name: __("Operation Type"),
+				namePlural: __("Operation Types"),
 				restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
