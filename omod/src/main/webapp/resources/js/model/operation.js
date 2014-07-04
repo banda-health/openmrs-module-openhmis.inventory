@@ -17,10 +17,47 @@ define(
         openhmis.url.backboneBase + 'js/lib/i18n',
         openhmis.url.backboneBase + 'js/model/generic',
 	    openhmis.url.backboneBase + 'js/model/user',
+		openhmis.url.backboneBase + 'js/model/role',
+		openhmis.url.backboneBase + 'js/model/openhmis',
 	    openhmis.url.inventoryBase + 'js/model/stockroom',
 	    openhmis.url.inventoryBase + 'js/view/editors'
     ],
     function(openhmis, __) {
+		openhmis.OperationAttributeType = openhmis.GenericModel.extend({
+			meta: {
+				name: "Attribute Type",
+				namePlural: "Attribute Types",
+				openmrsType: 'metadata',
+				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType'
+			},
+
+			schema: {
+				name: { type: 'Text' },
+				format: {
+					type: 'Select',
+					options: new openhmis.FieldFormatCollection()
+				},
+				foreignKey: { type: 'BasicNumber' },
+				regExp: { type: 'Text' },
+				required: { type: 'Checkbox' }
+			},
+
+			/*meta: {
+				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType'
+			}*/
+
+			validate: function (attrs, options) {
+				if (!attrs.name) {
+					return { name: __("A name is required") }
+				}
+				return null;
+			},
+
+			toString: function () {
+				return this.get('name');
+			}
+		});
+
 	    openhmis.OperationType = openhmis.GenericModel.extend({
 		    meta: {
 			    name: __("Operation Type"),
@@ -29,9 +66,11 @@ define(
 			    restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
-		    schema: {
+		    //attributeType: openhmis.OperationAttributeType,
+
+			schema: {
 			    name: { type: 'Text' },
-			    description: { type: 'Text' },
+			    description: { type: 'TextArea' },
 			    hasSource: {
 				    type: 'TrueFalseCheckbox',
 				    editorAttrs: { disabled: true }
@@ -63,13 +102,35 @@ define(
 					    url: 'v1/role'
 				    }),
 				    objRef: true
-			    }
+			    },
+				attributeTypes: {
+					type: 'List',
+					itemType: 'NestedModel',
+					model: openhmis.OperationAttributeType
+				}
 		    },
 
 			validate: function(attrs, options) {
 			    if (!attrs.name) return { name: __("A name is required.") };
 			    return null;
 		    },
+
+			parse: function(resp) {
+				if (resp.attributesTypes) {
+					var attributeTypes = resp.attributesTypes;
+					resp.attributesTypes = [];
+
+					for (var attrType in attributeTypes) {
+						var type = new openhmis.OperationAttributeType(attributeTypes[attrType], { parse: true });
+						if (attributeTypes[attrType].order !== undefined) {
+							resp.attributeTypes[attributeTypes[attrType].order] = type;
+						} else {
+							resp.attributeTypes.push(type);
+						}
+					}
+				}
+				return resp;
+			},
 
 		    toString: function() {
 			    if (this.get("name")) {

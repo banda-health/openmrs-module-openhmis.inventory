@@ -23,16 +23,16 @@ curl(
 		openhmis.url.backboneBase + 'js/view/list',
 		openhmis.url.backboneBase + 'js/view/editors',
 		openhmis.url.inventoryBase + 'js/view/editors',
-		openhmis.url.backboneBase + 'js/view/search',
-		openhmis.url.inventoryBase + 'js/view/search'
+		openhmis.url.inventoryBase + 'js/view/operationType',
 	],
 	function($, openhmis) {
 		$(function() {
 			openhmis.startAddEditScreen(openhmis.OperationType, {
-				listView: openhmis.GenericSearchableListView,
+				listView: openhmis.GenericListView,
 				searchView: openhmis.ByNameSearchView,
-				addEditViewType: openhmis.OperationTypeDetailView,
-				listFields: ['name', 'description']
+				addEditViewType: openhmis.OperationTypeEditView,
+				listFields: ['name', 'description'],
+				allowAdd: false
 			});
 		});
 	}
