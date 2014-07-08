@@ -1,4 +1,4 @@
-	/*
+/*
 	 * The contents of this file are subject to the OpenMRS Public License
 	 * Version 2.0 (the "License"); you may not use this file except in
 	 * compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,6 @@
 	 *
 	 * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
 	 */
-
 package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
@@ -44,5 +43,4 @@ public class InstitutionResource extends BaseRestMetadataResource<Institution> {
     public Class<? extends IMetadataDataService<Institution>> getServiceClass() {
         return IInstitutionDataService.class;
     }
-
 }
