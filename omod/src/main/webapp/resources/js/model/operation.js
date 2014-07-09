@@ -171,7 +171,7 @@ define(
 		    }
 	    });
 
-	    openhmis.Operation = openhmis.GenericModel.extend({
+        openhmis.Operation = openhmis.GenericModel.extend({
             meta: {
                 name: __("Operation"),
                 namePlural: __("Operations"),

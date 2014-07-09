@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.IOException;
 
-@Controller(value="invOperationTypesController")
-@RequestMapping(ModuleWebConstants.OPERATION_TYPES_ROOT)
-public class OperationTypesController {
+@Controller(value="invMyOperationsController")
+@RequestMapping(ModuleWebConstants.MY_OPERATIONS_ROOT)
+public class MyOperationsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
-		model.addAttribute("modelBase", "openhmis.inventory.operationType");
+		model.addAttribute("modelBase", "openhmis.inventory.operation");
 	}
 }
-

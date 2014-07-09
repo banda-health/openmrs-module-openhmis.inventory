@@ -13,18 +13,26 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import org.openmrs.User;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -80,6 +88,33 @@ public class StockOperationResource
 						instance.removeReserved(reserved);
 					}
 				});
+	}
+
+	@Override
+	protected PageableResult doSearch(RequestContext context) {
+		// TODO: Research if there is a better (more standard) way to do this.
+
+		// Check to see if this search is for 'my', which we're hardcoding to return the list for the current user
+		String query = context.getParameter("q");
+		if (query != null && query.equals("my")) {
+			return getUserOperations(context);
+		} else {
+			return super.doSearch(context);
+		}
+	}
+
+	protected PageableResult getUserOperations(RequestContext context) {
+		User user = Context.getAuthenticatedUser();
+		if (user == null) {
+			log.warn("Could not retrieve the current user to be able to find the current user operations.");
+
+			return  new EmptySearchResult();
+		}
+
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+		List<StockOperation> results = ((IStockOperationDataService)getService()).getUserOperations(user, pagingInfo);
+
+		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 	}
 }
 

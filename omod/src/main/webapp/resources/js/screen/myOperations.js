@@ -27,10 +27,9 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
-			openhmis.startAddEditScreen(openhmis.OperationType, {
-				listView: openhmis.GenericListView,
-				searchView: openhmis.ByNameSearchView,
-				addEditViewType: openhmis.OperationTypeEditView,
+			openhmis.startAddEditScreen(openhmis.Operation, {
+				listView: openhmis.MyOperationListView,
+				addEditViewType: openhmis.MyOperationEditView,
 				listFields: ['name', 'description'],
 				allowAdd: false
 			});

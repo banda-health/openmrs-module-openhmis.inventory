@@ -2,7 +2,7 @@
 	<b class="boxHeader title" style="display: none"><?= model.isNew()
 		? __("Add New %s", model.modelName())
 		: __("Edit %s", model.modelName()) ?></b>
-    <div id="stockroomDetails" class="box form" style="display: none">
+    <div id="details" class="box form" style="display: none">
         <input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
 		<button class="cancel"><?= __("Cancel") ?></button>
 		<br /><br />

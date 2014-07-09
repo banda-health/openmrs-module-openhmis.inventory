@@ -47,6 +47,7 @@ public class AdminList extends AdministrationSectionExt {
 		map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
 		map.put(ModuleWebConstants.INSTITUTIONS_PAGE, "openhmis.inventory.admin.institutions");
 		map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
+		map.put(ModuleWebConstants.MY_OPERATIONS_PAGE, "openhmis.inventory.admin.myOperations");
 		map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
 
 		return map;
