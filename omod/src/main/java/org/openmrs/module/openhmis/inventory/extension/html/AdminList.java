@@ -13,7 +13,10 @@
  */
 package org.openmrs.module.openhmis.inventory.extension.html;
 
+import org.openmrs.User;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
@@ -39,15 +42,24 @@ public class AdminList extends AdministrationSectionExt {
 	 * @see AdministrationSectionExt#getLinks()
 	 */
 	public Map<String, String> getLinks() {
+		User authenticatedUser = Context.getAuthenticatedUser();
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 
-		map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
-		map.put(ModuleWebConstants.ITEMS_TO_CONCEPT_MAPPING_PAGE, "openhmis.inventory.admin.items.concept.mapping");
-		map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");
-		map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
-		map.put(ModuleWebConstants.INSTITUTIONS_PAGE, "openhmis.inventory.admin.institutions");
-		map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
-		map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
+		if (authenticatedUser.hasPrivilege(PrivilegeConstants.ITEM_PAGE_PRIVILEGES)) {
+			map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
+			map.put(ModuleWebConstants.ITEMS_TO_CONCEPT_MAPPING_PAGE, "openhmis.inventory.admin.items.concept.mapping");
+		}
+		if (authenticatedUser.hasPrivilege(PrivilegeConstants.DEPARTMENT_PAGE_PRIVILEGES)) {
+			map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");
+		}
+		if (authenticatedUser.hasPrivilege(PrivilegeConstants.CATEGORY_PAGE_PRIVILEGES)) {
+			map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
+			map.put(ModuleWebConstants.INSTITUTIONS_PAGE, "openhmis.inventory.admin.institutions");
+		}
+		if (authenticatedUser.hasPrivilege(PrivilegeConstants.STOCKROOM_PAGE_PRIVILEGES)) {
+			map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
+			map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
+		}
 
 		return map;
 	}
