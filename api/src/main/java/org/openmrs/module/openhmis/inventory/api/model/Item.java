@@ -39,6 +39,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private boolean hasExpiration;
 	private Integer defaultExpirationPeriod;
 	private boolean hasPhysicalInventory;
+	private boolean conceptAccepted;
 
 	public Item() {
 	}
@@ -195,6 +196,14 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setDefaultExpirationPeriod(Integer defaultExpirationPeriod) {
 		this.defaultExpirationPeriod = defaultExpirationPeriod;
+	}
+
+	public boolean isConceptAccepted() {
+		return conceptAccepted;
+	}
+
+	public void setConceptAccepted(boolean conceptAccepted) {
+		this.conceptAccepted = conceptAccepted;
 	}
 
 	@Override
