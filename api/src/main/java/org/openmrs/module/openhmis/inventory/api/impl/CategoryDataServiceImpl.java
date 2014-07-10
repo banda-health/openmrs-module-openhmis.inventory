@@ -26,6 +26,7 @@ import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,9 +97,9 @@ public class CategoryDataServiceImpl
 		return executeCriteria(Category.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.isNull("parentCategory"));
+				criteria.add(Restrictions.isNull(HibernateCriteriaConstants.PARENT_CATEGORY));
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});

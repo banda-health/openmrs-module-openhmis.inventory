@@ -29,6 +29,7 @@ import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
+import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class StockroomDataServiceImpl
 			public void apply(Criteria criteria) {
 				criteria.createAlias("item", "i");
 				criteria.setResultTransformer(Criteria.ROOT_ENTITY);
-				criteria.add(Restrictions.eq("stockroom", stockroom));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
 			}
 		}, Order.asc("i.name"));
 	}
@@ -82,10 +83,10 @@ public class StockroomDataServiceImpl
 		return executeCriteria(StockOperationTransaction.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("stockroom", stockroom));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
 
-				criteria.addOrder(Order.desc("dateCreated"));
-				criteria.addOrder(Order.desc("id"));
+				criteria.addOrder(Order.desc(HibernateCriteriaConstants.DATE_CREATED));
+				criteria.addOrder(Order.desc(HibernateCriteriaConstants.ID));
 			}
 		});
 	}
@@ -103,8 +104,8 @@ public class StockroomDataServiceImpl
 					search.updateCriteria(criteria);
 				}
 				criteria.add(Restrictions.or(
-						Restrictions.eq("source", stockroom),
-						Restrictions.eq("destination", stockroom))
+						Restrictions.eq(HibernateCriteriaConstants.SOURCE, stockroom),
+						Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom))
 				);
 			}
 		});
@@ -129,7 +130,7 @@ public class StockroomDataServiceImpl
 		return executeCriteria(ItemStock.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("stockroom", stockroom));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
 				itemSearch.updateCriteria(criteria.createCriteria("item", "i"));
 			}
 		}, Order.asc("i.name"));
@@ -145,8 +146,8 @@ public class StockroomDataServiceImpl
 		}
 
 		Criteria criteria = repository.createCriteria(ItemStock.class);
-		criteria.add(Restrictions.eq("stockroom", stockroom));
-		criteria.add(Restrictions.eq("item", item));
+		criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
+		criteria.add(Restrictions.eq(HibernateCriteriaConstants.ITEM, item));
 
 		return repository.selectSingle(ItemStock.class, criteria);
 	}
@@ -161,19 +162,19 @@ public class StockroomDataServiceImpl
 		}
 
 		Criteria criteria = repository.createCriteria(ItemStockDetail.class);
-		criteria.add(Restrictions.eq("stockroom", stockroom));
-		criteria.add(Restrictions.eq("item", item));
+		criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
+		criteria.add(Restrictions.eq(HibernateCriteriaConstants.ITEM, item));
 
 		if (expiration == null) {
-			criteria.add(Restrictions.isNull("expiration"));
+			criteria.add(Restrictions.isNull(HibernateCriteriaConstants.EXPIRATION));
 		} else {
-			criteria.add(Restrictions.eq("expiration", expiration));
+			criteria.add(Restrictions.eq(HibernateCriteriaConstants.EXPIRATION, expiration));
 		}
 
 		if (batchOperation == null) {
-			criteria.add(Restrictions.isNull("batchOperation"));
+			criteria.add(Restrictions.isNull(HibernateCriteriaConstants.BATCH_OPERATION));
 		} else {
-			criteria.add(Restrictions.eq("batchOperation", batchOperation));
+			criteria.add(Restrictions.eq(HibernateCriteriaConstants.BATCH_OPERATION, batchOperation));
 		}
 
 		return repository.selectSingle(ItemStockDetail.class, criteria);
@@ -193,9 +194,9 @@ public class StockroomDataServiceImpl
         return executeCriteria(Stockroom.class, pagingInfo, new Action1<Criteria>() {
             @Override
             public void apply(Criteria criteria) {
-                criteria.add(Restrictions.eq("location", location));
+                criteria.add(Restrictions.eq(HibernateCriteriaConstants.LOCATION, location));
                 if (!includeRetired) {
-                    criteria.add(Restrictions.eq("retired", false));
+                    criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
                 }
             }
         });
@@ -221,11 +222,11 @@ public class StockroomDataServiceImpl
         return executeCriteria(Stockroom.class, pagingInfo, new Action1<Criteria>() {
             @Override
             public void apply(Criteria criteria) {
-                criteria.add(Restrictions.eq("location", location))
-                        .add(Restrictions.ilike("name", name, MatchMode.START));
+                criteria.add(Restrictions.eq(HibernateCriteriaConstants.LOCATION, location))
+                        .add(Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
 
                 if (!includeRetired) {
-                    criteria.add(Restrictions.eq("retired", false));
+                    criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
                 }
             }
         });
