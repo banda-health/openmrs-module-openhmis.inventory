@@ -322,7 +322,7 @@
 			<column name="stockroom_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
 			<column name="operation_id" type="int"><constraints nullable="false" primaryKey="true" /></column>
 		</createTable>
-		
+
 		<createTable tableName="inv_institution">
             <column name="institution_id" autoIncrement="true" type="int">
                 <constraints nullable="false" primaryKey="true"/>
@@ -738,7 +738,7 @@
 
 			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
 		</createTable>
-		
+
 		<createIndex tableName="inv_item_stock" indexName="inv_item_stock_item_stockroom_idx" unique="true">
 			<column name="stockroom_id" />
 			<column name="item_id" />
@@ -862,5 +862,10 @@
     <changeSet id="openhmis.inventory-v1.0.0-8" author="marios">
         <dropForeignKeyConstraint baseTableName="inv_item" constraintName="inv_item_drug_id_fk" />
         <dropColumn tableName="inv_item" columnName="drug_id" />
+    </changeSet>
+    <changeSet id="openhmis.inventory-v1.0.0-9" author="marios">
+        <addColumn tableName="inv_item" >
+            <column name="concept_accepted" type="boolean" defaultValueBoolean="false" />
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
