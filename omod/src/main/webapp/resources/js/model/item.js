@@ -107,7 +107,8 @@ define(
 				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
-				defaultPrice: { type: 'ItemPriceSelect', options: [] }
+				defaultPrice: { type: 'ItemPriceSelect', options: [] },
+				conceptAccepted: { type: "hidden" }
 			},
 
 			initialize: function(attributes, options) {

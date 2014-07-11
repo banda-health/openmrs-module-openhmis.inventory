@@ -23,8 +23,8 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String ITEMS_ROOT = MODULE_ROOT + "items";
 	public static final String ITEMS_PAGE = ITEMS_ROOT + ".form";
 
-	public static final String ITEMS_TO_CONCEPT_MAPPING_ROOT = MODULE_ROOT + "itemsToConceptMapping";
-    public static final String ITEMS_TO_CONCEPT_MAPPING_PAGE = ITEMS_TO_CONCEPT_MAPPING_ROOT + ".form";
+	public static final String ITEM_TO_CONCEPT_MAPPING_ROOT = MODULE_ROOT + "itemToConceptMapping";
+    public static final String ITEM_TO_CONCEPT_MAPPING_PAGE = ITEM_TO_CONCEPT_MAPPING_ROOT + ".form";
 
 	public static final String DEPARTMENTS_ROOT = MODULE_ROOT + "departments";
 	public static final String DEPARTMENTS_PAGE = DEPARTMENTS_ROOT + ".form";

@@ -14,6 +14,7 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.openmrs.Concept;
 import org.openmrs.annotation.Authorized;
@@ -287,6 +288,8 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 
     List<Item> findItemsByConcept(Concept concept);
 
-    List<Item> getAllWithoutConcept();
+    List<Item> findItemsWithoutConcept(List<Integer> excludedItemsIds, int resultLimit);
+
+    Map<Item, Concept> getItemsWithConceptSuggestions();
 }
 

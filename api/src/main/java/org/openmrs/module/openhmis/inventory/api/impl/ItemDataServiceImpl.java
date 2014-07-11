@@ -15,13 +15,18 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.ConceptName;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
@@ -34,12 +39,12 @@ import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
+import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public class ItemDataServiceImpl
-		extends BaseMetadataDataServiceImpl<Item>
+public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 		implements IItemDataService, IMetadataAuthorizationPrivileges {
 	@Override
 	protected void validate(Item entity) throws APIException {
@@ -58,34 +63,38 @@ public class ItemDataServiceImpl
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
 	public Item getItemByCode(String itemCode) throws APIException {
 		if (StringUtils.isEmpty(itemCode)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
 		if (itemCode.length() > 255) {
-			throw new IllegalArgumentException("The item code must be less than 256 characters.");
+			throw new IllegalArgumentException(
+					"The item code must be less than 256 characters.");
 		}
 
 		Criteria criteria = repository.createCriteria(getEntityClass());
-		criteria.createAlias("codes", "c")
-				.add(Restrictions.ilike("c.code", itemCode));
+		criteria.createAlias("codes", "c").add(
+				Restrictions.ilike("c.code", itemCode));
 
 		return repository.selectSingle(getEntityClass(), criteria);
 	}
 
 	@Override
-	@Transactional(readOnly =  true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	public List<Item> getItemsByCode(String itemCode, boolean includeRetired) throws APIException {
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Item> getItemsByCode(String itemCode, boolean includeRetired)
+			throws APIException {
 		return getItemsByCode(itemCode, includeRetired, null);
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByCode(final String itemCode, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> getItemsByCode(final String itemCode,
+			final boolean includeRetired, PagingInfo pagingInfo)
+			throws APIException {
 		if (StringUtils.isEmpty(itemCode)) {
 			throw new NullPointerException("The item code must be defined");
 		}
@@ -93,26 +102,29 @@ public class ItemDataServiceImpl
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.createAlias("codes", "c")
-				.add(Restrictions.eq("c.code", itemCode));
+				criteria.createAlias("codes", "c").add(
+						Restrictions.eq("c.code", itemCode));
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByDepartment(Department department, boolean includeRetired) throws APIException {
+	public List<Item> getItemsByDepartment(Department department,
+			boolean includeRetired) throws APIException {
 		return getItemsByDepartment(department, includeRetired, null);
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> getItemsByDepartment(final Department department,
+			final boolean includeRetired, PagingInfo pagingInfo)
+			throws APIException {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -120,25 +132,28 @@ public class ItemDataServiceImpl
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("department", department));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department));
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByCategory(Category category, boolean includeRetired) throws APIException {
+	public List<Item> getItemsByCategory(Category category,
+			boolean includeRetired) throws APIException {
 		return getItemsByCategory(category, includeRetired, null);
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByCategory(final Category category, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> getItemsByCategory(final Category category,
+			final boolean includeRetired, PagingInfo pagingInfo)
+			throws APIException {
 		if (category == null) {
 			throw new NullPointerException("The category must be defined");
 		}
@@ -146,21 +161,26 @@ public class ItemDataServiceImpl
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("category", category));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category));
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});
 	}
 
 	@Override
-	public List<Item> getItemsByDepartmentAndCategory(Department department, Category category, boolean includeRetired) throws APIException {
-		return getItemsByDepartmentAndCategory(department, category, includeRetired, null);
+	public List<Item> getItemsByDepartmentAndCategory(Department department,
+			Category category, boolean includeRetired) throws APIException {
+		return getItemsByDepartmentAndCategory(department, category,
+				includeRetired, null);
 	}
 
 	@Override
-	public List<Item> getItemsByDepartmentAndCategory(final Department department, final Category category, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> getItemsByDepartmentAndCategory(
+			final Department department, final Category category,
+			final boolean includeRetired, PagingInfo pagingInfo)
+			throws APIException {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -171,22 +191,25 @@ public class ItemDataServiceImpl
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("department", department));
-				criteria.add(Restrictions.eq("category", category));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category));
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});
 	}
 
 	@Override
-	public List<Item> findItems(Category category, String name, boolean includeRetired) throws APIException {
+	public List<Item> findItems(Category category, String name,
+			boolean includeRetired) throws APIException {
 		return findItems(category, name, includeRetired, null);
 	}
 
 	@Override
-	public List<Item> findItems(final Category category, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> findItems(final Category category, final String name,
+			final boolean includeRetired, PagingInfo pagingInfo)
+			throws APIException {
 		if (category == null) {
 			throw new NullPointerException("The category must be defined");
 		}
@@ -194,29 +217,34 @@ public class ItemDataServiceImpl
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
 		if (name.length() > 255) {
-			throw new IllegalArgumentException("The item code must be less than 256 characters.");
+			throw new IllegalArgumentException(
+					"The item code must be less than 256 characters.");
 		}
 
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("category", category))
-						.add(Restrictions.ilike("name", name, MatchMode.START));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category)).add(
+						Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
 
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});
 	}
 
 	@Override
-	public List<Item> findItems(Department department, Category category, String name, boolean includeRetired) throws APIException {
+	public List<Item> findItems(Department department, Category category,
+			String name, boolean includeRetired) throws APIException {
 		return findItems(department, category, name, includeRetired, null);
 	}
 
 	@Override
-	public List<Item> findItems(final Department department, final Category category, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> findItems(final Department department,
+			final Category category, final String name,
+			final boolean includeRetired, PagingInfo pagingInfo)
+			throws APIException {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -227,34 +255,38 @@ public class ItemDataServiceImpl
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
 		if (name.length() > 255) {
-			throw new IllegalArgumentException("The item code must be less than 256 characters.");
+			throw new IllegalArgumentException(
+					"The item code must be less than 256 characters.");
 		}
 
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("department", department))
-						.add(Restrictions.eq("category", category))
-						.add(Restrictions.ilike("name", name, MatchMode.START));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department))
+						.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category))
+						.add(Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
 
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> findItems(Department department, String name, boolean includeRetired) throws APIException {
+	public List<Item> findItems(Department department, String name,
+			boolean includeRetired) throws APIException {
 		return findItems(department, name, includeRetired, null);
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> findItems(final Department department, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+	public List<Item> findItems(final Department department, final String name,
+			final boolean includeRetired, PagingInfo pagingInfo)
+			throws APIException {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -262,35 +294,38 @@ public class ItemDataServiceImpl
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
 		if (name.length() > 255) {
-			throw new IllegalArgumentException("The item code must be less than 256 characters.");
+			throw new IllegalArgumentException(
+					"The item code must be less than 256 characters.");
 		}
 
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("department", department))
-						.add(Restrictions.ilike("name", name, MatchMode.START));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department)).add(
+						Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
 
 				if (!includeRetired) {
-					criteria.add(Restrictions.eq("retired", false));
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		});
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	public List<Item> findItems(ItemSearch itemSearch) {
 		return findItems(itemSearch, null);
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
-	public List<Item> findItems(final ItemSearch itemSearch, PagingInfo pagingInfo) {
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Item> findItems(final ItemSearch itemSearch,
+			PagingInfo pagingInfo) {
 		if (itemSearch == null) {
 			throw new NullPointerException("The item search must be defined.");
 		} else if (itemSearch.getTemplate() == null) {
-			throw new NullPointerException("The item search template must be defined.");
+			throw new NullPointerException(
+					"The item search template must be defined.");
 		}
 
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
@@ -301,26 +336,75 @@ public class ItemDataServiceImpl
 		});
 	}
 
-    @Override
-    public List<Item> findItemsByConcept(final Concept concept) {
-        return executeCriteria(Item.class, new Action1<Criteria>() {
-            @Override
-            public void apply(Criteria criteria) {
-                criteria.add(Restrictions.eq("concept", concept));
-            }
-        });
-    }
+	@Override
+	public List<Item> findItemsByConcept(final Concept concept) {
+		return executeCriteria(Item.class, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CONCEPT, concept));
+			}
+		});
+	}
 
-    @Override
-    public List<Item> getAllWithoutConcept() {
-        return executeCriteria(Item.class, new Action1<Criteria>() {
-            @Override
-            public void apply(Criteria criteria) {
-                criteria.add(Restrictions.isNull("concept"))
-                        .add(Restrictions.eq("retired", false));
-            }
-        });
-    }
+	@Override
+	public List<Item> findItemsWithoutConcept(final List<Integer> excludedItemsIds, final int resultLimit) {
+		return executeCriteria(Item.class, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.isNull(HibernateCriteriaConstants.CONCEPT)).add(
+						Restrictions.eq(HibernateCriteriaConstants.RETIRED, false)).add(
+						Restrictions.eq(HibernateCriteriaConstants.CONCEPT_ACCEPTED, false));
+				if (excludedItemsIds != null && excludedItemsIds.size() < 0) {
+					criteria.add(Restrictions.not(Restrictions.in("id", excludedItemsIds.toArray())));
+				}
+				criteria.setMaxResults(resultLimit);
+			}
+		});
+	}
+
+	@Override
+	public Map<Item, Concept> getItemsWithConceptSuggestions() {
+		int defaultResultLimit = 50;
+		Map<Item, Concept> itemConceptMap = getItemToConceptMapping(defaultResultLimit);
+		Set<Item> items = itemConceptMap.keySet();
+		List<Integer> excludedItemsIds = new ArrayList<Integer>();
+
+		for (Item item : items) {
+			excludedItemsIds.add(item.getId());
+		}
+
+		if (itemConceptMap.size() < defaultResultLimit) {
+			int reachDefaultReultLimit = defaultResultLimit - itemConceptMap.size();
+			List<Item> itemsWithoutConcept = findItemsWithoutConcept(excludedItemsIds, reachDefaultReultLimit);
+			for (Item item : itemsWithoutConcept) {
+				itemConceptMap.put(item, null);
+			}
+		}
+		return itemConceptMap;
+	}
+
+	private Map<Item, Concept> getItemToConceptMapping(int defaultResultLimit) {
+		String itemKey = "0";
+		String conceptKey = "1";
+
+		Map<Item, Concept> itemToConceptMap = new HashMap<Item, Concept>();
+		String queryString = "select new map(item.uuid, concept.concept) " +
+				"from " +  Item.class.getName() + " as item, " + ConceptName.class.getName() + " as concept " +
+				"where item.concept is null " + "and item.retired = false " +
+				"and item.name like concept.name " +
+				"and item.conceptAccepted = false " +
+				"group by item.id ";
+		Query query = repository.createQuery(queryString);
+		query.setMaxResults(defaultResultLimit);
+		List<Map<String, Object>> results = (List<Map<String, Object>>) query.list();
+		for (Map<String, Object> result : results) {
+			String itemUuid = (String) result.get(itemKey);
+			Item item = getByUuid(itemUuid);
+			Concept concept = (Concept) result.get(conceptKey);
+			itemToConceptMap.put(item, concept);
+		}
+		return itemToConceptMap;
+	}
 
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
@@ -348,4 +432,3 @@ public class ItemDataServiceImpl
 	}
 
 }
-

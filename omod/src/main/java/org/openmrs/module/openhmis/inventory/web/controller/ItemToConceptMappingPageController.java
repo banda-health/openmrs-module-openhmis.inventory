@@ -12,18 +12,12 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
-
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.openmrs.Concept;
-import org.openmrs.api.ConceptService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
@@ -33,29 +27,32 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
 @Controller(value="invItemToConceptMappingPageController")
-@RequestMapping(ModuleWebConstants.ITEMS_TO_CONCEPT_MAPPING_ROOT)
 public class ItemToConceptMappingPageController {
 
     private IItemDataService itemDataService;
-    private ConceptService conceptService;
 
     @Autowired
-    public ItemToConceptMappingPageController(IItemDataService itemDataService, ConceptService conceptService) {
-        this.itemDataService = itemDataService;
-        this.conceptService = conceptService;
+    public ItemToConceptMappingPageController(IItemDataService itemDataService) {
+    	this.itemDataService = itemDataService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public void itemsDrugConceptMapping(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
-
-
+    @RequestMapping(value=ModuleWebConstants.ITEM_TO_CONCEPT_MAPPING_ROOT, method = RequestMethod.GET)
+    public void itemToConceptMapping(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
+        Map<Item, Concept> itemsWithConceptSuggestions = itemDataService.getItemsWithConceptSuggestions();
+        model.addAttribute("itemConcepts", itemsWithConceptSuggestions);
         model.addAttribute("modelBase", "openhmis.inventory.institution");
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value=ModuleWebConstants.ITEM_TO_CONCEPT_MAPPING_ROOT + "/getConcept", method = RequestMethod.GET)
+    public void getConcepts() {
+        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX GET STUFF");
+    }
+
+    @RequestMapping(value=ModuleWebConstants.ITEM_TO_CONCEPT_MAPPING_ROOT, method = RequestMethod.POST)
     public void onSubmit(ModelMap model) {
         System.out.println("##################### FORM SUBMIT");
     }
+
 }
+

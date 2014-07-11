@@ -16,19 +16,55 @@
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
-<openmrs:require allPrivileges="<%= PrivilegeConstants.ITEM_PAGE_PRIVILEGES %>" otherwise="/login.htm"
-                 redirect="<%= ModuleWebConstants.ITEMS_PAGE %>" />
+<openmrs:require allPrivileges="<%= PrivilegeConstants.ITEM_PAGE_PRIVILEGES %>" otherwise="/login.htm"redirect="<%= ModuleWebConstants.ITEMS_PAGE %>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/itemToConceptMapping.js" %>' />
+
+
+
 
 <h2>
-    <spring:message code="openhmis.inventory.admin.items.concept.drug.mapping" />
+    <spring:message code="openhmis.inventory.admin.items.concept.mapping" />
 </h2>
 
-<form method="POST">
-    <div id=itemToConceptMappingList></div>
-    <input type="submit" value="Save Items">
-    <button class="cancel"><?= __("Cancel") ?></button>
-</form>
+<div id="existing-form">
+	<form method="POST">
+	    <div id=itemToConceptMappingList>
+	        <b class="boxHeader">Current Items</b>
+            <div class="box">
+                <table class="display" width="100%">
+	                <theader>
+	                    <th>Item Name</th>
+	                    <th>Concept Suggestion</th>
+	                    <th>Accept Setting</th>
+	                </theader>
+	                <tbody class="list">
+			            <c:forEach var="itemConcept" items="${itemConcepts}" varStatus="loopStatus">
+		                    <tr class="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}">
+		                        <td>${status.count} ${itemConcept.key.name}</td>
+		                        <c:choose>
+			                        <c:when test="${itemConcept.value != null}">
+	    		                        <td>${itemConcept.value.name}</td>
+			                        </c:when>
+			                        <c:otherwise>
+	    		                        <td>
+                                            <openmrs_tag:conceptField formFieldName="${status.expression}" formFieldId="concept-${loopStatus.index}" />
+	    		                        </td>
+			                        </c:otherwise>
+		                        </c:choose>
+		                        <td>
+		                            <input type="checkbox" name="bla" id="conceptSet" />
+                                </td>
+		                    </tr>
+			            </c:forEach>
+	                </tbody>
+	            </table>
+	        </div>
+	    </div>
+	    <input type="submit" value="Save Items">
+	    <button class="cancel">Cancel</button>
+	</form>
+</div>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>
