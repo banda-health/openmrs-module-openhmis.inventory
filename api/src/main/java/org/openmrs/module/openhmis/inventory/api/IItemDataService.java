@@ -28,6 +28,7 @@ import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Transactional
 public interface IItemDataService extends IMetadataDataService<Item> {
 	/**

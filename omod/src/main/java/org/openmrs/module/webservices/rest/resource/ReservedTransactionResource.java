@@ -17,7 +17,6 @@ import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 

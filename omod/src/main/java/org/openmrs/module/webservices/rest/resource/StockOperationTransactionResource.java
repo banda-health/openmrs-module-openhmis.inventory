@@ -15,7 +15,6 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.TransactionBase;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;

@@ -19,7 +19,6 @@ import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
-import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 

@@ -15,22 +15,26 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=StockOperationTypeBase.class, supportedOpenmrsVersions={"1.9"})
-public class StockOperationTypeResource extends BaseRestMetadataResource<StockOperationTypeBase> {
+import java.util.List;
+
+@Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=IStockOperationType.class, supportedOpenmrsVersions={"1.9"})
+public class StockOperationTypeResource
+		extends BaseRestInstanceTypeResource<IStockOperationType, StockOperation, StockOperationAttributeType, StockOperationAttribute> {
 	@Override
 	public StockOperationTypeBase newDelegate() {
 		return null;
 	}
 
 	@Override
-	public Class<? extends IMetadataDataService<StockOperationTypeBase>> getServiceClass() {
+	public Class<? extends IMetadataDataService<IStockOperationType>> getServiceClass() {
 		return IStockOperationTypeDataService.class;
 	}
 
@@ -46,9 +50,15 @@ public class StockOperationTypeResource extends BaseRestMetadataResource<StockOp
 		if (!(rep instanceof RefRepresentation)) {
 			description.addProperty("user", Representation.REF);
 			description.addProperty("role", Representation.REF);
-			description.addProperty("attributeTypes", Representation.REF);
 		}
 
 		return description;
 	}
+
+	// Workaround to fix the TypeVariable issue on base generic property
+	@PropertySetter("attributeTypes")
+	public void setAttributeTypes(IStockOperationType instance, List<StockOperationAttributeType> attributeTypes) {
+		super.setAttributeTypes(instance, attributeTypes);
+	}
 }
+

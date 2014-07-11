@@ -13,9 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -35,6 +32,9 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class ItemSearchHandler implements SearchHandler {

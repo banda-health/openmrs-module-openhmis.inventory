@@ -35,11 +35,11 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String STOCKROOMS_ROOT = MODULE_ROOT + "stockrooms";
 	public static final String STOCKROOMS_PAGE = STOCKROOMS_ROOT + ".form";
 
-	public static final String INSTITUTION_ROOT = MODULE_ROOT + "institution";
-	public static final String INSTITUTION_PAGE = INSTITUTION_ROOT + ".form";
+	public static final String INSTITUTIONS_ROOT = MODULE_ROOT + "institutions";
+	public static final String INSTITUTIONS_PAGE = INSTITUTIONS_ROOT + ".form";
 
-	public static final String TRANSACTIONS_ROOT = MODULE_ROOT + "transactions";
-	public static final String TRANSACTIONS_PAGE = TRANSACTIONS_ROOT + ".form";
+	public static final String OPERATION_TYPES_ROOT = MODULE_ROOT + "operationTypes";
+	public static final String OPERATION_TYPES_PAGE = OPERATION_TYPES_ROOT + ".form";
 
 	public static final String MODULE_INIT_JS = MODULE_RESOURCE_ROOT + "js/init.js";
 

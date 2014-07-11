@@ -13,15 +13,15 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openmrs.BaseCustomizableMetadata;
 import org.openmrs.Concept;
 import org.openmrs.customdatatype.Customizable;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Model class that represents a product or service that can be tracked by an institution.

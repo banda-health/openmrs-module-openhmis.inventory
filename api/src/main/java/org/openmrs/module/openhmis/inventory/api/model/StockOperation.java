@@ -1,12 +1,12 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class represents an operation performed on item stock.  Examples of an operation are things like transferring

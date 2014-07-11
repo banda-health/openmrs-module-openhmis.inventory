@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;

@@ -1,8 +1,8 @@
 package org.openmrs.module.webservices.rest.helper;
 
-import java.math.BigDecimal;
-
 import org.openmrs.module.webservices.rest.web.response.ConversionException;
+
+import java.math.BigDecimal;
 
 public class Converter {
 

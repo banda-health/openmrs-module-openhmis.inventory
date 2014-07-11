@@ -1,0 +1,24 @@
+<script id="detail-template" type="text/template">
+	<b class="boxHeader title" style="display: none"><?= model.isNew()
+		? __("Add New %s", model.modelName())
+		: __("Edit %s", model.modelName()) ?></b>
+    <div id="stockroomDetails" class="box form" style="display: none">
+        <input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
+		<button class="cancel"><?= __("Cancel") ?></button>
+		<br /><br />
+		<div class="retireVoidPurge" style="width: 75%">
+			<div class="box">
+				<? var strRetireOrVoid = model.getDataType() === "data" ? "Void" : "Retire" ?>
+				<? if (model.isRetired()) { ?>
+					<? var strUnretire = "Un" + strRetireOrVoid.toLowerCase() ?>
+					<h4><?= __(strUnretire + " %s", model.modelName()) ?></h4>
+					<button class="unretireOrUnvoid"><?= __(strUnretire) ?></button>
+				<? } else { ?>
+					<h4><?= __(strRetireOrVoid + " %s", model.modelName()) ?></h4>
+					<label for="reason">Reason</label> <input name="reason" id="reason" class="reason" type="text" /><br />
+					<button class="retireOrVoid"><?= __(strRetireOrVoid) ?></button>
+				 <? } ?>
+			</div>
+		 </div>
+     </div>
+</script>

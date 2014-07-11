@@ -17,20 +17,62 @@ define(
         openhmis.url.backboneBase + 'js/lib/i18n',
         openhmis.url.backboneBase + 'js/model/generic',
 	    openhmis.url.backboneBase + 'js/model/user',
+		openhmis.url.backboneBase + 'js/model/role',
+		openhmis.url.backboneBase + 'js/model/openhmis',
 	    openhmis.url.inventoryBase + 'js/model/stockroom',
 	    openhmis.url.inventoryBase + 'js/view/editors'
     ],
     function(openhmis, __) {
-	    openhmis.OperationType = openhmis.GenericModel.extend({
+		openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
+			meta: {
+				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType'
+			}
+		});
+
+	    openhmis.OperationType = openhmis.CustomizableInstanceTypeBase.extend({
 		    meta: {
-			    name: __("Operation Type"),
-			    namePlural: __("Operation Types"),
-			    openmrsType: 'metadata',
-			    restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
+				name: __("Operation Type"),
+				namePlural: __("Operation Types"),
+				restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
-		    schema: {
-			    name: { type: 'Text' }
+		    attributeType: openhmis.OperationAttributeType,
+
+			schema: {
+			    name: { type: 'Text' },
+			    description: { type: 'TextArea' },
+			    hasSource: {
+				    type: 'TrueFalseCheckbox',
+				    editorAttrs: { disabled: true }
+			    },
+			    hasDestination: {
+				    type: 'TrueFalseCheckbox',
+				    editorAttrs: { disabled: true }
+			    },
+			    hasRecipient: {
+				    type: 'TrueFalseCheckbox',
+				    editorAttrs: { disabled: true }
+			    },
+			    availableWhenReserved: {
+				    type: 'TrueFalseCheckbox',
+			    editorAttrs: { disabled: true }
+			    },
+			    user: {
+				    type: 'UserSelect',
+				    options: new openhmis.GenericCollection(null, {
+					    model: openhmis.User,
+					    url: 'v1/user'
+				    }),
+				    objRef: true
+			    },
+			    role: {
+				    type: 'RoleSelect',
+				    options: new openhmis.GenericCollection(null, {
+					    model: openhmis.Role,
+					    url: 'v1/role'
+				    }),
+				    objRef: true
+			    }
 		    },
 
 			validate: function(attrs, options) {
