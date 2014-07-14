@@ -12,7 +12,7 @@ define(
 			tmplSelector: '#detail-template'
 		});
 
-        openhmis.MyOperationListView = openhmis.GenericListView.extend({
+        openhmis.MyOperationListView = openhmis.GenericSearchableListView.extend({
             fetch: function(options, sender) {
                 options = options ? options : {};
 

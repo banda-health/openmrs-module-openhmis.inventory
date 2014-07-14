@@ -56,4 +56,6 @@ public class ModuleWebConstants extends WebConstants {
 	public static String getModulePageUrl(String relativePath) {
 		return MODULE_ROOT + relativePath;
 	}
+
+	private ModuleWebConstants() { }
 }

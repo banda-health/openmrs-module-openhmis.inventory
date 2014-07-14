@@ -235,6 +235,8 @@ define(
 			}
 		});
 
+        openhmis.OperationSearchByStatus
+
 		return openhmis;
 	}
 )
