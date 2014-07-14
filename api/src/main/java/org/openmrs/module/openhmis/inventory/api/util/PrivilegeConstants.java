@@ -30,5 +30,5 @@ public class PrivilegeConstants {
 	public static final String VIEW_OPERATIONS = "View Inventory Operations";
 	public static final String PURGE_OPERATIONS = "Purge Inventory Operations";
 
-	private PrivilegeConstants() { }
+	protected PrivilegeConstants() { }
 }

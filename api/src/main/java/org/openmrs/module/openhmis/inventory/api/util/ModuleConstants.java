@@ -16,5 +16,5 @@ package org.openmrs.module.openhmis.inventory.api.util;
 public class ModuleConstants {
 	public static final String MODULE_NAME = "inventory";
 
-	private ModuleConstants() { }
+	protected ModuleConstants() { }
 }

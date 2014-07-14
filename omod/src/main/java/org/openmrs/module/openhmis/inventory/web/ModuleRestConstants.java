@@ -37,5 +37,5 @@ public class ModuleRestConstants extends ModuleWebConstants {
 
 	public static final String RESERVATION_TRANSACTION_RESOURCE = MODULE_REST_ROOT + "reservationTransaction";
 
-
+	protected ModuleRestConstants() { }
 }

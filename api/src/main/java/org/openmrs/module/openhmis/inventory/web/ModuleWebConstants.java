@@ -57,5 +57,5 @@ public class ModuleWebConstants extends WebConstants {
 		return MODULE_ROOT + relativePath;
 	}
 
-	private ModuleWebConstants() { }
+	protected ModuleWebConstants() { }
 }
