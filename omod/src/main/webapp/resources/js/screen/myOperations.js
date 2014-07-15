@@ -29,8 +29,9 @@ curl(
 		$(function() {
 			openhmis.startAddEditScreen(openhmis.Operation, {
 				listView: openhmis.MyOperationListView,
+                searchView: openhmis.OperationSearchByStatus,
 				addEditViewType: openhmis.MyOperationEditView,
-				listFields: ['dateCreated', 'operationNumber', 'status', 'instanceType'],
+				listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status'],
 				allowAdd: false
 			});
 		});

@@ -235,7 +235,61 @@ define(
 			}
 		});
 
-        openhmis.OperationSearchByStatus
+        openhmis.OperationSearchByStatus = openhmis.BaseSearchView.extend({
+            tmplFile: openhmis.url.backboneBase + 'template/search.html',
+            tmplSelector: '#generic-search',
+
+            initialize: function(options) {
+                this.events['change #operation_status'] = 'onFormSubmit';
+                openhmis.BaseSearchView.prototype.initialize.call(this, options);
+                var statuses = ["Any", "Pending", "Completed", "Cancelled"];
+
+                this.form = new Backbone.Form({
+                    className: "inline",
+                    schema: {
+                        operation_status: {
+                            title: __("Status"),
+                            type: "Select",
+                            options: statuses
+                        }
+                    },
+                    data: {}
+                });
+            },
+
+            getFetchOptions: function(options) {
+                options = options ? options : {}
+                if (this.searchFilter) {
+                    for (var filter in this.searchFilter) {
+                        options.queryString = openhmis.addQueryStringParameter(
+                            options.queryString, filter + "=" + encodeURIComponent(this.searchFilter[filter]));
+                    }
+                }
+                return options;
+            },
+
+            focus: function() { this.$("#q").focus(); },
+
+            commitForm: function() {
+                var filters = this.form.getValue();
+
+                if (!filters.operation_status || filters.operation_status == "Any") {
+                    this.searchFilter = undefined;
+                } else {
+                    this.searchFilter = filters;
+                }
+            },
+
+            render: function() {
+                this.$el.html(this.template({ __: __ }));
+                this.$("div.box").append(this.form.render().el);
+                if (this.searchFilter)
+                    this.form.setValue(this.searchFilter);
+                this.$("form").addClass("inline");
+                this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+                return this;
+            }
+        })
 
 		return openhmis;
 	}

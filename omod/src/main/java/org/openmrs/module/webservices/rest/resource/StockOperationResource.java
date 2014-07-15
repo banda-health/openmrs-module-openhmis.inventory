@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -111,8 +112,27 @@ public class StockOperationResource
 			return  new EmptySearchResult();
 		}
 
+		StockOperationStatus status = null;
+		String statusText = context.getParameter("operation_status");
+		if (!StringUtils.isEmpty(statusText)) {
+			status = StockOperationStatus.valueOf(statusText.toUpperCase());
+
+			if (status == null) {
+				log.warn("Could not parse Stock Operation Status '" + statusText + "'");
+
+				return new EmptySearchResult();
+			}
+		}
+
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<StockOperation> results = ((IStockOperationDataService)getService()).getUserOperations(user, pagingInfo);
+		List<StockOperation> results = null;
+
+		if (status == null) {
+			results = ((IStockOperationDataService)getService()).getUserOperations(user, pagingInfo);
+		} else {
+			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, pagingInfo);
+		}
+
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 	}

@@ -1,6 +1,6 @@
 #operations { width: 750px; }
 #operations td.field-dateCreated { width: 175px; }
-#operations td.field-operationNumber { width: 125px; }
+#operations td.field-operationNumber { width: 150px; }
 
 #items { width: 500px; }
 #items td.field-item { width: 85%; }
