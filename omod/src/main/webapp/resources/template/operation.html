@@ -22,3 +22,27 @@
 		 </div>
      </div>
 </script>
+
+<script id="view-operation-detail" type="text/template">
+	<b class="boxHeader title" style="display: none"><?= __("Stock Operation %s", model.modelName()) ?></b>
+	<div id="details" class="box form" style="display: none">
+
+		<button class="cancel"><?= __("Close") ?></button>
+		<br /><br />
+		<div class="retireVoidPurge" style="width: 75%">
+			<div class="box">
+				<? var strRetireOrVoid = model.getDataType() === "data" ? "Void" : "Retire" ?>
+				<? if (model.isRetired()) { ?>
+				<? var strUnretire = "Un" + strRetireOrVoid.toLowerCase() ?>
+				<h4><?= __(strUnretire + " %s", model.modelName()) ?></h4>
+				<button class="unretireOrUnvoid"><?= __(strUnretire) ?></button>
+				<? } else { ?>
+				<h4><?= __(strRetireOrVoid + " %s", model.modelName()) ?></h4>
+				<label for="reason">Reason</label> <input name="reason" id="reason" class="reason" type="text" /><br />
+				<button class="retireOrVoid"><?= __(strRetireOrVoid) ?></button>
+				<? } ?>
+			</div>
+		</div>
+	</div>
+</script>
+

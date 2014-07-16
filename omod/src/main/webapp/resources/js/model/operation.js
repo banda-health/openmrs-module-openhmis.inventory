@@ -18,9 +18,9 @@ define(
         openhmis.url.backboneBase + 'js/model/generic',
 	    openhmis.url.backboneBase + 'js/model/user',
 		openhmis.url.backboneBase + 'js/model/role',
+        openhmis.url.backboneBase + 'js/model/patient',
 		openhmis.url.backboneBase + 'js/model/openhmis',
-	    openhmis.url.inventoryBase + 'js/model/stockroom',
-	    openhmis.url.inventoryBase + 'js/view/editors'
+	    openhmis.url.inventoryBase + 'js/model/stockroom'
     ],
     function(openhmis, __) {
 		openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
@@ -113,7 +113,17 @@ define(
 			    }
 
 			    return resp;
-		    }
+		    },
+
+            toString: function() {
+                var expiration = this.get("expiration");
+                var exp = ": ";
+                if (expiration) {
+                    exp = " (" + openhmis.dateFormatLocale(expiration) + "): ";
+                }
+
+                return this.get("item").name + exp + this.get("quantity")
+            }
 	    });
 
 	    openhmis.ReservedTransaction = openhmis.TransactionBase.extend({
@@ -180,15 +190,14 @@ define(
             },
 
             schema: {
-                name: 'Text',
                 operationNumber: 'Text',
                 status: {
 	                type: 'Text',
 	                readonly: 'readonly'
                 },
 	            dateCreated: {
-		            type: 'DateTime',
-		            readonly: 'readonly',
+		            type: 'Text',
+                    editorAttrs: { disabled: true },
 		            format: openhmis.dateTimeFormatLocale
 	            },
 	            instanceType: {
@@ -217,8 +226,7 @@ define(
 			            url: openhmis.url.inventoryModelBase + '/stockroom'
 		            }),
 		            objRef: true
-	            },
-	            patient: { type: 'Object', model: openhmis.Patient, objRef: true }
+	            }
             },
 
 	        OperationStatus: {
@@ -235,16 +243,19 @@ define(
 		        }
 	        },
 
-            validate: function(attrs, options) {
-                if (!attrs.name) return { name: __("A name is required.") };
-                return null;
-            },
-
-	        parse: function(resp) {
+            parse: function(resp) {
 		        if (resp) {
 			        if (resp.instanceType && _.isObject(resp.instanceType)) {
 				        resp.instanceType = new openhmis.OperationType(resp.instanceType);
 			        }
+
+                    if (resp.reserved) {
+                        resp.reserved = new openhmis.GenericCollection(resp.reserved, { model: openhmis.ReservedTransaction }).models;
+                    }
+
+                    if (resp.transactions) {
+                        resp.transactions = new openhmis.GenericCollection(resp.transactions, { model: openhmis.OperationTransaction }).models;
+                    }
 		        }
 
 		        return resp;
@@ -256,7 +267,6 @@ define(
 	            } else {
 		            return "Operation";
 	            }
-
             }
         });
 
