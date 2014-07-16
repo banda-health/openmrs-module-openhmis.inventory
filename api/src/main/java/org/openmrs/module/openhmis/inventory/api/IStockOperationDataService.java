@@ -32,10 +32,14 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should add the destination stockroom item stock if not found
 	 * @should calculate expiration if not defined for expirable item
 	 * @should calculate batch operation if not defined
+	 * @should update operation status to pending if status is new
+	 * @should create new reservations from the operation items
+	 * @should not recreate existing reservations if submitted multiple times
+	 * @should properly process operation as submitted for each state change
 	 * @should throw APIException if the operation type is receipt and expiration is not defined for expirable items
 	 * @should throw an IllegalArgumentException if the operation is null
 	 * @should throw an APIException if the operation type is null
-	 * @should throw an APIException if the operation has no reserved transactions
+	 * @should throw an APIException if the operation has no operation items
 	 * @should throw an APIException if the operation type requires a source and the source is null
 	 * @should throw an APIException if the operation type requires a destination and the destination is null
 	 * @should throw an APIException if the operation type requires a patient and the patient is null

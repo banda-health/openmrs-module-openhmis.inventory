@@ -20,18 +20,11 @@ import java.util.Date;
 /**
  * Model class the represents item stock information qualified by expiration date and batch operation.
  */
-public class ItemStockDetail extends BaseOpenmrsObject {
+public class ItemStockDetail extends ItemStockDetailBase {
 	public static final long serialVersionUID = 0L;
 
-	private Integer stockroomItemId;
 	private ItemStock itemStock;
 	private Stockroom stockroom;
-	private Item item;
-	private int quantity;
-	private Date expiration;
-	private StockOperation batchOperation;
-	private boolean calculatedExpiration;
-	private boolean calculatedBatch;
 
 	/**
 	 * Creates a new empty {@link ItemStockDetail} object.
@@ -55,7 +48,9 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 		this.setItemStock(stock);
 		this.setStockroom(tx.getStockroom());
 		this.setItem(tx.getItem());
-		this.setExpiration(tx.getExpiration());
+		if (tx.getExpiration() != null) {
+			this.setExpiration((Date)tx.getExpiration().clone());
+		}
 		this.setBatchOperation(tx.getBatchOperation());
 		this.setCalculatedExpiration(tx.isCalculatedExpiration());
 		this.setCalculatedBatch(tx.isCalculatedBatch());
@@ -73,32 +68,14 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 
 		this.itemStock = base.itemStock;
 		this.stockroom = base.stockroom;
-		this.item = base.item;
-		if (base.expiration != null) {
-			this.expiration = (Date)base.expiration.clone();
+		setItem(base.getItem());
+		if (base.getExpiration() != null) {
+			this.setExpiration((Date)base.getExpiration().clone());
 		}
-		this.batchOperation = base.batchOperation;
-		this.calculatedBatch = base.calculatedBatch;
-		this.calculatedExpiration = base.calculatedExpiration;
-		this.quantity = base.quantity;
-	}
-
-	/**
-	 * Gets the unique database record identifier.
-	 * @return The record identifier or {@code null} if the object is new.
-	 */
-	@Override
-	public Integer getId() {
-		return stockroomItemId;
-	}
-
-	/**
-	 * Sets the unique database record identifier.
-	 * @return The record identifier or {@code null} if the object is new.
-	 */
-	@Override
-	public void setId(Integer id) {
-		stockroomItemId = id;
+		setBatchOperation(base.getBatchOperation());
+		setCalculatedBatch(base.isCalculatedBatch());
+		setCalculatedExpiration(base.isCalculatedExpiration());
+		setQuantity(base.getQuantity());
 	}
 
 	/**
@@ -132,108 +109,5 @@ public class ItemStockDetail extends BaseOpenmrsObject {
 	public void setStockroom(Stockroom stockroom) {
 		this.stockroom = stockroom;
 	}
-
-	/**
-	 * Gets the item.
-	 * @return The item.
-	 */
-	public Item getItem() {
-		return item;
-	}
-
-	/**
-	 * Sets the item.
-	 * @param item The item.
-	 */
-	public void setItem(Item item) {
-		this.item = item;
-	}
-
-	/**
-	 * Gets the quantity.
-	 * @return The quantity.
-	 */
-	public int getQuantity() {
-		return quantity;
-	}
-
-	/**
-	 * Sets the quantity.
-	 * @param quantity The quantity.
-	 */
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
-	/**
-	 * Gets the item expiration date.
-	 * @return The item expiration date or {@code null} if there is no expiration.
-	 */
-	public Date getExpiration() {
-		return expiration;
-	}
-
-	/**
-	 * Sets the item expiration date.
-	 * @param expiration The item expiration date or {@code null} if there is no expiration.
-	 */
-	public void setExpiration(Date expiration) {
-		this.expiration = expiration;
-	}
-
-	/**
-	 * Gets the batch {@link StockOperation} that brought this item stock into the system.
-	 * @return The batch operation or {@code null} if it is unknown.
-	 */
-	public StockOperation getBatchOperation() {
-		return batchOperation;
-	}
-
-	/**
-	 * Sets the batch {@link StockOperation} that brought this item stock into the system.
-	 * @param batchOperation The batch operation or {@code null} if it is unknown.
-	 */
-	public void setBatchOperation(StockOperation batchOperation) {
-		this.batchOperation = batchOperation;
-	}
-
-	/**
-	 * Gets whether the expiration date was calculated by the owning {@link StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
-	 * @return Whether the expiration date was calculated.
-	 */
-	public boolean isCalculatedExpiration() {
-		return calculatedExpiration;
-	}
-
-	/**
-	 * Sets whether the expiration date was calculated by the owning {@link StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
-	 * @oaran calculatedExpiration Whether the expiration date was calculated.
-	 */
-	public void setCalculatedExpiration(boolean calculatedExpiration) {
-		this.calculatedExpiration = calculatedExpiration;
-	}
-
-	/**
-	 * Gets whether the batch operation was calculated by the owning {@link StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
-	 * @return Whether the batch operation was calculated.
-	 */
-	public boolean isCalculatedBatch() {
-		return calculatedBatch;
-	}
-
-	/**
-	 * Sets whether the batch operation was calculated by the owning {@link StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
-	 * @param calculatedBatch Whether the batch operation was calculated.
-	 */
-	public void setCalculatedBatch(boolean calculatedBatch) {
-		this.calculatedBatch = calculatedBatch;
-	}
 }
+

@@ -2,6 +2,7 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.User;
+import org.openmrs.api.context.Context;
 
 import java.util.Date;
 
@@ -17,15 +18,16 @@ public abstract class TransactionBase
 	private Integer quantity;
 	private Date expiration;
 	private StockOperation batchOperation;
-	private boolean calculatedExpiration;
-	private boolean sourceCalculatedExpiration;
-	private boolean calculatedBatch;
-	private boolean sourceCalculatedBatch;
+	private Boolean calculatedExpiration;
+	private Boolean sourceCalculatedExpiration;
+	private Boolean calculatedBatch;
+	private Boolean sourceCalculatedBatch;
 
 	private User creator;
 	private Date dateCreated = new Date();
 
 	protected TransactionBase() { }
+
 	protected TransactionBase(TransactionBase tx) {
 		operation = tx.operation;
 		creator = tx.creator;
@@ -36,6 +38,15 @@ public abstract class TransactionBase
 		quantity = tx.quantity;
 		calculatedExpiration = tx.calculatedExpiration;
 		calculatedBatch = tx.calculatedBatch;
+	}
+
+	protected TransactionBase(StockOperationItem item) {
+		this.item = item.getItem();
+		this.expiration = item.getExpiration();
+		this.batchOperation = item.getBatchOperation();
+		this.quantity = item.getQuantity();
+		this.calculatedBatch = item.isCalculatedBatch();
+		this.calculatedExpiration = item.isCalculatedExpiration();
 	}
 
 	public Integer getId() {
@@ -86,35 +97,35 @@ public abstract class TransactionBase
 		this.batchOperation = batchOperation;
 	}
 
-	public boolean isCalculatedExpiration() {
+	public Boolean isCalculatedExpiration() {
 		return calculatedExpiration;
 	}
 
-	public void setCalculatedExpiration(boolean calculatedExpiration) {
+	public void setCalculatedExpiration(Boolean calculatedExpiration) {
 		this.calculatedExpiration = calculatedExpiration;
 	}
 
-	public boolean isSourceCalculatedExpiration() {
+	public Boolean isSourceCalculatedExpiration() {
 		return sourceCalculatedExpiration;
 	}
 
-	public void setSourceCalculatedExpiration(boolean sourceCalculatedExpiration) {
+	public void setSourceCalculatedExpiration(Boolean sourceCalculatedExpiration) {
 		this.sourceCalculatedExpiration = sourceCalculatedExpiration;
 	}
 
-	public boolean isCalculatedBatch() {
+	public Boolean isCalculatedBatch() {
 		return calculatedBatch;
 	}
 
-	public void setCalculatedBatch(boolean calculatedBatch) {
+	public void setCalculatedBatch(Boolean calculatedBatch) {
 		this.calculatedBatch = calculatedBatch;
 	}
 
-	public boolean isSourceCalculatedBatch() {
+	public Boolean isSourceCalculatedBatch() {
 		return sourceCalculatedBatch;
 	}
 
-	public void setSourceCalculatedBatch(boolean sourceCalculatedBatch) {
+	public void setSourceCalculatedBatch(Boolean sourceCalculatedBatch) {
 		this.sourceCalculatedBatch = sourceCalculatedBatch;
 	}
 

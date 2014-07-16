@@ -20,15 +20,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
-import org.openmrs.module.openhmis.inventory.api.model.Item;
-import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
-import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
-import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
-import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 
 import com.google.common.collect.Iterators;
@@ -64,7 +56,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		}
 
 		op.setDestination(stockroomService.getById(0));
-		op.setStatus(StockOperationStatus.PENDING);
+		op.setStatus(StockOperationStatus.NEW);
 		op.setOperationNumber("Operation Number");
 		op.setOperationDate(new Date());
 
@@ -154,7 +146,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 				Assert.assertEquals(expected.getQuantity(), actual.getQuantity());
 				Assert.assertEquals(expected.getStockroom(), actual.getStockroom());
 				Assert.assertEquals(expected.getPatient(), actual.getPatient());
-                Assert.assertEquals(expected.getInstitution(), actual.getInstitution());
+				Assert.assertEquals(expected.getInstitution(), actual.getInstitution());
 				Assert.assertEquals(expected.getExpiration(), actual.getExpiration());
 				Assert.assertEquals(expected.getCreator(), actual.getCreator());
 				Assert.assertEquals(expected.getDateCreated(), actual.getDateCreated());
@@ -1100,7 +1092,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredBySourceStockRoom() throws Exception {
+	public void findOperations_shouldReturnItemsFilteredBySourceStockroom() throws Exception {
 		StockOperation operation = service.getById(1);
 		Stockroom room = operation.getSource();
 
@@ -1127,7 +1119,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredByDestinationStockRoom() throws Exception {
+	public void findOperations_shouldReturnItemsFilteredByDestinationStockroom() throws Exception {
 		StockOperation operation = service.getById(0);
 		Stockroom room = operation.getDestination();
 
@@ -1239,7 +1231,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(2, results.size());
 
 		Assert.assertEquals(0, (int)results.get(0).getId());
-		Assert.assertEquals(1, (int)results.get(1).getId());
+		Assert.assertEquals(1, (int) results.get(1).getId());
 
 		results = service.getUserOperations(user, StockOperationStatus.PENDING, null);
 
@@ -1287,28 +1279,28 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getInstanceType().setUser(user);
 		operation.setSource(stockroomService.getById(0));
 
-		typeService.save((StockOperationTypeBase)operation.getInstanceType());
+		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
 
 		operation = service.getById(operation.getId());
 
-		List<StockOperation> transactions = service.getUserOperations(user, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.PENDING, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
 
 	/**
@@ -1329,25 +1321,26 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getInstanceType().setRole(roleArray[0]);
 		operation.setSource(stockroomService.getById(0));
 
+		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> transactions = service.getUserOperations(user, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.PENDING, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
 
 	/**
@@ -1367,25 +1360,26 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getInstanceType().setRole(Context.getUserService().getRole("Parent"));
 		operation.setSource(stockroomService.getById(0));
 
+		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> transactions = service.getUserOperations(user, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.PENDING, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
 
 	/**
@@ -1409,25 +1403,26 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.getInstanceType().setRole(Context.getUserService().getRole("Parent"));
 		operation.setSource(stockroomService.getById(0));
 
+		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> transactions = service.getUserOperations(user, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
 
-		transactions = service.getUserOperations(user, StockOperationStatus.PENDING, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(1, transactions.size());
-		Assert.assertEquals(operation.getId(), transactions.get(0).getId());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(1, operations.size());
+		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
 
 	/**
@@ -1452,10 +1447,10 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> transactions = service.getUserOperations(user, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
 	}
 
 	/**
@@ -1480,10 +1475,10 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> transactions = service.getUserOperations(user, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null);
 
-		Assert.assertNotNull(transactions);
-		Assert.assertEquals(0, transactions.size());
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
 	}
 
 	/**
@@ -1593,8 +1588,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setPatient(patient);
 
 		// Create the operation reservations
-		ReservedTransaction tx = operation.addReserved(item, 1);
-		ReservedTransaction tx2 = operation.addReserved(item2, 3);
+		StockOperationItem operationItem = operation.addItem(item, 1);
+		StockOperationItem operationItem2 = operation.addItem(item2, 3);
 
 		// Get the current stockroom item quantities
 		int itemQty = stockroomService.getItem(source, item).getQuantity();
@@ -1605,12 +1600,12 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Context.flushSession();
 
 		// Check the reservation quantities
-		Assert.assertEquals(1, (int)tx.getQuantity());
-		Assert.assertEquals(3, (int)tx2.getQuantity());
+		Assert.assertEquals(1, (int)operationItem.getQuantity());
+		Assert.assertEquals(3, (int)operationItem2.getQuantity());
 
 		// Check that the reservation quantities were removed from the source stockroom
-		Assert.assertEquals(itemQty - tx.getQuantity(), stockroomService.getItem(source, item).getQuantity());
-		Assert.assertEquals(item2Qty - tx2.getQuantity(), stockroomService.getItem(source, item2).getQuantity());
+		Assert.assertEquals(itemQty - operationItem.getQuantity(), stockroomService.getItem(source, item).getQuantity());
+		Assert.assertEquals(item2Qty - operationItem2.getQuantity(), stockroomService.getItem(source, item2).getQuantity());
 
 		// Update the status to completed and submit again
 		operation.setStatus(StockOperationStatus.COMPLETED);
@@ -1670,16 +1665,16 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		int item2Qty = stockroomService.getItem(source, item2).getQuantity();
 
 		// Create the operation reservations for the total stockroom item quantities
-		ReservedTransaction tx = operation.addReserved(item, itemQty);
-		ReservedTransaction tx2 = operation.addReserved(item2, item2Qty);
+		StockOperationItem operationItem = operation.addItem(item, itemQty);
+		StockOperationItem operationItem2 = operation.addItem(item2, item2Qty);
 
 		// Submit the operation (this will apply the item reservations)
 		service.submitOperation(operation);
 		Context.flushSession();
 
 		// Check the reservation quantities
-		Assert.assertEquals(itemQty, (int)tx.getQuantity());
-		Assert.assertEquals(item2Qty, (int)tx2.getQuantity());
+		Assert.assertEquals(itemQty, (int)operationItem.getQuantity());
+		Assert.assertEquals(item2Qty, (int)operationItem2.getQuantity());
 
 		// Check that the reservation quantities caused the item stock to be removed from the stockroom
 		Assert.assertNull(stockroomService.getItem(source, item));
@@ -1743,8 +1738,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setDestination(stockroom);
 
 		// Create the operation reservations
-		ReservedTransaction tx = operation.addReserved(item, 1);
-		ReservedTransaction tx2 = operation.addReserved(item2, 3);
+		operation.addItem(item, 1);
+		operation.addItem(item2, 3);
 
 		// Submit the operation (this will apply the item reservations)
 		service.submitOperation(operation);
@@ -1788,8 +1783,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setDestination(stockroom);
 
 		// Create the operation reservations
-		ReservedTransaction tx = operation.addReserved(item, 1);
-		ReservedTransaction tx2 = operation.addReserved(item2, 3);
+		StockOperationItem operationItem = operation.addItem(item, 1);
+		StockOperationItem operationItem2 = operation.addItem(item2, 3);
 
 		// Submit the operation (this will apply the item reservations)
 		service.submitOperation(operation);
@@ -1808,6 +1803,292 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		// Check that the destination stockroom stock and quantity has now been created
 		Assert.assertEquals(1, stockroomService.getItem(stockroom, item).getQuantity());
 		Assert.assertEquals(3, stockroomService.getItem(stockroom, item2).getQuantity());
+	}
+
+	/**
+	 * @verifies throw APIException if the operation type is receipt and expiration is not defined for expirable items
+	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test(expected = APIException.class)
+	public void submitOperation_shouldThrowAPIExceptionIfTheOperationTypeIsReceiptAndExpirationIsNotDefinedForExpirableItems() throws Exception {
+		// Get the destination stockroom
+		Stockroom stockroom = stockroomService.getById(2);
+		stockroom.getItems();
+
+		// Get the items for the test operation
+		Item item2 = itemService.getById(2);
+
+		Assert.assertEquals(true, item2.hasExpiration());
+
+		// Create the operation
+		StockOperation operation = createEntity(true);
+		operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setDestination(stockroom);
+
+		// Create the operation item
+		StockOperationItem operationItem = operation.addItem(item2, 1);
+
+		// Submit the operation (this should throw because the item was added without an expiration)
+		service.submitOperation(operation);
+	}
+
+	/**
+	 * @verifies update operation status to pending if status is new
+	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldUpdateOperationStatusToPendingIfStatusIsNew() throws Exception {
+		// Get the destination stockroom
+		Stockroom stockroom = stockroomService.getById(2);
+		stockroom.getItems();
+
+		// Get the items for the test operation
+		Item item = itemService.getById(0);
+
+		// Create the operation
+		StockOperation operation = createEntity(true);
+		operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setDestination(stockroom);
+
+		// Create the operation item
+		operation.addItem(item, 1);
+
+		Assert.assertEquals(StockOperationStatus.NEW, operation.getStatus());
+
+		// Submit the operation
+		service.submitOperation(operation);
+
+		Assert.assertEquals(StockOperationStatus.PENDING, operation.getStatus());
+	}
+
+	/**
+	 * @verifies create new reservations from the operation items
+	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldCreateNewReservationsFromTheOperationItems() throws Exception {
+		// Get the destination stockroom
+		Stockroom stockroom = stockroomService.getById(2);
+		stockroom.getItems();
+
+		// Get the items for the test operation
+		Item item = itemService.getById(0);
+
+		// Create the operation
+		StockOperation operation = createEntity(true);
+		operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setDestination(stockroom);
+
+		// Create the operation item
+		operation.addItem(item, 1);
+
+		Assert.assertEquals(0, operation.getReserved().size());
+
+		// Submit the operation
+		service.submitOperation(operation);
+
+		Assert.assertEquals(1, operation.getReserved().size());
+		ReservedTransaction tx = Iterators.get(operation.getReserved().iterator(), 0);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(1, (int)tx.getQuantity());
+		Assert.assertEquals(operation, tx.getBatchOperation());
+		Assert.assertFalse(tx.isCalculatedBatch());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertFalse(tx.isCalculatedExpiration());
+	}
+
+	/**
+	 * @verifies not recreate existing reservations if submitted multiple times
+	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldNotRecreateExistingReservationsIfSubmittedMultipleTimes() throws Exception {
+		// Get the destination stockroom
+		Stockroom stockroom = stockroomService.getById(2);
+		stockroom.getItems();
+
+		// Get the items for the test operation
+		Item item = itemService.getById(0);
+
+		// Create the operation
+		StockOperation operation = createEntity(true);
+		operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setDestination(stockroom);
+
+		// Create the operation item
+		operation.addItem(item, 1);
+
+		Assert.assertEquals(0, operation.getReserved().size());
+
+		// Submit the operation
+		service.submitOperation(operation);
+		Assert.assertEquals(1, operation.getReserved().size());
+		ReservedTransaction tx = Iterators.get(operation.getReserved().iterator(), 0);
+
+		service.submitOperation(operation);
+		Assert.assertEquals(1, operation.getReserved().size());
+		Assert.assertEquals(tx, Iterators.get(operation.getReserved().iterator(), 0));
+	}
+
+	/**
+	 * @verifies properly process operation as submitted for each state change
+	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldProperlyProcessOperationAsSubmittedForEachStateChange() throws Exception {
+		// Get the destination stockroom
+		Stockroom stockroom = stockroomService.getById(2);
+		stockroom.getItems();
+
+		// Get the items for the test operation
+		Item item = itemService.getById(0);
+
+		// Create the operation
+		StockOperation operation = createEntity(true);
+		operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setDestination(stockroom);
+
+		// Create the operation item
+		operation.addItem(item, 1);
+
+		Assert.assertEquals(0, operation.getReserved().size());
+
+		// Submit the operation
+		service.submitOperation(operation);
+		Assert.assertEquals(1, operation.getReserved().size());
+		Assert.assertNull(operation.getTransactions());
+
+		operation.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(operation);
+		Assert.assertEquals(0, operation.getReserved().size());
+		Assert.assertEquals(1, operation.getTransactions().size());
+	}
+
+	/**
+	 * @verifies calculate expiration if not defined for expirable item
+	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldCalculateExpirationIfNotDefinedForExpirableItem() throws Exception {
+		// Get a stockroom with expirable item stock
+		Stockroom source = stockroomService.getById(0);
+		Stockroom dest = stockroomService.getById(2);
+
+		// Get an expirable item
+		Item item = itemService.getById(2);
+
+		ItemStock sourceItemStock = stockroomService.getItem(source, item);
+
+		Assert.assertNotNull(sourceItemStock);
+		ItemStockDetail sourceItemDetail = Iterators.getOnlyElement(sourceItemStock.getDetails().iterator());
+		Date exp = sourceItemDetail.getExpiration();
+		Assert.assertFalse(sourceItemDetail.isCalculatedExpiration());
+
+		// Create the operation
+		StockOperation operation = createEntity(true);
+		operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
+		operation.setSource(source);
+		operation.setDestination(dest);
+
+		// Create the operation item
+		operation.addItem(item, 2);
+
+		Assert.assertEquals(0, operation.getReserved().size());
+
+		// Submit the operation
+		service.submitOperation(operation);
+		// One reserved transaction for the item stock being transferred
+		Assert.assertEquals(1, operation.getReserved().size());
+		// One operation transaction for the item stock moved out of the source stockroom
+		Assert.assertEquals(1, operation.getTransactions().size());
+
+		ReservedTransaction reservedTransaction = Iterators.getOnlyElement(operation.getReserved().iterator());
+		Assert.assertEquals(exp, reservedTransaction.getExpiration());
+		Assert.assertTrue(reservedTransaction.isCalculatedExpiration());
+
+		operation.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(operation);
+		Assert.assertEquals(0, operation.getReserved().size());
+		Assert.assertEquals(2, operation.getTransactions().size());
+
+		StockOperationTransaction tx = Iterators.get(operation.getTransactions().iterator(), 1);
+		Assert.assertEquals(exp, tx.getExpiration());
+		Assert.assertTrue(tx.isCalculatedExpiration());
+
+		ItemStock destItemStock = stockroomService.getItem(dest, item);
+		Assert.assertNotNull(destItemStock);
+
+		ItemStockDetail destItemDetail = Iterators.getOnlyElement(destItemStock.getDetails().iterator());
+		Assert.assertNotNull(destItemDetail);
+		Assert.assertEquals(exp, destItemDetail.getExpiration());
+		Assert.assertTrue(destItemDetail.isCalculatedExpiration());
+	}
+
+	/**
+	 * @verifies calculate batch operation if not defined
+	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldCalculateBatchOperationIfNotDefined() throws Exception {
+		// Get a stockroom with expirable item stock
+		Stockroom source = stockroomService.getById(0);
+		Stockroom dest = stockroomService.getById(2);
+
+		// Get an expirable item
+		Item item = itemService.getById(0);
+
+		ItemStock sourceItemStock = stockroomService.getItem(source, item);
+
+		Assert.assertNotNull(sourceItemStock);
+		ItemStockDetail sourceItemDetail = Iterators.getOnlyElement(sourceItemStock.getDetails().iterator());
+		StockOperation batchOperation = sourceItemDetail.getBatchOperation();
+		Assert.assertFalse(sourceItemDetail.isCalculatedBatch());
+
+		// Create the operation
+		StockOperation operation = createEntity(true);
+		operation.getReserved().clear();
+		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
+		operation.setSource(source);
+		operation.setDestination(dest);
+
+		// Create the operation item
+		operation.addItem(item, 2);
+
+		Assert.assertEquals(0, operation.getReserved().size());
+
+		// Submit the operation
+		service.submitOperation(operation);
+		// One reserved transaction for the item stock being transferred
+		Assert.assertEquals(1, operation.getReserved().size());
+		// One operation transaction for the item stock moved out of the source stockroom
+		Assert.assertEquals(1, operation.getTransactions().size());
+
+		ReservedTransaction reservedTransaction = Iterators.getOnlyElement(operation.getReserved().iterator());
+		Assert.assertEquals(batchOperation, reservedTransaction.getBatchOperation());
+		Assert.assertTrue(reservedTransaction.isCalculatedBatch());
+
+		operation.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(operation);
+		Assert.assertEquals(0, operation.getReserved().size());
+		Assert.assertEquals(2, operation.getTransactions().size());
+
+		StockOperationTransaction tx = Iterators.get(operation.getTransactions().iterator(), 1);
+		Assert.assertEquals(batchOperation, tx.getBatchOperation());
+		Assert.assertTrue(tx.isCalculatedBatch());
+
+		ItemStock destItemStock = stockroomService.getItem(dest, item);
+		Assert.assertNotNull(destItemStock);
+
+		ItemStockDetail destItemDetail = Iterators.getOnlyElement(destItemStock.getDetails().iterator());
+		Assert.assertNotNull(destItemDetail);
+		Assert.assertEquals(batchOperation, destItemDetail.getBatchOperation());
+		Assert.assertTrue(destItemDetail.isCalculatedBatch());
 	}
 
 	/**
@@ -1833,11 +2114,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 
 	/**
-	 * @verifies throw an APIException if the operation has no reserved transactions
+	 * @verifies throw an APIException if the operation has no operation items
 	 * @see IStockOperationDataService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = APIException.class)
-	public void submitOperation_shouldThrowAnAPIExceptionIfTheOperationHasNoReservedTransactions() throws Exception {
+	public void submitOperation_shouldThrowAnAPIExceptionIfTheOperationHasNoOperationItems() throws Exception {
 		StockOperation operation = createEntity(true);
 		operation.getReserved().clear();
 
@@ -1893,7 +2174,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setSource(stockroomService.getById(0));
 		operation.setPatient(null);
-        operation.setInstitution(null);
+		operation.setInstitution(null);
 
 		Item item = itemService.getById(0);
 		operation.addReserved(item, 10);
