@@ -239,10 +239,12 @@ define(
             tmplFile: openhmis.url.backboneBase + 'template/search.html',
             tmplSelector: '#generic-search',
 
+            ANY: "Any",
+            STATUSES: [this.ANY, "Pending", "Completed", "Cancelled"],
+
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
                 openhmis.BaseSearchView.prototype.initialize.call(this, options);
-                var statuses = ["Any", "Pending", "Completed", "Cancelled"];
 
                 this.form = new Backbone.Form({
                     className: "inline",
@@ -250,7 +252,7 @@ define(
                         operation_status: {
                             title: __("Status"),
                             type: "Select",
-                            options: statuses
+                            options: this.STATUSES
                         }
                     },
                     data: {}
@@ -273,7 +275,7 @@ define(
             commitForm: function() {
                 var filters = this.form.getValue();
 
-                if (!filters.operation_status || filters.operation_status == "Any") {
+                if (!filters.operation_status || filters.operation_status == this.ANY) {
                     this.searchFilter = undefined;
                 } else {
                     this.searchFilter = filters;
