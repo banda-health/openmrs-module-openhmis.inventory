@@ -239,8 +239,7 @@ define(
             tmplFile: openhmis.url.backboneBase + 'template/search.html',
             tmplSelector: '#generic-search',
 
-            ANY: "Any",
-            STATUSES: [this.ANY, "Pending", "Completed", "Cancelled"],
+            STATUSES: ["Any", "Pending", "Completed", "Cancelled"],
 
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
@@ -275,7 +274,7 @@ define(
             commitForm: function() {
                 var filters = this.form.getValue();
 
-                if (!filters.operation_status || filters.operation_status == this.ANY) {
+                if (!filters.operation_status || filters.operation_status == "Any") {
                     this.searchFilter = undefined;
                 } else {
                     this.searchFilter = filters;
@@ -291,7 +290,7 @@ define(
                 this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
                 return this;
             }
-        })
+        });
 
 		return openhmis;
 	}

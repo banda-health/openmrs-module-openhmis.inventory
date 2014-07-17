@@ -59,6 +59,7 @@ public class StockOperationResource
 		description.addProperty("dateCreated", Representation.DEFAULT);
 
 		if (!(rep instanceof RefRepresentation)) {
+			description.addProperty("items", Representation.REF);
 			description.addProperty("reserved", Representation.REF);
 			description.addProperty("transactions", Representation.REF);
 			description.addProperty("source", Representation.REF);
