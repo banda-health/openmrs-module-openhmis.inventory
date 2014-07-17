@@ -39,7 +39,11 @@ define(
             var collection = new openhmis.GenericCollection([], {
                 model: model
             });
-            collection.fetch();
+            collection.fetch({
+                success: function() {
+                    $(".spinner").hide();
+                }
+            });
 
             var viewOptions = _.extend({
                 model: collection,

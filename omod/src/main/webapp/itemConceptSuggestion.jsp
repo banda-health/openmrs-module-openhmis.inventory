@@ -22,10 +22,9 @@
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/itemConceptSuggestion.js" %>' />
 
 
-
-
 <h2>
     <spring:message code="openhmis.inventory.admin.items.concept.mapping" />
 </h2>
+<div class="spinner"></div>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>
