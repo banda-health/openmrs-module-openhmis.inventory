@@ -1,0 +1,32 @@
+<script id="item-concept-suggestion-list" type="text/template">
+<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?></b>
+<div class="box">
+    <? if (listLength === 0) { ?>
+        <p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
+    <? } else { ?>
+    <table class="display" width="100%">
+        <p>bla</p>
+        <thead>
+            <tr>
+            <? if (options.itemActions.length > 0) { ?><th class="item-actions end" style="width: <?= options.itemActions.length * 10 ?>px;"></td> <? } ?>
+            <? for (var field in fields) { if (modelSchema[fields[field]] && modelSchema[fields[field]].hidden) continue; ?>
+                <? var fieldClassName = "field-" + fields[field]; ?>
+                <th class="<?= fieldClassName ?>">
+                    <? if (modelSchema[fields[field]] !== undefined) {
+                        print(modelSchema[fields[field]].title === undefined ? helpers.keyToTitle(fields[field]) : modelSchema[fields[field]].title);
+                    }
+                    else
+                        print(fields[field]);
+                    ?>
+                </th>
+            <? } ?>
+            </tr>
+        </thead>
+        <tbody class="list"></tbody>
+        <tfoot></tfoot>
+    </table>
+    <? } ?>
+    <input type="submit" value="Save Items">
+    <button class="cancel">Cancel</button>
+</div>
+</script>

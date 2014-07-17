@@ -47,7 +47,7 @@ public class AdminList extends AdministrationSectionExt {
 
 		if (authenticatedUser.hasPrivilege(PrivilegeConstants.ITEM_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
-			map.put(ModuleWebConstants.ITEM_TO_CONCEPT_MAPPING_PAGE, "openhmis.inventory.admin.items.concept.mapping");
+			map.put(ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_PAGE, "openhmis.inventory.admin.items.concept.mapping");
 		}
 		if (authenticatedUser.hasPrivilege(PrivilegeConstants.DEPARTMENT_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");

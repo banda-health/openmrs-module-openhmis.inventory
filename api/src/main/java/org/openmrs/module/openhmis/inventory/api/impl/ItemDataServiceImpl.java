@@ -15,19 +15,14 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
-import org.openmrs.ConceptName;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
@@ -66,7 +61,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	protected Order[] getDefaultSort() {
-		return new Order[] { Order.desc("name") };
+		return new Order[] { Order.desc(HibernateCriteriaConstants.NAME) };
 	}
 
 	@Override
@@ -362,55 +357,11 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 						Restrictions.eq(HibernateCriteriaConstants.RETIRED, false)).add(
 						Restrictions.eq(HibernateCriteriaConstants.CONCEPT_ACCEPTED, false));
 				if (excludedItemsIds != null && excludedItemsIds.size() < 0) {
-					criteria.add(Restrictions.not(Restrictions.in("id", excludedItemsIds.toArray())));
+					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID, excludedItemsIds.toArray())));
 				}
 				criteria.setMaxResults(resultLimit);
 			}
 		});
-	}
-
-	@Override
-	public Map<Item, Concept> getItemsWithConceptSuggestions() {
-		int defaultResultLimit = 50;
-		Map<Item, Concept> itemConceptMap = getItemToConceptMapping(defaultResultLimit);
-		Set<Item> items = itemConceptMap.keySet();
-		List<Integer> excludedItemsIds = new ArrayList<Integer>();
-
-		for (Item item : items) {
-			excludedItemsIds.add(item.getId());
-		}
-
-		if (itemConceptMap.size() < defaultResultLimit) {
-			int reachDefaultReultLimit = defaultResultLimit - itemConceptMap.size();
-			List<Item> itemsWithoutConcept = findItemsWithoutConcept(excludedItemsIds, reachDefaultReultLimit);
-			for (Item item : itemsWithoutConcept) {
-				itemConceptMap.put(item, null);
-			}
-		}
-		return itemConceptMap;
-	}
-
-	private Map<Item, Concept> getItemToConceptMapping(int defaultResultLimit) {
-		String itemKey = "0";
-		String conceptKey = "1";
-
-		Map<Item, Concept> itemToConceptMap = new HashMap<Item, Concept>();
-		String queryString = "select new map(item.uuid, concept.concept) " +
-				"from " +  Item.class.getName() + " as item, " + ConceptName.class.getName() + " as concept " +
-				"where item.concept is null " + "and item.retired = false " +
-				"and item.name like concept.name " +
-				"and item.conceptAccepted = false " +
-				"group by item.id ";
-		Query query = repository.createQuery(queryString);
-		query.setMaxResults(defaultResultLimit);
-		List<Map<String, Object>> results = (List<Map<String, Object>>) query.list();
-		for (Map<String, Object> result : results) {
-			String itemUuid = (String) result.get(itemKey);
-			Item item = getByUuid(itemUuid);
-			Concept concept = (Concept) result.get(conceptKey);
-			itemToConceptMap.put(item, concept);
-		}
-		return itemToConceptMap;
 	}
 
 	@Override

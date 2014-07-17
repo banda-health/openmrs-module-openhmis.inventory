@@ -20,7 +20,7 @@
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/itemToConceptMapping.form">
+            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/itemConceptSuggestion.form">
                 <openmrs:message code="openhmis.inventory.admin.items.concept.mapping"/>
             </a>
         </li>
