@@ -47,28 +47,34 @@
 	<inv_stock_operation stock_operation_id="0" status="COMPLETED" operation_type_id="3" operation_number="t101"
 						 destination_id="0" name="Test Op 1" operation_date="2012-01-03 00:00:00.0"
 						 creator="1" date_created="2012-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0000"/>
-	<inv_transaction transaction_id="0" operation_id="0" item_id="0" quantity="10"
+	<inv_stock_operation_item stock_operation_item_id="0" operation_id="0" item_id="0" quantity="10" calculated_batch="0" calculated_expiration="0" uuid="4028814B473EB6E701473EB6E7000000" />
+	<inv_stock_operation_item stock_operation_item_id="1" operation_id="0" item_id="1" quantity="11" calculated_batch="0" calculated_expiration="0" uuid="4028814B473EB6E701473EB7B3F00001" />
+	<inv_stock_operation_item stock_operation_item_id="2" operation_id="0" item_id="2" quantity="12" expiration="2025-01-01" calculated_batch="0" calculated_expiration="0" uuid="4028814B473EB6E701473EB7C2CE0002" />
+	<inv_transaction transaction_id="0" operation_id="0" item_id="0" quantity="10" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CE7DB50003" />
-	<inv_transaction transaction_id="1" operation_id="0" item_id="1" quantity="11"
+	<inv_transaction transaction_id="1" operation_id="0" item_id="1" quantity="11" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CE9700004"/>
-	<inv_transaction transaction_id="2" operation_id="0" item_id="2" quantity="12" expiration="2025-01-01"
+	<inv_transaction transaction_id="2" operation_id="0" item_id="2" quantity="12" expiration="2025-01-01" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CEAE9F0005" />
 	<inv_stockroom_operations operation_id="0" stockroom_id="0" />
 
 	<inv_stock_operation stock_operation_id="1" status="COMPLETED" operation_type_id="5"
 	                     source_id="0" destination_id="1" name="Test Op 2" operation_date="2012-01-02 00:00:00.0"
 	                     creator="1" date_created="2012-01-02 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C378CD0001" />
-	<inv_transaction transaction_id="3" operation_id="0" item_id="0" quantity="-6"
-	                                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D1F3440006"/>
-	<inv_transaction transaction_id="4" operation_id="0" item_id="1" quantity="-5"
+	<inv_stock_operation_item stock_operation_item_id="3" operation_id="1" item_id="0" quantity="6" batch_operation_id="0" calculated_batch="0" calculated_expiration="0" uuid="4028814B473EB6E701473EBC0AF60003" />
+	<inv_stock_operation_item stock_operation_item_id="4" operation_id="1" item_id="1" quantity="5" calculated_batch="1" calculated_expiration="0" uuid="4028814B473EB6E701473EBC139D0004" />
+	<inv_stock_operation_item stock_operation_item_id="5" operation_id="1" item_id="2" quantity="4" expiration="2025-01-01" calculated_expiration="0" batch_operation_id="0" calculated_batch="0" uuid="4028814B473EB6E701473EBC1D780005" />
+	<inv_transaction transaction_id="3" operation_id="0" item_id="0" quantity="-6" batch_operation_id="0" calculated_batch="0"
+	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D1F3440006"/>
+	<inv_transaction transaction_id="4" operation_id="0" item_id="1" quantity="-5" calculated_expiration="0" batch_operation_id="0" calculated_batch="1"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D22E210007" />
-	<inv_transaction transaction_id="5" operation_id="0" item_id="2" quantity="-4" expiration="2025-01-01"
+	<inv_transaction transaction_id="5" operation_id="0" item_id="2" quantity="-4" calculated_expiration="0" expiration="2025-01-01" batch_operation_id="0" calculated_batch="0"
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D23D6B0008" />
-	<inv_transaction transaction_id="6" operation_id="0" item_id="0" quantity="6"
+	<inv_transaction transaction_id="6" operation_id="0" item_id="0" quantity="6" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                 stockroom_id="1" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D26C220009" />
-	<inv_transaction transaction_id="7" operation_id="0" item_id="1" quantity="5"
+	<inv_transaction transaction_id="7" operation_id="0" item_id="1" quantity="5" calculated_expiration="0" batch_operation_id="0" calculated_batch="1"
 	                 stockroom_id="1" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D27BAB000A" />
-	<inv_transaction transaction_id="8" operation_id="0" item_id="2" quantity="4" expiration="2025-01-01"
+	<inv_transaction transaction_id="8" operation_id="0" item_id="2" quantity="4" expiration="2025-01-01" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                 stockroom_id="1" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D28C3F000B" />
 	<inv_stockroom_operations operation_id="1" stockroom_id="0" />
 	<inv_stockroom_operations operation_id="1" stockroom_id="1" />
@@ -76,61 +82,70 @@
 	<inv_stock_operation stock_operation_id="2" status="PENDING" operation_type_id="2"
 	                     source_id="1" patient_id="1" name="Test Op 3" operation_date="2012-01-05 00:00:00.0"
 	                     creator="1" date_created="2012-01-05 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C388660002"/>
-	<inv_reserved_transaction reserved_transaction_id="0" operation_id="0" item_id="0" quantity="1"
+	<inv_stock_operation_item stock_operation_item_id="7" operation_id="2" item_id="0" quantity="1" batch_operation_id="0" calculated_batch="0" calculated_expiration="0" uuid="4028814B473EB6E701473EBDB55D0006" />
+	<inv_stock_operation_item stock_operation_item_id="8" operation_id="2" item_id="1" quantity="2" batch_operation_id="0" calculated_batch="1" calculated_expiration="0" uuid="4028814B473EB6E701473EBDBEAC0007" />
+	<inv_stock_operation_item stock_operation_item_id="9" operation_id="2" item_id="2" quantity="3" expiration="2025-01-01" calculated_expiration="0" batch_operation_id="0" calculated_batch="0" uuid="4028814B473EB6E701473EBDDBD50009" />
+	<inv_reserved_transaction reserved_transaction_id="0" operation_id="0" item_id="0" quantity="1" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                          is_available="false" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2BB00000C" />
-	<inv_reserved_transaction reserved_transaction_id="1" operation_id="0" item_id="1" quantity="2"
+	<inv_reserved_transaction reserved_transaction_id="1" operation_id="0" item_id="1" quantity="2" calculated_expiration="0" batch_operation_id="0" calculated_batch="1"
 	                          is_available="false" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2CB60000D" />
-	<inv_reserved_transaction reserved_transaction_id="2" operation_id="0" item_id="2" quantity="3" expiration="2025-01-01"
+	<inv_reserved_transaction reserved_transaction_id="2" operation_id="0" item_id="2" quantity="3" expiration="2025-01-01" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                          is_available="false" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000E" />
 	<inv_stockroom_operations operation_id="2" stockroom_id="1" />
 	
 	<inv_stock_operation stock_operation_id="8" status="PENDING" operation_type_id="5" operation_number="t202"
                          source_id="3" destination_id="4" name="Test_Op_13" operation_date="2012-01-03 00:00:00.0"
                          creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0011"/>
-    <inv_reserved_transaction reserved_transaction_id="3" operation_id="8" item_id="2" quantity="5" expiration="2025-01-01"
+	<inv_stock_operation_item stock_operation_item_id="10" operation_id="8" item_id="2" quantity="5" expiration="2025-01-01" uuid="4028814B473EB6E701473EBDF1B5000A" />
+    <inv_reserved_transaction reserved_transaction_id="3" operation_id="8" item_id="2" quantity="5" expiration="2025-01-01" calculated_batch="1" calculated_expiration="1"
                               is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000F" />
 
     <inv_stock_operation stock_operation_id="3" status="PENDING" operation_type_id="4" operation_number="t303"
                          source_id="3" destination_id="4" name="Test_Op_14" operation_date="2012-01-03 00:00:00.0"
                          creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0022"/>
-    <inv_reserved_transaction reserved_transaction_id="4" operation_id="3" item_id="2" quantity="5" expiration="2025-01-01"
+	<inv_stock_operation_item stock_operation_item_id="11" operation_id="3" item_id="2" quantity="5" expiration="2025-01-01" uuid="4028814B473EB6E701473EBE5DE5000B" />
+	<inv_reserved_transaction reserved_transaction_id="4" operation_id="3" item_id="2" quantity="5" expiration="2025-01-01" calculated_batch="1" calculated_expiration="1"
                               is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000G" />
 
     <inv_stock_operation stock_operation_id="4" status="PENDING" operation_type_id="7" operation_number="t404"
                          source_id="3" destination_id="4" name="Test_Op_15" operation_date="2012-01-03 00:00:00.0"
                          creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0021"/>
-    <inv_reserved_transaction reserved_transaction_id="5" operation_id="4" item_id="2" quantity="5" expiration="2025-01-01"
+	<inv_stock_operation_item stock_operation_item_id="12" operation_id="4" item_id="2" quantity="5" expiration="2025-01-01" uuid="4028814B473EB6E701473EBEAF95000C" />
+    <inv_reserved_transaction reserved_transaction_id="5" operation_id="4" item_id="2" quantity="5" expiration="2025-01-01" calculated_batch="1" calculated_expiration="1"
                               is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000H" />
 
     <inv_stock_operation stock_operation_id="5" status="PENDING" operation_type_id="2" operation_number="t505"
                          source_id="3" destination_id="4" name="Test_Op_16" operation_date="2012-01-03 00:00:00.0"
                          creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0033"/>
-    <inv_reserved_transaction reserved_transaction_id="6" operation_id="5" item_id="2" quantity="5" expiration="2025-01-01"
+	<inv_stock_operation_item stock_operation_item_id="13" operation_id="5" item_id="2" quantity="5" expiration="2025-01-01" uuid="4028814B473EB6E701473EBF11F4000D" />
+    <inv_reserved_transaction reserved_transaction_id="6" operation_id="5" item_id="2" quantity="5" expiration="2025-01-01" calculated_batch="1" calculated_expiration="1"
                               is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000I" />
 
     <inv_stock_operation stock_operation_id="6" status="PENDING" operation_type_id="1" operation_number="t606"
                          source_id="3" destination_id="4" name="Test_Op_17" operation_date="2012-01-03 00:00:00.0"
                          creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0044"/>
-    <inv_reserved_transaction reserved_transaction_id="7" operation_id="6" item_id="2" quantity="5" expiration="2025-01-01"
+	<inv_stock_operation_item stock_operation_item_id="14" operation_id="6" item_id="2" quantity="5" expiration="2025-01-01" uuid="4028814B473EB6E701473EBF4E4D000E" />
+    <inv_reserved_transaction reserved_transaction_id="7" operation_id="6" item_id="2" quantity="5" expiration="2025-01-01" calculated_batch="1" calculated_expiration="1"
                               is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000K" />
 
     <inv_stock_operation stock_operation_id="7" status="PENDING" operation_type_id="6" operation_number="t707"
                          source_id="3" destination_id="4" name="Test_Op_18" operation_date="2012-01-03 00:00:00.0"
                          creator="1" date_created="2013-01-03 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C1CDFD0055"/>
-    <inv_reserved_transaction reserved_transaction_id="8" operation_id="7" item_id="2" quantity="5" expiration="2025-01-01"
+	<inv_stock_operation_item stock_operation_item_id="15" operation_id="7" item_id="2" quantity="5" expiration="2025-01-01" uuid="4028814B473EB6E701473EBF8BB5000F" />
+    <inv_reserved_transaction reserved_transaction_id="8" operation_id="7" item_id="2" quantity="5" expiration="2025-01-01" calculated_batch="1" calculated_expiration="1"
                               is_available="false" creator="1" date_created="2013-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000L" />
 	
 	<inv_item_stock item_stock_id="0" stockroom_id="0" item_id="0" quantity="4" uuid="FF8081814250C1CD014250D46D08000F" />
 	<inv_item_stock item_stock_id="1" stockroom_id="0" item_id="1" quantity="5" uuid="FF8081814250C1CD014250D474980010" />
 	<inv_item_stock item_stock_id="2" stockroom_id="0" item_id="2" quantity="8" uuid="FF8081814250C1CD014250D47D720011" />
-	<inv_item_stock_detail item_stock_detail_id="0" item_stock_id="0" stockroom_id="0" item_id="0" batch_operation_id="0" quantity="4" uuid="FF80818142A39FE30142A39FE3120000"/>
-	<inv_item_stock_detail item_stock_detail_id="1" item_stock_id="1" stockroom_id="0" item_id="1" batch_operation_id="0" quantity="5" uuid="FF80818142A3A8150142A3A815710000"/>
-	<inv_item_stock_detail item_stock_detail_id="2" item_stock_id="2" stockroom_id="0" item_id="2" batch_operation_id="0" expiration="2025-01-01" quantity="8" uuid="FF80818142A3A8150142A3A821330001"/>
+	<inv_item_stock_detail item_stock_detail_id="0" item_stock_id="0" stockroom_id="0" item_id="0" batch_operation_id="0" calculated_batch="0" quantity="4" calculated_expiration="0" uuid="FF80818142A39FE30142A39FE3120000"/>
+	<inv_item_stock_detail item_stock_detail_id="1" item_stock_id="1" stockroom_id="0" item_id="1" batch_operation_id="0" calculated_batch="0" quantity="5" calculated_expiration="0" uuid="FF80818142A3A8150142A3A815710000"/>
+	<inv_item_stock_detail item_stock_detail_id="2" item_stock_id="2" stockroom_id="0" item_id="2" batch_operation_id="0" calculated_batch="0" expiration="2025-01-01" calculated_expiration="0" quantity="8" uuid="FF80818142A3A8150142A3A821330001"/>
 
 	<inv_item_stock item_stock_id="3" stockroom_id="1" item_id="0" quantity="5" uuid="e47dd35b-a887-4de6-a290-74c078a25dcd" />
 	<inv_item_stock item_stock_id="4" stockroom_id="1" item_id="2" quantity="1" uuid="795c4f3d-4e24-4280-8b1d-19b38ab096d4" />
 	<inv_item_stock item_stock_id="5" stockroom_id="1" item_id="1" quantity="3" uuid="b0357d1e-69b7-44cf-86be-aff7ffd660b1" />
-	<inv_item_stock_detail item_stock_detail_id="3" item_stock_id="3" stockroom_id="1" item_id="0" batch_operation_id="0" quantity="5" uuid="aac8c4a4-0d8e-482c-9516-9a1baac5e242"/>
-	<inv_item_stock_detail item_stock_detail_id="4" item_stock_id="4" stockroom_id="1" item_id="2" batch_operation_id="0" expiration="2025-01-01" quantity="1" uuid="7323dbcf-0d21-41cc-9487-d2cceb341c7b"/>
-	<inv_item_stock_detail item_stock_detail_id="5" item_stock_id="3" stockroom_id="1" item_id="1" batch_operation_id="0" quantity="5" uuid="5caedf3f-debb-414f-aacb-c60b331fcb63"/>
+	<inv_item_stock_detail item_stock_detail_id="3" item_stock_id="3" stockroom_id="1" item_id="0" batch_operation_id="0" calculated_batch="0" quantity="5" calculated_expiration="0" uuid="aac8c4a4-0d8e-482c-9516-9a1baac5e242"/>
+	<inv_item_stock_detail item_stock_detail_id="4" item_stock_id="4" stockroom_id="1" item_id="2" batch_operation_id="0" calculated_batch="0" expiration="2025-01-01" calculated_expiration="0"  quantity="1" uuid="7323dbcf-0d21-41cc-9487-d2cceb341c7b"/>
+	<inv_item_stock_detail item_stock_detail_id="5" item_stock_id="3" stockroom_id="1" item_id="1" batch_operation_id="0" calculated_batch="1" quantity="5" calculated_expiration="0" uuid="5caedf3f-debb-414f-aacb-c60b331fcb63"/>
 </dataset>

@@ -6,8 +6,13 @@ public class ReservedTransaction extends TransactionBase {
 	private Boolean available;
 
 	public ReservedTransaction() { }
+
 	public ReservedTransaction(TransactionBase tx) {
 		super(tx);
+	}
+
+	public ReservedTransaction(StockOperationItem item) {
+		super(item);
 	}
 
 	public Boolean getAvailable() {

@@ -8,7 +8,7 @@
             </a>
         </li>
         <li>
-            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/itemsToConceptMapping.form">
+            <a href="${pageContext.request.contextPath}/module/openhmis/inventory/itemToConceptMapping.form">
                 <openmrs:message code="openhmis.inventory.admin.items.concept.mapping"/>
             </a>
         </li>

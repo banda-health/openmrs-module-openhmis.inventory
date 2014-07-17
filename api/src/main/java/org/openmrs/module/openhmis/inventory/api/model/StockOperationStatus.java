@@ -5,6 +5,10 @@ package org.openmrs.module.openhmis.inventory.api.model;
  */
 public enum StockOperationStatus {
 	/**
+	 * The operation is being created but has not yet been submitted.
+	 */
+	NEW(),
+	/**
 	 * The operation has been requested but not yet started.
 	 */
 	REQUESTED(),
@@ -21,6 +25,5 @@ public enum StockOperationStatus {
 	 */
 	COMPLETED();
 
-	private StockOperationStatus() {
-	}
+	private StockOperationStatus() { }
 }

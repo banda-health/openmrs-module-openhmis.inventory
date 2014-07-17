@@ -18,6 +18,7 @@
 		<property name="hasExpiration" type="boolean" column="has_expiration" />
 		<property name="hasPhysicalInventory" type="boolean" column="has_physical_inventory" />
 		<property name="defaultExpirationPeriod" type="int" column="default_expiration_period" />
+		<property name="conceptAccepted" type="boolean" column="concept_accepted" />
 
 		<!-- Associations -->
 		<many-to-one name="department" class="Department" column="department_id" />
@@ -30,6 +31,7 @@
 			<key column="item_id" />
 			<one-to-many class="ItemAttribute" />
 		</set>
+
 		<set name="prices" lazy="false" inverse="true" cascade="all-delete-orphan">
 			<key column="item_id" not-null="true" />
 			<one-to-many class="ItemPrice" />

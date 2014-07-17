@@ -26,6 +26,7 @@ public class StockOperation
 
 	private Integer id;
 	private StockOperationStatus status;
+	private Set<StockOperationItem> items;
 	private Set<ReservedTransaction> reserved;
 	private Set<StockOperationTransaction> transactions;
 
@@ -128,7 +129,69 @@ public class StockOperation
         this.institution = institution;
     }
 
-    public ReservedTransaction addReserved(Item item, int quantity) {
+	public StockOperationItem addItem(Item item, int quantity) {
+		return addItem(item, quantity, null, null);
+	}
+
+	public StockOperationItem addItem(Item item, int quantity, Date expiration) {
+		return addItem(item, quantity, expiration, null);
+	}
+
+	public StockOperationItem addItem(Item item, int quantity, Date expiration, StockOperation batchOperation) {
+		if (item == null) {
+			throw new IllegalArgumentException("The item must be defined");
+		}
+
+		StockOperationItem operationItem = new StockOperationItem();
+		operationItem.setItem(item);
+		operationItem.setQuantity(quantity);
+
+		if (expiration == null) {
+			if (item.getHasExpiration()) {
+				operationItem.setCalculatedExpiration(true);
+			} else {
+				operationItem.setCalculatedExpiration(false);
+			}
+		} else {
+			operationItem.setExpiration(expiration);
+			operationItem.setCalculatedExpiration(false);
+		}
+
+		if (batchOperation == null) {
+			operationItem.setCalculatedBatch(true);
+		} else {
+			operationItem.setBatchOperation(batchOperation);
+			operationItem.setCalculatedBatch(false);
+		}
+
+		return addItem(operationItem);
+	}
+
+	public StockOperationItem addItem(StockOperationItem item) {
+		if (item == null) {
+			throw new IllegalArgumentException("This item to add must be defined.");
+		}
+
+		if (items == null) {
+			items = new HashSet<StockOperationItem>();
+		}
+
+		item.setOperation(this);
+
+		items.add(item);
+
+		return item;
+	}
+
+	public Set<StockOperationItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<StockOperationItem> items) {
+		this.items = items;
+	}
+
+	public ReservedTransaction addReserved(Item item, int quantity) {
 		return addReserved(item, quantity, null);
 	}
 
