@@ -72,12 +72,8 @@
 		<property name="quantity" type="int" not-null="true" column="quantity" />
 		<property name="expiration" type="java.util.Date" column="expiration" />
 		<many-to-one name="batchOperation" class="StockOperation" column="batch_operation_id" />
-		<property name="calculatedExpiration" type="boolean">
-			<column name="calculated_expiration" default="true" />
-		</property>
-		<property name="calculatedBatch" type="boolean">
-			<column name="calculated_batch" default="true" />
-		</property>
+		<property name="calculatedExpiration" type="boolean" column="calculated_expiration" not-null="false" />
+		<property name="calculatedBatch" type="boolean" column="calculated_batch" not-null="false" />
 
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
@@ -190,6 +186,10 @@
 		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" access="field" />
         <many-to-one name="institution" class="Institution" column="institution_id" access="field" />
 
+		<set name="items" lazy="true" inverse="true" batch-size="100" access="field">
+			<key column="operation_id" />
+			<one-to-many class="StockOperationItem" />
+		</set>
 		<set name="reserved" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field">
 			<key column="operation_id" />
 			<one-to-many class="ReservedTransaction" />
@@ -226,6 +226,29 @@
 		<many-to-one name="owner" class="StockOperation" column="operation_id" />
 		<many-to-one name="attributeType" class="StockOperationAttributeType" column="attribute_type_id" />
 		<property name="value" type="text" access="field" column="value_reference" length="65535" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+	<class name="StockOperationItem" table="inv_stock_operation_item">
+		<cache usage="read-write"/>
+
+		<id name="id" type="int" column="stock_operation_item_id">
+			<generator class="native">
+				<param name="sequence">inv_stock_operation_item_stock_operation_item_id_seq</param>
+			</generator>
+		</id>
+
+		<many-to-one name="operation" class="StockOperation" not-null="true" column="operation_id" />
+		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
+		<property name="quantity" type="int" not-null="true" column="quantity" />
+		<property name="expiration" type="java.util.Date" column="expiration" />
+		<many-to-one name="batchOperation" class="StockOperation" column="batch_operation_id" />
+		<property name="calculatedExpiration" type="boolean">
+			<column name="calculated_expiration" default="true" />
+		</property>
+		<property name="calculatedBatch" type="boolean">
+			<column name="calculated_batch" default="true" />
+		</property>
+
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
 	<class name="ReservedTransaction" table="inv_reserved_transaction">

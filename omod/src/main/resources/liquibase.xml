@@ -868,4 +868,33 @@
             <column name="concept_accepted" type="boolean" defaultValueBoolean="false" />
         </addColumn>
     </changeSet>
+	<changeSet id="openhmis.inventory-v1.0.0-10" author="ibewes">
+		<createTable tableName="inv_stock_operation_item">
+			<column name="stock_operation_item_id" autoIncrement="true" type="int">
+				<constraints nullable="false" primaryKey="true"/>
+			</column>
+
+			<column name="operation_id" type="int"><constraints nullable="false"/></column>
+			<column name="item_id" type="int"><constraints nullable="false"/></column>
+			<column name="quantity" type="int"><constraints nullable="false"/></column>
+
+			<column name="batch_operation_id" type="int"/>
+			<column name="calculated_batch" type="boolean" defaultValueBoolean="true" />
+
+			<column name="expiration" type="DATE"/>
+			<column name="calculated_expiration" type="boolean" defaultValueBoolean="true" />
+
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true"/></column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="inv_stock_operation_item_stock_op_fk"
+								 baseTableName="inv_stock_operation_item" baseColumnNames="operation_id"
+								 referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_operation_item_item_fk"
+								 baseTableName="inv_stock_operation_item" baseColumnNames="item_id"
+								 referencedTableName="inv_item" referencedColumnNames="item_id"/>
+		<addForeignKeyConstraint constraintName="inv_stock_operation_item_batch_fk"
+								 baseTableName="inv_stock_operation_item" baseColumnNames="batch_operation_id"
+								 referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
+	</changeSet>
 </databaseChangeLog>

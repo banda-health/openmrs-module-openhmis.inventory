@@ -27,6 +27,7 @@ import org.joda.time.Seconds;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
@@ -37,6 +38,7 @@ import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.*;
 
@@ -44,7 +46,7 @@ public class StockOperationDataServiceImpl
 		extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
 		implements IStockOperationDataService {
 
-	// This is the object that will provide the synchronization
+	// This is the object that will provide synchronization
 	private static final UUID OPERATION_LOCK = UUID.randomUUID();
 
 	private IStockroomDataService stockroomService;
@@ -65,7 +67,7 @@ public class StockOperationDataServiceImpl
 	/**
 	 * Validates the stock operation.
 	 * @param operation The stock operation to validate.
-	 * @throws APIException
+	 * @throws org.openmrs.api.APIException
 	 * @should throw an APIException if the type requires a source and the source is null
 	 * @should throw an APIException if the type requires a destination and the destination is null
 	 * @should throw an APIException if the type requires a patient and the patient is null
@@ -99,16 +101,33 @@ public class StockOperationDataServiceImpl
 
 	@Override
 	public StockOperation submitOperation(StockOperation operation) throws IllegalArgumentException, APIException {
+		/*
+			Submitting the operation will copy the items to the operation reservations (if not already done) and then
+			process those reservations based on the operation state.
+		 */
+
 		validate(operation);
 
-		if (operation.getReserved() == null || operation.getReserved().size() <= 0) {
-			throw new APIException("The operation must have at least one reserved transaction item defined.");
+		if (operation.getItems() == null || operation.getItems().size() <= 0) {
+			throw new APIException("The operation must have at least one operation item defined.");
 		}
 
 		// Only allow access to a single caller at a time so that the reservation calculation does not gets messed up
 		synchronized (OPERATION_LOCK) {
-			// Perform any required calculations to make the reservations valid
-			calculateReservations(operation);
+			if (operation.getStatus() == StockOperationStatus.NEW) {
+				for (StockOperationItem item : operation.getItems()) {
+					ReservedTransaction tx = new ReservedTransaction(item);
+					tx.setCreator(Context.getAuthenticatedUser());
+					tx.setDateCreated(new Date());
+
+					operation.addReserved(tx);
+				}
+
+				// Perform any required calculations to make the reservations valid
+				calculateReservations(operation);
+
+				operation.setStatus(StockOperationStatus.PENDING);
+			}
 
 			// Triggers the appropriate status-based event so that the operation type can do what needs doing
 			//  Note: applyTransactions will be called as part of the event, if needed
@@ -343,9 +362,9 @@ public class StockOperationDataServiceImpl
 	}
 
 	/**
-	 * THIS SHOULD NOT BE CALLED FROM USER CODE - Code to the interface ({@link IStockroomDataService}) not this class.
+	 * THIS SHOULD NOT BE CALLED FROM USER CODE - Code to the interface ({@link org.openmrs.module.openhmis.inventory.api.IStockroomDataService}) not this class.
 	 *
-	 * Calculates the reservation details for the specified {@link StockOperation}. This includes calculating any
+	 * Calculates the reservation details for the specified {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. This includes calculating any
 	 * qualifiers and checking on the details of the source stockroom to create all required transactions to fulfill the
 	 * request.
 	 * @param operation The stock operation for this transaction
@@ -406,8 +425,10 @@ public class StockOperationDataServiceImpl
 					throw new APIException("Stock operations with no source stockroom must define an expiration for any expirable items.");
 				}
 
+				// Set the batch operation to the current operation because this must be some type of receipt operation
 				if (tx.getBatchOperation() == null) {
 					tx.setBatchOperation(operation);
+					tx.setCalculatedBatch(false);
 				}
 			} else {
 				if (tx.getItem().hasExpiration() && tx.getExpiration() == null && !tx.isCalculatedExpiration()) {
