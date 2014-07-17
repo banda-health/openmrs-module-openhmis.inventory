@@ -89,6 +89,29 @@ define(
 		    }
 	    });
 
+        openhmis.OperationItem = openhmis.ItemStockDetailBase.extend({
+            meta: {
+                name: __("Operation Item"),
+                namePlural: __("Operation Items"),
+                openmrsType: 'metadata',
+                restUrl: openhmis.url.inventoryModelBase + 'stockOperationItem'
+            },
+
+            schema: {
+                operation: {
+                    type: 'NestedModel',
+                    model: openhmis.Operation,
+                    objRef: true
+                }
+            },
+
+
+
+            toString: function() {
+                return this.get('item.name');
+            }
+        });
+
 	    openhmis.TransactionBase = openhmis.GenericModel.extend({
 		    initialize: function(attributes, options) {
 			    openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
@@ -209,8 +232,9 @@ define(
 		            }),
 		            objRef: true
 	            },
-	            reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
-	            transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
+                items: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationItem },
+	            //reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
+	            //transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
 	            source: {
 		            type: 'StockroomSelect',
 		            options: new openhmis.GenericCollection(null, {
@@ -230,7 +254,8 @@ define(
             },
 
 	        OperationStatus: {
-		        PENDING:	"PENDING",
+		        NEW:        "NEW",
+                PENDING:	"PENDING",
 		        CANCELLED:	"CANCELLED",
 		        COMPLETED:	"COMPLETED"
 	        },
@@ -255,6 +280,13 @@ define(
 
                     if (resp.transactions) {
                         resp.transactions = new openhmis.GenericCollection(resp.transactions, { model: openhmis.OperationTransaction }).models;
+                    }
+
+                    if (resp.source) {
+                        resp.source = new openhmis.Stockroom(resp.source);
+                    }
+                    if (resp.destination) {
+                        resp.destination = new openhmis.Stockroom(resp.destination);
                     }
 		        }
 

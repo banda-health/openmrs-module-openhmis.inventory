@@ -5,10 +5,7 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
-import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +100,21 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS})
 	List<StockOperation> getOperationsByRoom(Stockroom stockroom, PagingInfo paging) throws IllegalArgumentException, APIException;
+
+	/**
+	 * Returns the {@link StockOperationItem}s for the specified {@link StockOperation}.
+	 * @param operation The {@link StockOperation}
+	 * @param paging The paging information of {@code null} to return all results.
+	 * @return The operation items for the stockroom operation.
+	 * @should return items for the specified operation
+	 * @should return empty list when no items
+	 * @should return paged items when paging is specified
+	 * @should return all items when paging is null
+	 * @should throw IllegalArgumentException when operation is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({PrivilegeConstants.VIEW_OPERATIONS})
+	List<StockOperationItem> getItemsByOperation(StockOperation operation, PagingInfo paging) throws IllegalArgumentException, APIException;
 
 	/**
 	 * Returns the {@link StockOperation}s that are associated with the specified user.

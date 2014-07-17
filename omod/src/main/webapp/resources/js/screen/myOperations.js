@@ -30,7 +30,7 @@ curl(
 			openhmis.startAddEditScreen(openhmis.Operation, {
 				listView: openhmis.MyOperationListView,
                 searchView: openhmis.OperationSearchByStatus,
-				addEditViewType: openhmis.MyOperationEditView,
+				addEditViewType: openhmis.MyOperationDetailView,
 				listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status'],
 				allowAdd: false
 			});
