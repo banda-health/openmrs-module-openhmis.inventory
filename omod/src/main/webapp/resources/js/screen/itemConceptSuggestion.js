@@ -27,7 +27,10 @@ curl(
     ],
     function($, openhmis) {
         $(function() {
-            openhmis.startItemConceptSuggestionScreen(openhmis.ItemConceptSuggestion, {});
+            openhmis.startItemConceptSuggestionScreen(openhmis.ItemConceptSuggestion, {
+            	lostView: openhmis.ItemToConceptMappingListView,
+            	listFields: ['item', 'concept', 'conceptAccepted']
+            });
         });
     }
 );

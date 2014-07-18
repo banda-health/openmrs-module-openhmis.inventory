@@ -29,7 +29,7 @@ define(
     ],
     function($, _, Backbone, __, openhmis) {
 
-        openhmis.startItemConceptSuggestionScreen = function(model) {
+        openhmis.startItemConceptSuggestionScreen = function(model, options) {
             var options = {};
             if (!options.listElement) {
                 $("#content").append('<div id="existing-form"></div>');
@@ -53,6 +53,7 @@ define(
             var listView = new listViewType(viewOptions);
 
             listView.setElement(options.listElement);
+            listView.fetch();
         },
 
         openhmis.ItemToConceptMappingListView = Backbone.View.extend({
@@ -106,6 +107,9 @@ define(
                         }
 
                         this.model.on("reset", this.render);
+
+                        this.showRetired = false;
+                        this._determineFields();
 
                     },
 
@@ -187,8 +191,24 @@ define(
                             return this.model.length;
                         return this.model.filter(function(item) { return !item.isRetired() }).length;
                     },
-                });
 
+                    /**
+                     * Determine the fields that should be shown as columns in the table
+                     *
+                     * @private
+                     */
+                    _determineFields: function() {
+                        if (this.options.includeFields !== undefined)
+                            this.fields = this.options.includeFields;
+                        else
+                            this.fields = _.keys(this.model.model.prototype.schema);
+                        if (this.options.excludeFields !== undefined) {
+                            var argv = _.clone(this.options.excludeFields);
+                            argv.unshift(this.fields);
+                            this.fields = _.without.apply(this, argv);
+                        }
+                    },
+                });
 
         return openhmis;
     }
