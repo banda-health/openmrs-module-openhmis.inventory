@@ -56,11 +56,28 @@ define(
             },
 
             completeOperation: function() {
-                this.model.set('status', openhmis.Operation.OperationStatus.COMPLETED);
+                var self = this;
+                $.ajax({
+                    type: 'POST',
+                    url: this.model.url(),
+                    data: '{"status":"COMPLETED"}',
+                    success: function(data) {
+                        self.model.fetch();
+
+                        self.cancel();
+                    },
+                    contentType: "application/json",
+                    dataType: 'json'
+                });
+
+                //this.model.set('status', 'COMPLETED');
+                //this.save();
             },
 
             cancelOperation: function() {
-                this.model.set('status', openhmis.Operation.OperationStatus.CANCELLED);
+                this.model.set('status', 'CANCELLED');
+
+                this.save();
             },
 
             prepareModelForm: function(model, options) {
@@ -76,6 +93,7 @@ define(
                 openhmis.GenericAddEditView.prototype.render.call(this);
 
                 if (this.model.id) {
+                    // Fetch and render the operation items list
                     this.itemsView.fetch(undefined, undefined);
 
                     var itemsEl = $("#operation-items");

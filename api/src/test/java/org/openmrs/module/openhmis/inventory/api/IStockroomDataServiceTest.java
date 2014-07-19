@@ -510,7 +510,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(batchOperation, detail.getBatchOperation());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(4, detail.getQuantity());
+		Assert.assertEquals(4, (int)detail.getQuantity());
 	}
 
 	/**
@@ -532,14 +532,14 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		Assert.assertEquals(item, detail0.getItem());
 		Assert.assertEquals(batchOperation, detail0.getBatchOperation());
 		Assert.assertNull(detail0.getExpiration());
-		Assert.assertEquals(4, detail0.getQuantity());
+		Assert.assertEquals(4, (int)detail0.getQuantity());
 
 		Assert.assertNotNull(detail1);
 		Assert.assertEquals(stockroom1, detail1.getStockroom());
 		Assert.assertEquals(item, detail1.getItem());
 		Assert.assertEquals(batchOperation, detail1.getBatchOperation());
 		Assert.assertNull(detail1.getExpiration());
-		Assert.assertEquals(5, detail1.getQuantity());
+		Assert.assertEquals(5, (int)detail1.getQuantity());
 
 		Assert.assertNotEquals(detail0.getId(), detail1.getId());
 	}

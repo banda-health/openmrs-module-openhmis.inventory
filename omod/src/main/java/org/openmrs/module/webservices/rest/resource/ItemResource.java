@@ -99,7 +99,12 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
      * @param instance
      * @param uuidOrPrice
      */
-    @PropertySetter(value="defaultPrice")
+	// Commenting this out to test Stock Operation saving
+	// This setter causes problems when the operation items are saved because it attempts to map the json rep of the price
+	//		to a string, which fails. I'm not sure if/how this method is used on the item admin page or how to update
+	//		the operation item to not include the this field, which will never be updated from that page.
+	//		Backbone (or at least our usage) is a pain.
+    //@PropertySetter(value="defaultPrice")
     public void setDefaultPrice(Item instance, final String uuidOrPrice) {
         Collection<ItemPrice> results = Collections2.filter(instance.getPrices(), new Predicate<ItemPrice>() {
             @Override
