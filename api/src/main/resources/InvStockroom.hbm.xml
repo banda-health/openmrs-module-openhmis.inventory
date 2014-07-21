@@ -190,11 +190,11 @@
 			<key column="operation_id" />
 			<one-to-many class="StockOperationItem" />
 		</set>
-		<set name="reserved" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field" cascade="save-update">
+		<set name="reserved" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field" cascade="all-delete-orphan">
 			<key column="operation_id" />
 			<one-to-many class="ReservedTransaction" />
 		</set>
-		<set name="transactions" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field" cascade="save-update">
+		<set name="transactions" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field" cascade="all-delete-orphan">
 			<key column="operation_id" />
 			<one-to-many class="StockOperationTransaction" />
 		</set>
