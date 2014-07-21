@@ -2,7 +2,7 @@
 <%@ page import="org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants" %>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
-\<openmrs:require allPrivileges="<%= PrivilegeWebConstants.DEPARTMENT_PAGE_PRIVILEGES %>" otherwise="/login.htm"
+<openmrs:require allPrivileges="<%= PrivilegeWebConstants.DEPARTMENT_PAGE_PRIVILEGES %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.DEPARTMENTS_PAGE %>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
