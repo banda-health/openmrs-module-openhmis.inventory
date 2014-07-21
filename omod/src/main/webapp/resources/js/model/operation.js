@@ -18,9 +18,9 @@ define(
         openhmis.url.backboneBase + 'js/model/generic',
 	    openhmis.url.backboneBase + 'js/model/user',
 		openhmis.url.backboneBase + 'js/model/role',
+        openhmis.url.backboneBase + 'js/model/patient',
 		openhmis.url.backboneBase + 'js/model/openhmis',
-	    openhmis.url.inventoryBase + 'js/model/stockroom',
-	    openhmis.url.inventoryBase + 'js/view/editors'
+	    openhmis.url.inventoryBase + 'js/model/stockroom'
     ],
     function(openhmis, __) {
 		openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
@@ -89,6 +89,29 @@ define(
 		    }
 	    });
 
+        openhmis.OperationItem = openhmis.ItemStockDetailBase.extend({
+            meta: {
+                name: __("Operation Item"),
+                namePlural: __("Operation Items"),
+                openmrsType: 'metadata',
+                restUrl: openhmis.url.inventoryModelBase + 'stockOperationItem'
+            },
+
+            schema: {
+                operation: {
+                    type: 'NestedModel',
+                    model: openhmis.Operation,
+                    objRef: true
+                }
+            },
+
+
+
+            toString: function() {
+                return this.get('item.name');
+            }
+        });
+
 	    openhmis.TransactionBase = openhmis.GenericModel.extend({
 		    initialize: function(attributes, options) {
 			    openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
@@ -113,7 +136,17 @@ define(
 			    }
 
 			    return resp;
-		    }
+		    },
+
+            toString: function() {
+                var expiration = this.get("expiration");
+                var exp = ": ";
+                if (expiration) {
+                    exp = " (" + openhmis.dateFormatLocale(expiration) + "): ";
+                }
+
+                return this.get("item").name + exp + this.get("quantity")
+            }
 	    });
 
 	    openhmis.ReservedTransaction = openhmis.TransactionBase.extend({
@@ -171,7 +204,7 @@ define(
 		    }
 	    });
 
-	    openhmis.Operation = openhmis.GenericModel.extend({
+        openhmis.Operation = openhmis.GenericModel.extend({
             meta: {
                 name: __("Operation"),
                 namePlural: __("Operations"),
@@ -180,15 +213,14 @@ define(
             },
 
             schema: {
-                name: 'Text',
                 operationNumber: 'Text',
                 status: {
 	                type: 'Text',
 	                readonly: 'readonly'
                 },
 	            dateCreated: {
-		            type: 'DateTime',
-		            readonly: 'readonly',
+		            type: 'Text',
+                    editorAttrs: { disabled: true },
 		            format: openhmis.dateTimeFormatLocale
 	            },
 	            instanceType: {
@@ -200,8 +232,9 @@ define(
 		            }),
 		            objRef: true
 	            },
-	            reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
-	            transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
+                items: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationItem },
+	            //reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
+	            //transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
 	            source: {
 		            type: 'StockroomSelect',
 		            options: new openhmis.GenericCollection(null, {
@@ -217,12 +250,12 @@ define(
 			            url: openhmis.url.inventoryModelBase + '/stockroom'
 		            }),
 		            objRef: true
-	            },
-	            patient: { type: 'Object', model: openhmis.Patient, objRef: true }
+	            }
             },
 
 	        OperationStatus: {
-		        PENDING:	"PENDING",
+		        NEW:        "NEW",
+                PENDING:	"PENDING",
 		        CANCELLED:	"CANCELLED",
 		        COMPLETED:	"COMPLETED"
 	        },
@@ -235,16 +268,26 @@ define(
 		        }
 	        },
 
-            validate: function(attrs, options) {
-                if (!attrs.name) return { name: __("A name is required.") };
-                return null;
-            },
-
-	        parse: function(resp) {
+            parse: function(resp) {
 		        if (resp) {
 			        if (resp.instanceType && _.isObject(resp.instanceType)) {
 				        resp.instanceType = new openhmis.OperationType(resp.instanceType);
 			        }
+
+                    if (resp.reserved) {
+                        resp.reserved = new openhmis.GenericCollection(resp.reserved, { model: openhmis.ReservedTransaction }).models;
+                    }
+
+                    if (resp.transactions) {
+                        resp.transactions = new openhmis.GenericCollection(resp.transactions, { model: openhmis.OperationTransaction }).models;
+                    }
+
+                    if (resp.source) {
+                        resp.source = new openhmis.Stockroom(resp.source);
+                    }
+                    if (resp.destination) {
+                        resp.destination = new openhmis.Stockroom(resp.destination);
+                    }
 		        }
 
 		        return resp;
@@ -256,7 +299,6 @@ define(
 	            } else {
 		            return "Operation";
 	            }
-
             }
         });
 

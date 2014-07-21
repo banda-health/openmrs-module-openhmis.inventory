@@ -50,7 +50,7 @@ define(
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['dateCreated', 'operationNumber', 'status', 'instanceType']
+			        listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status']
 		        });
 		        this.transactionsView = new openhmis.StockroomDetailList({
 			        model: new openhmis.GenericCollection([], {
@@ -59,7 +59,7 @@ define(
 			        showRetiredOption: false,
 			        showRetired: true,
 			        listFields: ['dateCreated', 'batchOperation', 'item', 'expiration', 'quantity']
-		        })
+		        });
 
 		        this.itemsView.on("fetch", this.fetch);
 		        this.operationsView.on("fetch", this.fetch);

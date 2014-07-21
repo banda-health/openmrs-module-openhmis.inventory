@@ -16,20 +16,19 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 import com.google.common.collect.Iterators;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
+import org.openmrs.OpenmrsObject;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
+import org.openmrs.module.openhmis.commons.api.f.Action;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
@@ -269,6 +268,22 @@ public class StockOperationDataServiceImpl
 						Restrictions.eq("source", stockroom),
 						Restrictions.eq("destination", stockroom)
 				));
+			}
+		});
+	}
+
+	@Override
+	public List<StockOperationItem> getItemsByOperation(final StockOperation operation, PagingInfo paging) throws IllegalArgumentException, APIException {
+		if (operation == null) {
+			throw new IllegalArgumentException("The operation must be defined.");
+		}
+
+		return executeCriteria(StockOperationItem.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq("operation", operation));
+				criteria.createCriteria("item", "i");
+				criteria.addOrder(Order.desc("i.name"));
 			}
 		});
 	}

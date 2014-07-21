@@ -247,7 +247,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		ItemStockDetail detail = stock.getDetails().iterator().next();
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(10, detail.getQuantity());
+		Assert.assertEquals(10, (int)detail.getQuantity());
 		Assert.assertEquals(operation, detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 
@@ -261,7 +261,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		detail = stock.getDetails().iterator().next();
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(20, detail.getQuantity());
+		Assert.assertEquals(20, (int)detail.getQuantity());
 		Assert.assertEquals(operation, detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 	}
@@ -333,7 +333,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(qty + 10, detail.getQuantity());
+		Assert.assertEquals(qty + 10, (int)detail.getQuantity());
 		Assert.assertEquals(batchOperation, detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 
@@ -350,7 +350,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		detail = Iterators.get(stock.getDetails().iterator(), 0);
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(qty2 + 20, detail.getQuantity());
+		Assert.assertEquals(qty2 + 20, (int)detail.getQuantity());
 		Assert.assertEquals(batchOperation, detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 	}
@@ -410,7 +410,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(-10, detail.getQuantity());
+		Assert.assertEquals(-10, (int)detail.getQuantity());
 		Assert.assertNull(detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 
@@ -422,7 +422,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		detail = Iterators.get(stock.getDetails().iterator(), 0);
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(-20, detail.getQuantity());
+		Assert.assertEquals(-20, (int)detail.getQuantity());
 		Assert.assertNull(detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 	}
@@ -491,14 +491,14 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(qty, detail.getQuantity());
+		Assert.assertEquals(qty, (int)detail.getQuantity());
 		Assert.assertEquals(0, (int)detail.getBatchOperation().getId());
 		Assert.assertEquals(stock, detail.getItemStock());
 
 		detail = Iterators.get(stock.getDetails().iterator(), 1);
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(10, detail.getQuantity());
+		Assert.assertEquals(10, (int)detail.getQuantity());
 		Assert.assertEquals(operation, detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 
@@ -510,14 +510,14 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		detail = Iterators.get(stock.getDetails().iterator(), 0);
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(qty2, detail.getQuantity());
+		Assert.assertEquals(qty2, (int)detail.getQuantity());
 		Assert.assertEquals(0, (int)detail.getBatchOperation().getId());
 		Assert.assertEquals(stock, detail.getItemStock());
 
 		detail = Iterators.get(stock.getDetails().iterator(), 1);
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertNull(detail.getExpiration());
-		Assert.assertEquals(20, detail.getQuantity());
+		Assert.assertEquals(20, (int)detail.getQuantity());
 		Assert.assertEquals(operation, detail.getBatchOperation());
 		Assert.assertEquals(stock, detail.getItemStock());
 	}
@@ -584,7 +584,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertNotNull(detail);
 		Assert.assertNull(detail.getExpiration());
 		Assert.assertNull(detail.getBatchOperation());
-		Assert.assertEquals(-10, detail.getQuantity());
+		Assert.assertEquals(-10, (int)detail.getQuantity());
 
 		stock = stockroomService.getItem(stockroom, item2);
 		Assert.assertNotNull(stock);
@@ -596,7 +596,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertNotNull(detail);
 		Assert.assertNull(detail.getExpiration());
 		Assert.assertNull(detail.getBatchOperation());
-		Assert.assertEquals(-20, detail.getQuantity());
+		Assert.assertEquals(-20, (int)detail.getQuantity());
 	}
 
 	/**
@@ -2064,21 +2064,30 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		// Submit the operation
 		service.submitOperation(operation);
+		Context.flushSession();
+
+		operation = service.getById(operation.getId());
 		// One reserved transaction for the item stock being transferred
 		Assert.assertEquals(1, operation.getReserved().size());
 		// One operation transaction for the item stock moved out of the source stockroom
 		Assert.assertEquals(1, operation.getTransactions().size());
 
 		ReservedTransaction reservedTransaction = Iterators.getOnlyElement(operation.getReserved().iterator());
+		// Make sure that transaction was actually persisted
+		Assert.assertNotNull(reservedTransaction.getId());
 		Assert.assertEquals(batchOperation, reservedTransaction.getBatchOperation());
 		Assert.assertTrue(reservedTransaction.isCalculatedBatch());
 
 		operation.setStatus(StockOperationStatus.COMPLETED);
 		service.submitOperation(operation);
+		Context.flushSession();
+
+		operation = service.getById(operation.getId());
 		Assert.assertEquals(0, operation.getReserved().size());
 		Assert.assertEquals(2, operation.getTransactions().size());
 
 		StockOperationTransaction tx = Iterators.get(operation.getTransactions().iterator(), 1);
+		Assert.assertNotNull(tx.getId());
 		Assert.assertEquals(batchOperation, tx.getBatchOperation());
 		Assert.assertTrue(tx.isCalculatedBatch());
 
@@ -2089,6 +2098,10 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertNotNull(destItemDetail);
 		Assert.assertEquals(batchOperation, destItemDetail.getBatchOperation());
 		Assert.assertTrue(destItemDetail.isCalculatedBatch());
+
+		List<StockOperationTransaction> transactions = Context.getService(IStockOperationTransactionDataService.class).getAll();
+		Assert.assertNotNull(transactions);
+		Assert.assertTrue(transactions.size() > 0);
 	}
 
 	/**

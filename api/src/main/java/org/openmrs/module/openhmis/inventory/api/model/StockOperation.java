@@ -183,6 +183,16 @@ public class StockOperation
 		return item;
 	}
 
+	public void removeItem(StockOperationItem item) {
+		if (item != null) {
+			if (items == null) {
+				return;
+			}
+
+			items.remove(item);
+		}
+	}
+
 	public Set<StockOperationItem> getItems() {
 		return items;
 	}

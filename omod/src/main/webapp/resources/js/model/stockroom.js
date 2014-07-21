@@ -19,7 +19,7 @@ define(
 		openhmis.url.backboneBase + 'js/model/location'
 	],
 	function(openhmis, __) {
-		openhmis.Stockroom = openhmis.GenericModel.extend({
+        openhmis.Stockroom = openhmis.GenericModel.extend({
 			meta: {
 				name: __("Stockroom"),
 				namePlural: __("Stockrooms"),
@@ -114,7 +114,43 @@ define(
 			}
 		});
 
-		openhmis.ItemStockDetail = openhmis.GenericModel.extend({
+        openhmis.ItemStockDetailBase = openhmis.GenericModel.extend({
+            meta: {},
+            schema: {},
+
+            initialize: function(attributes, options) {
+                openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
+
+                this.schema.item = { type: 'NestedModel', model: openhmis.Item, objRef: true };
+                this.schema.quantity = { type: 'BasicNumber' };
+                this.schema.expiration = { type: 'Date', format: openhmis.dateFormatLocale };
+
+                this.schema.batchOperation = {
+                    type: 'OperationSelect',
+                    model: openhmis.Operation,
+                    url: openhmis.url.inventoryModelBase + '/stockOperation'
+                };
+
+                this.schema.calculatedExpiration = {type: 'checkbox'};
+                this.schema.calculatedBatch = {type: 'checkbox'};
+            },
+
+            parse: function(resp) {
+                if (resp) {
+                    if (resp.batchOperation && _.isObject(resp.batchOperation)) {
+                        resp.batchOperation = new openhmis.Operation(resp.batchOperation);
+                    }
+
+                    if (resp.item && _.isObject(resp.item)) {
+                        resp.item = new openhmis.Item(resp.item);
+                    }
+                }
+
+                return resp;
+            }
+        });
+
+		openhmis.ItemStockDetail = openhmis.ItemStockDetailBase.extend({
 			meta: {
 				name: __("Item Stock Detail"),
 				namePlural: __("Item Stock Detail"),
@@ -130,34 +166,6 @@ define(
 						url: openhmis.url.inventoryModelBase + '/stockroom'
 					}),
 					objRef: true
-				},
-				item: {
-					type: 'ItemSelect',
-					options: new openhmis.GenericCollection(null, {
-						model: openhmis.Item,
-						url: openhmis.url.inventoryModelBase + '/item'
-					}),
-					objRef: true
-				},
-				batchOperation: {
-					type: 'OperationSelect',
-					options: new openhmis.GenericCollection(null, {
-						model: openhmis.Operation,
-						url: openhmis.url.inventoryModelBase + '/stockOperation'
-					})
-				},
-				expiration: {
-					type: 'DateTime',
-					format: openhmis.dateTimeFormatLocale
-				},
-				quantity: {
-					type: 'BasicNumber'
-				},
-				calculatedBatch: {
-					type: 'checkbox'
-				},
-				calculatedExpiration: {
-					type: 'checkbox'
 				}
 			},
 
@@ -166,6 +174,6 @@ define(
 			}
 		});
 
-		return openhmis;
+        return openhmis;
 	}
 );
