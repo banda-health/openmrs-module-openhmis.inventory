@@ -33,6 +33,7 @@ curl(
 			openhmis.startAddEditScreen(openhmis.Item, {
 				listView: openhmis.GenericSearchableListView,
 				searchView: openhmis.DepartmentAndNameSearchView,
+				addEditViewType: openhmis.ItemAddEditView,
 				listFields: ['name', 'department', 'category', 'codes', 'defaultPrice']
 			});
 		});
