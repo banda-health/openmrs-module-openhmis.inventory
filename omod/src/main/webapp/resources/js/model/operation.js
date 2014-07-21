@@ -116,7 +116,8 @@ define(
 		    initialize: function(attributes, options) {
 			    openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
 
-			    this.schema.item = { type: 'NestedModel', model: openhmis.Item, objRef: true };
+                this.schema.operation = { type: 'NestedModel', model: openhmis.Operation, objRef: true };
+                this.schema.item = { type: 'NestedModel', model: openhmis.Item, objRef: true };
 			    this.schema.quantity = { type: 'BasicNumber' };
 			    this.schema.expiration = { type: 'Date', format: openhmis.dateFormatLocale };
 			    this.schema.dateCreated = { type: 'Date', format: openhmis.dateTimeFormatLocale };
@@ -127,11 +128,16 @@ define(
 
 		    parse: function(resp) {
 			    if (resp) {
-				    if (resp.batchOperation && _.isObject(resp.batchOperation)) {
+                    if (resp.operation && _.isObject(resp.operation)) {
+                        resp.operation = new openhmis.Operation(resp.operation);
+                    }
+
+                    if (resp.item && _.isObject(resp.item)) {
+                        resp.item = new openhmis.Item(resp.item);
+                    }
+
+                    if (resp.batchOperation && _.isObject(resp.batchOperation)) {
 					    resp.batchOperation = new openhmis.Operation(resp.batchOperation);
-				    }
-				    if (resp.item && _.isObject(resp.item)) {
-					    resp.item = new openhmis.Item(resp.item);
 				    }
 			    }
 

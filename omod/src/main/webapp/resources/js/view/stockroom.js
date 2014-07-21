@@ -58,7 +58,7 @@ define(
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['dateCreated', 'batchOperation', 'item', 'expiration', 'quantity']
+			        listFields: ['dateCreated', 'operation', 'item', 'batchOperation',  'expiration', 'quantity']
 		        });
 
 		        this.itemsView.on("fetch", this.fetch);
