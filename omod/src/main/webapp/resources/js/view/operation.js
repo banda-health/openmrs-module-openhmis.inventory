@@ -56,28 +56,17 @@ define(
             },
 
             completeOperation: function() {
-                var self = this;
-                $.ajax({
-                    type: 'POST',
-                    url: this.model.url(),
-                    data: '{"status":"COMPLETED"}',
-                    success: function(data) {
-                        self.model.fetch();
+                // Just post the status change and then reload the model
+                //  Using the normal save mechanism can result in issues as it sends the entire object hierarchy which
+                //  can result in issues with the REST converters
 
-                        self.cancel();
-                    },
-                    contentType: "application/json",
-                    dataType: 'json'
-                });
-
-                //this.model.set('status', 'COMPLETED');
-                //this.save();
+                this.updateStatus("COMPLETED");
             },
 
             cancelOperation: function() {
-                this.model.set('status', 'CANCELLED');
+                // Just post the status change and then reload the model
 
-                this.save();
+                this.updateStatus("CANCELLED");
             },
 
             prepareModelForm: function(model, options) {
@@ -100,6 +89,29 @@ define(
                     itemsEl.append(this.itemsView.el);
                     itemsEl.show();
                 }
+            },
+
+            updateStatus: function(status) {
+                var self = this;
+                $.ajax({
+                    type: 'POST',
+                    url: this.model.url(),
+                    data: '{"status":"' + status + '"}',
+                    success: function(data) {
+                        // Fetch the updated model
+                        self.model.fetch({
+                            success: function() {
+                                // Once the fetch is complete, sync the changes back to the list and close this edit view
+                                self.model.trigger("sync");
+
+                                self.cancel();
+                            }
+                        });
+                    },
+                    error: function(model, resp) { openhmis.error(resp); },
+                    contentType: "application/json",
+                    dataType: 'json'
+                });
             }
         });
 
