@@ -144,7 +144,7 @@ define(
         events: {
             'blur .concept-display': 'handleBlur',
         },
-        
+
         handleBlur: function() {
             if ($('.concept-display').val() == '') {
                 $('.concept').val('');
@@ -154,7 +154,7 @@ define(
         getValue: function() {
             return this.value;
         },
-        
+
         doConceptSearch: function(request, response) {
             var term = request.term;
             var query = "?q=" + encodeURIComponent(term);
@@ -162,6 +162,7 @@ define(
           },
 
         doSearch: function(request, response, model, query) {
+            this.handleSpinnerShow();
             var term = request.term;
             if (query in this.cache) {
               response(this.cache[query]);
@@ -171,15 +172,16 @@ define(
             var view = this;
             var fetchQuery = query ? query : "?q=" + encodeURIComponent(term);
             resultCollection.fetch({
-              url: "/openmrs/ws/rest/v1/concept" + fetchQuery,
-              success: function(collection, resp) {
-                var data = collection.map(function(model) { return {
-                  val: model.id,
-                  display: model.get('display'),
-                }});
-                view.cache[query] = data;
-                response(data);
-              }
+                url: "/openmrs/ws/rest/v1/concept" + fetchQuery,
+                success: function(collection, resp) {
+                    view.handleSpinnerHide();
+                    var data = collection.map(function(model) { return {
+                        val: model.id,
+                        display: model.get('display'),
+                    }});
+                    view.cache[query] = data;
+                    response(data);
+                }
             });
         },
 
@@ -206,8 +208,19 @@ define(
               .data("autocomplete")._renderItem = function(ul, concept) {
                 return $("<li></li>").data("concept.autocomplete", concept)
                   .append("<a>" + concept.display + "</a>").appendTo(ul);
-              };
+            };
+            this.handleSpinnerHide();
             return this;
+        },
+
+        handleSpinnerHide: function () {
+            this.$('#conceptDisplay').removeClass('spinner-float-style');
+            this.$('.spinner').hide();
+        },
+
+        handleSpinnerShow: function () {
+        	this.$('#conceptDisplay').addClass('spinner-float-style');
+        	this.$('.spinner').show();
         },
 
         renderInput: function() {
