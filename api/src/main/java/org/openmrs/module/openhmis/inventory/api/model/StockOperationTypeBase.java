@@ -6,6 +6,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceType;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -119,7 +120,7 @@ public abstract class StockOperationTypeBase
 			transactions.add(tx);
 		}
 
-		IStockOperationDataService service = Context.getService(IStockOperationDataService.class);
+		IStockOperationService service = Context.getService(IStockOperationService.class);
 		service.applyTransactions(transactions);
 
 		return transactions;

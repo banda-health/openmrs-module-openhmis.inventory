@@ -12,14 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.inventory.api.IItemDataService;
-import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.ITestableStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.TestConstants;
-import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
+import org.openmrs.module.openhmis.inventory.api.*;
+import org.openmrs.module.openhmis.inventory.api.ITestableStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
@@ -32,11 +26,12 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
-public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiveTest {
+public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTest {
 	IItemDataService itemDataService;
 	IStockroomDataService stockroomDataService;
 	IItemStockDataService itemStockDataService;
-	ITestableStockOperationDataService service;
+	IStockOperationDataService operationDataService;
+	ITestableStockOperationService service;
 
 	IItemDataServiceTest itemTest;
 
@@ -49,7 +44,8 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		stockroomDataService = Context.getService(IStockroomDataService.class);
 		itemDataService = Context.getService(IItemDataService.class);
 		itemStockDataService = Context.getService(IItemStockDataService.class);
-		service = Context.getService(ITestableStockOperationDataService.class);
+		operationDataService = Context.getService(IStockOperationDataService.class);
+		service = Context.getService(ITestableStockOperationService.class);
 
 		itemTest = new IItemDataServiceTest();
 	}
@@ -66,7 +62,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies use closest expiration from the source stockroom
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldUseClosestExpirationFromTheSourceStockRoom() throws Exception {
@@ -83,7 +79,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -94,7 +90,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
-		detail2.setBatchOperation(service.getById(1));
+		detail2.setBatchOperation(operationDataService.getById(1));
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.YEAR, 1);
 		detail2.setExpiration(calendar2.getTime());
@@ -150,7 +146,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies use oldest batch operation with the calculated expiration
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldUseOldestBatchOperationWithTheCalculatedExpiration() throws Exception {
@@ -166,7 +162,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item0);
@@ -174,7 +170,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
-		detail2.setBatchOperation(service.getById(1));
+		detail2.setBatchOperation(operationDataService.getById(1));
 
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item0);
 		stock2.addDetail(detail1);
@@ -208,7 +204,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies set the expiration to null if no valid item stock can be found
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheExpirationToNullIfNoValidItemStockCanBeFound() throws Exception {
@@ -242,7 +238,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies set the batch to null if no valid item stock can be found
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheBatchToNullIfNoValidItemStockCanBeFound() throws Exception {
@@ -276,7 +272,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies throw IllegalArgumentException if operation is null
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void calculateReservations_shouldThrowIllegalArgumentExceptionIfOperationIsNull() throws Exception {
@@ -285,7 +281,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies use date and time for expiration calculation
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldUseDateAndTimeForExpirationCalculation() throws Exception {
@@ -301,7 +297,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -312,7 +308,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
-		detail2.setBatchOperation(service.getById(1));
+		detail2.setBatchOperation(operationDataService.getById(1));
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.YEAR, 1);
 		calendar2.add(Calendar.MINUTE, 20);
@@ -324,7 +320,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail3.setQuantity(20);
 		detail3.setCalculatedBatch(false);
 		detail3.setCalculatedExpiration(false);
-		detail3.setBatchOperation(service.getById(1));
+		detail3.setBatchOperation(operationDataService.getById(1));
 		Calendar calendar3 = Calendar.getInstance();
 		calendar3.add(Calendar.YEAR, 1);
 		detail3.setExpiration(calendar3.getTime());
@@ -362,7 +358,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies create additional transactions when when multiple details are need to fulfill request
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldCreateAdditionalTransactionsWhenWhenMultipleDetailsAreNeedToFulfillRequest() throws Exception {
@@ -378,7 +374,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -389,7 +385,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail2.setQuantity(20);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
-		detail2.setBatchOperation(service.getById(1));
+		detail2.setBatchOperation(operationDataService.getById(1));
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.YEAR, 1);
 		detail2.setExpiration(calendar2.getTime());
@@ -445,7 +441,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies create additional null qualifier transaction when there is not enough valid item stock to fulfill request
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldCreateAdditionalNullQualifierTransactionWhenThereIsNotEnoughValidItemStockToFulfillRequest() throws Exception {
@@ -472,7 +468,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -527,7 +523,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies copy source calculation settings into source calculation fields
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldCopySourceCalculationSettingsIntoSourceCalculationFields() throws Exception {
@@ -553,7 +549,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(100);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(true);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -588,7 +584,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies throw APIException if calculate expiration is false and expiration is null for an expirable item
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = APIException.class)
 	public void calculateReservations_shouldThrowAPIExceptionIfCalculateExpirationIsFalseAndExpirationIsNullForAnExpirableItem() throws Exception {
@@ -615,7 +611,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies set the batch operation to the specified operation if there is no source stockroom
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheBatchOperationToTheSpecifiedOperationIfThereIsNoSourceStockroom() throws Exception {
@@ -645,7 +641,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies throw APIException if source stockroom is null and the expiration are not specified for an expirable item
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = APIException.class)
 	public void calculateReservations_shouldThrowAPIExceptionIfSourceStockroomIsNullAndTheExpirationAreNotSpecifiedForAnExpirableItem() throws Exception {
@@ -670,7 +666,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies combine transactions for the same item stock and qualifiers
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldCombineTransactionsForTheSameItemStockAndQualifiers() throws Exception {
@@ -697,7 +693,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(100);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(true);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -735,7 +731,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies handle multiple transactions for the same item but with different qualifiers
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldHandleMultipleTransactionsForTheSameItemButWithDifferentQualifiers() throws Exception {
@@ -762,7 +758,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -826,7 +822,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies set the transaction source calculated flags if the source was calculated
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheTransactionSourceCalculatedFlagsIfTheSourceWasCalculated() throws Exception {
@@ -852,7 +848,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(10);
 		detail1.setCalculatedBatch(true);
 		detail1.setCalculatedExpiration(true);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -889,7 +885,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies process non-calculated transactions before calculated transactions
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldProcessNoncalculatedTransactionsBeforeCalculatedTransactions() throws Exception {
@@ -915,7 +911,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail1.setQuantity(20);
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
-		detail1.setBatchOperation(service.getById(2));
+		detail1.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
@@ -926,7 +922,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		detail2.setQuantity(10);
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
-		detail2.setBatchOperation(service.getById(2));
+		detail2.setBatchOperation(operationDataService.getById(2));
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.YEAR, 10);
 		detail2.setExpiration(calendar2.getTime());
@@ -987,7 +983,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 
 	/**
 	 * @verifies set batch operation to past operations before future operations
-	 * @see StockOperationDataServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
 	public void calculateReservations_shouldSetBatchOperationToPastOperationsBeforeFutureOperations() throws Exception {
@@ -1008,7 +1004,7 @@ public class StockOperationDataServiceImplTest extends BaseModuleContextSensitiv
 		cal.add(Calendar.YEAR, 100);
 		operation.setOperationDate(cal.getTime());
 
-		service.save(operation);
+		operationDataService.save(operation);
 
 		ReservedTransaction tx = operation.addReserved(newItem, 25);
 		tx.setCalculatedBatch(true);

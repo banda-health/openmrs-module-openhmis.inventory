@@ -20,6 +20,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.impl.StockOperationDataServiceImpl;
 import org.openmrs.module.openhmis.inventory.api.model.*;
@@ -81,7 +82,7 @@ public class StockOperationResource
 
 		// If the status has changed, submit the operation
 		if (submitRequired) {
-			result = ((IStockOperationDataService)getService()).submitOperation(operation);
+			result = ((IStockOperationService)getService()).submitOperation(operation);
 		} else {
 			result = super.save(operation);
 		}
