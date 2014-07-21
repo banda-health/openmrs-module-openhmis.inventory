@@ -26,17 +26,16 @@
 		<many-to-one name="defaultPrice" class="ItemPrice" column="default_price_id" />
 		<many-to-one name="concept" class="org.openmrs.Concept" column="concept_id" />
 
-		<set name="attributes" lazy="false" inverse="true" batch-size="100"
-		     cascade="all-delete-orphan" order-by="voided asc">
+		<set name="attributes" lazy="false" fetch="subselect" inverse="true" cascade="all-delete-orphan" order-by="voided asc">
 			<key column="item_id" />
 			<one-to-many class="ItemAttribute" />
 		</set>
 
-		<set name="prices" lazy="false" inverse="true" cascade="all-delete-orphan">
+		<set name="prices" lazy="false" fetch="subselect" inverse="true" cascade="all-delete-orphan">
 			<key column="item_id" not-null="true" />
 			<one-to-many class="ItemPrice" />
 		</set>
-		<set name="codes" lazy="false" inverse="true" cascade="all-delete-orphan">
+		<set name="codes" lazy="false" fetch="subselect" inverse="true" cascade="all-delete-orphan">
 			<key column="item_id" not-null="true" />
 			<one-to-many class="ItemCode" />
 		</set>

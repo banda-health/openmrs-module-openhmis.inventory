@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.module.openhmis.inventory.api;
 
 import java.math.BigDecimal;
@@ -19,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Iterators;
 import liquibase.util.StringUtils;
 
 import org.junit.Assert;
@@ -180,6 +180,53 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 				Assert.assertEquals(expectedPrice.getPrice(), actualPrice.getPrice());
 			}
 		});
+	}
+
+	@Test
+	public void getAll_shouldReturnItemsOrderedByNameAsc() throws Exception {
+		Item firstItem = createEntity(true);
+		firstItem.setName("aAA Item");
+
+		firstItem = service.save(firstItem);
+		Context.flushSession();
+
+		Item lastItem = createEntity(true);
+		lastItem.setName("zZZ Item");
+
+		lastItem = service.save(lastItem);
+		Context.flushSession();
+
+		List<Item> results = service.getAll(false);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(5, results.size());
+		Assert.assertEquals(firstItem.getId(), Iterators.get(results.iterator(), 0).getId());
+		Assert.assertEquals(0, (int)Iterators.get(results.iterator(), 1).getId());
+		Assert.assertEquals(1, (int)Iterators.get(results.iterator(), 2).getId());
+		Assert.assertEquals(2, (int)Iterators.get(results.iterator(), 3).getId());
+		Assert.assertEquals(lastItem.getId(), Iterators.get(results.iterator(), 4).getId());
+
+		PagingInfo paging = new PagingInfo(1, 1);
+		results = service.getAll(false, paging);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(firstItem.getId(), Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(2);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(0, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(3);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(1, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(4);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(2, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(5);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(lastItem.getId(), Iterators.getOnlyElement(results.iterator()).getId());
 	}
 
 	/**
@@ -433,6 +480,54 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		results = service.getItemsByDepartment(department2, false);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
+	}
+
+	@Test
+	public void getItemsByDepartment_shouldReturnItemsOrderedByNameAsc() throws Exception {
+		Item firstItem = createEntity(true);
+		firstItem.setName("aAA Item");
+
+		firstItem = service.save(firstItem);
+		Context.flushSession();
+
+		Item lastItem = createEntity(true);
+		lastItem.setName("zZZ Item");
+
+		lastItem = service.save(lastItem);
+		Context.flushSession();
+
+		Department department = departmentService.getById(0);
+		List<Item> results = service.getItemsByDepartment(department, false);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(5, results.size());
+		Assert.assertEquals(firstItem.getId(), Iterators.get(results.iterator(), 0).getId());
+		Assert.assertEquals(0, (int)Iterators.get(results.iterator(), 1).getId());
+		Assert.assertEquals(1, (int)Iterators.get(results.iterator(), 2).getId());
+		Assert.assertEquals(2, (int)Iterators.get(results.iterator(), 3).getId());
+		Assert.assertEquals(lastItem.getId(), Iterators.get(results.iterator(), 4).getId());
+
+		PagingInfo paging = new PagingInfo(1, 1);
+		results = service.getItemsByDepartment(department, false, paging);
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(firstItem.getId(), Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(2);
+		results = service.getItemsByDepartment(department, false, paging);
+		Assert.assertEquals(0, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(3);
+		results = service.getItemsByDepartment(department, false, paging);
+		Assert.assertEquals(1, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(4);
+		results = service.getItemsByDepartment(department, false, paging);
+		Assert.assertEquals(2, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(5);
+		results = service.getItemsByDepartment(department, false, paging);
+		Assert.assertEquals(lastItem.getId(), Iterators.getOnlyElement(results.iterator()).getId());
 	}
 
 	@Test

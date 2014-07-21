@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.openmrs.api.APIException;

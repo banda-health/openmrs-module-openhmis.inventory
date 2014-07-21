@@ -108,7 +108,7 @@ public class StockroomDataServiceImpl
 						Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom))
 				);
 			}
-		});
+		}, Order.desc("dateCreated"));
 	}
 
 	@Override
@@ -229,7 +229,7 @@ public class StockroomDataServiceImpl
                     criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
                 }
             }
-        });
+        }, getDefaultSort());
     }
 
 	@Override

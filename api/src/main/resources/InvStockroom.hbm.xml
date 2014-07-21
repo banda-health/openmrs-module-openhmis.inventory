@@ -186,19 +186,19 @@
 		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" access="field" />
         <many-to-one name="institution" class="Institution" column="institution_id" access="field" />
 
-		<set name="items" lazy="true" inverse="true" batch-size="100" access="field" cascade="save-update">
+		<set name="items" lazy="true" inverse="true" access="field" cascade="all-delete-orphan">
 			<key column="operation_id" />
 			<one-to-many class="StockOperationItem" />
 		</set>
-		<set name="reserved" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field" cascade="all-delete-orphan">
+		<set name="reserved" lazy="true" inverse="true" order-by="dateCreated DESC" access="field" cascade="all-delete-orphan">
 			<key column="operation_id" />
 			<one-to-many class="ReservedTransaction" />
 		</set>
-		<set name="transactions" lazy="true" inverse="true" batch-size="100" order-by="dateCreated DESC" access="field" cascade="all-delete-orphan">
+		<set name="transactions" lazy="true" inverse="true" order-by="dateCreated DESC" access="field" cascade="all-delete-orphan">
 			<key column="operation_id" />
 			<one-to-many class="StockOperationTransaction" />
 		</set>
-		<set name="attributes" lazy="false" inverse="true" batch-size="100" cascade="all-delete-orphan">
+		<set name="attributes" lazy="true" inverse="true" cascade="all-delete-orphan">
 			<key column="operation_id" />
 			<one-to-many class="StockOperationAttribute" />
 		</set>

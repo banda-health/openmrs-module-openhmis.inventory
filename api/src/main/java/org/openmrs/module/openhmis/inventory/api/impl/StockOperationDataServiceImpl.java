@@ -269,7 +269,7 @@ public class StockOperationDataServiceImpl
 						Restrictions.eq("destination", stockroom)
 				));
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -285,7 +285,7 @@ public class StockOperationDataServiceImpl
 				criteria.createCriteria("item", "i");
 				criteria.addOrder(Order.desc("i.name"));
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -361,7 +361,7 @@ public class StockOperationDataServiceImpl
 			public void apply(Criteria criteria) {
 				search.updateCriteria(criteria);
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override

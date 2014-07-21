@@ -102,6 +102,6 @@ public class CategoryDataServiceImpl
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 }

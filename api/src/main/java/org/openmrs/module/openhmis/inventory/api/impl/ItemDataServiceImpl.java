@@ -59,12 +59,6 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	protected Order[] getDefaultSort() {
-		return new Order[] { Order.desc(HibernateCriteriaConstants.NAME) };
-	}
-
-	@Override
 	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
 	@Transactional(readOnly = true)
 	public Item getItemByCode(String itemCode) throws APIException {
@@ -110,7 +104,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -139,7 +133,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -168,7 +162,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -199,7 +193,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -233,7 +227,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -272,7 +266,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -310,7 +304,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -335,7 +329,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 			public void apply(Criteria criteria) {
 				itemSearch.updateCriteria(criteria);
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
@@ -350,7 +344,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 
 	@Override
 	public List<Item> findItemsWithoutConcept(final List<Integer> excludedItemsIds, final int resultLimit) {
-		return executeCriteria(Item.class, new Action1<Criteria>() {
+		return executeCriteria(Item.class, null, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.isNull(HibernateCriteriaConstants.CONCEPT)).add(
@@ -361,7 +355,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 				}
 				criteria.setMaxResults(resultLimit);
 			}
-		});
+		}, getDefaultSort());
 	}
 
 	@Override
