@@ -1,14 +1,17 @@
 #operations { width: 750px; }
 #operations td.field-dateCreated { width: 175px; }
-#operations td.field-operationNumber { width: 125px; }
+#operations td.field-operationNumber { width: 150px; }
 
 #items { width: 500px; }
 #items td.field-item { width: 85%; }
 
-#transactions { width: 800px; }
+#transactions { width: 100%; }
 #transactions td.field-dateCreated { width: 175px; }
+#transactions td.field-operation { width: 125px; }
 #transactions td.field-batchOperation { width: 125px; }
-#transactions td.field-item { width: 300px; }
+#transactions td.field-expiration { width: 75px; }
+#transactions td.field-quantity { width: 75px; }
+/* #transactions td.field-item { width: 300px; } */
 
 /*
 	TODO: Fix tab formatting (inv-93)

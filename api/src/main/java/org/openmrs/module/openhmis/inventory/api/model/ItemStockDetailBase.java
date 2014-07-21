@@ -10,7 +10,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	private Integer id;
 
 	private Item item;
-	private int quantity;
+	private Integer quantity;
 	private Date expiration;
 	private StockOperation batchOperation;
 	private Boolean calculatedExpiration;
@@ -54,7 +54,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	 * Gets the quantity.
 	 * @return The quantity.
 	 */
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
@@ -62,7 +62,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	 * Sets the quantity.
 	 * @param quantity The quantity.
 	 */
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 

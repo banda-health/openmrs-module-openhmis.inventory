@@ -16,8 +16,8 @@ package org.openmrs.module.openhmis.inventory.extension.html;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
-import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
+import org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 import java.util.LinkedHashMap;
@@ -45,20 +45,21 @@ public class AdminList extends AdministrationSectionExt {
 		User authenticatedUser = Context.getAuthenticatedUser();
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 
-		if (authenticatedUser.hasPrivilege(PrivilegeConstants.ITEM_PAGE_PRIVILEGES)) {
+		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
 			map.put(ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_PAGE, "openhmis.inventory.admin.items.concept.mapping");
 		}
-		if (authenticatedUser.hasPrivilege(PrivilegeConstants.DEPARTMENT_PAGE_PRIVILEGES)) {
+		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.DEPARTMENT_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");
 		}
-		if (authenticatedUser.hasPrivilege(PrivilegeConstants.CATEGORY_PAGE_PRIVILEGES)) {
+		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.CATEGORY_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
 			map.put(ModuleWebConstants.INSTITUTIONS_PAGE, "openhmis.inventory.admin.institutions");
 		}
-		if (authenticatedUser.hasPrivilege(PrivilegeConstants.STOCKROOM_PAGE_PRIVILEGES)) {
+		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.STOCKROOM_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
-			map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
+			map.put(ModuleWebConstants.MY_OPERATIONS_PAGE, "openhmis.inventory.admin.myOperations");
+            map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
 		}
 
 		return map;

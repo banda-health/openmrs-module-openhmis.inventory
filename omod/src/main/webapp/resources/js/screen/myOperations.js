@@ -27,11 +27,11 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
-			openhmis.startAddEditScreen(openhmis.OperationType, {
-				listView: openhmis.GenericListView,
-				searchView: openhmis.ByNameSearchView,
-				addEditViewType: openhmis.OperationTypeEditView,
-				listFields: ['name', 'description'],
+			openhmis.startAddEditScreen(openhmis.Operation, {
+				listView: openhmis.MyOperationListView,
+                searchView: openhmis.OperationSearchByStatus,
+				addEditViewType: openhmis.MyOperationDetailView,
+				listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status'],
 				allowAdd: false
 			});
 		});

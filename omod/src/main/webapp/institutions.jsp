@@ -1,8 +1,8 @@
-<%@ page import="org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants" %>
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
+<%@ page import="org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants" %>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
-<openmrs:require allPrivileges="<%= PrivilegeConstants.INSTITUTION_PAGE_PRIVILEGES %>" otherwise="/login.htm"
+<openmrs:require allPrivileges="<%= PrivilegeWebConstants.INSTITUTION_PAGE_PRIVILEGES %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.INSTITUTIONS_PAGE %>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
