@@ -21,6 +21,7 @@ public class ModuleRestConstants extends ModuleWebConstants {
 	public static final String ITEM_RESOURCE = MODULE_REST_ROOT + "item";
 	public static final String ITEM_PRICE_RESOURCE = MODULE_REST_ROOT + "itemPrice";
 	public static final String ITEM_CODE_RESOURCE = MODULE_REST_ROOT + "itemCode";
+	public static final String ITEM_CONCEPT_SUGGESTION_RESOURCE = MODULE_REST_ROOT + "itemConceptSuggestion";
 
 	public static final String DEPARTMENT_RESOURCE = MODULE_REST_ROOT + "department";
 	public static final String CATEGORY_RESOURCE = MODULE_REST_ROOT + "category";

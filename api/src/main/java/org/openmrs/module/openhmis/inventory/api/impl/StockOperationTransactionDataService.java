@@ -19,6 +19,7 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataService
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
 import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 
 public class StockOperationTransactionDataService
 	extends BaseObjectDataServiceImpl<StockOperationTransaction, BasicObjectAuthorizationPrivileges>
@@ -35,6 +36,6 @@ public class StockOperationTransactionDataService
 
 	@Override
 	protected Order[] getDefaultSort() {
-		return new Order[] { Order.desc("dateCreated"), Order.desc("id") };
+		return new Order[] { Order.desc(HibernateCriteriaConstants.DATE_CREATED), Order.desc(HibernateCriteriaConstants.ID) };
 	}
 }
