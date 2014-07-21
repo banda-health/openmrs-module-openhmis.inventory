@@ -90,44 +90,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         }
     }
 
-    /**
-     * Set the default price.
-     *
-     * Typically will use a uuid, but in the case of creating a new price (not
-     * yet having a uuid), we compare price strings.  Dubious?
-     *
-     * @param instance
-     * @param uuidOrPrice
-     */
-	// Commenting this out to test Stock Operation saving
-	// This setter causes problems when the operation items are saved because it attempts to map the json rep of the price
-	//		to a string, which fails. I'm not sure if/how this method is used on the item admin page or how to update
-	//		the operation item to not include the this field, which will never be updated from that page.
-	//		Backbone (or at least our usage) is a pain.
-    //@PropertySetter(value="defaultPrice")
-    public void setDefaultPrice(Item instance, final String uuidOrPrice) {
-        Collection<ItemPrice> results = Collections2.filter(instance.getPrices(), new Predicate<ItemPrice>() {
-            @Override
-            public boolean apply(@Nullable ItemPrice price) {
-                if (price != null) {
-                    if (price.getUuid().equals(uuidOrPrice) || price.getPrice().toPlainString().equals(uuidOrPrice)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        });
-
-        if (results != null && results.size() > 0) {
-            instance.setDefaultPrice(Iterables.getOnlyElement(results));
-        } else {
-            // If there are no matches in the current price set, save the price in a new ItemPrice to hopefully be
-            // updated later, in case we haven't set new prices yet.
-            instance.setDefaultPrice(new ItemPrice(new BigDecimal(uuidOrPrice), ""));
-        }
-    }
-
     @PropertySetter(value="concept")
     public void setConcept(Item instance, final String uuid) {
         if(StringUtils.isBlank(uuid)) {
@@ -148,28 +110,8 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
     @Override
     public Item save(Item item) {
         checkDefaultPrice(item);
-        return super.save(item);
-    }
 
-    private void checkDefaultPrice(Item item) {
-        // Check that default price has been properly set now that the item's
-        // prices have definitely been set
-        if (!item.getPrices().contains(item.getDefaultPrice())) {
-            if (item.getDefaultPrice().getId() == null) {
-                setDefaultPrice(item, item.getDefaultPrice().getPrice().toString());
-            }
-
-            // If it's still not set to one of the item's prices, set it to the
-            // first available price, or null.
-            if (!item.getPrices().contains(item.getDefaultPrice())) {
-                if (item.getPrices().size() > 0) {
-                    Set<ItemPrice> prices = item.getPrices();
-                    item.setDefaultPrice(prices.toArray(new ItemPrice[prices.size()])[0]);
-                } else {
-                    item.setDefaultPrice(null);
-                }
-            }
-        }
+		return super.save(item);
     }
 
     @Override
@@ -181,4 +123,48 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
     public Class<? extends IMetadataDataService<Item>> getServiceClass() {
         return IItemDataService.class;
     }
+
+	private void checkDefaultPrice(Item item) {
+		// Check that default price has been properly set now that the item's
+		// prices have definitely been set
+		if (!item.getPrices().contains(item.getDefaultPrice())) {
+			if (item.getDefaultPrice().getId() == null) {
+				setDefaultPrice(item, item.getDefaultPrice().getPrice().toString());
+			}
+
+			// If it's still not set to one of the item's prices, set it to the
+			// first available price, or null.
+			if (!item.getPrices().contains(item.getDefaultPrice())) {
+				if (item.getPrices().size() > 0) {
+					Set<ItemPrice> prices = item.getPrices();
+					item.setDefaultPrice(prices.toArray(new ItemPrice[prices.size()])[0]);
+				} else {
+					item.setDefaultPrice(null);
+				}
+			}
+		}
+	}
+
+	private void setDefaultPrice(Item instance, final String uuidOrPrice) {
+		Collection<ItemPrice> results = Collections2.filter(instance.getPrices(), new Predicate<ItemPrice>() {
+			@Override
+			public boolean apply(@Nullable ItemPrice price) {
+				if (price != null) {
+					if (price.getUuid().equals(uuidOrPrice) || price.getPrice().toPlainString().equals(uuidOrPrice)) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+		});
+
+		if (results != null && results.size() > 0) {
+			instance.setDefaultPrice(Iterables.getOnlyElement(results));
+		} else {
+			// If there are no matches in the current price set, save the price in a new ItemPrice to hopefully be
+			// updated later, in case we haven't set new prices yet.
+			instance.setDefaultPrice(new ItemPrice(new BigDecimal(uuidOrPrice), ""));
+		}
+	}
 }

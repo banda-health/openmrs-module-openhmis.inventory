@@ -227,11 +227,8 @@ define(
 						delete this.attributes.prices[price].resourceVersion;
 					}
 				}
-				var json = openhmis.GenericModel.prototype.toJSON.call(this, options);
-				if (json.defaultPrice instanceof openhmis.ItemPrice) {
-					json.defaultPrice = json.defaultPrice.get("price").toString();
-				}
-				return json;
+
+				return openhmis.GenericModel.prototype.toJSON.call(this, options);
 			},
 
 			toString: function() {
