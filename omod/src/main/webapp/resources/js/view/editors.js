@@ -146,6 +146,7 @@ define(
         },
 
         handleBlur: function() {
+        	this.handleSpinnerHide();
             if ($('.concept-display').val() == '') {
                 $('.concept').val('');
             }
@@ -166,6 +167,7 @@ define(
             var term = request.term;
             if (query in this.cache) {
               response(this.cache[query]);
+              this.handleSpinnerHide();
               return;
             }
             var resultCollection = new openhmis.GenericCollection([], { model: model });

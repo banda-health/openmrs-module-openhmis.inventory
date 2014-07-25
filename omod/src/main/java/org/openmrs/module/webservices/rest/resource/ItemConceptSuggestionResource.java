@@ -22,7 +22,8 @@ public class ItemConceptSuggestionResource extends BaseRestMetadataResource<Item
         description.removeProperty("name");
         description.removeProperty("description");
         description.addProperty("item");
-        description.addProperty("concept");
+        description.addProperty("conceptName");
+        description.addProperty("conceptUuid");
         description.addProperty("conceptAccepted");
 
         return description;

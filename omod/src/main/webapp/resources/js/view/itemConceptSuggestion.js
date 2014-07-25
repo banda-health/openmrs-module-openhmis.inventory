@@ -53,162 +53,248 @@ define(
             var listView = new listViewType(viewOptions);
 
             listView.setElement(options.listElement);
-            listView.fetch();
         },
 
-        openhmis.ItemToConceptMappingListView = Backbone.View.extend({
+        openhmis.ItemToConceptMappingListView = openhmis.GenericListView.extend({
 
-                    tmplFile: openhmis.url.inventoryBase + 'template/itemConceptSuggestion.html',
-                    tmplSelector: '#item-concept-suggestion-list',
+            tmplFile: openhmis.url.inventoryBase + 'template/itemConceptSuggestion.html',
+            tmplSelector: '#item-concept-suggestion-list',
 
-                    /** The default ListItemView to use to display each item */
-                    itemView: openhmis.GenericListItemView,
+            itemView: openhmis.ItemConceptSuggestionListView,
 
-                    /**
-                     * A list of other FetchHelpers that may affect the fetch results
-                     * for this view.  A FetchHelper must implement the
-                     * <b>getFetchOptions<b> method which will return
-                     *
-                     * @type Array
-                     */
-                    fetchable: null,
+            initialize: function(options) {
+                var itemView = this.itemView; // bindAll can messes this up for extending classes
+                _.bindAll(this);
+                this.itemView = itemView;
+                this.options = {};
+                this.fetchable = [];
 
-                    initialize: function(options) {
-                        var itemView = this.itemView; // bindAll can messes this up for extending classes
-                        _.bindAll(this);
-                        this.itemView = itemView;
-                        this.options = {};
+                // Load options
+                if (options !== undefined) {
+                    this.itemView = openhmis.ItemConceptSuggestionListView;
+                    if (options.schema) {
+                        this.schema = options.schema;
+                    }
 
-                        this.paginateView = new openhmis.PaginateView({ model: this.model, pageSize: 5 });
-                        this.paginateView.on("fetch", this.fetch);
-                        this.fetchable = [];
-                        this.fetchable.push(this.paginateView);
+                    // Why is this inside options??
+                    this.template = this.getTemplate();
+                    this.options.listTitle = options.listTitle;
+                    this.options.itemActions = options.itemActions || [];
+                    var itemViewActions = this.itemView.prototype.actions;
+                    if (itemViewActions) {
+                    	this.options.itemActions = this.options.itemActions.concat(itemViewActions);
+                    }
 
-                        // Load options
-                        if (options !== undefined) {
-                            this.itemView = options.itemView ? options.itemView : openhmis.GenericListItemView;
-                            if (options.schema) this.schema = options.schema;
+                    this.options.includeFields = options.listFields;
+                    this.options.excludeFields = options.listExcludeFields;
+                    this.options.showPaging = false;
+                    this.options.showRetiredOption = false;
+                    this.options.hideIfEmpty = options.hideIfEmpty !== undefined ? options.hideIfEmpty : false;
+                }
+                this.model.on("reset", this.render);
+                this.showRetired = false;
+                this._determineFields();
+            },
 
-                            // Why is this inside options??
-                            this.template = this.getTemplate();
+            events: {
 
-                            this.options.listTitle = options.listTitle;
+            },
 
-                            this.options.itemActions = options.itemActions || [];
-                            var itemViewActions = this.itemView.prototype.actions;
-                            if (itemViewActions) this.options.itemActions = this.options.itemActions.concat(itemViewActions);
 
-                            this.options.includeFields = options.listFields;
-                            this.options.excludeFields = options.listExcludeFields;
-                            this.options.showPaging = options.showPaging !== undefined ? options.showPaging : true;
-                            if (options.pageSize) this.paginateView.setPageSize(options.pageSize);
-                            this.options.showRetiredOption = options.showRetiredOption !== undefined ? options.showRetiredOption : true;
-                            this.options.hideIfEmpty = options.hideIfEmpty !== undefined ? options.hideIfEmpty : false;
+            fetch: function(options, sender) {
+                options = options ? options : {};
+                for (var f in this.fetchable) {
+                    if (this.fetchable[f] !== sender) {
+                        options = this.fetchable[f].getFetchOptions(options);
+                    }
+                }
+                this.trigger("fetch", options, this);
+                this.model.fetch(options);
+            },
+
+            addOne: function(model, schema, lineNumber) {
+                if ((this.$el.html() === "" && this.options.hideIfEmpty === true)
+                    || this.$("p.empty").length === 1) {
+                    this.render();
+                    // Re-rendering the entire list means we don't have to
+                    // continue adding this item
+                    return null;
+                }
+                schema = schema ? _.extend({}, model.schema, schema) : _.extend({}, this.model.model.prototype.schema, this.schema || {});
+
+                // Determine class name for alternating row styling
+                var className = "evenRow";
+                if (lineNumber && !isNaN(lineNumber)) {
+                    className = lineNumber % 2 === 0 ? "evenRow" : "oddRow";
+                } else {
+                    var $rows = this.$('tbody.list tr');
+                    if ($rows.length > 0) {
+                        var lastRow = $rows[$rows.length - 1];
+                        if ($(lastRow).hasClass("evenRow")) {
+                            className = "oddRow";
                         }
+                    }
+                }
 
-                        this.model.on("reset", this.render);
-
-                        this.showRetired = false;
-                        this._determineFields();
-
-                    },
-
-                    focus: function() {
-                        if (this.selectedItem) {
-                            this.selectedItem.focus();
-                        }
-                    },
-
-                    fetch: function(options, sender) {
-                        options = options ? options : {};
-                        for (var f in this.fetchable) {
-                            if (this.fetchable[f] !== sender)
-                                options = this.fetchable[f].getFetchOptions(options);
-                        }
-
-                        if(this.showRetired) {
-                            options.queryString = openhmis.addQueryStringParameter(options.queryString, "includeAll=true");
-                        }
-
-                        this.trigger("fetch", options, this);
-                        this.model.fetch(options);
-                    },
-
-                    render: function(extraContext) {
-                        var self = this;
-                        var length = this._visibleItemCount();
-                        if (length === 0 && this.options.hideIfEmpty) {
-                            this.$el.html("");
-                            return this;
-                        }
-                        var schema = _.extend({}, this.model.model.prototype.schema, this.schema || {});
-                        var pagingEnabled = this.options.showPaging && length > 0;
-                        var context = {
-                            list: this.model,
-                            listLength: length,
-                            fields: this.fields,
-                            modelType: this.model.model.prototype,
-                            modelMeta: this.model.model.prototype.meta,
-                            modelSchema: schema,
-                            showRetired: this.showRetired,
-                            pagingEnabled: pagingEnabled,
-                            options: this.options
-                        }
-                        if (extraContext !== undefined) {
-                            if (extraContext.options) {
-                                context.options = _.extend({}, context.options, extraContext.options);
-                                delete extraContext.options;
-                            }
-                            context = _.extend(context, extraContext);
-                        }
-                        this.$el.html(this.template(context));
-                        return this;
-                    },
-
-                    /**
-                     * Reassigns alternating styles to item views.
-                     *
-                     * @private
-                     */
-                    _colorRows: function() {
-                        var lineNumber = 0;
-                        this.$el.find('tbody tr').each(function() {
-                            $(this)
-                            .removeClass("evenRow oddRow")
-                            .addClass((lineNumber % 2 === 0) ? "evenRow" : "oddRow");
-                            lineNumber++;
-                        });
-                    },
-
-                    /**
-                     * Determine the number of items in the collection that are
-                     * actually visible according to UI settings
-                     *
-                     * @private
-                     */
-                    _visibleItemCount: function() {
-                        if (this.showRetired)
-                            return this.model.length;
-                        return this.model.filter(function(item) { return !item.isRetired() }).length;
-                    },
-
-                    /**
-                     * Determine the fields that should be shown as columns in the table
-                     *
-                     * @private
-                     */
-                    _determineFields: function() {
-                        if (this.options.includeFields !== undefined)
-                            this.fields = this.options.includeFields;
-                        else
-                            this.fields = _.keys(this.model.model.prototype.schema);
-                        if (this.options.excludeFields !== undefined) {
-                            var argv = _.clone(this.options.excludeFields);
-                            argv.unshift(this.fields);
-                            this.fields = _.without.apply(this, argv);
-                        }
-                    },
+                var itemView = new this.itemView({
+                    model: model,
+                    fields: this.fields,
+                    schema: schema,
+                    className: className,
+                    actions: this.options.itemActions
                 });
+                model.view = itemView;
+                this.$('tbody.list').append(itemView.render().el);
+                return itemView;
+            },
+
+            render: function(extraContext) {
+                var self = this;
+                var length = this._visibleItemCount();
+                if (length === 0 && this.options.hideIfEmpty) {
+                    this.$el.html("");
+                    return this;
+                }
+                var schema = _.extend({}, this.model.model.prototype.schema, this.schema || {});
+                var context = {
+                    list: this.model,
+                    listLength: length,
+                    fields: this.fields,
+                    modelType: this.model.model.prototype,
+                    modelMeta: this.model.model.prototype.meta,
+                    modelSchema: schema,
+                    showRetired: this.showRetired,
+                    pagingEnabled: false,
+                    options: this.options
+                }
+                if (extraContext !== undefined) {
+                    if (extraContext.options) {
+                        context.options = _.extend({}, context.options, extraContext.options);
+                        delete extraContext.options;
+                    }
+                    context = _.extend(context, extraContext);
+                }
+                this.$el.html(this.template(context));
+                var view = this;
+                var lineNumber = 0;
+                this.model.each(function(model) {
+                    view.addOne(model, schema, lineNumber)
+                    lineNumber++;
+                });
+                return this;
+            },
+
+        });
+
+        openhmis.ItemConceptSuggestionListView = openhmis.GenericListItemView.extend({
+			tagName: "tr",
+			tmplFile: openhmis.url.inventoryBase + 'template/itemConceptSuggestion.html',
+			tmplSelector: '#list-item',
+			
+			initialize: function(options) {
+	            _.bindAll(this);
+	            openhmis.GenericListItemView.prototype.initialize.call(this, options);
+	            this.cache = {};
+	            this.template = this.getTemplate();
+	        },
+			
+			events: {
+	            'blur .concept-display': 'handleBlur',
+	            'change .conceptAccepted' : 'toggleCheckbox'
+	        },
+
+	        handleBlur: function() {
+	        	var conceptInputFieldId = this.model.cid +'_conceptDisplay';
+	        	this.handleSpinnerHide();
+	            if ($('#' + conceptInputFieldId).val() == '') {
+	            	var conceptHiddenFieldId = this.model.cid + '_concept';
+	            	this.$('#' + conceptHiddenFieldId).val('');
+	            	this($('#' + conceptInputFieldId).val(''));
+	            }
+	        },
+	        
+	        toggleCheckbox: function() {
+	        	var currentValue = this.model.attributes.conceptAccepted;
+	        	this.model.attributes.conceptAccepted = !currentValue;
+	        },
+	        
+	        getValue: function() {
+	            return this.value;
+	        },
+
+	        doConceptSearch: function(request, response) {
+	            var term = request.term;
+	            var query = "?q=" + encodeURIComponent(term);
+	            this.doSearch(request, response, openhmis.Concept, query);
+	          },
+
+	        doSearch: function(request, response, model, query) {
+	            this.handleSpinnerShow();
+	            var term = request.term;
+	            if (query in this.cache) {
+	              response(this.cache[query]);
+	              this.handleSpinnerHide();
+	              return;
+	            }
+	            var resultCollection = new openhmis.GenericCollection([], { model: model });
+	            var view = this;
+	            var fetchQuery = query ? query : "?q=" + encodeURIComponent(term);
+	            resultCollection.fetch({
+	                url: "/openmrs/ws/rest/v1/concept" + fetchQuery,
+	                success: function(collection, resp) {
+	                    view.handleSpinnerHide();
+	                    var data = collection.map(function(model) { return {
+	                        val: model.id,
+	                        display: model.get('display'),
+	                    }});
+	                    view.cache[query] = data;
+	                    response(data);
+	                }
+	            });
+	        },
+
+	        selectConcept: function(event, ui) {
+	            var uuid = ui.item.val;
+	            var name = ui.item.display;
+	            this.$('.concept-display').val(name);
+	            this.$('.concept').val(uuid);
+	            event.preventDefault();
+	        },
+	        
+	        render: function() {
+	        	this.$el.html(this.template({
+					model: this.model,
+					actions: this.actions,
+					fields: this.fields,
+					GenericCollection: openhmis.GenericCollection
+				}));
+	        	if (this.model.attributes.conceptName) {
+	        		this.$('.concept-display').val(this.model.attributes.conceptName);
+	        	}
+	        	this.$('.concept-display').autocomplete({
+	                minLength: 2,
+	                source: this.doConceptSearch,
+	                select: this.selectConcept
+	              })
+	              // Tricky stuff here to get the autocomplete list to render with our custom data
+	              .data("autocomplete")._renderItem = function(ul, concept) {
+	                return $("<li></li>").data("concept.autocomplete", concept)
+	                  .append("<a>" + concept.display + "</a>").appendTo(ul);
+	            };
+	            this.handleSpinnerHide();
+	            return this;
+	        },
+	        
+	        handleSpinnerHide: function () {
+	            this.$('.concept-display').removeClass('spinner-float-style');
+	            this.$('.spinner').hide();
+	        },
+
+	        handleSpinnerShow: function () {
+	        	this.$('.concept-display').addClass('spinner-float-style');
+	        	this.$('.spinner').show();
+	        },
+		});
 
         return openhmis;
     }

@@ -29,3 +29,24 @@
     <button class="cancel">Cancel</button>
 </div>
 </script>
+
+<script id="list-item" type="text/template">
+	<? if (actions.indexOf('inlineEdit') !== -1) {
+	// do nothing, leave blank for form to be rendered
+	} else { ?>
+		<? var id =  model.cid + '_' ?>
+		<td class="field-item">
+			<?=model.attributes.item.name ?>
+        </td>
+        <td class="field-concept">
+			<? var concept_uuid = model.attributes.conceptUuid ? model.attributes.conceptUuid : "" ?>
+			<input type="text" id="<?= id ?>conceptDisplay" class="concept-display" placeholder="Enter concept name"/>
+			<input type="hidden" id="<?= id ?>concept" name="concept" value="<?=concept_uuid ?>" class="concept"/>
+			<div class="spinner spinner-10 spinner-align"></div>
+			
+        </td>
+        <td class="field-conceptAccepted">
+			<input id="<?= id ?>concept_accepted" type="checkbox" name="conceptAccepted" class="conceptAccepted"/>
+        </td>
+    <? } ?>
+</script>

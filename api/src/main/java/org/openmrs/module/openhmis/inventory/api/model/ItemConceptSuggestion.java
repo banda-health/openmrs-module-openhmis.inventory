@@ -1,19 +1,20 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.Concept;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 public class ItemConceptSuggestion extends BaseSerializableOpenmrsMetadata {
 
     private Item item;
-    private Concept concept;
+    private String conceptName;
+    private String conceptUuid;
     private boolean conceptAccepted;
 
     public ItemConceptSuggestion() {}
 
-    public ItemConceptSuggestion(Item item, Concept concept, boolean conceptAccepted) {
+    public ItemConceptSuggestion(Item item, String conceptName, String conceptUuid, boolean conceptAccepted) {
         this.item = item;
-        this.concept = concept;
+        this.conceptName = conceptName;
+        this.conceptUuid = conceptUuid;
         this.conceptAccepted = conceptAccepted;
     }
 
@@ -25,13 +26,22 @@ public class ItemConceptSuggestion extends BaseSerializableOpenmrsMetadata {
         this.item = item;
     }
 
-    public Concept getConcept() {
-        return concept;
-    }
-
-    public void setConcept(Concept concept) {
-        this.concept = concept;
-    }
+   public String getConceptName() {
+	return conceptName;
+   }
+   
+   public void setConceptName(String conceptName) {
+	this.conceptName = conceptName;
+   }
+   
+   public String getConceptUuid() {
+	return conceptUuid;
+   }
+   
+   public void setConceptUuid(String conceptUuid) {
+	this.conceptUuid = conceptUuid;
+   }
+   
 
     public boolean isConceptAccepted() {
         return conceptAccepted;
