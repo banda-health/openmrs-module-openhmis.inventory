@@ -1,6 +1,3 @@
-<%@ page import="org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants" %>
-<%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
-
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="View Administration Functions" otherwise="/login.htm" redirect="/admin/index.htm" />
@@ -33,13 +30,10 @@
     <tbody>
     <tr>
         <td valign="top" width="30%">
-            <openmrs:hasPrivilege privilege="View Concepts,Manage Concept Classes,Manage Concept Datatypes,Manage Concept Proposals">
-                <div class="adminMenuList">
+            <div class="adminMenuList">
                     <h4><spring:message code="openhmis.inventory.page"/></h4>
-                    <%@ include file="inventory/localHeader.jsp" %>
-                </div>
-            </openmrs:hasPrivilege>
-            
+                    <%@ include file="template/adminLinks.jsp" %>
+            </div>
         </td>
     </tr>
     </tbody>
