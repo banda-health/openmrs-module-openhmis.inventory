@@ -24,6 +24,7 @@
 <h2>
     <spring:message code="openhmis.inventory.admin.items.concept.mapping" />
 </h2>
+<input id="returnUrl" type="hidden" value="${returnUrl}" />
 <div class="spinner"></div>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

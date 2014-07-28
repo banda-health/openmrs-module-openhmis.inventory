@@ -51,7 +51,6 @@ define(
 
             var listViewType = openhmis.ItemToConceptMappingListView;
             var listView = new listViewType(viewOptions);
-
             listView.setElement(options.listElement);
         },
 
@@ -97,7 +96,17 @@ define(
             },
 
             events: {
-
+            	'click .cancel' : 'cancelView',
+            	'click .submitNext' : function(event) {
+            		this.save(true);
+            	},
+            	'click .submit' : function(event) {
+            		this.save(false);
+            	},
+            },
+            
+            cancelView: function() {
+            	window.location.href = $('#returnUrl').val();
             },
 
 
@@ -183,6 +192,18 @@ define(
                 });
                 return this;
             },
+            
+            save: function(loadNextItems) {
+            	console.log('XXXXXXXXXXXXXXXXXXXX ' + loadNextItems); 
+            	$.ajax({
+                    type: 'POST',
+                    url: this.model.url(),
+                    data: '{"status":"' + this.model.models + '"}',
+                    error: function(model, resp) { openhmis.error(resp); },
+                    contentType: "application/json",
+                    dataType: 'json'
+                });
+            }
 
         });
 
@@ -200,7 +221,7 @@ define(
 			
 			events: {
 	            'blur .concept-display': 'handleBlur',
-	            'change .conceptAccepted' : 'toggleCheckbox'
+	            'change .conceptAccepted' : 'toggleCheckbox',
 	        },
 
 	        handleBlur: function() {
@@ -209,7 +230,8 @@ define(
 	            if ($('#' + conceptInputFieldId).val() == '') {
 	            	var conceptHiddenFieldId = this.model.cid + '_concept';
 	            	this.$('#' + conceptHiddenFieldId).val('');
-	            	this($('#' + conceptInputFieldId).val(''));
+	            	this.model.attributes.conceptName = '';
+	            	this.model.attributes.conceptUuid = '';
 	            }
 	        },
 	        
@@ -258,6 +280,8 @@ define(
 	            var name = ui.item.display;
 	            this.$('.concept-display').val(name);
 	            this.$('.concept').val(uuid);
+	            this.model.attributes.conceptName = name;
+	            this.model.attributes.conceptUuid = uuid;
 	            event.preventDefault();
 	        },
 	        
