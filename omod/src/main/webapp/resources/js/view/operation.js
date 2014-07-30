@@ -28,7 +28,7 @@ define(
             tmplSelector: '#operation-item-list-item'
         });
 
-        openhmis.MyOperationDetailView = openhmis.GenericAddEditView.extend({
+        openhmis.OperationDetailView = openhmis.GenericAddEditView.extend({
             tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
             tmplSelector: '#view-operation-detail',
 
@@ -56,16 +56,18 @@ define(
             },
 
             completeOperation: function() {
-                // Just post the status change and then reload the model
+                // TODO: Ensure that the current user can complete the operation
+
+                // Post the status change and then reload the model
                 //  Using the normal save mechanism can result in issues as it sends the entire object hierarchy which
                 //  can result in issues with the REST converters
-
                 this.updateStatus("COMPLETED");
             },
 
             cancelOperation: function() {
-                // Just post the status change and then reload the model
+                // TODO: Ensure that the current user can cancel the operation
 
+                // Post the status change and then reload the model
                 this.updateStatus("CANCELLED");
             },
 
@@ -93,6 +95,8 @@ define(
 
             updateStatus: function(status) {
                 var self = this;
+
+                // Post the status change using the raw ajax request. This just sends up the changed property, status.
                 $.ajax({
                     type: 'POST',
                     url: this.model.url(),
@@ -112,6 +116,29 @@ define(
                     contentType: "application/json",
                     dataType: 'json'
                 });
+            }
+        });
+
+        openhmis.NewOperationView = openhmis.GenericAddEditView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
+            tmplSelector: '#new-operation',
+
+            events: {
+                'click .cancel': 'cancel'
+            },
+
+            prepareModelForm: function(model, options) {
+                // We don't want to use the backbone form as we are controlling the whole layout
+                return undefined;
+            },
+
+            showDialog: function() {
+                var dialog = $()
+                // Render new operation form
+                this.render();
+
+                // Turn display form as dialog
+                this.$el.dialog();
             }
         });
 

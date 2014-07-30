@@ -27,13 +27,28 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
+            // Display user's pending operation list
 			openhmis.startAddEditScreen(openhmis.Operation, {
 				listView: openhmis.MyOperationListView,
+                listElement: $("#operationList"),
+                addEditElement: $("#viewOperation"),
                 searchView: openhmis.OperationSearchByStatus,
-				addEditViewType: openhmis.MyOperationDetailView,
+				addEditViewType: openhmis.OperationDetailView,
 				listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status'],
-				allowAdd: false
+				allowAdd: false,
+                operation_status: "Pending"
 			});
+
+            // Set up new operation link and template
+            var collection = new openhmis.GenericCollection([], {
+                url: openhmis.Operation.prototype.meta.restUrl,
+                model: openhmis.Operation
+            });
+
+            var newView = new openhmis.NewOperationView({collection: collection});
+            newView.setElement($("#newOperationDialog"));
+
+            $("#createOperationLink").click(newView.showDialog);
 		});
 	}
 );

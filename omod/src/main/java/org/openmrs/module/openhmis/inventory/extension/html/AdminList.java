@@ -67,7 +67,7 @@ public class AdminList extends AdministrationSectionExt {
 
 		// These links are put down here so that the links layout a little nicer
 		if (stockroomPrivilege) {
-			map.put(ModuleWebConstants.MY_OPERATIONS_PAGE, "openhmis.inventory.admin.myOperations");
+			map.put(ModuleWebConstants.OPERATIONS_PAGE, "openhmis.inventory.admin.operations");
 		}
 		if (itemPrivilege) {
 			map.put(ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_PAGE, "openhmis.inventory.admin.items.concept.mapping");

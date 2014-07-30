@@ -41,8 +41,8 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String OPERATION_TYPES_ROOT = MODULE_ROOT + "operationTypes";
 	public static final String OPERATION_TYPES_PAGE = OPERATION_TYPES_ROOT + ".form";
 
-	public static final String MY_OPERATIONS_ROOT = MODULE_ROOT + "myOperations";
-	public static final String MY_OPERATIONS_PAGE = MY_OPERATIONS_ROOT + ".form";
+	public static final String OPERATIONS_ROOT = MODULE_ROOT + "operations";
+	public static final String OPERATIONS_PAGE = OPERATIONS_ROOT + ".form";
 
 	public static final String MODULE_INIT_JS = MODULE_RESOURCE_ROOT + "js/init.js";
 

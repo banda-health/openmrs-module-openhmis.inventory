@@ -4,6 +4,10 @@
 <openmrs:message var="pageTitle" code="admin.titlebar" scope="page"/>
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
+<%@ include file="template/localHeader.jsp"%>
+
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/operations.css" %>' />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/inventory.js" %>' />
 
 <style>
     .adminMenuList #menu li {
@@ -26,15 +30,24 @@
 
 <h2><spring:message code="openhmis.inventory.title" /></h2>
 
-<table border="0" width="93%">
+<table border="0" width="99%">
     <tbody>
     <tr>
-        <td valign="top" width="30%">
+        <td valign="top" width="150px">
             <div class="adminMenuList">
-                    <h4><spring:message code="openhmis.inventory.page"/></h4>
+                    <h4><spring:message code="openhmis.inventory.page.admin"/></h4>
                     <%@ include file="template/adminLinks.jsp" %>
             </div>
         </td>
+	    <td>
+		    <b class="boxheader"><spring:message code="openhmis.inventory.page.operations" /></b><br /><br />
+		    <div id="operationList"></div>
+			<div id="viewOperation"></div>
+		    <div id="newOperation">
+			    <a id="createOperationLink" href="#">New Stock Operation</a>
+			    <div id="newOperationDialog" style="visibility: hidden"></div>
+		    </div>
+	    </td>
     </tr>
     </tbody>
 </table>

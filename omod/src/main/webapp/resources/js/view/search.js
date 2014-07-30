@@ -253,19 +253,25 @@ define(
                             type: "Select",
                             options: this.STATUSES
                         }
-                    },
-                    data: {}
+                    }
                 });
+
+                if (options.operation_status) {
+                    this.searchFilter = { operation_status: options.operation_status};
+                }
             },
 
             getFetchOptions: function(options) {
-                options = options ? options : {}
+                options = options ? options : {};
                 if (this.searchFilter) {
                     for (var filter in this.searchFilter) {
-                        options.queryString = openhmis.addQueryStringParameter(
-                            options.queryString, filter + "=" + encodeURIComponent(this.searchFilter[filter]));
+                        if (this.searchFilter[filter] != "Any") {
+                            options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
+                                encodeURIComponent(this.searchFilter[filter]));
+                        }
                     }
                 }
+
                 return options;
             },
 
@@ -274,7 +280,7 @@ define(
             commitForm: function() {
                 var filters = this.form.getValue();
 
-                if (!filters.operation_status || filters.operation_status == "Any") {
+                if (!filters.operation_status) {
                     this.searchFilter = undefined;
                 } else {
                     this.searchFilter = filters;
@@ -284,10 +290,14 @@ define(
             render: function() {
                 this.$el.html(this.template({ __: __ }));
                 this.$("div.box").append(this.form.render().el);
-                if (this.searchFilter)
-                    this.form.setValue(this.searchFilter);
+
+                if (this.searchFilter) {
+                   this.form.setValue(this.searchFilter);
+                }
+
                 this.$("form").addClass("inline");
                 this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+
                 return this;
             }
         });

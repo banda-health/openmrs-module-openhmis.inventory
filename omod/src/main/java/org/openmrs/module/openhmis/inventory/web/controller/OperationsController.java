@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.IOException;
 
 @Controller(value="invMyOperationsController")
-@RequestMapping(ModuleWebConstants.MY_OPERATIONS_ROOT)
-public class MyOperationsController {
+@RequestMapping(ModuleWebConstants.OPERATIONS_ROOT)
+public class OperationsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.operation");

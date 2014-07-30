@@ -41,6 +41,11 @@
 			    <openmrs:message code="openhmis.inventory.admin.operationTypes"/>
 		    </a>
 	    </li>
+	    <li>
+		    <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.OPERATIONS_PAGE %>">
+			    <openmrs:message code="openhmis.inventory.admin.operations"/>
+		    </a>
+	    </li>
     </openmrs:hasPrivilege>
 	<openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES %>">
 		<li>
