@@ -45,7 +45,7 @@
 			<div id="viewOperation"></div>
 		    <div id="newOperation">
 			    <a id="createOperationLink" href="#">New Stock Operation</a>
-			    <div id="newOperationDialog" style="visibility: hidden"></div>
+			    <div id="newOperationDialog" title="New Operation" style="display: none"></div>
 		    </div>
 	    </td>
     </tr>

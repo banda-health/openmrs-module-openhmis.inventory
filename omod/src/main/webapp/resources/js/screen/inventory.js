@@ -42,12 +42,11 @@ curl(
             // Set up new operation link and template
             var collection = new openhmis.GenericCollection([], {
                 url: openhmis.Operation.prototype.meta.restUrl,
-                model: openhmis.Operation
+                model: openhmis.NewOperation
             });
 
             var newView = new openhmis.NewOperationView({collection: collection});
             newView.setElement($("#newOperationDialog"));
-
             $("#createOperationLink").click(newView.showDialog);
 		});
 	}

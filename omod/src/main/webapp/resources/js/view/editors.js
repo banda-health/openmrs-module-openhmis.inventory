@@ -112,7 +112,7 @@ define(
 
         render: function() {
             this.$el.html(this.template({
-                defaultExpirationPeriod: this.value,
+                defaultExpirationPeriod: this.value
             }));
             this.$('input[type=number]').stepper({
                 allowArrows: false,
@@ -124,8 +124,7 @@ define(
             .addClass("ui-spinner-input-spinner-border")
             .addClass("ui-widget-content-spinner-border");
             return this;
-        },
-
+        }
     });
 
     editors.ConceptInput = editors.Base.extend({
@@ -142,7 +141,7 @@ define(
         },
 
         events: {
-            'blur .concept-display': 'handleBlur',
+            'blur .concept-display': 'handleBlur'
         },
 
         handleBlur: function() {
@@ -179,7 +178,7 @@ define(
                     view.handleSpinnerHide();
                     var data = collection.map(function(model) { return {
                         val: model.id,
-                        display: model.get('display'),
+                        display: model.get('display')
                     }});
                     view.cache[query] = data;
                     response(data);
@@ -199,7 +198,7 @@ define(
             var self = this;
             this.$el.html(this.template({
                 concept: this.model.attributes.concept,
-                item_id: self.model.cid,
+                item_id: self.model.cid
             }));
             this.$('.concept-display').autocomplete({
                 minLength: 2,
@@ -243,4 +242,4 @@ define(
 
     return editors;
   }
-)
+);

@@ -1,12 +1,13 @@
 define(
 	[
-		openhmis.url.backboneBase + 'js/view/generic',
+        openhmis.url.backboneBase + 'js/lib/jquery',
+        openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/openhmis',
 		openhmis.url.inventoryBase + 'js/model/operation',
 		openhmis.url.inventoryBase + 'js/model/stockroom',
 		'link!' + openhmis.url.inventoryBase + 'css/style.css'
 	],
-	function(openhmis) {
+	function($, openhmis) {
 		openhmis.OperationTypeEditView = openhmis.CustomizableInstanceTypeAddEditView.extend({
 			tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
 			tmplSelector: '#detail-template'
@@ -120,25 +121,47 @@ define(
         });
 
         openhmis.NewOperationView = openhmis.GenericAddEditView.extend({
-            tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
-            tmplSelector: '#new-operation',
+            /*tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
+            tmplSelector: '#new-operation',*/
 
-            events: {
-                'click .cancel': 'cancel'
+            initialize: function(options) {
+                openhmis.GenericAddEditView.prototype.initialize.call(this, options);
+
+                this.events = _.extend({}, this.events, {
+                    'change select[name="instanceType"]': 'displayOperationFields'
+                });
+                //this.model.on("change:instanceType", this.displayOperationFields);
             },
 
-            prepareModelForm: function(model, options) {
-                // We don't want to use the backbone form as we are controlling the whole layout
-                return undefined;
+            displayOperationFields: function(event) {
+                var source = $('select[name="source"]');
+                var dest = $('select[name="destination"]');
+
+                var type = undefined;
+                var uuid = $(event.target).val();
+                var models = this.modelForm.fields.instanceType.schema.options.models;
+                for (var i in models) {
+                    var model = models[i];
+                    if (model.get('uuid') == uuid) {
+                        type = model;
+                        break;
+                    }
+                }
+
+                if (type != undefined) {
+                    source.prop('disabled', !type.get('hasSource'));
+                    dest.prop('disabled', !type.get('hasDestination'));
+                }
             },
 
             showDialog: function() {
-                var dialog = $()
                 // Render new operation form
-                this.render();
+                this.beginAdd();
+                $(".addLink").hide();
 
                 // Turn display form as dialog
-                this.$el.dialog();
+                this.$el.show();
+                //this.$el.dialog();
             }
         });
 

@@ -55,7 +55,7 @@ define(
 			    },
 			    availableWhenReserved: {
 				    type: 'TrueFalseCheckbox',
-			    editorAttrs: { disabled: true }
+			        editorAttrs: { disabled: true }
 			    },
 			    user: {
 				    type: 'UserSelect',
@@ -104,8 +104,6 @@ define(
                     objRef: true
                 }
             },
-
-
 
             toString: function() {
                 return this.get('item.name');
@@ -210,82 +208,74 @@ define(
 		    }
 	    });
 
-        openhmis.Operation = openhmis.GenericModel.extend({
+        openhmis.NewOperation = openhmis.GenericModel.extend({
             meta: {
                 name: __("Operation"),
                 namePlural: __("Operations"),
                 openmrsType: 'metadata',
-	            restUrl: openhmis.url.inventoryModelBase + 'stockOperation'
+                restUrl: openhmis.url.inventoryModelBase + 'stockOperation'
             },
 
-            schema: {
-                operationNumber: 'Text',
-                status: {
-	                type: 'Text',
-	                readonly: 'readonly'
-                },
-	            dateCreated: {
-		            type: 'Text',
-                    editorAttrs: { disabled: true },
-		            format: openhmis.dateTimeFormatLocale
-	            },
-	            instanceType: {
-		            type: 'OperationTypeSelect',
-		            title: 'Operation Type',
-		            options: new openhmis.GenericCollection(null, {
-			            model: openhmis.OperationType,
-			            url: openhmis.url.inventoryModelBase + '/stockOperationType'
-		            }),
-		            objRef: true
-	            },
-                items: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationItem },
-	            //reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
-	            //transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
-	            source: {
-		            type: 'StockroomSelect',
-		            options: new openhmis.GenericCollection(null, {
-			            model: openhmis.Stockroom,
-			            url: openhmis.url.inventoryModelBase + '/stockroom'
-		            }),
-		            objRef: true
-	            },
-	            destination: {
-		            type: 'StockroomSelect',
-		            options: new openhmis.GenericCollection(null, {
-			            model: openhmis.Stockroom,
-			            url: openhmis.url.inventoryModelBase + '/stockroom'
-		            }),
-		            objRef: true
-	            }
-            },
+            schema: {},
 
-	        OperationStatus: {
-		        NEW:        "NEW",
+            OperationStatus: {
+                NEW:        "NEW",
                 PENDING:	"PENDING",
-		        CANCELLED:	"CANCELLED",
-		        COMPLETED:	"COMPLETED"
-	        },
+                CANCELLED:	"CANCELLED",
+                COMPLETED:	"COMPLETED"
+            },
 
-	        initialize: function(attrs, options) {
-		        openhmis.GenericModel.prototype.initialize.call(this, attrs, options);
+            initialize: function(attrs, options) {
+                openhmis.GenericModel.prototype.initialize.call(this, attrs, options);
 
-		        if (!this.get("status")) {
-			        this.set("status", this.OperationStatus.PENDING);
-		        }
-	        },
+                this.schema.operationNumber = { type: 'Text' };
+                this.schema.status = {
+                    type: 'Text',
+                    readonly: 'readonly',
+                    hidden: true
+                };
+                this.schema.instanceType = {
+                    type: 'OperationTypeSelect',
+                        title: 'Operation Type',
+                        options: new openhmis.GenericCollection(null, {
+                            model: openhmis.OperationType,
+                            url: openhmis.url.inventoryModelBase + '/stockOperationType'
+                    }),
+                    objRef: true
+                };
+                this.schema.items = {
+                    type: 'List',
+                    itemType: 'NestedModel',
+                    model: openhmis.OperationItem,
+                    hidden: true
+                };
+                this.schema.source = {
+                    type: 'StockroomSelect',
+                        options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Stockroom,
+                        url: openhmis.url.inventoryModelBase + '/stockroom'
+                    }),
+                    objRef: true
+                };
+                this.schema.destination = {
+                    type: 'StockroomSelect',
+                        options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Stockroom,
+                        url: openhmis.url.inventoryModelBase + '/stockroom'
+                    }),
+                    objRef: true
+                };
+
+
+                if (!this.get("status")) {
+                    this.set("status", this.OperationStatus.NEW);
+                }
+            },
 
             parse: function(resp) {
-		        if (resp) {
-			        if (resp.instanceType && _.isObject(resp.instanceType)) {
-				        resp.instanceType = new openhmis.OperationType(resp.instanceType);
-			        }
-
-                    if (resp.reserved) {
-                        resp.reserved = new openhmis.GenericCollection(resp.reserved, { model: openhmis.ReservedTransaction }).models;
-                    }
-
-                    if (resp.transactions) {
-                        resp.transactions = new openhmis.GenericCollection(resp.transactions, { model: openhmis.OperationTransaction }).models;
+                if (resp) {
+                    if (resp.instanceType && _.isObject(resp.instanceType)) {
+                        resp.instanceType = new openhmis.OperationType(resp.instanceType);
                     }
 
                     if (resp.source) {
@@ -294,18 +284,47 @@ define(
                     if (resp.destination) {
                         resp.destination = new openhmis.Stockroom(resp.destination);
                     }
+                }
+
+                return resp;
+            },
+
+            toString: function() {
+                if (this.get("operationNumber")) {
+                    return this.get("operationNumber");
+                } else {
+                    return "Operation";
+                }
+            }
+        });
+
+        openhmis.Operation = openhmis.NewOperation.extend({
+            schema: {
+                operationNumber: 'Text',
+                dateCreated: {
+		            type: 'Text',
+                    editorAttrs: { disabled: true },
+		            format: openhmis.dateTimeFormatLocale
+	            }
+	            //reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
+	            //transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
+            },
+
+	        parse: function(resp) {
+		        openhmis.NewOperation.prototype.parse.call(this, resp);
+
+                if (resp) {
+			        /*if (resp.reserved) {
+                        resp.reserved = new openhmis.GenericCollection(resp.reserved, { model: openhmis.ReservedTransaction }).models;
+                    }
+
+                    if (resp.transactions) {
+                        resp.transactions = new openhmis.GenericCollection(resp.transactions, { model: openhmis.OperationTransaction }).models;
+                    }*/
 		        }
 
 		        return resp;
-	        },
-
-            toString: function() {
-	            if (this.get("operationNumber")) {
-		            return this.get("operationNumber");
-	            } else {
-		            return "Operation";
-	            }
-            }
+	        }
         });
 
         return openhmis;

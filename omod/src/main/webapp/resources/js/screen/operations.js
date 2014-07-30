@@ -31,8 +31,7 @@ curl(
                 listView: openhmis.GenericSearchableListView,
 				searchView: openhmis.OperationSearchByStatus,
 				addEditViewType: openhmis.OperationDetailView,
-				listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status'],
-				allowAdd: false
+				listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status']
 			});
 		});
 	}
