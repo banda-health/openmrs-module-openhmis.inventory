@@ -38,16 +38,18 @@ public class ItemConceptSuggestionSearchHandler implements SearchHandler {
 
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
-         IItemConceptSuggestionDataService service = Context.getService(IItemConceptSuggestionDataService.class);
-         PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-         pagingInfo.setPageSize(DEFAULT_PAGE_SIZE);
-
-         List<ItemConceptSuggestion> itemsWithConceptSuggestions = service.getItemsWithConceptSuggestions();
-         Long totalRecordCount = new Long(itemsWithConceptSuggestions.size());
-         pagingInfo.setTotalRecordCount(totalRecordCount);
-
-         AlreadyPagedWithLength<ItemConceptSuggestion> results = new AlreadyPagedWithLength<ItemConceptSuggestion>(context, itemsWithConceptSuggestions, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-         return results;
+         return doSearch(Context.getService(IItemConceptSuggestionDataService.class), context);
     }
 
+    public static PageableResult doSearch(IItemConceptSuggestionDataService service, RequestContext context) throws ResponseException {
+        PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+        pagingInfo.setPageSize(DEFAULT_PAGE_SIZE);
+
+        List<ItemConceptSuggestion> itemsWithConceptSuggestions = service.getItemsWithConceptSuggestions();
+        Long totalRecordCount = new Long(itemsWithConceptSuggestions.size());
+        pagingInfo.setTotalRecordCount(totalRecordCount);
+
+        AlreadyPagedWithLength<ItemConceptSuggestion> results = new AlreadyPagedWithLength<ItemConceptSuggestion>(context, itemsWithConceptSuggestions, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+        return results;
+    }
 }

@@ -15,6 +15,8 @@ package org.openmrs.module.openhmis.inventory.web.controller;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
@@ -28,9 +30,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller(value="invItemConceptSuggestionPageController")
 public class ItemConceptSuggestionPageController {
 
+	private static final String MODEL_BASE = "openhmis.inventory.itemConceptSuggestion";
+	private static final String ADMIN_PAGE = "/openmrs/admin/index.htm";
+	private static final String HOST = "Host";
+	
     @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
-    public void render(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
-        model.addAttribute("modelBase", "openhmis.inventory.itemConceptSuggestion");
+    public void render(ModelMap model, HttpServletRequest request) throws JsonGenerationException, JsonMappingException, IOException {
+    	String host = request.getHeader(HOST);
+    	String returnUrl = host + ADMIN_PAGE;
+
+    	model.addAttribute("returnUrl", returnUrl);
+        model.addAttribute("modelBase",MODEL_BASE);
     }
 
     @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.POST)

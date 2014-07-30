@@ -25,7 +25,7 @@ define(
                 name: __("Item <-> Concept Suggestion"),
                 namePlural: __("Item <-> Concept Suggestions"),
                 openmrsType: 'metadata',
-                restUrl: openhmis.url.inventoryModelBase + 'itemConceptSuggestion?q='
+                restUrl: openhmis.url.inventoryModelBase + 'itemConceptSuggestion'
             },
 
             schema: {

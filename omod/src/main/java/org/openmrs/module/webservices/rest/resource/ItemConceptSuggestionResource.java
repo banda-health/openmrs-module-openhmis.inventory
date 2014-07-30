@@ -1,12 +1,17 @@
 package org.openmrs.module.webservices.rest.resource;
 
+import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemConceptSuggestionDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemConceptSuggestion;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.search.ItemConceptSuggestionSearchHandler;
+import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, supportedClass=ItemConceptSuggestion.class, supportedOpenmrsVersions={"1.9"})
 public class ItemConceptSuggestionResource extends BaseRestMetadataResource<ItemConceptSuggestion> implements IMetadataDataServiceResource<ItemConceptSuggestion> {
@@ -22,7 +27,8 @@ public class ItemConceptSuggestionResource extends BaseRestMetadataResource<Item
         description.removeProperty("name");
         description.removeProperty("description");
         description.addProperty("item");
-        description.addProperty("concept");
+        description.addProperty("conceptName");
+        description.addProperty("conceptUuid");
         description.addProperty("conceptAccepted");
 
         return description;
@@ -31,6 +37,11 @@ public class ItemConceptSuggestionResource extends BaseRestMetadataResource<Item
     @Override
     public Class<? extends IMetadataDataService<ItemConceptSuggestion>> getServiceClass() {
         return IItemConceptSuggestionDataService.class;
+    }
+    
+    @Override
+    protected PageableResult doGetAll(RequestContext context) throws ResponseException {
+        return ItemConceptSuggestionSearchHandler.doSearch(Context.getService(IItemConceptSuggestionDataService.class), context);
     }
 
 }
