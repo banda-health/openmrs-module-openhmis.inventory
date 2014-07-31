@@ -15,6 +15,7 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
+import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -36,7 +37,7 @@ public class ItemStockResource extends BaseRestObjectResource<ItemStock> {
 
 	@Override
 	public Class<? extends IObjectDataService<ItemStock>> getServiceClass() {
-		return null;
+		return IItemStockDataService.class;
 	}
 
 	@Override

@@ -266,6 +266,9 @@ define(
                     objRef: true
                 };
 
+                if (!this.get("items")) {
+                    this.set("items", new openhmis.GenericCollection([], { model: openhmis.ItemStock }), { silent: true });
+                }
 
                 if (!this.get("status")) {
                     this.set("status", this.OperationStatus.NEW);

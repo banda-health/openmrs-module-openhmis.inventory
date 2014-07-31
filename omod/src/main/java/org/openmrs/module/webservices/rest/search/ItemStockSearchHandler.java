@@ -13,12 +13,15 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
+import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
@@ -42,7 +45,8 @@ public class ItemStockSearchHandler implements SearchHandler {
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_STOCK_RESOURCE,
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find all item stock by stockroom.")
+					new SearchQuery.Builder("Find item stock by stockroom and an optional name fragment.")
+							.withOptionalParameters("q")
 							.withRequiredParameters("stockroom_uuid").build()
 			)
 	);
@@ -65,6 +69,8 @@ public class ItemStockSearchHandler implements SearchHandler {
 	}
 
 	public static PageableResult doSearch(IStockroomDataService service, RequestContext context) {
+		String query = context.getParameter("q");
+
 		String stockroomUuid = context.getParameter("stockroom_uuid");
 		Stockroom stockroom = service.getByUuid(stockroomUuid);
 
@@ -74,8 +80,18 @@ public class ItemStockSearchHandler implements SearchHandler {
 			return new EmptySearchResult();
 		}
 
+		List<ItemStock> items;
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<ItemStock> items = service.getItemsByRoom(stockroom, pagingInfo);
+
+		if (!StringUtils.isEmpty(query)) {
+			ItemSearch search = new ItemSearch();
+			search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
+			search.getTemplate().setName(query + "%");
+			items = service.findItems(stockroom, search, pagingInfo);
+		} else {
+			items = service.getItemsByRoom(stockroom, pagingInfo);
+		}
+
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
 		} else {

@@ -242,6 +242,184 @@ define(
             }
         });
 
+        editors.ItemStockAutocomplete = editors.Base.extend({
+            tagName: "span",
+            className: "editor",
+            tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
+            tmplSelector: '#itemstock-autocomplete-editor',
+
+            departmentCollection: function() {
+                var collection = new openhmis.GenericCollection([], { model: openhmis.Department });
+                collection.fetch();
+                return collection;
+            }(),
+
+            initialize: function(options) {
+                _.bindAll(this);
+
+                editors.Base.prototype.initialize.call(this, options);
+
+                this.template = this.getTemplate();
+                this.stockroomSelector = options.schema.stockroomSelector;
+
+                this.cache = {};
+                this.departmentCollection.on("reset", this.render);
+            },
+
+            events: {
+                'change select.department': 'modified',
+                'change input.item-name' : 'modified',
+                'focus select': 'handleFocus',
+                'focus .item-name': 'handleFocus',
+                'blur select': 'handleBlur',
+                'keypress .item-name': 'onItemNameKeyPress'
+            },
+
+            getUuid: function() {
+                return this.$('.item-uuid').val();
+            },
+
+            getValue: function() {
+                return this.value;
+            },
+
+            handleFocus: function(event) {
+                if (this.hasFocus) return;
+                this.trigger("focus", this);
+            },
+
+            handleBlur: function(event) {
+                if (!this.hasFocus) return;
+                var self = this;
+                setTimeout(function() {
+                    // Check if another input from this editor has come into focus
+                    if (self.$('select:focus')[0] || self.$('.item-name:focus')[0] || self.$('label:focus')[0]) {
+                        return;
+                    }
+
+                    if (self.value) {
+                        self.$('.item-name').val(self.value.get("name"));
+                        self.$('.department').val(self.value.get("department").id);
+                        self.$('label.over-apply').hide();
+                    } else {
+                        self.render();
+                    }
+
+                    self.trigger("blur", self);
+                }, 0);
+            },
+
+            onItemNameKeyPress: function(event) {
+                if (event.keyCode === 13 && this.itemUpdating !== undefined) {
+                    event.stopPropagation();
+                }
+            },
+
+            modified: function(event) {
+                // TODO: Some logic to handle messing with the form after
+                //       successful validation
+            },
+
+            doItemSearch: function(request, response) {
+                // Query the item stock by name
+                var query = "?q=" + encodeURIComponent(request.term);
+
+                // and by stockroom
+                var stockroom_uuid = $(this.stockroomSelector).val();
+                if (!stockroom_uuid) {
+                    alert('Could not locate source stockroom element.');
+                    return;
+                }
+                query += "&stockroom_uuid=" + encodeURIComponent(stockroom_uuid);
+
+                // and optionally by the item department
+                var department_uuid = this.$('.department').val();
+                if (department_uuid) {
+                    query += "&department_uuid=" + encodeURIComponent(department_uuid);
+                }
+
+                this.doSearch(request, response, openhmis.ItemStock, query);
+            },
+
+            doSearch: function(request, response, model, query) {
+                if (query in this.cache) {
+                    response(this.cache[query]);
+                    return;
+                }
+
+                var resultCollection = new openhmis.GenericCollection([], { model: model });
+                var fetchQuery = query ? query : "?q=" + encodeURIComponent(request.term);
+
+                var view = this;
+                resultCollection.fetch({
+                    url: resultCollection.url + fetchQuery,
+                    success: function(collection, resp) {
+                        var data = collection.map(function(model) { return {
+                            val: model.id,
+                            label: model.get('item').get('name'),
+                            department_uuid: model.get('item').get('department').id
+                        }});
+
+                        view.cache[query] = data;
+                        response(data);
+                    }
+                });
+            },
+
+            selectItem: function(event, ui) {
+                this.itemUpdating = true;
+
+                var uuid = ui.item.val;
+                var name = ui.item.label;
+                var departmentUuid = ui.item.department_uuid;
+
+                this.$('.itemStock-name').val(name);
+                this.$('.itemStock-uuid').val(uuid);
+                this.$('.department').val(departmentUuid);
+
+                this.value = new openhmis.ItemStock({ uuid: uuid });
+
+                var view = this;
+                this.value.fetch({ success: function(model, resp) {
+                    view.trigger('change', view);
+                    delete view.itemUpdating;
+                }});
+            },
+
+            departmentKeyDown: function(event) {
+                if (event.keyCode === 8) {
+                    $(event.target).val('');
+                }
+            },
+
+            render: function() {
+                this.$el.html(this.template({
+                    departments: this.departmentCollection,
+                    itemStock: this.value,
+                    department: this.value ? this.value.get("item").get("department") : undefined,
+                    item: this.value ? this.value.get("item") : undefined
+                }));
+
+                this.$('select').keydown(this.departmentKeyDown);
+                this.$('label').labelOver('over-apply');
+
+                var self = this;
+                this.$('.itemStock-name')
+                    .autocomplete({
+                        minLength: 2,
+                        source: this.doItemSearch,
+                        select: this.selectItem
+                    })
+                    .data("autocomplete")._renderItem = function(ul, itemStock) {
+                        // Tricky stuff here to get the autocomplete list to render with our custom data
+                        return $("<li></li>").data("item.autocomplete", itemStock)
+                            .append("<a>" + itemStock.label + "</a>").appendTo(ul);
+                    };
+
+                return this;
+            }
+        });
+
         return editors;
     }
 );

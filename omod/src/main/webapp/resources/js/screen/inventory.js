@@ -45,9 +45,11 @@ curl(
                 model: openhmis.NewOperation
             });
 
-            var newView = new openhmis.NewOperationView({collection: collection});
-            newView.setElement($("#newOperationDialog"));
-            $("#createOperationLink").click(newView.showDialog);
+            var newView = new openhmis.NewOperationView({
+                collection: collection,
+                addLink: $("#createOperationLink"),
+                element: $("#newOperationDialog")
+            });
 		});
 	}
 );

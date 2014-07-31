@@ -86,7 +86,11 @@ define(
 				quantity: {
 					type: 'BasicNumber'
 				},
-				details: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemStockDetail }
+				details: {
+                    type: 'List',
+                    itemType: 'NestedModel',
+                    model: openhmis.ItemStockDetail
+                }
 			},
 
 			validate: function(attrs, options) {
@@ -104,6 +108,12 @@ define(
 					if (resp.stockroom && _.isObject(resp.stockroom)) {
 						resp.stockroom = new openhmis.Stockroom(resp.stockroom);
 					}
+                    if (resp.details && _.isObject(resp.details)) {
+                        resp.details = new openhmis.GenericCollection(
+                            resp.details,
+                            { model: openhmis.ItemStockDetail }
+                        ).models;
+                    }
 				}
 
 				return resp;
