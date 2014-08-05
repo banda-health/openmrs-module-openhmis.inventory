@@ -125,6 +125,8 @@ define(
             /*tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
             tmplSelector: '#new-operation',*/
 
+            currentOperationType: undefined,
+
             initialize: function(options) {
                 openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
@@ -142,11 +144,22 @@ define(
 
                 this.itemStockView = new openhmis.OperationItemStockView({
                     model: new openhmis.GenericCollection([], {
-                        model: openhmis.ItemStock
+                        model: openhmis.ItemStockEntry
                     }),
                     itemView: openhmis.OperationItemStockItemView,
-                    stockroomSelector: 'select[name="source"]'
+                    stockroomSelector: 'select[name="source"]',
+                    view: this,
+                    operation: this.model
                 });
+
+                var self = this;
+                var operationTypes = new openhmis.GenericCollection([], { model: openhmis.OperationType });
+                operationTypes.fetch({
+                    success: function(collection, resp) {
+                        self.currentOperationType = collection.models[0];
+                    },
+                    silent: true
+                })
             },
 
             render: function() {
@@ -158,17 +171,19 @@ define(
 
                     this.itemStockView.setupNewItem();
                 }
-                this.formEl.append(this.itemStockView.el);
+
+                // Add the item-stock class to the item stock table so it is easy to locate
+                this.itemStockView.$("table").addClass("item-stock");
             },
 
             updateOperationType: function(event) {
                 var source = $('select[name="source"]');
                 var dest = $('select[name="destination"]');
 
-                var type = this.findOperationType($(event.target).val());
-                if (type != undefined) {
-                    source.prop('disabled', !type.get('hasSource'));
-                    dest.prop('disabled', !type.get('hasDestination'));
+                this.currentOperationType = this.findOperationType($(event.target).val());
+                if (this.currentOperationType != undefined) {
+                    source.prop('disabled', !this.currentOperationType.get('hasSource'));
+                    dest.prop('disabled', !this.currentOperationType.get('hasDestination'));
                 }
             },
 
@@ -176,6 +191,9 @@ define(
                 // Render new operation form
                 this.beginAdd();
                 $(".addLink").hide();
+
+                // Insert the item stock list after the form but before the buttons
+                $("#newOperation").find(".bbf-form").append(this.itemStockView.el);
 
                 // Display the form as a dialog
                 this.$el.show();
@@ -199,9 +217,9 @@ define(
 
         openhmis.OperationItemStockView = openhmis.GenericListEntryView.extend({
             schema: {
-                item: {
-                    type: "ItemStockAutocomplete"
-                },
+                item: { type: "ItemStockAutocomplete" },
+                expiration: { type: "ItemStockEntryExpiration" },
+                /*batchOperation: { type: "" },*/
                 quantity: { type: "CustomNumber" }
             },
 
@@ -212,9 +230,13 @@ define(
                     'keypress': 'onKeyPress'
                 });
 
+                // Make sure that the options exist
                 options = options ? options : {};
 
+                // Create the stockroom jquery selector in the item schema so that it is passed to the editor
                 this.schema.item.stockroomSelector = options.stockroomSelector;
+                this.schema.expiration.parentView = options.view;
+                //this.schema.batchOperation.parentView = options.view;
 
                 var operation = options.operation ? options.operation : new openhmis.Operation();
                 this.setOperation(operation);
@@ -226,7 +248,9 @@ define(
 
             setOperation: function(operation) {
                 this.operation = operation;
-                this.model = operation.get("items");
+                this.model = operation.get("items") ?
+                    operation.get("items") :
+                    new openhmis.GenericCollection(null, { model: openhmis.ItemStockEntry });
                 this.options.itemActions = ["remove", "inlineEdit"];
             },
 
@@ -322,12 +346,43 @@ define(
             },
 
             updateItem: function(form, itemEditor) {
+                var item = itemEditor.getValue();
+                this.refreshItemFields(item, form);
                 if (form.fields.quantity.getValue() === 0) {
                     form.fields.quantity.setValue(1);
                 }
                 this.update();
 
                 form.fields.quantity.editor.focus(true);
+            },
+
+            refreshItemFields: function(item, form) {
+                // Get the selected item details
+                var details = item.get("details");
+
+                // Build the expiration and batch lists for this item
+                var expirations = [];
+                var batches = [];
+                details.each(function(detail) {
+                    var exp = detail.get("expiration");
+                    if (exp && exp != "") {
+                        expirations.push(exp);
+                    }
+
+                    var batch = detail.get("batchOperation");
+                    if (batch) {
+                        batches.push(batch);
+                    }
+                });
+
+                // Load the lists into the fields
+                if (form) {
+                    form.fields.expiration.editor.options.options = expirations;
+                    form.fields.expiration.editor.render();
+
+                    form.fields.batchOperation.editor.options.options = batches;
+                    form.fields.batchOperation.editor.render();
+                }
             },
 
             update: function() {

@@ -27,19 +27,39 @@
 </script>
 
 <script id="itemstock-autocomplete-editor" type="text/template">
-	<? var department_uuid = department? department.id : null ?>
-	<? var id = itemStock ? itemStock.cid + '-' : "" ?>
-	<select id="<?= id ?>department" class="department">
-		<option value=""><em>--department--</em></option>
-		<? departments.each(function(dept) { ?>
-		<option value="<?= dept.id ?>"<?= (dept.id === department_uuid) ? ' selected="selected"' : '' ?>><?= dept.get("name") ?></option>
-		<? }); ?>
-	</select>
-	<input type="hidden" class="department-uuid" />
-	<span class="label-hint">
-		<label for="<?= id ?>itemStock-name">search for item</label>
-		<input type="text" class="itemStock-name" id="<?= id ?>itemStock-name"
-			   value="<?= (item && item.get('name')) ? item.get('name') : "" ?>" />
-	</span>
-	<input type="hidden" class="itemStock-uuid" />
+    <? var department_uuid = department? department.id : null ?>
+    <? var id = itemStock ? itemStock.cid + '-' : "" ?>
+    <select id="<?= id ?>department" class="department">
+        <option value=""><em>--department--</em></option>
+        <? departments.each(function(dept) { ?>
+            <option value="<?= dept.id ?>"<?= (dept.id === department_uuid) ? ' selected="selected"' : '' ?>><?= dept.get("name") ?></option>
+        <? }); ?>
+    </select>
+    <input type="hidden" class="department-uuid" />
+    <span class="label-hint">
+        <label for="<?= id ?>itemStock-name">search for item</label>
+        <input type="text" class="itemStock-name" id="<?= id ?>itemStock-name"
+               value="<?= (item && item.get('name')) ? item.get('name') : "" ?>" />
+    </span>
+    <input type="hidden" class="itemStock-uuid" />
+</script>
+
+<script id="itemstock-expiration-editor" type="text/template">
+    <input id="calculated_expiration" class="expiration-check" type="checkbox" value="calculated" />
+    <? if (entryRequired) { ?>
+        <input id="expriationEntry" class="itemstock-expiration" type="date" value="<?= expiration ?>" />
+    <? } else { ?>
+        <select id="expriationSelect" class="itemstock-expiration">
+            <option value=""><em>Auto</em></option>
+            <? if (expirations) { ?>
+            <? expirations.each(function(exp) { ?>
+                <option value="<?= exp ?>"><?= exp ?></option>
+            <? }); ?>
+            <? } ?>
+        </select>
+    <? } ?>
+</script>
+
+<script id="itemstock-batch-editor" type="text/template">
+
 </script>

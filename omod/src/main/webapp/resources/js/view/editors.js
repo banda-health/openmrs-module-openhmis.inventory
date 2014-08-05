@@ -420,6 +420,67 @@ define(
             }
         });
 
+        editors.ItemStockEntryExpiration = editors.Base.extend({
+            tagName: "span",
+            className: "expiration-editor",
+            tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
+            tmplSelector: '#itemstock-expiration-editor',
+
+            events: {
+                'change input.expiration-check' : 'checked',
+                'change select.expiration': 'modified',
+                'change input.expiration' : 'modified'
+            },
+
+            initialize: function(options) {
+                _.bindAll(this);
+
+                editors.Base.prototype.initialize.call(this, options);
+
+                this.template = this.getTemplate();
+                this.stockroomSelector = options.schema.stockroomSelector;
+
+                this.cache = {};
+                this.parentView = options.schema.parentView;
+            },
+
+            render: function() {
+                // The parent view tracks the currently selected operation type so we'll use that here
+                var operationType = this.parentView.currentOperationType;
+                if (!operationType) {
+                    alert("Could not load operation type.");
+                    return;
+                }
+
+                this.$el.html(this.template({
+                    entryRequired: operationType.get('hasSource') != true,
+                    expirations: this.value
+                }));
+
+                this.$('label').labelOver('over-apply');
+
+                //this.inputEl = this.$('');
+                //this.selectEl = this.$('');
+
+                return this;
+            },
+
+            checked: function() {
+
+            },
+
+            modified: function() {
+
+            }
+        });
+
+        editors.ItemStockEntryBatch = editors.Base.extend({
+            tagName: "span",
+            className: "batch-editor",
+            tmplFile: openhmis.url.inventoryBase + 'template/editors.html',
+            tmplSelector: '#itemstock-batch-editor'
+        });
+
         return editors;
     }
 );

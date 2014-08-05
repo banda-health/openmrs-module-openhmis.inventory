@@ -89,28 +89,7 @@ define(
 		    }
 	    });
 
-        openhmis.OperationItem = openhmis.ItemStockDetailBase.extend({
-            meta: {
-                name: __("Operation Item"),
-                namePlural: __("Operation Items"),
-                openmrsType: 'metadata',
-                restUrl: openhmis.url.inventoryModelBase + 'stockOperationItem'
-            },
-
-            schema: {
-                operation: {
-                    type: 'NestedModel',
-                    model: openhmis.Operation,
-                    objRef: true
-                }
-            },
-
-            toString: function() {
-                return this.get('item.name');
-            }
-        });
-
-	    openhmis.TransactionBase = openhmis.GenericModel.extend({
+        openhmis.TransactionBase = openhmis.GenericModel.extend({
 		    initialize: function(attributes, options) {
 			    openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
 
@@ -266,9 +245,9 @@ define(
                     objRef: true
                 };
 
-                if (!this.get("items")) {
-                    this.set("items", new openhmis.GenericCollection([], { model: openhmis.ItemStock }), { silent: true });
-                }
+                /*if (!this.get("items")) {
+                    this.set("items", new openhmis.GenericCollection([], { model: openhmis.OperationItem }), { silent: true });
+                }*/
 
                 if (!this.get("status")) {
                     this.set("status", this.OperationStatus.NEW);
@@ -328,6 +307,27 @@ define(
 
 		        return resp;
 	        }
+        });
+
+        openhmis.OperationItem = openhmis.ItemStockDetailBase.extend({
+            meta: {
+                name: __("Operation Item"),
+                namePlural: __("Operation Items"),
+                openmrsType: 'metadata',
+                restUrl: openhmis.url.inventoryModelBase + 'stockOperationItem'
+            },
+
+            schema: {
+                operation: {
+                    type: 'NestedModel',
+                    model: openhmis.Operation,
+                    objRef: true
+                }
+            },
+
+            toString: function() {
+                return this.get('item.name');
+            }
         });
 
         return openhmis;

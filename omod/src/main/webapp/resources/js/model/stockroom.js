@@ -141,8 +141,8 @@ define(
                     url: openhmis.url.inventoryModelBase + '/stockOperation'
                 };
 
-                this.schema.calculatedExpiration = {type: 'checkbox'};
-                this.schema.calculatedBatch = {type: 'checkbox'};
+                this.schema.calculatedExpiration = { type: 'TrueFalseCheckbox' };
+                this.schema.calculatedBatch = { type: 'TrueFalseCheckbox' };
             },
 
             parse: function(resp) {
@@ -183,6 +183,29 @@ define(
 				return this.get('item.name');
 			}
 		});
+
+        openhmis.ItemStockEntry = openhmis.ItemStockDetailBase.extend({
+            meta: {
+                name: __("Item Stock"),
+                namePlural: __("Item Stock"),
+                openmrsType: 'metadata',
+                restUrl: openhmis.url.inventoryModelBase + 'itemStockEntry'
+            },
+
+            initialize: function(attributes, options) {
+                openhmis.ItemStockDetailBase.prototype.initialize.call(this, attributes, options);
+
+                // Use the custom editors for the expiration and batch operation fields
+                this.schema.item.type = "ItemStockAutocomplete";
+                this.schema.quantity.type = "CustomNumber";
+                this.schema.expiration.type = "ItemStockEntryExpiration";
+                //this.schema.batchOperation.type = "ItemStockEntryBatch";
+
+                // Hide the calculated fields as these will be set by the custom editors above
+                this.schema.calculatedExpiration.hidden= true;
+                this.schema.calculatedBatch.hidden = true;
+            }
+        });
 
         return openhmis;
 	}
