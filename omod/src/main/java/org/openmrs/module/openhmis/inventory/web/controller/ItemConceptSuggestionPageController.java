@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ItemConceptSuggestionPageController {
 
 	private static final String MODEL_BASE = "openhmis.inventory.itemConceptSuggestion";
-	private static final String ADMIN_PAGE = "/openmrs/admin/index.htm";
+	private static final String INVENTORY_PAGE = "/openhmis/inventory/inventory.htm";
 	private static final String ITEM_CONCEPT_SUGGESTION_PAGE = "itemConceptSuggestion.form";
 	
     @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
@@ -40,7 +40,7 @@ public class ItemConceptSuggestionPageController {
     }
 
 	private String getReturnUrl(HttpServletRequest request) {
-		String returnUrl = ADMIN_PAGE;
+		String returnUrl = INVENTORY_PAGE;
 		String referer = request.getHeader("referer");
 		if (!referer.contains(ITEM_CONCEPT_SUGGESTION_PAGE)) {
 			int refererWithoutHostPrefixStartIndex = referer.indexOf('/', 8);

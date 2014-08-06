@@ -27,9 +27,7 @@ curl(
     ],
     function($, openhmis) {
         $(function() {
-            openhmis.startItemConceptSuggestionScreen(openhmis.ItemConceptSuggestion, {
-            	listFields: ['item', 'concept', 'conceptAccepted']
-            });
+            openhmis.startItemConceptSuggestionScreen(openhmis.ItemConceptSuggestion, {});
         });
     }
 );

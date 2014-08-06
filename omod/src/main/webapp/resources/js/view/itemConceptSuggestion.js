@@ -37,7 +37,14 @@ define(
                 options.listElement = $("#existing-form");
             }
 
-            var collection = new openhmis.GenericCollection([], {
+            var viewOptions = openhmis.fetchData(model, options);
+            var listViewType = openhmis.ItemToConceptMappingListView;
+            var listView = new listViewType(viewOptions);
+            listView.setElement(options.listElement);
+        },
+        
+        openhmis.fetchData = function(model, options) {
+        	var collection = new openhmis.GenericCollection([], {
                 model: model
             });
             collection.fetch({
@@ -45,14 +52,16 @@ define(
                     $(".spinner").hide();
                 }
             });
-
+            
             var viewOptions = _.extend({
                 model: collection,
             }, options);
-
-            var listViewType = openhmis.ItemToConceptMappingListView;
-            var listView = new listViewType(viewOptions);
-            listView.setElement(options.listElement);
+            
+            return viewOptions;
+        },
+        
+        openhmis.renderData = function(model, options) {
+        	
         },
 
         openhmis.ItemToConceptMappingListView = openhmis.GenericListView.extend({
@@ -204,7 +213,12 @@ define(
 						if (loadNextItems === false) {
 							window.location.assign($('#returnUrl').val());
 						} else {
-							
+							$("#existing-form").empty();
+							$('.spinner').show();
+							var viewOptions = openhmis.fetchData(view.model.model, null);
+				            var listViewType = openhmis.ItemToConceptMappingListView;
+				            var listView = new listViewType(viewOptions);
+				            listView.setElement($("#existing-form"));
 						}
 					},
 					error: function(itemConceptSuggestionList, resp) { 
