@@ -286,13 +286,29 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
 	List<Item> findItems(ItemSearch itemSearch, PagingInfo pagingInfo);
 
+	/**
+	 * Finds all items by {@link Concept} settings.
+	 * @param concept The concept.
+	 * @return The items found or an empty list if no items were found.
+	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
     List<Item> findItemsByConcept(Concept concept);
 
+	/**
+	 * Finds all items where {@link Concept} is null
+	 * @param resultLimit Maximum size of returned items.
+	 * @param excludedItemsIds Items not to be considered in the result.
+	 * @return The items found or an empty list if no items were found.
+	 * @should return all results if resultLimit is null
+	 * @should not return items contained in excludedItemsIds
+	 * @should only return items where concept is null
+	 * @should only return items that are not retired
+	 * @should only return items where concept suggestion was not accepted
+	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-    List<Item> findItemsWithoutConcept(List<Integer> excludedItemsIds, int resultLimit);
+    List<Item> findItemsWithoutConcept(List<Integer> excludedItemsIds, Integer resultLimit);
 
 
 }

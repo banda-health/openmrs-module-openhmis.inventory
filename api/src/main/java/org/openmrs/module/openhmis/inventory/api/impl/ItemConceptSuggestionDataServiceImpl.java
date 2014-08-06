@@ -32,16 +32,16 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
 
     @Override
     public List<ItemConceptSuggestion> getItemsWithConceptSuggestions() {
-        int defaultResultLimit = 50;
-        List<ItemConceptSuggestion> itemConceptSuggestions = getItemToConceptMatches(defaultResultLimit);
+        int resultLimit = 50;
+        List<ItemConceptSuggestion> itemConceptSuggestions = getItemToConceptMatches(resultLimit);
 
         List<Integer> excludedItemsIds = new ArrayList<Integer>();
         for (ItemConceptSuggestion suggestion : itemConceptSuggestions) {
             excludedItemsIds.add(suggestion.getItemId());
         }
 
-        if (itemConceptSuggestions.size() < defaultResultLimit) {
-            int reachDefaultReultLimit = defaultResultLimit - itemConceptSuggestions.size();
+        if (itemConceptSuggestions.size() < resultLimit) {
+            int reachDefaultReultLimit = resultLimit - itemConceptSuggestions.size();
             List<Item> itemsWithoutConcept = itemDataService.findItemsWithoutConcept(excludedItemsIds, reachDefaultReultLimit);
             for (Item item : itemsWithoutConcept) {
                 ItemConceptSuggestion itemConceptSuggestion = new ItemConceptSuggestion(item, null, null, false);
@@ -51,7 +51,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
         return itemConceptSuggestions;
     }
 
-    private List<ItemConceptSuggestion> getItemToConceptMatches(int defaultResultLimit) {
+    public List<ItemConceptSuggestion> getItemToConceptMatches(Integer resultLimit) {
         String itemKey = "0";
         String conceptNameKey = "1";
         String conceptUuidKey = "2";
@@ -67,7 +67,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
                 "and item.name like concept_name.name " +
                 "group by item.id ";
         Query query = repository.createQuery(queryString);
-        query.setMaxResults(defaultResultLimit);
+        query.setMaxResults(resultLimit);
         List<Map<String, Object>> results = (List<Map<String, Object>>) query.list();
         for (Map<String, Object> result : results) {
             Item item = (Item) result.get(itemKey);

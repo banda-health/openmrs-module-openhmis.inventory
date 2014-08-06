@@ -13,12 +13,15 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
+import static org.junit.Assert.*;
+
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Iterators;
+
 import liquibase.util.StringUtils;
 
 import org.junit.Assert;
@@ -55,7 +58,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	@Override
 	protected int getTestEntityCount() {
-		return 3;
+		return 6;
 	}
 
 	@Override
@@ -199,12 +202,15 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		List<Item> results = service.getAll(false);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(5, results.size());
+		Assert.assertEquals(8, results.size());
 		Assert.assertEquals(firstItem.getId(), Iterators.get(results.iterator(), 0).getId());
 		Assert.assertEquals(0, (int)Iterators.get(results.iterator(), 1).getId());
 		Assert.assertEquals(1, (int)Iterators.get(results.iterator(), 2).getId());
 		Assert.assertEquals(2, (int)Iterators.get(results.iterator(), 3).getId());
-		Assert.assertEquals(lastItem.getId(), Iterators.get(results.iterator(), 4).getId());
+		Assert.assertEquals(3, (int)Iterators.get(results.iterator(), 4).getId());
+		Assert.assertEquals(4, (int)Iterators.get(results.iterator(), 5).getId());
+		Assert.assertEquals(5, (int)Iterators.get(results.iterator(), 6).getId());
+		Assert.assertEquals(lastItem.getId(), Iterators.get(results.iterator(), 7).getId());
 
 		PagingInfo paging = new PagingInfo(1, 1);
 		results = service.getAll(false, paging);
@@ -223,8 +229,20 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		paging.setPage(4);
 		results = service.getAll(false, paging);
 		Assert.assertEquals(2, (int)Iterators.getOnlyElement(results.iterator()).getId());
-
+		
 		paging.setPage(5);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(3, (int)Iterators.getOnlyElement(results.iterator()).getId());
+		
+		paging.setPage(6);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(4, (int)Iterators.getOnlyElement(results.iterator()).getId());
+		
+		paging.setPage(7);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(5, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(8);
 		results = service.getAll(false, paging);
 		Assert.assertEquals(lastItem.getId(), Iterators.getOnlyElement(results.iterator()).getId());
 	}
@@ -366,11 +384,11 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Department department = departmentService.getById(0);
 		List<Item> items = service.findItems(department, "t", false);
 		Assert.assertNotNull(items);
-		Assert.assertEquals(getTestEntityCount() - 1, items.size());
+		Assert.assertEquals(2, items.size());
 
 		items = service.findItems(department, "t", true);
 		Assert.assertNotNull(items);
-		Assert.assertEquals(getTestEntityCount(), items.size());
+		Assert.assertEquals(3, items.size());
 	}
 
 	/**
@@ -765,4 +783,9 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
 	}
+	
+	@Test
+    public void findItemsByConcept_shouldFindEveryItemWithTheSpecifiedConcept() throws Exception {
+	    
+    }
 }

@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
 import org.openmrs.OpenmrsObject;
@@ -315,8 +314,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public List<Item> findItems(final ItemSearch itemSearch,
-			PagingInfo pagingInfo) {
+	public List<Item> findItems(final ItemSearch itemSearch, PagingInfo pagingInfo) {
 		if (itemSearch == null) {
 			throw new NullPointerException("The item search must be defined.");
 		} else if (itemSearch.getTemplate() == null) {
@@ -343,7 +341,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> findItemsWithoutConcept(final List<Integer> excludedItemsIds, final int resultLimit) {
+	public List<Item> findItemsWithoutConcept(final List<Integer> excludedItemsIds, final Integer resultLimit) {
 		return executeCriteria(Item.class, null, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -353,7 +351,9 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 				if (excludedItemsIds != null && excludedItemsIds.size() < 0) {
 					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID, excludedItemsIds.toArray())));
 				}
-				criteria.setMaxResults(resultLimit);
+				if (resultLimit != null && resultLimit > 0) {
+					criteria.setMaxResults(resultLimit);
+				}
 			}
 		}, getDefaultSort());
 	}
