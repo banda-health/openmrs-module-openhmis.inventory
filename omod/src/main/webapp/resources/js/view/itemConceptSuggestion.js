@@ -24,6 +24,7 @@ define(
         openhmis.url.backboneBase + 'js/view/list',
         openhmis.url.backboneBase + 'js/view/paginate',
         openhmis.url.backboneBase + 'js/view/editors',
+        openhmis.url.inventoryBase + 'js/model/itemConceptSuggestionList',
         'link!' + openhmis.url.backboneBase + 'css/style.css',
         'link!/openmrs/scripts/jquery/dataTables/css/dataTables_jui.css'
     ],
@@ -194,15 +195,22 @@ define(
             },
             
             save: function(loadNextItems) {
-            	console.log('XXXXXXXXXXXXXXXXXXXX ' + loadNextItems); 
-            	$.ajax({
-                    type: 'POST',
-                    url: this.model.url(),
-                    data: '{"status":"' + this.model.models + '"}',
-                    error: function(model, resp) { openhmis.error(resp); },
-                    contentType: "application/json",
-                    dataType: 'json'
-                });
+            	var view = this;
+            	var itemConceptSuggestionList = new openhmis.ItemConceptSuggestionList();
+            	itemConceptSuggestionList.set("itemConceptSuggestions", this.model.models);
+            	
+            	itemConceptSuggestionList.save(null, {
+					success: function(itemConceptSuggestionList, resp) {
+						if (loadNextItems === false) {
+							window.location.assign($('#returnUrl').val());
+						} else {
+							
+						}
+					},
+					error: function(itemConceptSuggestionList, resp) { 
+						openhmis.error(resp); 
+					}
+				});
             }
 
         });

@@ -7,6 +7,7 @@ import org.openmrs.module.openhmis.inventory.api.model.ItemConceptSuggestion;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.search.ItemConceptSuggestionSearchHandler;
 import org.openmrs.module.webservices.rest.web.RequestContext;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
@@ -26,12 +27,17 @@ public class ItemConceptSuggestionResource extends BaseRestMetadataResource<Item
         DelegatingResourceDescription description = super.getRepresentationDescription(rep);
         description.removeProperty("name");
         description.removeProperty("description");
-        description.addProperty("item");
+        description.addProperty("item", Representation.REF);
         description.addProperty("conceptName");
         description.addProperty("conceptUuid");
         description.addProperty("conceptAccepted");
 
         return description;
+    }
+    
+    @PropertySetter(value="conceptAccepted")
+    public void setConceptAccepted(ItemConceptSuggestion instance, Boolean conceptAccepted) {
+    	instance.setConceptAccepted(conceptAccepted);
     }
 
     @Override
