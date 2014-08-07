@@ -39,7 +39,7 @@ public class ItemConceptMappingExt extends Extension {
         if (conceptId != null) {
             Concept concept = conceptService.getConcept(Integer
                     .valueOf(conceptId));
-            List<Item> items = itemDataService.findItemsByConcept(concept);
+            List<Item> items = itemDataService.getItemsByConcept(concept);
             tableRow += "<td>";
             if (items.size() > 0) {
                 for (Item item : items) {

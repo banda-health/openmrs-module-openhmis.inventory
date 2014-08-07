@@ -287,13 +287,13 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	List<Item> findItems(ItemSearch itemSearch, PagingInfo pagingInfo);
 
 	/**
-	 * Finds all items by {@link Concept} settings.
+	 * Gets all items by {@link Concept} settings.
 	 * @param concept The concept.
 	 * @return The items found or an empty list if no items were found.
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-    List<Item> findItemsByConcept(Concept concept);
+    List<Item> getItemsByConcept(Concept concept);
 
 	/**
 	 * Finds all items where {@link Concept} is null

@@ -331,7 +331,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> findItemsByConcept(final Concept concept) {
+	public List<Item> getItemsByConcept(final Concept concept) {
 		return executeCriteria(Item.class, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -348,7 +348,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 				criteria.add(Restrictions.isNull(HibernateCriteriaConstants.CONCEPT)).add(
 						Restrictions.eq(HibernateCriteriaConstants.RETIRED, false)).add(
 						Restrictions.eq(HibernateCriteriaConstants.CONCEPT_ACCEPTED, false));
-				if (excludedItemsIds != null && excludedItemsIds.size() < 0) {
+				if (excludedItemsIds != null && excludedItemsIds.size() > 0) {
 					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID, excludedItemsIds.toArray())));
 				}
 				if (resultLimit != null && resultLimit > 0) {
