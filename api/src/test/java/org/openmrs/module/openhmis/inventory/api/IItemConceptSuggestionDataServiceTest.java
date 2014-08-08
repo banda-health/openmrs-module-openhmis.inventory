@@ -89,7 +89,7 @@ public class IItemConceptSuggestionDataServiceTest extends BaseModuleContextSens
 		
 		for (ItemConceptSuggestion itemConceptSuggestion : itemsWithConceptSuggestions) {
 	        if (itemConceptSuggestion.getItemId() == 5) {
-	        	assertEquals("test 6 item", itemConceptSuggestion.getConceptName());
+	        	assertEquals("test 6", itemConceptSuggestion.getConceptName());
 	        	assertEquals(matchingConcept.getUuid(), itemConceptSuggestion.getConceptUuid());
 	        } else if (itemConceptSuggestion.getItemId() == 2) {
 	        	assertTrue(StringUtils.isEmpty(itemConceptSuggestion.getConceptName()));

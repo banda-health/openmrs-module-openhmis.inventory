@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
 import org.openmrs.api.APIException;
+import org.openmrs.api.ConceptNameType;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IItemConceptSuggestionDataService;
@@ -64,9 +65,11 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
                 "and item.conceptAccepted = false " +
                 "and concept.retired = false " +
         		"and concept_name.concept = concept.conceptId " +
-                "and item.name like concept_name.name " +
+        		"and concept_name.conceptNameType != :conceptNameType " +
+                "and item.name like concat(concept_name.name, '%') " +
                 "group by item.id ";
         Query query = repository.createQuery(queryString);
+        query.setString("conceptNameType", ConceptNameType.SHORT.toString());
         query.setMaxResults(resultLimit);
         List<Map<String, Object>> results = (List<Map<String, Object>>) query.list();
         for (Map<String, Object> result : results) {
