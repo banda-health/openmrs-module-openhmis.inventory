@@ -294,80 +294,81 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsNull() throws Exception {
 		Department department = null;
-		service.findItems(department, "something", false);
+		service.getItems(department, "something", false);
 	}
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemDataService#findItems(Category, String, boolean)
+	 * @see IItemDataService#getItems(Category, String, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsDefinedAndCategoryIsNull() throws Exception {
 		Department department = new Department();
 		Category category = null;
-		service.findItems(department, category, "something", false);
+		service.getItemsByDepartmentAndCategoryAndName(department, category, "something", false);
 	}
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemDataService#findItems(Category, String, boolean)
+	 * @see IItemDataService#getItems(Category, String, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfTheDepartmentIsNullAndCategoryIsDefined() throws Exception {
 		Department department = null;
 		Category category = new Category();
-		service.findItems(department, category, "something", false);
+		service.getItemsByDepartmentAndCategoryAndName(department, category, "something", false);
 	}
 
 	/**
 	 * @verifies throw NullPointerException if the department is null
-	 * @see IItemDataService#findItems(Category, String, boolean)
+	 * @see IItemDataService#getItems(Category, String, boolean)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfTheCategoryIsNull() throws Exception {
 		Category category= null;
-		service.findItems(category, "something", false);
+		service.getItems(category, "something", false);
 	}
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is null
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsNull() throws Exception {
-		service.findItems(departmentService.getById(0), null, false);
+		String name = null;
+		service.getItems(departmentService.getById(0), name, false);
 	}
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is empty
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsEmpty() throws Exception {
-		service.findItems(departmentService.getById(0), "", false);
+		service.getItems(departmentService.getById(0), "", false);
 	}
 
 	/**
 	 * @verifies throw IllegalArgumentException if the name is longer than 255 characters
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findItems_shouldThrowIllegalArgumentExceptionIfTheNameIsLongerThan255Characters() throws Exception {
-		service.findItems(departmentService.getById(0), StringUtils.repeat("A", 256), false);
+		service.getItems(departmentService.getById(0), StringUtils.repeat("A", 256), false);
 	}
 
 	/**
 	 * @verifies return an empty list if no items are found
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnAnEmptyListIfNoItemsAreFound() throws Exception {
-		List<Item> items = service.findItems(departmentService.getById(0), "not a valid name", false);
+		List<Item> items = service.getItems(departmentService.getById(0), "not a valid name", false);
 
 		Assert.assertNotNull(items);
 		Assert.assertEquals(0, items.size());
@@ -375,7 +376,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies not return retired items unless specified
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldNotReturnRetiredItemsUnlessSpecified() throws Exception {
@@ -385,22 +386,22 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Context.flushSession();
 
 		Department department = departmentService.getById(0);
-		List<Item> items = service.findItems(department, "t", false);
+		List<Item> items = service.getItems(department, "t", false);
 		Assert.assertNotNull(items);
 		Assert.assertEquals(2, items.size());
 
-		items = service.findItems(department, "t", true);
+		items = service.getItems(department, "t", true);
 		Assert.assertNotNull(items);
 		Assert.assertEquals(3, items.size());
 	}
 
 	/**
 	 * @verifies return items that start with the specified name
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsThatStartWithTheSpecifiedName() throws Exception {
-		List<Item> items = service.findItems(departmentService.getById(0), "test 1", false);
+		List<Item> items = service.getItems(departmentService.getById(0), "test 1", false);
 		Assert.assertNotNull(items);
 		Assert.assertEquals(1, items.size());
 
@@ -410,15 +411,15 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items for only the specified department
-	 * @see IItemDataService#findItems(Department, String, boolean)
+	 * @see IItemDataService#getItems(Department, String, boolean)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsForOnlyTheSpecifiedDepartment() throws Exception {
-		List<Item> items = service.findItems(departmentService.getById(0), "test", false);
+		List<Item> items = service.getItems(departmentService.getById(0), "test", false);
 		Assert.assertNotNull(items);
 		Assert.assertEquals(3, items.size());
 
-		items = service.findItems(departmentService.getById(1), "test", false);
+		items = service.getItems(departmentService.getById(1), "test", false);
 		Assert.assertNotNull(items);
 		Assert.assertEquals(0, items.size());
 	}
@@ -628,34 +629,34 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies throw NullPointerException if item search is null
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfItemSearchIsNull() throws Exception {
-		service.findItems(null, null);
+		service.getItemsByItemSearch(null, null);
 	}
 
 	/**
 	 * @verifies throw NullPointerException if item search template object is null
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test(expected = NullPointerException.class)
 	public void findItems_shouldThrowNullPointerExceptionIfItemSearchTemplateObjectIsNull() throws Exception {
 		ItemSearch search = new ItemSearch(null);
 
-		service.findItems(search, null);
+		service.getItemsByItemSearch(search, null);
 	}
 
 	/**
 	 * @verifies return an empty list if no items are found via the search
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnAnEmptyListIfNoItemsAreFoundViaTheSearch() throws Exception {
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setConcept(Context.getConceptService().getConcept(0));
 
-		List<Item> result = service.findItems(search, null);
+		List<Item> result = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(result);
 		Assert.assertEquals(0, result.size());
@@ -663,7 +664,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items filtered by department
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsFilteredByDepartment() throws Exception {
@@ -677,7 +678,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(department2);
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -686,7 +687,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items filtered by category
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsFilteredByCategory() throws Exception {
@@ -700,7 +701,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setCategory(category);
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -709,7 +710,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items filtered by concept
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnItemsFilteredByConcept() throws Exception {
@@ -721,7 +722,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setConcept(concept);
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -730,14 +731,14 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return all items if paging is null
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnAllItemsIfPagingIsNull() throws Exception {
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
@@ -745,7 +746,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return paged items if paging is specified
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
@@ -754,7 +755,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
-		List<Item> results = service.findItems(search, pagingInfo);
+		List<Item> results = service.getItemsByItemSearch(search, pagingInfo);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -763,7 +764,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies not return retired items from search unless specified
-	 * @see IItemDataService#findItems(ItemSearch, PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
 	public void findItems_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
@@ -777,12 +778,12 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
 
 		search.setIncludeRetired(true);
-		results = service.findItems(search, null);
+		results = service.getItemsByItemSearch(search, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
 	}
@@ -796,7 +797,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	
 	@Test
     public void findItemsWithoutConcept_shouldOnlyReturnItemsWithoutConcept() throws Exception {
-	    List<Item> items = service.findItemsWithoutConcept(null, null);
+	    List<Item> items = service.getItemsWithoutConcept(null, null);
 	    
 	    Assert.assertEquals(4, items.size());
 	    Assert.assertTrue(items.contains(service.getById(0)));
@@ -808,7 +809,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	@Test
     public void findItemsWithoutConcept_shouldLimitTheResultsToGivenSize() throws Exception {
 		Integer resultLimit = 2;
-		List<Item> items = service.findItemsWithoutConcept(null, resultLimit);
+		List<Item> items = service.getItemsWithoutConcept(null, resultLimit);
 		Assert.assertEquals(2, items.size());
     }
 	
@@ -821,7 +822,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		excludedItemIds.add(excludedItem1.getId());
 		excludedItemIds.add(excludedItem2.getId());
 		
-		List<Item> items = service.findItemsWithoutConcept(excludedItemIds, null);
+		List<Item> items = service.getItemsWithoutConcept(excludedItemIds, null);
 
 		Assert.assertEquals(2, items.size());
 		Assert.assertFalse(items.contains(excludedItem1));
@@ -843,7 +844,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		excludedItemIds.add(excludedItem3.getId());
 		excludedItemIds.add(excludedItem4.getId());
 
-		List<Item> items = service.findItemsWithoutConcept(excludedItemIds, null);
+		List<Item> items = service.getItemsWithoutConcept(excludedItemIds, null);
 		
 		Assert.assertNotNull(items);
 		Assert.assertEquals(0, items.size());
@@ -851,13 +852,13 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	
 	@Test
     public void findItemsWithoutConcept_shouldOnlyReturnItemsWhereConceptAcceptedIsFalse() throws Exception {
-	    List<Item> items = service.findItemsWithoutConcept(null, null);
+	    List<Item> items = service.getItemsWithoutConcept(null, null);
 	    Assert.assertEquals(4, items.size());
 	    
 	    Item item = service.getById(0);
 	    item.setConceptAccepted(true);
 	    
-	    items = service.findItemsWithoutConcept(null, null);
+	    items = service.getItemsWithoutConcept(null, null);
 	    Assert.assertEquals(3, items.size());
 	    
 	    

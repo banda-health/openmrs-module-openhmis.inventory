@@ -43,7 +43,7 @@ public class StockroomSearchHandler implements SearchHandler {
         if (location_uuid == null) {
             // Do a name search
             PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-            List<Stockroom> stockrooms = service.findByName(query, context.getIncludeAll(), pagingInfo);
+            List<Stockroom> stockrooms = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
             AlreadyPagedWithLength<Stockroom> results = new AlreadyPagedWithLength<Stockroom>(context, stockrooms, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
             return results;
         }

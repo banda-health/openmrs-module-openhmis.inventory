@@ -141,7 +141,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItemsByDepartmentAndCategory(Department department, Category category, boolean includeRetired) throws APIException;
+	List<Item> getItems(Department department, Category category, boolean includeRetired) throws APIException;
 
 	/**
 	 * Gets all the items for the specified {@link Department} and {@link Category}.
@@ -154,10 +154,10 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItemsByDepartmentAndCategory(Department department, Category category, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+	List<Item> getItems(Department department, Category category, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 
 	/**
-	 * Finds all items in the specified {@link Department} that start with the specified name.
+	 * Gets all items in the specified {@link Department} that start with the specified name.
 	 * @param department The department to search within.
 	 * @param name The item name fragment.
 	 * @param includeRetired Whether retired items should be included in the results.
@@ -174,10 +174,10 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(Department department, String name, boolean includeRetired) throws APIException;
+	List<Item> getItems(Department department, String name, boolean includeRetired) throws APIException;
 
 	/**
-	 * Finds all items in the specified {@link Department} that start with the specified name.
+	 * Gets all items in the specified {@link Department} that start with the specified name.
 	 * @param department The department to search within.
 	 * @param name The item name fragment.
 	 * @param includeRetired Whether retired items should be included in the results.
@@ -187,10 +187,10 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+	List<Item> getItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 
 	/**
-	 * Finds all items in the specified {@link Category} that start with the specified name.
+	 * Gets all items in the specified {@link Category} that start with the specified name.
 	 * @param category The category to search within.
 	 * @param name The item name fragment.
 	 * @param includeRetired Whether retired items should be included in the results.
@@ -207,10 +207,10 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(Category category, String name, boolean includeRetired) throws APIException;
+	List<Item> getItems(Category category, String name, boolean includeRetired) throws APIException;
 
 	/**
-	 * Finds all items in the specified {@link Category} that start with the specified name.
+	 * Gets all items in the specified {@link Category} that start with the specified name.
 	 * @param category The category to search within.
 	 * @param name The item name fragment.
 	 * @param includeRetired Whether retired items should be included in the results.
@@ -220,10 +220,10 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(Category category, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+	List<Item> getItems(Category category, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 
 	/**
-	 * Finds all items in the specified {@link Department} and {@link Category} that start with the specified name.
+	 * Gets all items in the specified {@link Department} and {@link Category} that start with the specified name.
 	 * @param department The department to search within.
 	 * @param name The item name fragment.
 	 * @param includeRetired Whether retired items should be included in the results.
@@ -241,10 +241,10 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(Department department, Category category, String name, boolean includeRetired) throws APIException;
+	List<Item> getItemsByDepartmentAndCategoryAndName(Department department, Category category, String name, boolean includeRetired) throws APIException;
 
 	/**
-	 * Finds all items in the specified {@link Department} and {@link Category} that start with the specified name.
+	 * Gets all items in the specified {@link Department} and {@link Category} that start with the specified name.
 	 * @param department The department to search within.
 	 * @param category The category to search within.
 	 * @param name The item name fragment.
@@ -255,19 +255,19 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(Department department, Category category, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+	List<Item> getItems(Department department, Category category, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 
 	/**
-	 * Finds all items using the specified {@link ItemSearch} settings.
+	 * Gets all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
 	 * @return The items found or an empty list if no items were found.
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(ItemSearch itemSearch);
+	List<Item> getItemsByItemSearch(ItemSearch itemSearch);
 
 	/**
-	 * Finds all items using the specified {@link ItemSearch} settings.
+	 * Gets all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
 	 * @param pagingInfo The paging information.
 	 * @return The items found or an empty list if no items were found.
@@ -284,7 +284,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> findItems(ItemSearch itemSearch, PagingInfo pagingInfo);
+	List<Item> getItemsByItemSearch(ItemSearch itemSearch, PagingInfo pagingInfo);
 
 	/**
 	 * Gets all items by {@link Concept} settings.
@@ -296,7 +296,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
     List<Item> getItemsByConcept(Concept concept);
 
 	/**
-	 * Finds all items where {@link Concept} is null
+	 * Gets all items where {@link Concept} is null
 	 * @param resultLimit Maximum size of returned items.
 	 * @param excludedItemsIds Items not to be considered in the result.
 	 * @return The items found or an empty list if no items were found.
@@ -308,7 +308,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-    List<Item> findItemsWithoutConcept(List<Integer> excludedItemsIds, Integer resultLimit);
+    List<Item> getItemsWithoutConcept(List<Integer> excludedItemsIds, Integer resultLimit);
 
 
 }

@@ -88,7 +88,7 @@ public class ItemSearchHandler implements SearchHandler {
 		if (query == null) {
 			List<Item> items;
 			if (department != null && category != null) {
-				items = service.getItemsByDepartmentAndCategory(department, category, context.getIncludeAll(), pagingInfo);
+				items = service.getItems(department, category, context.getIncludeAll(), pagingInfo);
 			} else if (department != null) {
 				items = service.getItemsByDepartment(department, context.getIncludeAll(), pagingInfo);
 			} else {
@@ -99,11 +99,11 @@ public class ItemSearchHandler implements SearchHandler {
 		} else {
 			List<Item> items;
 			if (department != null && category != null) {
-				items = service.findItems(department, category, query, context.getIncludeAll(), pagingInfo);
+				items = service.getItems(department, category, query, context.getIncludeAll(), pagingInfo);
 			} else if (department != null) {
-				items = service.findItems(department, query, context.getIncludeAll(), pagingInfo);
+				items = service.getItems(department, query, context.getIncludeAll(), pagingInfo);
 			} else {
-				items = service.findItems(category, query, context.getIncludeAll(), pagingInfo);
+				items = service.getItems(category, query, context.getIncludeAll(), pagingInfo);
 			}
 			PageableResult results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 			return results;
@@ -111,7 +111,7 @@ public class ItemSearchHandler implements SearchHandler {
 	}
 
 	private PageableResult doNameSearch(RequestContext context, String query, IItemDataService service, PagingInfo pagingInfo) {
-		List<Item> items = service.findByName(query, context.getIncludeAll(), pagingInfo);
+		List<Item> items = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
 		AlreadyPagedWithLength<Item> results = new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		return results;
 	}

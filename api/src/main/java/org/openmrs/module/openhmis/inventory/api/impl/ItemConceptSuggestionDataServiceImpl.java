@@ -43,7 +43,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
 
         if (itemConceptSuggestions.size() < resultLimit) {
             int reachDefaultReultLimit = resultLimit - itemConceptSuggestions.size();
-            List<Item> itemsWithoutConcept = itemDataService.findItemsWithoutConcept(excludedItemsIds, reachDefaultReultLimit);
+            List<Item> itemsWithoutConcept = itemDataService.getItemsWithoutConcept(excludedItemsIds, reachDefaultReultLimit);
             for (Item item : itemsWithoutConcept) {
                 ItemConceptSuggestion itemConceptSuggestion = new ItemConceptSuggestion(item, null, null, false);
                 itemConceptSuggestions.add(itemConceptSuggestion);
