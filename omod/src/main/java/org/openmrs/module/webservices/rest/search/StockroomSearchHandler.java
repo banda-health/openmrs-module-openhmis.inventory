@@ -56,7 +56,7 @@ public class StockroomSearchHandler implements SearchHandler {
             }
             // Do a name + department search
             PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-            List<Stockroom> stockrooms = service.findStockrooms(location, query, context.getIncludeAll(), pagingInfo);
+            List<Stockroom> stockrooms = service.getStockrooms(location, query, context.getIncludeAll(), pagingInfo);
             PageableResult results = new AlreadyPagedWithLength<Stockroom>(context, stockrooms, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
             return results;
         }

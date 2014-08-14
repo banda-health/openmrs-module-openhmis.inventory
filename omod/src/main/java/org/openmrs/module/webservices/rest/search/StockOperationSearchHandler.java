@@ -108,11 +108,11 @@ public class StockOperationSearchHandler implements SearchHandler {
 				operations = operationDataService.getAll(false, pagingInfo);
 			} else {
 				// Return the operations with the specified status
-				operations = operationDataService.findOperations(search, pagingInfo);
+				operations = operationDataService.getOperations(search, pagingInfo);
 			}
 		} else {
 			// Return the operations for the specified stockroom and status
-			operations = stockroomDataService.findOperations(stockroom, search, pagingInfo);
+			operations = stockroomDataService.getOperations(stockroom, search, pagingInfo);
 		}
 
 		if (operations == null || operations.size() == 0) {
