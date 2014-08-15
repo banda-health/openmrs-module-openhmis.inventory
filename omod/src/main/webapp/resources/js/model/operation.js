@@ -218,7 +218,7 @@ define(
                         title: 'Operation Type',
                         options: new openhmis.GenericCollection(null, {
                             model: openhmis.OperationType,
-                            url: openhmis.url.inventoryModelBase + '/stockOperationType'
+                            url: openhmis.url.inventoryModelBase + 'stockOperationType'
                     }),
                     objRef: true
                 };
@@ -232,7 +232,7 @@ define(
                     type: 'StockroomSelect',
                         options: new openhmis.GenericCollection(null, {
                         model: openhmis.Stockroom,
-                        url: openhmis.url.inventoryModelBase + '/stockroom'
+                        url: openhmis.url.inventoryModelBase + 'stockroom'
                     }),
                     objRef: true
                 };
@@ -240,7 +240,7 @@ define(
                     type: 'StockroomSelect',
                         options: new openhmis.GenericCollection(null, {
                         model: openhmis.Stockroom,
-                        url: openhmis.url.inventoryModelBase + '/stockroom'
+                        url: openhmis.url.inventoryModelBase + 'stockroom'
                     }),
                     objRef: true
                 };

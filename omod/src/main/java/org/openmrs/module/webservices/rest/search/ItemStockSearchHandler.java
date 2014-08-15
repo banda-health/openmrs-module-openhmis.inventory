@@ -18,7 +18,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
+import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
@@ -30,13 +32,16 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
+import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class ItemStockSearchHandler implements SearchHandler {
@@ -46,16 +51,19 @@ public class ItemStockSearchHandler implements SearchHandler {
 			Arrays.asList("1.9.*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Find item stock by stockroom and an optional name fragment.")
-							.withOptionalParameters("q")
-							.withRequiredParameters("stockroom_uuid").build()
+							.withRequiredParameters("stockroom_uuid")
+							.withOptionalParameters("q", "item_uuid")
+							.build()
 			)
 	);
 
 	private IStockroomDataService stockroomDataService;
+	private IItemDataService itemDataService;
 
 	@Autowired
-	public ItemStockSearchHandler(IStockroomDataService stockroomDataService) {
+	public ItemStockSearchHandler(IStockroomDataService stockroomDataService, IItemDataService itemDataService) {
 		this.stockroomDataService = stockroomDataService;
+		this.itemDataService = itemDataService;
 	}
 
 	@Override
@@ -65,14 +73,16 @@ public class ItemStockSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
-		return doSearch(stockroomDataService, context);
-	}
-
-	public static PageableResult doSearch(IStockroomDataService service, RequestContext context) {
 		String query = context.getParameter("q");
 
+		String itemUuid = context.getParameter("item_uuid");
+		Item item = null;
+		if (!StringUtils.isEmpty(itemUuid)) {
+			item = itemDataService.getByUuid(itemUuid);
+		}
+
 		String stockroomUuid = context.getParameter("stockroom_uuid");
-		Stockroom stockroom = service.getByUuid(stockroomUuid);
+		Stockroom stockroom = stockroomDataService.getByUuid(stockroomUuid);
 
 		if (stockroom == null) {
 			log.warn("Could not find stockroom '" + stockroomUuid + "'");
@@ -87,16 +97,25 @@ public class ItemStockSearchHandler implements SearchHandler {
 			ItemSearch search = new ItemSearch();
 			search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
 			search.getTemplate().setName(query + "%");
-			items = service.findItems(stockroom, search, pagingInfo);
+			items = stockroomDataService.findItems(stockroom, search, pagingInfo);
+		} else if (item != null) {
+			pagingInfo = null;
+
+			items = new ArrayList<ItemStock>(1);
+			items.add(stockroomDataService.getItem(stockroom, item));
 		} else {
-			items = service.getItemsByRoom(stockroom, pagingInfo);
+			items = stockroomDataService.getItemsByRoom(stockroom, pagingInfo);
 		}
 
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
 		} else {
-			return new AlreadyPagedWithLength<ItemStock>(context, items,
-					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			if (pagingInfo == null) {
+				return new AlreadyPaged<ItemStock>(context, items, false);
+			} else {
+				return new AlreadyPagedWithLength<ItemStock>(context, items,
+						pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			}
 		}
 	}
 }

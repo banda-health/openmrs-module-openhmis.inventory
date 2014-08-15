@@ -49,10 +49,5 @@ public class ItemStockResource extends BaseRestObjectResource<ItemStock> {
 
 		return description;
 	}
-
-	@Override
-	protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-		return ItemStockSearchHandler.doSearch(Context.getService(IStockroomDataService.class), context);
-	}
 }
 

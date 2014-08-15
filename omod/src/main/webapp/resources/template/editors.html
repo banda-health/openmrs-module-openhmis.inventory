@@ -27,7 +27,7 @@
 </script>
 
 <script id="itemstock-autocomplete-editor" type="text/template">
-    <? var department_uuid = department? department.id : null ?>
+    <? var department_uuid = department ? department.id : null ?>
     <? var id = itemStock ? itemStock.cid + '-' : "" ?>
     <select id="<?= id ?>department" class="department">
         <option value=""><em>--department--</em></option>
@@ -44,22 +44,42 @@
     <input type="hidden" class="itemStock-uuid" />
 </script>
 
+<!-- These controls start disabled and are only enabled once an item/item stock is selected -->
 <script id="itemstock-expiration-editor" type="text/template">
-    <input id="calculated_expiration" class="expiration-check" type="checkbox" value="calculated" />
-    <? if (entryRequired) { ?>
-        <input id="expriationEntry" class="itemstock-expiration" type="date" value="<?= expiration ?>" />
+
+    <? if (visible) { ?>
+        <? if (entryRequired) { ?>
+            <input id="expirationEntry" class="itemstock-expiration" type="text" placeholder="Expiration" />
+        <? } else { ?>
+            <select id="expirationSelect" class="itemstock-expiration">
+                <option value="Auto" selected><em>Auto</em></option>
+                <? if (expirations) { ?>
+                <? _.each(expirations, function(exp) { ?>
+                    <option value="<?= exp ?>"><?= exp ?></option>
+                <? }); ?>
+                <? } ?>
+            </select>
+        <? } ?>
+
     <? } else { ?>
-        <select id="expriationSelect" class="itemstock-expiration">
-            <option value=""><em>Auto</em></option>
-            <? if (expirations) { ?>
-            <? expirations.each(function(exp) { ?>
-                <option value="<?= exp ?>"><?= exp ?></option>
-            <? }); ?>
-            <? } ?>
-        </select>
+        <div></div>
     <? } ?>
 </script>
 
+<!-- This control starts disabled and is only enabled once an item/item stock is selected -->
 <script id="itemstock-batch-editor" type="text/template">
-
+    <? if (visible) { ?>
+        <? if (entryRequired) { ?>
+        <select id="batchSelect" class="itemstock-batch">
+            <option value="Auto" selected><em>Auto</em></option>
+            <? if (operations) { ?>
+            <? _.each(operations, function(op) { ?>
+            <option value="<?= op.id ?>"><?= op ?></option>
+            <? }); ?>
+            <? } ?>
+        </select>
+        <? } ?>
+    <? } else { ?>
+        <div></div>
+    <? } ?>
 </script>

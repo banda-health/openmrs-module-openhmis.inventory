@@ -52,9 +52,14 @@ table.item-stock td, table.item-stock th {
 }
 table.item-stock td.end, table.item-stock th.end { border-right: none; }
 
+table.item-stock .field-item { width: 65%; }
 table.item-stock .field-item .editor .department-name { width: 31%; }
 table.item-stock .field-item .editor .itemStock-name { width: 66%; }
 
+table.item-stock .field-quantity { width: 75px; }
+table.item-stock .field-expiration { width: 100px; }
+table.item-stock .field-batchOperation { width: 150px; }
+
 #newOperation b.boxHeader, #newOperation  div.box {
-	width: 98%;
+	width: 99%;
 }

@@ -56,6 +56,11 @@ define(
             displayAttr: "name"
         });
 
+        editors.OperationSelect = editors.GenericModelSelect.extend({
+            modelType: openhmis.Operation,
+            displayAttr: "operationNumber"
+        });
+
         editors.DefaultExpirationPeriodStepper = editors.Base.extend({
             tagName: "span",
             className: "editor",
@@ -158,10 +163,10 @@ define(
             doConceptSearch: function (request, response) {
                 var term = request.term;
                 var query = "?q=" + encodeURIComponent(term);
-                this.doSearch(request, response, openhmis.Concept, query);
+                this.doStockSearch(request, response, openhmis.Concept, query);
             },
 
-            doSearch: function (request, response, model, query) {
+            doStockSearch: function (request, response, model, query) {
                 this.handleSpinnerShow();
                 var term = request.term;
                 if (query in this.cache) {
@@ -261,6 +266,7 @@ define(
 
                 this.template = this.getTemplate();
                 this.stockroomSelector = options.schema.stockroomSelector;
+                this.parentView = options.schema.parentView;
 
                 this.cache = {};
                 this.departmentCollection.on("reset", this.render);
@@ -268,11 +274,11 @@ define(
 
             events: {
                 'change select.department': 'modified',
-                'change input.item-name' : 'modified',
+                'change input.itemStock-name' : 'modified',
                 'focus select': 'handleFocus',
-                'focus .item-name': 'handleFocus',
+                'focus .itemStock-name': 'handleFocus',
                 'blur select': 'handleBlur',
-                'keypress .item-name': 'onItemNameKeyPress'
+                'keypress .itemStock-name': 'onItemNameKeyPress'
             },
 
             getUuid: function() {
@@ -293,12 +299,12 @@ define(
                 var self = this;
                 setTimeout(function() {
                     // Check if another input from this editor has come into focus
-                    if (self.$('select:focus')[0] || self.$('.item-name:focus')[0] || self.$('label:focus')[0]) {
+                    if (self.$('select:focus')[0] || self.$('.itemStock-name:focus')[0] || self.$('label:focus')[0]) {
                         return;
                     }
 
                     if (self.value) {
-                        self.$('.item-name').val(self.value.get("name"));
+                        self.$('.itemStock-name').val(self.value.get("name"));
                         self.$('.department').val(self.value.get("department").id);
                         self.$('label.over-apply').hide();
                     } else {
@@ -320,29 +326,35 @@ define(
                 //       successful validation
             },
 
-            doItemSearch: function(request, response) {
+            doSearch: function(request, response) {
                 // Query the item stock by name
                 var query = "?q=" + encodeURIComponent(request.term);
 
-                // and by stockroom
-                var stockroom_uuid = $(this.stockroomSelector).val();
-                if (!stockroom_uuid) {
-                    alert('Could not locate source stockroom element.');
-                    return;
-                }
-                query += "&stockroom_uuid=" + encodeURIComponent(stockroom_uuid);
-
-                // and optionally by the item department
+                // Add the optional item department query filter
                 var department_uuid = this.$('.department').val();
                 if (department_uuid) {
                     query += "&department_uuid=" + encodeURIComponent(department_uuid);
                 }
 
-                this.doSearch(request, response, openhmis.ItemStock, query);
+                // We only want to return items that have physical stock
+                query += "&has_physical_inventory=true";
+
+                this.search(request, response, openhmis.Item, query, "item",
+                    function(model) {
+                        return {
+                            val: model.id,
+                            label: model.get('name'),
+                            department_uuid: model.get('department').uuid
+                        }
+                    }
+                );
             },
 
-            doSearch: function(request, response, model, query) {
-                if (query in this.cache) {
+            search: function(request, response, model, query, cacheSection, mapFn) {
+                cacheSection = cacheSection ? cacheSection : "";
+
+                // Check for cached queries
+                if (cacheSection + query in this.cache) {
                     response(this.cache[query]);
                     return;
                 }
@@ -354,13 +366,9 @@ define(
                 resultCollection.fetch({
                     url: resultCollection.url + fetchQuery,
                     success: function(collection, resp) {
-                        var data = collection.map(function(model) { return {
-                            val: model.id,
-                            label: model.get('item').get('name'),
-                            department_uuid: model.get('item').get('department').id
-                        }});
+                        var data = collection.map(mapFn);
 
-                        view.cache[query] = data;
+                        view.cache[cacheSection + query] = data;
                         response(data);
                     }
                 });
@@ -377,7 +385,7 @@ define(
                 this.$('.itemStock-uuid').val(uuid);
                 this.$('.department').val(departmentUuid);
 
-                this.value = new openhmis.ItemStock({ uuid: uuid });
+                this.value = new openhmis.Item({ uuid: uuid });
 
                 var view = this;
                 this.value.fetch({ success: function(model, resp) {
@@ -393,11 +401,17 @@ define(
             },
 
             render: function() {
+                var item, itemStock, department;
+
+                itemStock = undefined;
+                department = this.value ? this.value.get("department") : undefined;
+                item = this.value ? this.value : undefined;
+
                 this.$el.html(this.template({
                     departments: this.departmentCollection,
-                    itemStock: this.value,
-                    department: this.value ? this.value.get("item").get("department") : undefined,
-                    item: this.value ? this.value.get("item") : undefined
+                    itemStock: itemStock,
+                    department: department,
+                    item: item
                 }));
 
                 this.$('select').keydown(this.departmentKeyDown);
@@ -407,7 +421,7 @@ define(
                 this.$('.itemStock-name')
                     .autocomplete({
                         minLength: 2,
-                        source: this.doItemSearch,
+                        source: this.doSearch,
                         select: this.selectItem
                     })
                     .data("autocomplete")._renderItem = function(ul, itemStock) {
@@ -427,7 +441,6 @@ define(
             tmplSelector: '#itemstock-expiration-editor',
 
             events: {
-                'change input.expiration-check' : 'checked',
                 'change select.expiration': 'modified',
                 'change input.expiration' : 'modified'
             },
@@ -445,32 +458,76 @@ define(
             },
 
             render: function() {
-                // The parent view tracks the currently selected operation type so we'll use that here
-                var operationType = this.parentView.currentOperationType;
+                var operationType = this.getOperationType();
                 if (!operationType) {
-                    alert("Could not load operation type.");
                     return;
                 }
 
+                var defaultExp = undefined;
+                var entryRequired = operationType.get('hasSource') !== true;
+                if (entryRequired ) {
+                    // Set the default expiration date to the current date plus the number of days defined in the item's
+                    //  default expiration period. If the item does not have a default, no value should be used so that
+                    //  user is required to enter something
+                    var itemExpPeriod = this.options.item ? this.options.item.get('defaultExpirationPeriod') : undefined;
+                    if (itemExpPeriod) {
+                        defaultExp = new Date();
+                        defaultExp.setDate(defaultExp.getDate() + itemExpPeriod);
+                    }
+                }
+
                 this.$el.html(this.template({
-                    entryRequired: operationType.get('hasSource') != true,
-                    expirations: this.value
+                    visible: this.options.visible ? this.options.visible : false,
+                    entryRequired: entryRequired,
+                    defaultExpirationDate: defaultExp,
+                    expirations: this.options.options
                 }));
 
                 this.$('label').labelOver('over-apply');
 
-                //this.inputEl = this.$('');
-                //this.selectEl = this.$('');
+                if (entryRequired) {
+                    var entryEl = this.$('#expirationEntry');
+
+                    // Turn the expiration text input into a date picker
+                    entryEl.datepicker({
+                        defaultDate: defaultExp
+                    });
+
+                    // Set the text to the default value, if one has been calculated
+                    if (defaultExp) {
+                        entryEl.val(openhmis.dateFormatLocale(defaultExp));
+                    }
+                }
 
                 return this;
             },
 
-            checked: function() {
-
+            modified: function() {
             },
 
-            modified: function() {
+            getValue: function() {
+                var operationType = this.getOperationType();
+                if (!operationType) {
+                    return undefined;
+                }
 
+                if (operationType.get("hasSource") === true) {
+                    selected = this.$('#expriationEntry').val();
+                } else {
+                    selected = this.$('option:selected').val();
+                }
+
+                return selected;
+            },
+
+            getOperationType: function() {
+                // The parent view tracks the currently selected operation type so we'll use that here
+                var operationType = this.parentView.currentOperationType;
+                if (!operationType) {
+                    alert("Could not load operation type.");
+                }
+
+                return operationType;
             }
         });
 

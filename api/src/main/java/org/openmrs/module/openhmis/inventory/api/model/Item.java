@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Model class that represents a product or service that can be tracked by an institution.
+ * Model class that represents a product or service.
  */
 public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
 	public static final long serialVersionUID = 0L;
@@ -36,10 +36,10 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Category category;
 	private Concept concept;
 	private ItemPrice defaultPrice;
-	private boolean hasExpiration;
+	private Boolean hasExpiration;
 	private Integer defaultExpirationPeriod;
-	private boolean hasPhysicalInventory;
-	private boolean conceptAccepted;
+	private Boolean hasPhysicalInventory;
+	private Boolean conceptAccepted;
 
 	public Item() {
 	}
@@ -170,7 +170,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		return hasPhysicalInventory;
 	}
 
-	public boolean hasPhysicalInventory() {
+	public Boolean hasPhysicalInventory() {
 		return hasPhysicalInventory;
 	}
 
@@ -182,7 +182,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		return hasExpiration;
 	}
 
-	public boolean hasExpiration() {
+	public Boolean hasExpiration() {
 		return hasExpiration;
 	}
 
@@ -198,11 +198,15 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		this.defaultExpirationPeriod = defaultExpirationPeriod;
 	}
 
-	public boolean isConceptAccepted() {
+	public Boolean getConceptAccepted() {
+		return this.conceptAccepted;
+	}
+
+	public Boolean isConceptAccepted() {
 		return conceptAccepted;
 	}
 
-	public void setConceptAccepted(boolean conceptAccepted) {
+	public void setConceptAccepted(Boolean conceptAccepted) {
 		this.conceptAccepted = conceptAccepted;
 	}
 

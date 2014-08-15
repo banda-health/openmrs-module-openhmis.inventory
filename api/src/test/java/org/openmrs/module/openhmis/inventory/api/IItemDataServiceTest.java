@@ -27,6 +27,7 @@ import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
+import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
@@ -764,5 +765,84 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		results = service.findItems(search, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
+	}
+
+	/**
+	 * @verifies return items filtered by physical inventory
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.inventory.api.search.ItemSearch,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByPhysicalInventory() throws Exception {
+		Item item = service.getById(0);
+		item.setHasPhysicalInventory(false);
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch();
+		search.getTemplate().setHasPhysicalInventory(false);
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by expiration
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.inventory.api.search.ItemSearch,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByExpiration() throws Exception {
+		Item item = service.getById(2);
+		item.setHasExpiration(true);
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch();
+		search.getTemplate().setHasExpiration(true);
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by name
+	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.inventory.api.search.ItemSearch,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void findItems_shouldReturnItemsFilteredByName() throws Exception {
+		Item item = service.getById(0);
+		item.setName("SomeNewName");
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch();
+		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.EQUAL);
+		search.getTemplate().setName("SomeNewName");
+
+		List<Item> results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+
+		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
+		search.getTemplate().setName("Some%");
+
+		results = service.findItems(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
 	}
 }

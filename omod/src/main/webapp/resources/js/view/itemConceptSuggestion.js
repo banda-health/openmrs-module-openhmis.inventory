@@ -247,10 +247,10 @@ define(
 	        doConceptSearch: function(request, response) {
 	            var term = request.term;
 	            var query = "?q=" + encodeURIComponent(term);
-	            this.doSearch(request, response, openhmis.Concept, query);
+	            this.doStockSearch(request, response, openhmis.Concept, query);
 	          },
 
-	        doSearch: function(request, response, model, query) {
+	        doStockSearch: function(request, response, model, query) {
 	            this.handleSpinnerShow();
 	            var term = request.term;
 	            if (query in this.cache) {

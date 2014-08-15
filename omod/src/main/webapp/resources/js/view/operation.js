@@ -1,6 +1,7 @@
 define(
 	[
         openhmis.url.backboneBase + 'js/lib/jquery',
+        openhmis.url.backboneBase + 'js/lib/underscore',
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/openhmis',
 		openhmis.url.inventoryBase + 'js/model/operation',
@@ -8,7 +9,7 @@ define(
         openhmis.url.inventoryBase + 'js/view/editors',
 		'link!' + openhmis.url.inventoryBase + 'css/style.css'
 	],
-	function($, openhmis) {
+	function($, _, openhmis) {
 		openhmis.OperationTypeEditView = openhmis.CustomizableInstanceTypeAddEditView.extend({
 			tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
 			tmplSelector: '#detail-template'
@@ -139,7 +140,7 @@ define(
                 }
 
                 this.events = _.extend({}, this.events, {
-                    'change select[name="instanceType"]': 'updateOperationType'
+                    'change select[name="instanceType"]': 'instanceTypeChanged'
                 });
 
                 this.itemStockView = new openhmis.OperationItemStockView({
@@ -147,6 +148,8 @@ define(
                         model: openhmis.ItemStockEntry
                     }),
                     itemView: openhmis.OperationItemStockItemView,
+                    listTitle: 'Operation Items',
+                    listFields: ['item', 'quantity', 'expiration', 'batchOperation'],
                     stockroomSelector: 'select[name="source"]',
                     view: this,
                     operation: this.model
@@ -176,17 +179,6 @@ define(
                 this.itemStockView.$("table").addClass("item-stock");
             },
 
-            updateOperationType: function(event) {
-                var source = $('select[name="source"]');
-                var dest = $('select[name="destination"]');
-
-                this.currentOperationType = this.findOperationType($(event.target).val());
-                if (this.currentOperationType != undefined) {
-                    source.prop('disabled', !this.currentOperationType.get('hasSource'));
-                    dest.prop('disabled', !this.currentOperationType.get('hasDestination'));
-                }
-            },
-
             showForm: function() {
                 // Render new operation form
                 this.beginAdd();
@@ -195,9 +187,36 @@ define(
                 // Insert the item stock list after the form but before the buttons
                 $("#newOperation").find(".bbf-form").append(this.itemStockView.el);
 
-                // Display the form as a dialog
+                // Display the form
                 this.$el.show();
-                //this.$el.dialog();
+
+                if (this.currentOperationType) {
+                    this.updateOperationType(this.currentOperationType);
+                }
+            },
+
+            instanceTypeChanged: function(event) {
+                this.updateOperationType($(event.target).val());
+            },
+
+            updateOperationType: function(instanceType) {
+                // Do something with items
+                //  Options:
+                //      1) Warn, clear, and create new empty line (easiest)
+                //      2) ?
+
+                // If the instance type is a model just use it, otherwise expect that it is the uuid id for the instance type
+                this.currentOperationType = instanceType instanceof openhmis.OperationType ?
+                    instanceType :
+                    this.findOperationType(instanceType);
+
+                if (this.currentOperationType != undefined) {
+                    var source = $('select[name="source"]');
+                    var dest = $('select[name="destination"]');
+
+                    source.prop('disabled', !this.currentOperationType.get('hasSource'));
+                    dest.prop('disabled', !this.currentOperationType.get('hasDestination'));
+                }
             },
 
             findOperationType: function(uuid) {
@@ -219,7 +238,8 @@ define(
             schema: {
                 item: { type: "ItemStockAutocomplete" },
                 expiration: { type: "ItemStockEntryExpiration" },
-                /*batchOperation: { type: "" },*/
+                /* TODO: Enable the corrent batch operation autocomplete
+                batchOperation: { type: "" },*/
                 quantity: { type: "CustomNumber" }
             },
 
@@ -235,8 +255,11 @@ define(
 
                 // Create the stockroom jquery selector in the item schema so that it is passed to the editor
                 this.schema.item.stockroomSelector = options.stockroomSelector;
+                this.schema.item.parentView = options.view;
                 this.schema.expiration.parentView = options.view;
                 //this.schema.batchOperation.parentView = options.view;
+
+                this.parentView = options.view;
 
                 var operation = options.operation ? options.operation : new openhmis.Operation();
                 this.setOperation(operation);
@@ -248,9 +271,12 @@ define(
 
             setOperation: function(operation) {
                 this.operation = operation;
-                this.model = operation.get("items") ?
+                this.operation.set('items', operation.get("items") ?
                     operation.get("items") :
-                    new openhmis.GenericCollection(null, { model: openhmis.ItemStockEntry });
+                    new openhmis.GenericCollection(null, { model: openhmis.ItemStockEntry })
+                );
+                this.model = this.operation.get('items');
+
                 this.options.itemActions = ["remove", "inlineEdit"];
             },
 
@@ -317,7 +343,7 @@ define(
             },
 
             render: function() {
-                openhmis.GenericListEntryView.prototype.render.call(this, { options: { listTitle: "" }});
+                openhmis.GenericListEntryView.prototype.render.call(this);
 
                 return this;
             },
@@ -346,41 +372,78 @@ define(
             },
 
             updateItem: function(form, itemEditor) {
+                // Get the selected item
                 var item = itemEditor.getValue();
                 this.refreshItemFields(item, form);
+
+                // Set the quantity if not specified
                 if (form.fields.quantity.getValue() === 0) {
                     form.fields.quantity.setValue(1);
                 }
+
                 this.update();
 
+                // Set the focus on the quantity field
                 form.fields.quantity.editor.focus(true);
             },
 
             refreshItemFields: function(item, form) {
-                // Get the selected item details
-                var details = item.get("details");
+                var hasExpiration = item.get("hasExpiration");
 
-                // Build the expiration and batch lists for this item
-                var expirations = [];
-                var batches = [];
-                details.each(function(detail) {
-                    var exp = detail.get("expiration");
-                    if (exp && exp != "") {
-                        expirations.push(exp);
-                    }
+                // TODO: This logic is much too closely coupled to the underlying item editor
+                var stockroomUuid = $(this.options.schema.item.stockroomSelector).val();
+                if (stockroomUuid) {
+                    var self = this;
 
-                    var batch = detail.get("batchOperation");
-                    if (batch) {
-                        batches.push(batch);
-                    }
-                });
+                    // Get the selected item stock details and build the list of available expiration dates and batch
+                    // operations
+                    var search = new openhmis.GenericCollection([], {
+                        model: openhmis.ItemStock
+                    });
+                    search.fetch({
+                        queryString: "stockroom_uuid=" + stockroomUuid + "&item_uuid=" + item.id,
+                        success: function(model, resp) {
+                            var expirations = [];
+                            var batches = [];
 
-                // Load the lists into the fields
+                            if (model.models && model.models.length > 0) {
+                                var details = model.models[0].get("details");
+
+                                // Build the expiration and batch lists for this item
+                                _.each(details, function (detail) {
+                                    var exp = detail.get("expiration");
+                                    if (exp && exp != "") {
+                                        expirations.push(openhmis.dateFormatLocale(exp));
+                                    }
+
+                                    var batch = detail.get("batchOperation");
+                                    if (batch) {
+                                        batches.push(batch);
+                                    }
+                                });
+                            }
+
+                            self.updateEditors(form, item, hasExpiration, expirations, batches);
+                        },
+                        error: function() {
+                            self.updateEditors(form, item, hasExpiration, undefined, undefined);
+                        }
+                    });
+                } else {
+                    this.updateEditors(form, item, hasExpiration, undefined, undefined);
+                }
+            },
+
+            updateEditors: function(form, item, hasExpiration, expirations, batches) {
                 if (form) {
                     form.fields.expiration.editor.options.options = expirations;
+                    form.fields.expiration.editor.options.item = item;
+                    form.fields.expiration.editor.options.visible = hasExpiration;
                     form.fields.expiration.editor.render();
 
+                    // TODO: The batch editor needs to be a search rather than dropdown.
                     form.fields.batchOperation.editor.options.options = batches;
+                    form.fields.batchOperation.editor.options.item = item;
                     form.fields.batchOperation.editor.render();
                 }
             },

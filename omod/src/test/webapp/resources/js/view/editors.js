@@ -38,7 +38,7 @@ describe("Item Editor", function() {
 			});
 			
 			var request = { term: "Test term" }
-			editor.doSearch(request, response, openhmis.Item);
+			editor.doStockSearch(request, response, openhmis.Item);
 		});
 
 		waitsFor(function() {

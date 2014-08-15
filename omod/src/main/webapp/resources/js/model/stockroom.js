@@ -137,8 +137,12 @@ define(
 
                 this.schema.batchOperation = {
                     type: 'OperationSelect',
-                    model: openhmis.Operation,
-                    url: openhmis.url.inventoryModelBase + '/stockOperation'
+                    title: 'Batch Operation',
+                    options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Operation,
+                        url: openhmis.url.inventoryModelBase + 'stockOperation'
+                    }),
+                    objRef: true
                 };
 
                 this.schema.calculatedExpiration = { type: 'TrueFalseCheckbox' };
@@ -204,6 +208,14 @@ define(
                 // Hide the calculated fields as these will be set by the custom editors above
                 this.schema.calculatedExpiration.hidden= true;
                 this.schema.calculatedBatch.hidden = true;
+            },
+
+            validate: function(attrs, options) {
+                if (!attrs.item) {
+                    return { item: __("An item is required") }
+                }
+
+                return null;
             }
         });
 
