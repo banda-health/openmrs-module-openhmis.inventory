@@ -897,4 +897,10 @@
 								 baseTableName="inv_stock_operation_item" baseColumnNames="batch_operation_id"
 								 referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.0.0-11" author="marios">
+		<addNotNullConstraint 
+            columnDataType="varchar(255)"
+            columnName="operation_number"
+            tableName="inv_stock_operation"/>
+	</changeSet>
 </databaseChangeLog>
