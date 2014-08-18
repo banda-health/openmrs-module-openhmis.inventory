@@ -511,10 +511,20 @@ define(
                     return undefined;
                 }
 
+                var selected = undefined;
                 if (operationType.get("hasSource") === true) {
-                    selected = this.$('#expriationEntry').val();
-                } else {
                     selected = this.$('option:selected').val();
+                } else {
+                    selected = this.$('#expirationEntry').val();
+                }
+
+                // Try to parse the date into a real Date object
+                if (selected) {
+                    try {
+                        selected = new Date(selected);
+                    } catch(err) {
+                        selected = undefined;
+                    }
                 }
 
                 return selected;

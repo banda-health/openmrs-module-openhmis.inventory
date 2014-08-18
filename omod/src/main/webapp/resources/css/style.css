@@ -56,9 +56,13 @@ table.item-stock .field-item { width: 65%; }
 table.item-stock .field-item .editor .department-name { width: 31%; }
 table.item-stock .field-item .editor .itemStock-name { width: 66%; }
 
+table.item-stock thead .field-quantity, table.item-stock thead .field-expiration { text-align: center; }
+
 table.item-stock .field-quantity { width: 75px; }
-table.item-stock .field-expiration { width: 100px; }
-table.item-stock .field-batchOperation { width: 150px; }
+table.item-stock .field-expiration {
+	width: 100px;
+	text-align: right;
+}
 
 #newOperation b.boxHeader, #newOperation  div.box {
 	width: 99%;

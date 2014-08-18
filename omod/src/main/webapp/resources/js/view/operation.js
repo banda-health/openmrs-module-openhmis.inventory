@@ -179,6 +179,17 @@ define(
                 this.itemStockView.$("table").addClass("item-stock");
             },
 
+            save: function(event) {
+                // Load the item stock from the sub-view
+                if (this.itemStockView && this.itemStockView.model && this.itemStockView.model.models) {
+                    if (!this.model.get("items")) {
+                        this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
+                    }
+                }
+
+                openhmis.GenericAddEditView.prototype.save.call(this, event);
+            },
+
             showForm: function() {
                 // Render new operation form
                 this.beginAdd();
@@ -237,10 +248,9 @@ define(
         openhmis.OperationItemStockView = openhmis.GenericListEntryView.extend({
             schema: {
                 item: { type: "ItemStockAutocomplete" },
+                quantity: { type: "CustomNumber" },
                 expiration: { type: "ItemStockEntryExpiration" },
-                /* TODO: Enable the corrent batch operation autocomplete
-                batchOperation: { type: "" },*/
-                quantity: { type: "CustomNumber" }
+                batchOperation: { hidden: true }
             },
 
             initialize: function(options) {
@@ -257,7 +267,6 @@ define(
                 this.schema.item.stockroomSelector = options.stockroomSelector;
                 this.schema.item.parentView = options.view;
                 this.schema.expiration.parentView = options.view;
-                //this.schema.batchOperation.parentView = options.view;
 
                 this.parentView = options.view;
 
@@ -436,15 +445,11 @@ define(
 
             updateEditors: function(form, item, hasExpiration, expirations, batches) {
                 if (form) {
+                    form.fields.expiration.editor.options.visible = hasExpiration;
                     form.fields.expiration.editor.options.options = expirations;
                     form.fields.expiration.editor.options.item = item;
-                    form.fields.expiration.editor.options.visible = hasExpiration;
-                    form.fields.expiration.editor.render();
 
-                    // TODO: The batch editor needs to be a search rather than dropdown.
-                    form.fields.batchOperation.editor.options.options = batches;
-                    form.fields.batchOperation.editor.options.item = item;
-                    form.fields.batchOperation.editor.render();
+                    form.fields.expiration.editor.render();
                 }
             },
 

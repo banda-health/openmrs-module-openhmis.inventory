@@ -65,21 +65,3 @@
         <div></div>
     <? } ?>
 </script>
-
-<!-- This control starts disabled and is only enabled once an item/item stock is selected -->
-<script id="itemstock-batch-editor" type="text/template">
-    <? if (visible) { ?>
-        <? if (entryRequired) { ?>
-        <select id="batchSelect" class="itemstock-batch">
-            <option value="Auto" selected><em>Auto</em></option>
-            <? if (operations) { ?>
-            <? _.each(operations, function(op) { ?>
-            <option value="<?= op.id ?>"><?= op ?></option>
-            <? }); ?>
-            <? } ?>
-        </select>
-        <? } ?>
-    <? } else { ?>
-        <div></div>
-    <? } ?>
-</script>
