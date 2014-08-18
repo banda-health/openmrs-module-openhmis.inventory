@@ -428,32 +428,32 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies throw NullPointerException if operation search is null
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchIsNull() throws Exception {
-		service.findOperations(null, null);
+		service.getOperations(null, null);
 	}
 
 	/**
 	 * @verifies throw NullPointerException if operation search template object is null
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void findOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchTemplateObjectIsNull() throws Exception {
-		service.findOperations(new StockOperationSearch(null), null);
+		service.getOperations(new StockOperationSearch(null), null);
 	}
 
 	/**
 	 * @verifies return an empty list if no operations are found via the search
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnAnEmptyListIfNoOperationsAreFoundViaTheSearch() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.CANCELLED);
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
@@ -461,7 +461,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items filtered by number
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredByNumber() throws Exception {
@@ -474,7 +474,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setOperationNumber("ABCD-1234");
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -483,7 +483,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		search.setOperationNumberComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
 		search.getTemplate().setOperationNumber("AB%");
 
-		results = service.findOperations(search, null);
+		results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -492,7 +492,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items filtered by status
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredByStatus() throws Exception {
@@ -505,7 +505,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.CANCELLED);
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -514,7 +514,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items filtered by type
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredByType() throws Exception {
@@ -527,7 +527,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setInstanceType(WellKnownOperationTypes.getReceipt());
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -536,7 +536,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items filtered by source stockroom
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredBySourceStockroom() throws Exception {
@@ -554,7 +554,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertNotNull(test);
 		Assert.assertEquals(9, test.size());
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -563,7 +563,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items filtered by destination stockroom
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredByDestinationStockroom() throws Exception {
@@ -573,7 +573,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setDestination(room);
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -582,14 +582,14 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all items if paging is null
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnAllItemsIfPagingIsNull() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
@@ -597,7 +597,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return paged items if paging is specified
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
@@ -605,7 +605,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
 
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
-		List<StockOperation> results = service.findOperations(search, pagingInfo);
+		List<StockOperation> results = service.getOperations(search, pagingInfo);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -614,7 +614,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items filtered by creation date
-	 * @see IStockOperationDataService#findOperations(StockOperationSearch, PagingInfo)
+	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredByCreationDate() throws Exception {
@@ -622,7 +622,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		search.getTemplate().setDateCreated(service.getById(0).getDateCreated());
 		search.setDateCreatedComparisonType(BaseObjectTemplateSearch.DateComparisonType.GREATER_THAN_EQUAL);
 
-		List<StockOperation> results = service.findOperations(search, null);
+		List<StockOperation> results = service.getOperations(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(8, results.size());
@@ -630,7 +630,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items filtered by patient
-	 * @see IStockOperationDataService#findOperations(org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockOperationDataService#getOperations(org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void findOperations_shouldReturnItemsFilteredByPatient() throws Exception {
@@ -638,7 +638,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
         Patient patient = Context.getPatientService().getPatient(1);
         search.getTemplate().setPatient(patient);
 
-        List<StockOperation> results = service.findOperations(search, null);
+        List<StockOperation> results = service.getOperations(search, null);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());

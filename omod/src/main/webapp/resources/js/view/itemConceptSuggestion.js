@@ -24,6 +24,7 @@ define(
         openhmis.url.backboneBase + 'js/view/list',
         openhmis.url.backboneBase + 'js/view/paginate',
         openhmis.url.backboneBase + 'js/view/editors',
+        openhmis.url.inventoryBase + 'js/model/itemConceptSuggestionList',
         'link!' + openhmis.url.backboneBase + 'css/style.css',
         'link!/openmrs/scripts/jquery/dataTables/css/dataTables_jui.css'
     ],
@@ -36,7 +37,14 @@ define(
                 options.listElement = $("#existing-form");
             }
 
-            var collection = new openhmis.GenericCollection([], {
+            var viewOptions = openhmis.fetchData(model, options);
+            var listViewType = openhmis.ItemToConceptMappingListView;
+            var listView = new listViewType(viewOptions);
+            listView.setElement(options.listElement);
+        },
+        
+        openhmis.fetchData = function(model, options) {
+        	var collection = new openhmis.GenericCollection([], {
                 model: model
             });
             collection.fetch({
@@ -44,14 +52,16 @@ define(
                     $(".spinner").hide();
                 }
             });
-
+            
             var viewOptions = _.extend({
                 model: collection,
             }, options);
-
-            var listViewType = openhmis.ItemToConceptMappingListView;
-            var listView = new listViewType(viewOptions);
-            listView.setElement(options.listElement);
+            
+            return viewOptions;
+        },
+        
+        openhmis.renderData = function(model, options) {
+        	
         },
 
         openhmis.ItemToConceptMappingListView = openhmis.GenericListView.extend({
@@ -194,15 +204,27 @@ define(
             },
             
             save: function(loadNextItems) {
-            	console.log('XXXXXXXXXXXXXXXXXXXX ' + loadNextItems); 
-            	$.ajax({
-                    type: 'POST',
-                    url: this.model.url(),
-                    data: '{"status":"' + this.model.models + '"}',
-                    error: function(model, resp) { openhmis.error(resp); },
-                    contentType: "application/json",
-                    dataType: 'json'
-                });
+            	var view = this;
+            	var itemConceptSuggestionList = new openhmis.ItemConceptSuggestionList();
+            	itemConceptSuggestionList.set("itemConceptSuggestions", this.model.models);
+            	
+            	itemConceptSuggestionList.save(null, {
+					success: function(itemConceptSuggestionList, resp) {
+						if (loadNextItems === false) {
+							window.location.assign($('#returnUrl').val());
+						} else {
+							$("#existing-form").empty();
+							$('.spinner').show();
+							var viewOptions = openhmis.fetchData(view.model.model, null);
+				            var listViewType = openhmis.ItemToConceptMappingListView;
+				            var listView = new listViewType(viewOptions);
+				            listView.setElement($("#existing-form"));
+						}
+					},
+					error: function(itemConceptSuggestionList, resp) { 
+						openhmis.error(resp); 
+					}
+				});
             }
 
         });

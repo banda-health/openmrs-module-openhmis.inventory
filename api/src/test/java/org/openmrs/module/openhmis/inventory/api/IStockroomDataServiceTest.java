@@ -213,15 +213,15 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 
 	/**
 	 * @verifies return items filtered by template and stockroom
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnItemsFilteredByTemplateAndStockRoom() throws Exception {
+	public void getItems_shouldReturnItemsFilteredByTemplateAndStockRoom() throws Exception {
 		Stockroom stockRoom = service.getById(1);
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
-		List<ItemStock> results = service.findItems(stockRoom, search, null);
+		List<ItemStock> results = service.getItems(stockRoom, search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
@@ -236,7 +236,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		search.getTemplate().setDepartment(item.getItem().getDepartment());
 		search.getTemplate().setCategory(item.getItem().getCategory());
 
-		results = service.findItems(stockRoom, search, null);
+		results = service.getItems(stockRoom, search, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertItemStock(item, results.get(0));
@@ -244,10 +244,10 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 
 	/**
 	 * @verifies not return items for other stockrooms
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldNotReturnItemsForOtherStockRooms() throws Exception {
+	public void getItems_shouldNotReturnItemsForOtherStockRooms() throws Exception {
 		Stockroom room0 = service.getById(0);
 		Stockroom room1 = service.getById(1);
 
@@ -255,8 +255,8 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.EQUAL);
 		search.getTemplate().setName(itemService.getById(0).getName());
 
-		List<ItemStock> results0 = service.findItems(room0, search, null);
-		List<ItemStock> results1 = service.findItems(room1, search, null);
+		List<ItemStock> results0 = service.getItems(room0, search, null);
+		List<ItemStock> results1 = service.getItems(room1, search, null);
 		Assert.assertNotNull(results0);
 		Assert.assertNotNull(results1);
 		Assert.assertEquals(1, results0.size());
@@ -273,15 +273,15 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 
 	/**
 	 * @verifies return all found items if paging is null
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnAllFoundItemsIfPagingIsNull() throws Exception {
+	public void getItems_shouldReturnAllFoundItemsIfPagingIsNull() throws Exception {
 		Stockroom stockRoom = service.getById(1);
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
-		List<ItemStock> results = service.findItems(stockRoom, search, null);
+		List<ItemStock> results = service.getItems(stockRoom, search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
@@ -289,16 +289,16 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 
 	/**
 	 * @verifies return paged items if paging is specified
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+	public void getItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
 		Stockroom stockRoom = service.getById(1);
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
 		PagingInfo paging = new PagingInfo(1, 1);
-		List<ItemStock> results = service.findItems(stockRoom, search, paging);
+		List<ItemStock> results = service.getItems(stockRoom, search, paging);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -307,10 +307,10 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 
 	/**
 	 * @verifies return retired items from search unless specified
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
+	public void getItems_shouldReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
 		Item item = itemService.getById(0);
 		itemService.retire(item, "Just cuz");
 		Context.flushSession();
@@ -319,34 +319,34 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
-		List<ItemStock> results = service.findItems(stockRoom, search, null);
+		List<ItemStock> results = service.getItems(stockRoom, search, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
 
 		search.setIncludeRetired(null);
 		search.getTemplate().setRetired(false);
-		results = service.findItems(stockRoom, search, null);
+		results = service.getItems(stockRoom, search, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
 	}
 
 	/**
 	 * @verifies throw IllegalArgumentException if stockroom is null
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void findItems_shouldThrowIllegalArgumentExceptionIfStockRoomIsNull() throws Exception {
-		service.findItems(null, new ItemSearch(new Item()), null);
+	public void getItems_shouldThrowIllegalArgumentExceptionIfStockRoomIsNull() throws Exception {
+		service.getItems(null, new ItemSearch(new Item()), null);
 	}
 
 	/**
 	 * @verifies throw IllegalArgumentException if item search is null
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void findItems_shouldThrowIllegalArgumentExceptionIfItemSearchIsNull() throws Exception {
+	public void getItems_shouldThrowIllegalArgumentExceptionIfItemSearchIsNull() throws Exception {
 		Stockroom stockRoom = service.getById(1);
-		service.findItems(stockRoom, null, null);
+		service.getItems(stockRoom, null, null);
 	}
 
 	/**
@@ -787,10 +787,10 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 
 	/**
 	 * @verifies return item stock sorted by item name
-	 * @see IStockroomDataService#findItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockroomDataService#getItems(org.openmrs.module.openhmis.inventory.api.model.Stockroom, org.openmrs.module.openhmis.inventory.api.search.ItemSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnItemStockSortedByItemName() throws Exception {
+	public void getItems_shouldReturnItemStockSortedByItemName() throws Exception {
 		// Create some new items to work with
 		Item newItemX = new Item();
 		newItemX.setName("X new item");
@@ -851,7 +851,7 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		ItemSearch search = new ItemSearch();
 		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
 		search.getTemplate().setName("%new%");
-		List<ItemStock> items = service.findItems(room, search, null);
+		List<ItemStock> items = service.getItems(room, search, null);
 
 		Assert.assertNotNull(items);
 		Assert.assertEquals(3, items.size());

@@ -24,6 +24,13 @@
 	<inv_item_price item_price_id="4" name="default" item_id="2" price="103.01"
 	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399681CD640010" />
 
+	<inv_item item_id="3" name="test 4 item" description="test description 4" department_id="4" default_price_id="1" concept_accepted="true" concept_id="2"
+	              creator="1" has_expiration="false"  has_physical_inventory="true" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399671011D00DD" />
+	<inv_item item_id="4" name="test 5 item" description="test description 5" department_id="4" default_price_id="1" concept_accepted="false" concept_id="2"
+	              creator="1" has_expiration="false"  has_physical_inventory="true" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399671011D00EE" />
+	<inv_item item_id="5" name="test 6 item" description="test description 6" department_id="4" default_price_id="1" concept_accepted="false"
+	              creator="1" has_expiration="false"  has_physical_inventory="true" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399671011D00FF" />
+	              	
 	<concept concept_id="0" retired="false" datatype_id="4" class_id="3" is_set="false"
 	         creator="1" date_created="2004-04-08 00:00:00.0" version=""
 	         changed_by="1" date_changed="2008-08-15 14:05:56.0" uuid="FF8081813E217F6E013E217F6E1F0000"/>
@@ -33,6 +40,15 @@
 	<concept_name concept_name_id="1" concept_id="0" name="D4T+3TC+NVP" locale="en" creator="1" date_created="2008-08-15 14:05:56.0" concept_name_type="SHORT" locale_preferred="0" voided="false" uuid="FF8081813E217F6E013E217FB50C0003"/>
 	<concept_name concept_name_id="2" concept_id="0" name="D4T+3TC+NVP" locale="en" creator="1" date_created="2008-08-15 14:05:56.0" concept_name_type="" locale_preferred="0" voided="false" uuid="FF8081813E217F6E013E217FC77D0004"/>
 	<concept_name concept_name_id="3" concept_id="0" name="TRIOMUNE-30" locale="en" creator="1" date_created="2008-08-15 14:05:56.0" concept_name_type="" locale_preferred="0" voided="false" uuid="FF8081813E217F6E013E217FDBC00005"/>
+	
+	<concept concept_id="1" retired="false" datatype_id="4" class_id="2" is_set="false"
+	         creator="1" date_created="2004-04-08 00:00:00.0" version=""
+	         changed_by="1" date_changed="2008-08-15 14:05:56.0" uuid="FF8081813E217F6E013E217F6E1F0345"/>
+	<concept_name concept_name_id="4" concept_id="1" name="test 6" locale="en" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" creator="1" date_created="2008-08-15 14:05:56.0" voided="false" uuid="FF8081813E217F6E013E217F9F3F0222"/>
+	
+	<concept concept_id="2" retired="false" datatype_id="4" class_id="2" is_set="false"
+	         creator="1" date_created="2004-04-08 00:00:00.0" version=""
+	         changed_by="1" date_changed="2008-08-15 14:05:56.0" uuid="FF8081813E217F6E013E217F6E1F0355"/>
 
 	<drug drug_id="0" concept_id="0" name="Triomune-30" combination="true" dose_strength="1.0" units="tab(s)"
 	      creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="FF8081813E217F6E013E2180013E0006"/>

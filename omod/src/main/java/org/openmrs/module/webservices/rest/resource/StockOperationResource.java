@@ -205,7 +205,7 @@ public class StockOperationResource
 			StockOperationSearch search = new StockOperationSearch();
 			search.getTemplate().setStatus(status);
 
-			results = ((IStockOperationDataService)getService()).findOperations(search, pagingInfo);
+			results = ((IStockOperationDataService)getService()).getOperations(search, pagingInfo);
 		}
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(),

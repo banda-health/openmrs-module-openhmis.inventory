@@ -112,7 +112,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
     @Override
     public Item save(Item item) {
         checkDefaultPrice(item);
-
 		return super.save(item);
     }
 

@@ -58,7 +58,7 @@
 	                 stockroom_id="0" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250CEAE9F0005" />
 	<inv_stockroom_operations operation_id="0" stockroom_id="0" />
 
-	<inv_stock_operation stock_operation_id="1" status="COMPLETED" operation_type_id="5"
+	<inv_stock_operation stock_operation_id="1" status="COMPLETED" operation_type_id="5" operation_number="t200"
 	                     source_id="0" destination_id="1" name="Test Op 2" operation_date="2012-01-02 00:00:00.0"
 	                     creator="1" date_created="2012-01-02 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C378CD0001" />
 	<inv_stock_operation_item stock_operation_item_id="3" operation_id="1" item_id="0" quantity="6" batch_operation_id="0" calculated_batch="0" calculated_expiration="0" uuid="4028814B473EB6E701473EBC0AF60003" />
@@ -79,7 +79,7 @@
 	<inv_stockroom_operations operation_id="1" stockroom_id="0" />
 	<inv_stockroom_operations operation_id="1" stockroom_id="1" />
 
-	<inv_stock_operation stock_operation_id="2" status="PENDING" operation_type_id="2"
+	<inv_stock_operation stock_operation_id="2" status="PENDING" operation_type_id="2" operation_number="t300"
 	                     source_id="1" patient_id="1" name="Test Op 3" operation_date="2012-01-05 00:00:00.0"
 	                     creator="1" date_created="2012-01-05 00:00:00.0" retired="false" uuid="FF8081814250C1CD014250C388660002"/>
 	<inv_stock_operation_item stock_operation_item_id="7" operation_id="2" item_id="0" quantity="1" batch_operation_id="0" calculated_batch="0" calculated_expiration="0" uuid="4028814B473EB6E701473EBDB55D0006" />

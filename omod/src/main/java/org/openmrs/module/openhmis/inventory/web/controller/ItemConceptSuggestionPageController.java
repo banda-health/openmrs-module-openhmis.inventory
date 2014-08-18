@@ -13,17 +13,14 @@
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -31,23 +28,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ItemConceptSuggestionPageController {
 
 	private static final String MODEL_BASE = "openhmis.inventory.itemConceptSuggestion";
-	private static final String ADMIN_PAGE = "/openmrs/admin/index.htm";
-	private static final String HOST = "Host";
+	private static final String INVENTORY_PAGE = "/openhmis/inventory/inventory.htm";
+	private static final String ITEM_CONCEPT_SUGGESTION_PAGE = "itemConceptSuggestion.form";
 	
     @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
     public void render(ModelMap model, HttpServletRequest request) throws JsonGenerationException, JsonMappingException, IOException {
-    	String host = request.getHeader(HOST);
-    	String returnUrl = host + ADMIN_PAGE;
+    	String returnUrl = getReturnUrl(request);
 
     	model.addAttribute("returnUrl", returnUrl);
         model.addAttribute("modelBase",MODEL_BASE);
     }
 
-    @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.POST)
-    public void onSubmit(ModelMap model, @ModelAttribute List<Item> itemsWithConcepts) {
-        System.out.println("##################### FORM SUBMIT");
-        System.out.println("SIZE: " + itemsWithConcepts.size());
+	private String getReturnUrl(HttpServletRequest request) {
+		String returnUrl = INVENTORY_PAGE;
+		String referer = request.getHeader("referer");
+		if (!referer.contains(ITEM_CONCEPT_SUGGESTION_PAGE)) {
+			int refererWithoutHostPrefixStartIndex = referer.indexOf('/', 8);
+			String refererWithoutHostPrefix = referer.substring(refererWithoutHostPrefixStartIndex);
+			returnUrl = refererWithoutHostPrefix;
+		}
+	    return returnUrl;
     }
-
 }
 

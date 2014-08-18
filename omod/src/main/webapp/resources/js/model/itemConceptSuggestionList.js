@@ -17,32 +17,20 @@ define(
         openhmis.url.backboneBase + 'js/lib/i18n',
         openhmis.url.backboneBase + 'js/model/generic',
         openhmis.url.backboneBase + 'js/model/concept',
-        openhmis.url.inventoryBase + 'js/model/item',
+        openhmis.url.inventoryBase + 'js/model/itemConceptSuggestion',
     ],
     function(openhmis, __) {
-        openhmis.ItemConceptSuggestion = openhmis.GenericModel.extend({
+        openhmis.ItemConceptSuggestionList = openhmis.GenericModel.extend({
             meta: {
-                name: __("Item <-> Concept Suggestion"),
-                namePlural: __("Item <-> Concept Suggestions"),
+                name: __("Item <-> Concept Suggestion List"),
+                namePlural: __("Item <-> Concept Suggestions Lists"),
                 openmrsType: 'metadata',
-                restUrl: openhmis.url.inventoryModelBase + 'itemConceptSuggestion'
+                restUrl: openhmis.url.inventoryModelBase + 'itemConceptSuggestionList'
             },
 
             schema: {
-                item: { type: 'NestedModel', model: openhmis.Item, objRef: true },
-                conceptName: {type: 'Text'},
-                conceptUuid: {type: 'Text'},
-                conceptAccepted: {type: 'Checkbox'}
+            	itemConceptSuggestions: { type: "List", itemType: "NestedModel", model: openhmis.ItemConceptSuggestion },
             },
-            
-            parse: function(resp) {
-				if (resp) {
-					if (resp.item && _.isObject(resp.item)) {
-						resp.item = new openhmis.Item(resp.item);
-					}
-				}
-				return resp;
-			},
             
         });
 

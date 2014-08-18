@@ -158,12 +158,12 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public List<StockOperation> findOperations(StockOperationSearch search) {
-		return findOperations(search, null);
+	public List<StockOperation> getOperations(StockOperationSearch search) {
+		return getOperations(search, null);
 	}
 
 	@Override
-	public List<StockOperation> findOperations(final StockOperationSearch search, PagingInfo paging) {
+	public List<StockOperation> getOperations(final StockOperationSearch search, PagingInfo paging) {
 		if (search == null) {
 			throw new IllegalArgumentException("The operation search must be defined.");
 		} else if (search.getTemplate() == null) {
