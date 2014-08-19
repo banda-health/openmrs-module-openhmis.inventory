@@ -170,24 +170,24 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		return hasPhysicalInventory;
 	}
 
-	public Boolean hasPhysicalInventory() {
-		return hasPhysicalInventory;
+	public boolean hasPhysicalInventory() {
+		return Boolean.TRUE.equals(hasPhysicalInventory);
 	}
 
 	public void setHasPhysicalInventory(Boolean hasPhysicalInventory) {
-		this.hasPhysicalInventory = hasPhysicalInventory == null? false : hasPhysicalInventory;
+		this.hasPhysicalInventory = hasPhysicalInventory == null ? false : hasPhysicalInventory;
 	}
 
 	public Boolean getHasExpiration() {
 		return hasExpiration;
 	}
 
-	public Boolean hasExpiration() {
-		return hasExpiration;
+	public boolean hasExpiration() {
+		return Boolean.TRUE.equals(hasExpiration);
 	}
 
 	public void setHasExpiration(Boolean hasExpiration) {
-		this.hasExpiration = hasExpiration == null? false : hasExpiration;
+		this.hasExpiration = hasExpiration == null ? false : hasExpiration;
 	}
 
 	public Integer getDefaultExpirationPeriod() {
@@ -202,8 +202,8 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		return this.conceptAccepted;
 	}
 
-	public Boolean isConceptAccepted() {
-		return conceptAccepted;
+	public boolean isConceptAccepted() {
+		return Boolean.TRUE.equals(getConceptAccepted());
 	}
 
 	public void setConceptAccepted(Boolean conceptAccepted) {

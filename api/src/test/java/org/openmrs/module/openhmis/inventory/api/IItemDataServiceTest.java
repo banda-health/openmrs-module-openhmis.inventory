@@ -735,7 +735,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnAllItemsIfPagingIsNull() throws Exception {
+	public void getItemsByItemSearch_shouldReturnAllItemsIfPagingIsNull() throws Exception {
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
@@ -750,7 +750,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+	public void getItemsByItemSearch_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
 
 		ItemSearch search = new ItemSearch(new Item());
@@ -768,7 +768,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
+	public void getItemsByItemSearch_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
 		Item item = service.getById(0);
 		item.setRetired(true);
 		item.setRetireReason("something");
@@ -791,11 +791,10 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	
 	/**
 	 * @verifies return items filtered by physical inventory
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.inventory.api.search.ItemSearch,
-	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnItemsFilteredByPhysicalInventory() throws Exception {
+	public void getItemsByItemSearch_shouldReturnItemsFilteredByPhysicalInventory() throws Exception {
 		Item item = service.getById(0);
 		item.setHasPhysicalInventory(false);
 
@@ -805,7 +804,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		ItemSearch search = new ItemSearch();
 		search.getTemplate().setHasPhysicalInventory(false);
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -814,11 +813,10 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items filtered by expiration
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.inventory.api.search.ItemSearch,
-	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnItemsFilteredByExpiration() throws Exception {
+	public void getItemsByItemSearch_shouldReturnItemsFilteredByExpiration() throws Exception {
 		Item item = service.getById(2);
 		item.setHasExpiration(true);
 
@@ -828,7 +826,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		ItemSearch search = new ItemSearch();
 		search.getTemplate().setHasExpiration(true);
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -837,11 +835,10 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	/**
 	 * @verifies return items filtered by name
-	 * @see IItemDataService#findItems(org.openmrs.module.openhmis.inventory.api.search.ItemSearch,
-	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnItemsFilteredByName() throws Exception {
+	public void getItemsByItemSearch_shouldReturnItemsFilteredByName() throws Exception {
 		Item item = service.getById(0);
 		item.setName("SomeNewName");
 
@@ -852,7 +849,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.EQUAL);
 		search.getTemplate().setName("SomeNewName");
 
-		List<Item> results = service.findItems(search, null);
+		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -861,13 +858,14 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
 		search.getTemplate().setName("Some%");
 
-		results = service.findItems(search, null);
+		results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(item, results.get(0));
 	}
-@Test
+
+	@Test
     public void findItemsByConcept_shouldFindEveryItemWithTheSpecifiedConcept() throws Exception {
 	    Concept concept = Context.getConceptService().getConcept(2);
 	    List<Item> itemsByConcept = service.getItemsByConcept(concept);
@@ -942,5 +940,4 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	    
 	    
     }
-}
 }

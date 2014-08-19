@@ -97,9 +97,8 @@ public class StockOperationDataServiceImpl
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq("operation", operation));
 				criteria.createCriteria("item", "i");
-				criteria.addOrder(Order.desc("i.name"));
 			}
-		}, getDefaultSort());
+		}, Order.asc("i.name"));
 	}
 
 	@Override

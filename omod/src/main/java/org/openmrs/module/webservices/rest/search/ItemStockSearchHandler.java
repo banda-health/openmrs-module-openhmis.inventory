@@ -97,7 +97,7 @@ public class ItemStockSearchHandler implements SearchHandler {
 			ItemSearch search = new ItemSearch();
 			search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
 			search.getTemplate().setName(query + "%");
-			items = stockroomDataService.findItems(stockroom, search, pagingInfo);
+			items = stockroomDataService.getItems(stockroom, search, pagingInfo);
 		} else if (item != null) {
 			pagingInfo = null;
 

@@ -192,18 +192,22 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		});
 	}
 
-	public static void assertItemStockDetail(ItemStockDetail expected, ItemStockDetail actual) {
+	public static void assertItemStockDetailBase(ItemStockDetailBase expected, ItemStockDetailBase actual) {
 		assertOpenmrsObject(expected, actual);
 
-		Assert.assertEquals(expected.getItemStock(), actual.getItemStock());
-		Assert.assertEquals(expected.getItem(), actual.getItem());
-		Assert.assertEquals(expected.getStockroom(), actual.getStockroom());
 		Assert.assertEquals(expected.getItem(), actual.getItem());
 		Assert.assertEquals(expected.getQuantity(), actual.getQuantity());
 		Assert.assertEquals(expected.getExpiration(), actual.getExpiration());
 		Assert.assertEquals(expected.getBatchOperation(), actual.getBatchOperation());
 		Assert.assertEquals(expected.isCalculatedExpiration(), actual.isCalculatedExpiration());
 		Assert.assertEquals(expected.isCalculatedBatch(), actual.isCalculatedBatch());
+	}
+
+	public static void assertItemStockDetail(ItemStockDetail expected, ItemStockDetail actual) {
+		assertItemStockDetailBase(expected, actual);
+
+		Assert.assertEquals(expected.getItemStock(), actual.getItemStock());
+		Assert.assertEquals(expected.getStockroom(), actual.getStockroom());
 	}
 
 	@Override
