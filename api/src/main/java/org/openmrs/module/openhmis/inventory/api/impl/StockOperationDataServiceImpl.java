@@ -55,6 +55,12 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
+	protected Order[] getDefaultSort() {
+		// Return operations ordered by creation date, desc
+		return new Order[] { Order.desc("dateCreated") };
+	}
+
+	@Override
 	public StockOperation getOperationByNumber(String number) {
 		if (StringUtils.isEmpty(number)) {
 			throw new IllegalArgumentException("The operation number to find must be defined.");
