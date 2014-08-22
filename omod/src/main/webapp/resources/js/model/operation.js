@@ -36,7 +36,7 @@ define(
 				restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
-		    attributeType: openhmis.OperationAttributeType,
+		    attributeTypeClass: openhmis.OperationAttributeType,
 
 			schema: {
 			    name: { type: 'Text' },
@@ -88,6 +88,10 @@ define(
 			    return openhmis.GenericModel.prototype.toString.call(this);
 		    }
 	    });
+
+        openhmis.OperationAttribute = openhmis.InstanceAttributeBase.extend({
+            attributeClass: openhmis.OperationAttributeType
+        });
 
         openhmis.TransactionBase = openhmis.GenericModel.extend({
 		    initialize: function(attributes, options) {
@@ -218,7 +222,8 @@ define(
                         title: 'Operation Type',
                         options: new openhmis.GenericCollection(null, {
                             model: openhmis.OperationType,
-                            url: openhmis.url.inventoryModelBase + 'stockOperationType'
+                            url: openhmis.url.inventoryModelBase + 'stockOperationType',
+                            queryString: "v=full"
                     }),
                     objRef: true
                 };
@@ -244,10 +249,9 @@ define(
                     }),
                     objRef: true
                 };
-
-                /*if (!this.get("items")) {
-                    this.set("items", new openhmis.GenericCollection([], { model: openhmis.OperationItem }), { silent: true });
-                }*/
+                this.schema.attributes = {
+                    hidden: true
+                };
 
                 if (!this.get("status")) {
                     this.set("status", this.OperationStatus.NEW);
@@ -266,9 +270,64 @@ define(
                     if (resp.destination) {
                         resp.destination = new openhmis.Stockroom(resp.destination);
                     }
+
+                    if (resp.attributes) {
+                        resp.attributes = new openhmis.GenericCollection(resp.attributes,
+                            { model: openhmis.OperationAttribute }).models;
+                    }
                 }
 
                 return resp;
+            },
+
+            validate: function(goAhead) {
+                // By default, backbone validates every time we try try to alter the model.  We don't want to be bothered
+                // with this until we care.
+                if (goAhead !== true) {
+                    return null;
+                }
+
+                var errors = [];
+
+                if (this.get("instanceType") === undefined) {
+                    errors.push({
+                        selector: ".field-instanceType",
+                        message: "An operation must have an operation type."
+                    });
+                } else {
+                    var operationType = this.get("instanceType");
+                    if (operationType.get("hasSource") &&
+                        (this.get("source") === undefined || this.get("source").id === "")) {
+                        errors.push({
+                            selector: ".field-source",
+                            message: "The operation type " + operationType.get("name") + " requires a source stockroom"
+                        });
+                    }
+                    if (operationType.get("hasDestination") &&
+                        (this.get("destination") === undefined || this.get("destination").id === "")) {
+                        errors.push({
+                            selector: ".field-destination",
+                            message: "The operation type " + operationType.get("name") + " requires a destination stockroom"
+                        });
+                    }
+                }
+
+                // TODO: Should the operation type user/role check happen here?
+
+                if (this.get("items") === undefined || this.get("items").length === 0) {
+                    errors.push({
+                        selector: ".item-stock",
+                        message: "An operation must contain at least one item.",
+                        selectParent: true
+                    });
+                }
+
+                if (errors.length === 0) {
+                    return null;
+                } else {
+                    return errors;
+                }
+
             },
 
             toString: function() {
@@ -288,25 +347,7 @@ define(
                     editorAttrs: { disabled: true },
 		            format: openhmis.dateTimeFormatLocale
 	            }
-	            //reserved: { type: 'List', itemType: 'NestedModel', model: openhmis.ReservedTransaction },
-	            //transactions: { type: 'List', itemType: 'NestedModel', model: openhmis.OperationTransaction },
-            },
-
-	        parse: function(resp) {
-		        openhmis.NewOperation.prototype.parse.call(this, resp);
-
-                if (resp) {
-			        /*if (resp.reserved) {
-                        resp.reserved = new openhmis.GenericCollection(resp.reserved, { model: openhmis.ReservedTransaction }).models;
-                    }
-
-                    if (resp.transactions) {
-                        resp.transactions = new openhmis.GenericCollection(resp.transactions, { model: openhmis.OperationTransaction }).models;
-                    }*/
-		        }
-
-		        return resp;
-	        }
+            }
         });
 
         openhmis.OperationItem = openhmis.ItemStockDetailBase.extend({

@@ -344,7 +344,7 @@ define(
                         return {
                             val: model.id,
                             label: model.get('name'),
-                            department_uuid: model.get('department').uuid
+                            department_uuid: model.get('department').id
                         }
                     }
                 );
@@ -370,6 +370,12 @@ define(
 
                         view.cache[cacheSection + query] = data;
                         response(data);
+                    },
+                    error: openhmis.error,
+                    statusCode: {
+                        401: function(data) {
+                            alert("Auth Failure!");
+                        }
                     }
                 });
             },

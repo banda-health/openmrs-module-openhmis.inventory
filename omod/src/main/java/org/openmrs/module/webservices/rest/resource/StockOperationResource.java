@@ -16,15 +16,11 @@ package org.openmrs.module.webservices.rest.resource;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.logic.result.EmptyResult;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.impl.StockOperationDataServiceImpl;
-import org.openmrs.module.openhmis.inventory.api.impl.StockOperationServiceImpl;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -36,16 +32,12 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
 public class StockOperationResource
@@ -139,6 +131,17 @@ public class StockOperationResource
 			});
 	}
 
+	@PropertySetter("instanceType")
+	public void setInstanceType(StockOperation instance, IStockOperationType instanceType) {
+		instance.setInstanceType(instanceType);
+	}
+
+	@Override
+	@PropertySetter("attributes")
+	public void setAttributes(StockOperation instance, List<StockOperationAttribute> attributes) {
+		super.setAttributes(instance, attributes);
+	}
+
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		PageableResult result;
@@ -159,17 +162,6 @@ public class StockOperationResource
 		}
 
 		return result;
-	}
-
-	@PropertySetter("instanceType")
-	public void setInstanceType(StockOperation instance, IStockOperationType instanceType) {
-		instance.setInstanceType(instanceType);
-	}
-
-	@Override
-	@PropertySetter("attributes")
-	public void setAttributes(StockOperation instance, List<StockOperationAttribute> stockOperationAttributes) {
-		super.setAttributes(instance, stockOperationAttributes);
 	}
 
 	protected PageableResult getUserOperations(RequestContext context) {

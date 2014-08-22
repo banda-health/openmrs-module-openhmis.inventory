@@ -84,6 +84,29 @@ define(
             },
 
             render: function() {
+                if (this.model.id) {
+                    // Create a list of all the operation type attributes and get the value from the operation attributes.
+                    //  This is needed so we can view optional attributes that were not defined for the specific operation.
+                    var opType = this.model.get('instanceType');
+
+                    var attributeList = [];
+                    for (i in opType.get('attributeTypes')) {
+                        var type = opType.get('attributeTypes')[i];
+
+                        var name = type.name;
+                        var value = this.getAttributeValue(this.model, name);
+
+                        attributeList.push({
+                            name: name,
+                            value: value,
+                            id: type.uuid
+                        });
+                    }
+
+                    // Make the list of attributes and values accessible from the template via the attributeList field
+                    this.model.attributeList = attributeList;
+                }
+
                 openhmis.GenericAddEditView.prototype.render.call(this);
 
                 if (this.model.id) {
@@ -119,13 +142,21 @@ define(
                     contentType: "application/json",
                     dataType: 'json'
                 });
+            },
+
+            getAttributeValue: function(model, name) {
+                for (i in model.get('attributes')) {
+                    var attribute = model.get('attributes')[i];
+                    if (attribute.get('attributeType').name === name) {
+                        return attribute.get('value');
+                    }
+                }
+
+                return " ";
             }
         });
 
         openhmis.NewOperationView = openhmis.GenericAddEditView.extend({
-            /*tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
-            tmplSelector: '#new-operation',*/
-
             currentOperationType: undefined,
 
             initialize: function(options) {
@@ -156,11 +187,12 @@ define(
                 });
 
                 var self = this;
-                var operationTypes = new openhmis.GenericCollection([], { model: openhmis.OperationType });
-                operationTypes.fetch({
+                this.operationTypes = new openhmis.GenericCollection([], { model: openhmis.OperationType });
+                this.operationTypes.fetch({
                     success: function(collection, resp) {
                         self.currentOperationType = collection.models[0];
                     },
+                    queryString: "v=full",
                     silent: true
                 })
             },
@@ -180,6 +212,15 @@ define(
             },
 
             save: function(event) {
+                // Load the attributes and set in the model
+                var attributes = openhmis.loadAttributes(this, this.$attributes, openhmis.OperationAttribute);
+                if (attributes) {
+                    this.model.set("attributes", attributes);
+                } else if (attributes === false) {
+                    // The loadAttributes returns false if there was an error so halt the save if we got that
+                    return false;
+                }
+
                 // Load the item stock from the sub-view
                 if (this.itemStockView && this.itemStockView.model && this.itemStockView.model.models) {
                     if (!this.model.get("items")) {
@@ -187,7 +228,21 @@ define(
                     }
                 }
 
-                openhmis.GenericAddEditView.prototype.save.call(this, event);
+                // Save the model, hooking into the post-commit "event" to validate the model after it has been loaded
+                var self = this;
+                openhmis.GenericAddEditView.prototype.save.call(this, event, {
+                    postCommit: function() {
+                        // Set the instance type to the fully loaded model rather than the basic information loaded by the
+                        //  select box.
+                        self.model.set("instanceType", self.currentOperationType);
+
+                        var errors = self.model.validate(true);
+                        if (errors) {
+                            openhmis.displayErrors(self, errors);
+                            return false;
+                        }
+                    }
+                });
             },
 
             showForm: function() {
@@ -196,7 +251,7 @@ define(
                 $(".addLink").hide();
 
                 // Insert the item stock list after the form but before the buttons
-                $("#newOperation").find(".bbf-form").append(this.itemStockView.el);
+                $("#newOperation").find(".bbf-form").after(this.itemStockView.el);
 
                 // Display the form
                 this.$el.show();
@@ -211,7 +266,7 @@ define(
             },
 
             updateOperationType: function(instanceType) {
-                // Do something with items
+                // TODO: Do something with items
                 //  Options:
                 //      1) Warn, clear, and create new empty line (easiest)
                 //      2) ?
@@ -228,14 +283,25 @@ define(
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
                     dest.prop('disabled', !this.currentOperationType.get('hasDestination'));
                 }
+
+                // Find or create the attributes element
+                this.$attributes = this.$("#operationAttributes");
+                if (!this.$attributes.length) {
+                    // Find the element that the attributes should be added after
+                    this.$("form").after("<form id='operationAttributes' class='bbf-form' />");
+                    this.$attributes = this.$("#operationAttributes");
+                }
+
+                // Load the operation type attributes
+                openhmis.renderAttributesFragment(this.$attributes, "uuid=" + this.currentOperationType.id);
             },
 
             findOperationType: function(uuid) {
                 var type = undefined;
-                var models = this.modelForm.fields.instanceType.schema.options.models;
+                var models = this.operationTypes.models;
                 for (var i in models) {
                     var model = models[i];
-                    if (model.get('uuid') == uuid) {
+                    if (model.id == uuid) {
                         type = model;
                         break;
                     }

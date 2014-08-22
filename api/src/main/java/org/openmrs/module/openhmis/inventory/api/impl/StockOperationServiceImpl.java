@@ -555,3 +555,4 @@ public class StockOperationServiceImpl
 		detail.setQuantity(stock.getQuantity());
 	}
 }
+

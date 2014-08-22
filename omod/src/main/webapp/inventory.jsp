@@ -46,7 +46,7 @@
 		    <div id="operationList"></div>
 			<div id="viewOperation"></div>
 		    <div id="newOperation">
-			    <a id="createOperationLink" href="#">New Stock Operation</a>
+			    <a id="createOperationLink" href="#">New Stock Operation</a><br /><br />
 			    <div id="newOperationDialog" title="New Operation" style="display: none"></div>
 		    </div>
 	    </td>
