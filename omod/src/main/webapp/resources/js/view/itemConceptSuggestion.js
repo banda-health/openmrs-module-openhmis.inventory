@@ -113,6 +113,7 @@ define(
             	'click .submit' : function(event) {
             		this.save(false);
             	},
+	            'change .selectAll' : 'selectAll'
             },
             
             cancelView: function() {
@@ -225,7 +226,14 @@ define(
 						openhmis.error(resp); 
 					}
 				});
-            }
+            },
+
+	        selectAll: function() {
+		        $('.conceptAccepted').prop('checked', function(_, checked) {
+			        if ($('.conceptAccepted').prop('checked')){return !checked;}
+			        else return !checked;
+		        });
+	        }
 
         });
 
@@ -243,7 +251,7 @@ define(
 			
 			events: {
 	            'blur .concept-display': 'handleBlur',
-	            'change .conceptAccepted' : 'toggleCheckbox',
+	            'change .conceptAccepted' : 'toggleCheckbox'
 	        },
 
 	        handleBlur: function() {
@@ -339,7 +347,7 @@ define(
 	        handleSpinnerShow: function () {
 	        	this.$('.concept-display').addClass('spinner-float-style');
 	        	this.$('.spinner').show();
-	        },
+	        }
 		});
 
         return openhmis;

@@ -1,45 +1,47 @@
 <script id="item-concept-suggestion-list" type="text/template">
-<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?></b>
-<div class="box">
-    <? if (listLength === 0) { ?>
-        <p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
-    <? } else { ?>
-    <table class="display" width="100%">
-        <thead>
-            <tr>
-            	<th class="field-item">Item</th>
-            	<th class="field-concept">Concept</th>
-            	<th class="field-conceptAccepted">Concept accepted</th>
-            </tr>
-        </thead>
-        <tbody class="list">
-		</tbody>
-        <tfoot></tfoot>
-    </table>
-    <? } ?>
-    <input type="submit" class="submit" value="Save Items">
-    <button class="submitNext">Save Items and get next Items</button>
-    <button class="cancel">Cancel</button>
-</div>
+	<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?></b>
+	<div class="box">
+		<? if (listLength === 0) { ?>
+		<p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
+		<? } else { ?>
+		<table class="display" width="100%">
+			<thead>
+			<tr>
+				<th class="field-item">Item</th>
+				<th class="field-concept">Concept</th>
+				<th class="field-conceptAccepted">Concept accepted</th>
+			</tr>
+			</thead>
+			<tbody class="list">
+			<input id="selectAll" type="checkbox" name="selectAll" class="selectAll"/>
+			</tbody>
+			<tfoot></tfoot>
+		</table>
+		<? } ?>
+		<input type="submit" class="submit" value="Save Items">
+		<button class="submitNext">Save Items and get next Items</button>
+		<button class="cancel">Cancel</button>
+	</div>
 </script>
 
 <script id="list-item" type="text/template">
 	<? if (actions.indexOf('inlineEdit') !== -1) {
 	// do nothing, leave blank for form to be rendered
 	} else { ?>
-		<? var id =  model.cid + '_' ?>
-		<td class="field-item">
-			<?=model.attributes.item.attributes.name ?>
-        </td>
-        <td class="field-concept">
-			<? var concept_uuid = model.attributes.conceptUuid ? model.attributes.conceptUuid : "" ?>
-			<input type="text" id="<?= id ?>conceptDisplay" class="concept-display" placeholder="Enter concept name"/>
-			<input type="hidden" id="<?= id ?>concept" name="concept" value="<?=concept_uuid ?>" class="concept"/>
-			<div class="spinner spinner-10 spinner-align"></div>
-			
-        </td>
-        <td class="field-conceptAccepted">
-			<input id="<?= id ?>concept_accepted" type="checkbox" name="conceptAccepted" class="conceptAccepted"/>
-        </td>
-    <? } ?>
+	<? var id =  model.cid + '_' ?>
+	<td class="field-item">
+		<?=model.attributes.item.attributes.name ?>
+	</td>
+	<td class="field-concept">
+		<? var concept_uuid = model.attributes.conceptUuid ? model.attributes.conceptUuid : "" ?>
+		<input type="text" id="<?= id ?>conceptDisplay" class="concept-display" placeholder="Enter concept name"/>
+		<input type="hidden" id="<?= id ?>concept" name="concept" value="<?=concept_uuid ?>" class="concept"/>
+
+		<div class="spinner spinner-10 spinner-align"></div>
+
+	</td>
+	<td class="field-conceptAccepted">
+		<input id="<?= id ?>concept_accepted" type="checkbox" name="conceptAccepted" class="conceptAccepted"/>
+	</td>
+	<? } ?>
 </script>
