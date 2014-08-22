@@ -274,10 +274,12 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should throw NullPointerException if item search is null
 	 * @should throw NullPointerException if item search template object is null
 	 * @should return an empty list if no items are found via the search
+	 * @should return items filtered by name
 	 * @should return items filtered by department
 	 * @should return items filtered by category
 	 * @should return items filtered by concept
-	 * @should return items filtered by drug
+	 * @should return items filtered by physical inventory
+	 * @should return items filtered by expiration
 	 * @should return all items if paging is null
 	 * @should return paged items if paging is specified
 	 * @should not return retired items from search unless specified

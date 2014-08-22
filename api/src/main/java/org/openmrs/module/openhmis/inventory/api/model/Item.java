@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Model class that represents a product or service that can be tracked by an institution.
+ * Model class that represents a product or service.
  */
 public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
 	public static final long serialVersionUID = 0L;
@@ -36,10 +36,10 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Category category;
 	private Concept concept;
 	private ItemPrice defaultPrice;
-	private boolean hasExpiration;
+	private Boolean hasExpiration;
 	private Integer defaultExpirationPeriod;
-	private boolean hasPhysicalInventory;
-	private boolean conceptAccepted;
+	private Boolean hasPhysicalInventory;
+	private Boolean conceptAccepted;
 
 	public Item() {
 	}
@@ -171,11 +171,11 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	}
 
 	public boolean hasPhysicalInventory() {
-		return hasPhysicalInventory;
+		return Boolean.TRUE.equals(hasPhysicalInventory);
 	}
 
 	public void setHasPhysicalInventory(Boolean hasPhysicalInventory) {
-		this.hasPhysicalInventory = hasPhysicalInventory == null? false : hasPhysicalInventory;
+		this.hasPhysicalInventory = hasPhysicalInventory == null ? false : hasPhysicalInventory;
 	}
 
 	public Boolean getHasExpiration() {
@@ -183,11 +183,11 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	}
 
 	public boolean hasExpiration() {
-		return hasExpiration;
+		return Boolean.TRUE.equals(hasExpiration);
 	}
 
 	public void setHasExpiration(Boolean hasExpiration) {
-		this.hasExpiration = hasExpiration == null? false : hasExpiration;
+		this.hasExpiration = hasExpiration == null ? false : hasExpiration;
 	}
 
 	public Integer getDefaultExpirationPeriod() {
@@ -198,11 +198,15 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		this.defaultExpirationPeriod = defaultExpirationPeriod;
 	}
 
-	public boolean isConceptAccepted() {
-		return conceptAccepted;
+	public Boolean getConceptAccepted() {
+		return this.conceptAccepted;
 	}
 
-	public void setConceptAccepted(boolean conceptAccepted) {
+	public boolean isConceptAccepted() {
+		return Boolean.TRUE.equals(getConceptAccepted());
+	}
+
+	public void setConceptAccepted(Boolean conceptAccepted) {
 		this.conceptAccepted = conceptAccepted;
 	}
 

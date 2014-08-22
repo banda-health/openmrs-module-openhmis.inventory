@@ -233,7 +233,7 @@ define(
 
 			toString: function() {
 				if (this.get("codes") && this.get("codes").length > 0) {
-					return this.get("codes")[0].code + ' - ' + this.get("name");
+					return this.get("name") + ' - ' + this.get("codes")[0].code;
 				}
 				if (this.get("name")) {
 					return this.get("name");

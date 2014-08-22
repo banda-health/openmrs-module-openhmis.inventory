@@ -62,6 +62,15 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 				(conceptComparisonType != null && conceptComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("concept", item.getConcept(), conceptComparisonType));
 		}
+		if (item.getHasExpiration() != null) {
+			criteria.add(Restrictions.eq("hasExpiration", item.getHasExpiration()));
+		}
+		if (item.getHasPhysicalInventory() != null) {
+			criteria.add(Restrictions.eq("hasPhysicalInventory", item.getHasPhysicalInventory()));
+		}
+		if (item.getConceptAccepted() != null) {
+			criteria.add(Restrictions.eq("conceptAccepted", item.getConceptAccepted()));
+		}
 	}
 }
 

@@ -86,7 +86,11 @@ define(
 				quantity: {
 					type: 'BasicNumber'
 				},
-				details: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemStockDetail }
+				details: {
+                    type: 'List',
+                    itemType: 'NestedModel',
+                    model: openhmis.ItemStockDetail
+                }
 			},
 
 			validate: function(attrs, options) {
@@ -104,6 +108,12 @@ define(
 					if (resp.stockroom && _.isObject(resp.stockroom)) {
 						resp.stockroom = new openhmis.Stockroom(resp.stockroom);
 					}
+                    if (resp.details && _.isObject(resp.details)) {
+                        resp.details = new openhmis.GenericCollection(
+                            resp.details,
+                            { model: openhmis.ItemStockDetail }
+                        ).models;
+                    }
 				}
 
 				return resp;
@@ -127,12 +137,16 @@ define(
 
                 this.schema.batchOperation = {
                     type: 'OperationSelect',
-                    model: openhmis.Operation,
-                    url: openhmis.url.inventoryModelBase + '/stockOperation'
+                    title: 'Batch Operation',
+                    options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Operation,
+                        url: openhmis.url.inventoryModelBase + 'stockOperation'
+                    }),
+                    objRef: true
                 };
 
-                this.schema.calculatedExpiration = {type: 'checkbox'};
-                this.schema.calculatedBatch = {type: 'checkbox'};
+                this.schema.calculatedExpiration = { type: 'TrueFalseCheckbox' };
+                this.schema.calculatedBatch = { type: 'TrueFalseCheckbox' };
             },
 
             parse: function(resp) {
@@ -173,6 +187,37 @@ define(
 				return this.get('item.name');
 			}
 		});
+
+        openhmis.ItemStockEntry = openhmis.ItemStockDetailBase.extend({
+            meta: {
+                name: __("Item Stock"),
+                namePlural: __("Item Stock"),
+                openmrsType: 'metadata',
+                restUrl: openhmis.url.inventoryModelBase + 'itemStockEntry'
+            },
+
+            initialize: function(attributes, options) {
+                openhmis.ItemStockDetailBase.prototype.initialize.call(this, attributes, options);
+
+                // Use the custom editors for the expiration and batch operation fields
+                this.schema.item.type = "ItemStockAutocomplete";
+                this.schema.quantity.type = "CustomNumber";
+                this.schema.expiration.type = "ItemStockEntryExpiration";
+                //this.schema.batchOperation.type = "ItemStockEntryBatch";
+
+                // Hide the calculated fields as these will be set by the custom editors above
+                this.schema.calculatedExpiration.hidden= true;
+                this.schema.calculatedBatch.hidden = true;
+            },
+
+            validate: function(attrs, options) {
+                if (!attrs.item) {
+                    return { item: __("An item is required") }
+                }
+
+                return null;
+            }
+        });
 
         return openhmis;
 	}

@@ -11,20 +11,6 @@
   ~
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   -->
-<script id="item-editor" type="text/template">
-  <? var department_uuid = (item && item.get("department")) ? item.get("department").id : null ?>
-  <? var id = item ? item.cid + '-' : "" ?>
-  <select id="<?= id ?>department" class="department">
-    <option value=""><em>--department--</em></option>
-  <? departments.each(function(department) { ?>
-    <option value="<?= department.id ?>"<?= (department.id === department_uuid) ? ' selected="selected"' : '' ?>><?= department.get("name") ?></option>
-  <? }); ?>
-  </select>
-  <input type="hidden" class="department-uuid" />
-  <span class="label-hint"><label for="<?= id ?>item-name">search for item</label><input type="text" class="item-name" id="<?= id ?>item-name" value="<?= (item && item.get('name')) ? item.get('name') : "" ?>" /></span>
-  <input type="hidden" class="item-uuid" />
-</script>
-
 <script id="defaultExpirationPeriodStepper-editor" type="text/template">
     <input type="number" id="defaultExpirationPeriod" name="defaultExpirationPeriod" style="width: 50px" value="<?= (defaultExpirationPeriod != null) ? defaultExpirationPeriod : '' ?>">
     <div id="defaultExpirationPeriodText"></div>
@@ -38,4 +24,44 @@
         <input type="hidden" id="concept" name="concept" value="" class="concept"/>
         <div class="spinner spinner-align"></div>
     </div>
+</script>
+
+<script id="itemstock-autocomplete-editor" type="text/template">
+    <? var department_uuid = department ? department.id : null ?>
+    <? var id = itemStock ? itemStock.cid + '-' : "" ?>
+    <select id="<?= id ?>department" class="department">
+        <option value=""><em>--department--</em></option>
+        <? departments.each(function(dept) { ?>
+            <option value="<?= dept.id ?>"<?= (dept.id === department_uuid) ? ' selected="selected"' : '' ?>><?= dept.get("name") ?></option>
+        <? }); ?>
+    </select>
+    <input type="hidden" class="department-uuid" />
+    <span class="label-hint">
+        <label for="<?= id ?>itemStock-name">search for item</label>
+        <input type="text" class="itemStock-name" id="<?= id ?>itemStock-name"
+               value="<?= (item && item.get('name')) ? item.get('name') : "" ?>" />
+    </span>
+    <input type="hidden" class="itemStock-uuid" />
+</script>
+
+<!-- These controls start disabled and are only enabled once an item/item stock is selected -->
+<script id="itemstock-expiration-editor" type="text/template">
+
+    <? if (visible) { ?>
+        <? if (entryRequired) { ?>
+            <input id="expirationEntry" class="itemstock-expiration" type="text" placeholder="Expiration" />
+        <? } else { ?>
+            <select id="expirationSelect" class="itemstock-expiration">
+                <option value="Auto" selected><em>Auto</em></option>
+                <? if (expirations) { ?>
+                <? _.each(expirations, function(exp) { ?>
+                    <option value="<?= exp ?>"><?= exp ?></option>
+                <? }); ?>
+                <? } ?>
+            </select>
+        <? } ?>
+
+    <? } else { ?>
+        <div></div>
+    <? } ?>
 </script>

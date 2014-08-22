@@ -32,6 +32,7 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
+import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
@@ -734,7 +735,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnAllItemsIfPagingIsNull() throws Exception {
+	public void getItemsByItemSearch_shouldReturnAllItemsIfPagingIsNull() throws Exception {
 		ItemSearch search = new ItemSearch(new Item());
 		search.getTemplate().setDepartment(departmentService.getById(0));
 
@@ -749,7 +750,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+	public void getItemsByItemSearch_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
 
 		ItemSearch search = new ItemSearch(new Item());
@@ -767,7 +768,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
 	 */
 	@Test
-	public void findItems_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
+	public void getItemsByItemSearch_shouldNotReturnRetiredItemsFromSearchUnlessSpecified() throws Exception {
 		Item item = service.getById(0);
 		item.setRetired(true);
 		item.setRetireReason("something");
@@ -788,6 +789,82 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Assert.assertEquals(3, results.size());
 	}
 	
+	/**
+	 * @verifies return items filtered by physical inventory
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void getItemsByItemSearch_shouldReturnItemsFilteredByPhysicalInventory() throws Exception {
+		Item item = service.getById(0);
+		item.setHasPhysicalInventory(false);
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch();
+		search.getTemplate().setHasPhysicalInventory(false);
+
+		List<Item> results = service.getItemsByItemSearch(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by expiration
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void getItemsByItemSearch_shouldReturnItemsFilteredByExpiration() throws Exception {
+		Item item = service.getById(2);
+		item.setHasExpiration(true);
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch();
+		search.getTemplate().setHasExpiration(true);
+
+		List<Item> results = service.getItemsByItemSearch(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
+	/**
+	 * @verifies return items filtered by name
+	 * @see IItemDataService#getItemsByItemSearch(ItemSearch, PagingInfo)
+	 */
+	@Test
+	public void getItemsByItemSearch_shouldReturnItemsFilteredByName() throws Exception {
+		Item item = service.getById(0);
+		item.setName("SomeNewName");
+
+		service.save(item);
+		Context.flushSession();
+
+		ItemSearch search = new ItemSearch();
+		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.EQUAL);
+		search.getTemplate().setName("SomeNewName");
+
+		List<Item> results = service.getItemsByItemSearch(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+
+		search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
+		search.getTemplate().setName("Some%");
+
+		results = service.getItemsByItemSearch(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		assertEntity(item, results.get(0));
+	}
+
 	@Test
     public void findItemsByConcept_shouldFindEveryItemWithTheSpecifiedConcept() throws Exception {
 	    Concept concept = Context.getConceptService().getConcept(2);

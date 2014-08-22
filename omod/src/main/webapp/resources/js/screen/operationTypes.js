@@ -31,8 +31,7 @@ curl(
 				listView: openhmis.GenericListView,
 				searchView: openhmis.ByNameSearchView,
 				addEditViewType: openhmis.OperationTypeEditView,
-				listFields: ['name', 'description'],
-				allowAdd: false
+				listFields: ['name', 'description']
 			});
 		});
 	}

@@ -16,14 +16,11 @@ package org.openmrs.module.webservices.rest.resource;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.logic.result.EmptyResult;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.impl.StockOperationDataServiceImpl;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -35,18 +32,23 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.module.webservices.rest.web.response.ObjectNotFoundException;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
 public class StockOperationResource
-		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, IStockOperationType, StockOperationAttributeType, StockOperationAttribute> {
+		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, IStockOperationType,
+		StockOperationAttributeType, StockOperationAttribute> {
+	private IStockOperationService operationService;
 	private boolean submitRequired = false;
+
+	public StockOperationResource() {
+		this.operationService = Context.getService(IStockOperationService.class);
+	}
 
 	@Override
 	public StockOperation newDelegate() {
@@ -82,9 +84,15 @@ public class StockOperationResource
 	public StockOperation save(StockOperation operation) {
 		StockOperation result;
 
+		if (operation.getStatus() == StockOperationStatus.NEW || operation.getStatus() == StockOperationStatus.PENDING) {
+			if (operation.getOperationDate() == null) {
+				operation.setOperationDate(new Date());
+			}
+		}
+
 		// If the status has changed, submit the operation
 		if (submitRequired) {
-			result = ((IStockOperationService)getService()).submitOperation(operation);
+			result = operationService.submitOperation(operation);
 		} else {
 			result = super.save(operation);
 		}
@@ -104,8 +112,10 @@ public class StockOperationResource
 	@PropertySetter(value = "items")
 	public void setItems(final StockOperation operation, Set<StockOperationItem> items) {
 		if (operation.getItems() == null) {
-			operation.setItems(new TreeSet<StockOperationItem>());
+			operation.setItems(new HashSet<StockOperationItem>(items.size()));
 		}
+
+		processItemStock(operation, items);
 
 		BaseRestDataResource.syncCollection(operation.getItems(), items,
 			new Action2<Collection<StockOperationItem>, StockOperationItem>() {
@@ -119,6 +129,17 @@ public class StockOperationResource
 					operation.removeItem(item);
 				}
 			});
+	}
+
+	@PropertySetter("instanceType")
+	public void setInstanceType(StockOperation instance, IStockOperationType instanceType) {
+		instance.setInstanceType(instanceType);
+	}
+
+	@Override
+	@PropertySetter("attributes")
+	public void setAttributes(StockOperation instance, List<StockOperationAttribute> attributes) {
+		super.setAttributes(instance, attributes);
 	}
 
 	@Override
@@ -141,17 +162,6 @@ public class StockOperationResource
 		}
 
 		return result;
-	}
-
-	@PropertySetter("instanceType")
-	public void setInstanceType(StockOperation instance, IStockOperationType instanceType) {
-		instance.setInstanceType(instanceType);
-	}
-
-	@Override
-	@PropertySetter("attributes")
-	public void setAttributes(StockOperation instance, List<StockOperationAttribute> stockOperationAttributes) {
-		super.setAttributes(instance, stockOperationAttributes);
 	}
 
 	protected PageableResult getUserOperations(RequestContext context) {
@@ -208,5 +218,47 @@ public class StockOperationResource
 		}
 
 		return status;
+	}
+
+	private void processItemStock(StockOperation operation, Set<StockOperationItem> items) {
+		IStockOperationType type = operation.getInstanceType();
+
+		// Process each operation item to set the appropriate fields
+		for (StockOperationItem item : items) {
+			Item sourceItem = item.getItem();
+
+			// Set the calculated expiration flag for expirable items without an expiration
+			if (sourceItem.hasExpiration()) {
+				if (item.getExpiration() == null) {
+					if (!type.getHasSource()) {
+						// If the operation has no source then all expirable items must define an expiration
+						throw new IllegalArgumentException("The expiration for item '" + item.getItem().getName() + "' must be" +
+								" defined");
+					} else {
+						// No expiration was specified for an expirable item, flag as a calculated expiration
+						item.setCalculatedExpiration(true);
+					}
+				} else {
+					// An expiration was specified so make sure that the calculated flag is not set
+					item.setCalculatedExpiration(false);
+				}
+			} else {
+				// This is not an expirable item so set expire fields to null
+				item.setExpiration(null);
+				item.setCalculatedExpiration(null);
+			}
+
+			// Set the batch operation or calculated batch operation flag
+			if (item.getBatchOperation() == null) {
+				if (!type.getHasSource()) {
+					// The batch operation is set to the current operation when item stock originally enters in the system
+					item.setBatchOperation(operation);
+					item.setCalculatedBatch(false);
+				} else {
+					// The batch operation was not set so flag it as calculated
+					item.setCalculatedBatch(true);
+				}
+			}
+		}
 	}
 }

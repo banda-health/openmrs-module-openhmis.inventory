@@ -128,6 +128,15 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(expected.getPatient(), actual.getPatient());
         Assert.assertEquals(expected.getInstitution(), actual.getInstitution());
 
+		assertCollection(expected.getItems(), actual.getItems(), new Action2<StockOperationItem, StockOperationItem>() {
+			@Override
+			public void apply(StockOperationItem expectedItem, StockOperationItem actualItem) {
+				IStockroomDataServiceTest.assertItemStockDetailBase(expectedItem, actualItem);
+
+				Assert.assertEquals(expectedItem.getOperation(), actualItem.getOperation());
+			}
+		} );
+
 		assertCollection(expected.getReserved(), actual.getReserved(), new Action2<ReservedTransaction, ReservedTransaction>() {
 			@Override
 			public void apply(ReservedTransaction expected, ReservedTransaction actual) {
@@ -431,7 +440,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void findOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchIsNull() throws Exception {
+	public void getOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchIsNull() throws Exception {
 		service.getOperations(null, null);
 	}
 
@@ -440,7 +449,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void findOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchTemplateObjectIsNull() throws Exception {
+	public void getOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchTemplateObjectIsNull() throws Exception {
 		service.getOperations(new StockOperationSearch(null), null);
 	}
 
@@ -449,7 +458,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnAnEmptyListIfNoOperationsAreFoundViaTheSearch() throws Exception {
+	public void getOperations_shouldReturnAnEmptyListIfNoOperationsAreFoundViaTheSearch() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.CANCELLED);
 
@@ -464,7 +473,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredByNumber() throws Exception {
+	public void getOperations_shouldReturnItemsFilteredByNumber() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setOperationNumber("ABCD-1234");
 
@@ -495,7 +504,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredByStatus() throws Exception {
+	public void getOperations_shouldReturnItemsFilteredByStatus() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setStatus(StockOperationStatus.CANCELLED);
 
@@ -517,7 +526,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredByType() throws Exception {
+	public void getOperations_shouldReturnItemsFilteredByType() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
 
@@ -539,7 +548,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredBySourceStockroom() throws Exception {
+	public void getOperations_shouldReturnItemsFilteredBySourceStockroom() throws Exception {
 		StockOperation operation = service.getById(1);
 		Stockroom room = operation.getSource();
 
@@ -566,7 +575,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredByDestinationStockroom() throws Exception {
+	public void getOperations_shouldReturnItemsFilteredByDestinationStockroom() throws Exception {
 		StockOperation operation = service.getById(0);
 		Stockroom room = operation.getDestination();
 
@@ -585,7 +594,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnAllItemsIfPagingIsNull() throws Exception {
+	public void getOperations_shouldReturnAllItemsIfPagingIsNull() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
 
@@ -600,7 +609,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+	public void getOperations_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
 
@@ -617,7 +626,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredByCreationDate() throws Exception {
+	public void getOperations_shouldReturnItemsFilteredByCreationDate() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setDateCreated(service.getById(0).getDateCreated());
 		search.setDateCreatedComparisonType(BaseObjectTemplateSearch.DateComparisonType.GREATER_THAN_EQUAL);
@@ -633,7 +642,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperations(org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch, org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void findOperations_shouldReturnItemsFilteredByPatient() throws Exception {
+	public void getOperations_shouldReturnItemsFilteredByPatient() throws Exception {
         StockOperationSearch search = new StockOperationSearch();
         Patient patient = Context.getPatientService().getPatient(1);
         search.getTemplate().setPatient(patient);
@@ -1008,6 +1017,118 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		List<StockOperation> results = service.getUserOperations(user, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(9, results.size());
+	}
+
+	/**
+	 * @verifies return items for the specified operation
+	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getItemsByOperation_shouldReturnItemsForTheSpecifiedOperation() throws Exception {
+		StockOperation operation = service.getById(0);
+
+		List<StockOperationItem> items = service.getItemsByOperation(operation, null);
+
+		Assert.assertNotNull(items);
+		Assert.assertEquals(3, items.size());
+
+		StockOperationItem item = Iterators.get(items.iterator(), 0);
+		Assert.assertEquals(0, (int)item.getId());
+
+		item = Iterators.get(items.iterator(), 1);
+		Assert.assertEquals(1, (int)item.getId());
+
+		item = Iterators.get(items.iterator(), 2);
+		Assert.assertEquals(2, (int)item.getId());
+	}
+
+	/**
+	 * @verifies return empty list when no items
+	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getItemsByOperation_shouldReturnEmptyListWhenNoItems() throws Exception {
+		StockOperation newOperation = createEntity(true);
+		if (newOperation.getItems() != null) {
+			newOperation.getItems().clear();
+		}
+
+		service.save(newOperation);
+		Context.flushSession();
+
+		List<StockOperationItem> items = service.getItemsByOperation(newOperation, null);
+
+		Assert.assertNotNull(items);
+		Assert.assertEquals(0, items.size());
+	}
+
+	/**
+	 * @verifies return paged items when paging is specified
+	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getItemsByOperation_shouldReturnPagedItemsWhenPagingIsSpecified() throws Exception {
+		PagingInfo pagingInfo = new PagingInfo(1, 1);
+
+		StockOperation operation = service.getById(0);
+
+		List<StockOperationItem> items = service.getItemsByOperation(operation, pagingInfo);
+
+		Assert.assertNotNull(items);
+		Assert.assertEquals(3, (long)pagingInfo.getTotalRecordCount());
+		Assert.assertEquals(1, items.size());
+
+		StockOperationItem item = Iterators.getOnlyElement(items.iterator());
+		Assert.assertEquals(0, (int)item.getId());
+
+		pagingInfo.setPage(2);
+		items = service.getItemsByOperation(operation, pagingInfo);
+
+		item = Iterators.getOnlyElement(items.iterator());
+		Assert.assertEquals(1, (int)item.getId());
+
+		pagingInfo.setPage(3);
+		items = service.getItemsByOperation(operation, pagingInfo);
+
+		item = Iterators.getOnlyElement(items.iterator());
+		Assert.assertEquals(2, (int)item.getId());
+	}
+
+	/**
+	 * @verifies return all items when paging is null
+	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getItemsByOperation_shouldReturnAllItemsWhenPagingIsNull() throws Exception {
+		StockOperation operation = service.getById(0);
+
+		List<StockOperationItem> items = service.getItemsByOperation(operation, null);
+
+		Assert.assertNotNull(items);
+		Assert.assertEquals(3, items.size());
+
+		StockOperationItem item = Iterators.get(items.iterator(), 0);
+		Assert.assertEquals(0, (int)item.getId());
+
+		item = Iterators.get(items.iterator(), 1);
+		Assert.assertEquals(1, (int)item.getId());
+
+		item = Iterators.get(items.iterator(), 2);
+		Assert.assertEquals(2, (int)item.getId());
+	}
+
+	/**
+	 * @verifies throw IllegalArgumentException when operation is null
+	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getItemsByOperation_shouldThrowIllegalArgumentExceptionWhenOperationIsNull() throws Exception {
+		service.getItemsByOperation(null, new PagingInfo(1, 1));
 	}
 }
 

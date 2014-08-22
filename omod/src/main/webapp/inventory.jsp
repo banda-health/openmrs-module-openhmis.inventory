@@ -1,7 +1,9 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<openmrs:require privilege="View Administration Functions" otherwise="/login.htm" redirect="/admin/index.htm" />
-<openmrs:message var="pageTitle" code="admin.titlebar" scope="page"/>
+<openmrs:require privilege="<%= PrivilegeWebConstants.INVENTORY_PAGE_PRIVILEGES %>"
+                 otherwise="/login.htm"
+                 redirect="<%= ModuleWebConstants.INVENTORY_PAGE %>" />
+<openmrs:message var="pageTitle" code="openhmis.inventory.title" scope="page"/>
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
 <%@ include file="template/localHeader.jsp"%>
@@ -44,8 +46,8 @@
 		    <div id="operationList"></div>
 			<div id="viewOperation"></div>
 		    <div id="newOperation">
-			    <a id="createOperationLink" href="#">New Stock Operation</a>
-			    <div id="newOperationDialog" style="visibility: hidden"></div>
+			    <a id="createOperationLink" href="#">New Stock Operation</a><br /><br />
+			    <div id="newOperationDialog" title="New Operation" style="display: none"></div>
 		    </div>
 	    </td>
     </tr>

@@ -1,6 +1,8 @@
 package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationAttributeTypeDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttribute;
@@ -18,6 +20,7 @@ public class StockOperationAttributeTypeResource
 
 	@Override
 	public Class<? extends IMetadataDataService<StockOperationAttributeType>> getServiceClass() {
-		return null;
+		return IStockOperationAttributeTypeDataService.class;
 	}
 }
+

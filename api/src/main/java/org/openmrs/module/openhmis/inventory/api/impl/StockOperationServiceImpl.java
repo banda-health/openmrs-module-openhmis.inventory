@@ -1,6 +1,7 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import com.google.common.collect.Iterators;
+import org.apache.commons.lang.ObjectUtils;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.joda.time.DateTime;
@@ -424,14 +425,8 @@ public class StockOperationServiceImpl
 
 		// Loop through each detail record and find the first detail with the same expiration and batch operation
 		for (ItemStockDetail detail : stock.getDetails()) {
-			if  (
-					(
-							(detail.getExpiration() == null && tx.getExpiration() == null) || detail.getExpiration().equals(tx.getExpiration())
-					) && (
-							(detail.getBatchOperation() == null && tx.getBatchOperation() == null) ||
-									(tx.getBatchOperation() != null && detail.getBatchOperation().getId().equals(tx.getBatchOperation().getId()))
-					)
-					){
+			if (ObjectUtils.equals(detail.getExpiration(), tx.getExpiration()) &&
+				ObjectUtils.equals(detail.getBatchOperation(), tx.getBatchOperation())) {
 				return detail;
 			}
 		}
@@ -560,3 +555,4 @@ public class StockOperationServiceImpl
 		detail.setQuantity(stock.getQuantity());
 	}
 }
+
