@@ -30,6 +30,9 @@
 	              creator="1" has_expiration="false"  has_physical_inventory="true" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399671011D00EE" />
 	<inv_item item_id="5" name="test 6 item" description="test description 6" department_id="4" default_price_id="1" concept_accepted="false"
 	              creator="1" has_expiration="false"  has_physical_inventory="true" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA01399671011D00FF" />
+	<inv_item item_id="6" name="test 7 item" description="test description 6" department_id="4" default_price_id="1"
+			  concept_accepted="true" creator="1" has_expiration="true" has_physical_inventory="true"
+			  date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028828A480C83CE01480CD2D6070002" />
 	              	
 	<concept concept_id="0" retired="false" datatype_id="4" class_id="3" is_set="false"
 	         creator="1" date_created="2004-04-08 00:00:00.0" version=""

@@ -3,6 +3,16 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
 public class AdjustmentOperationType extends StockOperationTypeBase {
+	/**
+	 * Specifies whether the quantity should be negated when it is applied. This allows sub-classes to change the default
+	 * adjustment behavior.
+	 * @return
+	 */
+	protected boolean negateAppliedQuantity() {
+		// Note that the quantity is NOT negated because the adjustment quantity is the difference
+		return false;
+	}
+
 	@Override
 	public void onPending(final StockOperation operation) {
 		executeCopyReserved(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
@@ -10,7 +20,9 @@ public class AdjustmentOperationType extends StockOperationTypeBase {
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
 				tx.setStockroom(operation.getSource());
 
-				// Note that the quantity is NOT negated here because the adjustment quantity is the difference
+				if (negateAppliedQuantity()) {
+					tx.setQuantity(tx.getQuantity() * -1);
+				}
 			}
 		});
 	}
@@ -22,8 +34,10 @@ public class AdjustmentOperationType extends StockOperationTypeBase {
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
 				tx.setStockroom(operation.getSource());
 
-				// Negate the quantity because we want to undo the previously applied quantity difference
-				tx.setQuantity(tx.getQuantity() * -1);
+				// Undo the previously applied transaction by setting the quantity to the opposite of the pending transaction
+				if (!negateAppliedQuantity()) {
+					tx.setQuantity(tx.getQuantity() * -1);
+				}
 			}
 		});
 	}

@@ -62,7 +62,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	@Override
 	protected int getTestEntityCount() {
-		return 6;
+		return 7;
 	}
 
 	@Override
@@ -206,7 +206,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		List<Item> results = service.getAll(false);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(8, results.size());
+		Assert.assertEquals(getTestEntityCount() + 2, results.size());
 		Assert.assertEquals(firstItem.getId(), Iterators.get(results.iterator(), 0).getId());
 		Assert.assertEquals(0, (int)Iterators.get(results.iterator(), 1).getId());
 		Assert.assertEquals(1, (int)Iterators.get(results.iterator(), 2).getId());
@@ -214,7 +214,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Assert.assertEquals(3, (int)Iterators.get(results.iterator(), 4).getId());
 		Assert.assertEquals(4, (int)Iterators.get(results.iterator(), 5).getId());
 		Assert.assertEquals(5, (int)Iterators.get(results.iterator(), 6).getId());
-		Assert.assertEquals(lastItem.getId(), Iterators.get(results.iterator(), 7).getId());
+		Assert.assertEquals(lastItem.getId(), Iterators.getLast(results.iterator()).getId());
 
 		PagingInfo paging = new PagingInfo(1, 1);
 		results = service.getAll(false, paging);
@@ -247,6 +247,10 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		Assert.assertEquals(5, (int)Iterators.getOnlyElement(results.iterator()).getId());
 
 		paging.setPage(8);
+		results = service.getAll(false, paging);
+		Assert.assertEquals(6, (int)Iterators.getOnlyElement(results.iterator()).getId());
+
+		paging.setPage(9);
 		results = service.getAll(false, paging);
 		Assert.assertEquals(lastItem.getId(), Iterators.getOnlyElement(results.iterator()).getId());
 	}
@@ -829,7 +833,7 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		List<Item> results = service.getItemsByItemSearch(search, null);
 
 		Assert.assertNotNull(results);
-		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(2, results.size());
 		assertEntity(item, results.get(0));
 	}
 

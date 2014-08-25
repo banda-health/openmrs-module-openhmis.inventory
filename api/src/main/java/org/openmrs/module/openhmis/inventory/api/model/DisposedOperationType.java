@@ -5,4 +5,8 @@ package org.openmrs.module.openhmis.inventory.api.model;
  * implemented as a form of an adjustment operation, it is notable enough (for reporting) to warrant it's own type.
  */
 public class DisposedOperationType extends AdjustmentOperationType {
+	@Override
+	protected boolean negateAppliedQuantity() {
+		return true;
+	}
 }

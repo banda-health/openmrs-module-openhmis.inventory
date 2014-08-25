@@ -4,69 +4,143 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
+import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class DisposedOperationTypeTest extends BaseModuleContextSensitiveTest {
+import com.google.common.collect.Iterators;
 
-    IStockOperationTypeDataService stockOperationTypeDataService;
-    IStockOperationDataService stockOperationDataService;
-    IStockOperationTransactionDataService stockOperationTransactionDataService;
-    Patient patient;
+public class DisposedOperationTypeTest extends BaseOperationTypeTest {
+	IStockOperationDataService stockOperationDataService;
+	IStockroomDataService stockroomDataService;
+	
+	@Before
+	public void before() throws Exception {
+		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
+		executeDataSet(IStockroomDataServiceTest.DATASET);
+		executeDataSet(DATASET);
+		
+		stockOperationDataService = Context.getService(IStockOperationDataService.class);
+		stockroomDataService = Context.getService(IStockroomDataService.class);
+	}
+	
+	@Test
+	public void onPending_shouldNegateQuantityAndSetStockroomAndPatient() throws Exception {
+		IStockOperationType operationType = WellKnownOperationTypes.getDisposed();
+		StockOperation stockOperation = stockOperationDataService.getById(6);
+		
+		Assert.assertEquals(StockOperationStatus.NEW, stockOperation.getStatus());
+		Assert.assertNotNull(stockOperation.getItems());
+		Assert.assertEquals(1, stockOperation.getItems().size());
+		
+		StockOperationItem item = Iterators.getOnlyElement(stockOperation.getItems().iterator());
+		Assert.assertNotNull(item);
+		Assert.assertEquals(5, (int)item.getQuantity());
+		
+		ItemStock itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertNotNull(itemStock);
+		int itemStockQty = itemStock.getQuantity();
+		
+		// Apply the operation
+		operationType.onPending(stockOperation);
+		
+		// The item stock quantity should be the original quantity minus the disposed quantity
+		itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertNotNull(itemStock);
+		Assert.assertEquals(itemStockQty - item.getQuantity(), itemStock.getQuantity());
+		
+		// A single operation transaction should have been created
+		Assert.assertEquals(1, stockOperation.getTransactions().size());
+		StockOperationTransaction transaction = Iterators.getOnlyElement(stockOperation.getTransactions().iterator());
+		Assert.assertNotNull(transaction);
+		Assert.assertEquals(-5, (int)transaction.getQuantity());
+		
+		// A single reservation transactions should exist
+		Assert.assertEquals(1, stockOperation.getReserved().size());
+		ReservedTransaction reservedTransaction = Iterators.getOnlyElement(stockOperation.getReserved().iterator());
+		Assert.assertNotNull(reservedTransaction);
+		Assert.assertEquals(5, (int)reservedTransaction.getQuantity());
+	}
+	
+	@Test
+	public void onCancelled_shouldSetStockroomAndNegateQuantity() throws Exception {
+		IStockOperationType operationType = WellKnownOperationTypes.getDisposed();
+		StockOperation stockOperation = stockOperationDataService.getById(6);
+		
+		Assert.assertEquals(StockOperationStatus.NEW, stockOperation.getStatus());
 
-    @Before
-    public void before() throws Exception {
-        executeDataSet(IItemDataServiceTest.ITEM_DATASET);
-        executeDataSet(IStockroomDataServiceTest.DATASET);
+		StockOperationItem item = Iterators.getOnlyElement(stockOperation.getItems().iterator());
+		ItemStock itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertNotNull(itemStock);
+		int itemStockQty = itemStock.getQuantity();
 
-        stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
-        stockOperationDataService = Context.getService(IStockOperationDataService.class);
+		// First, apply the operation
+		operationType.onPending(stockOperation);
 
-    }
+		// The item stock quantity should be the original quantity minus the disposed quantity
+		itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertNotNull(itemStock);
+		Assert.assertEquals(itemStockQty - item.getQuantity(), itemStock.getQuantity());
 
-    @Test
-    public void onPending_shouldNegateQuantityAndSetStockroomAndPatient() throws Exception {
-        DisposedOperationType disposedOperationType = (DisposedOperationType) stockOperationTypeDataService.getById(1);
-        StockOperation stockOperation = stockOperationDataService.getById(6);
+		// Now cancel the operation
+		operationType.onCancelled(stockOperation);
 
-        disposedOperationType.onPending(stockOperation);
-        Set<StockOperationTransaction> transactions = stockOperation.getTransactions();
-        assertTrue(transactions.size() == 1);
-        for (StockOperationTransaction transaction : transactions) {
-            assertTrue(transaction.getStockroom().getId() == 3);
-        }
-    }
+		// The item stock quantity should be back to the original value
+		itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertNotNull(itemStock);
+		Assert.assertEquals(itemStockQty, itemStock.getQuantity());
 
-    @Test
-    public void onCancelled_shouldSetStockroomAndNegateQuantity() throws Exception {
-        DisposedOperationType disposedOperationType = (DisposedOperationType) stockOperationTypeDataService.getById(1);
-        StockOperation stockOperation = stockOperationDataService.getById(6);
+		// Two operation transactions should have been created, the first removing the quantity, the next adding it back
+		Assert.assertEquals(2, stockOperation.getTransactions().size());
+		StockOperationTransaction transaction = Iterators.get(stockOperation.getTransactions().iterator(), 0);
+		Assert.assertEquals(-5, (int)transaction.getQuantity());
+		transaction = Iterators.get(stockOperation.getTransactions().iterator(), 1);
+		Assert.assertEquals(5, (int)transaction.getQuantity());
 
-        disposedOperationType.onCancelled(stockOperation);
-        Set<StockOperationTransaction> transactions = stockOperation.getTransactions();
-        assertTrue(transactions.size() == 1);
-        for (StockOperationTransaction transaction : transactions) {
-            assertTrue(transaction.getStockroom().getId() == 3);
-            assertTrue(transaction.getQuantity() == -5);
-        }
-    }
+		// The reservation transactions should be empty
+		Assert.assertEquals(0, stockOperation.getReserved().size());
+	}
+	
+	@Test
+	public void onCompleted_shouldClearReservedTransactions() throws Exception {
+		IStockOperationType operationType = WellKnownOperationTypes.getDisposed();
+		StockOperation stockOperation = stockOperationDataService.getById(6);
 
-    @Test
-    public void onCompleted_shouldClearReservedTransactions() throws Exception {
-        DisposedOperationType disposedOperationType = (DisposedOperationType) stockOperationTypeDataService.getById(1);
-        StockOperation stockOperation = stockOperationDataService.getById(6);
+		Assert.assertEquals(StockOperationStatus.NEW, stockOperation.getStatus());
 
-        assertTrue(stockOperation.getReserved().size() == 1);
-        disposedOperationType.onCompleted(stockOperation);
-        assertTrue(stockOperation.getReserved().size() == 0);
-    }
+		StockOperationItem item = Iterators.getOnlyElement(stockOperation.getItems().iterator());
+		ItemStock itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertNotNull(itemStock);
+		int itemStockQty = itemStock.getQuantity();
 
+		// First, apply the operation
+		operationType.onPending(stockOperation);
+
+		// The item stock quantity should be the original quantity minus the disposed quantity
+		itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertEquals(itemStockQty - item.getQuantity(), itemStock.getQuantity());
+
+		Assert.assertEquals(1, stockOperation.getTransactions().size());
+		Assert.assertEquals(1, stockOperation.getReserved().size());
+
+		// Now complete the operation
+		operationType.onCompleted(stockOperation);
+
+		// The item stock quantity remains the same
+		itemStock = stockroomDataService.getItem(stockOperation.getSource(), item.getItem());
+		Assert.assertEquals(itemStockQty - item.getQuantity(), itemStock.getQuantity());
+
+		// The operation transaction remains but the reservation is deleted
+		Assert.assertEquals(1, stockOperation.getTransactions().size());
+		Assert.assertEquals(0, stockOperation.getReserved().size());
+	}
+	
 }
