@@ -174,10 +174,14 @@ define(
                     'change select[name="instanceType"]': 'instanceTypeChanged'
                 });
 
-                this.itemStockView = new openhmis.OperationItemStockView({
-                    model: new openhmis.GenericCollection([], {
+                if (!this.model.get('items')) {
+                    this.model.set('items', new openhmis.GenericCollection([], {
                         model: openhmis.ItemStockEntry
-                    }),
+                    }));
+                }
+
+                this.itemStockView = new openhmis.OperationItemStockView({
+                    model: this.model.get('items'),
                     itemView: openhmis.OperationItemStockItemView,
                     listTitle: 'Operation Items',
                     listFields: ['item', 'quantity', 'expiration', 'batchOperation'],
@@ -223,6 +227,11 @@ define(
 
                 // Load the item stock from the sub-view
                 if (this.itemStockView && this.itemStockView.model && this.itemStockView.model.models) {
+                    // Ensure that the current item is saved
+                    if (this.itemStockView.selectedItem) {
+                        this.itemStockView.selectedItem.commitForm();
+                    }
+
                     if (!this.model.get("items")) {
                         this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
                     }
@@ -241,6 +250,9 @@ define(
                             openhmis.displayErrors(self, errors);
                             return false;
                         }
+                    },
+                    success: function(model) {
+                        self.trigger("save", model);
                     }
                 });
             },

@@ -28,8 +28,7 @@
 
 <script id="itemstock-autocomplete-editor" type="text/template">
     <? var department_uuid = department ? department.id : null ?>
-    <? var id = itemStock ? itemStock.cid + '-' : "" ?>
-    <select id="<?= id ?>department" class="department">
+    <select id="<?= cid ?>department" class="department">
         <option value=""><em>--department--</em></option>
         <? departments.each(function(dept) { ?>
             <option value="<?= dept.id ?>"<?= (dept.id === department_uuid) ? ' selected="selected"' : '' ?>><?= dept.get("name") ?></option>
@@ -37,8 +36,8 @@
     </select>
     <input type="hidden" class="department-uuid" />
     <span class="label-hint">
-        <label for="<?= id ?>itemStock-name">search for item</label>
-        <input type="text" class="itemStock-name" id="<?= id ?>itemStock-name"
+        <label for="<?= cid ?>itemStock-name">search for item</label>
+        <input type="text" class="itemStock-name" id="<?= cid ?>itemStock-name"
                value="<?= (item && item.get('name')) ? item.get('name') : "" ?>" />
     </span>
     <input type="hidden" class="itemStock-uuid" />
@@ -46,12 +45,11 @@
 
 <!-- These controls start disabled and are only enabled once an item/item stock is selected -->
 <script id="itemstock-expiration-editor" type="text/template">
-
     <? if (visible) { ?>
         <? if (entryRequired) { ?>
-            <input id="expirationEntry" class="itemstock-expiration" type="text" placeholder="Expiration" />
+            <input id="<?= cid ?>_expirationEntry" class="itemstock-expiration" type="text" placeholder="Expiration" />
         <? } else { ?>
-            <select id="expirationSelect" class="itemstock-expiration">
+            <select id="<?= cid ?>_expirationSelect" class="itemstock-expiration">
                 <option value="Auto" selected><em>Auto</em></option>
                 <? if (expirations) { ?>
                 <? _.each(expirations, function(exp) { ?>

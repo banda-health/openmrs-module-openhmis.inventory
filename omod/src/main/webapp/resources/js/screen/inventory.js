@@ -50,6 +50,11 @@ curl(
                 addLink: $("#createOperationLink"),
                 element: $("#newOperationDialog")
             });
+
+            // When a new operation is saved, reload the page
+            newView.on("save", function() {
+                window.location = openhmis.url.getPage("inventoryBase") + "inventory.htm";
+            });
 		});
 	}
 );

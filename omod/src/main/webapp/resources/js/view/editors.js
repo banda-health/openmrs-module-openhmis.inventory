@@ -417,7 +417,8 @@ define(
                     departments: this.departmentCollection,
                     itemStock: itemStock,
                     department: department,
-                    item: item
+                    item: item,
+                    cid: this.model.cid
                 }));
 
                 this.$('select').keydown(this.departmentKeyDown);
@@ -486,13 +487,14 @@ define(
                     visible: this.options.visible ? this.options.visible : false,
                     entryRequired: entryRequired,
                     defaultExpirationDate: defaultExp,
-                    expirations: this.options.options
+                    expirations: this.options.options,
+                    cid: this.model.cid
                 }));
 
                 this.$('label').labelOver('over-apply');
 
                 if (entryRequired) {
-                    var entryEl = this.$('#expirationEntry');
+                    var entryEl = this.$('#' + this.model.cid + '_expirationEntry');
 
                     // Turn the expiration text input into a date picker
                     entryEl.datepicker({
@@ -521,7 +523,7 @@ define(
                 if (operationType.get("hasSource") === true) {
                     selected = this.$('option:selected').val();
                 } else {
-                    selected = this.$('#expirationEntry').val();
+                    selected = this.$('#' + this.model.cid + '_expirationEntry').val();
                 }
 
                 // Try to parse the date into a real Date object
