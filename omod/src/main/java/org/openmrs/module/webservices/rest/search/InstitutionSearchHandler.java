@@ -59,7 +59,7 @@ public class InstitutionSearchHandler implements SearchHandler {
         if (StringUtils.isBlank(query)) {
             institution = service.getAll(context.getIncludeAll(), pagingInfo);
         } else {
-            institution = service.findByName(query, context.getIncludeAll(), pagingInfo);
+            institution = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
         }
 
         AlreadyPagedWithLength<Institution> results = new AlreadyPagedWithLength<Institution>(context, institution, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());

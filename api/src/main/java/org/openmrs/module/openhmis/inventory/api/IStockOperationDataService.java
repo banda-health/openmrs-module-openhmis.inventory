@@ -95,16 +95,16 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	List<StockOperation> getUserOperations(User user, StockOperationStatus status, PagingInfo paging) throws IllegalArgumentException, APIException;
 
 	/**
-	 * Finds all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
+	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
 	 * @param search The transaction search settings.
 	 * @return The transactions found or an empty list if no transactions were found.
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> findOperations(StockOperationSearch search) throws IllegalArgumentException, APIException;
+	List<StockOperation> getOperations(StockOperationSearch search) throws IllegalArgumentException, APIException;
 
 	/**
-	 * Finds all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
+	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
 	 * @param search The operation search settings.
 	 * @param paging The paging information.
 	 * @return The operations found or an empty list if no transactions were found.
@@ -123,6 +123,6 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> findOperations(StockOperationSearch search, PagingInfo paging) throws IllegalArgumentException, APIException;
+	List<StockOperation> getOperations(StockOperationSearch search, PagingInfo paging) throws IllegalArgumentException, APIException;
 }
 

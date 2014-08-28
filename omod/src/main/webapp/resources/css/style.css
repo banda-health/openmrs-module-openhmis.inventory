@@ -1,5 +1,6 @@
 /* Item editor styles */
 .editor .item-name { position: relative; z-index: 1; }
+.editor .itemStock-name { position: relative; z-index: 1; }
 
 /* Input hint styles */
 span.label-hint { position: relative; }
@@ -7,7 +8,6 @@ span.label-hint { position: relative; }
 
 /* Exception for form style */
 li.bbf-field.field-cashPoint div.bbf-editor { margin-left: 7em; }
-
 
 div.box, div.combineBoxes { margin-bottom: 1em; }
 .combineBoxes div.box { margin-bottom: 0; }
@@ -29,4 +29,41 @@ div.box, div.combineBoxes { margin-bottom: 1em; }
     border: 1px solid #1AAD9B;
     color: #FFFFFF;
     font-weight: bold;
+}
+
+table.item-stock td input[type="text"], table.item-stock td input[type="number"] {
+	width: 100%;
+	background-color: transparent;
+}
+
+table.item-stock td input[name="quantity"] {
+	width: 50%;
+	background-color: transparent;
+}
+
+table.item-stock td input, table.item-stock td select {
+	border: 1px solid transparent;
+	background-color: transparent;
+}
+
+table.item-stock td, table.item-stock th {
+	padding: 0px 5px;
+	border-right: 1px solid #aaa;
+}
+table.item-stock td.end, table.item-stock th.end { border-right: none; }
+
+table.item-stock .field-item { width: 65%; }
+table.item-stock .field-item .editor .department-name { width: 31%; }
+table.item-stock .field-item .editor .itemStock-name { width: 66%; }
+
+table.item-stock thead .field-quantity, table.item-stock thead .field-expiration { text-align: center; }
+
+table.item-stock .field-quantity { width: 75px; }
+table.item-stock .field-expiration {
+	width: 100px;
+	text-align: right;
+}
+
+#newOperation b.boxHeader, #newOperation  div.box {
+	width: 99%;
 }

@@ -42,13 +42,19 @@ curl(
             // Set up new operation link and template
             var collection = new openhmis.GenericCollection([], {
                 url: openhmis.Operation.prototype.meta.restUrl,
-                model: openhmis.Operation
+                model: openhmis.NewOperation
             });
 
-            var newView = new openhmis.NewOperationView({collection: collection});
-            newView.setElement($("#newOperationDialog"));
+            var newView = new openhmis.NewOperationView({
+                collection: collection,
+                addLink: $("#createOperationLink"),
+                element: $("#newOperationDialog")
+            });
 
-            $("#createOperationLink").click(newView.showDialog);
+            // When a new operation is saved, reload the page
+            newView.on("save", function() {
+                window.location = openhmis.url.getPage("inventoryBase") + "inventory.htm";
+            });
 		});
 	}
 );

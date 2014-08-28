@@ -92,7 +92,7 @@ public class StockroomDataServiceImpl
 	}
 
 	@Override
-	public List<StockOperation> findOperations(final Stockroom stockroom, final StockOperationSearch search, PagingInfo paging) {
+	public List<StockOperation> getOperations(final Stockroom stockroom, final StockOperationSearch search, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined");
 		}
@@ -112,7 +112,7 @@ public class StockroomDataServiceImpl
 	}
 
 	@Override
-	public List<ItemStock> findItems(final Stockroom stockroom, final ItemSearch itemSearch, PagingInfo paging) {
+	public List<ItemStock> getItems(final Stockroom stockroom, final ItemSearch itemSearch, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
@@ -203,12 +203,12 @@ public class StockroomDataServiceImpl
     }
 
     @Override
-    public List<Stockroom> findStockrooms(Location location, String name, boolean includeRetired) throws APIException {
-        return findStockrooms(location, name, includeRetired, null);
+    public List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired) throws APIException {
+        return getStockrooms(location, name, includeRetired, null);
     }
 
     @Override
-    public List<Stockroom> findStockrooms(final Location location, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+    public List<Stockroom> getStockrooms(final Location location, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
         if (location == null) {
             throw new NullPointerException("The department must be defined");
         }

@@ -68,3 +68,4 @@ public interface IStockOperationService extends OpenmrsService {
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
 	void applyTransactions(StockOperationTransaction... transactions) throws APIException;
 }
+

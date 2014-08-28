@@ -58,7 +58,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	List<StockOperationTransaction> getTransactionsByRoom(Stockroom stockroom, PagingInfo paging);
 
 	/**
-	 * Finds all the items in the stockroom that match the {@link ItemSearch} settings.
+	 * Gets all the items in the stockroom that match the {@link ItemSearch} settings.
  	 * @param stockroom The {@link Stockroom} items to search within.
 	 * @param itemSearch The {@link ItemSearch} settings.
 	 * @param paging The paging information.
@@ -74,10 +74,10 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-	List<ItemStock> findItems(Stockroom stockroom, ItemSearch itemSearch, PagingInfo paging);
+	List<ItemStock> getItems(Stockroom stockroom, ItemSearch itemSearch, PagingInfo paging);
 
 	/**
-	 * Finds all operations associated with the stockroom that match the {@link StockOperationSearch} settings.
+	 * Gets all operations associated with the stockroom that match the {@link StockOperationSearch} settings.
 	 * @param stockroom The {@link Stockroom} operations to search within.
 	 * @param search The {@link StockOperationSearch} settings
 	 * @param paging The paging information.
@@ -93,7 +93,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-	List<StockOperation> findOperations(Stockroom stockroom, StockOperationSearch search, PagingInfo paging);
+	List<StockOperation> getOperations(Stockroom stockroom, StockOperationSearch search, PagingInfo paging);
 
 	/**
 	 * Gets the {@link ItemStock} for the specified {@link Item} with the optionally defined expiration.
@@ -158,7 +158,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
    List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 
    /**
-    * Finds all stockrooms in the specified {@link location} that start with the specified name.
+    * Gets all stockrooms in the specified {@link location} that start with the specified name.
     * @param location The location to search within.
     * @param name The stockroom name fragment.
     * @param includeRetired Whether retired stockrooms should be included in the results.
@@ -175,10 +175,10 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> findStockrooms(Location location, String name, boolean includeRetired) throws APIException;
+   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired) throws APIException;
 
    /**
-    * Finds all stockrooms in the specified {@link Location} that start with the specified name.
+    * Gets all stockrooms in the specified {@link Location} that start with the specified name.
     * @param location The location to search within.
     * @param name The stockroom name fragment.
     * @param includeRetired Whether retired stockrooms should be included in the results.
@@ -188,6 +188,6 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> findStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
 }
 

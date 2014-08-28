@@ -165,14 +165,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> getItemsByDepartmentAndCategory(Department department,
+	public List<Item> getItems(Department department,
 			Category category, boolean includeRetired) throws APIException {
-		return getItemsByDepartmentAndCategory(department, category,
+		return getItems(department, category,
 				includeRetired, null);
 	}
 
 	@Override
-	public List<Item> getItemsByDepartmentAndCategory(
+	public List<Item> getItems(
 			final Department department, final Category category,
 			final boolean includeRetired, PagingInfo pagingInfo)
 			throws APIException {
@@ -196,13 +196,13 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> findItems(Category category, String name,
+	public List<Item> getItems(Category category, String name,
 			boolean includeRetired) throws APIException {
-		return findItems(category, name, includeRetired, null);
+		return getItems(category, name, includeRetired, null);
 	}
 
 	@Override
-	public List<Item> findItems(final Category category, final String name,
+	public List<Item> getItems(final Category category, final String name,
 			final boolean includeRetired, PagingInfo pagingInfo)
 			throws APIException {
 		if (category == null) {
@@ -230,13 +230,13 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> findItems(Department department, Category category,
+	public List<Item> getItemsByDepartmentAndCategoryAndName(Department department, Category category,
 			String name, boolean includeRetired) throws APIException {
-		return findItems(department, category, name, includeRetired, null);
+		return getItems(department, category, name, includeRetired, null);
 	}
 
 	@Override
-	public List<Item> findItems(final Department department,
+	public List<Item> getItems(final Department department,
 			final Category category, final String name,
 			final boolean includeRetired, PagingInfo pagingInfo)
 			throws APIException {
@@ -271,15 +271,15 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> findItems(Department department, String name,
+	public List<Item> getItems(Department department, String name,
 			boolean includeRetired) throws APIException {
-		return findItems(department, name, includeRetired, null);
+		return getItems(department, name, includeRetired, null);
 	}
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> findItems(final Department department, final String name,
+	public List<Item> getItems(final Department department, final String name,
 			final boolean includeRetired, PagingInfo pagingInfo)
 			throws APIException {
 		if (department == null) {
@@ -308,13 +308,13 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public List<Item> findItems(ItemSearch itemSearch) {
-		return findItems(itemSearch, null);
+	public List<Item> getItemsByItemSearch(ItemSearch itemSearch) {
+		return getItemsByItemSearch(itemSearch, null);
 	}
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public List<Item> findItems(final ItemSearch itemSearch, PagingInfo pagingInfo) {
+	public List<Item> getItemsByItemSearch(final ItemSearch itemSearch, PagingInfo pagingInfo) {
 		if (itemSearch == null) {
 			throw new NullPointerException("The item search must be defined.");
 		} else if (itemSearch.getTemplate() == null) {
@@ -331,7 +331,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> findItemsByConcept(final Concept concept) {
+	public List<Item> getItemsByConcept(final Concept concept) {
 		return executeCriteria(Item.class, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -341,14 +341,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> findItemsWithoutConcept(final List<Integer> excludedItemsIds, final Integer resultLimit) {
+	public List<Item> getItemsWithoutConcept(final List<Integer> excludedItemsIds, final Integer resultLimit) {
 		return executeCriteria(Item.class, null, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.isNull(HibernateCriteriaConstants.CONCEPT)).add(
 						Restrictions.eq(HibernateCriteriaConstants.RETIRED, false)).add(
 						Restrictions.eq(HibernateCriteriaConstants.CONCEPT_ACCEPTED, false));
-				if (excludedItemsIds != null && excludedItemsIds.size() < 0) {
+				if (excludedItemsIds != null && excludedItemsIds.size() > 0) {
 					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID, excludedItemsIds.toArray())));
 				}
 				if (resultLimit != null && resultLimit > 0) {

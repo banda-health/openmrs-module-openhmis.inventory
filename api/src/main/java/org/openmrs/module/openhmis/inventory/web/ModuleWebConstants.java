@@ -46,16 +46,7 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String MODULE_INIT_JS = MODULE_RESOURCE_ROOT + "js/init.js";
 
-	public static final String INVENTORY_START_PAGE =  MODULE_ROOT + "inventory.htm";
-
-	/**
-	 * Returns the full page url for a module page.
-	 * @param relativePath The page url, relative to the module web directory.
-	 * @return The full page url.
-	 */
-	public static String getModulePageUrl(String relativePath) {
-		return MODULE_ROOT + relativePath;
-	}
+	public static final String INVENTORY_PAGE =  MODULE_ROOT + "inventory.htm";
 
 	protected ModuleWebConstants() { }
 }

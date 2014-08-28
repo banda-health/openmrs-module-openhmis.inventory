@@ -55,6 +55,12 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
+	protected Order[] getDefaultSort() {
+		// Return operations ordered by creation date, desc
+		return new Order[] { Order.desc("dateCreated") };
+	}
+
+	@Override
 	public StockOperation getOperationByNumber(String number) {
 		if (StringUtils.isEmpty(number)) {
 			throw new IllegalArgumentException("The operation number to find must be defined.");
@@ -97,9 +103,8 @@ public class StockOperationDataServiceImpl
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq("operation", operation));
 				criteria.createCriteria("item", "i");
-				criteria.addOrder(Order.desc("i.name"));
 			}
-		}, getDefaultSort());
+		}, Order.asc("i.name"));
 	}
 
 	@Override
@@ -158,12 +163,12 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public List<StockOperation> findOperations(StockOperationSearch search) {
-		return findOperations(search, null);
+	public List<StockOperation> getOperations(StockOperationSearch search) {
+		return getOperations(search, null);
 	}
 
 	@Override
-	public List<StockOperation> findOperations(final StockOperationSearch search, PagingInfo paging) {
+	public List<StockOperation> getOperations(final StockOperationSearch search, PagingInfo paging) {
 		if (search == null) {
 			throw new IllegalArgumentException("The operation search must be defined.");
 		} else if (search.getTemplate() == null) {

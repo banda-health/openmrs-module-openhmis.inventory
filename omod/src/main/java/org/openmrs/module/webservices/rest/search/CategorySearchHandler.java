@@ -59,7 +59,7 @@ public class CategorySearchHandler implements SearchHandler {
         if (StringUtils.isBlank(query)) {
             categories = service.getAll(context.getIncludeAll(), pagingInfo);
         } else {
-            categories = service.findByName(query, context.getIncludeAll(), pagingInfo);
+            categories = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
         }
 
         AlreadyPagedWithLength<Category> results = new AlreadyPagedWithLength<Category>(context, categories, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());

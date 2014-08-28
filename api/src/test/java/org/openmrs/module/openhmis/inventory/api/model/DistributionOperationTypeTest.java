@@ -13,7 +13,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.api.*;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class DistributionOperationTypeTest extends BaseModuleContextSensitiveTest {
+public class DistributionOperationTypeTest extends BaseOperationTypeTest {
 
     IStockOperationTypeDataService stockOperationTypeDataService;
     IStockOperationDataService stockOperationDataService;
@@ -25,6 +25,7 @@ public class DistributionOperationTypeTest extends BaseModuleContextSensitiveTes
         executeDataSet(TestConstants.CORE_DATASET);
 		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
         executeDataSet(IStockroomDataServiceTest.DATASET);
+	    executeDataSet(DATASET);
 
         stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
         stockOperationDataService = Context.getService(IStockOperationDataService.class);

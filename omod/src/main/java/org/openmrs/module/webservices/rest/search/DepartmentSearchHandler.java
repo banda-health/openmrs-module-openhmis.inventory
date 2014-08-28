@@ -59,7 +59,7 @@ public class DepartmentSearchHandler implements SearchHandler {
         if (StringUtils.isBlank(query)) {
             departments = service.getAll(context.getIncludeAll(), pagingInfo);
         } else {
-            departments = service.findByName(query, context.getIncludeAll(), pagingInfo);
+            departments = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
         }
 
         AlreadyPagedWithLength<Department> results = new AlreadyPagedWithLength<Department>(context, departments, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());

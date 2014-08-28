@@ -36,7 +36,7 @@ public class InventoryLinkExt extends LinkExt {
 
     @Override
     public String getUrl() {
-        return ModuleWebConstants.INVENTORY_START_PAGE;
+        return ModuleWebConstants.INVENTORY_PAGE;
     }
 
     @Override

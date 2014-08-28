@@ -58,6 +58,19 @@
 					<div class="bbf-editor"><label id="op-field-destination"><?= model.get('destination') ?></label></div>
 				</li>
 				<? } ?>
+                <? if (model.attributeList) {
+                        for (i in model.attributeList) {
+                            var attribute = model.attributeList[i]; ?>
+                            <li class="bbf-field field-attribute">
+                                <label for="op-field-<?= attribute.id ?>">
+                                    <?= attribute.name ?>
+                                </label>
+                                <div class="bbf-editor">
+                                    <label id="op-field-<?= attribute.id ?>"><?= attribute.value ?></label>
+                                </div>
+                            </li>
+                        <? }
+                   } ?>
 			</ul>
 		</fieldset>
 		</form>
@@ -139,8 +152,4 @@
 	</td>
 	<? } ?>
 	<? } ?>
-</script>
-
-<script id="new-operation" type="text/template">
-
 </script>
