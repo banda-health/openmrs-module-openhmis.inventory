@@ -23,13 +23,13 @@ define(
 	    openhmis.url.inventoryBase + 'js/model/stockroom'
     ],
     function(openhmis, __) {
-		openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
+        openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
 			meta: {
 				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType'
 			}
 		});
 
-	    openhmis.OperationType = openhmis.CustomizableInstanceTypeBase.extend({
+        openhmis.OperationType = openhmis.CustomizableInstanceTypeBase.extend({
 		    meta: {
 				name: __("Operation Type"),
 				namePlural: __("Operation Types"),

@@ -174,22 +174,6 @@ define(
                     'change select[name="instanceType"]': 'instanceTypeChanged'
                 });
 
-                if (!this.model.get('items')) {
-                    this.model.set('items', new openhmis.GenericCollection([], {
-                        model: openhmis.ItemStockEntry
-                    }));
-                }
-
-                this.itemStockView = new openhmis.OperationItemStockView({
-                    model: this.model.get('items'),
-                    itemView: openhmis.OperationItemStockItemView,
-                    listTitle: 'Operation Items',
-                    listFields: ['item', 'quantity', 'expiration', 'batchOperation'],
-                    stockroomSelector: 'select[name="source"]',
-                    view: this,
-                    operation: this.model
-                });
-
                 var self = this;
                 this.operationTypes = new openhmis.GenericCollection([], { model: openhmis.OperationType });
                 this.operationTypes.fetch({
@@ -210,9 +194,6 @@ define(
 
                     this.itemStockView.setupNewItem();
                 }
-
-                // Add the item-stock class to the item stock table so it is easy to locate
-                this.itemStockView.$("table").addClass("item-stock");
             },
 
             save: function(event) {
@@ -257,7 +238,33 @@ define(
                 });
             },
 
+            cancel: function() {
+                openhmis.GenericAddEditView.prototype.cancel.call(this);
+
+                this.itemStockView = undefined;
+            },
+
             showForm: function() {
+                // Set up the item stock entry view if not already defined
+                if (!this.itemStockView) {
+                    // Reset the items
+                    if (!this.model.get('items')) {
+                        this.model.set('items', new openhmis.GenericCollection([], {
+                            model: openhmis.ItemStockEntry
+                        }));
+                    }
+
+                    this.itemStockView = new openhmis.OperationItemStockView({
+                        model: this.model.get('items'),
+                        itemView: openhmis.OperationItemStockItemView,
+                        listTitle: 'Operation Items',
+                        listFields: ['item', 'quantity', 'expiration', 'batchOperation'],
+                        stockroomSelector: 'select[name="source"]',
+                        view: this,
+                        operation: this.model
+                    });
+                }
+
                 // Render new operation form
                 this.beginAdd();
                 $(".addLink").hide();
@@ -274,7 +281,33 @@ define(
             },
 
             instanceTypeChanged: function(event) {
+                var items = this.itemStockView.model.length;
+
+                if (items > 0) {
+                    // Confirm operation type change if there are any defined item stock
+                    if (!confirm('Changing the Operation Type will clear the item stock. Are you sure you want to do this?')) {
+                        // Set the value back to the previous value
+                        this.$(event.target).val($.data(event.target, 'current'));
+
+                        return false;
+                    }
+                }
+                // Store the updated operation type as the current value for the select
+                $.data(event.target, 'current', this.$(event.target).val());
+
+                if (items > 0) {
+                    this.clearItemStock();
+                }
+
                 this.updateOperationType($(event.target).val());
+            },
+
+            clearItemStock: function() {
+                // Remove the item stock models
+                this.itemStockView.model.remove(this.itemStockView.model.models);
+
+                // Remove the item stock rows
+
             },
 
             updateOperationType: function(instanceType) {
@@ -356,6 +389,13 @@ define(
                 this.itemView = openhmis.OperationItemStockItemView;
             },
 
+            render: function(extraContext) {
+                openhmis.GenericListEntryView.prototype.render.call(this, extraContext);
+
+                // Add the item-stock class to the item stock table so it is easy to locate
+                this.$("table").addClass("item-stock");
+            },
+
             setOperation: function(operation) {
                 this.operation = operation;
                 this.operation.set('items', operation.get("items") ?
@@ -365,12 +405,6 @@ define(
                 this.model = this.operation.get('items');
 
                 this.options.itemActions = ["remove", "inlineEdit"];
-            },
-
-            onItemRemoved: function(view) {
-                this.setupNewItem();
-
-                openhmis.GenericListEntryView.prototype.onItemRemoved.call(this, view);
             },
 
             setupNewItem: function(view) {
@@ -397,10 +431,6 @@ define(
                                 return errors;
                             }
                         });
-
-                        if (errors == null) {
-                            this.setupNewItem();
-                        }
                     }
                 }
             },
@@ -427,20 +457,6 @@ define(
                 }
 
                 return true;
-            },
-
-            render: function() {
-                openhmis.GenericListEntryView.prototype.render.call(this);
-
-                return this;
-            },
-
-            _addItemFromInputLine: function(inputLineView) {
-                // Prevent multiple change events causing duplicate views
-                if (this.model.getByCid(inputLineView.model.cid)) return;
-                inputLineView.off("change", this._addItemFromInputLine);
-                this.model.add(inputLineView.model, { silent: true });
-                this._deselectAll();
             }
         });
 
@@ -564,7 +580,6 @@ define(
 
                 if (event.keyCode === 13 /* Enter */)  {
                     this.update();
-                    this.trigger("change", this);
                     this.commitForm(event);
 
                     // Prevent enter press from interfering with HTML form controls
@@ -576,12 +591,6 @@ define(
                 var errors = openhmis.GenericListItemView.prototype.commitForm.call(this, event);
                 if (errors === undefined && event && event.keyCode === 13) {
                     this.trigger("focusNext", this);
-                }
-            },
-
-            onModelChange: function(model) {
-                if (model.hasChanged() && model.isValid()) {
-                    this.trigger("change", this);
                 }
             },
 
@@ -608,13 +617,7 @@ define(
                 openhmis.GenericListItemView.prototype.focus.call(this, form);
 
                 if (!form) {
-                    this.$('.item-name').focus();
-                }
-            },
-
-            _removeModel: function() {
-                if (this.model.collection) {
-                    this.model.collection.remove(this.model, { silent: true });
+                    this.$('.itemStock-name').focus();
                 }
             },
 
@@ -637,7 +640,6 @@ define(
             stepCallback: function(val, up) {
                 this.update();
             }
-
         });
 
 		return openhmis;
