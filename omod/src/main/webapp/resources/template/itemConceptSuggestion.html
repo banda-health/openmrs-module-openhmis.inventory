@@ -1,5 +1,5 @@
 <script id="item-concept-suggestion-list" type="text/template">
-	<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?></b>
+	<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?><div class="selectAll">Select All </div><input id="selectAll" type="checkbox" name="selectAll" class="selectAll"/></b>
 	<div class="box">
 		<? if (listLength === 0) { ?>
 		<p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
@@ -13,11 +13,13 @@
 			</tr>
 			</thead>
 			<tbody class="list">
-			<input id="selectAll" type="checkbox" name="selectAll" class="selectAll"/>
 			</tbody>
 			<tfoot></tfoot>
 		</table>
 		<? } ?>
+
+
+
 		<input type="submit" class="submit" value="Save Items">
 		<button class="submitNext">Save Items and get next Items</button>
 		<button class="cancel">Cancel</button>

@@ -233,6 +233,27 @@ define(
 			        if ($('.conceptAccepted').prop('checked')){return !checked;}
 			        else return !checked;
 		        });
+//			        $('.selectAll').click(function(event) {  //on click
+//				        if(this.checked) { // check select status
+//					        $('.conceptAccepted').each(function() { //loop through each checkbox
+//						        this.checked = true;  //select all checkboxes with class "checkbox1"
+//					        });
+//				        }else{
+//					        $('.conceptAccepted').each(function() { //loop through each checkbox
+//						        this.checked = false; //deselect all checkboxes with class "checkbox1"
+//					        });
+//				        }
+//			        });
+		        //select and deselect
+//		        $(".selectAll").prop(function () {
+//			        $('.conceptAccepted').prop('checked', this.checked);
+//		        });
+//
+//		        //If one item deselect then button CheckAll is UnCheck
+//		        $(".selectAll").click(function () {
+//			        if (!$(this).is(':checked'))
+//				        $(".conceptAccepted").prop('checked', false);
+//		        });
 	        }
 
         });
