@@ -122,7 +122,10 @@ define(
 			initialize: function(options) {
 				this.events['change #location_uuid'] = 'onFormSubmit';
 				openhmis.BaseSearchView.prototype.initialize.call(this, options);
-				var locationCollection = new openhmis.GenericCollection([], { model: openhmis.Location });
+				var locationCollection = new openhmis.GenericCollection([], {
+                    model: openhmis.Location,
+                    limit: openhmis.rest.maxResults
+                });
 				locationCollection.on("reset", function(collection) {
 					collection.unshift(new openhmis.Location({ name: __("Any") }));
 				});
