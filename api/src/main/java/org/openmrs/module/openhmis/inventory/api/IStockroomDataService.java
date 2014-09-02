@@ -49,7 +49,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @param paging The paging information.
 	 * @return A list containing all of the stockroom transactions.
 	 * @should return all the transactions in the stockroom ordered by the transaction date
-	 * @should return an empty list if there are not transactions
+	 * @should return an empty list if there are no transactions
 	 * @should return paged items if paging is specified
 	 * @should throw IllegalArgumentException if the stockroom is null
 	 */

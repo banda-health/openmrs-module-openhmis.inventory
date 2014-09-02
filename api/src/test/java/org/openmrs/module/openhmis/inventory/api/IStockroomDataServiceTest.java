@@ -864,4 +864,82 @@ public class IStockroomDataServiceTest extends IMetadataDataServiceTest<IStockro
 		Assert.assertEquals(stockX.getId(), items.get(1).getId());
 		Assert.assertEquals(stockZ.getId(), items.get(2).getId());
 	}
+
+	/**
+	 * @verifies return all the transactions in the stockroom ordered by the transaction date
+	 * @see IStockroomDataService#getTransactionsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test public void getTransactionsByRoom_shouldReturnAllTheTransactionsInTheStockroomOrderedByTheTransactionDate()
+			throws Exception {
+		Stockroom stockroom = service.getById(0);
+
+		List<StockOperationTransaction> results = service.getTransactionsByRoom(stockroom, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(6, results.size());
+
+		// THe order should be from the most recent transaction
+		StockOperationTransaction tx = Iterators.get(results.iterator(), 0);
+		Assert.assertEquals(4, (int)tx.getId());
+
+		tx = Iterators.get(results.iterator(), 1);
+		Assert.assertEquals(5, (int)tx.getId());
+
+		tx = Iterators.get(results.iterator(), 2);
+		Assert.assertEquals(3, (int)tx.getId());
+
+		tx = Iterators.get(results.iterator(), 3);
+		Assert.assertEquals(2, (int)tx.getId());
+
+		tx = Iterators.get(results.iterator(), 4);
+		Assert.assertEquals(1, (int)tx.getId());
+
+		tx = Iterators.get(results.iterator(), 5);
+		Assert.assertEquals(0, (int)tx.getId());
+	}
+
+	/**
+	 * @verifies return an empty list if there are no transactions
+	 * @see IStockroomDataService#getTransactionsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test public void getTransactionsByRoom_shouldReturnAnEmptyListIfThereAreNoTransactions() throws Exception {
+		Stockroom newRoom = createEntity(true);
+
+		service.save(newRoom);
+		Context.flushSession();
+
+		List<StockOperationTransaction> results = service.getTransactionsByRoom(newRoom, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+	}
+
+	/**
+	 * @verifies return paged items if paging is specified
+	 * @see IStockroomDataService#getTransactionsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test public void getTransactionsByRoom_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+		Stockroom stockroom = service.getById(0);
+
+		PagingInfo pagingInfo = new PagingInfo(1, 1);
+		List<StockOperationTransaction> results = service.getTransactionsByRoom(stockroom, pagingInfo);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(6, (long)pagingInfo.getTotalRecordCount());
+	}
+
+	/**
+	 * @verifies throw IllegalArgumentException if the stockroom is null
+	 * @see IStockroomDataService#getTransactionsByRoom(org.openmrs.module.openhmis.inventory.api.model.Stockroom,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getTransactionsByRoom_shouldThrowIllegalArgumentExceptionIfTheStockroomIsNull() throws Exception {
+		service.getTransactionsByRoom(null, null);
+	}
 }
+
