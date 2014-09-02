@@ -240,8 +240,8 @@ define(
 
             cancel: function() {
                 openhmis.GenericAddEditView.prototype.cancel.call(this);
-
                 this.itemStockView = undefined;
+                $("#createOperationLink").show();
             },
 
             showForm: function() {
@@ -268,6 +268,7 @@ define(
                 // Render new operation form
                 this.beginAdd();
                 $(".addLink").hide();
+                $("#createOperationLink").hide();
 
                 // Insert the item stock list after the form but before the buttons
                 $("#newOperation").find(".bbf-form").after(this.itemStockView.el);
