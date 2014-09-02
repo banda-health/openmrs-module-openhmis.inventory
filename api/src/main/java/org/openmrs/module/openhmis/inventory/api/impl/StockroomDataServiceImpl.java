@@ -105,7 +105,7 @@ public class StockroomDataServiceImpl
 						Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom))
 				);
 			}
-		}, Order.desc("dateCreated"));
+		}, Order.desc("dateChanged"), Order.desc("dateCreated"));
 	}
 
 	@Override

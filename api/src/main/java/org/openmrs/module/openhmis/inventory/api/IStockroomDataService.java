@@ -83,10 +83,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @param paging The paging information.
 	 * @return The stock operations found or an empty list if none were found.
 	 * @should return operations filtered by template and stockroom
-	 * @should not return operations for other stockrooms
-	 * @should return all found operations if paging is null
 	 * @should return paged operations if paging is specified
-	 * @should return retired operations from search unless specified
 	 * @should return operations sorted by last modified date
 	 * @should throw IllegalArgumentException if stockroom is null
 	 * @should not throw IllegalArgumentException if operation search is null
@@ -162,7 +159,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param location The location to search within.
     * @param name The stockroom name fragment.
     * @param includeRetired Whether retired stockrooms should be included in the results.
-    * @return All stockrooms in the specified {@link location} that start with the specified name.
+    * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
     * @throws APIException
     * @should throw NullPointerException if the location is null
     * @should throw IllegalArgumentException if the name is null
@@ -183,7 +180,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param name The stockroom name fragment.
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @param pagingInfo The paging information.
-    * @return All stockrooms in the specified {@link location} that start with the specified name.
+    * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
     * @throws APIException
     */
    @Transactional(readOnly = true)
