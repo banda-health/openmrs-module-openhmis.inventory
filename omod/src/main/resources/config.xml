@@ -24,6 +24,15 @@
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.InventoryModuleActivator</activator>
 	
+	<globalProperty>
+		<property>${project.parent.artifactId}.autoGenerateOperationNumber</property>
+		<description>true/false whether or not the operation number should be generated automatically</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.operationNumberIdentifierTypeId</property>
+		<description>Id of operation number identifier type</description>
+	</globalProperty>
 	
 	<!-- Adds link to admin page -->
 	<extension>
