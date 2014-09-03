@@ -16,7 +16,8 @@
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
-<openmrs:require allPrivileges="<%= PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES %>" otherwise="/login.htm"redirect="<%= ModuleWebConstants.ITEMS_PAGE %>" />
+<openmrs:require allPrivileges="<%= PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES %>" otherwise="/login.htm"
+                 redirect="<%= ModuleWebConstants.ITEMS_PAGE %>" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="template/localHeader.jsp"%>
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/itemConceptSuggestion.js" %>' />
