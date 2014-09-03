@@ -21,22 +21,49 @@ define(
     ],
     function(openhmis) {
         openhmis.ItemAddEditView = openhmis.GenericAddEditView.extend({
-        	
-        	initialize: function(options) {
-				_.bindAll(this);
-				this.events = _.extend({}, this.events, {
-					'click [data-action="remove-concept"]' : 'onRemove',
-					'change [name="hasExpiration"]' : 'showDefaultExpirationPeriodField'
-				});
-				openhmis.GenericAddEditView.prototype.initialize.call(this, options);
-				
-			},
-          
-        	
+            initialize: function(options) {
+                _.bindAll(this);
+                this.events = _.extend({}, this.events, {
+                    'click [data-action="remove-concept"]' : 'onRemove',
+                    'change [name="hasExpiration"]' : 'showDefaultExpirationPeriodField'
+                });
+                openhmis.GenericAddEditView.prototype.initialize.call(this, options);
+
+                this.itemStockView = new openhmis.GenericListView({
+                    model: new openhmis.GenericCollection([], {
+                        model: openhmis.ItemStock
+                    }),
+                    showRetiredOption: false,
+                    showRetired: true,
+                    listTitle: "Item Stock",
+                    listFields: ['stockroom', 'quantity']
+                });
+
+                this.itemStockView.on("fetch", this.fetch);
+            },
+
+            fetch: function(options) {
+                options.queryString = openhmis.addQueryStringParameter(options.queryString, "item_uuid=" + this.model.id);
+            },
+
             prepareModelForm: function(model, options) {
                 var modelForm = openhmis.GenericAddEditView.prototype.prepareModelForm.call(this, model, options);
                 modelForm.on('prices:change', this.updatePriceOptions);
                 return modelForm;
+            },
+
+            render: function() {
+                openhmis.GenericAddEditView.prototype.render.call(this);
+
+                if (this.model.id) {
+                    this.itemStockView.fetch(null);
+
+                    var el = this.$(".submit");
+                    el.before(this.itemStockView.el);
+
+                    // Set the itemstock element id so we can style it
+                    this.$(this.itemStockView.el).attr("id", "itemStock");
+                }
             },
 
             updatePriceOptions: function() {

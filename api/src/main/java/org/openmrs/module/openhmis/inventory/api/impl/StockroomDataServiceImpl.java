@@ -84,11 +84,8 @@ public class StockroomDataServiceImpl
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
-
-				criteria.addOrder(Order.desc(HibernateCriteriaConstants.DATE_CREATED));
-				criteria.addOrder(Order.desc(HibernateCriteriaConstants.ID));
 			}
-		});
+		}, Order.desc(HibernateCriteriaConstants.DATE_CREATED), Order.desc(HibernateCriteriaConstants.ID));
 	}
 
 	@Override
@@ -108,7 +105,7 @@ public class StockroomDataServiceImpl
 						Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom))
 				);
 			}
-		}, Order.desc("dateCreated"));
+		}, Order.desc("dateChanged"), Order.desc("dateCreated"));
 	}
 
 	@Override
