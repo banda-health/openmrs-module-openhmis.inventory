@@ -13,6 +13,10 @@
 #transactions td.field-quantity { width: 75px; }
 /* #transactions td.field-item { width: 300px; } */
 
-/*
-	TODO: Fix tab formatting (inv-93)
-*/
+.ui-state-default {
+	background: #d3d3d3 none !important;
+}
+
+.ui-tabs-active {
+	background: white none !important;
+}
