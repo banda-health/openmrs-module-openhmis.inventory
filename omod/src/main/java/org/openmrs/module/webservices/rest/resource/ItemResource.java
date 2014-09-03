@@ -47,7 +47,8 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         if (rep instanceof RefRepresentation) {
             description.addProperty("codes", Representation.REF);
             description.addProperty("department", Representation.REF);
-            description.addProperty("category", Representation.REF);
+            // TODO enable categories in v1.1
+            //description.addProperty("category", Representation.REF);
             description.addProperty("defaultPrice", Representation.REF);
 	        description.addProperty("hasExpiration");
 	        description.addProperty("defaultExpirationPeriod");
@@ -57,7 +58,8 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
             description.addProperty("codes", Representation.REF);
             description.addProperty("prices", Representation.REF);
             description.addProperty("department", Representation.REF);
-            description.addProperty("category", Representation.REF);
+            // TODO enable categories in v1.1
+            //description.addProperty("category", Representation.REF);
             description.addProperty("defaultPrice", Representation.REF);
             description.addProperty("concept", Representation.REF);
 	        description.addProperty("hasExpiration");

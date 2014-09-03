@@ -111,6 +111,8 @@ define(
 					this.form.setValue(this.searchFilter);
 				this.$("form").addClass("inline");
 				this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+				// TODO enable categories in v1.1 (delete folowing hide())
+				this.$('.field-category_uuid').hide();
 				return this;
 			}
 		});

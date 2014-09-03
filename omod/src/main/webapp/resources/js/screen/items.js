@@ -34,7 +34,9 @@ curl(
 				listView: openhmis.GenericSearchableListView,
 				searchView: openhmis.DepartmentAndNameSearchView,
 				addEditViewType: openhmis.ItemAddEditView,
-				listFields: ['name', 'department', 'category', 'codes', 'defaultPrice']
+				listFields: ['name', 'department', 'codes', 'defaultPrice']
+				// TODO enable categories in v1.1
+				//listFields: ['name', 'department', 'category', 'codes', 'defaultPrice']
 			});
 		});
 	}
