@@ -332,7 +332,13 @@ define(
                     var dest = $('select[name="destination"]');
 
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
+                    if (source.is(":disabled")) {
+                        source.val(0)
+                    }
                     dest.prop('disabled', !this.currentOperationType.get('hasDestination'));
+                    if (dest.is(":disabled")) {
+                        dest.val(0);
+                    }
                 }
 
                 // Find or create the attributes element
