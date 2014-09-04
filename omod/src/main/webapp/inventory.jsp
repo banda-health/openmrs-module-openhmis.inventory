@@ -30,6 +30,7 @@
     }
 </style>
 
+<%@ include file="template/linksHeader.jsp"%>
 <h2><spring:message code="openhmis.inventory.title" /></h2>
 
 <table border="0" width="99%">

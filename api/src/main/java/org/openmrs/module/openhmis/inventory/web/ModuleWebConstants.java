@@ -20,6 +20,9 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MODULE_ROOT = WebConstants.MODULE_BASE + ModuleConstants.MODULE_NAME + "/";
 	public static final String MODULE_RESOURCE_ROOT = WebConstants.MODULE_RESOURCE_BASE + ModuleConstants.MODULE_NAME + "/";
 
+	public static final String ROLE_CREATION_ROOT = MODULE_ROOT + "roleCreation";
+	public static final String ROLE_CREATION_PAGE = ROLE_CREATION_ROOT + ".form";
+
 	public static final String ITEMS_ROOT = MODULE_ROOT + "items";
 	public static final String ITEMS_PAGE = ITEMS_ROOT + ".form";
 

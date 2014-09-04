@@ -1,7 +1,15 @@
 <%@ page import="org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants" %>
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
+<%@ page import="org.openmrs.util.PrivilegeConstants" %>
 
 <ul id="menu">
+	<openmrs:hasPrivilege privilege="<%= PrivilegeConstants.MANAGE_ROLES %>">
+		<li>
+			<a href="${pageContext.request.contextPath}<%= ModuleWebConstants.ROLE_CREATION_PAGE %>">
+				<openmrs:message code="openhmis.inventory.admin.role"/>
+			</a>
+		</li>
+	</openmrs:hasPrivilege>
     <openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES %>">
         <li>
             <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.ITEMS_PAGE %>">

@@ -10,6 +10,7 @@
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/items.css" %>' />
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/items.js" %>' />
 
+<%@ include file="template/linksHeader.jsp"%>
 <h2>
 	<spring:message code="openhmis.inventory.admin.items" />
 </h2>

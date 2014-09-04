@@ -13,6 +13,13 @@
  */
 package org.openmrs.module.openhmis.inventory.api.util;
 
+import org.openmrs.Privilege;
+import org.openmrs.api.UserService;
+import org.openmrs.api.context.Context;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class PrivilegeConstants {
 	public static final String MANAGE_ITEMS = "Manage Inventory Items";
 	public static final String VIEW_ITEMS = "View Inventory Items";
@@ -28,7 +35,28 @@ public class PrivilegeConstants {
 
 	public static final String MANAGE_OPERATIONS = "Manage Inventory Operations";
 	public static final String VIEW_OPERATIONS = "View Inventory Operations";
-	public static final String PURGE_OPERATIONS = "Purge Inventory Operations";
+
+	public static final String[] PRIVILEGE_NAMES = new String[] {
+			MANAGE_ITEMS, VIEW_ITEMS, PURGE_ITEMS,
+			MANAGE_STOCKROOMS, VIEW_STOCKROOMS, PURGE_STOCKROOMS,
+			MANAGE_OPERATIONS, VIEW_OPERATIONS,
+			MANAGE_METADATA, VIEW_METADATA, PURGE_METADATA
+	};
 
 	protected PrivilegeConstants() { }
+
+	public static Set<Privilege> getPrivileges() {
+		Set<Privilege> privileges = new HashSet<Privilege>(PRIVILEGE_NAMES.length);
+
+		UserService service = Context.getUserService();
+		if (service == null) {
+			throw new IllegalStateException("The OpenMRS user service cannot be loaded.");
+		}
+
+		for (String name : PRIVILEGE_NAMES) {
+			privileges.add(service.getPrivilege(name));
+		}
+
+		return privileges;
+	}
 }
