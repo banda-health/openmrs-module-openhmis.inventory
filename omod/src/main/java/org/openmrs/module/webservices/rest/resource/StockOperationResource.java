@@ -13,23 +13,17 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.PatientIdentifierType;
 import org.openmrs.User;
-import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
+import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
@@ -40,9 +34,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeTy
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
-import org.openmrs.module.openhmis.inventory.api.util.IdGeneratorUtil;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -51,6 +43,12 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
 public class StockOperationResource
@@ -120,23 +118,30 @@ public class StockOperationResource
 	
 	@PropertySetter("operationNumber")
 	public void setOperationNumber(StockOperation instance, String operationNumber) {
-		if (StringUtils.isBlank(instance.getOperationNumber())) {
-			boolean autoGenerateOperationNumber = Boolean.parseBoolean(administrationService.getGlobalProperty(ModuleWebConstants.AUTO_GENERATE_OPERATION_NUMBER_PROPERTY));
-			if (autoGenerateOperationNumber) {
-				PatientIdentifierType operationNumberIdentifierType = getOperationNumberIdentifierType();
-				if (operationNumberIdentifierType != null) {
-					operationNumber = IdGeneratorUtil.getNewStockOperationIdentifier(operationNumberIdentifierType);
-					if (operationNumber != null) {
-						instance.setOperationNumber(operationNumber);
-					} else {
-						LOG.error("Error generating Stock Operation Number");
-					}
-				} else {
-					LOG.error("Inventory Operation Number Identifier Type Id not defined (Admin -> Maintenance/Settings -> Openhmis)");
+		if (StringUtils.isEmpty(instance.getOperationNumber())) {
+			if (ModuleSettings.generateOperationNumber()) {
+				try {
+					operationNumber = IdgenUtil.generateId(ModuleSettings.OPERATION_NUMBER_IDENTIFIER_TYPE_ID_PROPERTY);
+
+					instance.setOperationNumber(operationNumber);
+				} catch (Exception ex) {
+					LOG.error("Could not generate operation number: " + ex.getMessage());
+
+					throw new IllegalStateException("The Operation Number was not defined and could not be generated.", ex);
 				}
+			} else if (StringUtils.isEmpty(operationNumber)) {
+				LOG.error("Operation Number not defined or generated.");
+
+				throw new IllegalStateException("The Operation Number was not defined and no generator was configured.");
 			} else {
 				instance.setOperationNumber(operationNumber);
 			}
+		} else if (!StringUtils.isEmpty(operationNumber)) {
+			instance.setOperationNumber(operationNumber);
+		} else {
+			LOG.error("Operation Number not defined or generated.");
+
+			throw new IllegalStateException("The Operation Number was not defined and no generator was configured.");
 		}
 	}
 	
@@ -259,20 +264,6 @@ public class StockOperationResource
 
 		return status;
 	}
-
-	private PatientIdentifierType getOperationNumberIdentifierType() {
-		String typeId = null;
-		try {
-			typeId =  administrationService.getGlobalProperty(ModuleWebConstants.OPERATION_NUMBER_IDENTIFIER_TYPE_ID_PROPERTY);
-			if (StringUtils.isEmpty(typeId)) {
-				return null;
-			}
-			return Context.getPatientService().getPatientIdentifierType(Integer.parseInt(typeId));
-		} catch (APIException e) {
-			LOG.error("Error getting Identifier Type with typeId <" + typeId + ">", e);
-		}
-		return null;
-    }
 
 	private void processItemStock(StockOperation operation, Set<StockOperationItem> items) {
 		IStockOperationType type = operation.getInstanceType();
