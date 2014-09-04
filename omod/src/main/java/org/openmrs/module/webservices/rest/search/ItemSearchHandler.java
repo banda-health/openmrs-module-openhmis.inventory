@@ -26,6 +26,7 @@ import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.resource.AlreadyPagedWithLength;
 import org.openmrs.module.webservices.rest.resource.PagingUtil;
+import org.openmrs.module.webservices.rest.resource.search.BaseSearchHandler;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
@@ -39,7 +40,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class ItemSearchHandler implements SearchHandler {
+public class ItemSearchHandler
+		extends BaseSearchHandler
+		implements SearchHandler {
 	private final SearchConfig searchConfig =
 			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("1.9.*"),
 					Arrays.asList(
@@ -66,24 +69,22 @@ public class ItemSearchHandler implements SearchHandler {
 	@Override
 	public PageableResult search(RequestContext context) throws ResponseException {
 		String query = context.getParameter("q");
-		String department_uuid = context.getParameter("department_uuid");
-		String category_uuid = context.getParameter("category_uuid");
-		String hasPhysicalInventoryString = context.getParameter("has_physical_inventory");
-
 		query = query.isEmpty() ? null : query;
-		department_uuid = StringUtils.isEmpty(department_uuid) ? null : department_uuid;
-		category_uuid = StringUtils.isEmpty(category_uuid) ? null : category_uuid;
 
+		String hasPhysicalInventoryString = context.getParameter("has_physical_inventory");
 		Boolean hasPhysicalInventory = null;
 		if (!StringUtils.isEmpty(hasPhysicalInventoryString)) {
 			hasPhysicalInventory = Boolean.parseBoolean(hasPhysicalInventoryString);
 		}
 
+		Department department = getOptionalEntityByUuid(departmentService, context.getParameter("department_uuid"));
+		Category category = getOptionalEntityByUuid(categoryService, context.getParameter("category_uuid"));
+
 		List<Item> items = null;
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 		// If no parameters are specified first attempt a search by code (an exact match), then by name
-		if (department_uuid == null && category_uuid == null && hasPhysicalInventory == null) {
+		if (department == null && category == null && hasPhysicalInventory == null) {
 			if (query != null) {
 				// Try searching by code
 				items = service.getItemsByCode(query, context.getIncludeAll(), pagingInfo);
@@ -95,7 +96,7 @@ public class ItemSearchHandler implements SearchHandler {
 			}
 		} else {
 			// Create the item search template with the specified parameters
-			ItemSearch search = createSearchTemplate(context, query, department_uuid, category_uuid, hasPhysicalInventory);
+			ItemSearch search = createSearchTemplate(context, query, department, category, hasPhysicalInventory);
 
 			items = service.getItemsByItemSearch(search, pagingInfo);
 		}
@@ -104,17 +105,15 @@ public class ItemSearchHandler implements SearchHandler {
 				pagingInfo.getTotalRecordCount());
 	}
 
-	private ItemSearch createSearchTemplate(RequestContext context, String name, String department_uuid,
-			String category_uuid, Boolean hasPhysicalInventory) {
+	private ItemSearch createSearchTemplate(RequestContext context, String name, Department department,Category category,
+			Boolean hasPhysicalInventory) {
 		ItemSearch template = new ItemSearch();
-
-		Department department = StringUtils.isBlank(department_uuid) ? null : departmentService.getByUuid(department_uuid);
-		Category category = StringUtils.isBlank(category_uuid) ? null : categoryService.getByUuid(category_uuid);
 
 		if (!StringUtils.isEmpty(name)) {
 			template.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
 			template.getTemplate().setName(name + "%");
 		}
+
 		template.getTemplate().setDepartment(department);
 		template.getTemplate().setCategory(category);
 		template.getTemplate().setHasPhysicalInventory(hasPhysicalInventory);
