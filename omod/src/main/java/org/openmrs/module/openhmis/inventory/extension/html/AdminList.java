@@ -62,7 +62,8 @@ public class AdminList extends AdministrationSectionExt {
 		}
 
 		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.CATEGORY_PAGE_PRIVILEGES)) {
-			map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
+		    // TODO enable categories in v1.1
+			//map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
 			map.put(ModuleWebConstants.INSTITUTIONS_PAGE, "openhmis.inventory.admin.institutions");
 		}
 

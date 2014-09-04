@@ -1,3 +1,8 @@
 td.field-dateCreated { width: 175px; }
 td.field-operationNumber { width: 150px; }
 td.field-instanceType {width: 125px; }
+
+input.readonly {
+	border: 1px solid #BDBDBD;
+	color: #BDBDBD;
+}

@@ -92,15 +92,16 @@ define(
 					}),
 					objRef: true
 				},
-                category: {
-                    type: 'CategorySelect',
-                    options: new openhmis.GenericCollection(null, {
-                        model: openhmis.Category,
-                        url: openhmis.url.inventoryModelBase + 'category',
-	                    allowNull: true
-                    }),
-                    objRef: true
-                },
+// TODO enable categories in v1.1
+//                category: {
+//                    type: 'CategorySelect',
+//                    options: new openhmis.GenericCollection(null, {
+//                        model: openhmis.Category,
+//                        url: openhmis.url.inventoryModelBase + 'category',
+//	                    allowNull: true
+//                    }),
+//                    objRef: true
+//                },
 				hasExpiration: { type: "TrueFalseCheckbox" },
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
 				concept: { type: 'ConceptInput'},

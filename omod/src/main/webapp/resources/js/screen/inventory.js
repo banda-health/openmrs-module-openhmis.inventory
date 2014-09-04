@@ -53,7 +53,7 @@ curl(
 
             // When a new operation is saved, reload the page
             newView.on("save", function() {
-                window.location = openhmis.url.getPage("inventoryBase") + "inventory.htm";
+                window.location = openhmis.url.getPage("inventoryBase") + "inventory.form";
             });
 		});
 	}

@@ -28,7 +28,7 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String ITEM_CONCEPT_SUGGESTION_ROOT = MODULE_ROOT + "itemConceptSuggestion";
     public static final String ITEM_CONCEPT_SUGGESTION_PAGE = ITEM_CONCEPT_SUGGESTION_ROOT + ".form";
-
+	
 	public static final String DEPARTMENTS_ROOT = MODULE_ROOT + "departments";
 	public static final String DEPARTMENTS_PAGE = DEPARTMENTS_ROOT + ".form";
 
@@ -46,10 +46,14 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String OPERATIONS_ROOT = MODULE_ROOT + "operations";
 	public static final String OPERATIONS_PAGE = OPERATIONS_ROOT + ".form";
-
+	
 	public static final String MODULE_INIT_JS = MODULE_RESOURCE_ROOT + "js/init.js";
 
-	public static final String INVENTORY_PAGE =  MODULE_ROOT + "inventory.htm";
+	public static final String INVENTORY_ROOT = MODULE_ROOT + "inventory";
+	public static final String INVENTORY_PAGE =  MODULE_ROOT + "inventory.form";
+
+	public static final String AUTO_GENERATE_OPERATION_NUMBER_PROPERTY = "openhmis.inventory.autoGenerateOperationNumber";
+	public static final String OPERATION_NUMBER_IDENTIFIER_TYPE_ID_PROPERTY = "openhmis.inventory.operationNumberIdentifierTypeId";
 
 	protected ModuleWebConstants() { }
 }

@@ -288,7 +288,14 @@ define(
                 }
 
                 var errors = [];
-
+                var operationNumber = this.get("operationNumber");
+                if (operationNumber === undefined || operationNumber === '') {
+                    errors.push({
+                        selector: ".field-operationNumber",
+                        message: "An operation must have an operation number."
+                    });
+                }
+                
                 if (this.get("instanceType") === undefined) {
                     errors.push({
                         selector: ".field-instanceType",
