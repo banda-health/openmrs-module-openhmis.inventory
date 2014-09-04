@@ -16,6 +16,8 @@ package org.openmrs.module.openhmis.inventory.extension.html;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
+import org.openmrs.module.openhmis.commons.web.WebConstants;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
@@ -45,6 +47,11 @@ public class AdminList extends AdministrationSectionExt {
 		User authenticatedUser = Context.getAuthenticatedUser();
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 
+		Boolean rolePrivilege = authenticatedUser.hasPrivilege(org.openmrs.util.PrivilegeConstants.MANAGE_ROLES);
+		if (rolePrivilege) {
+			map.put(ModuleWebConstants.ROLE_CREATION_PAGE, "openhmis.inventory.admin.role");
+		}
+
 		Boolean itemPrivilege = authenticatedUser.hasPrivilege(PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES);
 		if (itemPrivilege) {
 			map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
@@ -55,7 +62,8 @@ public class AdminList extends AdministrationSectionExt {
 		}
 
 		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.CATEGORY_PAGE_PRIVILEGES)) {
-			map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
+		    // TODO enable categories in v1.1
+			//map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
 			map.put(ModuleWebConstants.INSTITUTIONS_PAGE, "openhmis.inventory.admin.institutions");
 		}
 

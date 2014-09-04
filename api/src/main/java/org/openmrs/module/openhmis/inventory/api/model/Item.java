@@ -175,7 +175,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	}
 
 	public void setHasPhysicalInventory(Boolean hasPhysicalInventory) {
-		this.hasPhysicalInventory = hasPhysicalInventory == null ? false : hasPhysicalInventory;
+		this.hasPhysicalInventory = hasPhysicalInventory;
 	}
 
 	public Boolean getHasExpiration() {
@@ -187,7 +187,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	}
 
 	public void setHasExpiration(Boolean hasExpiration) {
-		this.hasExpiration = hasExpiration == null ? false : hasExpiration;
+		this.hasExpiration = hasExpiration;
 	}
 
 	public Integer getDefaultExpirationPeriod() {

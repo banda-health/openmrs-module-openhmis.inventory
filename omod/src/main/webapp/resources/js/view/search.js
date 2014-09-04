@@ -111,6 +111,8 @@ define(
 					this.form.setValue(this.searchFilter);
 				this.$("form").addClass("inline");
 				this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+				// TODO enable categories in v1.1 (delete folowing hide())
+				this.$('.field-category_uuid').hide();
 				return this;
 			}
 		});
@@ -122,7 +124,10 @@ define(
 			initialize: function(options) {
 				this.events['change #location_uuid'] = 'onFormSubmit';
 				openhmis.BaseSearchView.prototype.initialize.call(this, options);
-				var locationCollection = new openhmis.GenericCollection([], { model: openhmis.Location });
+				var locationCollection = new openhmis.GenericCollection([], {
+                    model: openhmis.Location,
+                    limit: openhmis.rest.maxResults
+                });
 				locationCollection.on("reset", function(collection) {
 					collection.unshift(new openhmis.Location({ name: __("Any") }));
 				});

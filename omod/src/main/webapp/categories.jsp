@@ -8,6 +8,7 @@
 <%@ include file="template/localHeader.jsp"%>
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/categories.js" %>' />
 
+<%@ include file="template/linksHeader.jsp"%>
 <h2>
 	<spring:message code="openhmis.inventory.admin.categories" />
 </h2>

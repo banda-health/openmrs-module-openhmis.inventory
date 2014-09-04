@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller(value="invItemConceptSuggestionPageController")
 public class ItemConceptSuggestionPageController {
 
-	private static final String MODEL_BASE = "openhmis.inventory.itemConceptSuggestion";
-	private static final String INVENTORY_PAGE = "/openhmis/inventory/inventory.htm";
+	private static final String ITEM_CONCEPT_SUGGESTION_BASE = "openhmis.inventory.itemConceptSuggestion";
 	private static final String ITEM_CONCEPT_SUGGESTION_PAGE = "itemConceptSuggestion.form";
 	
     @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
@@ -36,11 +35,11 @@ public class ItemConceptSuggestionPageController {
     	String returnUrl = getReturnUrl(request);
 
     	model.addAttribute("returnUrl", returnUrl);
-        model.addAttribute("modelBase",MODEL_BASE);
+        model.addAttribute("modelBase", ITEM_CONCEPT_SUGGESTION_BASE);
     }
 
 	private String getReturnUrl(HttpServletRequest request) {
-		String returnUrl = INVENTORY_PAGE;
+		String returnUrl = ModuleWebConstants.INVENTORY_PAGE;
 		String referer = request.getHeader("referer");
 		if (!referer.contains(ITEM_CONCEPT_SUGGESTION_PAGE)) {
 			int refererWithoutHostPrefixStartIndex = referer.indexOf('/', 8);

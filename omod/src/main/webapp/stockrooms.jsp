@@ -11,6 +11,7 @@
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/stockroom.css" %>' />
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/stockrooms.js" %>' />
 
+<%@ include file="template/linksHeader.jsp"%>
 <h2>
     <spring:message code="openhmis.inventory.admin.stockrooms" />
 </h2>
