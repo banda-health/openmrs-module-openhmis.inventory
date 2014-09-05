@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<openmrs:require privilege="<%= PrivilegeWebConstants.INVENTORY_PAGE_PRIVILEGES %>"
+<openmrs:require allPrivileges="<%= PrivilegeWebConstants.INVENTORY_PAGE_PRIVILEGES %>"
                  otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.INVENTORY_PAGE %>" />
 <openmrs:message var="pageTitle" code="openhmis.inventory.title" scope="page"/>
