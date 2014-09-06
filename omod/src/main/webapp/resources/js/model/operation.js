@@ -317,16 +317,31 @@ define(
                             message: "The operation type " + operationType.get("name") + " requires a destination stockroom"
                         });
                     }
+                   
                 }
 
                 // TODO: Should the operation type user/role check happen here?
 
-                if (this.get("items") === undefined || this.get("items").length === 0) {
+                var items = this.get("items");
+                if (items === undefined || items.length === 0) {
                     errors.push({
                         selector: ".item-stock",
                         message: "An operation must contain at least one item.",
                         selectParent: true
                     });
+                } else  {
+                     var itemError = false;
+                     items.each(function(item) {
+                     	if (item.get("quantity") === 0) {
+                     		itemError = true;
+                     	}
+                     });
+                     if (itemError) {
+                     	errors.push({
+                             selector: "th.field-quantity",
+                             message: "The item quantity must not be 0"
+                         });
+                     }
                 }
 
                 if (errors.length === 0) {

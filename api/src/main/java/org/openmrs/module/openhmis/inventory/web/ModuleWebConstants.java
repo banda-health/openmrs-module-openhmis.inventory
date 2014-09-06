@@ -52,8 +52,5 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String INVENTORY_ROOT = MODULE_ROOT + "inventory";
 	public static final String INVENTORY_PAGE =  MODULE_ROOT + "inventory.form";
 
-	public static final String AUTO_GENERATE_OPERATION_NUMBER_PROPERTY = "openhmis.inventory.autoGenerateOperationNumber";
-	public static final String OPERATION_NUMBER_IDENTIFIER_TYPE_ID_PROPERTY = "openhmis.inventory.operationNumberIdentifierTypeId";
-
 	protected ModuleWebConstants() { }
 }

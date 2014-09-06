@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<module configVersion="1.2">
-
-	<!-- Module Properties -->
+<module configVersion="1.4">
+<!-- Module Properties -->
 	<id>${project.parent.artifactId}</id>
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
@@ -15,12 +13,16 @@
 	<require_version>${openMRSVersion}</require_version>
 	<!-- / Module Properties -->
 
+	<aware_of_modules>
+		<aware_of_module version="2.0">org.openmrs.module.idgen</aware_of_module>
+	</aware_of_modules>
+
 	<require_modules>
 		<require_module version="2.0">org.openmrs.module.webservices.rest</require_module>
 		<require_module version="2.0">org.openmrs.module.openhmis.commons</require_module>
 		<require_module version="2.0">org.openmrs.module.openhmis.backboneforms</require_module>
 	</require_modules>
-	
+
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.InventoryModuleActivator</activator>
 	
