@@ -138,7 +138,7 @@ define(
                             }
                         });
                     },
-                    error: function(model, resp) { openhmis.error(resp); },
+                    error: function(model, resp) { openhmis.error(model, resp); },
                     contentType: "application/json",
                     dataType: 'json'
                 });

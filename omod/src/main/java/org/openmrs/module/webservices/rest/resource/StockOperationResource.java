@@ -34,10 +34,8 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -46,6 +44,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.springframework.web.client.RestClientException;
 
 import java.util.Collection;
 import java.util.Date;
@@ -101,7 +100,7 @@ public class StockOperationResource
 		return description;
 	}
 
-	public Boolean getCanProcess(StockOperation operation) throws Exception {
+	public Boolean getCanProcess(StockOperation operation) {
 		// Assume that current user can process operation
 		Boolean canProcess = true;
 
@@ -131,6 +130,11 @@ public class StockOperationResource
 
 	@Override
 	public StockOperation save(StockOperation operation) {
+		// Ensure that the current user can process the operation
+		if (!getCanProcess(operation)) {
+			throw new RestClientException("The current user not authorized to process this operation.");
+		}
+
 		StockOperation result;
 
 		if (operation.getStatus() == StockOperationStatus.NEW || operation.getStatus() == StockOperationStatus.PENDING) {
