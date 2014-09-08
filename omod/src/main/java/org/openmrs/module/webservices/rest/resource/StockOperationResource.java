@@ -16,6 +16,7 @@ package org.openmrs.module.webservices.rest.resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -43,6 +44,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.springframework.web.client.RestClientException;
 
 import java.util.Collection;
 import java.util.Date;
@@ -91,13 +93,48 @@ public class StockOperationResource
 			description.addProperty("destination", Representation.REF);
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("institution", Representation.REF);
+
+			description.addProperty("canProcess", findMethod("getCanProcess"));
 		}
 
 		return description;
 	}
 
+	public Boolean getCanProcess(StockOperation operation) {
+		// Assume that current user can process operation
+		Boolean canProcess = true;
+
+		User currentUser = Context.getAuthenticatedUser();
+
+		IStockOperationType type = operation.getInstanceType();
+		Role role = type.getRole();
+		User user = type.getUser();
+
+		// If operation type has role restriction
+		if (role != null) {
+			if (!currentUser.hasRole(role.getRole())) {
+				canProcess = false;
+			}
+		}
+
+		// If there is a user restriction and either the role test did not pass or if there is no role test
+		if (((role != null && !canProcess) || (role == null))
+				&& user != null) {
+			if (currentUser.getUserId().equals(user.getUserId())) {
+				canProcess = true;
+			}
+		}
+
+		return canProcess;
+	}
+
 	@Override
 	public StockOperation save(StockOperation operation) {
+		// Ensure that the current user can process the operation
+		if (!getCanProcess(operation)) {
+			throw new RestClientException("The current user not authorized to process this operation.");
+		}
+
 		StockOperation result;
 
 		if (operation.getStatus() == StockOperationStatus.NEW || operation.getStatus() == StockOperationStatus.PENDING) {

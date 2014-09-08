@@ -16,6 +16,7 @@ package org.openmrs.module.openhmis.inventory.extension.html;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
+import org.openmrs.module.openhmis.commons.api.util.PrivilegeUtil;
 import org.openmrs.module.openhmis.commons.web.WebConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
@@ -40,6 +41,11 @@ public class AdminList extends AdministrationSectionExt {
 		return "openhmis.inventory.title";
 	}
 
+	@Override
+	public String getRequiredPrivilege() {
+		return PrivilegeWebConstants.INVENTORY_PAGE_PRIVILEGES;
+	}
+
 	/**
 	 * @see AdministrationSectionExt#getLinks()
 	 */
@@ -52,22 +58,26 @@ public class AdminList extends AdministrationSectionExt {
 			map.put(ModuleWebConstants.ROLE_CREATION_PAGE, "openhmis.inventory.admin.role");
 		}
 
-		Boolean itemPrivilege = authenticatedUser.hasPrivilege(PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES);
+		Boolean itemPrivilege = PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES);
 		if (itemPrivilege) {
 			map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
 		}
 
-		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.DEPARTMENT_PAGE_PRIVILEGES)) {
+		if (PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.DEPARTMENT_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.DEPARTMENTS_PAGE, "openhmis.inventory.admin.departments");
 		}
 
-		if (authenticatedUser.hasPrivilege(PrivilegeWebConstants.CATEGORY_PAGE_PRIVILEGES)) {
+		if (PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.CATEGORY_PAGE_PRIVILEGES)) {
 		    // TODO enable categories in v1.1
 			//map.put(ModuleWebConstants.CATEGORIES_PAGE, "openhmis.inventory.admin.categories");
+		}
+
+		if (PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.INSTITUTION_PAGE_PRIVILEGES)) {
 			map.put(ModuleWebConstants.INSTITUTIONS_PAGE, "openhmis.inventory.admin.institutions");
 		}
 
-		Boolean stockroomPrivilege = authenticatedUser.hasPrivilege(PrivilegeWebConstants.STOCKROOM_PAGE_PRIVILEGES);
+		Boolean stockroomPrivilege = PrivilegeUtil.hasPrivileges(authenticatedUser,
+				PrivilegeWebConstants.STOCKROOM_PAGE_PRIVILEGES);
 		if (stockroomPrivilege) {
 			map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
             map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
