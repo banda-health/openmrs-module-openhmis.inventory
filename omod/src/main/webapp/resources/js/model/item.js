@@ -31,7 +31,12 @@ define(
 				restUrl: openhmis.url.inventoryModelBase + 'itemCode'
 			},
 			schema: {
-				code: { type: 'Text' }
+				code: {
+					type: 'Text',
+					validators: [
+						{ type: 'required', message: 'Item Code is required' }
+					] 
+				}
 			},
 			toString: function() { return this.get('code'); }
 		});
@@ -45,7 +50,12 @@ define(
 			},
 			schema: {
 				name: { type: "Text" },
-				price: { type: 'BasicNumber' }
+				price: {
+					type: 'BasicNumber',
+					validators: [
+						{ type: 'required', message: 'Price value is required' }
+					] 
+				}
 			},
 
 		    set: function(key, value, options) {
@@ -58,6 +68,7 @@ define(
 				}
 				return openhmis.GenericModel.prototype.set.call(this, key, value, options);
 			},
+			
 			format: function(price) {
 				if (price === undefined) {
 					return 0;
@@ -67,7 +78,7 @@ define(
 				}
 				return price.toFixed(2);
 			},
-
+			
 			toString: function() {
 				var name = this.get("name") ? " (" + this.get("name") + ")" : "";
 				return this.format(this.get('price')) + name;
