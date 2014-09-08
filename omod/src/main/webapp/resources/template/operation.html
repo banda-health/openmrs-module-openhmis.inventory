@@ -71,14 +71,35 @@
                             </li>
                         <? }
                    } ?>
+                <? if (instanceType && (instanceType.get('role') || instanceType.get('user'))) { ?>
+                <li class="bbf-field field-role">
+                    <?  var text = "";
+                        if (instanceType.get('role')) {
+                            text += "users with the " + instanceType.get('role').display + " role";
+                        }
+
+                        if (instanceType.get('user')) {
+                            if (text.length != 0) {
+                                text += " or by ";
+                            }
+
+                            text += "the " + instanceType.get('user').display + " user.";
+                        } else {
+                            text += ".";
+                        } ?>
+                    <div>Can be processed by <?= text ?></div>
+                </li>
+                <? } ?>
 			</ul>
 		</fieldset>
 		</form>
-		<div id="operation-items" style="width: 600px;"></div>
-		<? if (model.get('status') != "COMPLETED") { ?>
-			<input type="submit" class="completeOp" value="<?= __("Complete Operation") ?>" />
-			<input type="submit" class="cancelOp" value="<?= __("Cancel Operation") ?>" />
-		<? } ?>
+        <div id="operation-items" style="width: 600px;"></div>
+        <? if (model.get('status') != "COMPLETED" && model.get('status') != "CANCELLED") { ?>
+            <input type="submit" class="completeOp" value="<?= __("Complete Operation") ?>"
+        <?= model.get('canProcess') ? '' : 'disabled' ?> />
+            <input type="submit" class="cancelOp" value="<?= __("Cancel Operation") ?>"
+        <?= model.get('canProcess') ? '' : 'disabled' ?> />
+        <? } ?>
 		<button class="cancel"><?= __("Close") ?></button>
 	</div>
 </script>

@@ -16,6 +16,7 @@ package org.openmrs.module.webservices.rest.resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -33,8 +34,10 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -91,9 +94,39 @@ public class StockOperationResource
 			description.addProperty("destination", Representation.REF);
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("institution", Representation.REF);
+
+			description.addProperty("canProcess", findMethod("getCanProcess"));
 		}
 
 		return description;
+	}
+
+	public Boolean getCanProcess(StockOperation operation) throws Exception {
+		// Assume that current user can process operation
+		Boolean canProcess = true;
+
+		User currentUser = Context.getAuthenticatedUser();
+
+		IStockOperationType type = operation.getInstanceType();
+		Role role = type.getRole();
+		User user = type.getUser();
+
+		// If operation type has role restriction
+		if (role != null) {
+			if (!currentUser.hasRole(role.getRole())) {
+				canProcess = false;
+			}
+		}
+
+		// If there is a user restriction and either the role test did not pass or if there is no role test
+		if (((role != null && !canProcess) || (role == null))
+				&& user != null) {
+			if (currentUser.getUserId().equals(user.getUserId())) {
+				canProcess = true;
+			}
+		}
+
+		return canProcess;
 	}
 
 	@Override
