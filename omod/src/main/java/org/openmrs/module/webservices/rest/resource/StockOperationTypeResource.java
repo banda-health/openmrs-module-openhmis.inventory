@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import org.openmrs.Role;
+import org.openmrs.User;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.*;
@@ -50,6 +53,8 @@ public class StockOperationTypeResource
 		if (!(rep instanceof RefRepresentation)) {
 			description.addProperty("user", Representation.REF);
 			description.addProperty("role", Representation.REF);
+
+			description.addProperty("canProcess", findMethod("canUserProcess"));
 		}
 
 		return description;
@@ -59,6 +64,33 @@ public class StockOperationTypeResource
 	@PropertySetter("attributeTypes")
 	public void setAttributeTypes(IStockOperationType instance, List<StockOperationAttributeType> attributeTypes) {
 		super.setAttributeTypes(instance, attributeTypes);
+	}
+
+	public static Boolean canUserProcess(IStockOperationType operationType) {
+		// Assume that current user can process operation
+		Boolean canProcess = true;
+
+		User currentUser = Context.getAuthenticatedUser();
+
+		Role role = operationType.getRole();
+		User user = operationType.getUser();
+
+		// If operation type has role restriction
+		if (role != null) {
+			if (!currentUser.hasRole(role.getRole())) {
+				canProcess = false;
+			}
+		}
+
+		// If there is a user restriction and either the role test did not pass or if there is no role test
+		if (((role != null && !canProcess) || (role == null))
+				&& user != null) {
+			if (currentUser.getUserId().equals(user.getUserId())) {
+				canProcess = true;
+			}
+		}
+
+		return canProcess;
 	}
 }
 

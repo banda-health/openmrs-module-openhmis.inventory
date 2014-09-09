@@ -16,7 +16,6 @@ package org.openmrs.module.webservices.rest.resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -94,44 +93,20 @@ public class StockOperationResource
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("institution", Representation.REF);
 
-			description.addProperty("canProcess", findMethod("getCanProcess"));
+			description.addProperty("canProcess", findMethod("canUserProcess"));
 		}
 
 		return description;
 	}
 
-	public Boolean getCanProcess(StockOperation operation) {
-		// Assume that current user can process operation
-		Boolean canProcess = true;
-
-		User currentUser = Context.getAuthenticatedUser();
-
-		IStockOperationType type = operation.getInstanceType();
-		Role role = type.getRole();
-		User user = type.getUser();
-
-		// If operation type has role restriction
-		if (role != null) {
-			if (!currentUser.hasRole(role.getRole())) {
-				canProcess = false;
-			}
-		}
-
-		// If there is a user restriction and either the role test did not pass or if there is no role test
-		if (((role != null && !canProcess) || (role == null))
-				&& user != null) {
-			if (currentUser.getUserId().equals(user.getUserId())) {
-				canProcess = true;
-			}
-		}
-
-		return canProcess;
+	public Boolean canUserProcess(StockOperation operation) {
+		return StockOperationTypeResource.canUserProcess(operation.getInstanceType());
 	}
 
 	@Override
 	public StockOperation save(StockOperation operation) {
 		// Ensure that the current user can process the operation
-		if (!getCanProcess(operation)) {
+		if (!canUserProcess(operation)) {
 			throw new RestClientException("The current user not authorized to process this operation.");
 		}
 

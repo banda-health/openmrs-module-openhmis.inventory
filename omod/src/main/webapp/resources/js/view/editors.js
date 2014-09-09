@@ -53,7 +53,19 @@ define(
 
         editors.OperationTypeSelect = editors.GenericModelSelect.extend({
             modelType: openhmis.OperationType,
-            displayAttr: "name"
+            displayAttr: "name",
+
+            // Hacky support for updating the instance type based on the current user authorization
+            renderOptions: function(options) {
+                // The "options" here is the model collection that has been async loaded and thus renders after the main
+                //  form (NewOperationView) has finished executing it's render method. This is the only way I've been able
+                //  to get the instance type editor to be processed after it has been loaded.
+                editors.GenericModelSelect.prototype.renderOptions.call(this, options);
+
+                if (this.model.schema.instanceType.view) {
+                    this.model.schema.instanceType.view.checkInstanceType();
+                }
+            }
         });
 
         editors.OperationSelect = editors.GenericModelSelect.extend({

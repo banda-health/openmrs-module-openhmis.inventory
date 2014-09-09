@@ -2,6 +2,7 @@ define(
 	[
         openhmis.url.backboneBase + 'js/lib/jquery',
         openhmis.url.backboneBase + 'js/lib/underscore',
+        openhmis.url.backboneBase + 'js/lib/backbone',
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/openhmis',
 		openhmis.url.inventoryBase + 'js/model/operation',
@@ -9,7 +10,7 @@ define(
         openhmis.url.inventoryBase + 'js/view/editors',
 		'link!' + openhmis.url.inventoryBase + 'css/style.css'
 	],
-	function($, _, openhmis) {
+	function($, _, Backbone, openhmis) {
 		openhmis.OperationTypeEditView = openhmis.CustomizableInstanceTypeAddEditView.extend({
 			tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
 			tmplSelector: '#detail-template'
@@ -171,7 +172,7 @@ define(
                 }
 
                 this.events = _.extend({}, this.events, {
-                    'change select[name="instanceType"]': 'instanceTypeChanged'
+                    'change select[name="instanceType"]': 'instanceTypeChanged',
                 });
 
                 var self = this;
@@ -182,10 +183,12 @@ define(
                     },
                     queryString: "v=full",
                     silent: true
-                })
+                });
             },
 
             render: function() {
+                this.model.schema.instanceType.view = this;
+
                 openhmis.GenericAddEditView.prototype.render.call(this);
 
                 if (!this.model.id) {
@@ -310,6 +313,34 @@ define(
                 this.updateOperationType($(event.target).val());
             },
 
+            checkInstanceType: function() {
+                // Disable operation types that cannot be used by the current user
+                var self = this;
+                var optionsEl = this.$('select[name="instanceType"] option');
+                optionsEl.each(function() {
+                    var type = self.findOperationType($(this).val());
+
+                    if (!type.get('canProcess')) {
+                        $(this).prop('disabled', true);
+                    }
+                });
+
+                // Select the first non-disabled option
+                var selected;
+                for (var i in optionsEl) {
+                    var optionEl = $(optionsEl[i]);
+
+                    if (!optionEl.is(':disabled')) {
+                        selected = optionEl;
+                        break;
+                    }
+                }
+
+                if (selected) {
+                    selected.prop('selected', true);
+                }
+            },
+
             clearItemStock: function() {
                 // Remove the item stock models
                 this.itemStockView.model.remove(this.itemStockView.model.models);
@@ -319,11 +350,6 @@ define(
             },
 
             updateOperationType: function(instanceType) {
-                // TODO: Do something with items
-                //  Options:
-                //      1) Warn, clear, and create new empty line (easiest)
-                //      2) ?
-
                 // If the instance type is a model just use it, otherwise expect that it is the uuid id for the instance type
                 this.currentOperationType = instanceType instanceof openhmis.OperationType ?
                     instanceType :
