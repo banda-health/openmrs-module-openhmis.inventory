@@ -1,5 +1,5 @@
 <script id="item-concept-suggestion-list" type="text/template">
-	<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?><div class="selectAll">Select All </div><input id="selectAll" type="checkbox" name="selectAll" class="selectAll"/></b>
+	<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?><div class="selectAll">Select All </div><input id="selectAll" type="checkbox" name="selectAll" class="selectAll" value="Select All"/></b>
 	<div class="box">
 		<? if (listLength === 0) { ?>
 		<p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>

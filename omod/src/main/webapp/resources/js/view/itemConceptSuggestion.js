@@ -113,7 +113,7 @@ define(
             	'click .submit' : function(event) {
             		this.save(false);
             	},
-	            'change .selectAll' : 'selectAll'
+	            'click .selectAll' : 'selectAll'
             },
             
             cancelView: function() {
@@ -229,31 +229,20 @@ define(
             },
 
 	        selectAll: function() {
-		        $('.conceptAccepted').prop('checked', function(_, checked) {
-			        if ($('.conceptAccepted').prop('checked')){return !checked;}
-			        else return !checked;
-		        });
-//			        $('.selectAll').click(function(event) {  //on click
-//				        if(this.checked) { // check select status
-//					        $('.conceptAccepted').each(function() { //loop through each checkbox
-//						        this.checked = true;  //select all checkboxes with class "checkbox1"
-//					        });
-//				        }else{
-//					        $('.conceptAccepted').each(function() { //loop through each checkbox
-//						        this.checked = false; //deselect all checkboxes with class "checkbox1"
-//					        });
-//				        }
-//			        });
-		        //select and deselect
-//		        $(".selectAll").prop(function () {
-//			        $('.conceptAccepted').prop('checked', this.checked);
-//		        });
-//
-//		        //If one item deselect then button CheckAll is UnCheck
-//		        $(".selectAll").click(function () {
-//			        if (!$(this).is(':checked'))
-//				        $(".conceptAccepted").prop('checked', false);
-//		        });
+                var conceptAcceptedCheckbox = document.getElementsByClassName('conceptAccepted');
+                var selectAllCheckbox = document.getElementsByClassName('selectAll');
+
+                if(selectAllCheckbox.value == 'Select All') {
+                    for (var i in conceptAcceptedCheckbox) {
+                        conceptAcceptedCheckbox[i].checked = '';
+                    }
+                    selectAllCheckbox.value = "Deselect All"
+                } else {
+                    for (var i in conceptAcceptedCheckbox) {
+                        conceptAcceptedCheckbox[i].checked = 'false'
+                    }
+                    selectAllCheckbox.value = 'Select All'
+                }
 	        }
 
         });
@@ -368,7 +357,7 @@ define(
 	        handleSpinnerShow: function () {
 	        	this.$('.concept-display').addClass('spinner-float-style');
 	        	this.$('.spinner').show();
-	        }
+	        },
 		});
 
         return openhmis;
