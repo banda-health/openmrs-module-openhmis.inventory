@@ -113,6 +113,7 @@ define(
             	'click .submit' : function(event) {
             		this.save(false);
             	},
+	            'click .selectAll' : 'selectAll'
             },
             
             cancelView: function() {
@@ -225,7 +226,24 @@ define(
 						openhmis.error(resp); 
 					}
 				});
-            }
+            },
+
+	        selectAll: function() {
+                var conceptAcceptedCheckbox = document.getElementsByClassName('conceptAccepted');
+                var selectAllCheckbox = document.getElementsByClassName('selectAll');
+
+                if(selectAllCheckbox.value == 'Select All') {
+                    for (var i in conceptAcceptedCheckbox) {
+                        conceptAcceptedCheckbox[i].checked = '';
+                    }
+                    selectAllCheckbox.value = "Deselect All"
+                } else {
+                    for (var i in conceptAcceptedCheckbox) {
+                        conceptAcceptedCheckbox[i].checked = 'false'
+                    }
+                    selectAllCheckbox.value = 'Select All'
+                }
+	        }
 
         });
 
@@ -243,7 +261,7 @@ define(
 			
 			events: {
 	            'blur .concept-display': 'handleBlur',
-	            'change .conceptAccepted' : 'toggleCheckbox',
+	            'change .conceptAccepted' : 'toggleCheckbox'
 	        },
 
 	        handleBlur: function() {
