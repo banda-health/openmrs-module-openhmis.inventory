@@ -6,7 +6,8 @@ import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 
 public class ModuleSettings {
 	public static final String AUTO_GENERATE_OPERATION_NUMBER_PROPERTY = "openhmis.inventory.autoGenerateOperationNumber";
-	public static final String OPERATION_NUMBER_IDENTIFIER_TYPE_ID_PROPERTY = "openhmis.inventory.operationNumberIdentifierTypeId";
+	public static final String OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY =
+			"openhmis.inventory.operationNumberIdentifierSourceId";
 
 	public static boolean generateOperationNumber() {
 		AdministrationService administrationService = Context.getAdministrationService();

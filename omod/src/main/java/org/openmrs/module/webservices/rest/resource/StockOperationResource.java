@@ -133,7 +133,7 @@ public class StockOperationResource
 		if (StringUtils.isEmpty(instance.getOperationNumber())) {
 			if (ModuleSettings.generateOperationNumber()) {
 				try {
-					operationNumber = IdgenUtil.generateId(ModuleSettings.OPERATION_NUMBER_IDENTIFIER_TYPE_ID_PROPERTY);
+					operationNumber = IdgenUtil.generateId(ModuleSettings.OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY);
 
 					instance.setOperationNumber(operationNumber);
 				} catch (Exception ex) {
