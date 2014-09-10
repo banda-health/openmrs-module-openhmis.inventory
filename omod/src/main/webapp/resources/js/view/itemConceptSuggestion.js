@@ -195,8 +195,9 @@ define(
                     context = _.extend(context, extraContext);
                 }
                 this.$el.html(this.template(context));
+                this.$('tbody.list').append('<tr class="evenRow"><td></td><td></td><td><input id="selectAll" type="checkbox" name="selectAll" class="selectAll" value="Select All"/><b>&nbsp;Select all </b></td></tr>');
                 var view = this;
-                var lineNumber = 0;
+                var lineNumber = 1;
                 this.model.each(function(model) {
                     view.addOne(model, schema, lineNumber)
                     lineNumber++;
