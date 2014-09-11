@@ -629,6 +629,10 @@ define(
             },
 
             commitForm: function(event) {
+                if (!this.model.attributes || !this.model.attributes.item) {
+                    return;
+                }
+
                 var errors = openhmis.GenericListItemView.prototype.commitForm.call(this, event);
                 if (errors === undefined && event && event.keyCode === 13) {
                     this.trigger("focusNext", this);
