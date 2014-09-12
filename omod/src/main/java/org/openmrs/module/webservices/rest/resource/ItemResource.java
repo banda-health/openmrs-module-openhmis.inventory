@@ -163,7 +163,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 		});
 
 		if (results != null && results.size() > 0) {
-			instance.setDefaultPrice(Iterables.getOnlyElement(results));
+			instance.setDefaultPrice(Iterables.getFirst(results, null));
 		} else {
 			// If there are no matches in the current price set, save the price in a new ItemPrice to hopefully be
 			// updated later, in case we haven't set new prices yet.
