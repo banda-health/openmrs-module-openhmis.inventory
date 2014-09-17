@@ -68,7 +68,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
         		"and concept_name.conceptNameType != :conceptNameType " +
                 "and item.name like concat(concept_name.name, '%') " +
                 "group by item.id ";
-        Query query = repository.createQuery(queryString);
+        Query query = getRepository().createQuery(queryString);
         query.setString("conceptNameType", ConceptNameType.SHORT.toString());
         query.setMaxResults(resultLimit);
         List<Map<String, Object>> results = (List<Map<String, Object>>) query.list();

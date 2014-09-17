@@ -69,11 +69,11 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 					"The item code must be less than 256 characters.");
 		}
 
-		Criteria criteria = repository.createCriteria(getEntityClass());
+		Criteria criteria = getRepository().createCriteria(getEntityClass());
 		criteria.createAlias("codes", "c").add(
 				Restrictions.ilike("c.code", itemCode));
 
-		return repository.selectSingle(getEntityClass(), criteria);
+		return getRepository().selectSingle(getEntityClass(), criteria);
 	}
 
 	@Override

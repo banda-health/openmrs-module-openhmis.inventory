@@ -69,10 +69,10 @@ public class StockOperationDataServiceImpl
 			throw new IllegalArgumentException("The operation number must be less than 256 characters.");
 		}
 
-		Criteria criteria = repository.createCriteria(getEntityClass());
+		Criteria criteria = getRepository().createCriteria(getEntityClass());
 		criteria.add(Restrictions.eq("operationNumber", number));
 
-		return repository.selectSingle(getEntityClass(), criteria);
+		return getRepository().selectSingle(getEntityClass(), criteria);
 	}
 
 	@Override

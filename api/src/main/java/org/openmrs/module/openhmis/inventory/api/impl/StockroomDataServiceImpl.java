@@ -142,11 +142,11 @@ public class StockroomDataServiceImpl
 			throw new IllegalArgumentException("The item must be defined.");
 		}
 
-		Criteria criteria = repository.createCriteria(ItemStock.class);
+		Criteria criteria = getRepository().createCriteria(ItemStock.class);
 		criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
 		criteria.add(Restrictions.eq(HibernateCriteriaConstants.ITEM, item));
 
-		return repository.selectSingle(ItemStock.class, criteria);
+		return getRepository().selectSingle(ItemStock.class, criteria);
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class StockroomDataServiceImpl
 			throw new IllegalArgumentException("The item must be defined.");
 		}
 
-		Criteria criteria = repository.createCriteria(ItemStockDetail.class);
+		Criteria criteria = getRepository().createCriteria(ItemStockDetail.class);
 		criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
 		criteria.add(Restrictions.eq(HibernateCriteriaConstants.ITEM, item));
 
@@ -174,7 +174,7 @@ public class StockroomDataServiceImpl
 			criteria.add(Restrictions.eq(HibernateCriteriaConstants.BATCH_OPERATION, batchOperation));
 		}
 
-		return repository.selectSingle(ItemStockDetail.class, criteria);
+		return getRepository().selectSingle(ItemStockDetail.class, criteria);
 	}
 
     @Override
