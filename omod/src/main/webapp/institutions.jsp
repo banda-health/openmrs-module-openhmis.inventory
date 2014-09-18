@@ -10,7 +10,7 @@
 
 <%@ include file="template/linksHeader.jsp"%>
 <h2>
-    <spring:message code="openhmis.inventory.admin.institution" />
+    <spring:message code="openhmis.inventory.admin.institutions" />
 </h2>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

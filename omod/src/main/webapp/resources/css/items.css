@@ -1,3 +1,5 @@
+li.field-name input { width: 500px; }
+
 #itemStock { width: 500px; }
 #itemStock td.field-stockroom { width: 400px; }
 #itemStock td.field-quantity {
