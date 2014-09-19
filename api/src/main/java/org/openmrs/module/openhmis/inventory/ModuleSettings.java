@@ -1,13 +1,10 @@
 package org.openmrs.module.openhmis.inventory;
 
-import org.apache.commons.lang3.StringUtils;
-import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
-import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 
 public class ModuleSettings {
 	public static final String AUTO_GENERATE_OPERATION_NUMBER_PROPERTY = "openhmis.inventory.autoGenerateOperationNumber";

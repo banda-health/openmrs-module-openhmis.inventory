@@ -15,7 +15,7 @@
 <script type="text/javascript">
 	function enableDisable() {
 		var generateEl = $j("#autoGenerateOperationNumber");
-		var sourceEl = $j("#operationNumberGeneratorSource");
+		var sourceEl = $j("#operationNumberGeneratorSourceId");
 
 		// Cannot use .prop because the jquery version we're using is ooooooold
 		if (generateEl.is(':checked')) {
@@ -33,12 +33,14 @@
 <form:form method="POST" modelAttribute="settings">
 	<table><tr><td>
 			<spring:bind path="autoGenerateOperationNumber">
-				<input id="autoGenerateOperationNumber" type="checkbox" onClick="enableDisable();"
+				<input id="autoGenerateOperationNumber" name="${status.expression}" type="checkbox"
+				       onClick="enableDisable()"
 					<c:if test="${settings.autoGenerateOperationNumber}">checked</c:if> />
 				<label for="autoGenerateOperationNumber">Auto Generate Operation Number</label>
 			</spring:bind>
 		</td></tr>
 		<tr><td>
+			<br />
 			<label for="operationNumberGeneratorSourceId">Select Identifier Source</label>
 			<spring:bind path="operationNumberGeneratorSourceId">
 			<select id="operationNumberGeneratorSourceId" name="${status.expression}"
@@ -52,6 +54,7 @@
 			</select>
 			</spring:bind>
 	</td></tr></table>
+	<br />
 	<input type="submit" value="Save" >
 </form:form>
 

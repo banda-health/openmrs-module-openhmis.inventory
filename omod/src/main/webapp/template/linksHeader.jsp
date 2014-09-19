@@ -91,4 +91,11 @@
 			</a>
 		</li>
 	</openmrs:hasPrivilege>
+	<openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.SETTINGS_PAGE_PRIVILEGES %>">
+		<li <c:if test='<%= request.getRequestURI().contains("inventory/settings") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}<%= ModuleWebConstants.SETTINGS_PAGE %>">
+				<spring:message code="openhmis.inventory.admin.settings"/>
+			</a>
+		</li>
+	</openmrs:hasPrivilege>
 </ul>

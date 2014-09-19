@@ -58,10 +58,6 @@ public class AdminList extends AdministrationSectionExt {
 			map.put(ModuleWebConstants.ROLE_CREATION_PAGE, "openhmis.inventory.admin.role");
 		}
 
-		if (PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.SETTINGS_PAGE_PRIVILEGES)) {
-			map.put(ModuleWebConstants.SETTINGS_PAGE, "openhmis.inventory.admin.settings");
-		}
-
 		Boolean itemPrivilege = PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.ITEM_PAGE_PRIVILEGES);
 		if (itemPrivilege) {
 			map.put(ModuleWebConstants.ITEMS_PAGE, "openhmis.inventory.admin.items");
@@ -93,6 +89,10 @@ public class AdminList extends AdministrationSectionExt {
 		}
 		if (itemPrivilege) {
 			map.put(ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_PAGE, "openhmis.inventory.admin.items.concept.mapping");
+		}
+
+		if (PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.SETTINGS_PAGE_PRIVILEGES)) {
+			map.put(ModuleWebConstants.SETTINGS_PAGE, "openhmis.inventory.admin.settings");
 		}
 
 		return map;

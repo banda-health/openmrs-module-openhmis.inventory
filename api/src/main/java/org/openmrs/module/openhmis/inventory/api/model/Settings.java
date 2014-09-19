@@ -1,7 +1,5 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.module.idgen.IdentifierSource;
-
 public class Settings {
 	public static final long serialVersionUID = 0L;
 

@@ -29,10 +29,12 @@ public class SettingsController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public void submit(HttpServletRequest request, Settings settings, Errors errors, ModelMap model) {
+	public void submit(HttpServletRequest request, Settings settings, Errors errors, ModelMap model) throws IOException {
 		ModuleSettings.saveSettings(settings);
 
 		HttpSession session = request.getSession();
 		session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.settings.saved");
+
+		render(model);
 	}
 }
