@@ -50,7 +50,10 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MODULE_INIT_JS = MODULE_RESOURCE_ROOT + "js/init.js";
 
 	public static final String INVENTORY_ROOT = MODULE_ROOT + "inventory";
-	public static final String INVENTORY_PAGE =  MODULE_ROOT + "inventory.form";
+	public static final String INVENTORY_PAGE =  INVENTORY_ROOT + ".form";
+
+	public static final String SETTINGS_ROOT = MODULE_ROOT + "settings";
+	public static final String SETTINGS_PAGE = SETTINGS_ROOT + ".form";
 
 	protected ModuleWebConstants() { }
 }
