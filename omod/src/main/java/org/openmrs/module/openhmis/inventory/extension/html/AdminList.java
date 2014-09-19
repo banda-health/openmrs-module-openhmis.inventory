@@ -91,6 +91,10 @@ public class AdminList extends AdministrationSectionExt {
 			map.put(ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_PAGE, "openhmis.inventory.admin.items.concept.mapping");
 		}
 
+		if (PrivilegeUtil.hasPrivileges(authenticatedUser, PrivilegeWebConstants.SETTINGS_PAGE_PRIVILEGES)) {
+			map.put(ModuleWebConstants.SETTINGS_PAGE, "openhmis.inventory.admin.settings");
+		}
+
 		return map;
 	}
 }
