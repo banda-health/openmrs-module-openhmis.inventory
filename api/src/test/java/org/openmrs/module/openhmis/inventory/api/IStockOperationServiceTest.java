@@ -1351,4 +1351,95 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 
 		service.submitOperation(operation);
 	}
+
+	@Test
+	public void submitOperation_shouldStoreBatchAndExpEvenWhenCalculated() throws Exception {
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemService.save(item);
+		Context.flushSession();
+
+		Stockroom stockroom0 = stockroomService.getById(0);
+		Stockroom stockroom1 = stockroomService.getById(1);
+
+		StockOperation receiptOperation = operationTest.createEntity(true);
+		receiptOperation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		receiptOperation.setOperationNumber("Test1");
+		receiptOperation.setStatus(StockOperationStatus.NEW);
+		receiptOperation.setDestination(stockroom0);
+		if (receiptOperation.getReserved() != null) {
+			receiptOperation.getReserved().clear();
+		}
+		if (receiptOperation.getTransactions() != null) {
+			receiptOperation.getTransactions().clear();
+		}
+
+		Date exp = new Date();
+		receiptOperation.addItem(item, 10, exp, receiptOperation);
+
+		// Submit a new op
+		service.submitOperation(receiptOperation);
+		Context.flushSession();
+
+		// Complete the op
+		receiptOperation.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(receiptOperation);
+		Context.flushSession();
+
+		// Check stockroom
+		ItemStock stock = stockroomService.getItem(stockroom0, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(10, stock.getQuantity());
+
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(10, (int)detail.getQuantity());
+		Assert.assertEquals(false, detail.getCalculatedBatch());
+		Assert.assertEquals(false, detail.getCalculatedExpiration());
+		Assert.assertEquals(receiptOperation, detail.getBatchOperation());
+		Assert.assertEquals(exp, detail.getExpiration());
+
+		// Now create a transfer operation
+		StockOperation transferOperation = operationTest.createEntity(true);
+		transferOperation.setInstanceType(WellKnownOperationTypes.getTransfer());
+		transferOperation.setOperationNumber("Test2");
+		transferOperation.setStatus(StockOperationStatus.NEW);
+		transferOperation.setSource(stockroom0);
+		transferOperation.setDestination(stockroom1);
+		if (transferOperation.getReserved() != null) {
+			transferOperation.getReserved().clear();
+		}
+		if (transferOperation.getTransactions() != null) {
+			transferOperation.getTransactions().clear();
+		}
+
+		transferOperation.addItem(item, 10);
+
+		// Submit the new transfer op
+		service.submitOperation(transferOperation);
+		Context.flushSession();
+
+		// Complete the transfer op
+		transferOperation.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(transferOperation);
+		Context.flushSession();
+
+		// Check the stockrooms
+		stock = stockroomService.getItem(stockroom0, item);
+		Assert.assertNull(stock);
+
+		stock = stockroomService.getItem(stockroom1, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(10, stock.getQuantity());
+
+		Assert.assertNotNull(stock.getDetails());
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(10, (int)detail.getQuantity());
+		Assert.assertEquals(true, detail.getCalculatedBatch());
+		Assert.assertEquals(true, detail.getCalculatedExpiration());
+		Assert.assertEquals(receiptOperation, detail.getBatchOperation());
+		Assert.assertEquals(exp, detail.getExpiration());
+	}
 }
