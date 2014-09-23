@@ -1,0 +1,167 @@
+<script id="detail-template" type="text/template">
+	<b class="boxHeader title" style="display: none"><?= model.isNew()
+		? __("Add New %s", model.modelName())
+		: __("Edit %s", model.modelName()) ?></b>
+    <div id="details" class="box form" style="display: none">
+        <input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
+		<button class="cancel"><?= __("Cancel") ?></button>
+		<br /><br />
+		<div class="retireVoidPurge" style="width: 75%">
+			<div class="box">
+				<? var strRetireOrVoid = model.getDataType() === "data" ? "Void" : "Retire" ?>
+				<? if (model.isRetired()) { ?>
+					<? var strUnretire = "Un" + strRetireOrVoid.toLowerCase() ?>
+					<h4><?= __(strUnretire + " %s", model.modelName()) ?></h4>
+					<button class="unretireOrUnvoid"><?= __(strUnretire) ?></button>
+				<? } else { ?>
+					<h4><?= __(strRetireOrVoid + " %s", model.modelName()) ?></h4>
+					<label for="reason">Reason</label> <input name="reason" id="reason" class="reason" type="text" /><br />
+					<button class="retireOrVoid"><?= __(strRetireOrVoid) ?></button>
+				 <? } ?>
+			</div>
+		 </div>
+     </div>
+</script>
+
+<script id="view-operation-detail" type="text/template">
+	<b class="boxHeader title" style="display: none"><?= __("%s Details", model.modelName()) ?></b>
+	<div id="operation-fields" class="box form" style="display: none">
+		<form class="bbf-form">
+		<fieldset>
+			<ul>
+				<li class="bbf-field field-date-created">
+					<label for="op-field-date-created">Date Created</label>
+					<div class="bbf-editor"><label id="op-field-date-created"><?= openhmis.dateTimeFormatLocale(model.get('dateCreated')) ?></label></div>
+				</li>
+				<li class="bbf-field field-operation-number">
+					<label for="op-field-operation-number">Operation Number</label>
+					<div class="bbf-editor"><label id="op-field-operation-number"><?= model.get('operationNumber') ?></label></div>
+				</li>
+				<li class="bbf-field field-status">
+					<label for="op-field-status">Status</label>
+					<div class="bbf-editor"><label id="op-field-status"><?= model.get('status') ?></label></div>
+				</li>
+				<li class="bbf-field field-instance-type">
+					<label for="op-field-instance-type">Operation Type</label>
+					<div class="bbf-editor"><label id="op-field-instance-type"><?= model.get('instanceType') ?></label></div>
+				</li>
+				<? var instanceType = model.get('instanceType') ?>
+				<? if (instanceType && instanceType.get('hasSource') === true) { ?>
+				<li class="bbf-field field-source">
+					<label for="op-field-source">Source Stockroom</label>
+					<div class="bbf-editor"><label id="op-field-source"><?= model.get('source') ?></label></div>
+				</li>
+				<? } ?>
+				<? if (instanceType && instanceType.get('hasDestination') === true) { ?>
+				<li class="bbf-field field-destination">
+					<label for="op-field-destination">Destination Stockroom</label>
+					<div class="bbf-editor"><label id="op-field-destination"><?= model.get('destination') ?></label></div>
+				</li>
+				<? } ?>
+                <? if (instanceType && instanceType.get('hasRecipient') === true) { ?>
+                <li class="bbf-field field-institution">
+                    <label for="op-field-institution">Institution</label>
+                    <div class="bbf-editor"><label id="op-field-institution"><?= model.get('institution') ?></label></div>
+                </li>
+                <? } ?>
+                <? if (model.attributeList) {
+                        for (i in model.attributeList) {
+                            var attribute = model.attributeList[i]; ?>
+                            <li class="bbf-field field-attribute">
+                                <label for="op-field-<?= attribute.id ?>">
+                                    <?= attribute.name ?>
+                                </label>
+                                <div class="bbf-editor">
+                                    <label id="op-field-<?= attribute.id ?>"><?= attribute.value ?></label>
+                                </div>
+                            </li>
+                        <? }
+                   } ?>
+                <? if (instanceType && (instanceType.get('role') || instanceType.get('user'))) { ?>
+                <li class="bbf-field field-role">
+                    <?  var text = "";
+                        if (instanceType.get('role')) {
+                            text += "users with the " + instanceType.get('role').display + " role";
+                        }
+
+                        if (instanceType.get('user')) {
+                            if (text.length != 0) {
+                                text += " or by ";
+                            }
+
+                            text += "the " + instanceType.get('user').display + " user.";
+                        } else {
+                            text += ".";
+                        } ?>
+                    <div>Can be processed by <?= text ?></div>
+                </li>
+                <? } ?>
+			</ul>
+		</fieldset>
+		</form>
+        <div id="operation-items" style="width: 600px;"></div>
+        <? if (model.get('status') != "COMPLETED" && model.get('status') != "CANCELLED") { ?>
+            <input type="submit" class="completeOp" value="<?= __("Complete Operation") ?>"
+        <?= model.get('canProcess') ? '' : 'disabled' ?> />
+            <input type="submit" class="cancelOp" value="<?= __("Cancel Operation") ?>"
+        <?= model.get('canProcess') ? '' : 'disabled' ?> />
+        <? } ?>
+		<button class="cancel"><?= __("Close") ?></button>
+	</div>
+</script>
+
+<script id="operation-item-list-item" type="text/template">
+	<? if (actions.length > 0) { ?>
+	<td class="item-actions end">
+		<? for (var act in actions) {
+		switch (actions[act]) {
+			case 'remove': ?>
+		<input type="image" src="<?= urls.openmrs ?>images/trash.gif" title="<?= __("Remove %s", model.modelName()) ?>" class="remove"/>
+		<? break;
+			case 'details': ?>
+		<input type="image" src="<?= urls.openmrs ?>images/lookup.gif" title="<?= __("Show details for %s", model.modelName()) ?>" class="details"/>
+		<? break;
+		}
+	} ?>
+	</td>
+	<? } ?>
+
+	<? if (actions.indexOf('inlineEdit') !== -1) {
+	// do nothing, leave blank for form to be rendered
+ } else { ?>
+	<?
+		var cssClass;
+		var calcExp = model.get('calculatedExpiration');
+		var calcBatch = model.get('calculatedBatch');
+	?>
+	<? for (var field in fields) { ?>
+	<? cssClass = "field-" + fields[field];
+		if (model.isRetired()) cssClass += " retired";
+		if (model.schema[fields[field]] !== undefined
+				&& model.schema[fields[field]].type in {'Number':0, 'BasicNumber':0, 'Date':0, 'DateTime':0})
+			cssClass += " numeric"; ?>
+	<td class="<?= cssClass ?>">
+		<? if (model.schema[fields[field]] === undefined) {
+			/* leave cell empty */
+		} else if (model.schema[fields[field]].type === 'List' && model.schema[fields[field]].model !== undefined) {
+			print(GenericCollection.prototype.toString.call(
+				model.get([fields[field]]),
+				model.schema[fields[field]])
+			);
+		} else if (model.schema[fields[field]].format !== undefined) {
+			print(model.schema[fields[field]].format(model.get(fields[field])));
+
+			if (fields[field] == 'expiration' && calcExp) {
+				print(' (Auto)');
+			}
+		} else {
+			print(model.get(fields[field]));
+
+			if (fields[field] == 'batchOperation' && calcBatch) {
+				print(' (Auto)');
+			}
+		} ?>
+	</td>
+	<? } ?>
+	<? } ?>
+</script>

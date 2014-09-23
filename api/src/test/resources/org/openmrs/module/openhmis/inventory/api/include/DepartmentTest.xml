@@ -1,0 +1,10 @@
+<dataset>
+	<inv_department department_id="0" name="Test One" description="Some test department"
+	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA0139958CCF8D0006" />
+	<inv_department department_id="1" name="Test Two" description="Another test department"
+	                    creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA0139958D48660007" />
+	<inv_department department_id="2" name="Test Three" description="The third test department"
+						creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA0139958D60BD0009" />
+	<inv_department department_id="4" name="Test Four" description="The fourth test department"
+						creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA0139958D60BD0011" />
+</dataset>

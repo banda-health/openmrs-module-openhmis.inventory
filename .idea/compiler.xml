@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="?*.properties" />
+      <entry name="?*.xml" />
+      <entry name="?*.gif" />
+      <entry name="?*.png" />
+      <entry name="?*.jpeg" />
+      <entry name="?*.jpg" />
+      <entry name="?*.html" />
+      <entry name="?*.dtd" />
+      <entry name="?*.tld" />
+      <entry name="?*.ftl" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="openhmis.backboneforms-api" />
+        <module name="openhmis.backboneforms-omod" />
+        <module name="openhmis.cashier-api" />
+        <module name="openhmis.cashier-omod" />
+        <module name="openhmis.commons-api" />
+        <module name="openhmis.commons-omod" />
+        <module name="openhmis.inventory-api" />
+        <module name="openhmis.inventory-omod" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="openhmis.backboneforms" target="1.6" />
+      <module name="openhmis.backboneforms-api" target="1.6" />
+      <module name="openhmis.backboneforms-omod" target="1.6" />
+      <module name="openhmis.cashier-api" target="1.6" />
+      <module name="openhmis.cashier-omod" target="1.6" />
+      <module name="openhmis.commons" target="1.6" />
+      <module name="openhmis.commons-api" target="1.6" />
+      <module name="openhmis.commons-omod" target="1.6" />
+      <module name="openhmis.inventory" target="1.6" />
+      <module name="openhmis.inventory-api" target="1.6" />
+      <module name="openhmis.inventory-omod" target="1.6" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
+

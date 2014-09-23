@@ -1,0 +1,18 @@
+<dataset>
+	<inv_category category_id="0" name="Test Parent Category 1"
+	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D4A5166013D4A5166DE0000" />
+	<inv_category category_id="1" name="Child Cat 1" parent_id="0"
+	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA0139958D48660007" />
+	<inv_category category_id="2" name="Child Cat 2" parent_id="0"
+	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="4028814B399565AA0139958D60BD0009" />
+	<inv_category category_id="3" name="Child Cat 3" parent_id="0"
+	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D4A5166013D4A5467700001" />
+	<inv_category category_id="4" name="Child Cat 1-1" parent_id="1"
+	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D4A5166013D4A549A910003" />
+	<inv_category category_id="5" name="Test Parent Category 2"
+	                creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D4A5166013D4A54E9690004" />
+	<inv_category category_id="6" name="Child Cat 1" parent_id="5"
+	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D59AB8A013D59ABA27A0002" />
+	<inv_category category_id="7" name="Test Parent Category 3"
+	              creator="1" date_created="2012-01-01 00:00:00.0" retired="false" uuid="FF8081813D59AB8A013D59AB8A430000" />
+</dataset>
