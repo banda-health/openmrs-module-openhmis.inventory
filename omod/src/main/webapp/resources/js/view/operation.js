@@ -358,6 +358,8 @@ define(
                 if (this.currentOperationType != undefined) {
                     var source = $('select[name="source"]');
                     var dest = $('select[name="destination"]');
+                    var institution = $('select[name="institution"]');
+
 
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
                     if (source.is(":disabled")) {
@@ -367,6 +369,11 @@ define(
                     if (dest.is(":disabled")) {
                         dest.val(0);
                     }
+                    institution.prop('disabled', !this.currentOperationType.get('hasRecipient'));
+                    if (institution.is(":disabled")) {
+                        institution.val(0);
+                    }
+
                 }
 
                 // Find or create the attributes element
@@ -378,7 +385,8 @@ define(
                 }
 
                 // Load the operation type attributes
-                openhmis.renderAttributesFragment(this.$attributes, "uuid=" + this.currentOperationType.id);
+                openhmis.renderAttributesFragment(this.$attributes, "OperationType", "uuid=" + this.currentOperationType.id);
+
             },
 
             findOperationType: function(uuid) {

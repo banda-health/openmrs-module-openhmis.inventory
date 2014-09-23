@@ -20,7 +20,8 @@ define(
 		openhmis.url.backboneBase + 'js/model/role',
         openhmis.url.backboneBase + 'js/model/patient',
 		openhmis.url.backboneBase + 'js/model/openhmis',
-	    openhmis.url.inventoryBase + 'js/model/stockroom'
+	    openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/model/institution'
     ],
     function(openhmis, __) {
         openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
@@ -235,7 +236,7 @@ define(
                 };
                 this.schema.source = {
                     type: 'StockroomSelect',
-                        options: new openhmis.GenericCollection(null, {
+                    options: new openhmis.GenericCollection(null, {
                         model: openhmis.Stockroom,
                         url: openhmis.url.inventoryModelBase + 'stockroom'
                     }),
@@ -243,9 +244,17 @@ define(
                 };
                 this.schema.destination = {
                     type: 'StockroomSelect',
-                        options: new openhmis.GenericCollection(null, {
+                    options: new openhmis.GenericCollection(null, {
                         model: openhmis.Stockroom,
                         url: openhmis.url.inventoryModelBase + 'stockroom'
+                    }),
+                    objRef: true
+                };
+                this.schema.institution = {
+                    type: 'InstitutionSelect',
+                    options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Institution,
+                        url: openhmis.url.inventoryModelBase + 'institution'
                     }),
                     objRef: true
                 };
@@ -269,6 +278,9 @@ define(
                     }
                     if (resp.destination) {
                         resp.destination = new openhmis.Stockroom(resp.destination);
+                    }
+                    if (resp.institution) {
+                        resp.institution = new openhmis.Institution(resp.institution);
                     }
 
                     if (resp.attributes) {
