@@ -22,6 +22,7 @@ curl(
 
 		openhmis.url.backboneBase + 'js/view/list',
 		openhmis.url.backboneBase + 'js/view/editors',
+        openhmis.url.backboneBase + 'js/view/patient',
 		openhmis.url.inventoryBase + 'js/view/editors',
 		openhmis.url.inventoryBase + 'js/view/operation'
 	],
@@ -38,6 +39,10 @@ curl(
 				allowAdd: false,
                 operation_status: "Pending"
 			});
+
+            // Set up patient search selection handler
+            this.patientView = new openhmis.PatientView();
+            openhmis.doSelectionHandler = this.patientView.takeRawPatient;
 
             // Set up new operation link and template
             var collection = new openhmis.GenericCollection([], {

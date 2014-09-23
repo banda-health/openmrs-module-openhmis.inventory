@@ -21,6 +21,7 @@ define(
             openhmis.url.inventoryBase + 'js/model/category',
             openhmis.url.inventoryBase + 'js/view/search',
             openhmis.url.inventoryBase + 'js/model/operation',
+            openhmis.url.inventoryBase + 'js/model/institution',
             openhmis.url.backboneBase + 'js/lib/backbone-forms',
             openhmis.url.backboneBase + 'js/lib/labelOver',
             openhmis.url.backboneBase + 'js/view/editors',
@@ -32,6 +33,12 @@ define(
         editors.DepartmentSelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Department,
             displayAttr: "name"
+        });
+
+        editors.InstitutionSelect = editors.GenericModelSelect.extend({
+            modelType: openhmis.Institution,
+            displayAttr: "name",
+            allowNull: true
         });
 
         editors.CategorySelect = editors.GenericModelSelect.extend({

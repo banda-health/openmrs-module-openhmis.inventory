@@ -2,10 +2,8 @@ package org.openmrs.module.webservices.rest.web.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.entity.model.IInstanceAttributeType;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = AttributeFragmentControllerBase.REQUEST_MAPPING_PATH)
+@RequestMapping(value = OperationTypeAttributeFragmentController.REQUEST_MAPPING_PATH)
 public class OperationTypeAttributeFragmentController extends AttributeFragmentControllerBase {
+	public static final String REQUEST_MAPPING_PATH = AttributeFragmentControllerBase.REQUEST_MAPPING_PATH_BASE + "OperationType";
+
 	private IStockOperationTypeDataService service;
 
 	@Autowired

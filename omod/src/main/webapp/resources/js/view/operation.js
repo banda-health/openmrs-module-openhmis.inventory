@@ -172,7 +172,7 @@ define(
                 }
 
                 this.events = _.extend({}, this.events, {
-                    'change select[name="instanceType"]': 'instanceTypeChanged',
+                    'change select[name="instanceType"]': 'instanceTypeChanged'
                 });
 
                 var self = this;
@@ -283,6 +283,28 @@ define(
                 // Insert the item stock list after the form but before the buttons
                 $("#newOperation").find(".bbf-form").after(this.itemStockView.el);
 
+                // Move the patient search div
+                // Find or create the patient search element
+                this.$patientSearch = this.$("#patientSearch");
+                if (!this.$patientSearch.length) {
+                    // Find the element that the attributes should be added after
+                    this.$("form").after("<div id='patientSearch' class='bbf-form' />");
+                    this.$patientSearch = this.$("#patientSearch");
+
+                    var self = this;
+                    openhmis.renderPatientSearchFragment(this.$patientSearch, undefined, {
+                        success: function() {
+                            self.$("#find-patient").show();
+                            self.$patientSearch.prop('disabled', false);
+
+                            // Make sure the selection handler is properly set up
+                            //window.doSelectionHandler = function(index, data) {
+                            //  openhmis.doSelectionHandler(index,data);
+                            //};
+                        }
+                    });
+                }
+
                 // Display the form
                 this.$el.show();
 
@@ -358,6 +380,7 @@ define(
                 if (this.currentOperationType != undefined) {
                     var source = $('select[name="source"]');
                     var dest = $('select[name="destination"]');
+                    var institution = $('select[name="institution"]');
 
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
                     if (source.is(":disabled")) {
@@ -366,6 +389,32 @@ define(
                     dest.prop('disabled', !this.currentOperationType.get('hasDestination'));
                     if (dest.is(":disabled")) {
                         dest.val(0);
+                    }
+                    institution.prop('disabled', !this.currentOperationType.get('hasRecipient'));
+                    if (institution.is(":disabled")) {
+                        institution.val(0);
+                    }
+
+                    if (this.currentOperationType.get('hasRecipient')) {
+                        this.$("#find-patient").show();
+                        this.$patientSearch.prop('disabled', false);
+
+                        /*
+                        var self = this;
+                        openhmis.renderPatientSearchFragment(this.$patientSearch, undefined, {
+                            success: function() {
+                                self.$("#find-patient").show();
+                                self.$patientSearch.prop('disabled', false);
+
+                                // Make sure the selection handler is properly set up
+                                window.doSelectionHandler = function(index, data) {
+                                        openhmis.doSelectionHandler(index,data);
+                                };
+                            }
+                        });
+                        */
+                    } else {
+                        this.$patientSearch.prop('disabled', true);
                     }
                 }
 
@@ -377,8 +426,8 @@ define(
                     this.$attributes = this.$("#operationAttributes");
                 }
 
-                // Load the operation type attributes
-                openhmis.renderAttributesFragment(this.$attributes, "uuid=" + this.currentOperationType.id);
+                // Load the patient search and operation type attributes
+                openhmis.renderAttributesFragment(this.$attributes, "OperationType", "uuid=" + this.currentOperationType.id);
             },
 
             findOperationType: function(uuid) {

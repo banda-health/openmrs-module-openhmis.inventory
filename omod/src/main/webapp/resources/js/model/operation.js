@@ -20,7 +20,8 @@ define(
 		openhmis.url.backboneBase + 'js/model/role',
         openhmis.url.backboneBase + 'js/model/patient',
 		openhmis.url.backboneBase + 'js/model/openhmis',
-	    openhmis.url.inventoryBase + 'js/model/stockroom'
+	    openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/model/institution'
     ],
     function(openhmis, __) {
         openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
@@ -219,8 +220,8 @@ define(
                 };
                 this.schema.instanceType = {
                     type: 'OperationTypeSelect',
-                        title: 'Operation Type',
-                        options: new openhmis.GenericCollection(null, {
+                    title: 'Operation Type',
+                    options: new openhmis.GenericCollection(null, {
                             model: openhmis.OperationType,
                             url: openhmis.url.inventoryModelBase + 'stockOperationType',
                             queryString: "v=full"
@@ -235,7 +236,7 @@ define(
                 };
                 this.schema.source = {
                     type: 'StockroomSelect',
-                        options: new openhmis.GenericCollection(null, {
+                    options: new openhmis.GenericCollection(null, {
                         model: openhmis.Stockroom,
                         url: openhmis.url.inventoryModelBase + 'stockroom'
                     }),
@@ -243,12 +244,24 @@ define(
                 };
                 this.schema.destination = {
                     type: 'StockroomSelect',
-                        options: new openhmis.GenericCollection(null, {
+                    options: new openhmis.GenericCollection(null, {
                         model: openhmis.Stockroom,
                         url: openhmis.url.inventoryModelBase + 'stockroom'
                     }),
                     objRef: true
                 };
+                /*this.schema.patient = {
+                    type: 'Object',
+                    objRef: true
+                };*/
+                this.schema.institution = {
+                    type: 'InstitutionSelect',
+                    options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Institution,
+                        url: openhmis.url.inventoryModelBase + 'institution'
+                    }),
+                    objRef: true
+                }
                 this.schema.attributes = {
                     hidden: true
                 };
