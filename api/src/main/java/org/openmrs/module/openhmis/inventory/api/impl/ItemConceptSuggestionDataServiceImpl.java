@@ -58,7 +58,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
         String conceptUuidKey = "2";
 
         List<ItemConceptSuggestion> itemToConceptMatches = new ArrayList<ItemConceptSuggestion>();
-        String queryString = "select new map(item, concept_name.name, concept.uuid) " +
+        String queryString = "select new map(item, MAX(concept_name.name), MAX(concept.uuid)) " +
                 "from " +  Item.class.getName() + " as item, " + ConceptName.class.getName() + " as concept_name, " +
                 Concept.class.getName() + " as concept " +
                 "where item.concept is null " + "and item.retired = false " +
