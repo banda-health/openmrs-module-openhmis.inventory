@@ -31,7 +31,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 @Handler(supports = { Category.class }, order = 0)
 public class CategoryResource extends BaseRestMetadataResource<Category> {
 
-    private static Log LOG = LogFactory.getLog(CategoryResource.class);
+    private static final Log LOG = LogFactory.getLog(CategoryResource.class);
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
