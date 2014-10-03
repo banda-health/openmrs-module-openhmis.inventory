@@ -25,9 +25,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
+import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.commons.api.exception.PrivilegeException;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
@@ -127,10 +130,15 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
     }
     
     @Override
-    public void purge(Item item, RequestContext context) throws ResponseException {
+    public void purge(Item item, RequestContext context) {
         try {
             super.purge(item, context);
-        } catch(Exception e) {
+        } catch (PrivilegeException ce) {
+        	LOG.error("Exception occured when trying to purge item <" + item.getName() + ">", ce);
+        	throw new ResponseException("Can't purge item with name <" +  item.getName() + "> as required privilege is missing") {
+                private static final long serialVersionUID = 1L;
+            };
+        } catch(APIException e) {
             LOG.error("Exception occured when trying to purge item <" + item.getName() + ">", e);
             throw new ResponseException("Can't purge item with name <" +  item.getName() + "> as it is still in use") {
                 private static final long serialVersionUID = 1L;
