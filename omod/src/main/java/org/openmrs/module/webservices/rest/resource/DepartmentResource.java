@@ -53,7 +53,7 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 	}
 
     @Override
-    public void purge(Department department, RequestContext context) throws ResponseException {
+    public void purge(Department department, RequestContext context) {
         try {
             super.purge(department, context);
         } catch (PrivilegeException ce) {

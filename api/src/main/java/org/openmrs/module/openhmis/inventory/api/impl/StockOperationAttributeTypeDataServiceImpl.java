@@ -1,6 +1,5 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationAttributeTypeDataService;
@@ -17,7 +16,7 @@ public class StockOperationAttributeTypeDataServiceImpl
 	}
 
 	@Override
-	protected void validate(StockOperationAttributeType object) throws APIException {
+	protected void validate(StockOperationAttributeType object) {
 
 	}
 }

@@ -14,6 +14,9 @@
 
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -27,11 +30,7 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class InstitutionSearchHandler implements SearchHandler {
@@ -50,7 +49,7 @@ public class InstitutionSearchHandler implements SearchHandler {
     }
 
     @Override
-    public PageableResult search(RequestContext context) throws ResponseException {
+    public PageableResult search(RequestContext context) {
         String query = context.getParameter("q");
         IInstitutionDataService service = Context.getService(IInstitutionDataService.class);
         PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);

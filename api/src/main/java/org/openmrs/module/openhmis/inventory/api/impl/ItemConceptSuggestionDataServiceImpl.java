@@ -27,7 +27,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
     }
 
     @Override
-    protected void validate(ItemConceptSuggestion object) throws APIException {
+    protected void validate(ItemConceptSuggestion object) {
 
     }
 

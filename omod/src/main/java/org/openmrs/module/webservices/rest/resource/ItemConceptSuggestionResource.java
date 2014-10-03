@@ -46,7 +46,7 @@ public class ItemConceptSuggestionResource extends BaseRestMetadataResource<Item
     }
     
     @Override
-    protected PageableResult doGetAll(RequestContext context) throws ResponseException {
+    protected PageableResult doGetAll(RequestContext context) {
         return ItemConceptSuggestionSearchHandler.doSearch(Context.getService(IItemConceptSuggestionDataService.class), context);
     }
 

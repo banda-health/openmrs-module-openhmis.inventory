@@ -57,7 +57,7 @@ public class CategoryResource extends BaseRestMetadataResource<Category> {
 	}
 
     @Override
-    public void purge(Category category, RequestContext context) throws ResponseException {
+    public void purge(Category category, RequestContext context) {
         try {
             super.purge(category, context);
         } catch(Exception e) {

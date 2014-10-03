@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
@@ -30,11 +29,11 @@ public class StockOperationTypeDataServiceImpl
 	}
 
 	@Override
-	protected void validate(IStockOperationType object) throws APIException {
+	protected void validate(IStockOperationType object) {
 	}
 
 	@Override
-	public IStockOperationType save(IStockOperationType type) throws APIException {
+	public IStockOperationType save(IStockOperationType type) {
 		// Check to see if this is a new entity
 		if (type.getId() == null) {
 			throw new UnsupportedOperationException("New stock operation types can not be created.");

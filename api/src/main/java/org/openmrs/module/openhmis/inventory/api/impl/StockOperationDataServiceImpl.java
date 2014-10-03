@@ -13,44 +13,42 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import com.google.common.collect.Iterators;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.*;
-import org.javatuples.Pair;
-import org.javatuples.Triplet;
-import org.joda.time.DateTime;
-import org.joda.time.Seconds;
-import org.openmrs.OpenmrsObject;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
-import org.openmrs.module.openhmis.commons.api.f.Action;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
-import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.*;
 
 public class StockOperationDataServiceImpl
 		extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
 		implements IStockOperationDataService {
+	private static final int MAX_OPERATION_NUMBER_LENGTH = 255;
+
 	@Override
 	protected BasicMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
 
 	@Override
-	protected void validate(StockOperation operation) throws IllegalArgumentException, APIException {
+	protected void validate(StockOperation operation) {
 		StockOperationServiceImpl.validateOperation(operation);
 	}
 
@@ -65,7 +63,7 @@ public class StockOperationDataServiceImpl
 		if (StringUtils.isEmpty(number)) {
 			throw new IllegalArgumentException("The operation number to find must be defined.");
 		}
-		if (number.length() > 255) {
+		if (number.length() > MAX_OPERATION_NUMBER_LENGTH) {
 			throw new IllegalArgumentException("The operation number must be less than 256 characters.");
 		}
 
@@ -93,7 +91,7 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public List<StockOperationItem> getItemsByOperation(final StockOperation operation, PagingInfo paging) throws IllegalArgumentException, APIException {
+	public List<StockOperationItem> getItemsByOperation(final StockOperation operation, PagingInfo paging) {
 		if (operation == null) {
 			throw new IllegalArgumentException("The operation must be defined.");
 		}
@@ -184,7 +182,7 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public void purge(StockOperation operation) throws APIException {
+	public void purge(StockOperation operation) {
 		if (operation != null && (
 				(operation.getReserved() != null && operation.getReserved().size() > 0) ||
 				(operation.getTransactions() != null && operation.getTransactions().size() > 0))

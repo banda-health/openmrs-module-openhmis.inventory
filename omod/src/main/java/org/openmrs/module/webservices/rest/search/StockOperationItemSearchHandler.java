@@ -47,7 +47,7 @@ public class StockOperationItemSearchHandler implements SearchHandler {
 	}
 
 	@Override
-	public PageableResult search(RequestContext context) throws ResponseException {
+	public PageableResult search(RequestContext context) {
 		return doSearch(operationDataService, context);
 	}
 
