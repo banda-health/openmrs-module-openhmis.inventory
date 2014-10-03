@@ -6,6 +6,8 @@ import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
  * Url Util class
  */
 public class UrlUtil {
+
+	protected UrlUtil() {}
 	
 	/**
 	 * Returns the full page url for a module page.

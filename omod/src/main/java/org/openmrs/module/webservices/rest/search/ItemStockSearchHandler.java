@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
 public class ItemStockSearchHandler
 		extends BaseSearchHandler
 		implements SearchHandler {
-	private static Log log = LogFactory.getLog(ItemStockSearchHandler.class);
+	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_STOCK_RESOURCE,
 			Arrays.asList("1.9.*"),
@@ -90,7 +90,7 @@ public class ItemStockSearchHandler
 			search.getTemplate().setName(query + "%");
 
 			if (stockroom == null) {
-				log.warn("Could not find stockroom '" + context.getParameter("stockroom_uuid") + "'");
+				LOG.warn("Could not find stockroom '" + context.getParameter("stockroom_uuid") + "'");
 			} else {
 				items = stockroomDataService.getItems(stockroom, search, pagingInfo);
 			}
@@ -99,7 +99,7 @@ public class ItemStockSearchHandler
 
 			if (stockroom == null) {
 				if (item == null) {
-					log.warn("No query, stockroom or item search was specified.");
+					LOG.warn("No query, stockroom or item search was specified.");
 				} else {
 					// Return all item stock for the specified item
 					items = itemStockDataService.getItemStockByItem(item, pagingInfo);

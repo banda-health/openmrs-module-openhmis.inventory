@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StockOperationSearchHandler implements SearchHandler {
-	protected Log log = LogFactory.getLog(getClass());
+	private static final Log LOG = LogFactory.getLog(StockOperationSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
 			Arrays.asList("1.9.*"),
@@ -76,7 +76,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 			status = StockOperationStatus.valueOf(statusText);
 
 			if (status == null) {
-				log.warn("Could not parse Stock Operation Status '" + statusText + "'");
+				LOG.warn("Could not parse Stock Operation Status '" + statusText + "'");
 
 				return new EmptySearchResult();
 			}
@@ -87,7 +87,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 			stockroom = stockroomDataService.getByUuid(stockroomText);
 
 			if (stockroom == null) {
-				log.warn("Could not find stockroom '" + stockroomText + "'");
+				LOG.warn("Could not find stockroom '" + stockroomText + "'");
 
 				return new EmptySearchResult();
 			}

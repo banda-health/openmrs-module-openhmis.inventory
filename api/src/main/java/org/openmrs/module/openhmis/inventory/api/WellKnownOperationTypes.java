@@ -16,7 +16,7 @@ package org.openmrs.module.openhmis.inventory.api;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 
-public class WellKnownOperationTypes {
+public final class WellKnownOperationTypes {
 	public static final String ADJUSTMENT_UUID = "288fd7fe-1374-4f7a-89e6-d5f1ac97d4a5";
 	public static final String DISPOSED_UUID = "84be0aaf-70cf-4ebb-83e3-088e5d375905";
 	public static final String DISTRIBUTION_UUID = "c264f34b-c795-4576-9928-454d1fa20e09";

@@ -24,7 +24,7 @@ import java.util.List;
 
 @Component
 public class StockOperationItemSearchHandler implements SearchHandler {
-	private static Log log = LogFactory.getLog(ItemStockSearchHandler.class);
+	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_ITEM_RESOURCE,
 			Arrays.asList("1.9.*"),
@@ -56,7 +56,7 @@ public class StockOperationItemSearchHandler implements SearchHandler {
 		StockOperation operation = service.getByUuid(operationUuid);
 
 		if (operation == null) {
-			log.warn("Could not find stock operation '" + operationUuid + "'");
+			LOG.warn("Could not find stock operation '" + operationUuid + "'");
 
 			return new EmptySearchResult();
 		}

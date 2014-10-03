@@ -45,7 +45,7 @@ public class StockOperationServiceImpl
 
 	private IStockroomDataService stockroomService;
 	private IItemStockDataService itemStockService;
-	protected IStockOperationDataService operationService;
+	private IStockOperationDataService operationService;
 
 	@Autowired
 	public StockOperationServiceImpl(IStockOperationDataService operationService,

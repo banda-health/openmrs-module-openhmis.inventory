@@ -184,8 +184,7 @@ public class StockOperationDataServiceImpl
 	@Override
 	public void purge(StockOperation operation) {
 		if (operation != null && (
-				(operation.getReserved() != null && operation.getReserved().size() > 0) ||
-				(operation.getTransactions() != null && operation.getTransactions().size() > 0))
+				(operation.hasReservedTransactions()) || operation.hasTransactions())
 			) {
 			throw new APIException("Stock operations can not be deleted if there are any associated transactions.");
 		}

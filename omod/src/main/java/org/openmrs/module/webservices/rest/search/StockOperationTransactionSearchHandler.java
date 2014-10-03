@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StockOperationTransactionSearchHandler implements SearchHandler {
-	private static Log log = LogFactory.getLog(ItemStockSearchHandler.class);
+	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE,
 			Arrays.asList("1.9.*"),
@@ -55,7 +55,7 @@ public class StockOperationTransactionSearchHandler implements SearchHandler {
 		Stockroom stockroom = service.getByUuid(stockroomUuid);
 
 		if (stockroom == null) {
-			log.warn("Could not find stockroom '" + stockroomUuid + "'");
+			LOG.warn("Could not find stockroom '" + stockroomUuid + "'");
 
 			return new EmptySearchResult();
 		}
