@@ -153,7 +153,9 @@ public class StockOperationServiceImpl
 		if (transactions == null || transactions.length == 0) {
 			// Nothing to do
 			return;
-		} else if (transactions.length == 1 && transactions[0] == null) {
+		} 
+		
+		if (transactions.length == 1 && transactions[0] == null) {
 			// A single null parameter was passed in.  Nothing to do.
 			return;
 		}
