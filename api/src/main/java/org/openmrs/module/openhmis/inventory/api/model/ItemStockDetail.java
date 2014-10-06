@@ -13,8 +13,6 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.BaseOpenmrsObject;
-
 import java.util.Date;
 
 /**

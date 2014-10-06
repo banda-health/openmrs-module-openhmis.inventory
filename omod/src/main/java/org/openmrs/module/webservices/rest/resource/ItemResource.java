@@ -28,7 +28,6 @@ import org.openmrs.Concept;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.exception.PrivilegeException;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
