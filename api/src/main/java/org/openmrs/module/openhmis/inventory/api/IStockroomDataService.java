@@ -132,7 +132,6 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param location The location.
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @return All stockrooms for the specified {@link Location}.
-    * @throws APIException
     * @should throw NullPointerException if the location is null
     * @should return an empty list if the location has no stockrooms
     * @should not return retired stockrooms unless specified
@@ -140,7 +139,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired) throws APIException;
+   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired);
 
    /**
     * Gets all the stockrooms for the specified {@link Location}.
@@ -148,11 +147,10 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @param pagingInfo The paging information
     * @return All stockrooms for the specified {@link location}.
-    * @throws APIException
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo);
 
    /**
     * Gets all stockrooms in the specified {@link location} that start with the specified name.
@@ -160,7 +158,6 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param name The stockroom name fragment.
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
-    * @throws APIException
     * @should throw NullPointerException if the location is null
     * @should throw IllegalArgumentException if the name is null
     * @should throw IllegalArgumentException if the name is empty
@@ -172,7 +169,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired) throws APIException;
+   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired);
 
    /**
     * Gets all stockrooms in the specified {@link Location} that start with the specified name.
@@ -181,10 +178,9 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @param pagingInfo The paging information.
     * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
-    * @throws APIException
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo);
 }
 

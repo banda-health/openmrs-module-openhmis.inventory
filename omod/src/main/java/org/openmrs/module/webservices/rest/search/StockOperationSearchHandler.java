@@ -77,7 +77,6 @@ public class StockOperationSearchHandler implements SearchHandler {
 
 			if (status == null) {
 				LOG.warn("Could not parse Stock Operation Status '" + statusText + "'");
-
 				return new EmptySearchResult();
 			}
 		}
@@ -88,7 +87,6 @@ public class StockOperationSearchHandler implements SearchHandler {
 
 			if (stockroom == null) {
 				LOG.warn("Could not find stockroom '" + stockroomText + "'");
-
 				return new EmptySearchResult();
 			}
 		}

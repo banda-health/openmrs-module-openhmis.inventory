@@ -84,26 +84,12 @@ public class ItemStockSearchHandler
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 		if (!StringUtils.isEmpty(query)) {
-			// Search for items starting with the specified query
-			ItemSearch search = new ItemSearch();
-			search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
-			search.getTemplate().setName(query + "%");
-
-			if (stockroom == null) {
-				LOG.warn("Could not find stockroom '" + context.getParameter("stockroom_uuid") + "'");
-			} else {
-				items = stockroomDataService.getItems(stockroom, search, pagingInfo);
-			}
+			items = searchItemsStartingWithQuery(context, query, stockroom, items, pagingInfo);
 		} else {
 			Item item = getOptionalEntityByUuid(itemDataService, context.getParameter("item_uuid"));
 
 			if (stockroom == null) {
-				if (item == null) {
-					LOG.warn("No query, stockroom or item search was specified.");
-				} else {
-					// Return all item stock for the specified item
-					items = itemStockDataService.getItemStockByItem(item, pagingInfo);
-				}
+				items = getItemStockByItem(items, pagingInfo, item);
 			} else {
 				if (item == null) {
 					// Return all item stock for the specified stockroom
@@ -111,7 +97,6 @@ public class ItemStockSearchHandler
 				} else {
 					// Return the item stock record for the specified stockroom and item
 					pagingInfo = null;
-
 					items = new ArrayList<ItemStock>(1);
 					items.add(stockroomDataService.getItem(stockroom, item));
 				}
@@ -120,14 +105,38 @@ public class ItemStockSearchHandler
 
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
-		} else {
-			if (pagingInfo == null) {
-				return new AlreadyPaged<ItemStock>(context, items, false);
-			} else {
-				return new AlreadyPagedWithLength<ItemStock>(context, items, pagingInfo.hasMoreResults(),
-						pagingInfo.getTotalRecordCount());
-			}
-		}
+		} 
+			
+		if (pagingInfo == null) {
+			return new AlreadyPaged<ItemStock>(context, items, false);
+		} 
+		
+		return new AlreadyPagedWithLength<ItemStock>(context, items, pagingInfo.hasMoreResults(),
+			pagingInfo.getTotalRecordCount());
 	}
+
+	private List<ItemStock> getItemStockByItem(List<ItemStock> items, PagingInfo pagingInfo, Item item) {
+	    if (item == null) {
+	    	LOG.warn("No query, stockroom or item search was specified.");
+	    } else {
+	    	// Return all item stock for the specified item
+	    	items = itemStockDataService.getItemStockByItem(item, pagingInfo);
+	    }
+	    return items;
+    }
+
+	private List<ItemStock> searchItemsStartingWithQuery(RequestContext context, String query, Stockroom stockroom,
+            List<ItemStock> items, PagingInfo pagingInfo) {
+	    ItemSearch search = new ItemSearch();
+	    search.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
+	    search.getTemplate().setName(query + "%");
+
+	    if (stockroom == null) {
+	    	LOG.warn("Could not find stockroom '" + context.getParameter("stockroom_uuid") + "'");
+	    } else {
+	    	items = stockroomDataService.getItems(stockroom, search, pagingInfo);
+	    }
+	    return items;
+    }
 }
 
