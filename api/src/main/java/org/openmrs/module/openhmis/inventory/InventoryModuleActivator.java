@@ -13,57 +13,37 @@
  */
 package org.openmrs.module.openhmis.inventory;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.ModuleActivator;
+import org.openmrs.module.BaseModuleActivator;
 
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
  */
-public class InventoryModuleActivator implements ModuleActivator {
-	protected Log log = LogFactory.getLog(getClass());
+public class InventoryModuleActivator extends BaseModuleActivator {
+	private static final Log LOG = LogFactory.getLog(InventoryModuleActivator.class);
 		
 	/**
-	 * @see ModuleActivator#willRefreshContext()
+	 * @see BaseModuleActivator#contextRefreshed()
 	 */
-	public void willRefreshContext() {
-		log.info("Refreshing OpenHMIS Inventory Module");
-	}
-	
-	/**
-	 * @see ModuleActivator#contextRefreshed()
-	 */
+	@Override
 	public void contextRefreshed() {
-		log.info("OpenHMIS Inventory Module refreshed");
+		LOG.info("OpenHMIS Inventory Module refreshed");
 	}
 	
 	/**
-	 * @see ModuleActivator#willStart()
+	 * @see BaseModuleActivator#started()
 	 */
-	public void willStart() {
-		log.info("Starting OpenHMIS Inventory Module");
-	}
-	
-	/**
-	 * @see ModuleActivator#started()
-	 */
+	@Override
 	public void started() {
-		log.info("OpenHMIS Inventory Module started");
+		LOG.info("OpenHMIS Inventory Module started");
 	}
 	
 	/**
-	 * @see ModuleActivator#willStop()
+	 * @see BaseModuleActivator#stopped()
 	 */
-	public void willStop() {
-		log.info("Stopping OpenHMIS Inventory Module");
-	}
-	
-	/**
-	 * @see ModuleActivator#stopped()
-	 */
+	@Override
 	public void stopped() {
-		log.info("OpenHMIS Inventory Module stopped");
+		LOG.info("OpenHMIS Inventory Module stopped");
 	}
-		
 }
