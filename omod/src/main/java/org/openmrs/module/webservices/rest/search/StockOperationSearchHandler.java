@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,16 +35,12 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Component
 public class StockOperationSearchHandler implements SearchHandler {
-	protected Log log = LogFactory.getLog(getClass());
+	private static final Log LOG = LogFactory.getLog(StockOperationSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
 			Arrays.asList("1.9.*"),
@@ -68,7 +67,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 	}
 
 	@Override
-	public PageableResult search(RequestContext context) throws ResponseException {
+	public PageableResult search(RequestContext context) {
 		String statusText = context.getParameter("status");
 		String stockroomText = context.getParameter("stockroom_uuid");
 
@@ -77,8 +76,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 			status = StockOperationStatus.valueOf(statusText);
 
 			if (status == null) {
-				log.warn("Could not parse Stock Operation Status '" + statusText + "'");
-
+				LOG.warn("Could not parse Stock Operation Status '" + statusText + "'");
 				return new EmptySearchResult();
 			}
 		}
@@ -88,8 +86,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 			stockroom = stockroomDataService.getByUuid(stockroomText);
 
 			if (stockroom == null) {
-				log.warn("Could not find stockroom '" + stockroomText + "'");
-
+				LOG.warn("Could not find stockroom '" + stockroomText + "'");
 				return new EmptySearchResult();
 			}
 		}

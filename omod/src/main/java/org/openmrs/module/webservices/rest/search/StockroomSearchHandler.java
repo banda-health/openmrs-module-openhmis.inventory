@@ -1,5 +1,8 @@
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.api.LocationService;
@@ -15,11 +18,7 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class StockroomSearchHandler implements SearchHandler {
@@ -33,14 +32,14 @@ public class StockroomSearchHandler implements SearchHandler {
     );
 
     @Override
-    public PageableResult search(RequestContext context) throws ResponseException {
+    public PageableResult search(RequestContext context) {
         String query = context.getParameter("q");
-        String location_uuid = context.getParameter("location_uuid");
+        String locationUuid = context.getParameter("location_uuid");
         query = query.isEmpty() ? null : query;
-        location_uuid = StringUtils.isEmpty(location_uuid) ? null : location_uuid;
+        locationUuid = StringUtils.isEmpty(locationUuid) ? null : locationUuid;
         IStockroomDataService service = Context.getService(IStockroomDataService.class);
 
-        if (location_uuid == null) {
+        if (locationUuid == null) {
             // Do a name search
             PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
             List<Stockroom> stockrooms = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
@@ -49,10 +48,10 @@ public class StockroomSearchHandler implements SearchHandler {
         }
         else {
             LocationService locationService = Context.getLocationService();
-            Location location = locationService.getLocationByUuid(location_uuid);
+            Location location = locationService.getLocationByUuid(locationUuid);
             // Get all items in the department if no name query is given
             if (query == null) {
-                return searchByLocation(location_uuid, context);
+                return searchByLocation(locationUuid, context);
             }
             // Do a name + department search
             PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
@@ -62,9 +61,9 @@ public class StockroomSearchHandler implements SearchHandler {
         }
     }
 
-    public PageableResult searchByLocation(String location_uuid, RequestContext context) throws ResponseException {
+    public PageableResult searchByLocation(String locationUuid, RequestContext context) {
         LocationService locationService = Context.getLocationService();
-        Location location = locationService.getLocationByUuid(location_uuid);
+        Location location = locationService.getLocationByUuid(locationUuid);
         IStockroomDataService service = Context.getService(IStockroomDataService.class);
 
         PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);

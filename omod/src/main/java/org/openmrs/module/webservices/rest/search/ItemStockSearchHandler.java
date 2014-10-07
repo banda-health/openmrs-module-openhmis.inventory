@@ -13,6 +13,10 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,20 +40,14 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.AlreadyPaged;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 @Component
 public class ItemStockSearchHandler
 		extends BaseSearchHandler
 		implements SearchHandler {
-	private static Log log = LogFactory.getLog(ItemStockSearchHandler.class);
+	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_STOCK_RESOURCE,
 			Arrays.asList("1.9.*"),
@@ -78,7 +76,7 @@ public class ItemStockSearchHandler
 	}
 
 	@Override
-	public PageableResult search(RequestContext context) throws ResponseException {
+	public PageableResult search(RequestContext context) {
 		String query = context.getParameter("q");
 		Stockroom stockroom = getOptionalEntityByUuid(stockroomDataService, context.getParameter("stockroom_uuid"));
 
@@ -92,7 +90,7 @@ public class ItemStockSearchHandler
 			search.getTemplate().setName(query + "%");
 
 			if (stockroom == null) {
-				log.warn("Could not find stockroom '" + context.getParameter("stockroom_uuid") + "'");
+				LOG.warn("Could not find stockroom '" + context.getParameter("stockroom_uuid") + "'");
 			} else {
 				items = stockroomDataService.getItems(stockroom, search, pagingInfo);
 			}
@@ -101,7 +99,7 @@ public class ItemStockSearchHandler
 
 			if (stockroom == null) {
 				if (item == null) {
-					log.warn("No query, stockroom or item search was specified.");
+					LOG.warn("No query, stockroom or item search was specified.");
 				} else {
 					// Return all item stock for the specified item
 					items = itemStockDataService.getItemStockByItem(item, pagingInfo);
@@ -122,14 +120,14 @@ public class ItemStockSearchHandler
 
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
-		} else {
-			if (pagingInfo == null) {
-				return new AlreadyPaged<ItemStock>(context, items, false);
-			} else {
-				return new AlreadyPagedWithLength<ItemStock>(context, items, pagingInfo.hasMoreResults(),
-						pagingInfo.getTotalRecordCount());
-			}
+		} 
+			
+		if (pagingInfo == null) {
+			return new AlreadyPaged<ItemStock>(context, items, false);
 		}
+		
+		return new AlreadyPagedWithLength<ItemStock>(context, items, pagingInfo.hasMoreResults(),
+			pagingInfo.getTotalRecordCount());
 	}
 }
 

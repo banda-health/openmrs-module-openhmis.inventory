@@ -2,6 +2,8 @@ package org.openmrs.module.openhmis.inventory.api.util;
 
 public class HibernateCriteriaConstants {
 
+	protected HibernateCriteriaConstants() {}
+	
 	public static final String DEPARTMENT = "department";
 	public static final String RETIRED = "retired";
 	public static final String CATEGORY = "category";

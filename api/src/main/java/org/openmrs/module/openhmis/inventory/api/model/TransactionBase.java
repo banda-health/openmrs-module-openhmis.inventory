@@ -1,10 +1,9 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
+import java.util.Date;
+
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.User;
-import org.openmrs.api.context.Context;
-
-import java.util.Date;
 
 public abstract class TransactionBase
 		extends BaseOpenmrsObject

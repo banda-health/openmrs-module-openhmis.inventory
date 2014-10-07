@@ -13,6 +13,11 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
@@ -20,33 +25,34 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
 import org.openmrs.OpenmrsObject;
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 public class StockroomDataServiceImpl
 		extends BaseMetadataDataServiceImpl<Stockroom>
 		implements IStockroomDataService, IMetadataAuthorizationPrivileges {
+	private static final int MAX_STOCKROOM_CODE_LENGTH = 255;
+
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return this;
 	}
 
 	@Override
-	protected void validate(Stockroom object) throws APIException {}
+	protected void validate(Stockroom object) {}
 
 	@Override
 	protected Collection<? extends OpenmrsObject> getRelatedObjects(Stockroom entity) {
@@ -178,12 +184,12 @@ public class StockroomDataServiceImpl
 	}
 
     @Override
-    public List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired) throws APIException {
+    public List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired) {
         return getStockroomsByLocation(location, includeRetired, null);
     }
 
     @Override
-    public List<Stockroom> getStockroomsByLocation(final Location location, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+    public List<Stockroom> getStockroomsByLocation(final Location location, final boolean includeRetired, PagingInfo pagingInfo) {
         if (location == null) {
             throw new NullPointerException("The location must be defined");
         }
@@ -200,19 +206,19 @@ public class StockroomDataServiceImpl
     }
 
     @Override
-    public List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired) throws APIException {
+    public List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired) {
         return getStockrooms(location, name, includeRetired, null);
     }
 
     @Override
-    public List<Stockroom> getStockrooms(final Location location, final String name, final boolean includeRetired, PagingInfo pagingInfo) throws APIException {
+    public List<Stockroom> getStockrooms(final Location location, final String name, final boolean includeRetired, PagingInfo pagingInfo) {
         if (location == null) {
             throw new NullPointerException("The department must be defined");
         }
         if (StringUtils.isEmpty(name)) {
             throw new IllegalArgumentException("The stockroom code must be defined.");
         }
-        if (name.length() > 255) {
+        if (name.length() > MAX_STOCKROOM_CODE_LENGTH) {
             throw new IllegalArgumentException("The stockroom code must be less than 256 characters.");
         }
 

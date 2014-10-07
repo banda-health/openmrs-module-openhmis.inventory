@@ -1,17 +1,18 @@
 package org.openmrs.module.openhmis.inventory.api;
 
+import java.util.List;
+
 import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.List;
 
 public interface IStockOperationDataService extends IMetadataDataService<StockOperation> {
 	/**
@@ -27,7 +28,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	StockOperation getOperationByNumber(String operationNumber) throws IllegalArgumentException, APIException;
+	StockOperation getOperationByNumber(String operationNumber);
 
 	/**
 	 * Returns the {@link StockOperation}s for the specified {@link Stockroom}.
@@ -43,7 +44,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS})
-	List<StockOperation> getOperationsByRoom(Stockroom stockroom, PagingInfo paging) throws IllegalArgumentException, APIException;
+	List<StockOperation> getOperationsByRoom(Stockroom stockroom, PagingInfo paging);
 
 	/**
 	 * Returns the {@link StockOperationItem}s for the specified {@link StockOperation}.
@@ -58,7 +59,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized({PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperationItem> getItemsByOperation(StockOperation operation, PagingInfo paging) throws IllegalArgumentException, APIException;
+	List<StockOperationItem> getItemsByOperation(StockOperation operation, PagingInfo paging);
 
 	/**
 	 * Returns the {@link StockOperation}s that are associated with the specified user.
@@ -68,7 +69,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> getUserOperations(User user, PagingInfo paging) throws IllegalArgumentException, APIException;
+	List<StockOperation> getUserOperations(User user, PagingInfo paging);
 
 	/**
 	 * Returns the {@link StockOperation}s with the specified status for the specified user.
@@ -92,7 +93,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> getUserOperations(User user, StockOperationStatus status, PagingInfo paging) throws IllegalArgumentException, APIException;
+	List<StockOperation> getUserOperations(User user, StockOperationStatus status, PagingInfo paging);
 
 	/**
 	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
@@ -101,7 +102,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> getOperations(StockOperationSearch search) throws IllegalArgumentException, APIException;
+	List<StockOperation> getOperations(StockOperationSearch search);
 
 	/**
 	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
@@ -123,6 +124,6 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> getOperations(StockOperationSearch search, PagingInfo paging) throws IllegalArgumentException, APIException;
+	List<StockOperation> getOperations(StockOperationSearch search, PagingInfo paging);
 }
 

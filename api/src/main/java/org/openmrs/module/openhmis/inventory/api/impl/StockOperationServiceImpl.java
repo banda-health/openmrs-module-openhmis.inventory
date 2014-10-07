@@ -1,6 +1,15 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import com.google.common.collect.Iterators;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -13,10 +22,20 @@ import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
+import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
+import org.openmrs.module.openhmis.inventory.api.model.TransactionBase;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import com.google.common.collect.Iterators;
 
 public class StockOperationServiceImpl
 		extends BaseOpenmrsService
@@ -26,7 +45,7 @@ public class StockOperationServiceImpl
 
 	private IStockroomDataService stockroomService;
 	private IItemStockDataService itemStockService;
-	protected IStockOperationDataService operationService;
+	private IStockOperationDataService operationService;
 
 	@Autowired
 	public StockOperationServiceImpl(IStockOperationDataService operationService,
@@ -72,7 +91,7 @@ public class StockOperationServiceImpl
 	}
 
 	@Override
-	public StockOperation submitOperation(StockOperation operation) throws IllegalArgumentException, APIException {
+	public StockOperation submitOperation(StockOperation operation) {
 		/*
 			Submitting the operation will copy the items to the operation reservations (if not already done) and then
 			process those reservations based on the operation state.
@@ -134,7 +153,9 @@ public class StockOperationServiceImpl
 		if (transactions == null || transactions.length == 0) {
 			// Nothing to do
 			return;
-		} else if (transactions.length == 1 && transactions[0] == null) {
+		} 
+		
+		if (transactions.length == 1 && transactions[0] == null) {
 			// A single null parameter was passed in.  Nothing to do.
 			return;
 		}

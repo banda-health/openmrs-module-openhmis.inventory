@@ -16,8 +16,6 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,7 +29,7 @@ public class ItemConceptSuggestionPageController {
 	private static final String ITEM_CONCEPT_SUGGESTION_PAGE = "itemConceptSuggestion.form";
 	
     @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
-    public void render(ModelMap model, HttpServletRequest request) throws JsonGenerationException, JsonMappingException, IOException {
+    public void render(ModelMap model, HttpServletRequest request) throws IOException {
     	String returnUrl = getReturnUrl(request);
 
     	model.addAttribute("returnUrl", returnUrl);
@@ -42,7 +40,8 @@ public class ItemConceptSuggestionPageController {
 		String returnUrl = ModuleWebConstants.INVENTORY_PAGE;
 		String referer = request.getHeader("referer");
 		if (!referer.contains(ITEM_CONCEPT_SUGGESTION_PAGE)) {
-			int refererWithoutHostPrefixStartIndex = referer.indexOf('/', 8);
+			int startIndex = 8;
+			int refererWithoutHostPrefixStartIndex = referer.indexOf('/', startIndex);
 			String refererWithoutHostPrefix = referer.substring(refererWithoutHostPrefixStartIndex);
 			returnUrl = refererWithoutHostPrefix;
 		}

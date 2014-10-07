@@ -7,7 +7,6 @@ import java.util.Map;
 import org.hibernate.Query;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
-import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptNameType;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
@@ -27,7 +26,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
     }
 
     @Override
-    protected void validate(ItemConceptSuggestion object) throws APIException {
+    protected void validate(ItemConceptSuggestion object) {
 
     }
 

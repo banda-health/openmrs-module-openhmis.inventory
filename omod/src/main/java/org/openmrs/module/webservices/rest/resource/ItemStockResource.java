@@ -13,19 +13,13 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.webservices.rest.search.ItemStockSearchHandler;
-import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
 @Resource(name = ModuleRestConstants.ITEM_STOCK_RESOURCE, supportedClass=ItemStock.class, supportedOpenmrsVersions={"1.9"})
 public class ItemStockResource extends BaseRestObjectResource<ItemStock> {

@@ -1,5 +1,8 @@
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -15,16 +18,12 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Component
 public class StockOperationItemSearchHandler implements SearchHandler {
-	private static Log log = LogFactory.getLog(ItemStockSearchHandler.class);
+	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_ITEM_RESOURCE,
 			Arrays.asList("1.9.*"),
@@ -47,7 +46,7 @@ public class StockOperationItemSearchHandler implements SearchHandler {
 	}
 
 	@Override
-	public PageableResult search(RequestContext context) throws ResponseException {
+	public PageableResult search(RequestContext context) {
 		return doSearch(operationDataService, context);
 	}
 
@@ -56,7 +55,7 @@ public class StockOperationItemSearchHandler implements SearchHandler {
 		StockOperation operation = service.getByUuid(operationUuid);
 
 		if (operation == null) {
-			log.warn("Could not find stock operation '" + operationUuid + "'");
+			LOG.warn("Could not find stock operation '" + operationUuid + "'");
 
 			return new EmptySearchResult();
 		}

@@ -21,7 +21,7 @@ import org.openmrs.attribute.BaseAttributeType;
 public class ItemAttributeType extends BaseAttributeType<Item> {
 	public static final long serialVersionUID = 0L;
 
-	public Integer itemAttributeTypeId;
+	private Integer itemAttributeTypeId;
 
 	@Override
 	public Integer getId() {

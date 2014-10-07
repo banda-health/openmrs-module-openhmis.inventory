@@ -17,7 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.Handler;
+import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.commons.api.exception.PrivilegeException;
 import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -57,10 +59,13 @@ public class CategoryResource extends BaseRestMetadataResource<Category> {
 	}
 
     @Override
-    public void purge(Category category, RequestContext context) throws ResponseException {
+    public void purge(Category category, RequestContext context) {
         try {
             super.purge(category, context);
-        } catch(Exception e) {
+        } catch (PrivilegeException ce) {
+        	LOG.error("Exception occured when trying to purge category <" + category.getName() + ">", ce);
+        	throw new PrivilegeException("Can't purge category with name <" +  category.getName() + "> as required privilege is missing");    
+        } catch(APIException e) {
             LOG.error("Exception occured when trying to purge category <" + category.getName() + ">", e);
             throw new ResponseException("Can't purge category with name <" +  category.getName() + "> as it is still in use") {
                 private static final long serialVersionUID = 1L;

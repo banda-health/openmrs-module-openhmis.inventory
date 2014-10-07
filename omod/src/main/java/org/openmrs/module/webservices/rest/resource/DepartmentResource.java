@@ -16,7 +16,9 @@ package org.openmrs.module.webservices.rest.resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.Handler;
+import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.commons.api.exception.PrivilegeException;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -30,7 +32,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
 @Handler(supports = { Department.class }, order = 0)
 public class DepartmentResource extends BaseRestMetadataResource<Department> {
 
-    private static Log LOG = LogFactory.getLog(DepartmentResource.class);
+    private static final Log LOG = LogFactory.getLog(DepartmentResource.class);
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -51,10 +53,13 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 	}
 
     @Override
-    public void purge(Department department, RequestContext context) throws ResponseException {
+    public void purge(Department department, RequestContext context) {
         try {
             super.purge(department, context);
-        } catch(Exception e) {
+        } catch (PrivilegeException ce) {
+        	LOG.error("Exception occured when trying to purge item <" + department.getName() + ">", ce);
+        	throw new PrivilegeException("Can't purge department with name <" +  department.getName() + "> as required privilege is missing");
+        } catch(APIException e) {
             LOG.error("Exception occured when trying to purge department <" + department.getName() + ">", e);
             throw new ResponseException("Can't purge department with name <" +  department.getName() + "> as it is still in use") {
                 private static final long serialVersionUID = 1L;
