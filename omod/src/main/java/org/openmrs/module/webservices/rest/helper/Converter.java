@@ -5,7 +5,6 @@ import org.openmrs.module.webservices.rest.web.response.ConversionException;
 import java.math.BigDecimal;
 
 public class Converter {
-
 	protected Converter() {}
 	
     public static BigDecimal objectToBigDecimal(Object number) {
@@ -25,5 +24,4 @@ public class Converter {
         	throw new ConversionException("Can't convert given number to " + Integer.class.getSimpleName());
         }
     }
-
 }

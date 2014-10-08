@@ -13,8 +13,11 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, supportedClass=ItemConceptSuggestion.class, supportedOpenmrsVersions={"1.9"})
-public class ItemConceptSuggestionResource extends BaseRestMetadataResource<ItemConceptSuggestion> implements IMetadataDataServiceResource<ItemConceptSuggestion> {
+@Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, supportedClass=ItemConceptSuggestion.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+public class ItemConceptSuggestionResource
+		extends BaseRestMetadataResource<ItemConceptSuggestion>
+		implements IMetadataDataServiceResource<ItemConceptSuggestion> {
 
     @Override
     public ItemConceptSuggestion newDelegate() {

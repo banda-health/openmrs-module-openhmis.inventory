@@ -43,7 +43,7 @@ public class ItemSearchHandler
 		extends BaseSearchHandler
 		implements SearchHandler {
 	private final SearchConfig searchConfig =
-			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("1.9.*"),
+			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("*"),
 					Arrays.asList(
 							new SearchQuery.Builder(
 									"Find an item by its name or code, optionally filtering by category and department")

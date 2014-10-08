@@ -47,7 +47,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 
-@Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class ItemResource extends BaseRestMetadataResource<Item> {
 	
 	private static final Log LOG = LogFactory.getLog(ItemResource.class);

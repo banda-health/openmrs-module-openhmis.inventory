@@ -29,7 +29,8 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@Resource(name = ModuleRestConstants.CATEGORY_RESOURCE, supportedClass=Category.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name = ModuleRestConstants.CATEGORY_RESOURCE, supportedClass=Category.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 @Handler(supports = { Category.class }, order = 0)
 public class CategoryResource extends BaseRestMetadataResource<Category> {
 

@@ -23,7 +23,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class StockroomSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.STOCKROOM_RESOURCE, Arrays.asList("1.9.*"),
+    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.STOCKROOM_RESOURCE,
+		    Arrays.asList("*"),
             Arrays.asList(
                     new SearchQuery.Builder("Find a stockroom by its name, optionally filtering by location")
                             .withRequiredParameters("q")

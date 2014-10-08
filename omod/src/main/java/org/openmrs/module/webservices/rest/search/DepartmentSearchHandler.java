@@ -35,7 +35,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class DepartmentSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.DEPARTMENT_RESOURCE, Arrays.asList("1.9.*"),
+    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.DEPARTMENT_RESOURCE,
+		    Arrays.asList("*"),
             Arrays.asList(
                     new SearchQuery.Builder("Find a department by its name")
                             .withRequiredParameters("q")

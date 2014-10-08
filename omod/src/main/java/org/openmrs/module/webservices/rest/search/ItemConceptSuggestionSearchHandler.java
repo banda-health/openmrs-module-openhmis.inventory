@@ -22,7 +22,8 @@ public class ItemConceptSuggestionSearchHandler implements SearchHandler {
 
     private static final int DEFAULT_PAGE_SIZE = 50;
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, Arrays.asList("1.9.*"),
+    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE,
+		    Arrays.asList("*"),
             Arrays.asList(
                     new SearchQuery.Builder("Find concept mappings for items that do not have a concept")
                             .withOptionalParameters("q")

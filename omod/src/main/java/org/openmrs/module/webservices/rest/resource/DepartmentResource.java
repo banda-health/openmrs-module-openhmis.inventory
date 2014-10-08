@@ -28,7 +28,8 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass=Department.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass=Department.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 @Handler(supports = { Department.class }, order = 0)
 public class DepartmentResource extends BaseRestMetadataResource<Department> {
 

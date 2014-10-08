@@ -51,7 +51,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class StockOperationResource
 		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, IStockOperationType,
 		StockOperationAttributeType, StockOperationAttribute> {

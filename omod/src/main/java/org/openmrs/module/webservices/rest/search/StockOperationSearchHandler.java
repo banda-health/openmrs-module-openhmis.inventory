@@ -43,7 +43,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 	private static final Log LOG = LogFactory.getLog(StockOperationSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
-			Arrays.asList("1.9.*"),
+			Arrays.asList("*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Finds stock operations with an optional status and/or stockroom.")
 							.withOptionalParameters("status", "stockroom_uuid")

@@ -35,7 +35,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class InstitutionSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.INSTITUTION_RESOURCE, Arrays.asList("1.9.*"),
+    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.INSTITUTION_RESOURCE,
+		    Arrays.asList("*"),
             Arrays.asList(
                     new SearchQuery.Builder("Find a institution by its name")
                             .withRequiredParameters("q")
