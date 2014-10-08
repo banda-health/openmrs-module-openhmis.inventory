@@ -377,10 +377,17 @@ define(
             schema: {
                 operationNumber: 'Text',
                 dateCreated: {
-		            type: 'Text',
+                    type: 'Text',
                     editorAttrs: { disabled: true },
-		            format: openhmis.dateTimeFormatLocale
-	            }
+                    format: openhmis.dateTimeFormatLocale
+                }
+            },
+
+            initialize: function(attrs, options) {
+                openhmis.NewOperation.prototype.initialize.call(this, attrs, options);
+
+                // Show the status column
+                this.schema.status.hidden = false;
             }
         });
 
