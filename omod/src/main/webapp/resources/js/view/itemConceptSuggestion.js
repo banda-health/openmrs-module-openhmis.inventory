@@ -230,19 +230,17 @@ define(
             },
 
 	        selectAll: function() {
-                var conceptAcceptedCheckbox = document.getElementsByClassName('conceptAccepted');
-                var selectAllCheckbox = document.getElementsByClassName('selectAll');
-
-                if(selectAllCheckbox.value == 'Select All') {
-                    for (var i in conceptAcceptedCheckbox) {
-                        conceptAcceptedCheckbox[i].checked = '';
-                    }
-                    selectAllCheckbox.value = "Deselect All"
+                if($('#selectAll').is(':checked')) {
+                	$('.conceptAccepted').prop('checked',true)
+                	this.model.each(function(listEntry) {
+                		listEntry.set('conceptAccepted', true);
+                	});
                 } else {
-                    for (var i in conceptAcceptedCheckbox) {
-                        conceptAcceptedCheckbox[i].checked = 'false'
-                    }
-                    selectAllCheckbox.value = 'Select All'
+                	$('.conceptAccepted').prop('checked',false)
+                	this.model.each(function(listEntry) {
+                		listEntry.set('conceptAccepted', false);
+                	});
+                    $('#selectAll').prop('checked',false);
                 }
 	        }
 
