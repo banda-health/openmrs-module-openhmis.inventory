@@ -25,7 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
-import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
@@ -42,6 +41,7 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -137,7 +137,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         	throw new ResponseException("Can't purge item with name <" +  item.getName() + "> as required privilege is missing") {
                 private static final long serialVersionUID = 1L;
             };
-        } catch(APIException e) {
+        } catch(DataIntegrityViolationException e) {
             LOG.error("Exception occured when trying to purge item <" + item.getName() + ">", e);
             throw new ResponseException("Can't purge item with name <" +  item.getName() + "> as it is still in use") {
                 private static final long serialVersionUID = 1L;
