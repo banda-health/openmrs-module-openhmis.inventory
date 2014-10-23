@@ -32,6 +32,7 @@ import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
@@ -324,6 +325,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CONCEPT, concept));
 			}
 		});
+	}
+	
+	@Override
+	public ItemPrice getItemPriceByUuid(final String uuid) {
+		Criteria criteria = getRepository().createCriteria(ItemPrice.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return getRepository().selectSingle(ItemPrice.class, criteria);
 	}
 
 	@Override
