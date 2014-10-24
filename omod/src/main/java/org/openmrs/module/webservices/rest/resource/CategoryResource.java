@@ -14,29 +14,19 @@
 package org.openmrs.module.webservices.rest.resource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.exception.ConstraintViolationException;
 import org.openmrs.annotation.Handler;
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.commons.api.exception.PrivilegeException;
 import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
-import org.springframework.dao.DataIntegrityViolationException;
 
 @Resource(name = ModuleRestConstants.CATEGORY_RESOURCE, supportedClass=Category.class,
 		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 @Handler(supports = { Category.class }, order = 0)
 public class CategoryResource extends BaseRestMetadataResource<Category> {
-
-    private static final Log LOG = LogFactory.getLog(CategoryResource.class);
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -61,19 +51,5 @@ public class CategoryResource extends BaseRestMetadataResource<Category> {
 		return StringUtils.isEmpty(uniqueId) ? null : super.getByUniqueId(uniqueId);
 	}
 
-    @Override
-    public void purge(Category category, RequestContext context) {
-        try {
-            super.purge(category, context);
-        } catch (PrivilegeException ce) {
-        	LOG.error("Exception occured when trying to purge category <" + category.getName() + ">", ce);
-        	throw new PrivilegeException("Can't purge category with name <" +  category.getName() + "> as required privilege is missing");    
-        } catch(DataIntegrityViolationException e) {
-            LOG.error("Exception occured when trying to purge category <" + category.getName() + ">", e);
-            throw new ResponseException("Can't purge category with name <" +  category.getName() + "> as it is still in use") {
-                private static final long serialVersionUID = 1L;
-            };
-        }
-    }
 }
 

@@ -13,28 +13,19 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.exception.ConstraintViolationException;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.commons.api.exception.PrivilegeException;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
-import org.springframework.dao.DataIntegrityViolationException;
 
 @Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass=Department.class,
 		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 @Handler(supports = { Department.class }, order = 0)
 public class DepartmentResource extends BaseRestMetadataResource<Department> {
-
-    private static final Log LOG = LogFactory.getLog(DepartmentResource.class);
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -54,20 +45,6 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 		return IDepartmentDataService.class;
 	}
 
-    @Override
-    public void purge(Department department, RequestContext context) {
-        try {
-            super.purge(department, context);
-        } catch (PrivilegeException ce) {
-        	LOG.error("Exception occured when trying to purge item <" + department.getName() + ">", ce);
-        	throw new PrivilegeException("Can't purge department with name <" +  department.getName() + "> as required privilege is missing");
-        } catch(DataIntegrityViolationException e) {
-            LOG.error("Exception occured when trying to purge department <" + department.getName() + ">", e);
-            throw new ResponseException("Can't purge department with name <" +  department.getName() + "> as it is still in use") {
-                private static final long serialVersionUID = 1L;
-            };
-        }
-    }
 }
 
 
