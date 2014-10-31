@@ -23,6 +23,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
+import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
@@ -132,7 +133,7 @@ public class StockOperationResource
 	@PropertySetter("operationNumber")
 	public void setOperationNumber(StockOperation instance, String operationNumber) {
 		if (StringUtils.isEmpty(instance.getOperationNumber())) {
-			if (ModuleSettings.generateOperationNumber()) {
+			if (ModuleUtil.isLoaded(ModuleUtil.IDGEN_MODULE_ID) && ModuleSettings.generateOperationNumber()) {
 				try {
 					operationNumber = IdgenUtil.generateId(ModuleSettings.OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY);
 

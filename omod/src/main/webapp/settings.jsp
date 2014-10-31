@@ -1,6 +1,6 @@
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
 <%@ page import="org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants" %>
-<%--@elvariable id="sources" type="java.util.List<IdentifierSource>"--%>
+<%--@elvariable id="sources" type="java.util.List<SafeIdentifierSource>"--%>
 <%--@elvariable id="settings" type="org.openmrs.module.openhmis.inventory.api.model.Settings"--%>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
@@ -30,6 +30,7 @@
 	<spring:message code="openhmis.inventory.admin.settings" />
 </h2>
 
+<c:if test="${hasIdgenModule == true}">
 <form:form method="POST" modelAttribute="settings">
 	<table><tr><td>
 			<spring:bind path="autoGenerateOperationNumber">
@@ -57,5 +58,10 @@
 	<br />
 	<input type="submit" value="Save" >
 </form:form>
+</c:if>
+
+<c:if test="${hasIdgenModule == false}">
+There are currently no settings to change because the IDGen module is not loaded.
+</c:if>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>
