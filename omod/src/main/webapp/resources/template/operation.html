@@ -58,6 +58,12 @@
 					<div class="bbf-editor"><label id="op-field-destination"><?= model.get('destination') ?></label></div>
 				</li>
 				<? } ?>
+                <? if (instanceType && instanceType.get('hasRecipient') === true) { ?>
+                <li class="bbf-field field-institution">
+                    <label for="op-field-institution">Institution</label>
+                    <div class="bbf-editor"><label id="op-field-institution"><?= model.get('institution') ?></label></div>
+                </li>
+                <? } ?>
                 <? if (model.attributeList) {
                         for (i in model.attributeList) {
                             var attribute = model.attributeList[i]; ?>

@@ -15,7 +15,6 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,7 +22,8 @@ public class ItemConceptSuggestionSearchHandler implements SearchHandler {
 
     private static final int DEFAULT_PAGE_SIZE = 50;
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, Arrays.asList("1.9.*"),
+    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE,
+		    Arrays.asList("*"),
             Arrays.asList(
                     new SearchQuery.Builder("Find concept mappings for items that do not have a concept")
                             .withOptionalParameters("q")
@@ -37,11 +37,11 @@ public class ItemConceptSuggestionSearchHandler implements SearchHandler {
     }
 
     @Override
-    public PageableResult search(RequestContext context) throws ResponseException {
+    public PageableResult search(RequestContext context) {
          return doSearch(Context.getService(IItemConceptSuggestionDataService.class), context);
     }
 
-    public static PageableResult doSearch(IItemConceptSuggestionDataService service, RequestContext context) throws ResponseException {
+    public static PageableResult doSearch(IItemConceptSuggestionDataService service, RequestContext context) {
         PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
         pagingInfo.setPageSize(DEFAULT_PAGE_SIZE);
 

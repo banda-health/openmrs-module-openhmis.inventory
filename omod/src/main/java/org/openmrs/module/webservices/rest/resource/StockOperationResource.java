@@ -23,6 +23,7 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
+import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
@@ -51,7 +52,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class StockOperationResource
 		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, IStockOperationType,
 		StockOperationAttributeType, StockOperationAttribute> {
@@ -131,7 +133,7 @@ public class StockOperationResource
 	@PropertySetter("operationNumber")
 	public void setOperationNumber(StockOperation instance, String operationNumber) {
 		if (StringUtils.isEmpty(instance.getOperationNumber())) {
-			if (ModuleSettings.generateOperationNumber()) {
+			if (ModuleUtil.isLoaded(ModuleUtil.IDGEN_MODULE_ID) && ModuleSettings.generateOperationNumber()) {
 				try {
 					operationNumber = IdgenUtil.generateId(ModuleSettings.OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY);
 

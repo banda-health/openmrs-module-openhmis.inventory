@@ -42,7 +42,7 @@ public class CategoryDataServiceImpl
 	}
 
 	@Override
-	protected void validate(Category category) throws APIException {
+	protected void validate(Category category) {
 		// Ensure that the category is not a child of itself
 		if (hasCycle(category, category.getCategories())) {
 			throw new APIException("Cycle detected.  A category cannot be a child of itself.");

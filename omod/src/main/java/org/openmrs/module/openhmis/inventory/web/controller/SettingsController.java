@@ -1,8 +1,14 @@
 package org.openmrs.module.openhmis.inventory.web.controller;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.openmrs.api.context.Context;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
-import org.openmrs.module.openhmis.commons.model.RoleCreationViewModel;
+import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
+import org.openmrs.module.openhmis.commons.api.util.SafeIdgenUtil;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
@@ -13,19 +19,20 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-
 @Controller(value="invSettingsController")
 @RequestMapping(ModuleWebConstants.SETTINGS_ROOT)
 public class SettingsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model) throws IOException {
-		model.addAttribute("settings", ModuleSettings.loadSettings());
-
-		IdentifierSourceService service = Context.getService(IdentifierSourceService.class);
-		model.addAttribute("sources", service.getAllIdentifierSources(false));
+		if (ModuleUtil.isLoaded(ModuleUtil.IDGEN_MODULE_ID)) {
+			model.addAttribute("hasIdgenModule", true);
+			model.addAttribute("settings", ModuleSettings.loadSettings());
+			model.addAttribute("sources", SafeIdgenUtil.getAllIdentifierSourceInfo());
+		} else {
+			model.addAttribute("hasIdgenModule", false);
+			model.addAttribute("settings", null);
+			model.addAttribute("sources", null);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

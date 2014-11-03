@@ -5,16 +5,16 @@ define(
         openhmis.url.backboneBase + 'js/lib/backbone',
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/openhmis',
-		openhmis.url.inventoryBase + 'js/model/operation',
-		openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/model/operation',
+        openhmis.url.inventoryBase + 'js/model/stockroom',
         openhmis.url.inventoryBase + 'js/view/editors',
-		'link!' + openhmis.url.inventoryBase + 'css/style.css'
-	],
-	function($, _, Backbone, openhmis) {
-		openhmis.OperationTypeEditView = openhmis.CustomizableInstanceTypeAddEditView.extend({
-			tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
-			tmplSelector: '#detail-template'
-		});
+        'link!' + openhmis.url.inventoryBase + 'css/style.css'
+    ],
+    function($, _, Backbone, openhmis) {
+        openhmis.OperationTypeEditView = openhmis.CustomizableInstanceTypeAddEditView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
+            tmplSelector: '#detail-template'
+        });
 
         openhmis.MyOperationListView = openhmis.GenericSearchableListView.extend({
             fetch: function(options, sender) {
@@ -428,6 +428,7 @@ define(
 
                 // Load the patient search and operation type attributes
                 openhmis.renderAttributesFragment(this.$attributes, "OperationType", "uuid=" + this.currentOperationType.id);
+
             },
 
             findOperationType: function(uuid) {

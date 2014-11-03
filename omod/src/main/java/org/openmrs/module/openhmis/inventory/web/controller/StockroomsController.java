@@ -13,21 +13,19 @@
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
+import java.io.IOException;
+
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.IOException;
-
 @Controller(value="invStockroomsController")
 @RequestMapping(ModuleWebConstants.STOCKROOMS_ROOT)
 public class StockroomsController {
 	@RequestMapping(method = RequestMethod.GET)
-	public void render(ModelMap model) throws JsonGenerationException, JsonMappingException, IOException {
+	public void render(ModelMap model) throws IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.stockroom");
 	}
 }

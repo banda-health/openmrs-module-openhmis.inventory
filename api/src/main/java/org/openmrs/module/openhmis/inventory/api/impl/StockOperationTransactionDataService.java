@@ -14,7 +14,6 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.hibernate.criterion.Order;
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
@@ -31,7 +30,7 @@ public class StockOperationTransactionDataService
 	}
 
 	@Override
-	protected void validate(StockOperationTransaction object) throws APIException {
+	protected void validate(StockOperationTransaction object) {
 	}
 
 	@Override

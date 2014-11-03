@@ -118,7 +118,7 @@ define(
 				concept: { type: 'ConceptInput'},
 				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
-				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice },
+				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice, subResource: true},
 				defaultPrice: { type: 'ItemPriceSelect', options: [] },
 			},
 

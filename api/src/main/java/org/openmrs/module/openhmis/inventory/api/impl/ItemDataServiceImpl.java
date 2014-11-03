@@ -24,7 +24,6 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
@@ -33,6 +32,7 @@ import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
@@ -41,8 +41,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 		implements IItemDataService, IMetadataAuthorizationPrivileges {
+	
+	private static final int MAX_ITEM_CODE_LENGTH = 255;
+
 	@Override
-	protected void validate(Item entity) throws APIException {
+	protected void validate(Item entity) {
 		return;
 	}
 
@@ -60,11 +63,11 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
 	@Transactional(readOnly = true)
-	public Item getItemByCode(String itemCode) throws APIException {
+	public Item getItemByCode(String itemCode) {
 		if (StringUtils.isEmpty(itemCode)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
-		if (itemCode.length() > 255) {
+		if (itemCode.length() > MAX_ITEM_CODE_LENGTH) {
 			throw new IllegalArgumentException(
 					"The item code must be less than 256 characters.");
 		}
@@ -79,8 +82,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public List<Item> getItemsByCode(String itemCode, boolean includeRetired)
-			throws APIException {
+	public List<Item> getItemsByCode(String itemCode, boolean includeRetired) {
 		return getItemsByCode(itemCode, includeRetired, null);
 	}
 
@@ -88,8 +90,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
 	public List<Item> getItemsByCode(final String itemCode,
-			final boolean includeRetired, PagingInfo pagingInfo)
-			throws APIException {
+			final boolean includeRetired, PagingInfo pagingInfo) {
 		if (StringUtils.isEmpty(itemCode)) {
 			throw new NullPointerException("The item code must be defined");
 		}
@@ -109,17 +110,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByDepartment(Department department,
-			boolean includeRetired) throws APIException {
+	public List<Item> getItemsByDepartment(Department department, boolean includeRetired)  {
 		return getItemsByDepartment(department, includeRetired, null);
 	}
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByDepartment(final Department department,
-			final boolean includeRetired, PagingInfo pagingInfo)
-			throws APIException {
+	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired, PagingInfo pagingInfo) {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -138,17 +136,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByCategory(Category category,
-			boolean includeRetired) throws APIException {
+	public List<Item> getItemsByCategory(Category category, boolean includeRetired) {
 		return getItemsByCategory(category, includeRetired, null);
 	}
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByCategory(final Category category,
-			final boolean includeRetired, PagingInfo pagingInfo)
-			throws APIException {
+	public List<Item> getItemsByCategory(final Category category, final boolean includeRetired, PagingInfo pagingInfo) {
 		if (category == null) {
 			throw new NullPointerException("The category must be defined");
 		}
@@ -166,16 +161,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 
 	@Override
 	public List<Item> getItems(Department department,
-			Category category, boolean includeRetired) throws APIException {
+			Category category, boolean includeRetired) {
 		return getItems(department, category,
 				includeRetired, null);
 	}
 
 	@Override
 	public List<Item> getItems(
-			final Department department, final Category category,
-			final boolean includeRetired, PagingInfo pagingInfo)
-			throws APIException {
+			final Department department, final Category category, final boolean includeRetired, PagingInfo pagingInfo) {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -196,22 +189,20 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	}
 
 	@Override
-	public List<Item> getItems(Category category, String name,
-			boolean includeRetired) throws APIException {
+	public List<Item> getItems(Category category, String name, boolean includeRetired) {
 		return getItems(category, name, includeRetired, null);
 	}
 
 	@Override
 	public List<Item> getItems(final Category category, final String name,
-			final boolean includeRetired, PagingInfo pagingInfo)
-			throws APIException {
+			final boolean includeRetired, PagingInfo pagingInfo) {
 		if (category == null) {
 			throw new NullPointerException("The category must be defined");
 		}
 		if (StringUtils.isEmpty(name)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
-		if (name.length() > 255) {
+		if (name.length() > MAX_ITEM_CODE_LENGTH) {
 			throw new IllegalArgumentException(
 					"The item code must be less than 256 characters.");
 		}
@@ -231,15 +222,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 
 	@Override
 	public List<Item> getItemsByDepartmentAndCategoryAndName(Department department, Category category,
-			String name, boolean includeRetired) throws APIException {
+			String name, boolean includeRetired) {
 		return getItems(department, category, name, includeRetired, null);
 	}
 
 	@Override
 	public List<Item> getItems(final Department department,
 			final Category category, final String name,
-			final boolean includeRetired, PagingInfo pagingInfo)
-			throws APIException {
+			final boolean includeRetired, PagingInfo pagingInfo) {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -249,7 +239,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 		if (StringUtils.isEmpty(name)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
-		if (name.length() > 255) {
+		if (name.length() > MAX_ITEM_CODE_LENGTH) {
 			throw new IllegalArgumentException(
 					"The item code must be less than 256 characters.");
 		}
@@ -271,24 +261,21 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItems(Department department, String name,
-			boolean includeRetired) throws APIException {
+	public List<Item> getItems(Department department, String name, boolean includeRetired) {
 		return getItems(department, name, includeRetired, null);
 	}
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItems(final Department department, final String name,
-			final boolean includeRetired, PagingInfo pagingInfo)
-			throws APIException {
+	public List<Item> getItems(final Department department, final String name, final boolean includeRetired, PagingInfo pagingInfo) {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
 		if (StringUtils.isEmpty(name)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
-		if (name.length() > 255) {
+		if (name.length() > MAX_ITEM_CODE_LENGTH) {
 			throw new IllegalArgumentException(
 					"The item code must be less than 256 characters.");
 		}
@@ -338,6 +325,14 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CONCEPT, concept));
 			}
 		});
+	}
+	
+	@Override
+	public ItemPrice getItemPriceByUuid(final String uuid) {
+		Criteria criteria = getRepository().createCriteria(ItemPrice.class);
+		criteria.add(Restrictions.eq("uuid", uuid));
+
+		return getRepository().selectSingle(ItemPrice.class, criteria);
 	}
 
 	@Override

@@ -10,7 +10,8 @@ import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 
-@Resource(name= ModuleRestConstants.OPERATION_ATTRIBUTE_RESOURCE, supportedClass=StockOperationAttribute.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name= ModuleRestConstants.OPERATION_ATTRIBUTE_RESOURCE, supportedClass=StockOperationAttribute.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class StockOperationAttributeResource extends BaseRestInstanceAttributeObjectResource<StockOperationAttribute,
 		StockOperation,IStockOperationType, StockOperationAttributeType> {
 	@Override

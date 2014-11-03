@@ -220,8 +220,8 @@ define(
                 };
                 this.schema.instanceType = {
                     type: 'OperationTypeSelect',
-                    title: 'Operation Type',
-                    options: new openhmis.GenericCollection(null, {
+                        title: 'Operation Type',
+                        options: new openhmis.GenericCollection(null, {
                             model: openhmis.OperationType,
                             url: openhmis.url.inventoryModelBase + 'stockOperationType',
                             queryString: "v=full"
@@ -261,7 +261,7 @@ define(
                         url: openhmis.url.inventoryModelBase + 'institution'
                     }),
                     objRef: true
-                }
+                };
                 this.schema.attributes = {
                     hidden: true
                 };
@@ -282,6 +282,9 @@ define(
                     }
                     if (resp.destination) {
                         resp.destination = new openhmis.Stockroom(resp.destination);
+                    }
+                    if (resp.institution) {
+                        resp.institution = new openhmis.Institution(resp.institution);
                     }
 
                     if (resp.attributes) {
@@ -378,10 +381,17 @@ define(
             schema: {
                 operationNumber: 'Text',
                 dateCreated: {
-		            type: 'Text',
+                    type: 'Text',
                     editorAttrs: { disabled: true },
-		            format: openhmis.dateTimeFormatLocale
-	            }
+                    format: openhmis.dateTimeFormatLocale
+                }
+            },
+
+            initialize: function(attrs, options) {
+                openhmis.NewOperation.prototype.initialize.call(this, attrs, options);
+
+                // Show the status column
+                this.schema.status.hidden = false;
             }
         });
 
