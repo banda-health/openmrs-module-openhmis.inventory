@@ -5,6 +5,7 @@ define(
         openhmis.url.backboneBase + 'js/lib/backbone',
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/openhmis',
+        openhmis.url.backboneBase + 'js/view/patient',
         openhmis.url.inventoryBase + 'js/model/operation',
         openhmis.url.inventoryBase + 'js/model/stockroom',
         openhmis.url.inventoryBase + 'js/view/editors',
@@ -184,6 +185,10 @@ define(
                     queryString: "v=full",
                     silent: true
                 });
+
+                // Set up patient search selection handler
+                this.patientView = new openhmis.PatientView();
+                openhmis.doSelectionHandler = this.patientView.takeRawPatient;
             },
 
             render: function() {
@@ -219,6 +224,10 @@ define(
                     if (!this.model.get("items")) {
                         this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
                     }
+                }
+
+                if (this.currentOperationType.get('hasRecipient')) {
+                    this.model.set('patient', this.patientView.model);
                 }
 
                 // Save the model, hooking into the post-commit "event" to validate the model after it has been loaded
@@ -283,30 +292,22 @@ define(
                 // Insert the item stock list after the form but before the buttons
                 $("#newOperation").find(".bbf-form").after(this.itemStockView.el);
 
-                // Move the patient search div
+
                 // Find or create the patient search element
                 this.$patientSearch = this.$("#patientSearch");
                 if (!this.$patientSearch.length) {
-                    // Find the element that the attributes should be added after
-                    this.$("form").after("<div id='patientSearch' class='bbf-form' />");
+                    // Find the element that the search should be added after
+                    this.$("form").after("<div id='patientSearch' class='bbf-form'></div>");
                     this.$patientSearch = this.$("#patientSearch");
 
-                    var self = this;
-                    openhmis.renderPatientSearchFragment(this.$patientSearch, undefined, {
-                        success: function() {
-                            self.$("#find-patient").show();
-                            self.$patientSearch.prop('disabled', false);
-
-                            // Make sure the selection handler is properly set up
-                            //window.doSelectionHandler = function(index, data) {
-                            //  openhmis.doSelectionHandler(index,data);
-                            //};
-                        }
-                    });
+                    openhmis.renderPatientSearchFragment(this.$patientSearch);
                 }
 
                 // Display the form
                 this.$el.show();
+
+                this.patientView.setElement($('#patient-view'));
+                this.patientView.render();
 
                 if (this.currentOperationType) {
                     this.updateOperationType(this.currentOperationType);
@@ -381,6 +382,7 @@ define(
                     var source = $('select[name="source"]');
                     var dest = $('select[name="destination"]');
                     var institution = $('select[name="institution"]');
+                    var patientSearch = self.$("#find-patient");
 
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
                     if (source.is(":disabled")) {
@@ -393,7 +395,16 @@ define(
                     institution.prop('disabled', !this.currentOperationType.get('hasRecipient'));
                     if (institution.is(":disabled")) {
                         institution.val(0);
+                        patientSearch.hide();
+                    } else {
+                        patientSearch.show();
+
+                        // Update the patient view as the expected elements will no be found
+                        this.patientView.setElement($('#patient-view'));
+                        this.patientView.render();
                     }
+
+                    patientSearch.hide();patientSearch.hide();patientSearch.hide();
 
                     if (this.currentOperationType.get('hasRecipient')) {
                         this.$("#find-patient").show();

@@ -250,10 +250,11 @@ define(
                     }),
                     objRef: true
                 };
-                /*this.schema.patient = {
+                this.schema.patient = {
                     type: 'Object',
-                    objRef: true
-                };*/
+                    objRef: true,
+                    hidden: true
+                };
                 this.schema.institution = {
                     type: 'InstitutionSelect',
                     options: new openhmis.GenericCollection(null, {
@@ -333,7 +334,25 @@ define(
                             message: "The operation type " + operationType.get("name") + " requires a destination stockroom"
                         });
                     }
-                   
+                    if (operationType.get("hasRecipient")) {
+                        var institution = this.get('institution');
+                        var patient = this.get('patient');
+
+                        // Either an institution or patient must be defined, but not both
+                        if ((!institution || institution.id === "") &&
+                            (!patient || patient.id === "")) {
+                            errors.push({
+                                selector: ".field-institution",
+                                message: "The operation type " + operationType.get("name") + " requires an institution or patient"
+                            });
+                        } else if ((institution && institution.id !== "") &&
+                                   (patient && patient.id !== "")) {
+                            errors.push({
+                                selector: ".field-institution",
+                                message: "The operation type " + operationType.get("name") + " cannot have both an institution and patient"
+                            });
+                        }
+                    }
                 }
 
                 // TODO: Should the operation type user/role check happen here?
