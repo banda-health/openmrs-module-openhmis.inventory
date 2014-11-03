@@ -58,6 +58,21 @@ define(
 
                 this.itemsView.on("fetch", this.fetch);
             },
+            
+        	edit: function(model) {
+        		$("#viewOperation").show();
+        		$("#newOperationDialog").hide();
+        		$("#createOperationLink").hide();
+        		$(".addLink").hide();
+        		openhmis.GenericAddEditView.prototype.edit.call(this, model);
+        	},
+        	
+        	cancel: function() {
+        		openhmis.GenericAddEditView.prototype.cancel.call(this);
+        		$("#newOperationDialog").hide();
+        		$("#createOperationLink").show();
+        		$(".addLink").hide();
+        	},
 
             completeOperation: function() {
                 // TODO: Ensure that the current user can complete the operation
@@ -245,6 +260,7 @@ define(
                 openhmis.GenericAddEditView.prototype.cancel.call(this);
                 this.itemStockView = undefined;
                 $("#createOperationLink").show();
+                $(".addLink").hide();
             },
 
             showForm: function() {
@@ -289,6 +305,13 @@ define(
                 if (this.currentOperationType) {
                     this.updateOperationType(this.currentOperationType);
                 }
+            },
+            
+            beginAdd: function() {
+            	$("#viewOperation").hide();
+            	$("#createOperationLink").hide();
+            	$(".addLink").hide();
+            	openhmis.GenericAddEditView.prototype.beginAdd.call(this);
             },
 
             instanceTypeChanged: function(event) {
