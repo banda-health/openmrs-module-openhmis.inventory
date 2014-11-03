@@ -287,6 +287,9 @@ define(
                     if (resp.institution) {
                         resp.institution = new openhmis.Institution(resp.institution);
                     }
+                    if (resp.patient) {
+                        resp.patient = new openhmis.Patient(resp.patient);
+                    }
 
                     if (resp.attributes) {
                         resp.attributes = new openhmis.GenericCollection(resp.attributes,
