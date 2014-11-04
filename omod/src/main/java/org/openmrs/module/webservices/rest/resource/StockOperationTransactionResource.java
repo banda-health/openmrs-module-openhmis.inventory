@@ -21,7 +21,8 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE, supportedClass=StockOperationTransaction.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name = ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE, supportedClass=StockOperationTransaction.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class StockOperationTransactionResource extends TransactionBaseResource<StockOperationTransaction> {
 	@Override
 	public StockOperationTransaction newDelegate() {

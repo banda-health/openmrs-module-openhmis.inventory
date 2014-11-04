@@ -250,6 +250,11 @@ define(
                     }),
                     objRef: true
                 };
+                this.schema.patient = {
+                    type: 'Object',
+                    objRef: true,
+                    hidden: true
+                };
                 this.schema.institution = {
                     type: 'InstitutionSelect',
                     options: new openhmis.GenericCollection(null, {
@@ -281,6 +286,9 @@ define(
                     }
                     if (resp.institution) {
                         resp.institution = new openhmis.Institution(resp.institution);
+                    }
+                    if (resp.patient) {
+                        resp.patient = new openhmis.Patient(resp.patient);
                     }
 
                     if (resp.attributes) {
@@ -329,7 +337,25 @@ define(
                             message: "The operation type " + operationType.get("name") + " requires a destination stockroom"
                         });
                     }
-                   
+                    if (operationType.get("hasRecipient")) {
+                        var institution = this.get('institution');
+                        var patient = this.get('patient');
+
+                        // Either an institution or patient must be defined, but not both
+                        if ((!institution || institution.id === "") &&
+                            (!patient || patient.id === "")) {
+                            errors.push({
+                                selector: ".field-institution",
+                                message: "The operation type " + operationType.get("name") + " requires an institution or patient"
+                            });
+                        } else if ((institution && institution.id !== "") &&
+                                   (patient && patient.id !== "")) {
+                            errors.push({
+                                selector: ".field-institution",
+                                message: "The operation type " + operationType.get("name") + " cannot have both an institution and patient"
+                            });
+                        }
+                    }
                 }
 
                 // TODO: Should the operation type user/role check happen here?
@@ -377,10 +403,17 @@ define(
             schema: {
                 operationNumber: 'Text',
                 dateCreated: {
-		            type: 'Text',
+                    type: 'Text',
                     editorAttrs: { disabled: true },
-		            format: openhmis.dateTimeFormatLocale
-	            }
+                    format: openhmis.dateTimeFormatLocale
+                }
+            },
+
+            initialize: function(attrs, options) {
+                openhmis.NewOperation.prototype.initialize.call(this, attrs, options);
+
+                // Show the status column
+                this.schema.status.hidden = false;
             }
         });
 

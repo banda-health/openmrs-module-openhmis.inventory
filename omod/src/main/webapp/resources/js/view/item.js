@@ -85,6 +85,7 @@ define(
 				this.model.fetch({
 					success: function(model, resp) {
 						self.render();
+						$('.addLink').hide();
 						$(self.titleEl).show();
 						self.modelForm = self.prepareModelForm(self.model);
 						$(self.formEl).prepend(self.modelForm.el);

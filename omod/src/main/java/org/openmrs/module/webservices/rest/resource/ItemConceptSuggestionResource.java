@@ -12,10 +12,12 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 
-@Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, supportedClass=ItemConceptSuggestion.class, supportedOpenmrsVersions={"1.9"})
-public class ItemConceptSuggestionResource extends BaseRestMetadataResource<ItemConceptSuggestion> implements IMetadataDataServiceResource<ItemConceptSuggestion> {
+@Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, supportedClass=ItemConceptSuggestion.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+public class ItemConceptSuggestionResource
+		extends BaseRestMetadataResource<ItemConceptSuggestion>
+		implements IMetadataDataServiceResource<ItemConceptSuggestion> {
 
     @Override
     public ItemConceptSuggestion newDelegate() {
@@ -46,7 +48,7 @@ public class ItemConceptSuggestionResource extends BaseRestMetadataResource<Item
     }
     
     @Override
-    protected PageableResult doGetAll(RequestContext context) throws ResponseException {
+    protected PageableResult doGetAll(RequestContext context) {
         return ItemConceptSuggestionSearchHandler.doSearch(Context.getService(IItemConceptSuggestionDataService.class), context);
     }
 

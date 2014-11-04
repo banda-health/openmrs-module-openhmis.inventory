@@ -13,19 +13,23 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
+import java.util.Date;
+import java.util.List;
+
 import org.openmrs.Location;
 import org.openmrs.annotation.Authorized;
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
 
 public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	/**
@@ -132,7 +136,6 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param location The location.
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @return All stockrooms for the specified {@link Location}.
-    * @throws APIException
     * @should throw NullPointerException if the location is null
     * @should return an empty list if the location has no stockrooms
     * @should not return retired stockrooms unless specified
@@ -140,7 +143,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired) throws APIException;
+   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired);
 
    /**
     * Gets all the stockrooms for the specified {@link Location}.
@@ -148,11 +151,10 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @param pagingInfo The paging information
     * @return All stockrooms for the specified {@link location}.
-    * @throws APIException
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo);
 
    /**
     * Gets all stockrooms in the specified {@link location} that start with the specified name.
@@ -160,7 +162,6 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param name The stockroom name fragment.
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
-    * @throws APIException
     * @should throw NullPointerException if the location is null
     * @should throw IllegalArgumentException if the name is null
     * @should throw IllegalArgumentException if the name is empty
@@ -172,7 +173,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired) throws APIException;
+   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired);
 
    /**
     * Gets all stockrooms in the specified {@link Location} that start with the specified name.
@@ -181,10 +182,9 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
     * @param includeRetired Whether retired stockrooms should be included in the results.
     * @param pagingInfo The paging information.
     * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
-    * @throws APIException
     */
    @Transactional(readOnly = true)
    @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo) throws APIException;
+   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo);
 }
 

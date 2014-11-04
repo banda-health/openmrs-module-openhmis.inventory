@@ -14,9 +14,13 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
@@ -33,14 +37,13 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-import javax.annotation.Nullable;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 
-@Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class ItemResource extends BaseRestMetadataResource<Item> {
+	
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
         DelegatingResourceDescription description = super.getRepresentationDescription(rep);
@@ -94,6 +97,18 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         }
     }
 
+    @PropertySetter(value="defaultPrice")
+    public void setDefaultPrice(Item instance, ItemPrice defaultPrice) {
+    	IItemDataService service = Context.getService(IItemDataService.class);
+		ItemPrice dataBaseItemPrice = service.getItemPriceByUuid(defaultPrice.getUuid());
+        if (dataBaseItemPrice != null) {
+        	instance.setDefaultPrice(dataBaseItemPrice);
+        	return;
+        }
+        instance.setDefaultPrice(defaultPrice);
+        setNewDefaultPrice(instance, defaultPrice.getPrice().toPlainString(), defaultPrice.getName());
+    }
+    
     @PropertySetter(value="concept")
     public void setConcept(Item instance, final String uuid) {
         if(StringUtils.isBlank(uuid)) {
@@ -112,12 +127,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
     }
 
     @Override
-    public Item save(Item item) {
-        checkDefaultPrice(item);
-		return super.save(item);
-    }
-
-    @Override
     public Item newDelegate() {
         return new Item();
     }
@@ -127,47 +136,38 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         return IItemDataService.class;
     }
 
-	private void checkDefaultPrice(Item item) {
-		// Check that default price has been properly set now that the item's
-		// prices have definitely been set
-		if (!item.getPrices().contains(item.getDefaultPrice())) {
-			if (item.getDefaultPrice().getId() == null) {
-				setDefaultPrice(item, item.getDefaultPrice().getPrice().toString());
-			}
-
-			// If it's still not set to one of the item's prices, set it to the
-			// first available price, or null.
-			if (!item.getPrices().contains(item.getDefaultPrice())) {
-				if (item.getPrices().size() > 0) {
-					Set<ItemPrice> prices = item.getPrices();
-					item.setDefaultPrice(prices.toArray(new ItemPrice[prices.size()])[0]);
-				} else {
-					item.setDefaultPrice(null);
-				}
-			}
-		}
-	}
-
-	private void setDefaultPrice(Item instance, final String uuidOrPrice) {
+	private void setNewDefaultPrice(Item instance, final String price, final String name) {
 		Collection<ItemPrice> results = Collections2.filter(instance.getPrices(), new Predicate<ItemPrice>() {
 			@Override
-			public boolean apply(@Nullable ItemPrice price) {
-				if (price != null) {
-					if (price.getUuid().equals(uuidOrPrice) || price.getPrice().toPlainString().equals(uuidOrPrice)) {
+			public boolean apply(@Nullable ItemPrice itemPrice) {
+				if (itemPrice != null) {
+					String itemPriceName = itemPrice.getName();
+					if (itemPrice.getPrice().toPlainString().equals(price) && namesEqualOrBlank(itemPriceName, name)) {
 						return true;
 					}
 				}
 
 				return false;
 			}
-		});
 
+		});
+		
 		if (results != null && results.size() > 0) {
 			instance.setDefaultPrice(Iterables.getFirst(results, null));
 		} else {
 			// If there are no matches in the current price set, save the price in a new ItemPrice to hopefully be
 			// updated later, in case we haven't set new prices yet.
-			instance.setDefaultPrice(new ItemPrice(new BigDecimal(uuidOrPrice), ""));
+			instance.setDefaultPrice(new ItemPrice(new BigDecimal(price), ""));
 		}
 	}
+	
+	private boolean namesEqualOrBlank(final String name1, final String name2) {
+        if (StringUtils.isBlank(name1) && StringUtils.isBlank(name2)) {
+        	return true;
+        }
+        if (StringUtils.equals(name1, name2)) {
+        	return true;
+        }
+        return false;
+    }
 }

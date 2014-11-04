@@ -14,7 +14,8 @@ import java.util.List;
 @Controller
 @RequestMapping(value = OperationTypeAttributeFragmentController.REQUEST_MAPPING_PATH)
 public class OperationTypeAttributeFragmentController extends AttributeFragmentControllerBase {
-	public static final String REQUEST_MAPPING_PATH = AttributeFragmentControllerBase.REQUEST_MAPPING_PATH_BASE + "OperationType";
+	public static final String REQUEST_MAPPING_PATH = AttributeFragmentControllerBase.REQUEST_MAPPING_PATH_BASE +
+			"OperationType";
 
 	private IStockOperationTypeDataService service;
 

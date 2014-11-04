@@ -13,18 +13,16 @@
  */
 package org.openmrs.module.openhmis.inventory.extension.html;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension;
 import org.openmrs.module.openhmis.commons.api.util.PrivilegeUtil;
-import org.openmrs.module.openhmis.commons.web.WebConstants;
-import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class AdminList extends AdministrationSectionExt {
 	/**

@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
@@ -31,7 +30,7 @@ public class DepartmentDataServiceImpl
 	}
 
 	@Override
-	protected void validate(Department entity) throws APIException {
+	protected void validate(Department entity) {
 		return;
 	}
 }

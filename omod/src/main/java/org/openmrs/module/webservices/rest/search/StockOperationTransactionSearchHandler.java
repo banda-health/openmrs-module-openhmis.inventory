@@ -1,5 +1,8 @@
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -15,19 +18,15 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Component
 public class StockOperationTransactionSearchHandler implements SearchHandler {
-	private static Log log = LogFactory.getLog(ItemStockSearchHandler.class);
+	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE,
-			Arrays.asList("1.9.*"),
+			Arrays.asList("*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Find all transactions by stockroom.")
 							.withRequiredParameters("stockroom_uuid").build()
@@ -47,7 +46,7 @@ public class StockOperationTransactionSearchHandler implements SearchHandler {
 	}
 
 	@Override
-	public PageableResult search(RequestContext context) throws ResponseException {
+	public PageableResult search(RequestContext context) {
 		return doSearch(stockroomDataService, context);
 	}
 
@@ -56,7 +55,7 @@ public class StockOperationTransactionSearchHandler implements SearchHandler {
 		Stockroom stockroom = service.getByUuid(stockroomUuid);
 
 		if (stockroom == null) {
-			log.warn("Could not find stockroom '" + stockroomUuid + "'");
+			LOG.warn("Could not find stockroom '" + stockroomUuid + "'");
 
 			return new EmptySearchResult();
 		}

@@ -7,7 +7,6 @@ import java.util.Map;
 import org.hibernate.Query;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
-import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptNameType;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
@@ -27,7 +26,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
     }
 
     @Override
-    protected void validate(ItemConceptSuggestion object) throws APIException {
+    protected void validate(ItemConceptSuggestion object) {
 
     }
 
@@ -58,7 +57,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
         String conceptUuidKey = "2";
 
         List<ItemConceptSuggestion> itemToConceptMatches = new ArrayList<ItemConceptSuggestion>();
-        String queryString = "select new map(item, concept_name.name, concept.uuid) " +
+        String queryString = "select new map(item, MAX(concept_name.name), MAX(concept.uuid)) " +
                 "from " +  Item.class.getName() + " as item, " + ConceptName.class.getName() + " as concept_name, " +
                 Concept.class.getName() + " as concept " +
                 "where item.concept is null " + "and item.retired = false " +

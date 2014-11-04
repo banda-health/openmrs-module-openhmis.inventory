@@ -17,8 +17,11 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_LIST_RESOURCE, supportedClass=ItemConceptSuggestionList.class, supportedOpenmrsVersions={"1.9"})
-public class ItemConceptSuggetionListResource extends BaseRestMetadataResource<ItemConceptSuggestionList> implements IMetadataDataServiceResource<ItemConceptSuggestionList> {
+@Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_LIST_RESOURCE, supportedClass=ItemConceptSuggestionList.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+public class ItemConceptSuggetionListResource
+		extends BaseRestMetadataResource<ItemConceptSuggestionList>
+		implements IMetadataDataServiceResource<ItemConceptSuggestionList> {
 
 	@Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep)  {

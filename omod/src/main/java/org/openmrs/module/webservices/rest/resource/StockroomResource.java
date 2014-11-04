@@ -22,7 +22,8 @@ import org.openmrs.module.webservices.rest.web.representation.FullRepresentation
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.STOCKROOM_RESOURCE, supportedClass=Stockroom.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name = ModuleRestConstants.STOCKROOM_RESOURCE, supportedClass=Stockroom.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class StockroomResource extends BaseRestMetadataResource<Stockroom> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {

@@ -22,7 +22,8 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.INSTITUTION_RESOURCE, supportedClass=Institution.class, supportedOpenmrsVersions={"1.9"})
+@Resource(name = ModuleRestConstants.INSTITUTION_RESOURCE, supportedClass=Institution.class,
+		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 @Handler(supports = { Institution.class }, order = 0)
 public class InstitutionResource extends BaseRestMetadataResource<Institution> {
 

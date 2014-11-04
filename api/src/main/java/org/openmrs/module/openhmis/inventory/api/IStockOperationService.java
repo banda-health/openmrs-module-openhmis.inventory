@@ -1,15 +1,14 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 
+import java.util.Collection;
+
 import org.openmrs.annotation.Authorized;
-import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
 
 public interface IStockOperationService extends OpenmrsService {
 	/**
@@ -41,7 +40,7 @@ public interface IStockOperationService extends OpenmrsService {
 	 */
 	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
-	StockOperation submitOperation(StockOperation operation) throws IllegalArgumentException, APIException;
+	StockOperation submitOperation(StockOperation operation);
 
 	/**
 	 * Applies the specified transactions against the referenced objects.
@@ -58,7 +57,7 @@ public interface IStockOperationService extends OpenmrsService {
 	 */
 	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
-	void applyTransactions(Collection<StockOperationTransaction> transactions) throws APIException;
+	void applyTransactions(Collection<StockOperationTransaction> transactions);
 
 	/**
 	 * Applies the specified transactions against the referenced objects.
@@ -66,6 +65,6 @@ public interface IStockOperationService extends OpenmrsService {
 	 */
 	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
-	void applyTransactions(StockOperationTransaction... transactions) throws APIException;
+	void applyTransactions(StockOperationTransaction... transactions);
 }
 

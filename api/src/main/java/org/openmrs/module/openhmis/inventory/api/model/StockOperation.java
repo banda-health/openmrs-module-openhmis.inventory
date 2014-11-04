@@ -37,7 +37,7 @@ public class StockOperation
 	protected Stockroom source;
 	protected Stockroom destination;
 	protected Patient patient;
-    protected Institution institution;
+	protected Institution institution;
 
 	@Override
 	public Integer getId() {
@@ -298,6 +298,15 @@ public class StockOperation
 	public void setTransactions(Set<StockOperationTransaction> transactions) {
 		this.transactions = transactions;
 	}
+	
+	public boolean hasReservedTransactions() {
+		return (getReserved() != null && getReserved().size() > 0);
+	}
+	
+	public boolean hasTransactions() {
+		return (getTransactions() != null && getTransactions().size() > 0);
+	}
+	
 
 	@Override
 	public int compareTo(StockOperation o) {

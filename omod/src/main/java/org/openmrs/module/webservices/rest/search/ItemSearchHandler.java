@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
@@ -32,19 +35,15 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchConfig;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
-import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class ItemSearchHandler
 		extends BaseSearchHandler
 		implements SearchHandler {
 	private final SearchConfig searchConfig =
-			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("1.9.*"),
+			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("*"),
 					Arrays.asList(
 							new SearchQuery.Builder(
 									"Find an item by its name or code, optionally filtering by category and department")
@@ -67,7 +66,7 @@ public class ItemSearchHandler
 	}
 
 	@Override
-	public PageableResult search(RequestContext context) throws ResponseException {
+	public PageableResult search(RequestContext context) {
 		String query = context.getParameter("q");
 		query = query.isEmpty() ? null : query;
 
