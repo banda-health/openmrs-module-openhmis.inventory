@@ -22,11 +22,13 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name= ModuleRestConstants.ITEM_PRICE_RESOURCE, supportedClass=ItemPrice.class,
+@Resource(name= ModuleRestConstants.ITEM_PRICE_RESOURCE, supportedClass=ItemPrice.class, 
 		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+
 public class ItemPriceResource
 		extends BaseRestMetadataResource<ItemPrice>
 		implements IMetadataDataServiceResource<ItemPrice> {
+	
 	@PropertySetter(value = "price")
 	public void setPrice(ItemPrice instance, Object price) {
 		instance.setPrice(Converter.objectToBigDecimal(price));

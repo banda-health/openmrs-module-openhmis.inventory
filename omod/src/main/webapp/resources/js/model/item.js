@@ -82,6 +82,14 @@ define(
 			toString: function() {
 				var name = this.get("name") ? " (" + this.get("name") + ")" : "";
 				return this.format(this.get('price')) + name;
+			},
+			
+			toJSON: function() {
+				var attributes = openhmis.GenericModel.prototype.toJSON.call(this);
+				if (this.get('uuid') != null && this.get('uuid') != undefined) {
+					attributes[this.idAttribute] = this.attributes[this.idAttribute];
+				}
+				return attributes;
 			}
 		});
 
