@@ -5,6 +5,7 @@ define(
         openhmis.url.backboneBase + 'js/lib/backbone',
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.backboneBase + 'js/view/openhmis',
+        openhmis.url.backboneBase + 'js/view/patient',
         openhmis.url.inventoryBase + 'js/model/operation',
         openhmis.url.inventoryBase + 'js/model/stockroom',
         openhmis.url.inventoryBase + 'js/view/editors',
@@ -172,7 +173,7 @@ define(
                 }
 
                 this.events = _.extend({}, this.events, {
-                    'change select[name="instanceType"]': 'instanceTypeChanged',
+                    'change select[name="instanceType"]': 'instanceTypeChanged'
                 });
 
                 var self = this;
@@ -219,6 +220,10 @@ define(
                     if (!this.model.get("items")) {
                         this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
                     }
+                }
+
+                if (this.currentOperationType.get('hasRecipient')) {
+                    this.model.set('patient', this.patientView.model);
                 }
 
                 // Save the model, hooking into the post-commit "event" to validate the model after it has been loaded
@@ -283,8 +288,28 @@ define(
                 // Insert the item stock list after the form but before the buttons
                 $("#newOperation").find(".bbf-form").after(this.itemStockView.el);
 
+
+                // If the patient search already exists remove it and reset the patient search view
+                this.$patientSearch = this.$("#patientSearch");
+                if (this.$patientSearch.length) {
+                    this.$patientSearch.remove();
+                }
+
+                // Set up a new patient search selection handler (we don't want to keep the old view)
+                this.patientView = new openhmis.PatientView();
+                openhmis.doSelectionHandler = this.patientView.takeRawPatient;
+
+                // Create the patient search element
+                this.$("form").after("<div id='patientSearch' class='bbf-form'></div>");
+                this.$patientSearch = this.$("#patientSearch");
+
+                openhmis.renderPatientSearchFragment(this.$patientSearch);
+
                 // Display the form
                 this.$el.show();
+
+                this.patientView.setElement($('#patient-view'));
+                this.patientView.render();
 
                 if (this.currentOperationType) {
                     this.updateOperationType(this.currentOperationType);
@@ -359,7 +384,7 @@ define(
                     var source = $('select[name="source"]');
                     var dest = $('select[name="destination"]');
                     var institution = $('select[name="institution"]');
-
+                    var patientSearch = self.$("#find-patient");
 
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
                     if (source.is(":disabled")) {
@@ -372,8 +397,38 @@ define(
                     institution.prop('disabled', !this.currentOperationType.get('hasRecipient'));
                     if (institution.is(":disabled")) {
                         institution.val(0);
+                        patientSearch.hide();
+                    } else {
+                        patientSearch.show();
+
+                        // Update the patient view as the expected elements will no be found
+                        this.patientView.setElement($('#patient-view'));
+                        this.patientView.render();
                     }
 
+                    patientSearch.hide();patientSearch.hide();patientSearch.hide();
+
+                    if (this.currentOperationType.get('hasRecipient')) {
+                        this.$("#find-patient").show();
+                        this.$patientSearch.prop('disabled', false);
+
+                        /*
+                        var self = this;
+                        openhmis.renderPatientSearchFragment(this.$patientSearch, undefined, {
+                            success: function() {
+                                self.$("#find-patient").show();
+                                self.$patientSearch.prop('disabled', false);
+
+                                // Make sure the selection handler is properly set up
+                                window.doSelectionHandler = function(index, data) {
+                                        openhmis.doSelectionHandler(index,data);
+                                };
+                            }
+                        });
+                        */
+                    } else {
+                        this.$patientSearch.prop('disabled', true);
+                    }
                 }
 
                 // Find or create the attributes element
@@ -384,7 +439,7 @@ define(
                     this.$attributes = this.$("#operationAttributes");
                 }
 
-                // Load the operation type attributes
+                // Load the patient search and operation type attributes
                 openhmis.renderAttributesFragment(this.$attributes, "OperationType", "uuid=" + this.currentOperationType.id);
 
             },

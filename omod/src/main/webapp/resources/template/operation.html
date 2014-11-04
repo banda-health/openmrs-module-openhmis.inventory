@@ -59,10 +59,17 @@
 				</li>
 				<? } ?>
                 <? if (instanceType && instanceType.get('hasRecipient') === true) { ?>
-                <li class="bbf-field field-institution">
-                    <label for="op-field-institution">Institution</label>
-                    <div class="bbf-editor"><label id="op-field-institution"><?= model.get('institution') ?></label></div>
-                </li>
+                    <? if (model.get('institution') && model.get('institution').id !== '') { ?>
+                        <li class="bbf-field field-institution">
+                            <label for="op-field-institution">Institution</label>
+                            <div class="bbf-editor"><label id="op-field-institution"><?= model.get('institution') ?></label></div>
+                        </li>
+                    <? } else { ?>
+                        <li class="bbf-field field-patient">
+                            <label for="op-field-patient">Patient</label>
+                            <div class="bbf-editor"><label id="op-field-patient"><?= model.get('patient') ?></label></div>
+                        </li>
+                    <? } ?>
                 <? } ?>
                 <? if (model.attributeList) {
                         for (i in model.attributeList) {
