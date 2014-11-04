@@ -454,9 +454,8 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
-	public
-	        void
-	        calculateReservations_shouldCreateAdditionalNullQualifierTransactionWhenThereIsNotEnoughValidItemStockToFulfillRequest()
+	public void
+	calculateReservations_shouldCreateAdditionalNullQualifierTransactionWhenThereIsNotEnoughValidItemStockToFulfillRequest()
 	                throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);

@@ -103,7 +103,7 @@ public class StockOperationServiceImpl
 			throw new APIException("The operation must have at least one operation item defined.");
 		}
 
-		// Only allow access to a single caller at a time so that the reservation calculation does not gets messed up
+		// Only allow access to a single caller at a time so that the reservation calculation does not get messed up
 		synchronized (OPERATION_LOCK) {
 			if (operation.getStatus() == StockOperationStatus.NEW) {
 				for (StockOperationItem item : operation.getItems()) {
@@ -521,6 +521,12 @@ public class StockOperationServiceImpl
 	}
 
 	private ItemStockDetail findOldestBatch(StockOperation operation, Collection<ItemStockDetail> details) {
+		if (details == null || details.size() == 0) {
+			return null;
+		} else if (details.size() == 1) {
+			return Iterators.getOnlyElement(details.iterator());
+		}
+
 		final DateTime operationTime = new DateTime(operation.getOperationDate());
 
 		return Collections.min(details, new Comparator<ItemStockDetail>() {
