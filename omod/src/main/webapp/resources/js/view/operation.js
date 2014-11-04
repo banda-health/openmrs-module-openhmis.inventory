@@ -232,7 +232,7 @@ define(
                         this.itemStockView.selectedItem.commitForm();
                     }
 
-                    if (!this.model.get("items")) {
+                    if (!this.model.get("items") || this.model.get("items").length === 0) {
                         this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
                     }
                 }
