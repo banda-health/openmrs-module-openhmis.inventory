@@ -185,10 +185,6 @@ define(
                     queryString: "v=full",
                     silent: true
                 });
-
-                // Set up patient search selection handler
-                this.patientView = new openhmis.PatientView();
-                openhmis.doSelectionHandler = this.patientView.takeRawPatient;
             },
 
             render: function() {
@@ -293,15 +289,21 @@ define(
                 $("#newOperation").find(".bbf-form").after(this.itemStockView.el);
 
 
-                // Find or create the patient search element
+                // If the patient search already exists remove it and reset the patient search view
                 this.$patientSearch = this.$("#patientSearch");
-                if (!this.$patientSearch.length) {
-                    // Find the element that the search should be added after
-                    this.$("form").after("<div id='patientSearch' class='bbf-form'></div>");
-                    this.$patientSearch = this.$("#patientSearch");
-
-                    openhmis.renderPatientSearchFragment(this.$patientSearch);
+                if (this.$patientSearch.length) {
+                    this.$patientSearch.remove();
                 }
+
+                // Set up a new patient search selection handler (we don't want to keep the old view)
+                this.patientView = new openhmis.PatientView();
+                openhmis.doSelectionHandler = this.patientView.takeRawPatient;
+
+                // Create the patient search element
+                this.$("form").after("<div id='patientSearch' class='bbf-form'></div>");
+                this.$patientSearch = this.$("#patientSearch");
+
+                openhmis.renderPatientSearchFragment(this.$patientSearch);
 
                 // Display the form
                 this.$el.show();
