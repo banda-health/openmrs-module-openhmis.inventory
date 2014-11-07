@@ -16,12 +16,13 @@ define(
         openhmis.url.backboneBase + 'js/openhmis',
         openhmis.url.backboneBase + 'js/lib/i18n',
         openhmis.url.backboneBase + 'js/model/generic',
-	    openhmis.url.backboneBase + 'js/model/user',
-		openhmis.url.backboneBase + 'js/model/role',
+        openhmis.url.backboneBase + 'js/model/user',
+        openhmis.url.backboneBase + 'js/model/role',
         openhmis.url.backboneBase + 'js/model/patient',
-		openhmis.url.backboneBase + 'js/model/openhmis',
-	    openhmis.url.inventoryBase + 'js/model/stockroom',
-        openhmis.url.inventoryBase + 'js/model/institution'
+        openhmis.url.backboneBase + 'js/model/openhmis',
+        openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/model/institution',
+        openhmis.url.inventoryBase + 'js/model/department'
     ],
     function(openhmis, __) {
         openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
@@ -263,6 +264,14 @@ define(
                     }),
                     objRef: true
                 };
+                this.schema.department = {
+                    type: 'DepartmentSelect',
+                    options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Department,
+                        url: openhmis.url.inventoryModelBase + 'department'
+                    }),
+                    objRef: true
+                };
                 this.schema.attributes = {
                     hidden: true
                 };
@@ -289,6 +298,9 @@ define(
                     }
                     if (resp.patient) {
                         resp.patient = new openhmis.Patient(resp.patient);
+                    }
+                    if (resp.department) {
+                        resp.department = new openhmis.Department(resp.department);
                     }
 
                     if (resp.attributes) {

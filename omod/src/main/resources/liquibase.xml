@@ -903,4 +903,13 @@
             columnName="operation_number"
             tableName="inv_stock_operation"/>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.2.0-1" author="ibewes">
+		<addColumn tableName="inv_stock_operation">
+			<column name="department_id"><constraints nullable="true" /></column>
+		</addColumn>
+
+		<addForeignKeyConstraint constraintName="inv_stock_operation_department_fk"
+								 baseTableName="inv_stock_operation" baseColumnNames="department_id"
+								 referencedTableName="inv_department" referencedColumnNames="department_id"/>
+	</changeSet>
 </databaseChangeLog>

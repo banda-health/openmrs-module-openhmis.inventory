@@ -185,6 +185,7 @@
 		<many-to-one name="destination" class="Stockroom" column="destination_id" access="field" />
 		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" access="field" />
         <many-to-one name="institution" class="Institution" column="institution_id" access="field" />
+		<many-to-one name="department" class="Department" column="department_id" access="field" />
 
 		<set name="items" lazy="true" inverse="true" access="field" cascade="all-delete-orphan">
 			<key column="operation_id" />
