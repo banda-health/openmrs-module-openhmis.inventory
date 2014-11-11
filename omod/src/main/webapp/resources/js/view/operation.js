@@ -407,6 +407,7 @@ define(
                     var source = $('select[name="source"]');
                     var dest = $('select[name="destination"]');
                     var institution = $('select[name="institution"]');
+                    var department = $('select[name="department"]');
                     var patientSearch = self.$("#find-patient");
 
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
@@ -418,8 +419,10 @@ define(
                         dest.val(0);
                     }
                     institution.prop('disabled', !this.currentOperationType.get('hasRecipient'));
+                    department.prop('disabled', !this.currentOperationType.get('hasRecipient'));
                     if (institution.is(":disabled")) {
                         institution.val(0);
+                        department.val(0);
                         patientSearch.hide();
                     } else {
                         patientSearch.show();
@@ -434,21 +437,6 @@ define(
                     if (this.currentOperationType.get('hasRecipient')) {
                         this.$("#find-patient").show();
                         this.$patientSearch.prop('disabled', false);
-
-                        /*
-                        var self = this;
-                        openhmis.renderPatientSearchFragment(this.$patientSearch, undefined, {
-                            success: function() {
-                                self.$("#find-patient").show();
-                                self.$patientSearch.prop('disabled', false);
-
-                                // Make sure the selection handler is properly set up
-                                window.doSelectionHandler = function(index, data) {
-                                        openhmis.doSelectionHandler(index,data);
-                                };
-                            }
-                        });
-                        */
                     } else {
                         this.$patientSearch.prop('disabled', true);
                     }

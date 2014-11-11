@@ -16,12 +16,13 @@ define(
         openhmis.url.backboneBase + 'js/openhmis',
         openhmis.url.backboneBase + 'js/lib/i18n',
         openhmis.url.backboneBase + 'js/model/generic',
-	    openhmis.url.backboneBase + 'js/model/user',
-		openhmis.url.backboneBase + 'js/model/role',
+        openhmis.url.backboneBase + 'js/model/user',
+        openhmis.url.backboneBase + 'js/model/role',
         openhmis.url.backboneBase + 'js/model/patient',
-		openhmis.url.backboneBase + 'js/model/openhmis',
-	    openhmis.url.inventoryBase + 'js/model/stockroom',
-        openhmis.url.inventoryBase + 'js/model/institution'
+        openhmis.url.backboneBase + 'js/model/openhmis',
+        openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/model/institution',
+        openhmis.url.inventoryBase + 'js/model/department'
     ],
     function(openhmis, __) {
         openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
@@ -263,6 +264,14 @@ define(
                     }),
                     objRef: true
                 };
+                this.schema.department = {
+                    type: 'OptionalDepartmentSelect',
+                    options: new openhmis.GenericCollection(null, {
+                        model: openhmis.Department,
+                        url: openhmis.url.inventoryModelBase + 'department'
+                    }),
+                    objRef: true
+                };
                 this.schema.attributes = {
                     hidden: true
                 };
@@ -289,6 +298,9 @@ define(
                     }
                     if (resp.patient) {
                         resp.patient = new openhmis.Patient(resp.patient);
+                    }
+                    if (resp.department) {
+                        resp.department = new openhmis.Department(resp.department);
                     }
 
                     if (resp.attributes) {
@@ -339,21 +351,29 @@ define(
                     }
                     if (operationType.get("hasRecipient")) {
                         var institution = this.get('institution');
+                        var department = this.get('department');
                         var patient = this.get('patient');
 
-                        // Either an institution or patient must be defined, but not both
+                        // Either an institution, department, or patient must be defined
                         if ((!institution || institution.id === "") &&
+                            (!department || department.id === "") &&
                             (!patient || patient.id === "")) {
                             errors.push({
                                 selector: ".field-institution",
-                                message: "The operation type " + operationType.get("name") + " requires an institution or patient"
+                                message: "The operation type " + operationType.get("name") + " requires an institution, department or patient"
                             });
-                        } else if ((institution && institution.id !== "") &&
-                                   (patient && patient.id !== "")) {
-                            errors.push({
-                                selector: ".field-institution",
-                                message: "The operation type " + operationType.get("name") + " cannot have both an institution and patient"
-                            });
+                        } else {
+                            var defined = 0;
+                            defined += institution && institution.id !== "" ? 1 : 0;
+                            defined += department && department.id !== "" ? 1 : 0;
+                            defined += patient && patient.id !== "" ? 1 : 0;
+
+                            if (defined > 1) {
+                                errors.push({
+                                    selector: ".field-institution",
+                                    message: "The operation type " + operationType.get("name") + " requires either an institution, department, or patient."
+                                });
+                            }
                         }
                     }
                 }

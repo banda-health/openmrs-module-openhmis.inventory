@@ -94,6 +94,7 @@ public class StockOperationResource
 			description.addProperty("destination", Representation.REF);
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("institution", Representation.REF);
+			description.addProperty("department", Representation.REF);
 
 			description.addProperty("canProcess", findMethod("canUserProcess"));
 		}
