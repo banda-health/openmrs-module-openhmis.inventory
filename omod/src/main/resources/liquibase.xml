@@ -905,7 +905,7 @@
 	</changeSet>
 	<changeSet id="openhmis.inventory-v1.2.0-1" author="ibewes">
 		<addColumn tableName="inv_stock_operation">
-			<column name="department_id"><constraints nullable="true" /></column>
+			<column name="department_id" type="int"><constraints nullable="true" /></column>
 		</addColumn>
 
 		<addForeignKeyConstraint constraintName="inv_stock_operation_department_fk"

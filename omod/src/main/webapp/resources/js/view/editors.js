@@ -35,6 +35,12 @@ define(
             displayAttr: "name"
         });
 
+        editors.OptionalDepartmentSelect = editors.GenericModelSelect.extend({
+            modelType: openhmis.Department,
+            displayAttr: "name",
+            allowNull: true
+        });
+
         editors.InstitutionSelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Institution,
             displayAttr: "name",

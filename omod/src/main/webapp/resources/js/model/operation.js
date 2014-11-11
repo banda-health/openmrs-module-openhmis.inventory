@@ -265,7 +265,7 @@ define(
                     objRef: true
                 };
                 this.schema.department = {
-                    type: 'DepartmentSelect',
+                    type: 'OptionalDepartmentSelect',
                     options: new openhmis.GenericCollection(null, {
                         model: openhmis.Department,
                         url: openhmis.url.inventoryModelBase + 'department'
@@ -351,21 +351,29 @@ define(
                     }
                     if (operationType.get("hasRecipient")) {
                         var institution = this.get('institution');
+                        var department = this.get('department');
                         var patient = this.get('patient');
 
-                        // Either an institution or patient must be defined, but not both
+                        // Either an institution, department, or patient must be defined
                         if ((!institution || institution.id === "") &&
+                            (!department || department.id === "") &&
                             (!patient || patient.id === "")) {
                             errors.push({
                                 selector: ".field-institution",
-                                message: "The operation type " + operationType.get("name") + " requires an institution or patient"
+                                message: "The operation type " + operationType.get("name") + " requires an institution, department or patient"
                             });
-                        } else if ((institution && institution.id !== "") &&
-                                   (patient && patient.id !== "")) {
-                            errors.push({
-                                selector: ".field-institution",
-                                message: "The operation type " + operationType.get("name") + " cannot have both an institution and patient"
-                            });
+                        } else {
+                            var defined = 0;
+                            defined += institution && institution.id !== "" ? 1 : 0;
+                            defined += department && department.id !== "" ? 1 : 0;
+                            defined += patient && patient.id !== "" ? 1 : 0;
+
+                            if (defined > 1) {
+                                errors.push({
+                                    selector: ".field-institution",
+                                    message: "The operation type " + operationType.get("name") + " requires either an institution, department, or patient."
+                                });
+                            }
                         }
                     }
                 }
