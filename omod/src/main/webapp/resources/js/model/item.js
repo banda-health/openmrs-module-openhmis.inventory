@@ -125,9 +125,10 @@ define(
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
 				concept: { type: 'ConceptInput'},
 				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
+				minimumQuantity: { type: "BasicNumber" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice, subResource: true},
-				defaultPrice: { type: 'ItemPriceSelect', options: [] },
+				defaultPrice: { type: 'ItemPriceSelect', options: [] }
 			},
 
 			initialize: function(attributes, options) {
@@ -211,6 +212,10 @@ define(
 				if (attrs.defaultExpirationPeriod && attrs.defaultExpirationPeriod <= 0) {
 					return { defaultExpirationPeriod: "Value must be greater than 0"}
 				}
+				if (attrs.minimumQuantity && attrs.minimumQuantity !== parseInt(attrs.minimumQuantity)) {
+					return { minimumQuantity: "Value must be an integer"}
+				}
+
 				return null;
 			},
 
@@ -232,7 +237,6 @@ define(
 					if (resp.concept && _.isObject(resp.concept)) {
 						resp.concept = new openhmis.Concept(resp.concept);
 					}
-
 				}
 				return resp;
 			},

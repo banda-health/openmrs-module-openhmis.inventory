@@ -912,4 +912,9 @@
 								 baseTableName="inv_stock_operation" baseColumnNames="department_id"
 								 referencedTableName="inv_department" referencedColumnNames="department_id"/>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.2.0-2" author="ibewes">
+		<addColumn tableName="inv_item">
+			<column name="minimum_quantity" type="int"><constraints nullable="true" /></column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

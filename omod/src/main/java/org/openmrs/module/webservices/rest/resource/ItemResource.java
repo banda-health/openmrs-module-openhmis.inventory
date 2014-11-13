@@ -43,31 +43,22 @@ import com.google.common.collect.Iterables;
 
 @Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class ItemResource extends BaseRestMetadataResource<Item> {
-	
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
         DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-        if (rep instanceof RefRepresentation) {
-            description.addProperty("codes", Representation.REF);
-            description.addProperty("department", Representation.REF);
-            // TODO enable categories in v1.1
-            //description.addProperty("category", Representation.REF);
-            description.addProperty("defaultPrice", Representation.REF);
-	        description.addProperty("hasExpiration");
-	        description.addProperty("defaultExpirationPeriod");
-	        description.addProperty("hasPhysicalInventory");
-        } else {
-            description.addProperty("name");
-            description.addProperty("codes", Representation.REF);
+        description.addProperty("codes", Representation.REF);
+        description.addProperty("department", Representation.REF);
+        // TODO enable categories in v1.1
+        //description.addProperty("category", Representation.REF);
+        description.addProperty("defaultPrice", Representation.REF);
+        description.addProperty("hasExpiration");
+        description.addProperty("defaultExpirationPeriod");
+        description.addProperty("hasPhysicalInventory");
+        description.addProperty("minimumQuantity");
+
+        if (!(rep instanceof RefRepresentation)) {
             description.addProperty("prices", Representation.REF);
-            description.addProperty("department", Representation.REF);
-            // TODO enable categories in v1.1
-            //description.addProperty("category", Representation.REF);
-            description.addProperty("defaultPrice", Representation.REF);
             description.addProperty("concept", Representation.REF);
-	        description.addProperty("hasExpiration");
-	        description.addProperty("defaultExpirationPeriod");
-	        description.addProperty("hasPhysicalInventory");
         }
 
         return description;
