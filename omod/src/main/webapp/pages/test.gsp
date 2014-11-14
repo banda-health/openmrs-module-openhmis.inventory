@@ -1,6 +1,9 @@
-<% ui.decorateWith("uicommons", "html5") %>
+<% ui.decorateWith("openhmis.inventory", "decorator2") %>
+<% ui.includeCss("openhmis.inventory", "test.css") %>
 
 
 <div class="test">
 	hello world again
+</div>
+<div class="decorator">
 </div>
