@@ -21,6 +21,7 @@
 		<require_module version="2.6">org.openmrs.module.webservices.rest</require_module>
 		<require_module version="2.1">org.openmrs.module.openhmis.commons</require_module>
 		<require_module version="2.1">org.openmrs.module.openhmis.backboneforms</require_module>
+		<require_module version="1.5.5">org.openmrs.module.jasperreport</require_module>
 	</require_modules>
 
 	<!-- Module Activator -->
@@ -35,7 +36,17 @@
 		<property>${project.parent.artifactId}.operationNumberIdentifierSourceId</property>
 		<description>ID of the Idgen Module identifier source.</description>
 	</globalProperty>
-	
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.stockTake</property>
+		<description>The ID of the Stock Take report.</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.stockCard</property>
+		<description>The ID of the Stock Card report.</description>
+	</globalProperty>
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>

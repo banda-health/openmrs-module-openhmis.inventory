@@ -30,9 +30,10 @@
 	<spring:message code="openhmis.inventory.admin.settings" />
 </h2>
 
-<c:if test="${hasIdgenModule == true}">
 <form:form method="POST" modelAttribute="settings">
-	<table><tr><td>
+	<table>
+		<c:if test="${hasIdgenModule == true}">
+		<tr><td>
 			<spring:bind path="autoGenerateOperationNumber">
 				<input id="autoGenerateOperationNumber" name="${status.expression}" type="checkbox"
 				       onClick="enableDisable()"
@@ -41,27 +42,54 @@
 			</spring:bind>
 		</td></tr>
 		<tr><td>
-			<br />
 			<label for="operationNumberGeneratorSourceId">Select Identifier Source</label>
 			<spring:bind path="operationNumberGeneratorSourceId">
 			<select id="operationNumberGeneratorSourceId" name="${status.expression}"
 			        <c:if test="${!settings.autoGenerateOperationNumber}">disabled</c:if>>
+				<option value=""></option>
 				<c:forEach items="${sources}" var="source">
 					<option value="${source.id}"
-					        <c:if test="${settings.operationNumberGeneratorSourceId == source.id}">selected</c:if>>
+						<c:if test="${settings.operationNumberGeneratorSourceId == source.id}">selected</c:if>>
 							${source.name}
 					</option>
 				</c:forEach>
 			</select>
 			</spring:bind>
-	</td></tr></table>
+		</td></tr>
+		</c:if>
+		<tr><td>
+			<br />
+			<label for="stockTakeReportId">Select Stock Take Report</label>
+			<spring:bind path="stockTakeReportId">
+				<select id="stockTakeReportId" name="${status.expression}">
+					<option value=""></option>
+					<c:forEach items="${reports}" var="report">
+						<option value="${report.reportId}"
+						    <c:if test="${settings.stockTakeReportId == report.reportId}">selected</c:if>>
+								${report.name}
+						</option>
+					</c:forEach>
+				</select>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
+			<label for="stockCardReportId">Select Stock Card Report</label>
+			<spring:bind path="stockCardReportId">
+				<select id="stockCardReportId" name="${status.expression}">
+					<option value=""></option>
+					<c:forEach items="${reports}" var="report">
+						<option value="${report.reportId}"
+						    <c:if test="${settings.stockCardReportId == report.reportId}">selected</c:if>>
+								${report.name}
+						</option>
+					</c:forEach>
+				</select>
+			</spring:bind>
+		</td></tr>
+	</table>
 	<br />
 	<input type="submit" value="Save" >
 </form:form>
-</c:if>
-
-<c:if test="${hasIdgenModule == false}">
-There are currently no settings to change because the IDGen module is not loaded.
-</c:if>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

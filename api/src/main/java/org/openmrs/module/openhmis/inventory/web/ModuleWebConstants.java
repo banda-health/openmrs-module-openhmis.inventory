@@ -52,8 +52,13 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String INVENTORY_ROOT = MODULE_ROOT + "inventory";
 	public static final String INVENTORY_PAGE =  INVENTORY_ROOT + ".form";
 
+	public static final String INVENTORY_REPORTS_ROOT = MODULE_ROOT + "inventoryReports";
+	public static final String INVENTORY_REPORTS_PAGE =  INVENTORY_REPORTS_ROOT + ".form";
+
 	public static final String SETTINGS_ROOT = MODULE_ROOT + "settings";
 	public static final String SETTINGS_PAGE = SETTINGS_ROOT + ".form";
+
+	public static final String JASPER_REPORT_PAGE = MODULE_ROOT + "jasperReport";
 
 	protected ModuleWebConstants() { }
 }
