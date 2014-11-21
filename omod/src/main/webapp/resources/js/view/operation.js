@@ -749,10 +749,10 @@ define(
                     .add(this.$('td.field-total'))
                     .addClass("numeric");
 
-                this.$('input[type=number]').stepper({
-                    allowArrows: false,
-                    onStep: this.stepCallback
-                });
+//                this.$('input[type=number]').stepper({
+//                    allowArrows: false,
+//                    onStep: this.stepCallback
+//                });
 
                 return this;
             },

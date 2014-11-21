@@ -144,15 +144,15 @@ define(
                 this.$el.html(this.template({
                     defaultExpirationPeriod: this.value
                 }));
-                this.$('input[type=number]').stepper({
-                    allowArrows: false,
-                    limit: [0, null],
-                    onStep: this.update
-                });
-                this.$('#outer-span-stepper').removeClass("ui-widget-content-spinner")
-                    .removeClass("ui-spinner-input-spinner")
-                    .addClass("ui-spinner-input-spinner-border")
-                    .addClass("ui-widget-content-spinner-border");
+//                this.$('input[type=number]').stepper({
+//                    allowArrows: false,
+//                    limit: [0, null],
+//                    onStep: this.update
+//                });
+//                this.$('#outer-span-stepper').removeClass("ui-widget-content-spinner")
+//                    .removeClass("ui-spinner-input-spinner")
+//                    .addClass("ui-spinner-input-spinner-border")
+//                    .addClass("ui-widget-content-spinner-border");
                 return this;
             }
         });
