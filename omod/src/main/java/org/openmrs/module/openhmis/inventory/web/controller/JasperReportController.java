@@ -18,6 +18,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReport;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.jasperreport.ReportGenerator;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
+import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,18 +37,54 @@ public class JasperReportController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String render(@RequestParam(value = "reportId", required = true) int reportId, WebRequest request,
 			HttpServletResponse response) throws IOException {
-
-
-		int timesheetId;
-		String temp = request.getParameter("timesheetId");
-		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
-			timesheetId = Integer.parseInt(temp);
+		Settings settings = ModuleSettings.loadSettings();
+		if (reportId == settings.getStockTakeReportId()) {
+			return renderStockTakeReport(reportId, request, response);
+		} else if (reportId == settings.getStockCardReportId()) {
+			return renderStockCardReport(reportId, request, response);
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The timesheet id ('" + temp + "') must be " +
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown report.");
+		}
+
+		return null;
+	}
+
+	private String renderStockTakeReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
+		int stockroomId;
+		String temp = request.getParameter("stockroomId");
+		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
+			stockroomId = Integer.parseInt(temp);
+		} else {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
 					"defined and be numeric.");
 			return null;
 		}
 
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("stockroomId", stockroomId);
+
+		return renderReport(reportId, params, null, response);
+	}
+
+	private String renderStockCardReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
+		int stockroomId;
+		String temp = request.getParameter("stockroomId");
+		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
+			stockroomId = Integer.parseInt(temp);
+		} else {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
+					"defined and be numeric.");
+			return null;
+		}
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("stockroomId", stockroomId);
+
+		return renderReport(reportId, params, null, response);
+	}
+
+	private String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,
+			HttpServletResponse response) throws IOException {
 		JasperReportService jasperService = Context.getService(JasperReportService.class);
 		JasperReport report = jasperService.getJasperReport(reportId);
 		if (report == null) {
@@ -54,14 +92,14 @@ public class JasperReportController {
 			return null;
 		}
 
-		report.setName("Cashier Shift Report - " + temp);
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("timesheetId", timesheetId);
+		if (!StringUtils.isEmpty(reportName)) {
+			report.setName(reportName);
+		}
+
 		try {
-			ReportGenerator.generate(report, params, false, true);
+			ReportGenerator.generate(report, parameters, false, true);
 		} catch (IOException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating cashier shift report for " +
-					"timesheet '" + temp + "'");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating report");
 			return null;
 		}
 

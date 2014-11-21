@@ -10,32 +10,48 @@
 <%@ include file="/WEB-INF/template/header.jsp" %>
 <%@ include file="template/localHeader.jsp"%>
 
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/operations.css" %>' />
-
 <script type="text/javascript">
-  function printReport(reportId, form) {
-    var timesheetId = jQuery("input[name=timesheetId]:checked").val();
-
-    if (!timesheetId) {
-      alert("You must select a timesheet to run the report.");
+  function printTakeReport() {
+    var stockroomId = jQuery("#stockroomId").val();
+    if (!stockroomId) {
+      alert("You must select a stockroom to generate the report.");
       return false;
     }
 
-    var url = openhmis.url.openmrs + "<%= ModuleWebConstants.JASPER_REPORT_PAGE %>.form?"
-    url += "reportId=" + reportId  + "&timesheetId=" + timesheetId;
+    var reportId = jQuery('#stockTakeReportId').val();
+
+    return printReport(reportId, "stockroomId=" + stockroomId);
+  }
+
+  function printCardReport() {
+    var stockroomId = jQuery("input[name=stockroomId]").val();
+    if (!stockroomId) {
+      alert("You must select a stockroom to generate the report.");
+      return false;
+    }
+
+    var reportId = jQuery('#stockCardReportId').val();
+
+    return printReport(reportId, "stockroomId=" + stockroomId);
+  }
+
+  function printReport(reportId, parameters) {
+    var url = openhmis.url.openmrs + "<%= ModuleWebConstants.JASPER_REPORT_PAGE %>.form?";
+    url += "reportId=" + reportId  + "&" + parameters;
     window.open(url, "pdfDownload");
+
     return false;
   }
 </script>
 
 <%@ include file="template/linksHeader.jsp"%>
-<h2><spring:message code="openhmis.inventory.title" /></h2>
+<h2><spring:message code="openhmis.inventory.admin.reports" /></h2>
 
 <c:if test="${stockTakeReport != null}" >
   <h3>${stockTakeReport.name}</h3>
   <div class="">${stockTakeReport.description}</div>
   <div>
-    <form id="stockTakeReport" method="post">
+    <form id="stockTakeReport" onsubmit="return false;">
       <fieldset>
         <label for="stockroomId">Stockroom: </label>
         <select id="stockroomId">
@@ -44,11 +60,13 @@
             <option value="${stockroom.id}">${stockroom.name}</option>
           </c:forEach>
         </select>
-        <input type="hidden" id="stockTakeReportId" value="${stockTakeReport.id}" />
+        <input type="hidden" id="stockTakeReportId" value="${stockTakeReport.reportId}" />
+        <br /><br />
+        <input type="submit" value="Generate" onclick="printTakeReport()" />
       </fieldset>
-      <input type="submit" value="Generate" onclick="printReport($('stockTakeReportId').val(), $('#stockTakeReport'))" />
     </form>
   </div>
+  <br />
   <hr>
 </c:if>
 
@@ -56,25 +74,18 @@
   <h3>${stockCardReport.name}</h3>
   <div class="">${stockCardReport.description}</div>
   <div>
-    <form id="stockCardReport" method="post">
+    <form id="stockCardReport" onsubmit="return false;">
       <fieldset>
-        <label for="stockroomId">Item: </label>
-        <select id="stockroomId">
-          <option value=""></option>
-          <c:forEach var="stockroom" items="${stockrooms}">
-            <option value="${stockroom.id}">${stockroom.name}</option>
-          </c:forEach>
-        </select>
-
         <label for="beginDate">Begin Date</label>
         <input type="date" id="beginDate" />
 
         <label for="endDate">End Date</label>
         <input type="date" id="endDate" />
 
-        <input type="hidden" id="stockCardReportId" value="${stockCardReport.id}" />
+        <input type="hidden" id="stockCardReportId" value="${stockCardReport.reportId}" />
+        <br /><br />
+        <input type="submit" value="Generate" onclick="printCardReport()" />
       </fieldset>
-      <input type="submit" value="Generate" onclick="printReport($('stockCardReportId').val(), $('#stockCardReport'))" />
     </form>
   </div>
 </c:if>

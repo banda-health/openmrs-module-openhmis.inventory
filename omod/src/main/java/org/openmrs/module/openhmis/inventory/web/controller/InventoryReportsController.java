@@ -13,8 +13,11 @@
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 
-import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +31,20 @@ import java.io.IOException;
 public class InventoryReportsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void inventory(ModelMap model) throws IOException {
+		Settings settings = ModuleSettings.loadSettings();
+		JasperReportService reportService = Context.getService(JasperReportService.class);
+		IStockroomDataService stockroomDataService = Context.getService(IStockroomDataService.class);
 
+		Integer reportId = settings.getStockTakeReportId();
+		if (settings.getStockTakeReportId() != null) {
+			model.addAttribute("stockTakeReport", reportService.getJasperReport(reportId));
+		}
+
+		reportId = settings.getStockCardReportId();
+		if (settings.getStockTakeReportId() != null) {
+			model.addAttribute("stockCardReport", reportService.getJasperReport(reportId));
+		}
+
+		model.addAttribute("stockrooms", stockroomDataService.getAll());
 	}
 }
