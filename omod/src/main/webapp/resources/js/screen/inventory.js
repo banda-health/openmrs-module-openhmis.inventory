@@ -38,23 +38,6 @@ curl(
 				allowAdd: false,
                 operation_status: "Pending"
 			});
-
-            // Set up new operation link and template
-            var collection = new openhmis.GenericCollection([], {
-                url: openhmis.Operation.prototype.meta.restUrl,
-                model: openhmis.NewOperation
-            });
-
-            var newView = new openhmis.NewOperationView({
-                collection: collection,
-                addLink: $("#createOperationLink"),
-                element: $("#newOperationDialog")
-            });
-
-            // When a new operation is saved, reload the page
-            newView.on("save", function() {
-                window.location = openhmis.url.getPage("inventoryBase") + "inventory.form";
-            });
 		});
 	}
 );
