@@ -19,6 +19,9 @@ import org.openmrs.module.jasperreport.JasperReport;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.jasperreport.ReportGenerator;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
+import org.openmrs.module.openhmis.inventory.api.IItemDataService;
+import org.openmrs.module.openhmis.inventory.api.impl.ItemDataServiceImpl;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
@@ -29,6 +32,8 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 @Controller(value="invJasperReportController")
@@ -67,20 +72,57 @@ public class JasperReportController {
 	}
 
 	private String renderStockCardReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
-		int stockroomId;
-		String temp = request.getParameter("stockroomId");
-		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
-			stockroomId = Integer.parseInt(temp);
+		int itemId;
+		String itemName;
+		Date beginDate = null, endDate = null;
+
+		String temp = request.getParameter("itemUuid");
+		if (!StringUtils.isEmpty(temp)) {
+			IItemDataService itemService = Context.getService(IItemDataService.class);
+			Item item = itemService.getByUuid(temp);
+			if (item != null) {
+				itemId = item.getId();
+				itemName = item.getName();
+			} else {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+						"No item with UUID '" + temp + "' could be found.");
+				return null;
+			}
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
-					"defined and be numeric.");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The item uuid must be defined.");
+			return null;
+		}
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		temp = request.getParameter("beginDate");
+		if (!StringUtils.isEmpty(temp)) {
+			try {
+				beginDate = dateFormat.parse(temp);
+			} catch (Exception ex) {
+				// Whatevs... dealing with stupid checked exceptions
+			}
+		}
+
+		temp = request.getParameter("endDate");
+		if (!StringUtils.isEmpty(temp)) {
+			try {
+				endDate = dateFormat.parse(temp);
+			} catch (Exception ex) {
+				// Whatevs... dealing with stupid checked exceptions
+			}
+		}
+
+		if (beginDate == null || endDate == null) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The begin and end dates must be defined.");
 			return null;
 		}
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("stockroomId", stockroomId);
+		params.put("itemId", itemId);
+		params.put("beginDate", beginDate);
+		params.put("endDate", endDate);
 
-		return renderReport(reportId, params, null, response);
+		return renderReport(reportId, params, "Item Stock Card - " + itemName, response);
 	}
 
 	private String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,

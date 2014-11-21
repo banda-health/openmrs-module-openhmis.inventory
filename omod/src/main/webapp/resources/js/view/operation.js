@@ -183,10 +183,6 @@ define(
                     this.setElement(options.element);
                 }
 
-                if (options.addLink) {
-                    options.addLink.click(this.showForm);
-                }
-
                 this.events = _.extend({}, this.events, {
                     'change select[name="instanceType"]': 'instanceTypeChanged'
                 });
@@ -196,6 +192,10 @@ define(
                 this.operationTypes.fetch({
                     success: function(collection, resp) {
                         self.currentOperationType = collection.models[0];
+
+                        if (options.loaded) {
+                            options.loaded();
+                        }
                     },
                     queryString: "v=full",
                     silent: true
@@ -299,6 +299,7 @@ define(
                     operationNumberEl.addClass('readonly');
                 }
                 $(".addLink").hide();
+                $(".cancel  ").hide();
                 $("#createOperationLink").hide();
 
                 // Insert the item stock list after the form but before the buttons

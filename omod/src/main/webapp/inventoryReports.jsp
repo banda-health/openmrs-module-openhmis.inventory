@@ -1,4 +1,5 @@
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
+<%@ page import="org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants" %>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
@@ -10,84 +11,70 @@
 <%@ include file="/WEB-INF/template/header.jsp" %>
 <%@ include file="template/localHeader.jsp"%>
 
-<script type="text/javascript">
-  function printTakeReport() {
-    var stockroomId = jQuery("#stockroomId").val();
-    if (!stockroomId) {
-      alert("You must select a stockroom to generate the report.");
-      return false;
-    }
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/inventoryReports.js" %>' />
 
-    var reportId = jQuery('#stockTakeReportId').val();
+<input id="reportUrl" type="hidden" value="<%= ModuleWebConstants.JASPER_REPORT_PAGE %>" />
 
-    return printReport(reportId, "stockroomId=" + stockroomId);
-  }
-
-  function printCardReport() {
-    var stockroomId = jQuery("input[name=stockroomId]").val();
-    if (!stockroomId) {
-      alert("You must select a stockroom to generate the report.");
-      return false;
-    }
-
-    var reportId = jQuery('#stockCardReportId').val();
-
-    return printReport(reportId, "stockroomId=" + stockroomId);
-  }
-
-  function printReport(reportId, parameters) {
-    var url = openhmis.url.openmrs + "<%= ModuleWebConstants.JASPER_REPORT_PAGE %>.form?";
-    url += "reportId=" + reportId  + "&" + parameters;
-    window.open(url, "pdfDownload");
-
-    return false;
-  }
-</script>
-
-<%@ include file="template/linksHeader.jsp"%>
 <h2><spring:message code="openhmis.inventory.admin.reports" /></h2>
 
-<c:if test="${stockTakeReport != null}" >
-  <h3>${stockTakeReport.name}</h3>
-  <div class="">${stockTakeReport.description}</div>
-  <div>
-    <form id="stockTakeReport" onsubmit="return false;">
-      <fieldset>
-        <label for="stockroomId">Stockroom: </label>
-        <select id="stockroomId">
-          <option value=""></option>
-          <c:forEach var="stockroom" items="${stockrooms}">
-            <option value="${stockroom.id}">${stockroom.name}</option>
-          </c:forEach>
-        </select>
-        <input type="hidden" id="stockTakeReportId" value="${stockTakeReport.reportId}" />
-        <br /><br />
-        <input type="submit" value="Generate" onclick="printTakeReport()" />
-      </fieldset>
-    </form>
-  </div>
-  <br />
-  <hr>
-</c:if>
+<table style="width: 99%">
+  <tr>
+    <td style="vertical-align: top; width: 250px;">
+      <br />
+      <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.INVENTORY_PAGE %>"><spring:message code="openhmis.inventory.admin.pending"/></a><br />
+      <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.INVENTORY_CREATION_PAGE %>"><spring:message code="openhmis.inventory.admin.create"/></a><br />
+      <b>
+      <spring:message code="openhmis.inventory.admin.reports"/>
+      </b>
+    </td>
+    <td>
+      <c:if test="${stockTakeReport != null}" >
+        <h3>${stockTakeReport.name}</h3>
+        <div style="color: grey">${stockTakeReport.description}</div>
+        <br />
+        <div>
+          <form id="stockTakeReport" onsubmit="return false;">
+            <label for="stockroomId">Stockroom: </label>
+            <select id="stockroomId">
+              <option value=""></option>
+              <c:forEach var="stockroom" items="${stockrooms}">
+                <option value="${stockroom.id}">${stockroom.name}</option>
+              </c:forEach>
+            </select>
+            <input id="stockTakeReportId" type="hidden" value="${stockTakeReport.reportId}" />
+            <br /><br />
+            <input id="generateTakeReport" type="submit" value="Generate Report"/>
+          </form>
+        </div>
+        <br />
+        <hr>
+      </c:if>
 
-<c:if test="${stockCardReport != null}" >
-  <h3>${stockCardReport.name}</h3>
-  <div class="">${stockCardReport.description}</div>
-  <div>
-    <form id="stockCardReport" onsubmit="return false;">
-      <fieldset>
-        <label for="beginDate">Begin Date</label>
-        <input type="date" id="beginDate" />
+      <c:if test="${stockCardReport != null}" >
+        <h3>${stockCardReport.name}</h3>
+        <div style="color: grey">${stockCardReport.description}</div>
+        <br />
+        <div>
+          <form id="stockCardReport" onsubmit="return false;">
+            <label for="itemSearch">Item: </label>
+            <input id="itemSearch" style="width: 350px" type="text" placeholder="Item Name" />
+            <input id="item-uuid" type="hidden" />
+            <br />
+            <br />
+            <label for="beginDate">Begin Date</label>
+            <input id="beginDate" type="date" />
 
-        <label for="endDate">End Date</label>
-        <input type="date" id="endDate" />
+            <label for="endDate">End Date</label>
+            <input id="endDate" type="date" />
 
-        <input type="hidden" id="stockCardReportId" value="${stockCardReport.reportId}" />
-        <br /><br />
-        <input type="submit" value="Generate" onclick="printCardReport()" />
-      </fieldset>
-    </form>
-  </div>
-</c:if>
+            <input id="stockCardReportId" type="hidden" value="${stockCardReport.reportId}" />
+            <br /><br />
+            <input id="generateCardReport" type="submit" value="Generate Report" />
+          </form>
+        </div>
+      </c:if>
+    </td>
+  </tr>
+</table>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>
