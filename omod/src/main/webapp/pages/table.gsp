@@ -1,45 +1,51 @@
-<% ui.decorateWith("openhmis.inventory", "decorator") %>
+${ ui.includeFragment "openhmis.inventory", "initialImports" }
 
-<% ui.includeJavascript("openhmis.inventory", "angular.min.js") %>
-<% ui.includeJavascript("openhmis.inventory", "table.js") %>
-
-<% ui.includeCss("openhmis.inventory", "bootstrap.no-icons.min.css") %>
-<% ui.includeCss("openhmis.inventory", "font-awesome.css") %>
-<% ui.includeCss("openhmis.inventory", "table.css") %>
-
-<body ng-app="myModule">
-<div ng-controller="ctrlRead">
-	<table class="table table-striped table-condensed table-hover">
-		<thead>
-			<tr>
-				<th ng-repeat="headField in headFields" class="capitalize" custom-sort order="'{{headField}}'" sort="sort">{{headField}}&nbsp;</th>
-			</tr>
-		</thead>
-		<tfoot>
-			<td colspan="6">
-				<div class="pagination pull-right">
-					<ul>
-						<li ng-class="{disabled: currentPage == 0}">
-							<a href ng-click="prevPage()">« Prev</a>
-						</li>
-						<li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
-							ng-class="{active: n == currentPage}"
-							ng-click="setPage()">
-							<a href ng-bind="n + 1">1</a>
-						</li>
-						<li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
-							<a href ng-click="nextPage()">Next »</a>
-						</li>
-					</ul>
-				</div>
-			</td>
-		</tfoot>
-		<tbody>
-			<tr ng-repeat="item in pagedItems[currentPage] | orderBy:sort.sortingOrder:sort.reverse">
-				<td ng-repeat="col in headFields">{{item[col]}}</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+<body ng-app="itemsModule">
+	<div ng-controller="ctrlRead">
+		<div id="search">
+			${ ui.message("openhmis.inventory.search") }: <input type="text" ng-model="query">
+			<span  class="nullable">
+			    <select ng-model="departmentSelected" ng-options="department.name for department in departments">
+			        <option value="">${ ui.message("openhmis.inventory.any") }</option>
+			    </select>
+			</span>
+			<button ng-click="searchItem(query, departmentSelected, retiredChecked)">${ ui.message("openhmis.inventory.search") }</button>
+		</div>
+		<div>
+			<table class="table table-striped table-condensed table-hover">
+				<thead>
+					<tr>
+						<th custom-sort="name" order="'name'" sort="sort">${ ui.message("openhmis.inventory.name") }&nbsp;</th>
+						<th custom-sort="department.name" order="'department.name'" sort="sort">${ ui.message("openhmis.inventory.department") }&nbsp;</th>
+						<th custom-sort="codes[0].code" order="'codes[0].code'" sort="sort">${ ui.message("openhmis.inventory.codes") }&nbsp;</th>
+						<th custom-sort="defaultPrice.price" order="'defaultPrice.price'" sort="sort">${ ui.message("openhmis.inventory.defaultPrice") }&nbsp;</th>
+					</tr>
+				</thead>
+				<tfoot>
+					${ ui.includeFragment "openhmis.inventory", "entityManagement/tableFooter" }
+				</tfoot>
+				<tbody>
+					<tr ng-repeat="item in items | orderBy:sort.sortingOrder:sort.reverse" 
+						ng-click="edit(item)" ng-class="{retired: item.retired==true}">
+						<td>{{item.name}}</td>
+						<td>{{item.department.name}}</td>
+						<td>{{item.codes[0].code}}</td>
+						<td>
+							{{item.defaultPrice.price | currency:""}} ({{item.defaultPrice.name}})
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="edit" ng-hide="hideEditItem">
+			<div>
+				<input type="text" ng-model="editItem.name">
+			</div>
+			<div class="button">
+				<button ng-model="cancelEdit" ng-click="hideEditItem = !hideEditItem">${ ui.message("openhmis.inventory.cancel") }</button>
+			</div>
+			${ ui.includeFragment("openhmis.inventory", "entityManagement/retire") }
+		</div>
+	</div>
 </body>
 

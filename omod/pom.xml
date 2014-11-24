@@ -290,6 +290,7 @@
               </executions>        
               <configuration>
                   <!-- <verbose>true</verbose> -->
+                  <skip>true</skip>
                   <nosuffix>true</nosuffix>
                   <excludes>
                       <exclude>**/*.min.js</exclude>
