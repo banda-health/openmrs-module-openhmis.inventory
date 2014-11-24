@@ -134,6 +134,11 @@ public class StockOperationServiceImpl
 					break;
 			}
 
+			if (operation.getStatus() == StockOperationStatus.COMPLETED ||
+					operation.getStatus() == StockOperationStatus.CANCELLED) {
+				closeOperation(operation);
+			}
+
 			// Save the operation and all sub-objects
 			return operationService.save(operation);
 		}
@@ -166,6 +171,9 @@ public class StockOperationServiceImpl
 			// Note that we don't touch the stockroom operations, transactions, or item stock because that could result
 			//  in loading a large number of records from the database that we don't need for this. This means that
 			//  any existing stockroom objects must be refreshed before the data updated below will be seen.
+
+			// At a high level, this method analyses the specified transactions to create, update, and/or delete the
+			//  appropriate item stock and item stock detail records for the appropriate stockroom
 
 			// Create a map to store the tx grouped by item and stockroom
 			Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> grouped = createGroupedTransactions(transactions);
@@ -319,6 +327,43 @@ public class StockOperationServiceImpl
 		for (ReservedTransaction newTx : newTransactions) {
 			operation.addReserved(newTx);
 		}
+	}
+
+	private void closeOperation(StockOperation operation) {
+		// When the operation is cancelled or completed it is considered "closed". Once closed, any operations
+		//  that were created after this operation must be rolled back and reapplied to take stock changes into
+		//  account.
+
+		// Get operations that were created after the specified operation
+		List<StockOperation> rollbackOperations = operationService.getOperationsSince(operation.getOperationDate(), null);
+
+		// Sort the transactions in reverse order by operation date (most recent first)
+		Collections.sort(rollbackOperations, new Comparator<StockOperation>() {
+			@Override
+			public int compare(StockOperation o1, StockOperation o2) {
+				return o1.getOperationDate().compareTo(o2.getOperationDate()) * -1;
+			}
+		});
+
+		for (StockOperation rollbackOp : rollbackOperations) {
+			// Rollback each operation
+			rollBackOperation(rollbackOp);
+
+			// Reapply each operation back to the original status
+			reapplyOperation(rollbackOp);
+		}
+	}
+
+	private void rollBackOperation(StockOperation operation) {
+		// Rolling back an operation reverses any operation transactions and deletes the reservation transactions for the
+		// operation. Basically, it sets the operation and associated item stock and stockroom data back to before this
+		// operation was performed.
+
+
+	}
+
+	private void reapplyOperation(StockOperation operation) {
+
 	}
 
 	private void findAndUpdateCalculatedDetail(List<ReservedTransaction> newTransactions, StockOperation operation, ItemStock stock, ReservedTransaction tx) {

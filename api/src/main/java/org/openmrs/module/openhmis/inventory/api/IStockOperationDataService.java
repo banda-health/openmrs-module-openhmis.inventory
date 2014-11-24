@@ -1,5 +1,6 @@
 package org.openmrs.module.openhmis.inventory.api;
 
+import java.util.Date;
 import java.util.List;
 
 import org.openmrs.User;
@@ -112,18 +113,33 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should throw IllegalArgumentException if operation search is null
 	 * @should throw IllegalArgumentException if operation search template object is null
 	 * @should return an empty list if no operations are found via the search
-	 * @should return items filtered by number
-	 * @should return items filtered by status
-	 * @should return items filtered by type
-	 * @should return items filtered by source stockroom
-	 * @should return items filtered by destination stockroom
-	 * @should return items filtered by creation date
-	 * @should return all items if paging is null
-	 * @should return paged items if paging is specified
-	 * @should return items filtered by patient
+	 * @should return operations filtered by number
+	 * @should return operations filtered by status
+	 * @should return operations filtered by type
+	 * @should return operations filtered by source stockroom
+	 * @should return operations filtered by destination stockroom
+	 * @should return operations filtered by creation date
+	 * @should return all operations if paging is null
+	 * @should return paged operations if paging is specified
+	 * @should return operations filtered by patient
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
 	List<StockOperation> getOperations(StockOperationSearch search, PagingInfo paging);
+
+	/**
+	 * Gets all {@link StockOperation}s with an operation date past the specified date
+	 * @param operationDate The starting operation date (not inclusive)
+	 * @param paging The paging information.
+	 * @return The operations found or an empty list
+	 * @should throw IllegalArgumentException if operationDate is null
+	 * @should return an empty list if no operations are found
+	 * @should return operations with operation date past specified date
+	 * @should return all results if paging is null
+	 * @should return paged operations if paging is specified
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
+	List<StockOperation> getOperationsSince(Date operationDate, PagingInfo paging);
 }
 
