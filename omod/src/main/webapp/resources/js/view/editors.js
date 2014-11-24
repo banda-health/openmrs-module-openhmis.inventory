@@ -360,11 +360,15 @@ define(
                 if (department_uuid) {
                     query += "&department_uuid=" + encodeURIComponent(department_uuid);
                 }
-
+                var cacheSection = "item"
                 // We only want to return items that have physical stock
                 query += "&has_physical_inventory=true";
 
-                this.search(request, response, openhmis.Item, query, "item",
+                if (cacheSection + query in this.cache) {
+                    response(this.cache[cacheSection + query]);
+                    return;
+                };
+                this.search(request, response, openhmis.Item, query, cacheSection,
                     function(model) {
                         return {
                             val: model.id,
