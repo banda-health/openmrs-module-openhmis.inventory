@@ -22,6 +22,9 @@ curl(
 
     ],
     function($, openhmis) {
+    	
+    	var cache = {};
+    	
         $(function() {
             if ($('#itemSearch').length > 0) {
                 $('#itemSearch')
@@ -97,7 +100,13 @@ curl(
             // We only want to return items that have physical stock
             query += "&has_physical_inventory=true";
 
-            search(request, response, openhmis.Item, query, "item",
+            var cacheSection = "item"
+            if (cacheSection + query in cache) {
+                response(cache[cacheSection + query]);
+                return;
+            }
+            
+            search(request, response, openhmis.Item, query, cacheSection,
                 function(model) {
                     return {
                         val: model.id,
@@ -115,7 +124,7 @@ curl(
                 url: resultCollection.url + fetchQuery,
                 success: function(collection, resp) {
                     var data = collection.map(mapFn);
-
+                    cache[cacheSection + query] = data;
                     response(data);
                 },
                 error: openhmis.error,
