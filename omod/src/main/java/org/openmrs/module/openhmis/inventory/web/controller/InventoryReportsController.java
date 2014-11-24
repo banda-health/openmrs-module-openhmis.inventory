@@ -36,12 +36,12 @@ public class InventoryReportsController {
 		IStockroomDataService stockroomDataService = Context.getService(IStockroomDataService.class);
 
 		Integer reportId = settings.getStockTakeReportId();
-		if (settings.getStockTakeReportId() != null) {
+		if (reportId != null) {
 			model.addAttribute("stockTakeReport", reportService.getJasperReport(reportId));
 		}
 
 		reportId = settings.getStockCardReportId();
-		if (settings.getStockTakeReportId() != null) {
+		if (reportId != null) {
 			model.addAttribute("stockCardReport", reportService.getJasperReport(reportId));
 		}
 

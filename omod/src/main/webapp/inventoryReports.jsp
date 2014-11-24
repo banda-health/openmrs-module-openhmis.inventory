@@ -28,6 +28,9 @@
       </b>
     </td>
     <td>
+      <c:if test="${stockTakeReport == null && stockCardReport == null}" >
+        <div style="color: grey">No inventory reports have been defined.</div>
+      </c:if>
       <c:if test="${stockTakeReport != null}" >
         <h3>${stockTakeReport.name}</h3>
         <div style="color: grey">${stockTakeReport.description}</div>

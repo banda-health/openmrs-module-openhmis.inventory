@@ -43,9 +43,9 @@ public class JasperReportController {
 	public String render(@RequestParam(value = "reportId", required = true) int reportId, WebRequest request,
 			HttpServletResponse response) throws IOException {
 		Settings settings = ModuleSettings.loadSettings();
-		if (reportId == settings.getStockTakeReportId()) {
+		if (settings.getStockTakeReportId() != null && reportId == settings.getStockTakeReportId()) {
 			return renderStockTakeReport(reportId, request, response);
-		} else if (reportId == settings.getStockCardReportId()) {
+		} else if (settings.getStockCardReportId() != null && reportId == settings.getStockCardReportId()) {
 			return renderStockCardReport(reportId, request, response);
 		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown report.");

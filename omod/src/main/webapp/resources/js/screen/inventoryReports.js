@@ -23,19 +23,26 @@ curl(
     ],
     function($, openhmis) {
         $(function() {
-            $('#itemSearch')
-                .autocomplete({
-                    minLength: 2,
-                    source: doSearch,
-                    select: selectItem
-                })
-                .data("autocomplete")._renderItem = function(ul, item) {
-                return $("<li></li>").data("item.autocomplete", item)
-                    .append("<a>" + item.label + "</a>").appendTo(ul);
-            };
+            if ($('#itemSearch').length > 0) {
+                $('#itemSearch')
+                    .autocomplete({
+                        minLength: 2,
+                        source: doSearch,
+                        select: selectItem
+                    })
+                    .data("autocomplete")._renderItem = function (ul, item) {
+                    return $("<li></li>").data("item.autocomplete", item)
+                        .append("<a>" + item.label + "</a>").appendTo(ul);
+                };
+            }
 
-            $("#generateTakeReport").click(printTakeReport)
-            $("#generateCardReport").click(printCardReport);
+            if ($("#generateTakeReport").length > 0) {
+                $("#generateTakeReport").click(printTakeReport)
+            }
+
+            if ($("#generateCardReport").length > 0) {
+                $("#generateCardReport").click(printCardReport);
+            }
         });
 
         function printTakeReport() {

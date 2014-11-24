@@ -474,7 +474,7 @@ define(
 
             events: {
                 'change select.expiration': 'modified',
-                'change input.expiration' : 'modified'
+                'change .itemstock-expiration' : 'modified'
             },
 
             initialize: function(options) {
@@ -536,6 +536,7 @@ define(
             },
 
             modified: function() {
+                this.commit();
             },
 
             getValue: function() {
