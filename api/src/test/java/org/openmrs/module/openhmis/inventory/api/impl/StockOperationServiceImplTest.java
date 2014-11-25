@@ -56,17 +56,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		
 		itemTest = new IItemDataServiceTest();
 	}
-	
-	//@Test
-	public void dateTest() throws Exception {
-		DateTime baseTime = new DateTime();
-		DateTime o1Time = baseTime.plusDays(100);
-		DateTime o2Time = baseTime.minusDays(100);
-		
-		int i = Seconds.secondsBetween(baseTime, o1Time).getSeconds();
-		int i2 = Seconds.secondsBetween(baseTime, o2Time).getSeconds();
-	}
-	
+
 	/**
 	 * @verifies use closest expiration from the source stockroom
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -370,7 +360,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void calculateReservations_shouldCreateAdditionalTransactionsWhenWhenMultipleDetailsAreNeedToFulfillRequest()
-	        throws Exception {
+			throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
 		
@@ -456,7 +446,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void
 	calculateReservations_shouldCreateAdditionalNullQualifierTransactionWhenThereIsNotEnoughValidItemStockToFulfillRequest()
-	                throws Exception {
+			throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
 		
@@ -601,8 +591,8 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test(expected = APIException.class)
 	public void
-	        calculateReservations_shouldThrowAPIExceptionIfCalculateExpirationIsFalseAndExpirationIsNullForAnExpirableItem()
-	                throws Exception {
+			calculateReservations_shouldThrowAPIExceptionIfCalculateExpirationIsFalseAndExpirationIsNullForAnExpirableItem()
+			throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
 		
@@ -630,7 +620,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheBatchOperationToTheSpecifiedOperationIfThereIsNoSourceStockroom()
-	        throws Exception {
+			throws Exception {
 		Stockroom destRoom = stockroomDataService.getById(1);
 		
 		Item newItem = itemTest.createEntity(true);
@@ -660,10 +650,9 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = APIException.class)
-	public
-	        void
-	        calculateReservations_shouldThrowAPIExceptionIfSourceStockroomIsNullAndTheExpirationAreNotSpecifiedForAnExpirableItem()
-	                throws Exception {
+	public void
+			calculateReservations_shouldThrowAPIExceptionIfSourceStockroomIsNullAndTheExpirationAreNotSpecifiedForAnExpirableItem()
+			throws Exception {
 		Stockroom destRoom = stockroomDataService.getById(1);
 		
 		Item newItem = itemTest.createEntity(true);

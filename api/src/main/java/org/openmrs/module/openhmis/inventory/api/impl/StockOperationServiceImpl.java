@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.ObjectUtils;
@@ -120,7 +121,13 @@ public class StockOperationServiceImpl
 				operation.setStatus(StockOperationStatus.PENDING);
 			}
 
-			// Triggers the appropriate status-based event so that the operation type can do what needs doing
+			// Roll back any operations with an operation date after the specified operation
+			if (operation.getStatus() == StockOperationStatus.COMPLETED ||
+					operation.getStatus() == StockOperationStatus.CANCELLED) {
+				rollBackFollowingOperations(operation);
+			}
+
+			// Trigger the appropriate status-based event so that the operation type can do what needs doing
 			//  Note: applyTransactions will be called as part of the event, if needed
 			switch (operation.getStatus()) {
 				case PENDING:
@@ -132,6 +139,12 @@ public class StockOperationServiceImpl
 				case COMPLETED:
 					operation.getInstanceType().onCompleted(operation);
 					break;
+			}
+
+			// Reapply any operations with an operation date after the specified operation
+			if (operation.getStatus() == StockOperationStatus.COMPLETED ||
+					operation.getStatus() == StockOperationStatus.CANCELLED) {
+				reapplyFollowingOperations(operation);
 			}
 
 			// Save the operation and all sub-objects
@@ -166,6 +179,9 @@ public class StockOperationServiceImpl
 			// Note that we don't touch the stockroom operations, transactions, or item stock because that could result
 			//  in loading a large number of records from the database that we don't need for this. This means that
 			//  any existing stockroom objects must be refreshed before the data updated below will be seen.
+
+			// At a high level, this method analyses the specified transactions to create, update, and/or delete the
+			//  appropriate item stock and item stock detail records for the appropriate stockroom
 
 			// Create a map to store the tx grouped by item and stockroom
 			Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> grouped = createGroupedTransactions(transactions);
@@ -319,6 +335,91 @@ public class StockOperationServiceImpl
 		for (ReservedTransaction newTx : newTransactions) {
 			operation.addReserved(newTx);
 		}
+	}
+
+	private void rollBackFollowingOperations(StockOperation operation) {
+		// Rolling back an operation reverses any operation transactions and deletes the reservation transactions for the
+		// operation. Basically, it sets the operation and associated item stock and stockroom data back to before this
+		// operation was performed.
+
+		// Get operations that were created after the specified operation
+		List<StockOperation> rollbackOperations = operationService.getOperationsSince(operation.getOperationDate(), null);
+
+		// Sort the transactions in reverse order by operation date (most recent first)
+		Collections.sort(rollbackOperations, new Comparator<StockOperation>() {
+			@Override
+			public int compare(StockOperation o1, StockOperation o2) {
+				return o1.getOperationDate().compareTo(o2.getOperationDate()) * -1;
+			}
+		});
+
+		// // Rollback each operation, starting from the newest
+		for (StockOperation rollbackOp : rollbackOperations) {
+			// To undo the transaction we are merely going to negate the quantity and then reapply the transactions
+			if (rollbackOp.getTransactions() != null) {
+				Set<StockOperationTransaction> transactions = rollbackOp.getTransactions();
+				for (StockOperationTransaction tx : transactions) {
+					tx.setQuantity(tx.getQuantity() * -1);
+				}
+
+				applyTransactions(transactions);
+
+				rollbackOp.getTransactions().clear();
+			}
+
+			// Now we can delete the transactions and pending transactions
+			if (rollbackOp.getReserved() != null) {
+				rollbackOp.getReserved().clear();
+			}
+		}
+	}
+
+	private void reapplyFollowingOperations(StockOperation operation) {
+		// Get operations that were created after the specified operation
+		List<StockOperation> rollbackOperations = operationService.getOperationsSince(operation.getOperationDate(), null);
+
+		// Sort the transactions in reverse order by operation date (most recent first)
+		Collections.sort(rollbackOperations, new Comparator<StockOperation>() {
+			@Override
+			public int compare(StockOperation o1, StockOperation o2) {
+				return o1.getOperationDate().compareTo(o2.getOperationDate());
+			}
+		});
+
+		// Now reapply each operation, starting from the oldest
+		for (StockOperation reapplyOp : rollbackOperations) {
+			// Ensure that the transactions have been cleared
+			if (reapplyOp.getTransactions() != null) {
+				reapplyOp.getTransactions().clear();
+			}
+			if (reapplyOp.getReserved() != null) {
+				reapplyOp.getReserved().clear();
+			}
+
+			// Recreate the initial set of reserved transactions
+			for (StockOperationItem item : reapplyOp.getItems()) {
+				ReservedTransaction tx = new ReservedTransaction(item);
+				tx.setCreator(Context.getAuthenticatedUser());
+				tx.setDateCreated(new Date());
+
+				reapplyOp.addReserved(tx);
+			}
+
+			// Now recalculate the reservations
+			calculateReservations(reapplyOp);
+
+			// Apply the pending transactions
+			reapplyOp.getInstanceType().onPending(reapplyOp);
+
+			// If the status is cancelled or completed then also apply those transactions as well
+			if (reapplyOp.getStatus() == StockOperationStatus.CANCELLED) {
+				reapplyOp.getInstanceType().onCancelled(reapplyOp);
+			} else if (reapplyOp.getStatus() == StockOperationStatus.COMPLETED) {
+				reapplyOp.getInstanceType().onCompleted(reapplyOp);
+			}
+		}
+
+		// No need to save because this that will happen in submitOperation
 	}
 
 	private void findAndUpdateCalculatedDetail(List<ReservedTransaction> newTransactions, StockOperation operation, ItemStock stock, ReservedTransaction tx) {

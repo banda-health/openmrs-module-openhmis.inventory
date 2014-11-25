@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class StockOperationDataServiceImpl
 		extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
@@ -179,6 +181,20 @@ public class StockOperationDataServiceImpl
 				search.updateCriteria(criteria);
 			}
 		}, getDefaultSort());
+	}
+
+	@Override
+	public List<StockOperation> getOperationsSince(final Date operationDate, PagingInfo paging) {
+		if (operationDate == null) {
+			throw new IllegalArgumentException("The operation date must be defined.");
+		}
+
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.gt("operationDate", operationDate));
+			}
+		}, Order.asc("operationDate"));
 	}
 
 	@Override
