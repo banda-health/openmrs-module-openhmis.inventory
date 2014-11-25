@@ -35,6 +35,12 @@ define(
             displayAttr: "name"
         });
 
+        editors.OptionalDepartmentSelect = editors.GenericModelSelect.extend({
+            modelType: openhmis.Department,
+            displayAttr: "name",
+            allowNull: true
+        });
+
         editors.InstitutionSelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Institution,
             displayAttr: "name",
@@ -138,15 +144,15 @@ define(
                 this.$el.html(this.template({
                     defaultExpirationPeriod: this.value
                 }));
-                this.$('input[type=number]').stepper({
-                    allowArrows: false,
-                    limit: [0, null],
-                    onStep: this.update
-                });
-                this.$('#outer-span-stepper').removeClass("ui-widget-content-spinner")
-                    .removeClass("ui-spinner-input-spinner")
-                    .addClass("ui-spinner-input-spinner-border")
-                    .addClass("ui-widget-content-spinner-border");
+//                this.$('input[type=number]').stepper({
+//                    allowArrows: false,
+//                    limit: [0, null],
+//                    onStep: this.update
+//                });
+//                this.$('#outer-span-stepper').removeClass("ui-widget-content-spinner")
+//                    .removeClass("ui-spinner-input-spinner")
+//                    .addClass("ui-spinner-input-spinner-border")
+//                    .addClass("ui-widget-content-spinner-border");
                 return this;
             }
         });
@@ -354,11 +360,15 @@ define(
                 if (department_uuid) {
                     query += "&department_uuid=" + encodeURIComponent(department_uuid);
                 }
-
+                var cacheSection = "item"
                 // We only want to return items that have physical stock
                 query += "&has_physical_inventory=true";
 
-                this.search(request, response, openhmis.Item, query, "item",
+                if (cacheSection + query in this.cache) {
+                    response(this.cache[cacheSection + query]);
+                    return;
+                };
+                this.search(request, response, openhmis.Item, query, cacheSection,
                     function(model) {
                         return {
                             val: model.id,
@@ -468,7 +478,7 @@ define(
 
             events: {
                 'change select.expiration': 'modified',
-                'change input.expiration' : 'modified'
+                'change .itemstock-expiration' : 'modified'
             },
 
             initialize: function(options) {
@@ -530,6 +540,7 @@ define(
             },
 
             modified: function() {
+                this.commit();
             },
 
             getValue: function() {

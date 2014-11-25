@@ -1,9 +1,13 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -250,9 +254,8 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	 * @see IStockOperationService#applyTransactions(java.util.Collection)
 	 */
 	@Test
-	public
-	        void
-	        applyTransactions_shouldAddSourceStockroomItemStockWithNegativeQuantityWhenTransactionQuantityIsNegativeAndStockNotFound()
+	public void
+		applyTransactions_shouldAddSourceStockroomItemStockWithNegativeQuantityWhenTransactionQuantityIsNegativeAndStockNotFound()
 	                throws Exception {
 		// Create a new item
 		Item item = itemTest.createEntity(true);
@@ -1482,5 +1485,761 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(true, detail.getCalculatedExpiration());
 		Assert.assertEquals(receiptOperation, detail.getBatchOperation());
 		Assert.assertEquals(exp, detail.getExpiration());
+	}
+
+	@Test
+	public void submitOperation_shouldRollBackSubsequentPendingOperationWhenClosingOperation() throws Exception {
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+
+		itemService.save(item);
+		Context.flushSession();
+
+		Calendar now = Calendar.getInstance();
+
+		// Create new receipt with exp and save (PENDING)
+		StockOperation receipt = operationTest.createEntity(true);
+		receipt.getReserved().clear();
+		receipt.setInstanceType(WellKnownOperationTypes.getReceipt());
+		receipt.setDestination(stockroomService.getById(0));
+
+		now.add(Calendar.MINUTE, 1);
+		receipt.setOperationDate(now.getTime());
+
+		Calendar expCal = Calendar.getInstance();
+		expCal.add(Calendar.MONTH, 3);
+		receipt.addItem(item, 15, expCal.getTime());
+
+		service.submitOperation(receipt);
+		Context.flushSession();
+
+		// Create new transfer for same item (auto exp) and save (PENDING)
+		StockOperation transfer = operationTest.createEntity(true);
+		transfer.getReserved().clear();
+		transfer.setInstanceType(WellKnownOperationTypes.getTransfer());
+		transfer.setSource(stockroomService.getById(0));
+		transfer.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		transfer.setOperationDate(now.getTime());
+
+		transfer.addItem(item, 5);
+
+		service.submitOperation(transfer);
+		Context.flushSession();
+
+		// Refresh the operations we created
+		receipt = operationService.getById(receipt.getId());
+		transfer = operationService.getById(transfer.getId());
+
+		// Transfer tx will not have exp or batch because the receipt has not been completed
+		StockOperationTransaction tx = Iterators.getOnlyElement(transfer.getTransactions().iterator());
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		// Source SR will have a negative quantity with no exp or batch in details
+		ItemStock stock = stockroomService.getItem(transfer.getSource(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-5, stock.getQuantity());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(-5, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		// Complete the receipt
+		receipt.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(receipt);
+		Context.flushSession();
+
+		// Refresh operations
+		receipt = operationService.getById(receipt.getId());
+		transfer = operationService.getById(transfer.getId());
+
+		// Source SR should have not have neg qty detail, pending item details should be minus transfer qty
+		stock = stockroomService.getItem(receipt.getDestination(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(10, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(10, (int)detail.getQuantity());
+		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertEquals(receipt, detail.getBatchOperation());
+
+		// Transfer pending tx and tx should now have exp and batch from completed receipt
+		ReservedTransaction resTx = Iterators.getOnlyElement(transfer.getReserved().iterator());
+		Assert.assertEquals(item, resTx.getItem());
+		Assert.assertEquals(5, (int)resTx.getQuantity());
+		Assert.assertEquals(expCal.getTime(), resTx.getExpiration());
+		Assert.assertEquals(receipt, resTx.getBatchOperation());
+
+		tx = Iterators.getOnlyElement(transfer.getTransactions().iterator());
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(-5, (int)tx.getQuantity());
+		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(receipt, tx.getBatchOperation());
+
+		// Complete the transfer
+		transfer.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(transfer);
+		Context.flushSession();
+
+		// Dest SR should have receipt exp and batch and be set to auto
+		stock = stockroomService.getItem(transfer.getDestination(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(5, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(5, (int)detail.getQuantity());
+		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertEquals(receipt, detail.getBatchOperation());
+	}
+
+	@Test
+	public void submitOperation_shouldRollBackSubsequentCompletedOperationWhenClosingOperation() throws Exception {
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+
+		itemService.save(item);
+		Context.flushSession();
+
+		Calendar now = Calendar.getInstance();
+
+		// Create new receipt with exp and save (PENDING)
+		StockOperation receipt = operationTest.createEntity(true);
+		receipt.getReserved().clear();
+		receipt.setInstanceType(WellKnownOperationTypes.getReceipt());
+		receipt.setDestination(stockroomService.getById(0));
+
+		now.add(Calendar.MINUTE, 1);
+		receipt.setOperationDate(now.getTime());
+
+		Calendar expCal = Calendar.getInstance();
+		expCal.add(Calendar.MONTH, 3);
+		receipt.addItem(item, 15, expCal.getTime());
+
+		service.submitOperation(receipt);
+		Context.flushSession();
+
+		// Create new transfer for same item (auto exp) and save (PENDING)
+		StockOperation transfer = operationTest.createEntity(true);
+		transfer.getReserved().clear();
+		transfer.setInstanceType(WellKnownOperationTypes.getTransfer());
+		transfer.setSource(stockroomService.getById(0));
+		transfer.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		transfer.setOperationDate(now.getTime());
+
+		transfer.addItem(item, 5);
+
+		service.submitOperation(transfer);
+		Context.flushSession();
+
+		// Refresh the operations we created
+		receipt = operationService.getById(receipt.getId());
+		transfer = operationService.getById(transfer.getId());
+
+		// Transfer tx will not have exp or batch because the receipt has not been completed
+		StockOperationTransaction tx = Iterators.getOnlyElement(transfer.getTransactions().iterator());
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		// Source SR will have a negative quantity with no exp or batch in details
+		ItemStock stock = stockroomService.getItem(transfer.getSource(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-5, stock.getQuantity());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(-5, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		// Complete the transfer
+		transfer.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(transfer);
+		Context.flushSession();
+
+		// Refresh the transfer op
+		transfer = operationService.getById(transfer.getId());
+
+		// Dest SR should have null exp and batch and be set to auto
+		stock = stockroomService.getItem(transfer.getDestination(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(5, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(5, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+		Assert.assertTrue(detail.getCalculatedExpiration());
+		Assert.assertTrue(detail.getCalculatedBatch());
+
+		// Complete the receipt
+		receipt.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(receipt);
+		Context.flushSession();
+
+		// Refresh operations
+		receipt = operationService.getById(receipt.getId());
+		transfer = operationService.getById(transfer.getId());
+
+		// Source SR should have not have neg qty detail, pending item details should be minus transfer qty
+		stock = stockroomService.getItem(receipt.getDestination(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(10, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(10, (int)detail.getQuantity());
+		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertEquals(receipt, detail.getBatchOperation());
+
+		// Transfer tx's should now have exp and batch from completed receipt
+		Assert.assertEquals(2, transfer.getTransactions().size());
+		tx = Iterators.get(transfer.getTransactions().iterator(), 0);
+		Assert.assertEquals(item, tx.getItem());
+
+		// The order of the tx's is not knoen so figure it out here
+		int factor = -1;
+		Stockroom stockroom = transfer.getSource();
+		if (tx.getQuantity() < 0) {
+			Assert.assertEquals(-5, (int)tx.getQuantity());
+			Assert.assertEquals(transfer.getSource(), tx.getStockroom());
+
+			factor = 1;
+			stockroom = transfer.getDestination();
+		} else {
+			Assert.assertEquals(5, (int)tx.getQuantity());
+			Assert.assertEquals(transfer.getDestination(), tx.getStockroom());
+		}
+
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(receipt, tx.getBatchOperation());
+
+		tx = Iterators.get(transfer.getTransactions().iterator(), 1);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(5 * factor, (int)tx.getQuantity());
+		Assert.assertEquals(stockroom, tx.getStockroom());
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(receipt, tx.getBatchOperation());
+
+		// Dest SR should have receipt exp and batch and be set to auto
+		stock = stockroomService.getItem(transfer.getDestination(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(5, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(5, (int)detail.getQuantity());
+		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertEquals(receipt, detail.getBatchOperation());
+		Assert.assertTrue(detail.getCalculatedExpiration());
+		Assert.assertTrue(detail.getCalculatedBatch());
+
+		// Transfer op should still be COMPLETED
+		transfer = operationService.getById(transfer.getId());
+		Assert.assertEquals(StockOperationStatus.COMPLETED, transfer.getStatus());
+	}
+
+	@Test
+	public void submitOperation_shouldRollBackSubsequentCancelledOperationWhenClosingOperation() throws Exception {
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+
+		itemService.save(item);
+		Context.flushSession();
+
+		Calendar now = Calendar.getInstance();
+
+		// Create new receipt with exp and save (PENDING)
+		StockOperation receipt = operationTest.createEntity(true);
+		receipt.getReserved().clear();
+		receipt.setInstanceType(WellKnownOperationTypes.getReceipt());
+		receipt.setDestination(stockroomService.getById(0));
+
+		now.add(Calendar.MINUTE, 1);
+		receipt.setOperationDate(now.getTime());
+
+		Calendar expCal = Calendar.getInstance();
+		expCal.add(Calendar.MONTH, 3);
+
+		receipt.addItem(item, 15, expCal.getTime());
+
+		service.submitOperation(receipt);
+		Context.flushSession();
+
+		// Create new transfer for same item (auto exp) and save (PENDING)
+		StockOperation transfer = operationTest.createEntity(true);
+		transfer.getReserved().clear();
+		transfer.setInstanceType(WellKnownOperationTypes.getTransfer());
+		transfer.setSource(stockroomService.getById(0));
+		transfer.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		transfer.setOperationDate(now.getTime());
+
+		transfer.addItem(item, 5);
+
+		service.submitOperation(transfer);
+		Context.flushSession();
+
+		// Refresh the operations we created
+		receipt = operationService.getById(receipt.getId());
+		transfer = operationService.getById(transfer.getId());
+
+		// Transfer tx will not have exp or batch because the receipt has not been completed
+		StockOperationTransaction tx = Iterators.getOnlyElement(transfer.getTransactions().iterator());
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		// Source SR will have a negative quantity with no exp or batch in details
+		ItemStock stock = stockroomService.getItem(transfer.getSource(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-5, stock.getQuantity());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(-5, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		// Complete the transfer
+		transfer.setStatus(StockOperationStatus.CANCELLED);
+		service.submitOperation(transfer);
+		Context.flushSession();
+
+		// Refresh the transfer op
+		transfer = operationService.getById(transfer.getId());
+
+		// Dest SR should not have the item
+		stock = stockroomService.getItem(transfer.getDestination(), item);
+		Assert.assertNull(stock);
+
+		// Complete the receipt
+		receipt.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(receipt);
+		Context.flushSession();
+
+		// Refresh operations
+		receipt = operationService.getById(receipt.getId());
+		transfer = operationService.getById(transfer.getId());
+
+		// Source SR should have not have neg qty detail, pending item details should be minus transfer qty
+		stock = stockroomService.getItem(receipt.getDestination(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(15, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(15, (int)detail.getQuantity());
+		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertEquals(receipt, detail.getBatchOperation());
+
+		// Transfer tx's should now have exp and batch from cancelled receipt
+		Assert.assertEquals(2, transfer.getTransactions().size());
+		tx = Iterators.get(transfer.getTransactions().iterator(), 0);
+		Assert.assertEquals(item, tx.getItem());
+
+		// The order of the tx's is not knoen so figure it out here
+		int factor = -1;
+		if (tx.getQuantity() < 0) {
+			Assert.assertEquals(-5, (int)tx.getQuantity());
+
+			factor = 1;
+		} else {
+			Assert.assertEquals(5, (int)tx.getQuantity());
+		}
+
+		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(receipt, tx.getBatchOperation());
+
+		tx = Iterators.get(transfer.getTransactions().iterator(), 1);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(5 * factor, (int)tx.getQuantity());
+		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(receipt, tx.getBatchOperation());
+
+		// Dest SR should have receipt exp and batch and be set to auto
+		stock = stockroomService.getItem(transfer.getDestination(), item);
+		Assert.assertNull(stock);
+
+		// Transfer op should still be CANCELLED
+		transfer = operationService.getById(transfer.getId());
+		Assert.assertEquals(StockOperationStatus.CANCELLED, transfer.getStatus());
+	}
+
+	@Test
+	public void submitOperation_shouldRollBackSubsequentOperationsInProperOrderWhenClosingOperation() throws Exception {
+		Item item = itemTest.createEntity(true);
+		item.setName("New Item 1");
+		item.setHasExpiration(true);
+		Item item2 = itemTest.createEntity(true);
+		item2.setName("New Item 2");
+		item2.setHasExpiration(true);
+
+		itemService.save(item);
+		itemService.save(item2);
+		Context.flushSession();
+
+		Calendar now = Calendar.getInstance();
+
+		// Create new receipt with exp and save (PENDING) - R1
+		StockOperation r1 = operationTest.createEntity(true);
+		r1.getReserved().clear();
+		r1.setInstanceType(WellKnownOperationTypes.getReceipt());
+		r1.setDestination(stockroomService.getById(0));
+
+		now.add(Calendar.MINUTE, 1);
+		r1.setOperationDate(now.getTime());
+
+		Calendar expCal = Calendar.getInstance();
+		expCal.add(Calendar.MONTH, 3);
+		r1.addItem(item, 15, expCal.getTime());
+		Calendar expCal2 = Calendar.getInstance();
+		expCal2.add(Calendar.MONTH, 6);
+		r1.addItem(item2, 25, expCal2.getTime());
+
+		service.submitOperation(r1);
+		Context.flushSession();
+
+		// Create new transfer (SR1 -> SR2) for same item (auto exp) and save (PENDING) - T1
+		StockOperation t1 = operationTest.createEntity(true);
+		t1.getReserved().clear();
+		t1.setInstanceType(WellKnownOperationTypes.getTransfer());
+		t1.setSource(stockroomService.getById(0));
+		t1.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		t1.setOperationDate(now.getTime());
+
+		t1.addItem(item, 5);
+		t1.addItem(item2, 10);
+
+		service.submitOperation(t1);
+		Context.flushSession();
+
+		// Create new transfer (SR2 -> SR3) for same item (auto exp) and save (PENDING) - T2
+		StockOperation t2 = operationTest.createEntity(true);
+		t2.getReserved().clear();
+		t2.setInstanceType(WellKnownOperationTypes.getTransfer());
+		t2.setSource(stockroomService.getById(1));
+		t2.setDestination(stockroomService.getById(2));
+
+		now.add(Calendar.MINUTE, 1);
+		t2.setOperationDate(now.getTime());
+
+		t2.addItem(item, 5);
+		t2.addItem(item2, 7);
+
+		service.submitOperation(t2);
+		Context.flushSession();
+
+		// Create new distribution (SR3 - Dept) for same item (auto exp) and save (PENDING) - D1
+		StockOperation d1 = operationTest.createEntity(true);
+		d1.getReserved().clear();
+		d1.setInstanceType(WellKnownOperationTypes.getDistribution());
+		d1.setSource(stockroomService.getById(2));
+		d1.setDepartment(item.getDepartment());
+
+		now.add(Calendar.MINUTE, 1);
+		d1.setOperationDate(now.getTime());
+
+		d1.addItem(item, 5);
+		d1.addItem(item2, 3);
+
+		service.submitOperation(d1);
+		Context.flushSession();
+
+		// Refresh the operations we created
+		r1 = operationService.getById(r1.getId());
+		t1 = operationService.getById(t1.getId());
+		t2 = operationService.getById(t2.getId());
+		d1 = operationService.getById(d1.getId());
+
+		// T1 tx will not have exp or batch because the receipt has not been completed
+		Assert.assertEquals(2, t1.getTransactions().size());
+		StockOperationTransaction tx = getTransactionForItem(t1.getTransactions(), item);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(-5, (int)tx.getQuantity());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		tx = getTransactionForItem(t1.getTransactions(), item2);
+		Assert.assertEquals(item2, tx.getItem());
+		Assert.assertEquals(-10, (int)tx.getQuantity());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		// SR1 will have a negative quantity with no exp or batch in details
+		ItemStock stock = stockroomService.getItem(t1.getSource(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-5, stock.getQuantity());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(-5, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		stock = stockroomService.getItem(t1.getSource(), item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-10, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertEquals(-10, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		// T2 tx will not have exp or batch because T1 has not been completed
+		Assert.assertEquals(2, t2.getTransactions().size());
+		tx = getTransactionForItem(t2.getTransactions(), item);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(-5, (int)tx.getQuantity());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		tx = getTransactionForItem(t2.getTransactions(), item2);
+		Assert.assertEquals(item2, tx.getItem());
+		Assert.assertEquals(-7, (int)tx.getQuantity());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		// SR2 will have a negative quantity with no exp or batch in details
+		stock = stockroomService.getItem(t2.getSource(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-5, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(-5, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		stock = stockroomService.getItem(t2.getSource(), item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-7, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertEquals(-7, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		// D1 tx will not have exp or batch because T2 has not been completed
+		Assert.assertEquals(2, d1.getTransactions().size());
+		tx = getTransactionForItem(d1.getTransactions(), item);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(-5, (int)tx.getQuantity());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		tx = getTransactionForItem(d1.getTransactions(), item2);
+		Assert.assertEquals(item2, tx.getItem());
+		Assert.assertEquals(-3, (int)tx.getQuantity());
+		Assert.assertNull(tx.getExpiration());
+		Assert.assertNull(tx.getBatchOperation());
+
+		// SR3 will have a negative quantity with no exp or batch in details
+		stock = stockroomService.getItem(d1.getSource(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-5, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(-5, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		stock = stockroomService.getItem(d1.getSource(), item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-3, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertEquals(-3, (int)detail.getQuantity());
+		Assert.assertNull(detail.getExpiration());
+		Assert.assertNull(detail.getBatchOperation());
+
+		// Complete the receipt
+		r1.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(r1);
+		Context.flushSession();
+
+		// Refresh operations
+		r1 = operationService.getById(r1.getId());
+		t1 = operationService.getById(t1.getId());
+		t2 = operationService.getById(t2.getId());
+		d1 = operationService.getById(d1.getId());
+
+		// SR1 should have not have neg qty detail
+		stock = stockroomService.getItem(r1.getDestination(), item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(10, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item, detail.getItem());
+		Assert.assertEquals(10, (int)detail.getQuantity());
+		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+
+		stock = stockroomService.getItem(r1.getDestination(), item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(15, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertEquals(15, (int)detail.getQuantity());
+		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+
+		// T1 tx's should now have exp and batch from completed receipt
+		Assert.assertEquals(2, t1.getTransactions().size());
+		tx = getTransactionForItem(t1.getTransactions(), item);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(-5, (int)tx.getQuantity());
+		Assert.assertEquals(t1.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(r1, tx.getBatchOperation());
+
+		tx = getTransactionForItem(t1.getTransactions(), item2);
+		Assert.assertEquals(item2, tx.getItem());
+		Assert.assertEquals(-10, (int)tx.getQuantity());
+		Assert.assertEquals(t1.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
+		Assert.assertEquals(r1, tx.getBatchOperation());
+
+		// Operations should still be PENDING
+		Assert.assertEquals(StockOperationStatus.PENDING, t1.getStatus());
+		Assert.assertEquals(StockOperationStatus.PENDING, t2.getStatus());
+		Assert.assertEquals(StockOperationStatus.PENDING, d1.getStatus());
+
+		// Complete T1
+		t1.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(t1);
+		Context.flushSession();
+
+		// SR2 should not have stock for item-1 and should have item-2 stock with exp and batch
+		stock = stockroomService.getItem(t1.getDestination(), item);
+		Assert.assertNull(stock);
+
+		stock = stockroomService.getItem(t1.getDestination(), item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(3, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertEquals(3, (int)detail.getQuantity());
+		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+
+		// T2 tx's should now have exp and batch from completed receipt
+		Assert.assertEquals(2, t2.getTransactions().size());
+		tx = getTransactionForItem(t2.getTransactions(), item);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(-5, (int)tx.getQuantity());
+		Assert.assertEquals(t2.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(r1, tx.getBatchOperation());
+
+		tx = getTransactionForItem(t2.getTransactions(), item2);
+		Assert.assertEquals(item2, tx.getItem());
+		Assert.assertEquals(-7, (int)tx.getQuantity());
+		Assert.assertEquals(t2.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
+		Assert.assertEquals(r1, tx.getBatchOperation());
+
+		// Complete T2
+		t2.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(t2);
+		Context.flushSession();
+
+		// SR3 should not have stock for item-1 and should have item-2 stock with exp and batch
+		stock = stockroomService.getItem(t2.getDestination(), item);
+		Assert.assertNull(stock);
+
+		stock = stockroomService.getItem(t2.getDestination(), item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(4, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(item2, detail.getItem());
+		Assert.assertEquals(4, (int)detail.getQuantity());
+		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+
+		// D1 tx's should now have exp and batch from completed receipt
+		Assert.assertEquals(2, d1.getTransactions().size());
+		tx = getTransactionForItem(d1.getTransactions(), item);
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(-5, (int)tx.getQuantity());
+		Assert.assertEquals(d1.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertEquals(r1, tx.getBatchOperation());
+
+		tx = getTransactionForItem(d1.getTransactions(), item2);
+		Assert.assertEquals(item2, tx.getItem());
+		Assert.assertEquals(-3, (int)tx.getQuantity());
+		Assert.assertEquals(d1.getSource(), tx.getStockroom());
+		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
+		Assert.assertEquals(r1, tx.getBatchOperation());
+
+		// Complete D1
+		d1.setStatus(StockOperationStatus.COMPLETED);
+		service.submitOperation(d1);
+		Context.flushSession();
+
+		// Check each stockroom
+		Stockroom sr0 = stockroomService.getById(0);
+		Stockroom sr1 = stockroomService.getById(1);
+		Stockroom sr2 = stockroomService.getById(2);
+
+		stock = stockroomService.getItem(sr0, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(10, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(10, (int)detail.getQuantity());
+		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+		Assert.assertFalse(detail.getCalculatedExpiration());
+		Assert.assertFalse(detail.getCalculatedBatch());
+
+		stock = stockroomService.getItem(sr0, item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(15, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(15, (int)detail.getQuantity());
+		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+		Assert.assertFalse(detail.getCalculatedExpiration());
+		Assert.assertFalse(detail.getCalculatedBatch());
+
+		stock = stockroomService.getItem(sr1, item);
+		Assert.assertNull(stock);
+
+		stock = stockroomService.getItem(sr1, item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(3, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(3, (int)detail.getQuantity());
+		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+		Assert.assertTrue(detail.getCalculatedExpiration());
+		Assert.assertTrue(detail.getCalculatedBatch());
+
+		stock = stockroomService.getItem(sr2, item);
+		Assert.assertNull(stock);
+
+		stock = stockroomService.getItem(sr2, item2);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(4, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(4, (int)detail.getQuantity());
+		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertEquals(r1, detail.getBatchOperation());
+		Assert.assertTrue(detail.getCalculatedExpiration());
+		Assert.assertTrue(detail.getCalculatedBatch());
+	}
+
+	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions, final Item item) {
+		return Iterators.find(transactions.iterator(), new Predicate<StockOperationTransaction>() {
+			@Override
+			public boolean apply(StockOperationTransaction input) {
+				return input.getItem() == item;
+			}
+		});
 	}
 }

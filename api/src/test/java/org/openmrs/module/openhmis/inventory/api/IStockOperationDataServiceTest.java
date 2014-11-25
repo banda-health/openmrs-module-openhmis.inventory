@@ -1,5 +1,6 @@
 package org.openmrs.module.openhmis.inventory.api;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -480,11 +481,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return items filtered by number
+	 * @verifies return operations filtered by number
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnItemsFilteredByNumber() throws Exception {
+	public void getOperations_shouldReturnOperationsFilteredByNumber() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setOperationNumber("ABCD-1234");
 		
@@ -511,11 +512,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return items filtered by status
+	 * @verifies return operations filtered by status
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnItemsFilteredByStatus() throws Exception {
+	public void getOperations_shouldReturnOperationsFilteredByStatus() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setStatus(StockOperationStatus.CANCELLED);
 		
@@ -533,11 +534,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return items filtered by type
+	 * @verifies return operations filtered by type
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnItemsFilteredByType() throws Exception {
+	public void getOperations_shouldReturnOperationsFilteredByType() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
 		
@@ -555,11 +556,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return items filtered by source stockroom
+	 * @verifies return operations filtered by source stockroom
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnItemsFilteredBySourceStockroom() throws Exception {
+	public void getOperations_shouldReturnOperationsFilteredBySourceStockroom() throws Exception {
 		StockOperation operation = service.getById(1);
 		Stockroom room = operation.getSource();
 		
@@ -582,11 +583,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return items filtered by destination stockroom
+	 * @verifies return operations filtered by destination stockroom
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnItemsFilteredByDestinationStockroom() throws Exception {
+	public void getOperations_shouldReturnOperationsFilteredByDestinationStockroom() throws Exception {
 		StockOperation operation = service.getById(0);
 		Stockroom room = operation.getDestination();
 		
@@ -601,11 +602,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return all items if paging is null
+	 * @verifies return all operations if paging is null
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnAllItemsIfPagingIsNull() throws Exception {
+	public void getOperations_shouldReturnAllOperationsIfPagingIsNull() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
 		
@@ -616,11 +617,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return paged items if paging is specified
+	 * @verifies return paged operations if paging is specified
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnPagedItemsIfPagingIsSpecified() throws Exception {
+	public void getOperations_shouldReturnPagedOperationsIfPagingIsSpecified() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
 		
@@ -633,11 +634,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return items filtered by creation date
+	 * @verifies return operations filtered by creation date
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnItemsFilteredByCreationDate() throws Exception {
+	public void getOperations_shouldReturnOperationsFilteredByCreationDate() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setDateCreated(service.getById(0).getDateCreated());
 		search.setDateCreatedComparisonType(BaseObjectTemplateSearch.DateComparisonType.GREATER_THAN_EQUAL);
@@ -649,12 +650,12 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 	
 	/**
-	 * @verifies return items filtered by patient
+	 * @verifies return operations filtered by patient
 	 * @see IStockOperationDataService#getOperations(org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch,
 	 *      org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
-	public void getOperations_shouldReturnItemsFilteredByPatient() throws Exception {
+	public void getOperations_shouldReturnOperationsFilteredByPatient() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		Patient patient = Context.getPatientService().getPatient(1);
 		search.getTemplate().setPatient(patient);
@@ -1143,5 +1144,148 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test(expected = IllegalArgumentException.class)
 	public void getItemsByOperation_shouldThrowIllegalArgumentExceptionWhenOperationIsNull() throws Exception {
 		service.getItemsByOperation(null, new PagingInfo(1, 1));
+	}
+
+	/**
+	 * @verifies throw IllegalArgumentException if operationDate is null
+	 * @see IStockOperationDataService#getOperationsSince(java.util.Date, PagingInfo)
+	 */
+	@Test(expected =  IllegalArgumentException.class)
+	public void getOperationsSince_shouldThrowIllegalArgumentExceptionIfOperationDateIsNull() throws Exception {
+		service.getOperationsSince(null, new PagingInfo(1, 1));
+	}
+
+	/**
+	 * @verifies return an empty list if no operations are found
+	 * @see IStockOperationDataService#getOperationsSince(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsSince_shouldReturnAnEmptyListIfNoOperationsAreFound() throws Exception {
+		List<StockOperation> results = service.getOperationsSince(new Date(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+	}
+
+	/**
+	 * @verifies return operations with operation date past specified date
+	 * @see IStockOperationDataService#getOperationsSince(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsSince_shouldReturnOperationsWithOperationDatePastSpecifiedDate() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 2);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.YEAR, 15);
+		Calendar cal3 = Calendar.getInstance();
+		cal3.add(Calendar.YEAR, 10);
+
+		StockOperation operation = createEntity(true);
+		operation.setOperationDate(cal.getTime());
+		StockOperation operation2 = createEntity(true);
+		operation2.setOperationDate(cal2.getTime());
+		StockOperation operation3 = createEntity(true);
+		operation3.setOperationDate(cal3.getTime());
+
+		service.save(operation);
+		service.save(operation2);
+		service.save(operation3);
+		Context.flushSession();
+
+		List<StockOperation> results = service.getOperationsSince(new Date(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+
+		// Results should be in order of operation date
+		Assert.assertEquals(operation, results.get(0));
+		Assert.assertEquals(operation3, results.get(1));
+		Assert.assertEquals(operation2, results.get(2));
+	}
+
+	/**
+	 * @verifies return all results if paging is null
+	 * @see IStockOperationDataService#getOperationsSince(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsSince_shouldReturnAllResultsIfPagingIsNull() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 2);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.YEAR, 15);
+		Calendar cal3 = Calendar.getInstance();
+		cal3.add(Calendar.YEAR, 10);
+
+		StockOperation operation = createEntity(true);
+		operation.setOperationDate(cal.getTime());
+		StockOperation operation2 = createEntity(true);
+		operation2.setOperationDate(cal2.getTime());
+		StockOperation operation3 = createEntity(true);
+		operation3.setOperationDate(cal3.getTime());
+
+		service.save(operation);
+		service.save(operation2);
+		service.save(operation3);
+		Context.flushSession();
+
+		List<StockOperation> results = service.getOperationsSince(new Date(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+
+		// Results should be in order of operation date
+		Assert.assertEquals(operation, results.get(0));
+		Assert.assertEquals(operation3, results.get(1));
+		Assert.assertEquals(operation2, results.get(2));
+	}
+
+	/**
+	 * @verifies return paged operations if paging is specified
+	 * @see IStockOperationDataService#getOperationsSince(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsSince_shouldReturnPagedOperationsIfPagingIsSpecified() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 2);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.YEAR, 15);
+		Calendar cal3 = Calendar.getInstance();
+		cal3.add(Calendar.YEAR, 10);
+
+		StockOperation operation = createEntity(true);
+		operation.setOperationDate(cal.getTime());
+		StockOperation operation2 = createEntity(true);
+		operation2.setOperationDate(cal2.getTime());
+		StockOperation operation3 = createEntity(true);
+		operation3.setOperationDate(cal3.getTime());
+
+		service.save(operation);
+		service.save(operation2);
+		service.save(operation3);
+		Context.flushSession();
+
+		PagingInfo paging = new PagingInfo(1, 1);
+		List<StockOperation> results = service.getOperationsSince(new Date(), paging);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(3, (long)paging.getTotalRecordCount());
+
+		// Results should be in order of operation date
+		Assert.assertEquals(operation, results.get(0));
+
+		paging.setPage(2);
+		results = service.getOperationsSince(new Date(), paging);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(operation3, results.get(0));
+
+		paging.setPage(3);
+		results = service.getOperationsSince(new Date(), paging);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(operation2, results.get(0));
 	}
 }

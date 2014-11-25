@@ -183,10 +183,6 @@ define(
                     this.setElement(options.element);
                 }
 
-                if (options.addLink) {
-                    options.addLink.click(this.showForm);
-                }
-
                 this.events = _.extend({}, this.events, {
                     'change select[name="instanceType"]': 'instanceTypeChanged'
                 });
@@ -196,6 +192,10 @@ define(
                 this.operationTypes.fetch({
                     success: function(collection, resp) {
                         self.currentOperationType = collection.models[0];
+
+                        if (options.loaded) {
+                            options.loaded();
+                        }
                     },
                     queryString: "v=full",
                     silent: true
@@ -299,6 +299,7 @@ define(
                     operationNumberEl.addClass('readonly');
                 }
                 $(".addLink").hide();
+                $(".cancel  ").hide();
                 $("#createOperationLink").hide();
 
                 // Insert the item stock list after the form but before the buttons
@@ -407,6 +408,7 @@ define(
                     var source = $('select[name="source"]');
                     var dest = $('select[name="destination"]');
                     var institution = $('select[name="institution"]');
+                    var department = $('select[name="department"]');
                     var patientSearch = self.$("#find-patient");
 
                     source.prop('disabled', !this.currentOperationType.get('hasSource'));
@@ -418,8 +420,10 @@ define(
                         dest.val(0);
                     }
                     institution.prop('disabled', !this.currentOperationType.get('hasRecipient'));
+                    department.prop('disabled', !this.currentOperationType.get('hasRecipient'));
                     if (institution.is(":disabled")) {
                         institution.val(0);
+                        department.val(0);
                         patientSearch.hide();
                     } else {
                         patientSearch.show();
@@ -434,21 +438,6 @@ define(
                     if (this.currentOperationType.get('hasRecipient')) {
                         this.$("#find-patient").show();
                         this.$patientSearch.prop('disabled', false);
-
-                        /*
-                        var self = this;
-                        openhmis.renderPatientSearchFragment(this.$patientSearch, undefined, {
-                            success: function() {
-                                self.$("#find-patient").show();
-                                self.$patientSearch.prop('disabled', false);
-
-                                // Make sure the selection handler is properly set up
-                                window.doSelectionHandler = function(index, data) {
-                                        openhmis.doSelectionHandler(index,data);
-                                };
-                            }
-                        });
-                        */
                     } else {
                         this.$patientSearch.prop('disabled', true);
                     }
@@ -760,10 +749,10 @@ define(
                     .add(this.$('td.field-total'))
                     .addClass("numeric");
 
-                this.$('input[type=number]').stepper({
-                    allowArrows: false,
-                    onStep: this.stepCallback
-                });
+//                this.$('input[type=number]').stepper({
+//                    allowArrows: false,
+//                    onStep: this.stepCallback
+//                });
 
                 return this;
             },

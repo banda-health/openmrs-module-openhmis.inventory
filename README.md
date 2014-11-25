@@ -4,7 +4,7 @@ The inventory module is an [OpenMRS] [5] module to provide simple inventory mana
 ##Project Details
 You will find our installation and user documentation for this module on the OpenMRS wiki site under the OpenHMIS Inventory Module once that documentation is complete.  We welcome any feedback and/or bug reports on our [bug tracking system] [2].  
 
-Questions or comments? Chat with us in  [our hipchat room] [4]!
+Questions or comments? Chat with us in [our hipchat room] [4]!
 
 Once this module is released, our [demo site] [1] will always be running the currently released version of this module.
 
@@ -13,7 +13,7 @@ This repository follows the [git flow] [3] branching model.  The current release
 
 [0]: https://wiki.openmrs.org/display/docs/OpenHMIS+Modules
 [1]: http://openmrs.openhmisafrica.org
-[2]: http://youtrack.openhmisafrica.org
+[2]: http://issues.openhmisafrica.org
 [3]: https://github.com/nvie/gitflow
 [4]: http://www.hipchat.com/gHNSPJwzw
 [5]: http://www.openmrs.org

@@ -7,12 +7,14 @@ import javax.servlet.http.HttpSession;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
+import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
 import org.openmrs.module.openhmis.commons.api.util.SafeIdgenUtil;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.web.WebConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.Errors;
@@ -33,6 +35,9 @@ public class SettingsController {
 			model.addAttribute("settings", null);
 			model.addAttribute("sources", null);
 		}
+
+		JasperReportService reportService = Context.getService(JasperReportService.class);
+		model.addAttribute("reports", reportService.getJasperReports());
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

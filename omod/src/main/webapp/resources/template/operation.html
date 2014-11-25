@@ -64,6 +64,11 @@
                             <label for="op-field-institution">Institution</label>
                             <div class="bbf-editor"><label id="op-field-institution"><?= model.get('institution') ?></label></div>
                         </li>
+                    <? } else if (model.get('department') && model.get('department').id !== '') { ?>
+                        <li class="bbf-field field-department">
+                            <label for="op-field-department">Department</label>
+                            <div class="bbf-editor"><label id="op-field-department"><?= model.get('department') ?></label></div>
+                        </li>
                     <? } else { ?>
                         <li class="bbf-field field-patient">
                             <label for="op-field-patient">Patient</label>

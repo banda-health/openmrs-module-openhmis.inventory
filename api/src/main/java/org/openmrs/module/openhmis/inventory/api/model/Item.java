@@ -38,6 +38,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private ItemPrice defaultPrice;
 	private Boolean hasExpiration;
 	private Integer defaultExpirationPeriod;
+	private Integer minimumQuantity;
 	private Boolean hasPhysicalInventory;
 	private Boolean conceptAccepted;
 
@@ -208,6 +209,14 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setConceptAccepted(Boolean conceptAccepted) {
 		this.conceptAccepted = conceptAccepted;
+	}
+
+	public Integer getMinimumQuantity() {
+		return minimumQuantity;
+	}
+
+	public void setMinimumQuantity(Integer minimumQuantity) {
+		this.minimumQuantity = minimumQuantity;
 	}
 
 	@Override
