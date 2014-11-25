@@ -2,9 +2,11 @@ package org.openmrs.module.openhmis.inventory.api;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.junit.Assert;
 import org.junit.Before;
@@ -1493,11 +1495,16 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		itemService.save(item);
 		Context.flushSession();
 
+		Calendar now = Calendar.getInstance();
+
 		// Create new receipt with exp and save (PENDING)
 		StockOperation receipt = operationTest.createEntity(true);
 		receipt.getReserved().clear();
 		receipt.setInstanceType(WellKnownOperationTypes.getReceipt());
 		receipt.setDestination(stockroomService.getById(0));
+
+		now.add(Calendar.MINUTE, 1);
+		receipt.setOperationDate(now.getTime());
 
 		Calendar expCal = Calendar.getInstance();
 		expCal.add(Calendar.MONTH, 3);
@@ -1512,6 +1519,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		transfer.setInstanceType(WellKnownOperationTypes.getTransfer());
 		transfer.setSource(stockroomService.getById(0));
 		transfer.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		transfer.setOperationDate(now.getTime());
 
 		transfer.addItem(item, 5);
 
@@ -1595,11 +1605,16 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		itemService.save(item);
 		Context.flushSession();
 
+		Calendar now = Calendar.getInstance();
+
 		// Create new receipt with exp and save (PENDING)
 		StockOperation receipt = operationTest.createEntity(true);
 		receipt.getReserved().clear();
 		receipt.setInstanceType(WellKnownOperationTypes.getReceipt());
 		receipt.setDestination(stockroomService.getById(0));
+
+		now.add(Calendar.MINUTE, 1);
+		receipt.setOperationDate(now.getTime());
 
 		Calendar expCal = Calendar.getInstance();
 		expCal.add(Calendar.MONTH, 3);
@@ -1614,6 +1629,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		transfer.setInstanceType(WellKnownOperationTypes.getTransfer());
 		transfer.setSource(stockroomService.getById(0));
 		transfer.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		transfer.setOperationDate(now.getTime());
 
 		transfer.addItem(item, 5);
 
@@ -1683,15 +1701,28 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(2, transfer.getTransactions().size());
 		tx = Iterators.get(transfer.getTransactions().iterator(), 0);
 		Assert.assertEquals(item, tx.getItem());
-		Assert.assertEquals(5, (int)tx.getQuantity());
-		Assert.assertEquals(transfer.getDestination(), tx.getStockroom());
+
+		// The order of the tx's is not knoen so figure it out here
+		int factor = -1;
+		Stockroom stockroom = transfer.getSource();
+		if (tx.getQuantity() < 0) {
+			Assert.assertEquals(-5, (int)tx.getQuantity());
+			Assert.assertEquals(transfer.getSource(), tx.getStockroom());
+
+			factor = 1;
+			stockroom = transfer.getDestination();
+		} else {
+			Assert.assertEquals(5, (int)tx.getQuantity());
+			Assert.assertEquals(transfer.getDestination(), tx.getStockroom());
+		}
+
 		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
 		tx = Iterators.get(transfer.getTransactions().iterator(), 1);
 		Assert.assertEquals(item, tx.getItem());
-		Assert.assertEquals(-5, (int)tx.getQuantity());
-		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
+		Assert.assertEquals(5 * factor, (int)tx.getQuantity());
+		Assert.assertEquals(stockroom, tx.getStockroom());
 		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
@@ -1720,14 +1751,20 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		itemService.save(item);
 		Context.flushSession();
 
+		Calendar now = Calendar.getInstance();
+
 		// Create new receipt with exp and save (PENDING)
 		StockOperation receipt = operationTest.createEntity(true);
 		receipt.getReserved().clear();
 		receipt.setInstanceType(WellKnownOperationTypes.getReceipt());
 		receipt.setDestination(stockroomService.getById(0));
 
+		now.add(Calendar.MINUTE, 1);
+		receipt.setOperationDate(now.getTime());
+
 		Calendar expCal = Calendar.getInstance();
 		expCal.add(Calendar.MONTH, 3);
+
 		receipt.addItem(item, 15, expCal.getTime());
 
 		service.submitOperation(receipt);
@@ -1739,6 +1776,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		transfer.setInstanceType(WellKnownOperationTypes.getTransfer());
 		transfer.setSource(stockroomService.getById(0));
 		transfer.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		transfer.setOperationDate(now.getTime());
 
 		transfer.addItem(item, 5);
 
@@ -1796,18 +1836,28 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
 		Assert.assertEquals(receipt, detail.getBatchOperation());
 
-		// Transfer tx's should now have exp and batch from completed receipt
+		// Transfer tx's should now have exp and batch from cancelled receipt
 		Assert.assertEquals(2, transfer.getTransactions().size());
 		tx = Iterators.get(transfer.getTransactions().iterator(), 0);
 		Assert.assertEquals(item, tx.getItem());
-		Assert.assertEquals(-5, (int)tx.getQuantity());
+
+		// The order of the tx's is not knoen so figure it out here
+		int factor = -1;
+		if (tx.getQuantity() < 0) {
+			Assert.assertEquals(-5, (int)tx.getQuantity());
+
+			factor = 1;
+		} else {
+			Assert.assertEquals(5, (int)tx.getQuantity());
+		}
+
 		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
 		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
 		tx = Iterators.get(transfer.getTransactions().iterator(), 1);
 		Assert.assertEquals(item, tx.getItem());
-		Assert.assertEquals(5, (int)tx.getQuantity());
+		Assert.assertEquals(5 * factor, (int)tx.getQuantity());
 		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
 		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
 		Assert.assertEquals(receipt, tx.getBatchOperation());
@@ -1834,17 +1884,22 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		itemService.save(item2);
 		Context.flushSession();
 
+		Calendar now = Calendar.getInstance();
+
 		// Create new receipt with exp and save (PENDING) - R1
 		StockOperation r1 = operationTest.createEntity(true);
 		r1.getReserved().clear();
 		r1.setInstanceType(WellKnownOperationTypes.getReceipt());
 		r1.setDestination(stockroomService.getById(0));
 
+		now.add(Calendar.MINUTE, 1);
+		r1.setOperationDate(now.getTime());
+
 		Calendar expCal = Calendar.getInstance();
 		expCal.add(Calendar.MONTH, 3);
 		r1.addItem(item, 15, expCal.getTime());
 		Calendar expCal2 = Calendar.getInstance();
-		expCal.add(Calendar.MONTH, 6);
+		expCal2.add(Calendar.MONTH, 6);
 		r1.addItem(item2, 25, expCal2.getTime());
 
 		service.submitOperation(r1);
@@ -1856,6 +1911,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		t1.setInstanceType(WellKnownOperationTypes.getTransfer());
 		t1.setSource(stockroomService.getById(0));
 		t1.setDestination(stockroomService.getById(1));
+
+		now.add(Calendar.MINUTE, 1);
+		t1.setOperationDate(now.getTime());
 
 		t1.addItem(item, 5);
 		t1.addItem(item2, 10);
@@ -1870,6 +1928,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		t2.setSource(stockroomService.getById(1));
 		t2.setDestination(stockroomService.getById(2));
 
+		now.add(Calendar.MINUTE, 1);
+		t2.setOperationDate(now.getTime());
+
 		t2.addItem(item, 5);
 		t2.addItem(item2, 7);
 
@@ -1882,6 +1943,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		d1.setInstanceType(WellKnownOperationTypes.getDistribution());
 		d1.setSource(stockroomService.getById(2));
 		d1.setDepartment(item.getDepartment());
+
+		now.add(Calendar.MINUTE, 1);
+		d1.setOperationDate(now.getTime());
 
 		d1.addItem(item, 5);
 		d1.addItem(item2, 3);
@@ -1897,13 +1961,13 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 
 		// T1 tx will not have exp or batch because the receipt has not been completed
 		Assert.assertEquals(2, t1.getTransactions().size());
-		StockOperationTransaction tx = Iterators.get(t1.getTransactions().iterator(), 0);
+		StockOperationTransaction tx = getTransactionForItem(t1.getTransactions(), item);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertNull(tx.getExpiration());
 		Assert.assertNull(tx.getBatchOperation());
 
-		tx = Iterators.get(t1.getTransactions().iterator(), 1);
+		tx = getTransactionForItem(t1.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-10, (int)tx.getQuantity());
 		Assert.assertNull(tx.getExpiration());
@@ -1928,21 +1992,15 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertNull(detail.getExpiration());
 		Assert.assertNull(detail.getBatchOperation());
 
-		// There should be nothing for these items in the destination
-		stock = stockroomService.getItem(t1.getDestination(), item);
-		Assert.assertNull(stock);
-		stock = stockroomService.getItem(t1.getDestination(), item2);
-		Assert.assertNull(stock);
-
 		// T2 tx will not have exp or batch because T1 has not been completed
 		Assert.assertEquals(2, t2.getTransactions().size());
-		tx = Iterators.get(t2.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(t2.getTransactions(), item);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertNull(tx.getExpiration());
 		Assert.assertNull(tx.getBatchOperation());
 
-		tx = Iterators.get(t2.getTransactions().iterator(), 1);
+		tx = getTransactionForItem(t2.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-7, (int)tx.getQuantity());
 		Assert.assertNull(tx.getExpiration());
@@ -1969,15 +2027,15 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 
 		// D1 tx will not have exp or batch because T2 has not been completed
 		Assert.assertEquals(2, d1.getTransactions().size());
-		tx = Iterators.get(d1.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(d1.getTransactions(), item);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertNull(tx.getExpiration());
 		Assert.assertNull(tx.getBatchOperation());
 
-		tx = Iterators.get(d1.getTransactions().iterator(), 1);
+		tx = getTransactionForItem(d1.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
-		Assert.assertEquals(-4, (int)tx.getQuantity());
+		Assert.assertEquals(-3, (int)tx.getQuantity());
 		Assert.assertNull(tx.getExpiration());
 		Assert.assertNull(tx.getBatchOperation());
 
@@ -1999,7 +2057,6 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(-3, (int)detail.getQuantity());
 		Assert.assertNull(detail.getExpiration());
 		Assert.assertNull(detail.getBatchOperation());
-
 
 		// Complete the receipt
 		r1.setStatus(StockOperationStatus.COMPLETED);
@@ -2033,14 +2090,14 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 
 		// T1 tx's should now have exp and batch from completed receipt
 		Assert.assertEquals(2, t1.getTransactions().size());
-		tx = Iterators.get(t1.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(t1.getTransactions(), item);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertEquals(t1.getSource(), tx.getStockroom());
 		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
-		tx = Iterators.get(t1.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(t1.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-10, (int)tx.getQuantity());
 		Assert.assertEquals(t1.getSource(), tx.getStockroom());
@@ -2057,15 +2114,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		service.submitOperation(t1);
 		Context.flushSession();
 
-		// SR2 should not have neg qty detail and should have exp and batch
+		// SR2 should not have stock for item-1 and should have item-2 stock with exp and batch
 		stock = stockroomService.getItem(t1.getDestination(), item);
-		Assert.assertNotNull(stock);
-		Assert.assertEquals(5, stock.getQuantity());
-		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
-		Assert.assertEquals(item, detail.getItem());
-		Assert.assertEquals(5, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
-		Assert.assertEquals(r1, detail.getBatchOperation());
+		Assert.assertNull(stock);
 
 		stock = stockroomService.getItem(t1.getDestination(), item2);
 		Assert.assertNotNull(stock);
@@ -2078,17 +2129,17 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 
 		// T2 tx's should now have exp and batch from completed receipt
 		Assert.assertEquals(2, t2.getTransactions().size());
-		tx = Iterators.get(t1.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(t2.getTransactions(), item);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
-		Assert.assertEquals(t1.getSource(), tx.getStockroom());
+		Assert.assertEquals(t2.getSource(), tx.getStockroom());
 		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
-		tx = Iterators.get(t2.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(t2.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-7, (int)tx.getQuantity());
-		Assert.assertEquals(t1.getSource(), tx.getStockroom());
+		Assert.assertEquals(t2.getSource(), tx.getStockroom());
 		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
@@ -2097,15 +2148,9 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		service.submitOperation(t2);
 		Context.flushSession();
 
-		// SR3 should not have neg qty detail and should have exp and batch
+		// SR3 should not have stock for item-1 and should have item-2 stock with exp and batch
 		stock = stockroomService.getItem(t2.getDestination(), item);
-		Assert.assertNotNull(stock);
-		Assert.assertEquals(5, stock.getQuantity());
-		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
-		Assert.assertEquals(item, detail.getItem());
-		Assert.assertEquals(5, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
-		Assert.assertEquals(r1, detail.getBatchOperation());
+		Assert.assertNull(stock);
 
 		stock = stockroomService.getItem(t2.getDestination(), item2);
 		Assert.assertNotNull(stock);
@@ -2118,17 +2163,17 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 
 		// D1 tx's should now have exp and batch from completed receipt
 		Assert.assertEquals(2, d1.getTransactions().size());
-		tx = Iterators.get(t1.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(d1.getTransactions(), item);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
-		Assert.assertEquals(t1.getSource(), tx.getStockroom());
+		Assert.assertEquals(d1.getSource(), tx.getStockroom());
 		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
-		tx = Iterators.get(d1.getTransactions().iterator(), 0);
+		tx = getTransactionForItem(d1.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-3, (int)tx.getQuantity());
-		Assert.assertEquals(t1.getSource(), tx.getStockroom());
+		Assert.assertEquals(d1.getSource(), tx.getStockroom());
 		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
@@ -2187,5 +2232,14 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(r1, detail.getBatchOperation());
 		Assert.assertTrue(detail.getCalculatedExpiration());
 		Assert.assertTrue(detail.getCalculatedBatch());
+	}
+
+	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions, final Item item) {
+		return Iterators.find(transactions.iterator(), new Predicate<StockOperationTransaction>() {
+			@Override
+			public boolean apply(StockOperationTransaction input) {
+				return input.getItem() == item;
+			}
+		});
 	}
 }
