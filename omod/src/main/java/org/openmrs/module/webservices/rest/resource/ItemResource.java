@@ -50,7 +50,6 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
         description.addProperty("department", Representation.REF);
         // TODO enable categories in v1.1
         //description.addProperty("category", Representation.REF);
-        description.addProperty("defaultPrice", Representation.REF);
         description.addProperty("hasExpiration");
         description.addProperty("defaultExpirationPeriod");
         description.addProperty("hasPhysicalInventory");
@@ -61,6 +60,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
             description.addProperty("concept", Representation.REF);
         }
 
+        description.addProperty("defaultPrice", Representation.REF);
         return description;
     }
 
