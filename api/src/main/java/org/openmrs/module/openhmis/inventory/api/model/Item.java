@@ -41,6 +41,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Integer minimumQuantity;
 	private Boolean hasPhysicalInventory;
 	private Boolean conceptAccepted;
+	private BigDecimal buyingPrice;
 
 	public Item() {
 	}
@@ -217,6 +218,14 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setMinimumQuantity(Integer minimumQuantity) {
 		this.minimumQuantity = minimumQuantity;
+	}
+
+	public BigDecimal getBuyingPrice() {
+		return buyingPrice;
+	}
+
+	public void setBuyingPrice(BigDecimal buyingPrice) {
+		this.buyingPrice = buyingPrice;
 	}
 
 	@Override

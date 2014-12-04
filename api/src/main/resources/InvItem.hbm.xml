@@ -20,6 +20,7 @@
 		<property name="defaultExpirationPeriod" type="int" column="default_expiration_period" />
 		<property name="conceptAccepted" type="boolean" column="concept_accepted" />
 		<property name="minimumQuantity" type="int" column="minimum_quantity" />
+		<property name="buyingPrice" type="java.math.BigDecimal" column="buying_price" />
 
 		<!-- Associations -->
 		<many-to-one name="department" class="Department" column="department_id" />

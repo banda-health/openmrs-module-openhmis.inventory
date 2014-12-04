@@ -917,4 +917,9 @@
 			<column name="minimum_quantity" type="int"><constraints nullable="true" /></column>
 		</addColumn>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.3.0-1" author="ibewes">
+		<addColumn tableName="inv_item">
+			<column name="buying_price" type="DECIMAL(10,2)"><constraints nullable="true" /></column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
