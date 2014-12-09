@@ -59,6 +59,14 @@
 		</c:if>
 		<tr><td>
 			<br />
+			<spring:bind path="autoCompleteOperations">
+				<input id="autoCompleteOperations" name="${status.expression}" type="checkbox"
+				       <c:if test="${settings.autoCompleteOperations}">checked</c:if> />
+				<label for="autoCompleteOperations">Auto Complete Operations</label>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
 			<label for="stockTakeReportId">Select Stock Take Report</label>
 			<spring:bind path="stockTakeReportId">
 				<select id="stockTakeReportId" name="${status.expression}">
