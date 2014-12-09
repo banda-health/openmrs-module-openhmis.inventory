@@ -922,4 +922,19 @@
 			<column name="buying_price" type="DECIMAL(10,2)"><constraints nullable="true" /></column>
 		</addColumn>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.3.0-2" author="ibewes">
+		<insert tableName="inv_stock_operation_type">
+			<column name="name">Initial</column>
+			<column name="operation_type">initial</column>
+			<column name="description">The initial stockroom item stock quantities.</column>
+			<column name="has_source">0</column>
+			<column name="has_destination">1</column>
+			<column name="has_recipient">0</column>
+			<column name="recipient_required">0</column>
+			<column name="available_when_reserved">0</column>
+			<column name="creator">1</column>
+			<column name="date_created">2013-01-01</column>
+			<column name="uuid">20f3734f-5b1a-490d-8676-1225a9cdddf7</column>
+		</insert>
+	</changeSet>
 </databaseChangeLog>
