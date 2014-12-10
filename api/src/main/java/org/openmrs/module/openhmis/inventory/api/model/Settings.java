@@ -8,6 +8,7 @@ public class Settings {
 	private Integer operationNumberGeneratorSourceId;
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
+	private Integer stockroomReportId;
 
 	public Boolean getAutoGenerateOperationNumber() {
 		return autoGenerateOperationNumber;
@@ -47,5 +48,13 @@ public class Settings {
 
 	public void setStockCardReportId(Integer stockCardReportId) {
 		this.stockCardReportId = stockCardReportId;
+	}
+
+	public Integer getStockroomReportId() {
+		return stockroomReportId;
+	}
+
+	public void setStockroomReportId(Integer stockroomReportId) {
+		this.stockroomReportId = stockroomReportId;
 	}
 }

@@ -13,6 +13,7 @@ public class ModuleSettings {
 			"openhmis.inventory.operationNumberIdentifierSourceId";
 	public static final String STOCK_TAKE_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockTake";
 	public static final String STOCK_CARD_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockCard";
+	public static final String STOCKROOM_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockroom";
 	public static final String AUTO_COMPLETE_OPERATIONS_PROPERTY = "openhmis.inventory.autoCompleteOperations";
 
 	public static boolean generateOperationNumber() {
@@ -45,6 +46,11 @@ public class ModuleSettings {
 		prop = adminService.getGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setStockCardReportId(Integer.parseInt(prop));
+		}
+
+		prop = adminService.getGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY);
+		if (!StringUtils.isEmpty(prop)) {
+			settings.setStockroomReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
@@ -89,6 +95,13 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY, reportId.toString());
 		} else {
 			adminService.setGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY, "");
+		}
+
+		reportId = settings.getStockroomReportId();
+		if (reportId != null) {
+			adminService.setGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY, reportId.toString());
+		} else {
+			adminService.setGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY, "");
 		}
 
 		Boolean autoComplete = settings.getAutoCompleteOperations();
