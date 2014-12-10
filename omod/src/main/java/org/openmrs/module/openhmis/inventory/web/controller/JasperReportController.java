@@ -47,6 +47,8 @@ public class JasperReportController {
 			return renderStockTakeReport(reportId, request, response);
 		} else if (settings.getStockCardReportId() != null && reportId == settings.getStockCardReportId()) {
 			return renderStockCardReport(reportId, request, response);
+		} else if (settings.getStockroomReportId() != null && reportId == settings.getStockroomReportId()) {
+			return renderStockroomReport(reportId, request, response);
 		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown report.");
 		}
@@ -123,6 +125,51 @@ public class JasperReportController {
 		params.put("endDate", endDate);
 
 		return renderReport(reportId, params, "Item Stock Card - " + itemName, response);
+	}
+
+	private String renderStockroomReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
+		int stockroomId;
+		Date beginDate = null, endDate = null;
+
+		String temp = request.getParameter("stockroomId");
+		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
+			stockroomId = Integer.parseInt(temp);
+		} else {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
+					"defined and be numeric.");
+			return null;
+		}
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		temp = request.getParameter("beginDate");
+		if (!StringUtils.isEmpty(temp)) {
+			try {
+				beginDate = dateFormat.parse(temp);
+			} catch (Exception ex) {
+				// Whatevs... dealing with stupid checked exceptions
+			}
+		}
+
+		temp = request.getParameter("endDate");
+		if (!StringUtils.isEmpty(temp)) {
+			try {
+				endDate = dateFormat.parse(temp);
+			} catch (Exception ex) {
+				// Whatevs... dealing with stupid checked exceptions
+			}
+		}
+
+		if (beginDate == null || endDate == null) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The begin and end dates must be defined.");
+			return null;
+		}
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("stockroomId", stockroomId);
+		params.put("beginDate", beginDate);
+		params.put("endDate", endDate);
+
+		return renderReport(reportId, params, null, response);
 	}
 
 	private String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,

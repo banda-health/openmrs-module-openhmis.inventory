@@ -46,6 +46,10 @@ curl(
             if ($("#generateCardReport").length > 0) {
                 $("#generateCardReport").click(printCardReport);
             }
+
+            if ($("#generateStockroomReport").length > 0) {
+                $("#generateStockroomReport").click(printStockroomReport);
+            }
         });
 
         function printTakeReport() {
@@ -82,6 +86,30 @@ curl(
             var reportId = $('#stockCardReportId').val();
 
             return printReport(reportId, "itemUuid=" + itemUuid + "&beginDate=" + beginDate + "&endDate=" + endDate);
+        }
+
+        function printStockroomReport() {
+            var stockroomId = $("#stockroomReport-StockroomId").val();
+            if (!stockroomId) {
+                alert("You must select a stockroom to generate the report.");
+                return false;
+            }
+
+            var beginDate = $("#stockroomReport-beginDate").val();
+            var endDate = $("#stockroomReport-endDate").val();
+
+            if (!beginDate || !endDate) {
+                alert("You must select a begin and end date to generate the report.");
+                return false;
+            }
+
+            // Get the dates into the expected format (dd-MM-yyyy)
+            beginDate = openhmis.dateFormat(new Date(beginDate), false);
+            endDate = openhmis.dateFormat(new Date(endDate), false);
+
+            var reportId = $('#stockroomReportId').val();
+
+            return printReport(reportId, "stockroomId=" + stockroomId + "&beginDate=" + beginDate + "&endDate=" + endDate);
         }
 
         function printReport(reportId, parameters) {

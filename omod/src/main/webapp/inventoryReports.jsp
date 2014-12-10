@@ -28,7 +28,7 @@
       </b>
     </td>
     <td>
-      <c:if test="${stockTakeReport == null && stockCardReport == null}" >
+      <c:if test="${stockTakeReport == null && stockCardReport == null && stockroomReport == null}" >
         <div style="color: grey">No inventory reports have been defined.</div>
       </c:if>
       <c:if test="${stockTakeReport != null}" >
@@ -75,6 +75,38 @@
             <input id="generateCardReport" type="submit" value="Generate Report" />
           </form>
         </div>
+        <hr>
+      </c:if>
+
+      <c:if test="${stockroomReport != null}" >
+        <h3>${stockroomReport.name}</h3>
+        <div style="color: grey">${stockroomReport.description}</div>
+        <br />
+        <div>
+          <form id="stockroomReport" onsubmit="return false;">
+            <label for="stockroomReport-StockroomId">Stockroom: </label>
+            <select id="stockroomReport-StockroomId">
+              <option value=""></option>
+              <c:forEach var="stockroom" items="${stockrooms}">
+                <option value="${stockroom.id}">${stockroom.name}</option>
+              </c:forEach>
+            </select>
+            <br />
+            <br />
+
+            <label for="stockroomReport-beginDate">Begin Date</label>
+            <input id="stockroomReport-beginDate" type="date" />
+
+            <label for="stockroomReport-endDate">End Date</label>
+            <input id="stockroomReport-endDate" type="date" />
+
+            <input id="stockroomReportId" type="hidden" value="${stockroomReport.reportId}" />
+            <br /><br />
+            <input id="generateStockroomReport" type="submit" value="Generate Report"/>
+          </form>
+        </div>
+        <br />
+        <hr>
       </c:if>
     </td>
   </tr>

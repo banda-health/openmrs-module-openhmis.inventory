@@ -28,16 +28,16 @@ public class SettingsController {
 	public void render(ModelMap model) throws IOException {
 		if (ModuleUtil.isLoaded(ModuleUtil.IDGEN_MODULE_ID)) {
 			model.addAttribute("hasIdgenModule", true);
-			model.addAttribute("settings", ModuleSettings.loadSettings());
 			model.addAttribute("sources", SafeIdgenUtil.getAllIdentifierSourceInfo());
 		} else {
 			model.addAttribute("hasIdgenModule", false);
-			model.addAttribute("settings", null);
 			model.addAttribute("sources", null);
 		}
 
 		JasperReportService reportService = Context.getService(JasperReportService.class);
 		model.addAttribute("reports", reportService.getJasperReports());
+
+		model.addAttribute("settings", ModuleSettings.loadSettings());
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

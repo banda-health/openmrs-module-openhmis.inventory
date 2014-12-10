@@ -45,6 +45,11 @@ public class InventoryReportsController {
 			model.addAttribute("stockCardReport", reportService.getJasperReport(reportId));
 		}
 
+		reportId = settings.getStockroomReportId();
+		if (reportId != null) {
+			model.addAttribute("stockroomReport", reportService.getJasperReport(reportId));
+		}
+
 		model.addAttribute("stockrooms", stockroomDataService.getAll());
 	}
 }
