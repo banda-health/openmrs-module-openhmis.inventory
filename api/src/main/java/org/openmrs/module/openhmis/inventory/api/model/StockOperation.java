@@ -158,7 +158,7 @@ public class StockOperation
 		operationItem.setQuantity(quantity);
 
 		if (expiration == null) {
-			if (item.getHasExpiration()) {
+			if (Boolean.TRUE.equals(item.getHasExpiration())) {
 				operationItem.setCalculatedExpiration(true);
 			} else {
 				operationItem.setCalculatedExpiration(false);

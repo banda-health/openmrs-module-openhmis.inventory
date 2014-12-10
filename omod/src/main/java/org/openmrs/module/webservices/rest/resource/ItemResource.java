@@ -14,13 +14,9 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
@@ -31,101 +27,114 @@ import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.helper.Converter;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
+import javax.annotation.Nullable;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-@Resource(name= ModuleRestConstants.ITEM_RESOURCE, supportedClass=Item.class, supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+@Resource(name = ModuleRestConstants.ITEM_RESOURCE, supportedClass = Item.class,
+		supportedOpenmrsVersions = { "1.9.*", "1.10.*" })
 public class ItemResource extends BaseRestMetadataResource<Item> {
-    @Override
-    public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
-        DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-        description.addProperty("codes", Representation.REF);
-        description.addProperty("department", Representation.REF);
-        // TODO enable categories in v1.1
-        //description.addProperty("category", Representation.REF);
-        description.addProperty("hasExpiration");
-        description.addProperty("defaultExpirationPeriod");
-        description.addProperty("hasPhysicalInventory");
-        description.addProperty("minimumQuantity");
+	@Override
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		description.addProperty("codes", Representation.REF);
+		description.addProperty("department", Representation.REF);
+		// TODO enable categories in v1.1
+		//description.addProperty("category", Representation.REF);
+		description.addProperty("hasExpiration");
+		description.addProperty("defaultExpirationPeriod");
+		description.addProperty("hasPhysicalInventory");
+		description.addProperty("minimumQuantity");
 
-        if (!(rep instanceof RefRepresentation)) {
-            description.addProperty("prices", Representation.REF);
-            description.addProperty("concept", Representation.REF);
-        }
+		if (!(rep instanceof RefRepresentation)) {
+			description.addProperty("prices", Representation.REF);
+			description.addProperty("concept", Representation.REF);
+			description.addProperty("buyingPrice");
+		}
 
-        description.addProperty("defaultPrice", Representation.REF);
-        return description;
-    }
+		description.addProperty("defaultPrice", Representation.REF);
+		return description;
+	}
 
-    @PropertySetter(value="codes")
-    public void setItemCodes(Item instance, Set<ItemCode> codes) {
-        if (instance.getCodes() == null) {
-            instance.setCodes(new HashSet<ItemCode>());
-        }
+	@PropertySetter(value = "codes")
+	public void setItemCodes(Item instance, Set<ItemCode> codes) {
+		if (instance.getCodes() == null) {
+			instance.setCodes(new HashSet<ItemCode>());
+		}
 
-        BaseRestDataResource.syncCollection(instance.getCodes(), codes);
-        for (ItemCode code : instance.getCodes()) {
-            code.setItem(instance);
-        }
-    }
+		BaseRestDataResource.syncCollection(instance.getCodes(), codes);
+		for (ItemCode code : instance.getCodes()) {
+			code.setItem(instance);
+		}
+	}
 
-    @PropertySetter(value="prices")
-    public void setItemPrices(Item instance, Set<ItemPrice> prices) {
-        if (instance.getPrices() == null) {
-            instance.setPrices(new HashSet<ItemPrice>());
-        }
+	@PropertySetter(value = "prices")
+	public void setItemPrices(Item instance, Set<ItemPrice> prices) {
+		if (instance.getPrices() == null) {
+			instance.setPrices(new HashSet<ItemPrice>());
+		}
 
-        BaseRestDataResource.syncCollection(instance.getPrices(), prices);
-        for (ItemPrice price : instance.getPrices()) {
-            price.setItem(instance);
-        }
-    }
+		BaseRestDataResource.syncCollection(instance.getPrices(), prices);
+		for (ItemPrice price : instance.getPrices()) {
+			price.setItem(instance);
+		}
+	}
 
-    @PropertySetter(value="defaultPrice")
-    public void setDefaultPrice(Item instance, ItemPrice defaultPrice) {
-    	IItemDataService service = Context.getService(IItemDataService.class);
+	@PropertySetter(value = "defaultPrice")
+	public void setDefaultPrice(Item instance, ItemPrice defaultPrice) {
+		IItemDataService service = Context.getService(IItemDataService.class);
 		ItemPrice dataBaseItemPrice = service.getItemPriceByUuid(defaultPrice.getUuid());
-        if (dataBaseItemPrice != null) {
-        	instance.setDefaultPrice(dataBaseItemPrice);
-        	return;
-        }
-        instance.setDefaultPrice(defaultPrice);
-        setNewDefaultPrice(instance, defaultPrice.getPrice().toPlainString(), defaultPrice.getName());
-    }
-    
-    @PropertySetter(value="concept")
-    public void setConcept(Item instance, final String uuid) {
-        if(StringUtils.isBlank(uuid)) {
-            instance.setConcept(null);
-            return;
-        }
+		if (dataBaseItemPrice != null) {
+			instance.setDefaultPrice(dataBaseItemPrice);
+			return;
+		}
+		instance.setDefaultPrice(defaultPrice);
+		setNewDefaultPrice(instance, defaultPrice.getPrice().toPlainString(), defaultPrice.getName());
+	}
 
-        if (instance.getConcept() != null && uuid.equals(instance.getConcept().getUuid())) {
-            return;
-        }
+	@PropertySetter(value = "concept")
+	public void setConcept(Item instance, final String uuid) {
+		if (StringUtils.isBlank(uuid)) {
+			instance.setConcept(null);
+			return;
+		}
 
-        ConceptService conceptService = Context.getConceptService();
-        Concept concept = conceptService.getConceptByUuid(uuid);
-        instance.setConcept(concept);
+		if (instance.getConcept() != null && uuid.equals(instance.getConcept().getUuid())) {
+			return;
+		}
 
-    }
+		ConceptService conceptService = Context.getConceptService();
+		Concept concept = conceptService.getConceptByUuid(uuid);
+		instance.setConcept(concept);
+	}
 
-    @Override
-    public Item newDelegate() {
-        return new Item();
-    }
+	@PropertySetter(value = "buyingPrice")
+	public void setPrice(Item instance, Object price) {
+		if (price == null || price.equals("")) {
+			instance.setBuyingPrice(null);
+		} else {
+			instance.setBuyingPrice(Converter.objectToBigDecimal(price));
+		}
+	}
 
-    @Override
-    public Class<? extends IMetadataDataService<Item>> getServiceClass() {
-        return IItemDataService.class;
-    }
+	@Override
+	public Item newDelegate() {
+		return new Item();
+	}
+
+	@Override
+	public Class<? extends IMetadataDataService<Item>> getServiceClass() {
+		return IItemDataService.class;
+	}
 
 	private void setNewDefaultPrice(Item instance, final String price, final String name) {
 		Collection<ItemPrice> results = Collections2.filter(instance.getPrices(), new Predicate<ItemPrice>() {
@@ -142,7 +151,7 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 			}
 
 		});
-		
+
 		if (results != null && results.size() > 0) {
 			instance.setDefaultPrice(Iterables.getFirst(results, null));
 		} else {
@@ -151,14 +160,14 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 			instance.setDefaultPrice(new ItemPrice(new BigDecimal(price), ""));
 		}
 	}
-	
+
 	private boolean namesEqualOrBlank(final String name1, final String name2) {
-        if (StringUtils.isBlank(name1) && StringUtils.isBlank(name2)) {
-        	return true;
-        }
-        if (StringUtils.equals(name1, name2)) {
-        	return true;
-        }
-        return false;
-    }
+		if (StringUtils.isBlank(name1) && StringUtils.isBlank(name2)) {
+			return true;
+		}
+		if (StringUtils.equals(name1, name2)) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -123,6 +123,7 @@
 		<subclass name="AdjustmentOperationType" discriminator-value="adjustment" />
 		<subclass name="DisposedOperationType" discriminator-value="disposed" />
 		<subclass name="DistributionOperationType" discriminator-value="distribution" />
+		<subclass name="InitialOperationType" discriminator-value="initial" />
 		<subclass name="ReceiptOperationType" discriminator-value="receipt" />
 		<subclass name="ReturnOperationType" discriminator-value="return" />
 		<subclass name="TransferOperationType" discriminator-value="transfer" />

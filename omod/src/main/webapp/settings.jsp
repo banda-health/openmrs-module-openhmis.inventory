@@ -59,6 +59,14 @@
 		</c:if>
 		<tr><td>
 			<br />
+			<spring:bind path="autoCompleteOperations">
+				<input id="autoCompleteOperations" name="${status.expression}" type="checkbox"
+				       <c:if test="${settings.autoCompleteOperations}">checked</c:if> />
+				<label for="autoCompleteOperations">Auto Complete Operations</label>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
 			<label for="stockTakeReportId">Select Stock Take Report</label>
 			<spring:bind path="stockTakeReportId">
 				<select id="stockTakeReportId" name="${status.expression}">
@@ -81,6 +89,21 @@
 					<c:forEach items="${reports}" var="report">
 						<option value="${report.reportId}"
 						    <c:if test="${settings.stockCardReportId == report.reportId}">selected</c:if>>
+								${report.name}
+						</option>
+					</c:forEach>
+				</select>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
+			<label for="stockroomReportId">Select Stockroom Report</label>
+			<spring:bind path="stockroomReportId">
+				<select id="stockroomReportId" name="${status.expression}">
+					<option value=""></option>
+					<c:forEach items="${reports}" var="report">
+						<option value="${report.reportId}"
+						        <c:if test="${settings.stockroomReportId == report.reportId}">selected</c:if>>
 								${report.name}
 						</option>
 					</c:forEach>

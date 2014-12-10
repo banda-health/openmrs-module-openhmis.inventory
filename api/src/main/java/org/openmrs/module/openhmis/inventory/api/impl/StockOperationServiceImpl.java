@@ -19,6 +19,7 @@ import org.joda.time.Seconds;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
@@ -148,7 +149,18 @@ public class StockOperationServiceImpl
 			}
 
 			// Save the operation and all sub-objects
-			return operationService.save(operation);
+			operation = operationService.save(operation);
+
+			// Check to see if we should autocomplete the operation
+			if (operation.getStatus() == StockOperationStatus.PENDING &&
+					ModuleSettings.loadSettings().getAutoCompleteOperations()) {
+				operation.getInstanceType().onCompleted(operation);
+				operation.setStatus(StockOperationStatus.COMPLETED);
+
+				operation = operationService.save(operation);
+			}
+
+			return operation;
 		}
 	}
 

@@ -126,6 +126,7 @@ define(
 				concept: { type: 'ConceptInput'},
 				hasPhysicalInventory: { type: "TrueFalseCheckbox" },
 				minimumQuantity: { type: "BasicNumber" },
+				buyingPrice: { type: "BasicNumber" },
 				codes: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemCode },
 				prices: { type: 'List', itemType: 'NestedModel', model: openhmis.ItemPrice, subResource: true},
 				defaultPrice: { type: 'ItemPriceSelect', options: [] }

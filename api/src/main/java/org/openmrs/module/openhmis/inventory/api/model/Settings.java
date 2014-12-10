@@ -1,12 +1,14 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 public class Settings {
-	public static final long serialVersionUID = 0L;
+	public static final long serialVersionUID = 1L;
 
 	private Boolean autoGenerateOperationNumber;
+	private Boolean autoCompleteOperations;
 	private Integer operationNumberGeneratorSourceId;
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
+	private Integer stockroomReportId;
 
 	public Boolean getAutoGenerateOperationNumber() {
 		return autoGenerateOperationNumber;
@@ -14,6 +16,14 @@ public class Settings {
 
 	public void setAutoGenerateOperationNumber(Boolean autoGenerateOperationNumber) {
 		this.autoGenerateOperationNumber = autoGenerateOperationNumber;
+	}
+
+	public Boolean getAutoCompleteOperations() {
+		return autoCompleteOperations;
+	}
+
+	public void setAutoCompleteOperations(Boolean autoCompleteOperations) {
+		this.autoCompleteOperations = autoCompleteOperations;
 	}
 
 	public Integer getOperationNumberGeneratorSourceId() {
@@ -38,5 +48,13 @@ public class Settings {
 
 	public void setStockCardReportId(Integer stockCardReportId) {
 		this.stockCardReportId = stockCardReportId;
+	}
+
+	public Integer getStockroomReportId() {
+		return stockroomReportId;
+	}
+
+	public void setStockroomReportId(Integer stockroomReportId) {
+		this.stockroomReportId = stockroomReportId;
 	}
 }

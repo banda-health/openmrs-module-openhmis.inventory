@@ -14,10 +14,12 @@ import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
 import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
+import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
@@ -26,6 +28,8 @@ import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import com.google.common.collect.Iterators;
+
+import javax.validation.constraints.AssertFalse;
 
 public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	IStockOperationTypeDataService typeService;
@@ -1158,7 +1162,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		// Submit the operation
 		service.submitOperation(operation);
 		Assert.assertEquals(1, operation.getReserved().size());
-		Assert.assertNull(operation.getTransactions());
+		Assert.assertEquals(0, operation.getTransactions().size());
 		
 		operation.setStatus(StockOperationStatus.COMPLETED);
 		service.submitOperation(operation);
@@ -2232,6 +2236,88 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(r1, detail.getBatchOperation());
 		Assert.assertTrue(detail.getCalculatedExpiration());
 		Assert.assertTrue(detail.getCalculatedBatch());
+	}
+
+	@Test
+	public void submitOperation_shouldNotAutoCompleteOperationIfPropertyNotTrue() throws Exception {
+		Item item = itemTest.createEntity(true);
+		itemService.save(item);
+		Context.flushSession();
+
+		Stockroom sr = stockroomService.getById(0);
+		StockOperation operation = operationTest.createEntity(true);
+
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.getReserved().clear();
+		operation.getTransactions().clear();
+		operation.setDestination(sr);
+
+		operation.addItem(item, 100);
+
+		// Make sure that autocomplete setting is not true
+		Assert.assertFalse(ModuleSettings.loadSettings().getAutoCompleteOperations());
+
+		operation = service.submitOperation(operation);
+		Context.flushSession();
+
+		// Check that the operation is pending and not completed
+		Assert.assertEquals(StockOperationStatus.PENDING, operation.getStatus());
+		Assert.assertEquals(1, operation.getReserved().size());
+		Assert.assertEquals(0, operation.getTransactions().size());
+
+		// Check that the proper reservation has been created
+		ReservedTransaction tx = Iterators.getOnlyElement(operation.getReserved().iterator());
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(100, (int)tx.getQuantity());
+
+		// Check that the destination stockroom has not been updated
+		ItemStock stock = stockroomService.getItem(sr, item);
+		Assert.assertNull(stock);
+	}
+
+	@Test
+	public void submitOperation_shouldAutoCompleteOperationIfPropertyTrue() throws Exception {
+		Item item = itemTest.createEntity(true);
+		itemService.save(item);
+		Context.flushSession();
+
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		Stockroom sr = stockroomService.getById(0);
+		StockOperation operation = operationTest.createEntity(true);
+
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.getReserved().clear();
+		operation.getTransactions().clear();
+		operation.setDestination(sr);
+
+		operation.addItem(item, 100);
+
+		// Make sure that autocomplete setting is true
+		Assert.assertTrue(ModuleSettings.loadSettings().getAutoCompleteOperations());
+
+		operation = service.submitOperation(operation);
+		Context.flushSession();
+
+		// Check that the operation is pending and not completed
+		Assert.assertEquals(StockOperationStatus.COMPLETED, operation.getStatus());
+		Assert.assertEquals(0, operation.getReserved().size());
+		Assert.assertEquals(1, operation.getTransactions().size());
+
+		// Check that the proper reservation has been created
+		StockOperationTransaction tx = Iterators.getOnlyElement(operation.getTransactions().iterator());
+		Assert.assertEquals(item, tx.getItem());
+		Assert.assertEquals(100, (int)tx.getQuantity());
+		Assert.assertEquals(sr, tx.getStockroom());
+
+		// Check that the destination stockroom has not been updated
+		ItemStock stock = stockroomService.getItem(sr, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(100, stock.getQuantity());
 	}
 
 	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions, final Item item) {
