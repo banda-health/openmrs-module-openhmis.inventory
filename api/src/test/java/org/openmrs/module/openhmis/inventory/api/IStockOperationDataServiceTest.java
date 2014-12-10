@@ -141,6 +141,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		op.addReserved(item);
 		op.addReserved(item2);
 
+		op.setTransactions(new HashSet<StockOperationTransaction>());
+
 		return op;
 	}
 

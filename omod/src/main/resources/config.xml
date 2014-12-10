@@ -47,6 +47,11 @@
 		<description>The ID of the Stock Card report.</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.autoCompleteOperations</property>
+		<description>Whether or not to automatically complete operations once submitted (true/false).</description>
+	</globalProperty>
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
