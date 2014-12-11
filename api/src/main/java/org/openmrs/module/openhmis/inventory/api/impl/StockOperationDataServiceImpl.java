@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -195,6 +196,40 @@ public class StockOperationDataServiceImpl
 				criteria.add(Restrictions.gt("operationDate", operationDate));
 			}
 		}, Order.asc("operationDate"));
+	}
+
+	@Override
+	public StockOperation getLastOperationByDate(Date date) {
+		if (date == null) {
+			throw new IllegalArgumentException("The date to search for must be defined.");
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		final Date start = cal.getTime();
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.MILLISECOND, -1);
+
+		final Date end = cal.getTime();
+
+		List<StockOperation> results = executeCriteria(StockOperation.class, null, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.between("operationDate", start, end));
+			}
+		}, Order.desc("operationOrder"), Order.desc("dateCreated"));
+
+		if (results == null || results.size() == 0) {
+			return null;
+		} else {
+			return results.get(0);
+		}
 	}
 
 	@Override

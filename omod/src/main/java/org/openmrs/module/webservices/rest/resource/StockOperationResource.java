@@ -85,6 +85,8 @@ public class StockOperationResource
 		description.addProperty("status", Representation.DEFAULT);
 		description.addProperty("operationNumber", Representation.DEFAULT);
 		description.addProperty("dateCreated", Representation.DEFAULT);
+		description.addProperty("operationDate", Representation.DEFAULT);
+		description.addProperty("operationOrder", Representation.DEFAULT);
 
 		if (!(rep instanceof RefRepresentation)) {
 			description.addProperty("items", Representation.REF);
@@ -118,6 +120,18 @@ public class StockOperationResource
 		if (operation.getStatus() == StockOperationStatus.NEW || operation.getStatus() == StockOperationStatus.PENDING) {
 			if (operation.getOperationDate() == null) {
 				operation.setOperationDate(new Date());
+			}
+
+			if (operation.getOperationOrder() == null) {
+				// Get the last operation for the operation day
+				StockOperation lastOp = ((IStockOperationDataService)getService()).getLastOperationByDate(
+						operation.getOperationDate());
+
+				if (lastOp == null || lastOp.getOperationOrder() == null) {
+					operation.setOperationOrder(0);
+				} else {
+					operation.setOperationOrder(lastOp.getOperationOrder() + 1);
+				}
 			}
 		}
 
