@@ -123,43 +123,43 @@ public class StockOperationDataServiceImpl
 		final Set<Role> roles = user.getAllRoles();
 
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				DetachedCriteria subQuery = DetachedCriteria.forClass(IStockOperationType.class);
-				subQuery.setProjection(Property.forName("id"));
+					@Override
+					public void apply(Criteria criteria) {
+						DetachedCriteria subQuery = DetachedCriteria.forClass(IStockOperationType.class);
+						subQuery.setProjection(Property.forName("id"));
 
-				// Add user/role filter
-				if (roles != null && roles.size() > 0) {
-					subQuery.add(Restrictions.or(
+						// Add user/role filter
+						if (roles != null && roles.size() > 0) {
+							subQuery.add(Restrictions.or(
+									// Types that require user approval
+									Restrictions.eq("user", user),
+									// Types that require role approval
+									Restrictions.in("role", roles)
+							));
+						} else {
 							// Types that require user approval
-							Restrictions.eq("user", user),
-							// Types that require role approval
-							Restrictions.in("role", roles)
-					));
-				} else {
-					// Types that require user approval
-					subQuery.add(Restrictions.eq("user", user));
-				}
+							subQuery.add(Restrictions.eq("user", user));
+						}
 
-				if (status != null) {
-					criteria.add(Restrictions.and(
-							Restrictions.eq("status", status),
-							Restrictions.or(
-									// Transactions created by the user
-									Restrictions.eq("creator", user),
-									Property.forName("instanceType").in(subQuery)
-							)
-					));
-				} else {
-					criteria.add(Restrictions.or(
-							// Transactions created by the user
-							Restrictions.eq("creator", user),
-							Property.forName("instanceType").in(subQuery)
-					)
-					);
-				}
-			}
-		}, Order.desc("dateCreated")
+						if (status != null) {
+							criteria.add(Restrictions.and(
+									Restrictions.eq("status", status),
+									Restrictions.or(
+											// Transactions created by the user
+											Restrictions.eq("creator", user),
+											Property.forName("instanceType").in(subQuery)
+									)
+							));
+						} else {
+							criteria.add(Restrictions.or(
+											// Transactions created by the user
+											Restrictions.eq("creator", user),
+											Property.forName("instanceType").in(subQuery)
+									)
+							);
+						}
+					}
+				}, Order.desc("dateCreated")
 		);
 	}
 
@@ -199,11 +199,48 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public StockOperation getLastOperationByDate(Date date) {
+	public StockOperation getLastOperationByDate(final Date date) {
 		if (date == null) {
 			throw new IllegalArgumentException("The date to search for must be defined.");
 		}
 
+		List<StockOperation> results = executeCriteria(StockOperation.class, null, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				addDateCriteria(criteria, date);
+				criteria.setMaxResults(1);
+			}
+		}, Order.desc("operationOrder"), Order.desc("dateCreated"));
+
+		if (results == null || results.size() == 0) {
+			return null;
+		} else {
+			return results.get(0);
+		}
+	}
+
+	@Override
+	public StockOperation getFirstOperationByDate(final Date date) {
+		if (date == null) {
+			throw new IllegalArgumentException("The date to search for must be defined.");
+		}
+
+		List<StockOperation> results = executeCriteria(StockOperation.class, null, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				addDateCriteria(criteria, date);
+				criteria.setMaxResults(1);
+			}
+		}, Order.asc("operationOrder"), Order.asc("dateCreated"));
+
+		if (results == null || results.size() == 0) {
+			return null;
+		} else {
+			return results.get(0);
+		}
+	}
+
+	private void addDateCriteria(Criteria criteria, Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -218,18 +255,7 @@ public class StockOperationDataServiceImpl
 
 		final Date end = cal.getTime();
 
-		List<StockOperation> results = executeCriteria(StockOperation.class, null, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.between("operationDate", start, end));
-			}
-		}, Order.desc("operationOrder"), Order.desc("dateCreated"));
-
-		if (results == null || results.size() == 0) {
-			return null;
-		} else {
-			return results.get(0);
-		}
+		criteria.add(Restrictions.between("operationDate", start, end));
 	}
 
 	@Override

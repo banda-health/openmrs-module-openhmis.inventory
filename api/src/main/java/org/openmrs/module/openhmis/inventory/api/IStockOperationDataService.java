@@ -154,5 +154,18 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS} )
 	StockOperation getLastOperationByDate(Date date);
+
+	/**
+	 * Gets the first {@link StockOperation} (that is, with the least operation order) on the specified date.
+	 * @param date The operation date.
+	 * @return The last stock operation or {@code null} if no operations occurred on the specified date.
+	 * @should return the operation with the least operation order on the specified date
+	 * @should return the operation with the first creation date if the operation order is the same
+	 * @should return null if no operations occurred on the specified date
+	 * @should throw IllegalArgumentException if the date is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS} )
+	StockOperation getFirstOperationByDate(Date date);
 }
 

@@ -1336,7 +1336,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		Context.flushSession();
 
-		StockOperation result = service.getLastOperationByDate(cal.getTime());
+		StockOperation result = service.getLastOperationByDate(op1.getOperationDate());
 
 		Assert.assertNotNull(result);
 		Assert.assertEquals(op4, result);
@@ -1403,5 +1403,125 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test(expected = IllegalArgumentException.class)
 	public void getLastOperationByDate_shouldThrowIllegalArgumentExceptionIfTheDateIsNull() throws Exception {
 		service.getLastOperationByDate(null);
+	}
+
+	/**
+	 * @verifies return the operation with the least operation order on the specified date
+	 * @see IStockOperationDataService#getFirstOperationByDate(java.util.Date)
+	 */
+	@Test
+	public void getFirstOperationByDate_shouldReturnTheOperationWithTheLeastOperationOrderOnTheSpecifiedDate()
+			throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 10);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.MINUTE, 10);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(3);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		cal.add(Calendar.DAY_OF_MONTH, -2);
+		StockOperation op6 = createEntity(true);
+		op6.setOperationDate(cal.getTime());
+		op6.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+		service.save(op6);
+
+		Context.flushSession();
+
+		StockOperation result = service.getFirstOperationByDate(op4.getOperationDate());
+
+		Assert.assertNotNull(result);
+		Assert.assertEquals(op1, result);
+	}
+
+	/**
+	 * @verifies return the operation with the first creation date if the operation order is the same
+	 * @see IStockOperationDataService#getFirstOperationByDate(java.util.Date)
+	 */
+	@Test
+	public void getFirstOperationByDate_shouldReturnTheOperationWithTheFirstCreationDateIfTheOperationOrderIsTheSame()
+			throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 10);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+
+		Calendar calCreate = Calendar.getInstance();
+
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+		op1.setDateCreated(calCreate.getTime());
+
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(0);
+
+		calCreate.add(Calendar.MINUTE, 10);
+		op2.setDateCreated(calCreate.getTime());
+
+		service.save(op1);
+		service.save(op2);
+
+		Context.flushSession();
+
+		StockOperation result = service.getFirstOperationByDate(cal.getTime());
+
+		Assert.assertNotNull(result);
+		Assert.assertEquals(op1, result);
+	}
+
+	/**
+	 * @verifies return null if no operations occurred on the specified date
+	 * @see IStockOperationDataService#getFirstOperationByDate(java.util.Date)
+	 */
+	@Test
+	public void getFirstOperationByDate_shouldReturnNullIfNoOperationsOccurredOnTheSpecifiedDate() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 10);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+
+		StockOperation result = service.getFirstOperationByDate(cal.getTime());
+		Assert.assertNull(result);
+	}
+
+	/**
+	 * @verifies throw IllegalArgumentException if the date is null
+	 * @see IStockOperationDataService#getFirstOperationByDate(java.util.Date)
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getFirstOperationByDate_shouldThrowIllegalArgumentExceptionIfTheDateIsNull() throws Exception {
+		service.getFirstOperationByDate(null);
 	}
 }
