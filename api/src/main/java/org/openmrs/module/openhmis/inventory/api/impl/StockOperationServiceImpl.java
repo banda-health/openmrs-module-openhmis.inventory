@@ -105,6 +105,8 @@ public class StockOperationServiceImpl
 			process those reservations based on the operation state.
 		 */
 
+		checkOperationDate(operation);
+
 		validateOperation(operation);
 
 		if (operation.getItems() == null || operation.getItems().size() <= 0) {
@@ -713,6 +715,38 @@ public class StockOperationServiceImpl
 		}
 
 		return result;
+	}
+
+	private void checkOperationDate(StockOperation operation) {
+		// Ensure that the operation date and order are properly set
+		if (operation.getStatus() == StockOperationStatus.NEW || operation.getStatus() == StockOperationStatus.PENDING) {
+			if (operation.getOperationDate() == null) {
+				operation.setOperationDate(new Date());
+			}
+
+			if (operation.getOperationOrder() == null) {
+				// Get the last operation for the operation day
+				StockOperation lastOp = operationService.getLastOperationByDate(operation.getOperationDate());
+
+				if (lastOp == null || lastOp.getOperationOrder() == null) {
+					operation.setOperationOrder(0);
+				} else {
+					operation.setOperationOrder(lastOp.getOperationOrder() + 1);
+				}
+			} else {
+				// The operation order has been explicitly set. Ensure that any subsequent operations on the same day have
+				//	their operation order incremented
+				List<StockOperation> operations = operationService.getOperationsByDate(operation.getOperationDate(), null);
+
+				for (StockOperation op : operations) {
+					if (op != operation && op.getOperationOrder() >= operation.getOperationOrder()) {
+						op.setOperationOrder(op.getOperationOrder() + 1);
+
+						operationService.save(op);
+					}
+				}
+			}
+		}
 	}
 }
 
