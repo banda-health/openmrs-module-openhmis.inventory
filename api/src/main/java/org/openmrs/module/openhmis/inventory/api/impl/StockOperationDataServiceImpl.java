@@ -20,13 +20,16 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
+import org.openmrs.module.openhmis.commons.api.CustomizedOrderBy;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
@@ -199,8 +202,24 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public List<StockOperation> getFutureOperations(StockOperation operation, PagingInfo paging) {
-		return null;
+	public List<StockOperation> getFutureOperations(final StockOperation operation, PagingInfo paging) {
+		if (operation == null) {
+			throw new IllegalArgumentException("The operation must be defined.");
+		}
+
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.or(
+						Restrictions.and(
+							createDateRestriction(operation.getOperationDate()),
+							Restrictions.gt("operationOrder", operation.getOperationOrder())
+						),
+						Restrictions.gt("operationDate", operation.getOperationDate())
+				));
+			}
+		}, CustomizedOrderBy.asc("convert(operation_date, date)"), Order.asc("operationOrder"), Order.asc
+				("operationDate"));
 	}
 
 	@Override
@@ -241,7 +260,7 @@ public class StockOperationDataServiceImpl
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				addDateCriteria(criteria, date);
+				criteria.add(createDateRestriction(date));
 				if (maxResults != null && maxResults > 0) {
 					criteria.setMaxResults(maxResults);
 				}
@@ -249,7 +268,7 @@ public class StockOperationDataServiceImpl
 		}, orders);
 	}
 
-	private void addDateCriteria(Criteria criteria, Date date) {
+	private Criterion createDateRestriction(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		Utility.clearCalendarTime(cal);
@@ -259,7 +278,7 @@ public class StockOperationDataServiceImpl
 		cal.add(Calendar.MILLISECOND, -1);
 		final Date end = cal.getTime();
 
-		criteria.add(Restrictions.between("operationDate", start, end));
+		return Restrictions.between("operationDate", start, end);
 	}
 
 	@Override

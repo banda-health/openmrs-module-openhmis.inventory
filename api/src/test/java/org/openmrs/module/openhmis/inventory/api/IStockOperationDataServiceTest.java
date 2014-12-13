@@ -1596,53 +1596,49 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getFutureOperations_shouldReturnOperationsWithHigherOperationOrderWhenDayIsTheSame() throws Exception {
 		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+
 		cal.add(Calendar.YEAR, 2);
-		Calendar cal2 = Calendar.getInstance();
-		cal2.add(Calendar.YEAR, 2);
-		cal2.add(Calendar.HOUR_OF_DAY, 5);
-		Calendar cal3 = Calendar.getInstance();
-		cal3.add(Calendar.YEAR, 2);
-		cal3.add(Calendar.HOUR_OF_DAY, 10);
-		cal3.add(Calendar.MINUTE, 5);
-		Calendar cal4 = Calendar.getInstance();
-		cal4.add(Calendar.YEAR, 2);
-		cal4.add(Calendar.DAY_OF_MONTH, 1);
-		Calendar cal5 = Calendar.getInstance();
-		cal5.add(Calendar.YEAR, 2);
-		cal5.add(Calendar.HOUR_OF_DAY, 12);
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
 
-		StockOperation operation = createEntity(true);
-		operation.setOperationDate(cal.getTime());
-		operation.setOperationOrder(0);
-		StockOperation operation2 = createEntity(true);
-		operation2.setOperationDate(cal2.getTime());
-		operation2.setOperationOrder(1);
-		StockOperation operation3 = createEntity(true);
-		operation3.setOperationDate(cal3.getTime());
-		operation3.setOperationOrder(2);
-		StockOperation operation4 = createEntity(true);
-		operation4.setOperationDate(cal4.getTime());
-		operation4.setOperationOrder(0);
-		StockOperation operation5 = createEntity(true);
-		operation5.setOperationDate(cal5.getTime());
-		operation5.setOperationOrder(-1);
+		cal.add(Calendar.HOUR_OF_DAY, 5);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
 
-		service.save(operation);
-		service.save(operation2);
-		service.save(operation3);
-		service.save(operation4);
-		service.save(operation5);
+		cal.add(Calendar.HOUR_OF_DAY, 5);
+		cal.add(Calendar.MINUTE, 5);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(0);
+
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(op1.getOperationDate());
+		op5.setOperationOrder(-1);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
 		Context.flushSession();
 
-		List<StockOperation> results = service.getFutureOperations(operation, null);
+		List<StockOperation> results = service.getFutureOperations(op1, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
 
 		// Results should be in order of operation date, then operation order
-		Assert.assertEquals(operation2, results.get(0));
-		Assert.assertEquals(operation3, results.get(1));
-		Assert.assertEquals(operation4, results.get(3));
+		Assert.assertEquals(op2, results.get(0));
+		Assert.assertEquals(op3, results.get(1));
+		Assert.assertEquals(op4, results.get(2));
 	}
 
 	/**
