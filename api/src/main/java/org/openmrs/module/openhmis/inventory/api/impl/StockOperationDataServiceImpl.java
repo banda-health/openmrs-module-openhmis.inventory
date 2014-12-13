@@ -28,6 +28,7 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
@@ -38,7 +39,6 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class StockOperationDataServiceImpl
 		extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
@@ -199,18 +199,19 @@ public class StockOperationDataServiceImpl
 	}
 
 	@Override
-	public StockOperation getLastOperationByDate(final Date date) {
-		if (date == null) {
-			throw new IllegalArgumentException("The date to search for must be defined.");
-		}
+	public List<StockOperation> getFutureOperations(StockOperation operation, PagingInfo paging) {
+		return null;
+	}
 
-		List<StockOperation> results = executeCriteria(StockOperation.class, null, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				addDateCriteria(criteria, date);
-				criteria.setMaxResults(1);
-			}
-		}, Order.desc("operationOrder"), Order.desc("dateCreated"));
+	@Override
+	public List<StockOperation> getOperationsByDate(final Date date, PagingInfo paging) {
+		return getOperationsByDate(date, paging, null, Order.asc("operationOrder"), Order.asc("operationDate"));
+	}
+
+	@Override
+	public StockOperation getLastOperationByDate(final Date date) {
+		List<StockOperation> results = getOperationsByDate(date, null, 1, Order.desc("operationOrder"),
+				Order.desc("dateCreated"));
 
 		if (results == null || results.size() == 0) {
 			return null;
@@ -221,17 +222,8 @@ public class StockOperationDataServiceImpl
 
 	@Override
 	public StockOperation getFirstOperationByDate(final Date date) {
-		if (date == null) {
-			throw new IllegalArgumentException("The date to search for must be defined.");
-		}
-
-		List<StockOperation> results = executeCriteria(StockOperation.class, null, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				addDateCriteria(criteria, date);
-				criteria.setMaxResults(1);
-			}
-		}, Order.asc("operationOrder"), Order.asc("dateCreated"));
+		List<StockOperation> results = getOperationsByDate(date, null, 1, Order.asc("operationOrder"),
+				Order.asc("dateCreated"));
 
 		if (results == null || results.size() == 0) {
 			return null;
@@ -240,19 +232,31 @@ public class StockOperationDataServiceImpl
 		}
 	}
 
+	private List<StockOperation> getOperationsByDate(final Date date, PagingInfo paging, final Integer maxResults,
+			Order... orders) {
+		if (date == null) {
+			throw new IllegalArgumentException("The date to search for must be defined.");
+		}
+
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				addDateCriteria(criteria, date);
+				if (maxResults != null && maxResults > 0) {
+					criteria.setMaxResults(maxResults);
+				}
+			}
+		}, orders);
+	}
+
 	private void addDateCriteria(Criteria criteria, Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
+		Utility.clearCalendarTime(cal);
 		final Date start = cal.getTime();
 
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		cal.add(Calendar.MILLISECOND, -1);
-
 		final Date end = cal.getTime();
 
 		criteria.add(Restrictions.between("operationDate", start, end));

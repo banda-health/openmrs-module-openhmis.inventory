@@ -116,6 +116,7 @@ public class StockOperationResource
 		}
 
 		StockOperation result;
+		IStockOperationDataService dataService = (IStockOperationDataService)getService();
 
 		if (operation.getStatus() == StockOperationStatus.NEW || operation.getStatus() == StockOperationStatus.PENDING) {
 			if (operation.getOperationDate() == null) {
@@ -124,13 +125,24 @@ public class StockOperationResource
 
 			if (operation.getOperationOrder() == null) {
 				// Get the last operation for the operation day
-				StockOperation lastOp = ((IStockOperationDataService)getService()).getLastOperationByDate(
-						operation.getOperationDate());
+				StockOperation lastOp = dataService.getLastOperationByDate(operation.getOperationDate());
 
 				if (lastOp == null || lastOp.getOperationOrder() == null) {
 					operation.setOperationOrder(0);
 				} else {
 					operation.setOperationOrder(lastOp.getOperationOrder() + 1);
+				}
+			} else {
+				// The operation order has been explicitly set. Ensure that any subsequent operations on the same day have
+				//	their operation order incremented
+				List<StockOperation> operations = dataService.getOperationsByDate(operation.getOperationDate(), null);
+
+				for (StockOperation op : operations) {
+					if (op != operation && op.getOperationOrder() >= operation.getOperationOrder()) {
+						op.setOperationOrder(op.getOperationOrder() + 1);
+
+						super.save(op);
+					}
 				}
 			}
 		}

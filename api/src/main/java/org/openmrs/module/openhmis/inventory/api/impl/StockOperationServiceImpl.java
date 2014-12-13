@@ -1,6 +1,7 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,6 +20,7 @@ import org.joda.time.Seconds;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
@@ -48,6 +50,10 @@ public class StockOperationServiceImpl
 	private IStockroomDataService stockroomService;
 	private IItemStockDataService itemStockService;
 	private IStockOperationDataService operationService;
+
+	// These calendars are used so a temporary variables when sorting operations
+	private Calendar cal1 = Calendar.getInstance();
+	private Calendar cal2 = Calendar.getInstance();
 
 	@Autowired
 	public StockOperationServiceImpl(IStockOperationDataService operationService,
@@ -154,10 +160,9 @@ public class StockOperationServiceImpl
 			// Check to see if we should autocomplete the operation
 			if (operation.getStatus() == StockOperationStatus.PENDING &&
 					ModuleSettings.loadSettings().getAutoCompleteOperations()) {
-				operation.getInstanceType().onCompleted(operation);
 				operation.setStatus(StockOperationStatus.COMPLETED);
 
-				operation = operationService.save(operation);
+				operation = submitOperation(operation);
 			}
 
 			return operation;
@@ -361,7 +366,7 @@ public class StockOperationServiceImpl
 		Collections.sort(rollbackOperations, new Comparator<StockOperation>() {
 			@Override
 			public int compare(StockOperation o1, StockOperation o2) {
-				return o1.getOperationDate().compareTo(o2.getOperationDate()) * -1;
+				return compareOperationsByDateAndOrder(o1, o2) * -1;
 			}
 		});
 
@@ -394,7 +399,7 @@ public class StockOperationServiceImpl
 		Collections.sort(rollbackOperations, new Comparator<StockOperation>() {
 			@Override
 			public int compare(StockOperation o1, StockOperation o2) {
-				return o1.getOperationDate().compareTo(o2.getOperationDate());
+				return compareOperationsByDateAndOrder(o1, o2);
 			}
 		});
 
@@ -693,6 +698,21 @@ public class StockOperationServiceImpl
 		detail.setCalculatedExpiration(true);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(stock.getQuantity());
+	}
+
+	private int compareOperationsByDateAndOrder(StockOperation o1, StockOperation o2) {
+		cal1.setTime(o1.getOperationDate());
+		Utility.clearCalendarTime(cal1);
+
+		cal2.setTime(o2.getOperationDate());
+		Utility.clearCalendarTime(cal2);
+
+		int result =  cal1.compareTo(cal2);
+		if (result == 0) {
+			result = o1.getOperationOrder().compareTo(o2.getOperationOrder());
+		}
+
+		return result;
 	}
 }
 

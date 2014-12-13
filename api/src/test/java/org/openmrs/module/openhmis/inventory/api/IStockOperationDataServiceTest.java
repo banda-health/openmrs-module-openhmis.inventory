@@ -17,6 +17,7 @@ import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
@@ -1176,18 +1177,19 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getOperationsSince_shouldReturnOperationsWithOperationDatePastSpecifiedDate() throws Exception {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 2);
-		Calendar cal2 = Calendar.getInstance();
-		cal2.add(Calendar.YEAR, 15);
-		Calendar cal3 = Calendar.getInstance();
-		cal3.add(Calendar.YEAR, 10);
+		Utility.clearCalendarTime(cal);
 
+		cal.add(Calendar.YEAR, 2);
 		StockOperation operation = createEntity(true);
 		operation.setOperationDate(cal.getTime());
+
+		cal.add(Calendar.YEAR, 13);
 		StockOperation operation2 = createEntity(true);
-		operation2.setOperationDate(cal2.getTime());
+		operation2.setOperationDate(cal.getTime());
+
+		cal.add(Calendar.YEAR, -3);
 		StockOperation operation3 = createEntity(true);
-		operation3.setOperationDate(cal3.getTime());
+		operation3.setOperationDate(cal.getTime());
 
 		service.save(operation);
 		service.save(operation2);
@@ -1212,18 +1214,19 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getOperationsSince_shouldReturnAllResultsIfPagingIsNull() throws Exception {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 2);
-		Calendar cal2 = Calendar.getInstance();
-		cal2.add(Calendar.YEAR, 15);
-		Calendar cal3 = Calendar.getInstance();
-		cal3.add(Calendar.YEAR, 10);
+		Utility.clearCalendarTime(cal);
 
+		cal.add(Calendar.YEAR, 2);
 		StockOperation operation = createEntity(true);
 		operation.setOperationDate(cal.getTime());
+
+		cal.add(Calendar.YEAR, 13);
 		StockOperation operation2 = createEntity(true);
-		operation2.setOperationDate(cal2.getTime());
+		operation2.setOperationDate(cal.getTime());
+
+		cal.add(Calendar.YEAR, -3);
 		StockOperation operation3 = createEntity(true);
-		operation3.setOperationDate(cal3.getTime());
+		operation3.setOperationDate(cal.getTime());
 
 		service.save(operation);
 		service.save(operation2);
@@ -1248,18 +1251,19 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getOperationsSince_shouldReturnPagedOperationsIfPagingIsSpecified() throws Exception {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 2);
-		Calendar cal2 = Calendar.getInstance();
-		cal2.add(Calendar.YEAR, 15);
-		Calendar cal3 = Calendar.getInstance();
-		cal3.add(Calendar.YEAR, 10);
+		Utility.clearCalendarTime(cal);
 
+		cal.add(Calendar.YEAR, 2);
 		StockOperation operation = createEntity(true);
 		operation.setOperationDate(cal.getTime());
+
+		cal.add(Calendar.YEAR, 13);
 		StockOperation operation2 = createEntity(true);
-		operation2.setOperationDate(cal2.getTime());
+		operation2.setOperationDate(cal.getTime());
+
+		cal.add(Calendar.YEAR, -3);
 		StockOperation operation3 = createEntity(true);
-		operation3.setOperationDate(cal3.getTime());
+		operation3.setOperationDate(cal.getTime());
 
 		service.save(operation);
 		service.save(operation2);
@@ -1299,10 +1303,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getLastOperationByDate_shouldReturnTheOperationWithTheLargestOperationOrderOnTheSpecifiedDate()
 			throws Exception {
 		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
 		cal.add(Calendar.YEAR, 10);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
 
 		StockOperation op1 = createEntity(true);
 		op1.setOperationDate(cal.getTime());
@@ -1350,13 +1352,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getLastOperationByDate_shouldReturnTheOperationWithTheLastCreationDateIfTheOperationOrderIsTheSame()
 			throws Exception {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 10);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
+		Utility.clearCalendarTime(cal);
 
 		Calendar calCreate = Calendar.getInstance();
 
+		cal.add(Calendar.YEAR, 10);
 		StockOperation op1 = createEntity(true);
 		op1.setOperationDate(cal.getTime());
 		op1.setOperationOrder(0);
@@ -1388,9 +1388,6 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getLastOperationByDate_shouldReturnNullIfNoOperationsOccurredOnTheSpecifiedDate() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, 10);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
 
 		StockOperation result = service.getLastOperationByDate(cal.getTime());
 		Assert.assertNull(result);
@@ -1413,11 +1410,9 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getFirstOperationByDate_shouldReturnTheOperationWithTheLeastOperationOrderOnTheSpecifiedDate()
 			throws Exception {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 10);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
+		Utility.clearCalendarTime(cal);
 
+		cal.add(Calendar.YEAR, 10);
 		StockOperation op1 = createEntity(true);
 		op1.setOperationDate(cal.getTime());
 		op1.setOperationOrder(0);
@@ -1470,13 +1465,11 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getFirstOperationByDate_shouldReturnTheOperationWithTheFirstCreationDateIfTheOperationOrderIsTheSame()
 			throws Exception {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, 10);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
+		Utility.clearCalendarTime(cal);
 
 		Calendar calCreate = Calendar.getInstance();
 
+		cal.add(Calendar.YEAR, 10);
 		StockOperation op1 = createEntity(true);
 		op1.setOperationDate(cal.getTime());
 		op1.setOperationOrder(0);
@@ -1508,9 +1501,6 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getFirstOperationByDate_shouldReturnNullIfNoOperationsOccurredOnTheSpecifiedDate() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, 10);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
 
 		StockOperation result = service.getFirstOperationByDate(cal.getTime());
 		Assert.assertNull(result);
@@ -1523,5 +1513,572 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test(expected = IllegalArgumentException.class)
 	public void getFirstOperationByDate_shouldThrowIllegalArgumentExceptionIfTheDateIsNull() throws Exception {
 		service.getFirstOperationByDate(null);
+	}
+
+	/**
+	 * @verifies throw IllegalArgumentException if the operation is null
+	 * @see IStockOperationDataService#getFutureOperations(StockOperation, PagingInfo)
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getFutureOperations_shouldThrowIllegalArgumentExceptionIfTheOperationIsNull() throws Exception {
+		service.getFutureOperations(null, new PagingInfo(1, 1));
+	}
+
+	/**
+	 * @verifies return an empty list if no operations are found
+	 * @see IStockOperationDataService#getFutureOperations(StockOperation, PagingInfo)
+	 */
+	@Test
+	public void getFutureOperations_shouldReturnAnEmptyListIfNoOperationsAreFound() throws Exception {
+		List<StockOperation> results = service.getOperationsSince(new Date(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+	}
+
+	/**
+	 * @verifies return operations with operation date past specified operation
+	 * @see IStockOperationDataService#getFutureOperations(StockOperation, PagingInfo)
+	 */
+	@Test
+	public void getFutureOperations_shouldReturnOperationsWithOperationDatePastSpecifiedOperation() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+		cal.add(Calendar.YEAR, 10);
+
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.MINUTE, 10);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(3);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+
+		Context.flushSession();
+
+		List<StockOperation> results = service.getFutureOperations(op1, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(4, results.size());
+
+		Assert.assertEquals(op2, results.get(0));
+		Assert.assertEquals(op3, results.get(1));
+		Assert.assertEquals(op4, results.get(2));
+		Assert.assertEquals(op5, results.get(3));
+	}
+
+	/**
+	 * @verifies return operations with higher operation order when day is the same
+	 * @see IStockOperationDataService#getFutureOperations(StockOperation, PagingInfo)
+	 */
+	@Test
+	public void getFutureOperations_shouldReturnOperationsWithHigherOperationOrderWhenDayIsTheSame() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 2);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.YEAR, 2);
+		cal2.add(Calendar.HOUR_OF_DAY, 5);
+		Calendar cal3 = Calendar.getInstance();
+		cal3.add(Calendar.YEAR, 2);
+		cal3.add(Calendar.HOUR_OF_DAY, 10);
+		cal3.add(Calendar.MINUTE, 5);
+		Calendar cal4 = Calendar.getInstance();
+		cal4.add(Calendar.YEAR, 2);
+		cal4.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar cal5 = Calendar.getInstance();
+		cal5.add(Calendar.YEAR, 2);
+		cal5.add(Calendar.HOUR_OF_DAY, 12);
+
+		StockOperation operation = createEntity(true);
+		operation.setOperationDate(cal.getTime());
+		operation.setOperationOrder(0);
+		StockOperation operation2 = createEntity(true);
+		operation2.setOperationDate(cal2.getTime());
+		operation2.setOperationOrder(1);
+		StockOperation operation3 = createEntity(true);
+		operation3.setOperationDate(cal3.getTime());
+		operation3.setOperationOrder(2);
+		StockOperation operation4 = createEntity(true);
+		operation4.setOperationDate(cal4.getTime());
+		operation4.setOperationOrder(0);
+		StockOperation operation5 = createEntity(true);
+		operation5.setOperationDate(cal5.getTime());
+		operation5.setOperationOrder(-1);
+
+		service.save(operation);
+		service.save(operation2);
+		service.save(operation3);
+		service.save(operation4);
+		service.save(operation5);
+		Context.flushSession();
+
+		List<StockOperation> results = service.getFutureOperations(operation, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(3, results.size());
+
+		// Results should be in order of operation date, then operation order
+		Assert.assertEquals(operation2, results.get(0));
+		Assert.assertEquals(operation3, results.get(1));
+		Assert.assertEquals(operation4, results.get(3));
+	}
+
+	/**
+	 * @verifies return all results if paging is null
+	 * @see IStockOperationDataService#getFutureOperations(StockOperation, PagingInfo)
+	 */
+	@Test
+	public void getFutureOperations_shouldReturnAllResultsIfPagingIsNull() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+		cal.add(Calendar.YEAR, 10);
+
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.MINUTE, 10);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(3);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+
+		Context.flushSession();
+
+		List<StockOperation> results = service.getFutureOperations(op1, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(4, results.size());
+	}
+
+	/**
+	 * @verifies return paged results if paging is specified
+	 * @see IStockOperationDataService#getFutureOperations(StockOperation, PagingInfo)
+	 */
+	@Test
+	public void getFutureOperations_shouldReturnPagedResultsIfPagingIsSpecified() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+		cal.add(Calendar.YEAR, 10);
+
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.MINUTE, 10);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(3);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+
+		Context.flushSession();
+
+		PagingInfo paging = new PagingInfo(1, 1);
+		List<StockOperation> results = service.getFutureOperations(op1, paging);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(4, (long)paging.getTotalRecordCount());
+		Assert.assertEquals(1, results.size());
+
+		Assert.assertEquals(op2, results.get(0));
+
+		paging.setPage(2);
+		results = service.getFutureOperations(op1, paging);
+		Assert.assertEquals(op3, results.get(0));
+
+		paging.setPage(3);
+		results = service.getFutureOperations(op1, paging);
+		Assert.assertEquals(op4, results.get(0));
+
+		paging.setPage(4);
+		results = service.getFutureOperations(op1, paging);
+		Assert.assertEquals(op5, results.get(0));
+	}
+
+	/**
+	 * @verifies return operations by operation order then by date
+	 * @see IStockOperationDataService#getFutureOperations(StockOperation, PagingInfo)
+	 */
+	@Test
+	public void getFutureOperations_shouldReturnOperationsByDateThenByOperationOrder() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+
+		cal.add(Calendar.YEAR, 2);
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.HOUR_OF_DAY, 5);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.MINUTE, 5);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(0);
+
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(op1.getOperationDate());
+		op5.setOperationOrder(-1);
+
+		StockOperation op6 = createEntity(true);
+		op6.setOperationDate(cal.getTime());
+		op6.setOperationOrder(-1);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		StockOperation op7 = createEntity(true);
+		op7.setOperationDate(cal.getTime());
+		op7.setOperationOrder(1);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+		service.save(op6);
+		service.save(op7);
+		Context.flushSession();
+
+		List<StockOperation> results = service.getFutureOperations(op1, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(5, results.size());
+
+		// Results should be in order of operation date
+		Assert.assertEquals(op2, results.get(0));
+		Assert.assertEquals(op3, results.get(1));
+		Assert.assertEquals(op6, results.get(2));
+		Assert.assertEquals(op4, results.get(3));
+		Assert.assertEquals(op7, results.get(4));
+	}
+
+	/**
+	 * @verifies throw IllegalArgumentException if the operation is null
+	 * @see IStockOperationDataService#getOperationsByDate(java.util.Date, PagingInfo)
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void getOperationsByDate_shouldThrowIllegalArgumentExceptionIfTheOperationIsNull() throws Exception {
+		service.getOperationsByDate(null, new PagingInfo(1, 1));
+	}
+
+	/**
+	 * @verifies return an empty list if no operations are found
+	 * @see IStockOperationDataService#getOperationsByDate(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsByDate_shouldReturnAnEmptyListIfNoOperationsAreFound() throws Exception {
+		List<StockOperation> results = service.getOperationsByDate(new Date(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+	}
+
+	/**
+	 * @verifies return operations that occurred on the specified date regardless of time
+	 * @see IStockOperationDataService#getOperationsByDate(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsByDate_shouldReturnOperationsThatOccurredOnTheSpecifiedDateRegardlessOfTime() throws
+			Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.HOUR_OF_DAY, 6);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.MINUTE, 20);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		cal.add(Calendar.MINUTE, 15);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(3);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		Date test = cal.getTime();
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+
+		Context.flushSession();
+
+		List<StockOperation> results = service.getOperationsByDate(test, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(4, results.size());
+
+		Assert.assertEquals(op1, results.get(0));
+		Assert.assertEquals(op2, results.get(1));
+		Assert.assertEquals(op3, results.get(2));
+		Assert.assertEquals(op4, results.get(3));
+	}
+
+	/**
+	 * @verifies return operations ordered by operation order
+	 * @see IStockOperationDataService#getOperationsByDate(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsByDate_shouldReturnOperationsOrderedByOperationOrder() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(3);
+
+		cal.add(Calendar.HOUR_OF_DAY, 6);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(2);
+
+		cal.add(Calendar.MINUTE, 20);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(1);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		cal.add(Calendar.MINUTE, 15);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(0);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		Date test = cal.getTime();
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+
+		Context.flushSession();
+
+		List<StockOperation> results = service.getOperationsByDate(test, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(4, results.size());
+
+		Assert.assertEquals(op4, results.get(0));
+		Assert.assertEquals(op3, results.get(1));
+		Assert.assertEquals(op2, results.get(2));
+		Assert.assertEquals(op1, results.get(3));
+	}
+
+	/**
+	 * @verifies return all results if paging is null
+	 * @see IStockOperationDataService#getOperationsByDate(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsByDate_shouldReturnAllResultsIfPagingIsNull() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.HOUR_OF_DAY, 6);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.MINUTE, 20);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		cal.add(Calendar.MINUTE, 15);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(3);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		Date test = cal.getTime();
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+
+		Context.flushSession();
+
+		List<StockOperation> results = service.getOperationsByDate(test, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(4, results.size());
+
+		Assert.assertEquals(op1, results.get(0));
+		Assert.assertEquals(op2, results.get(1));
+		Assert.assertEquals(op3, results.get(2));
+		Assert.assertEquals(op4, results.get(3));
+	}
+
+	/**
+	 * @verifies return paged results if paging is specified
+	 * @see IStockOperationDataService#getOperationsByDate(java.util.Date, PagingInfo)
+	 */
+	@Test
+	public void getOperationsByDate_shouldReturnPagedResultsIfPagingIsSpecified() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		Utility.clearCalendarTime(cal);
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op1 = createEntity(true);
+		op1.setOperationDate(cal.getTime());
+		op1.setOperationOrder(0);
+
+		cal.add(Calendar.HOUR_OF_DAY, 6);
+		StockOperation op2 = createEntity(true);
+		op2.setOperationDate(cal.getTime());
+		op2.setOperationOrder(1);
+
+		cal.add(Calendar.MINUTE, 20);
+		StockOperation op3 = createEntity(true);
+		op3.setOperationDate(cal.getTime());
+		op3.setOperationOrder(2);
+
+		cal.add(Calendar.HOUR_OF_DAY, 2);
+		cal.add(Calendar.MINUTE, 15);
+		StockOperation op4 = createEntity(true);
+		op4.setOperationDate(cal.getTime());
+		op4.setOperationOrder(3);
+
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+		Date test = cal.getTime();
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		StockOperation op5 = createEntity(true);
+		op5.setOperationDate(cal.getTime());
+		op5.setOperationOrder(0);
+
+		service.save(op1);
+		service.save(op2);
+		service.save(op3);
+		service.save(op4);
+		service.save(op5);
+
+		Context.flushSession();
+
+		PagingInfo pagingInfo = new PagingInfo(1, 1);
+		List<StockOperation> results = service.getOperationsByDate(test, pagingInfo);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(4, (long)pagingInfo.getTotalRecordCount());
+
+		Assert.assertEquals(op1, results.get(0));
+
+		pagingInfo.setPage(2);
+		results = service.getOperationsByDate(test, pagingInfo);
+		Assert.assertEquals(op2, results.get(0));
+
+		pagingInfo.setPage(3);
+		results = service.getOperationsByDate(test, pagingInfo);
+		Assert.assertEquals(op3, results.get(0));
+
+		pagingInfo.setPage(4);
+		results = service.getOperationsByDate(test, pagingInfo);
+		Assert.assertEquals(op4, results.get(0));
 	}
 }
