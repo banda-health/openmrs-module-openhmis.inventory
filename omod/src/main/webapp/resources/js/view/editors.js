@@ -600,6 +600,9 @@ define(
             operationOrderEl: null,
             updateOperationEl: null,
 
+            dateOperations: null,
+            selectedOperation: null,
+
             events: {
                 'click #changeOperationDate' : 'showChangeDialog'
             },
@@ -686,6 +689,9 @@ define(
                     date = new Date(date);
                 }
 
+                this.dateOperations = null;
+                this.selectedOperation = null;
+
                 // Get the operations that occurred on the selected date
                 var search = new openhmis.GenericCollection([], {
                     model: openhmis.NewOperation
@@ -694,6 +700,8 @@ define(
                 search.fetch({
                     queryString: "operation_date=" + openhmis.dateFormat(date, false),
                     success: function(model, resp) {
+                        self.dateOperations = model.models;
+
                         if (model.models && model.models.length > 0) {
                             // If there were any operations on the date then display the operation order select
 
@@ -735,9 +743,18 @@ define(
 
             orderChanged: function() {
                 var order = this.operationOrderEl.val();
-                if (order == undefined) {
+                if (order == undefined || order == "") {
+                    this.selectedOperation = null;
                     this.updateOperationEl.button("disable");
                 } else {
+                    var index = this.operationOrderEl[0].selectedIndex - 1;
+                    if (index < this.dateOperations.length) {
+                        this.selectedOperation = this.dateOperations[index];
+                    } else {
+                        // If the last option is select (After last operation) then use the last operation
+                        this.selectedOperation = this.dateOperations[this.dateOperations.length - 1]
+                    }
+
                     this.updateOperationEl.button("enable");
                 }
             },
@@ -761,10 +778,19 @@ define(
 
                 var order = this.operationOrderEl.val();
                 if (order) {
+                    if (this.selectedOperation) {
+                        // If an operation was selected for this operation to run before then use that operation date
+                        date = this.selectedOperation.get('operationDate');
+                        this.model.set('operationDate', this.selectedOperation.get('operationDate'));
+                    }
+
                     this.model.set('operationOrder', order);
+
+                    this.currentDateEl.text(openhmis.dateTimeFormatLocale(date));
+                } else {
+                    this.currentDateEl.text(openhmis.dateFormatLocale(date));
                 }
 
-                this.currentDateEl.text(openhmis.dateFormatLocale(date));
                 this.currentDateValueEl.val(date);
 
                 this.changeOperationDialogEl.dialog('close');

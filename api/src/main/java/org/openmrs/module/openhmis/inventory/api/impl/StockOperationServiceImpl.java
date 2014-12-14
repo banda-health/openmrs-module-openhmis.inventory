@@ -105,9 +105,8 @@ public class StockOperationServiceImpl
 			process those reservations based on the operation state.
 		 */
 
-		checkOperationDate(operation);
-
 		validateOperation(operation);
+		checkOperationDate(operation);
 
 		if (operation.getItems() == null || operation.getItems().size() <= 0) {
 			throw new APIException("The operation must have at least one operation item defined.");
