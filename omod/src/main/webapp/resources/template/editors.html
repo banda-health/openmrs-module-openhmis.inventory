@@ -63,3 +63,23 @@
         <div></div>
     <? } ?>
 </script>
+
+<script id="operation-date-editor" type="text/template">
+    <div id="currentOperationDate">
+        <label id="currentOperationDateLabel"><?= operationDateText ?></label>
+        <input type="hidden" id="currentOperationDateValue" value="<?= operationDate  ?>" />
+        <input id="changeOperationDate" type="button" value="Change Date" />
+    </div>
+    <div id="changeOperationDateDialog" title="Change Operation Date" style="display: none;">
+        <div>
+            <label for="operationDateEntry">Operation Date:</label>
+            <input id="operationDateEntry" type="text" />
+        </div>
+        <div id="dateOperations" style="display: none;">
+            <br />
+            <label for="operationOrderSelect">Occurs:</label>
+            <select id="operationOrderSelect">
+            </select>
+        </div>
+    </div>
+</script>

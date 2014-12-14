@@ -217,6 +217,7 @@ public class StockOperationDataServiceImpl
 						),
 						Restrictions.gt("operationDate", operation.getOperationDate())
 				));
+			// Note that this ordering may not support all databases
 			}
 		}, CustomizedOrderBy.asc("convert(operation_date, date)"), Order.asc("operationOrder"), Order.asc
 				("operationDate"));

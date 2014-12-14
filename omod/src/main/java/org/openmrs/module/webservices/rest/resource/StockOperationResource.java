@@ -20,6 +20,7 @@ import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
@@ -174,17 +175,18 @@ public class StockOperationResource
 		processItemStock(operation, items);
 
 		BaseRestDataResource.syncCollection(operation.getItems(), items,
-			new Action2<Collection<StockOperationItem>, StockOperationItem>() {
-				@Override
-				public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
-					operation.addItem(item); }
-			},
-			new Action2<Collection<StockOperationItem>, StockOperationItem>() {
-				@Override
-				public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
-					operation.removeItem(item);
-				}
-			});
+				new Action2<Collection<StockOperationItem>, StockOperationItem>() {
+					@Override
+					public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
+						operation.addItem(item);
+					}
+				},
+				new Action2<Collection<StockOperationItem>, StockOperationItem>() {
+					@Override
+					public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
+						operation.removeItem(item);
+					}
+				});
 	}
 
 	@PropertySetter("instanceType")
@@ -196,6 +198,16 @@ public class StockOperationResource
 	@PropertySetter("attributes")
 	public void setAttributes(StockOperation instance, List<StockOperationAttribute> attributes) {
 		super.setAttributes(instance, attributes);
+	}
+
+	@PropertySetter("operationDate")
+	public void setOperationDate(StockOperation instance, String dateText) {
+		Date date = Utility.parseOpenhmisDateString(dateText);
+		if (date == null) {
+			throw new IllegalArgumentException("Could not parse '" + dateText + "' as a date.");
+		}
+
+		instance.setOperationDate(date);
 	}
 
 	@Override

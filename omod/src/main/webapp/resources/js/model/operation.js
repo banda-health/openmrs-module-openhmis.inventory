@@ -229,6 +229,9 @@ define(
                     }),
                     objRef: true
                 };
+                this.schema.operationDate = {
+                    type: 'OperationDateEditor'
+                };
                 this.schema.items = {
                     type: 'List',
                     itemType: 'NestedModel',
