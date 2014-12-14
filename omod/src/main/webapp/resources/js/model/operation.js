@@ -229,6 +229,10 @@ define(
                     }),
                     objRef: true
                 };
+                this.schema.operationDate = {
+                    type: 'OperationDateEditor',
+                    format: openhmis.dateTimeFormatLocale
+                };
                 this.schema.items = {
                     type: 'List',
                     itemType: 'NestedModel',

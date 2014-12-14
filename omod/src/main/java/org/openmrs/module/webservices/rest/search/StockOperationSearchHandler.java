@@ -13,13 +13,17 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
@@ -46,7 +50,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 			Arrays.asList("*"),
 			Arrays.asList(
 					new SearchQuery.Builder("Finds stock operations with an optional status and/or stockroom.")
-							.withOptionalParameters("status", "stockroom_uuid")
+							.withOptionalParameters("status", "stockroom_uuid", "operation_date")
 							.build()
 
 			)
@@ -68,8 +72,17 @@ public class StockOperationSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) {
+		String operationDateText = context.getParameter("operation_date");
 		String statusText = context.getParameter("status");
 		String stockroomText = context.getParameter("stockroom_uuid");
+
+		Date operationDate = null;
+		if (!StringUtils.isEmpty(operationDateText)) {
+			operationDate = Utility.parseOpenhmisDateString(operationDateText);
+			if (operationDate == null) {
+				return new EmptySearchResult();
+			}
+		}
 
 		StockOperationStatus status = null;
 		if (!StringUtils.isEmpty(statusText)) {
@@ -91,25 +104,29 @@ public class StockOperationSearchHandler implements SearchHandler {
 			}
 		}
 
-		StockOperationSearch search = null;
-		if (status != null) {
-			search = new StockOperationSearch();
-			search.getTemplate().setStatus(status);
-		}
-
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		List<StockOperation> operations;
-		if (stockroom == null) {
-			if (search == null) {
-				// No search was defined so just return everything (excluding retired)
-				operations = operationDataService.getAll(false, pagingInfo);
-			} else {
-				// Return the operations with the specified status
-				operations = operationDataService.getOperations(search, pagingInfo);
-			}
+		if (operationDate != null) {
+			operations = operationDataService.getOperationsByDate(operationDate, pagingInfo);
 		} else {
-			// Return the operations for the specified stockroom and status
-			operations = stockroomDataService.getOperations(stockroom, search, pagingInfo);
+			StockOperationSearch search = null;
+			if (status != null) {
+				search = new StockOperationSearch();
+				search.getTemplate().setStatus(status);
+			}
+
+			if (stockroom == null) {
+				if (search == null) {
+					// No search was defined so just return everything (excluding retired)
+					operations = operationDataService.getAll(false, pagingInfo);
+				} else {
+					// Return the operations with the specified status
+					operations = operationDataService.getOperations(search, pagingInfo);
+				}
+			} else {
+				// Return the operations for the specified stockroom and status
+				operations = stockroomDataService.getOperations(stockroom, search, pagingInfo);
+			}
 		}
 
 		if (operations == null || operations.size() == 0) {
