@@ -24,7 +24,7 @@ import java.util.Set;
 public class StockOperation
 		extends BaseCustomizableInstanceMetadata<IStockOperationType, StockOperationAttribute>
 		implements Comparable<StockOperation> {
-	public static final long serialVersionUID = 1L;
+	public static final long serialVersionUID = 2L;
 
 	private Integer id;
 	private StockOperationStatus status;
@@ -34,6 +34,7 @@ public class StockOperation
 
 	private String operationNumber;
 	private Date operationDate;
+	private Integer operationOrder;
 	protected Stockroom source;
 	protected Stockroom destination;
 	protected Patient patient;
@@ -72,6 +73,14 @@ public class StockOperation
 
 	public void setOperationDate(Date operationDate) {
 		this.operationDate = operationDate;
+	}
+
+	public Integer getOperationOrder() {
+		return operationOrder;
+	}
+
+	public void setOperationOrder(Integer operationOrder) {
+		this.operationOrder = operationOrder;
 	}
 
 	public Stockroom getSource() {

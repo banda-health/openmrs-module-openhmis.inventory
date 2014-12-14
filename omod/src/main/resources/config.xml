@@ -19,8 +19,8 @@
 
 	<require_modules>
 		<require_module version="2.6">org.openmrs.module.webservices.rest</require_module>
-		<require_module version="2.2">org.openmrs.module.openhmis.commons</require_module>
-		<require_module version="2.2">org.openmrs.module.openhmis.backboneforms</require_module>
+		<require_module version="2.2.1">org.openmrs.module.openhmis.commons</require_module>
+		<require_module version="2.2.1">org.openmrs.module.openhmis.backboneforms</require_module>
 		<require_module version="1.5.5">org.openmrs.module.jasperreport</require_module>
 	</require_modules>
 

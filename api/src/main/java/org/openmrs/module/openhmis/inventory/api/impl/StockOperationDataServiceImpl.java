@@ -13,20 +13,25 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
+import org.openmrs.module.openhmis.commons.api.CustomizedOrderBy;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
@@ -37,7 +42,6 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class StockOperationDataServiceImpl
 		extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
@@ -122,43 +126,43 @@ public class StockOperationDataServiceImpl
 		final Set<Role> roles = user.getAllRoles();
 
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				DetachedCriteria subQuery = DetachedCriteria.forClass(IStockOperationType.class);
-				subQuery.setProjection(Property.forName("id"));
+					@Override
+					public void apply(Criteria criteria) {
+						DetachedCriteria subQuery = DetachedCriteria.forClass(IStockOperationType.class);
+						subQuery.setProjection(Property.forName("id"));
 
-				// Add user/role filter
-				if (roles != null && roles.size() > 0) {
-					subQuery.add(Restrictions.or(
+						// Add user/role filter
+						if (roles != null && roles.size() > 0) {
+							subQuery.add(Restrictions.or(
+									// Types that require user approval
+									Restrictions.eq("user", user),
+									// Types that require role approval
+									Restrictions.in("role", roles)
+							));
+						} else {
 							// Types that require user approval
-							Restrictions.eq("user", user),
-							// Types that require role approval
-							Restrictions.in("role", roles)
-					));
-				} else {
-					// Types that require user approval
-					subQuery.add(Restrictions.eq("user", user));
-				}
+							subQuery.add(Restrictions.eq("user", user));
+						}
 
-				if (status != null) {
-					criteria.add(Restrictions.and(
-							Restrictions.eq("status", status),
-							Restrictions.or(
-									// Transactions created by the user
-									Restrictions.eq("creator", user),
-									Property.forName("instanceType").in(subQuery)
-							)
-					));
-				} else {
-					criteria.add(Restrictions.or(
-							// Transactions created by the user
-							Restrictions.eq("creator", user),
-							Property.forName("instanceType").in(subQuery)
-					)
-					);
-				}
-			}
-		}, Order.desc("dateCreated")
+						if (status != null) {
+							criteria.add(Restrictions.and(
+									Restrictions.eq("status", status),
+									Restrictions.or(
+											// Transactions created by the user
+											Restrictions.eq("creator", user),
+											Property.forName("instanceType").in(subQuery)
+									)
+							));
+						} else {
+							criteria.add(Restrictions.or(
+											// Transactions created by the user
+											Restrictions.eq("creator", user),
+											Property.forName("instanceType").in(subQuery)
+									)
+							);
+						}
+					}
+				}, Order.desc("dateCreated")
 		);
 	}
 
@@ -195,6 +199,87 @@ public class StockOperationDataServiceImpl
 				criteria.add(Restrictions.gt("operationDate", operationDate));
 			}
 		}, Order.asc("operationDate"));
+	}
+
+	@Override
+	public List<StockOperation> getFutureOperations(final StockOperation operation, PagingInfo paging) {
+		if (operation == null) {
+			throw new IllegalArgumentException("The operation must be defined.");
+		}
+
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.or(
+						Restrictions.and(
+							createDateRestriction(operation.getOperationDate()),
+							Restrictions.gt("operationOrder", operation.getOperationOrder())
+						),
+						Restrictions.gt("operationDate", operation.getOperationDate())
+				));
+			// Note that this ordering may not support all databases
+			}
+		}, CustomizedOrderBy.asc("convert(operation_date, date)"), Order.asc("operationOrder"),
+				Order.asc("operationDate"));
+	}
+
+	@Override
+	public List<StockOperation> getOperationsByDate(final Date date, PagingInfo paging) {
+		return getOperationsByDate(date, paging, null, Order.asc("operationOrder"), Order.asc("operationDate"));
+	}
+
+	@Override
+	public StockOperation getLastOperationByDate(final Date date) {
+		List<StockOperation> results = getOperationsByDate(date, null, 1, Order.desc("operationOrder"),
+				Order.desc("dateCreated"));
+
+		if (results == null || results.size() == 0) {
+			return null;
+		} else {
+			return results.get(0);
+		}
+	}
+
+	@Override
+	public StockOperation getFirstOperationByDate(final Date date) {
+		List<StockOperation> results = getOperationsByDate(date, null, 1, Order.asc("operationOrder"),
+				Order.asc("dateCreated"));
+
+		if (results == null || results.size() == 0) {
+			return null;
+		} else {
+			return results.get(0);
+		}
+	}
+
+	private List<StockOperation> getOperationsByDate(final Date date, PagingInfo paging, final Integer maxResults,
+			Order... orders) {
+		if (date == null) {
+			throw new IllegalArgumentException("The date to search for must be defined.");
+		}
+
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(createDateRestriction(date));
+				if (maxResults != null && maxResults > 0) {
+					criteria.setMaxResults(maxResults);
+				}
+			}
+		}, orders);
+	}
+
+	private Criterion createDateRestriction(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		Utility.clearCalendarTime(cal);
+		final Date start = cal.getTime();
+
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.MILLISECOND, -1);
+		final Date end = cal.getTime();
+
+		return Restrictions.between("operationDate", start, end);
 	}
 
 	@Override

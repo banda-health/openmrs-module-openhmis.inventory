@@ -141,5 +141,64 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
 	List<StockOperation> getOperationsSince(Date operationDate, PagingInfo paging);
+
+	/**
+	 * Gets all {@link StockOperation}s with an operation date after the specified operation date, taking into account the
+	 * operation order for operations that occurred on the same day.
+	 * @param operation The starting operation.
+	 * @param paging The paging information.
+	 * @return The operations found or an empty list
+	 * @should throw IllegalArgumentException if the operation is null
+	 * @should return an empty list if no operations are found
+	 * @should return operations with operation date past specified operation
+	 * @should return operations with higher operation order when day is the same
+	 * @should return operations by date then by operation order
+	 * @should return all results if paging is null
+	 * @should return paged results if paging is specified
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS} )
+	List<StockOperation> getFutureOperations(StockOperation operation, PagingInfo paging);
+
+	/**
+	 * Gets all operations that occurred on the specified operation date. The time portion of the operation date is not
+	 * considered.
+	 * @param date The operation date.
+	 * @param paging The paging information.
+	 * @return The operations that occurred on the specified date
+	 * @should throw IllegalArgumentException if the operation is null
+	 * @should return an empty list if no operations are found
+	 * @should return operations that occurred on the specified date regardless of time
+	 * @should return operations ordered by operation order
+	 * @should return all results if paging is null
+	 * @should return paged results if paging is specified
+	 */
+	List<StockOperation> getOperationsByDate(Date date, PagingInfo paging);
+
+	/**
+	 * Gets the last {@link StockOperation} (that is, with the largest operation order) on the specified date.
+	 * @param date The operation date.
+	 * @return The last stock operation or {@code null} if no operations occurred on the specified date.
+	 * @should return the operation with the largest operation order on the specified date
+	 * @should return the operation with the last creation date if the operation order is the same
+	 * @should return null if no operations occurred on the specified date
+	 * @should throw IllegalArgumentException if the date is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS} )
+	StockOperation getLastOperationByDate(Date date);
+
+	/**
+	 * Gets the first {@link StockOperation} (that is, with the smallest operation order) on the specified date.
+	 * @param date The operation date.
+	 * @return The last stock operation or {@code null} if no operations occurred on the specified date.
+	 * @should return the operation with the least operation order on the specified date
+	 * @should return the operation with the first creation date if the operation order is the same
+	 * @should return null if no operations occurred on the specified date
+	 * @should throw IllegalArgumentException if the date is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS} )
+	StockOperation getFirstOperationByDate(Date date);
 }
 
