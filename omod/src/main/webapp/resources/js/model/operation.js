@@ -230,7 +230,8 @@ define(
                     objRef: true
                 };
                 this.schema.operationDate = {
-                    type: 'OperationDateEditor'
+                    type: 'OperationDateEditor',
+                    format: openhmis.dateTimeFormatLocale
                 };
                 this.schema.items = {
                     type: 'List',

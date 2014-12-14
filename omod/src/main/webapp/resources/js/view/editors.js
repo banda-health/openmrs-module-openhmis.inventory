@@ -601,7 +601,7 @@ define(
             updateOperationEl: null,
 
             events: {
-                'click #changeOperationDate' : 'showChangeDialog',
+                'click #changeOperationDate' : 'showChangeDialog'
             },
 
             initialize: function(options) {
@@ -632,7 +632,7 @@ define(
                 this.operationDateInputEl.datepicker({
                     maxDate: new Date()
                 });
-                
+
                 this.operationOrderEl = this.$('#operationOrderSelect');
                 this.dateOperationsEl = this.$('#dateOperations');
 

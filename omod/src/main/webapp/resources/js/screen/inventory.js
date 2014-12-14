@@ -34,7 +34,7 @@ curl(
                 addEditElement: $("#viewOperation"),
                 searchView: openhmis.OperationSearchByStatus,
 				addEditViewType: openhmis.OperationDetailView,
-				listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status'],
+				listFields: ['operationDate', 'instanceType', 'operationNumber', 'status'],
 				allowAdd: false,
                 operation_status: "Pending"
 			});
