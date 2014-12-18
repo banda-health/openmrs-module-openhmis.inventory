@@ -90,9 +90,6 @@ public class StockOperationResource
 		description.addProperty("operationOrder", Representation.DEFAULT);
 
 		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("items", Representation.REF);
-			description.addProperty("reserved", Representation.REF);
-			description.addProperty("transactions", Representation.REF);
 			description.addProperty("source", Representation.REF);
 			description.addProperty("destination", Representation.REF);
 			description.addProperty("patient", Representation.REF);
@@ -101,6 +98,14 @@ public class StockOperationResource
 
 			description.addProperty("canProcess", findMethod("canUserProcess"));
 		}
+
+		return description;
+	}
+
+	@Override
+	public DelegatingResourceDescription getCreatableProperties() {
+		DelegatingResourceDescription description = super.getCreatableProperties();
+		description.addProperty("items", Representation.REF);
 
 		return description;
 	}
