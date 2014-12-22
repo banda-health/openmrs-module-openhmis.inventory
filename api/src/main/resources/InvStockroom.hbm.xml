@@ -50,7 +50,7 @@
 		<many-to-one name="item" class="Item" not-null="true" lazy="false" column="item_id" />
 		<property name="quantity" type="int" not-null="true" column="quantity" />
 
-		<set name="details" lazy="false" inverse="true" cascade="all-delete-orphan" order-by="id asc">
+		<set name="details" lazy="false" inverse="true" cascade="all-delete-orphan" order-by="id asc" fetch="subselect">
 			<key column="item_stock_id"/>
 			<one-to-many class="ItemStockDetail" />
 		</set>

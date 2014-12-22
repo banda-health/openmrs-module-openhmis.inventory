@@ -30,13 +30,6 @@ public class StockroomResource extends BaseRestMetadataResource<Stockroom> {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("location", Representation.REF);
 
-		// Only include the items and operations if the full representation is asked for. There are usually requested
-		//  by separate requests
-        if (rep instanceof FullRepresentation) {
-	        description.addProperty("items", Representation.REF);
-	        description.addProperty("operations", Representation.REF);
-        }
-
 		return description;
 	}
 
