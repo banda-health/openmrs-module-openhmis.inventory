@@ -26,13 +26,14 @@
         </ul>
 
         <? if (model.isNew()) { ?>
-            <b class="boxHeader title">Add New Stockroom</b>
+        <b class="boxHeader title">Add New Stockroom</b>
         <? } ?>
 
         <div class="box form" id="stockroomDetails">
-                <input type="submit" class="submit" value="<?= model.isNew() ? __("Create %s", model.modelName()) : __("Update %s", model.modelName()) ?>" />
-                <button class="cancel"><?= __("Cancel") ?></button>
-            <br /><br />
+            <input type="submit" class="submit" value="<?= model.isNew() ? __(" Create %s", model.modelName()) :__("Update %s", model.modelName()) ?>" />
+            <button class="cancel"><?= __("Cancel") ?></button>
+            <br/><br/>
+
             <div class="retireVoidPurge" style="width: 75%">
                 <div class="box">
                     <? var strRetireOrVoid = model.getDataType() === "data" ? "Void" : "Retire" ?>
@@ -42,11 +43,12 @@
                     <button class="unretireOrUnvoid"><?= __(strUnretire) ?></button>
                     <? } else { ?>
                     <h4><?= __(strRetireOrVoid + " %s", model.modelName()) ?></h4>
-                    <label for="reason">Reason</label> <input name="reason" id="reason" class="reason" type="text" /><br />
+                    <label for="reason">Reason</label> <input name="reason" id="reason" class="reason" type="text"/><br/>
                     <button class="retireOrVoid"><?= __(strRetireOrVoid) ?></button>
                     <? } ?>
                 </div>
-                <br />
+                <br/>
+
                 <div class="box">
                     <h4><?= __("Purge %s", model.modelName()) ?></h4>
                     <button class="purge"><?= __("Purge") ?></button>
@@ -60,36 +62,52 @@
 </script>
 
 <script id="stockroom-list" type="text/template">
-	<div style="width: 100%">
-		<? if (listLength === 0) { ?>
-		<p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
-		<? } else { ?>
-		<table class="display" width="100%">
-			<thead>
-			<tr>
-				<? if (options.itemActions.length > 0) { ?><th class="item-actions end" style="width: <?= options.itemActions.length * 10 ?>px;"></td> <? } ?>
-				<? for (var field in fields) { if (modelSchema[fields[field]] && modelSchema[fields[field]].hidden) continue; ?>
-                    <? var fieldClassName = "field-" + fields[field]; ?>
-                    <th class="<?= fieldClassName ?>">
-                        <? if (modelSchema[fields[field]] !== undefined) {
+    <div style="width: 100%">
+        <? if (listLength === 0) { ?>
+        <p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
+        <? } else { ?>
+        <table class="display" width="100%">
+            <thead>
+            <tr>
+                <? if (options.itemActions.length > 0) { ?>
+                <th class="item-actions end" style="width: <?= options.itemActions.length * 10 ?>px;">
+                </td> <? } ?>
+                <? for (var field in fields) { if (modelSchema[fields[field]] && modelSchema[fields[field]].hidden) continue; ?>
+                <? var fieldClassName = "field-" + fields[field]; ?>
+                <th class="<?= fieldClassName ?>">
+                    <? if (modelSchema[fields[field]] !== undefined) {
                             print(modelSchema[fields[field]].title === undefined ? helpers.keyToTitle(fields[field]) : modelSchema[fields[field]].title);
                         }
                         else
                             print(fields[field]);
                         ?>
-                    </th>
-				<? } ?>
-			</tr>
-			</thead>
-			<tbody class="list"></tbody>
-			<tfoot></tfoot>
-		</table>
-		<? } ?>
-		<? if (pagingEnabled) { ?>
-		<div class="paging-container ui-helper-clearfix"></div>
-		<? } ?>
-		<? var strRetiredOrVoided = (modelMeta.openmrsType === 'data') ? "voided" : "retired" ?>
-		<? if (pagingEnabled) { ?><span class="pageSize"></span><? } ?>
-		<? if (options.showRetiredOption) { ?><span class="showRetired"><input id="showRetired" type="checkbox"<?= showRetired ? ' checked="checked"' : '' ?>/><label for="showRetired"><?= __("Show " + strRetiredOrVoided) ?></label></span><? } ?>
-	</div>
+                </th>
+                <? } ?>
+            </tr>
+            </thead>
+            <tbody class="list"></tbody>
+            <tfoot></tfoot>
+        </table>
+        <? } ?>
+        <? if (options.spinnerEnabled) { ?>
+        <div class="tSpace">
+            <div class="overlay">
+                <div class="modalSpinner">
+                    <div class="spinner"></div>
+                    <? if (options.loadingText) { ?>
+                    <div class="loadingText"><?=__("Loading %s", modelType.modelNamePlural()) ?></div>
+                    <? } ?>
+                </div>
+            </div>
+        </div>
+        <? } ?>
+        <? if (pagingEnabled) { ?>
+        <div class="paging-container ui-helper-clearfix"></div>
+        <? } ?>
+        <? var strRetiredOrVoided = (modelMeta.openmrsType === 'data') ? "voided" : "retired" ?>
+        <? if (pagingEnabled) { ?><span class="pageSize"></span><? } ?>
+        <? if (options.showRetiredOption) { ?><span class="showRetired"><input id="showRetired"
+                                                                               type="checkbox"<?= showRetired ? ' checked="checked"' : '' ?>
+        /><label for="showRetired"><?= __("Show " + strRetiredOrVoided) ?></label></span><? } ?>
+    </div>
 </script>
