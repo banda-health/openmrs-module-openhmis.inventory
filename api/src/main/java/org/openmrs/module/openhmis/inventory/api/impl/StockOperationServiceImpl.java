@@ -162,7 +162,6 @@ public class StockOperationServiceImpl
 			if (operation.getStatus() == StockOperationStatus.PENDING &&
 					ModuleSettings.loadSettings().getAutoCompleteOperations()) {
 				operation.setStatus(StockOperationStatus.COMPLETED);
-
 				operation = submitOperation(operation);
 			}
 
@@ -236,14 +235,24 @@ public class StockOperationServiceImpl
 							detail = new ItemStockDetail(stock, tx);
 							stock.addDetail(detail);
 						} else {
-							// Found the detail, just update the quantity
+							// Found the detail, update the quantity
+							long currentQuantity = detail.getQuantity();
 							detail.setQuantity(detail.getQuantity() + tx.getQuantity());
+
+							if (currentQuantity < 0 && detail.getQuantity() > 0) {
+								// The quantity was previously negative and is now positive so inherit the batch and
+								// expiration from the transaction
+								detail.setCalculatedBatch(Boolean.TRUE.equals(tx.isCalculatedBatch()));
+								detail.setBatchOperation(tx.getBatchOperation());
+								detail.setCalculatedExpiration(Boolean.TRUE.equals(tx.isCalculatedExpiration()));
+								detail.setExpiration(tx.getExpiration() == null ? null : (Date)tx.getExpiration().clone());
+							}
 						}
 					}
 
 					// If the detail quantity is zero then remove the record. Note, details with quantities less than zero
 					//      still need to be tracked.
-					if(detail.getQuantity() == 0) {
+					if (detail.getQuantity() == 0) {
 						stock.getDetails().remove(detail);
 					}
 				}
@@ -338,7 +347,8 @@ public class StockOperationServiceImpl
 					tx.setCalculatedBatch(false);
 				}
 			} else {
-				if (tx.getItem().hasExpiration() && tx.getExpiration() == null && !tx.isCalculatedExpiration()) {
+				if (Boolean.TRUE.equals(tx.getItem().hasExpiration()) && tx.getExpiration() == null &&
+						Boolean.FALSE.equals(tx.isCalculatedExpiration())) {
 					throw new APIException("The item '" + tx.getItem().getName() + "' requires an expiration date but " +
 							"one was not defined or set to be calculated.");
 				}
@@ -444,37 +454,44 @@ public class StockOperationServiceImpl
 		ItemStockDetail detail = findCalculatedDetail(operation, stock, tx);
 
 		if (detail == null) {
+			// No existing stock could be found to fulfill the request
 			tx.setSourceCalculatedExpiration(true);
 			tx.setSourceCalculatedBatch(true);
 			tx.setExpiration(null);
 			tx.setBatchOperation(null);
 		} else {
-			// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
-			detail.setQuantity(detail.getQuantity() - tx.getQuantity());
-
 			// Set the tx fields that derive from the source detail
 			tx.setSourceCalculatedExpiration(detail.isCalculatedExpiration());
 			tx.setSourceCalculatedBatch(detail.isCalculatedBatch());
 			tx.setExpiration(detail.getExpiration());
 			tx.setBatchOperation(detail.getBatchOperation());
 
-			if (detail.getQuantity() == 0) {
-				stock.getDetails().remove(detail);
-			} else if (detail.getQuantity() < 0) {
-				stock.getDetails().remove(detail);
+			if (detail.getQuantity() < 0) {
+				// The detail quantity is already negative so just subtract more
+				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
+			} else {
+				// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
+				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
 
-				// Set the tx quantity to the number actually deduced from the detail
-				tx.setQuantity(tx.getQuantity() + detail.getQuantity());
+				if (detail.getQuantity() == 0) {
+					// If the quantity is exactly zero than we can simply remove the detail record
+					stock.getDetails().remove(detail);
+				} else if (detail.getQuantity() < 0) {
+					stock.getDetails().remove(detail);
 
-				// Create a new tx to handle the remaining stock request
-				ReservedTransaction newTx = new ReservedTransaction(tx);
-				newTx.setQuantity(Math.abs(detail.getQuantity()));
+					// Set the tx quantity to the number actually deduced from the detail
+					tx.setQuantity(tx.getQuantity() + detail.getQuantity());
 
-				// Add the new tx to the list of transactions to add to the operations
-				newTransactions.add(newTx);
+					// Create a new tx to handle the remaining stock request
+					ReservedTransaction newTx = new ReservedTransaction(tx);
+					newTx.setQuantity(Math.abs(detail.getQuantity()));
 
-				// Find the details to fulfill this new tx
-				findAndUpdateCalculatedDetail(newTransactions, operation, stock, newTx);
+					// Add the new tx to the list of transactions to add to the operations
+					newTransactions.add(newTx);
+
+					// Find the details to fulfill this new tx
+					findAndUpdateCalculatedDetail(newTransactions, operation, stock, newTx);
+				}
 			}
 		}
 	}
@@ -536,9 +553,9 @@ public class StockOperationServiceImpl
 
 		ItemStockDetail detail = null;
 
-		if (stock.getItem().hasExpiration() && tx.isCalculatedExpiration()) {
+		if (Boolean.TRUE.equals(stock.getItem().hasExpiration()) && Boolean.TRUE.equals(tx.isCalculatedExpiration())) {
 			List<ItemStockDetail> results = null;
-			if (tx.isCalculatedExpiration()) {
+			if (Boolean.TRUE.equals(tx.isCalculatedExpiration())) {
 				results = findClosestExpiration(stock, new DateTime(operation.getOperationDate()));
 			} else {
 				results =  findDetailByExpiration(stock, tx.getExpiration());
@@ -549,7 +566,7 @@ public class StockOperationServiceImpl
 			} else if (results.size() > 1) {
 				detail = findOldestBatch(operation, results);
 			}
-		} else if (tx.isCalculatedBatch()) {
+		} else if (Boolean.TRUE.equals(tx.isCalculatedBatch())) {
 			detail = findOldestBatch(operation, stock);
 		} else {
 			detail = findDetail(stock, tx);
@@ -561,6 +578,15 @@ public class StockOperationServiceImpl
 	private ItemStockDetail findDetail(ItemStock stock, TransactionBase tx) {
 		if (stock == null || stock.getDetails() == null || stock.getDetails().size() == 0) {
 			return null;
+		}
+
+		// Check if there is only a single detail with a negative quantity
+		if (stock.getDetails().size() == 1) {
+			ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+			if (detail.getQuantity() < 0) {
+				// This detail can be used for all transactions, regardless of batch and expiration
+				return detail;
+			}
 		}
 
 		// Loop through each detail record and find the first detail with the same expiration and batch operation

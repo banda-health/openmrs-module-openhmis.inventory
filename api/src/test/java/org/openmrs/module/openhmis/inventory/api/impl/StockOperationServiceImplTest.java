@@ -2,6 +2,7 @@ package org.openmrs.module.openhmis.inventory.api.impl;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -16,6 +17,7 @@ import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.ITestableStockOperationService;
@@ -26,6 +28,7 @@ import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
 import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -41,6 +44,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	ITestableStockOperationService service;
 	
 	IItemDataServiceTest itemTest;
+	IStockOperationDataServiceTest operationTest;
 	
 	@Before
 	public void before() throws Exception {
@@ -55,6 +59,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		service = Context.getService(ITestableStockOperationService.class);
 		
 		itemTest = new IItemDataServiceTest();
+		operationTest = new IStockOperationDataServiceTest();
 	}
 
 	/**
@@ -1029,5 +1034,134 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		
 		Assert.assertEquals(newItem, tx.getItem());
 		Assert.assertEquals(operation, tx.getBatchOperation());
+	}
+
+	@Test
+	public void calculateReservations_shouldCreateSingleTransactionWhenNegativeSourceStockAndRemoving() throws Exception {
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemDataService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomDataService.getById(0);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+		stock.setQuantity(-10);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(-10);
+
+		stock.addDetail(detail);
+		sr.addItem(stock);
+
+		stockroomDataService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to deduct more stock from the stockroom
+		StockOperation op =  operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getDistribution());
+		op.setSource(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+		op.addItem(item, 15);
+
+		// Set up the reservation transactions (this is normally done in submitOperation)
+		for (StockOperationItem itemStock : op.getItems()) {
+			ReservedTransaction tx = new ReservedTransaction(itemStock);
+			tx.setCreator(Context.getAuthenticatedUser());
+			tx.setDateCreated(new Date());
+
+			op.addReserved(tx);
+		}
+
+		// Now calculate the actual reservations
+		service.calculateReservations(op);
+
+		// Check the generated pending transactions
+		Set<ReservedTransaction> transactions = op.getReserved();
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+
+		ReservedTransaction tx = Iterators.getOnlyElement(transactions.iterator());
+		Assert.assertEquals(15, (long)tx.getQuantity());
+		Assert.assertNull(tx.getBatchOperation());
+		Assert.assertNull(tx.getExpiration());
+	}
+
+	@Test
+	public void calculateReservations_shouldCreateSingleTransactionWhenNegativeSourceStockAndAdding() throws Exception {
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemDataService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomDataService.getById(0);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+		stock.setQuantity(-10);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(-10);
+
+		stock.addDetail(detail);
+		sr.addItem(stock);
+
+		stockroomDataService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to add stock to the stockroom
+		StockOperation op =  operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op.setDestination(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		op.addItem(item, 15, cal.getTime());
+
+		// Set up the reservation transactions (this is normally done in submitOperation)
+		for (StockOperationItem itemStock : op.getItems()) {
+			ReservedTransaction tx = new ReservedTransaction(itemStock);
+			tx.setCreator(Context.getAuthenticatedUser());
+			tx.setDateCreated(new Date());
+
+			op.addReserved(tx);
+		}
+
+		// Now calculate the actual reservations
+		service.calculateReservations(op);
+
+		// Check the generated pending transactions
+		Set<ReservedTransaction> transactions = op.getReserved();
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+
+		ReservedTransaction tx = Iterators.getOnlyElement(transactions.iterator());
+		Assert.assertEquals(15, (long)tx.getQuantity());
+		Assert.assertEquals(op, tx.getBatchOperation());
+		Assert.assertEquals(cal.getTime(), tx.getExpiration());
 	}
 }

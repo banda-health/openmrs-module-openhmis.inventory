@@ -30,6 +30,8 @@ public interface IStockOperationService extends OpenmrsService {
 	 * @should create new reservations from the operation items
 	 * @should not recreate existing reservations if submitted multiple times
 	 * @should properly process operation as submitted for each state change
+	 * @should add the destination stockroom item stock if existing is negative
+	 * @should remove item stock from destination stockroom if quantity becomes negative
 	 * @should throw APIException if the operation type is receipt and expiration is not defined for expirable items
 	 * @should throw an IllegalArgumentException if the operation is null
 	 * @should throw an APIException if the operation type is null
