@@ -2455,4 +2455,67 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		stock = stockroomService.getItem(sr, item);
 		Assert.assertNotNull(stock);
 	}
+
+	@Test
+	public void submitOperation_shouldAddTheDestinationStockroomItemStockIfExistingRemainsNegative() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomService.getById(0);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+		stock.setQuantity(-10);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(-10);
+
+		stock.addDetail(detail);
+		sr.addItem(stock);
+
+		stockroomService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to add stock to the stockroom
+		StockOperation op =  operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op.setDestination(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		op.addItem(item, 7, cal.getTime());
+
+		service.submitOperation(op);
+		Context.flushSession();
+
+		stock = stockroomService.getItem(sr, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-3, stock.getQuantity());
+
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(-3, (long)detail.getQuantity());
+		Assert.assertTrue(detail.getCalculatedBatch());
+		Assert.assertNull(detail.getBatchOperation());
+		Assert.assertTrue(detail.getCalculatedExpiration());
+		Assert.assertNull(detail.getExpiration());
+	}
 }
