@@ -1,13 +1,7 @@
 package org.openmrs.module.openhmis.inventory.api;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +21,11 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-import com.google.common.collect.Iterators;
-
-import javax.validation.constraints.AssertFalse;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	IStockOperationTypeDataService typeService;
@@ -2327,5 +2323,207 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 				return input.getItem() == item;
 			}
 		});
+	}
+
+	/**
+	 * @verifies add the destination stockroom item stock if existing is negative
+	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldAddTheDestinationStockroomItemStockIfExistingIsNegative() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomService.getById(0);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+		stock.setQuantity(-10);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(-10);
+
+		stock.addDetail(detail);
+		sr.addItem(stock);
+
+		stockroomService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to add stock to the stockroom
+		StockOperation op =  operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op.setDestination(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		op.addItem(item, 15, cal.getTime());
+
+		service.submitOperation(op);
+		Context.flushSession();
+
+		stock = stockroomService.getItem(sr, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(5, stock.getQuantity());
+
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(5, (long)detail.getQuantity());
+		Assert.assertFalse(detail.getCalculatedBatch());
+		Assert.assertEquals(op, detail.getBatchOperation());
+		Assert.assertFalse(detail.getCalculatedExpiration());
+		Assert.assertEquals(cal.getTime(), detail.getExpiration());
+	}
+
+	/**
+	 * @verifies remove item stock from destination stockroom if quantity becomes zero
+	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldRemoveItemStockFromDestinationStockroomIfQuantityBecomesZero() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomService.getById(0);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+		stock.setQuantity(-10);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(-10);
+
+		stock.addDetail(detail);
+		sr.addItem(stock);
+
+		stockroomService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to add stock to the stockroom
+		StockOperation op =  operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op.setDestination(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		op.addItem(item, 10, cal.getTime());
+
+		service.submitOperation(op);
+		Context.flushSession();
+
+		stock = stockroomService.getItem(sr, item);
+		Assert.assertNull(stock);
+	}
+
+	@Test
+	public void simpletest() throws Exception {
+		Stockroom sr = stockroomService.getById(0);
+		ItemStock stock = Iterators.get(sr.getItems().iterator(), 0);
+		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
+
+		stock.getDetails().remove(detail);
+
+		List<StockOperation> operations = operationService.getOperationsSince(new Date(), null);
+
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
+	}
+
+	@Test
+	public void submitOperation_shouldAddTheDestinationStockroomItemStockIfExistingRemainsNegative() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomService.getById(0);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+		stock.setQuantity(-10);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(-10);
+
+		stock.addDetail(detail);
+		sr.addItem(stock);
+
+		stockroomService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to add stock to the stockroom
+		StockOperation op =  operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op.setDestination(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		op.addItem(item, 7, cal.getTime());
+
+		service.submitOperation(op);
+		Context.flushSession();
+
+		stock = stockroomService.getItem(sr, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-3, stock.getQuantity());
+
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(-3, (long)detail.getQuantity());
+		Assert.assertTrue(detail.getCalculatedBatch());
+		Assert.assertNull(detail.getBatchOperation());
+		Assert.assertTrue(detail.getCalculatedExpiration());
+		Assert.assertNull(detail.getExpiration());
 	}
 }
