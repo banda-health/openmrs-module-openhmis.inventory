@@ -1,14 +1,7 @@
 package org.openmrs.module.openhmis.inventory.api;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +9,6 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
-import org.openmrs.module.openhmis.inventory.api.impl.StockOperationServiceImpl;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
@@ -29,9 +21,11 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-import com.google.common.collect.Iterators;
-
-import javax.validation.constraints.AssertFalse;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	IStockOperationTypeDataService typeService;
@@ -2399,11 +2393,11 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	}
 
 	/**
-	 * @verifies remove item stock from destination stockroom if quantity becomes negative
+	 * @verifies remove item stock from destination stockroom if quantity becomes zero
 	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
-	public void submitOperation_shouldRemoveItemStockFromDestinationStockroomIfQuantityBecomesNegative() throws Exception {
+	public void submitOperation_shouldRemoveItemStockFromDestinationStockroomIfQuantityBecomesZero() throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);
@@ -2453,7 +2447,21 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Context.flushSession();
 
 		stock = stockroomService.getItem(sr, item);
-		Assert.assertNotNull(stock);
+		Assert.assertNull(stock);
+	}
+
+	@Test
+	public void simpletest() throws Exception {
+		Stockroom sr = stockroomService.getById(0);
+		ItemStock stock = Iterators.get(sr.getItems().iterator(), 0);
+		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
+
+		stock.getDetails().remove(detail);
+
+		List<StockOperation> operations = operationService.getOperationsSince(new Date(), null);
+
+		Assert.assertNotNull(operations);
+		Assert.assertEquals(0, operations.size());
 	}
 
 	@Test

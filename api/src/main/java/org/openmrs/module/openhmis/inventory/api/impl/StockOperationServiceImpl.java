@@ -267,7 +267,11 @@ public class StockOperationServiceImpl
 				}
 
 				if (stock.getQuantity() == 0) {
-					// Remove the stock if the quantity is zero
+					// We have to remove the item stock from the stockroom even though this will load the full list of items
+					//	otherwise we may get a ObjectDeletedException when reapplying other operations
+					stock.getStockroom().removeItem(stock);
+
+					// Make sure the record is purged
 					itemStockService.purge(stock);
 				} else {
 					// Save the stock if the quantity is something other than zero (positive or negative)
