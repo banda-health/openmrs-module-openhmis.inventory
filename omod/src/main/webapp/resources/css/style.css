@@ -67,3 +67,7 @@ table.item-stock .field-expiration {
 #newOperation b.boxHeader, #newOperation  div.box {
 	width: 99%;
 }
+
+.footer-padding {
+	padding-bottom: 20px;
+}

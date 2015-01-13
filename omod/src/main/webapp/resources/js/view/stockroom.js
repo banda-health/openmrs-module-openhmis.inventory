@@ -97,6 +97,7 @@ define(
 			    } else {
 			        tabs.hide();
 		        }
+		        this.$el.addClass('footer-padding');
 	        },
 
 	        edit: function(model) {
