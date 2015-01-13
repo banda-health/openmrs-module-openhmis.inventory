@@ -90,6 +90,8 @@ public class ItemSearchHandler
 			}
 
 			if (items == null || items.size() == 0) {
+				//new paging info as otherwise the old one is used and paging does not work
+				pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 				// If no items are found, search by name
 				items = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
 			}
