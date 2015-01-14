@@ -1,12 +1,12 @@
 #operations { width: 750px; }
-#operations td.field-dateCreated { width: 175px; }
+#operations td.field-dateCreated { width: 200px; }
 #operations td.field-operationNumber { width: 150px; }
 
 #items { width: 600px; }
 #items td.field-item { width: 85%; }
 
 #transactions { width: 99%; }
-#transactions td.field-dateCreated { width: 175px; }
+#transactions td.field-dateCreated { width: 200px; }
 #transactions td.field-operation { width: 125px; }
 #transactions td.field-batchOperation { width: 125px; }
 #transactions td.field-expiration { width: 75px; }
