@@ -111,12 +111,12 @@ define(
             showDefaultExpirationPeriodField: function() {
                 if (this.modelForm.fields['hasExpiration'].getValue() === true) {
                     $('.field-defaultExpirationPeriod').show();
-                    $('#outer-span-stepper').show();
+                    $('#defaultExpirationPeriod').show();
                     $('#defaultExpirationPeriodText').hide();
                 } else if (this.modelForm.fields['defaultExpirationPeriod'].getValue() != null && this.modelForm.fields['defaultExpirationPeriod'].getValue() != '') {
-                    $('#outer-span-stepper').hide();
                     $('#defaultExpirationPeriodText').contents().remove();
                     $('#defaultExpirationPeriodText').append(this.modelForm.fields['defaultExpirationPeriod'].getValue());
+                    $('#defaultExpirationPeriod').hide();
                     $('#defaultExpirationPeriodText').show();
                 } else {
                     $('.field-defaultExpirationPeriod').hide();
