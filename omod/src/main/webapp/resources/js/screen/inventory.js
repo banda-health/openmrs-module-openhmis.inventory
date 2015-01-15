@@ -36,8 +36,14 @@ curl(
 				addEditViewType: openhmis.OperationDetailView,
 				listFields: ['dateCreated', 'operationDate', 'instanceType', 'operationNumber', 'status'],
 				allowAdd: false,
-                operation_status: "Pending"
+                operation_status: getDefaultStatus()
 			});
+			
+			function getDefaultStatus() {
+				return ($('.isOperationAutoCompleted').val() === 'true') ? "Completed" : "Pending";
+			};
 		});
+		
+		
 	}
 );
