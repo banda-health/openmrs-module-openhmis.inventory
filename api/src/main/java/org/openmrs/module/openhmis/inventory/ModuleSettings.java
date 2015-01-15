@@ -19,13 +19,18 @@ public class ModuleSettings {
 	public static boolean generateOperationNumber() {
 		return generateOperationNumber(Context.getAdministrationService());
 	}
-
+	
 	protected static boolean generateOperationNumber(AdministrationService adminService) {
 		String property = adminService.getGlobalProperty(AUTO_GENERATE_OPERATION_NUMBER_PROPERTY);
-
 		return Boolean.parseBoolean(property);
 	}
-
+	
+	public static boolean isOperationAutoCompleted() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
+		return Boolean.parseBoolean(property);
+	}
+	
 	public static Settings loadSettings() {
 		Settings settings = new Settings();
 		AdministrationService adminService = Context.getAdministrationService();
