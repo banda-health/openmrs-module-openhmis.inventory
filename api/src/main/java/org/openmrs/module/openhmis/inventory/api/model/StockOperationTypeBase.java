@@ -99,6 +99,45 @@ public abstract class StockOperationTypeBase
 		this.role = role;
 	}
 
+	public boolean userCanProcess(User currentUser) {
+		if (currentUser == null) {
+			throw new IllegalArgumentException("The current user must be defined.");
+		}
+
+		// Users can process the type if they have either the role OR are the same user as defined for the type. If no
+		// role or user are defined for the type then all users can process the type. Super users always have access to
+		// process every type.
+
+		if (currentUser.isSuperUser()) {
+			return true;
+		}
+
+		// Assume that current user can process operation
+		boolean canProcess = true;
+
+		Role role = this.getRole();
+		User user = this.getUser();
+
+		// If operation type has role restriction
+		if (role != null) {
+			if (!currentUser.hasRole(role.getRole())) {
+				canProcess = false;
+			}
+		}
+
+		// If there is a user restriction and either the role test did not pass or if there is no role test
+		if (user != null &&
+				((role != null && !canProcess) || (role == null))) {
+			if (currentUser.getUserId().equals(user.getUserId())) {
+				canProcess = true;
+			} else {
+				canProcess = false;
+			}
+		}
+
+		return canProcess;
+	}
+
 	protected Set<StockOperationTransaction> executeCopyReserved(
 			StockOperation operation,
 			Action2<ReservedTransaction, StockOperationTransaction> action) {

@@ -96,7 +96,7 @@ public class StockOperationResource
 			description.addProperty("institution", Representation.REF);
 			description.addProperty("department", Representation.REF);
 
-			description.addProperty("canProcess", findMethod("canUserProcess"));
+			description.addProperty("canProcess", findMethod("userCanProcess"));
 		}
 
 		return description;
@@ -110,14 +110,14 @@ public class StockOperationResource
 		return description;
 	}
 
-	public Boolean canUserProcess(StockOperation operation) {
-		return StockOperationTypeResource.canUserProcess(operation.getInstanceType());
+	public Boolean userCanProcess(StockOperation operation) {
+		return StockOperationTypeResource.userCanProcess(operation.getInstanceType());
 	}
 
 	@Override
 	public StockOperation save(StockOperation operation) {
 		// Ensure that the current user can process the operation
-		if (!canUserProcess(operation)) {
+		if (!userCanProcess(operation)) {
 			throw new RestClientException("The current user not authorized to process this operation.");
 		}
 
