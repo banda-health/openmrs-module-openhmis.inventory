@@ -55,7 +55,7 @@ public class StockOperationTypeResource
 			description.addProperty("user", Representation.REF);
 			description.addProperty("role", Representation.REF);
 
-			description.addProperty("canProcess", findMethod("canUserProcess"));
+			description.addProperty("canProcess", findMethod("userCanProcess"));
 		}
 
 		return description;
@@ -67,31 +67,8 @@ public class StockOperationTypeResource
 		super.setAttributeTypes(instance, attributeTypes);
 	}
 
-	public static Boolean canUserProcess(IStockOperationType operationType) {
-		// Assume that current user can process operation
-		Boolean canProcess = true;
-
-		User currentUser = Context.getAuthenticatedUser();
-
-		Role role = operationType.getRole();
-		User user = operationType.getUser();
-
-		// If operation type has role restriction
-		if (role != null) {
-			if (!currentUser.hasRole(role.getRole())) {
-				canProcess = false;
-			}
-		}
-
-		// If there is a user restriction and either the role test did not pass or if there is no role test
-		if (((role != null && !canProcess) || (role == null))
-				&& user != null) {
-			if (currentUser.getUserId().equals(user.getUserId())) {
-				canProcess = true;
-			}
-		}
-
-		return canProcess;
+	public static Boolean userCanProcess(IStockOperationType operationType) {
+		return operationType.userCanProcess(Context.getAuthenticatedUser());
 	}
 }
 
