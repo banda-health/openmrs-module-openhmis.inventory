@@ -39,6 +39,9 @@ public interface IStockOperationService extends OpenmrsService {
 	 * @should throw an APIException if the operation type requires a source and the source is null
 	 * @should throw an APIException if the operation type requires a destination and the destination is null
 	 * @should throw an APIException if the operation type requires a patient and the patient is null
+	 * @should throw APIException if source stockroom is null and the expiration is not specified for an expirable item
+	 * @should throw APIException if calculate expiration is false and expiration is null for an expirable item
+
 	 */
 	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})

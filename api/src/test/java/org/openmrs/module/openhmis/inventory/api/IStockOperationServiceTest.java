@@ -1005,26 +1005,22 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test(expected = APIException.class)
-	public void
-	        submitOperation_shouldThrowAPIExceptionIfTheOperationTypeIsReceiptAndExpirationIsNotDefinedForExpirableItems()
-	                throws Exception {
+	public void submitOperation_shouldThrowAPIExceptionIfTheOperationTypeIsReceiptAndExpirationIsNotDefinedForExpirableItems()
+			throws Exception {
 		// Get the destination stockroom
 		Stockroom stockroom = stockroomService.getById(2);
 		stockroom.getItems();
 		
 		// Get the items for the test operation
 		Item item2 = itemService.getById(2);
-		
-		Assert.assertEquals(true, item2.hasExpiration());
+		Assert.assertTrue(item2.getHasExpiration());
 		
 		// Create the operation
 		StockOperation operation = operationTest.createEntity(true);
 		operation.getReserved().clear();
 		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
 		operation.setDestination(stockroom);
-		
-		// Create the operation item
-		StockOperationItem operationItem = operation.addItem(item2, 1);
+		operation.addItem(item2, 1);
 		
 		// Submit the operation (this should throw because the item was added without an expiration)
 		service.submitOperation(operation);
@@ -2451,20 +2447,6 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void simpletest() throws Exception {
-		Stockroom sr = stockroomService.getById(0);
-		ItemStock stock = Iterators.get(sr.getItems().iterator(), 0);
-		ItemStockDetail detail = Iterators.get(stock.getDetails().iterator(), 0);
-
-		stock.getDetails().remove(detail);
-
-		List<StockOperation> operations = operationService.getOperationsSince(new Date(), null);
-
-		Assert.assertNotNull(operations);
-		Assert.assertEquals(0, operations.size());
-	}
-
-	@Test
 	public void submitOperation_shouldAddTheDestinationStockroomItemStockIfExistingRemainsNegative() throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
@@ -2525,5 +2507,62 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertNull(detail.getBatchOperation());
 		Assert.assertTrue(detail.getCalculatedExpiration());
 		Assert.assertNull(detail.getExpiration());
+	}
+
+	/**
+	 * @verifies throw APIException if source stockroom is null and the expiration is not specified for an expirable item
+	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test(expected = APIException.class)
+	public void submitOperation_shouldThrowAPIExceptionIfSourceStockroomIsNullAndTheExpirationIsNotSpecifiedForAnExpirableItem()
+			throws Exception {
+		Stockroom destRoom = stockroomService.getById(1);
+
+		Item newItem = itemTest.createEntity(true);
+		newItem.setHasExpiration(true);
+
+		itemService.save(newItem);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setDestination(destRoom);
+		operation.setOperationNumber("A123");
+		operation.setOperationDate(new Date());
+		operation.addItem(newItem, 25);
+
+		service.submitOperation(operation);
+	}
+
+	/**
+	 * @verifies throw APIException if calculate expiration is false and expiration is null for an expirable item
+	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test(expected = APIException.class)
+	public void submitOperation_shouldThrowAPIExceptionIfCalculateExpirationIsFalseAndExpirationIsNullForAnExpirableItem()
+			throws Exception {
+		Stockroom sourceRoom = stockroomService.getById(0);
+		Stockroom destRoom = stockroomService.getById(1);
+
+		Item newItem = itemTest.createEntity(true);
+		newItem.setHasExpiration(true);
+
+		itemService.save(newItem);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
+		operation.setStatus(StockOperationStatus.PENDING);
+		operation.setSource(sourceRoom);
+		operation.setDestination(destRoom);
+		operation.setOperationNumber("A123");
+		operation.setOperationDate(new Date());
+		StockOperationItem item = operation.addItem(newItem, 25);
+		item.setCalculatedExpiration(false);
+
+		service.submitOperation(operation);
 	}
 }
