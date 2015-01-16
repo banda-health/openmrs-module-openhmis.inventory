@@ -618,7 +618,7 @@ define(
             },
 
             refreshItemFields: function(item, form) {
-                var hasExpiration = item.get("hasExpiration");
+                var itemHasExpiration = item.get("hasExpiration");
 
                 // TODO: This logic is much too closely coupled to the underlying item editor
                 var stockroomUuid = $(this.options.schema.item.stockroomSelector).val();
@@ -656,22 +656,29 @@ define(
                                     }
                                 });
 
-                                // Add the 'None' expiration if there was at least one expiration or the
-                                if ((hasExp || model.models[0].get("item").get("hasExpiration")) && hasNone) {
+                                if ((hasExp || itemHasExpiration) && hasNone) {
+                                    // Add the 'None' expiration if there was at least one expiration or the item is
+                                    //  expirable and there was an empty expiration
+                                    itemHasExpiration = true;
+                                    expirations.push("");
+                                } else if (hasExp && !itemHasExpiration) {
+                                    // If a non-expirable item has stock with expirations then always include the
+                                    //  'None' expiration
+                                    itemHasExpiration = true;
                                     expirations.push("");
                                 }
                             }
 
-                            self.updateEditors(form, item, hasExpiration, expirations, batches);
+                            self.updateEditors(form, item, itemHasExpiration, expirations, batches);
                             self.update();
                         },
                         error: function() {
-                            self.updateEditors(form, item, hasExpiration, undefined, undefined);
+                            self.updateEditors(form, item, itemHasExpiration, undefined, undefined);
                             this.update();
                         }
                     });
                 } else {
-                    this.updateEditors(form, item, hasExpiration, undefined, undefined);
+                    this.updateEditors(form, item, itemHasExpiration, undefined, undefined);
                     this.update();
                 }
             },

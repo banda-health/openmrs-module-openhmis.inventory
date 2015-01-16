@@ -499,7 +499,7 @@ define(
                     return;
                 }
 
-                var defaultExp = undefined;
+                var defaultExp;
                 var entryRequired = operationType.get('hasSource') !== true;
                 if (entryRequired ) {
                     // Set the default expiration date to the current date plus the number of days defined in the item's
