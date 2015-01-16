@@ -235,6 +235,19 @@ define(
                     if (!this.model.get("items") || this.model.get("items").length === 0) {
                         this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
                     }
+
+                    // Check for a Auto/None expiration and set the item attributes accordingly
+                    _.each(this.model.get("items").models, function (item) {
+                        if (item.get("expiration") === "Auto") {
+                            item.set("expiration", undefined);
+                            item.set("calculatedExpiration", true)
+                        } else if (item.get("expiration") === "None") {
+                            item.set("expiration", undefined);
+                            item.set("calculatedExpiration", false)
+                        } else {
+                            item.set("calculatedExpiration", false)
+                        }
+                    });
                 }
 
                 if (this.currentOperationType.get('hasRecipient')) {
@@ -600,8 +613,6 @@ define(
                     form.fields.quantity.setValue(1);
                 }
 
-                this.update();
-
                 // Set the focus on the quantity field
                 form.fields.quantity.editor.focus(true);
             },
@@ -626,13 +637,17 @@ define(
                             var batches = [];
 
                             if (model.models && model.models.length > 0) {
-                                var details = model.models[0].get("details");
+                                var hasExp = false;
+                                var hasNone = false;
 
                                 // Build the expiration and batch lists for this item
-                                _.each(details, function (detail) {
+                                _.each(model.models[0].get("details"), function (detail) {
                                     var exp = detail.get("expiration");
                                     if (exp && exp != "") {
+                                        hasExp = true;
                                         expirations.push(openhmis.dateFormatLocale(exp));
+                                    } else {
+                                        hasNone = true;
                                     }
 
                                     var batch = detail.get("batchOperation");
@@ -640,16 +655,24 @@ define(
                                         batches.push(batch);
                                     }
                                 });
+
+                                // Add the 'None' expiration if there was at least one expiration or the
+                                if ((hasExp || model.models[0].get("item").get("hasExpiration")) && hasNone) {
+                                    expirations.push("");
+                                }
                             }
 
                             self.updateEditors(form, item, hasExpiration, expirations, batches);
+                            self.update();
                         },
                         error: function() {
                             self.updateEditors(form, item, hasExpiration, undefined, undefined);
+                            this.update();
                         }
                     });
                 } else {
                     this.updateEditors(form, item, hasExpiration, undefined, undefined);
+                    this.update();
                 }
             },
 

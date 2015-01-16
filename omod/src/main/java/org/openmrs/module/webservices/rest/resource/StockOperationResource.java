@@ -297,39 +297,42 @@ public class StockOperationResource
 		IStockOperationType type = operation.getInstanceType();
 
 		// Process each operation item to set the appropriate fields
-		for (StockOperationItem item : items) {
-			Item sourceItem = item.getItem();
+		for (StockOperationItem opItem : items) {
+			Item sourceItem = opItem.getItem();
 
-			// Set the calculated expiration flag for expirable items without an expiration
-			if (sourceItem.hasExpiration()) {
-				if (item.getExpiration() == null) {
-					if (!type.getHasSource()) {
-						// If the operation has no source then all expirable items must define an expiration
-						throw new IllegalArgumentException("The expiration for item '" + item.getItem().getName() + "' must be" +
-								" defined");
-					} else {
-						// No expiration was specified for an expirable item, flag as a calculated expiration
-						item.setCalculatedExpiration(true);
-					}
+			if (type.getHasSource()) {
+				// If the operation has a source we will allow an expiration or null, regardless of whether the source
+				// item is expirable or not
+
+				// The code that saves the operation sets the appropriate fields based on whether a specific expiration,
+				// Auto, or None was selected
+
+				if (opItem.getExpiration() != null) {
+					// A specific expiration was selected
+					opItem.setCalculatedExpiration(false);
+				}
+			} else if (!type.getHasSource() && sourceItem.getHasExpiration()) {
+				// This is new item stock so the expiration must be valid
+
+				if (opItem.getExpiration() == null) {
+					// If the operation has no source then all expirable items must define an expiration
+					throw new IllegalArgumentException("The expiration for item '" + opItem.getItem().getName() +
+							"' must be defined");
 				} else {
 					// An expiration was specified so make sure that the calculated flag is not set
-					item.setCalculatedExpiration(false);
+					opItem.setCalculatedExpiration(false);
 				}
-			} else {
-				// This is not an expirable item so set expire fields to null
-				item.setExpiration(null);
-				item.setCalculatedExpiration(null);
 			}
 
 			// Set the batch operation or calculated batch operation flag
-			if (item.getBatchOperation() == null) {
+			if (opItem.getBatchOperation() == null) {
 				if (!type.getHasSource()) {
 					// The batch operation is set to the current operation when item stock originally enters in the system
-					item.setBatchOperation(operation);
-					item.setCalculatedBatch(false);
+					opItem.setBatchOperation(operation);
+					opItem.setCalculatedBatch(false);
 				} else {
 					// The batch operation was not set so flag it as calculated
-					item.setCalculatedBatch(true);
+					opItem.setCalculatedBatch(true);
 				}
 			}
 		}

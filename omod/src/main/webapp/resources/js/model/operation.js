@@ -412,7 +412,7 @@ define(
                      if (expiryDateError) {
                     	 errors.push({
                     		 selector: "th.field-expiration",
-                    		 message: "ExpiryDate is missing"
+                    		 message: "The expiration date is missing"
                     	 });
                      }
                 }
