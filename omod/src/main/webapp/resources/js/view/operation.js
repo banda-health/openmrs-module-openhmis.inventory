@@ -251,6 +251,7 @@ define(
 
                         var errors = self.model.validate(true);
                         if (errors) {
+                        	self.model.set("items", null) ;
                             openhmis.displayErrors(self, errors);
                             return false;
                         }
