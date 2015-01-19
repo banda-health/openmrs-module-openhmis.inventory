@@ -101,15 +101,21 @@ public class StockOperationServiceImpl
 	}
 
 	public static void validateOperationItems(StockOperation operation) {
-		if (operation.getItems() != null && operation.getItems().size() > 0) {
-			// Check operation items
-			for (StockOperationItem item : operation.getItems()) {
-				if (Boolean.TRUE.equals(item.getItem().getHasExpiration())) {
-					if ((item.getExpiration() == null && !Boolean.TRUE.equals(item.getCalculatedExpiration()))) {
-						throw new APIException("The item " + item.getItem().getName() + " requires an expiration.");
-					} else if (operation.getSource() == null && item.getExpiration() == null) {
-						throw new APIException("The expiration for item " + item.getItem().getName() + " must be defined.");
-					}
+		if (operation.getItems() == null || operation.getItems().size() == 0) {
+			return;
+		}
+
+		if (operation.getInstanceType().getHasSource()) {
+			return;
+		}
+
+		// Check operation items
+		for (StockOperationItem item : operation.getItems()) {
+			if (Boolean.TRUE.equals(item.getItem().getHasExpiration())) {
+				if ((item.getExpiration() == null && !Boolean.TRUE.equals(item.getCalculatedExpiration()))) {
+					throw new APIException("The item " + item.getItem().getName() + " requires an expiration.");
+				} else if (operation.getSource() == null && item.getExpiration() == null) {
+					throw new APIException("The expiration for item " + item.getItem().getName() + " must be defined.");
 				}
 			}
 		}

@@ -32,6 +32,7 @@ public interface IStockOperationService extends OpenmrsService {
 	 * @should properly process operation as submitted for each state change
 	 * @should add the destination stockroom item stock if existing is negative
 	 * @should remove item stock from destination stockroom if quantity becomes zero
+	 * @should add stock if calculate expiration is false and expiration is null for an expirable item
 	 * @should throw APIException if the operation type is receipt and expiration is not defined for expirable items
 	 * @should throw an IllegalArgumentException if the operation is null
 	 * @should throw an APIException if the operation type is null
@@ -40,8 +41,6 @@ public interface IStockOperationService extends OpenmrsService {
 	 * @should throw an APIException if the operation type requires a destination and the destination is null
 	 * @should throw an APIException if the operation type requires a patient and the patient is null
 	 * @should throw APIException if source stockroom is null and the expiration is not specified for an expirable item
-	 * @should throw APIException if calculate expiration is false and expiration is null for an expirable item
-
 	 */
 	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})

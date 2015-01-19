@@ -235,6 +235,19 @@ define(
                     if (!this.model.get("items") || this.model.get("items").length === 0) {
                         this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
                     }
+
+                    // Check for a Auto/None expiration and set the item attributes accordingly
+                    _.each(this.model.get("items").models, function (item) {
+                        if (item.get("expiration") === "Auto") {
+                            item.set("expiration", undefined);
+                            item.set("calculatedExpiration", true)
+                        } else if (item.get("expiration") === "None") {
+                            item.set("expiration", undefined);
+                            item.set("calculatedExpiration", false)
+                        } else {
+                            item.set("calculatedExpiration", false)
+                        }
+                    });
                 }
 
                 if (this.currentOperationType.get('hasRecipient')) {
@@ -601,14 +614,12 @@ define(
                     form.fields.quantity.setValue(1);
                 }
 
-                this.update();
-
                 // Set the focus on the quantity field
                 form.fields.quantity.editor.focus(true);
             },
 
             refreshItemFields: function(item, form) {
-                var hasExpiration = item.get("hasExpiration");
+                var itemHasExpiration = item.get("hasExpiration");
 
                 // TODO: This logic is much too closely coupled to the underlying item editor
                 var stockroomUuid = $(this.options.schema.item.stockroomSelector).val();
@@ -627,13 +638,17 @@ define(
                             var batches = [];
 
                             if (model.models && model.models.length > 0) {
-                                var details = model.models[0].get("details");
+                                var hasExp = false;
+                                var hasNone = false;
 
                                 // Build the expiration and batch lists for this item
-                                _.each(details, function (detail) {
+                                _.each(model.models[0].get("details"), function (detail) {
                                     var exp = detail.get("expiration");
                                     if (exp && exp != "") {
+                                        hasExp = true;
                                         expirations.push(openhmis.dateFormatLocale(exp));
+                                    } else {
+                                        hasNone = true;
                                     }
 
                                     var batch = detail.get("batchOperation");
@@ -641,16 +656,31 @@ define(
                                         batches.push(batch);
                                     }
                                 });
+
+                                if ((hasExp || itemHasExpiration) && hasNone) {
+                                    // Add the 'None' expiration if there was at least one expiration or the item is
+                                    //  expirable and there was an empty expiration
+                                    itemHasExpiration = true;
+                                    expirations.push("");
+                                } else if (hasExp && !itemHasExpiration) {
+                                    // If a non-expirable item has stock with expirations then always include the
+                                    //  'None' expiration
+                                    itemHasExpiration = true;
+                                    expirations.push("");
+                                }
                             }
 
-                            self.updateEditors(form, item, hasExpiration, expirations, batches);
+                            self.updateEditors(form, item, itemHasExpiration, expirations, batches);
+                            self.update();
                         },
                         error: function() {
-                            self.updateEditors(form, item, hasExpiration, undefined, undefined);
+                            self.updateEditors(form, item, itemHasExpiration, undefined, undefined);
+                            this.update();
                         }
                     });
                 } else {
-                    this.updateEditors(form, item, hasExpiration, undefined, undefined);
+                    this.updateEditors(form, item, itemHasExpiration, undefined, undefined);
+                    this.update();
                 }
             },
 
