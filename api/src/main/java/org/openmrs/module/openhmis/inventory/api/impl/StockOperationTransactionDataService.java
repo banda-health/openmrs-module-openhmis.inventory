@@ -13,9 +13,16 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.List;
+
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
+import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTransactionDataService;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
 import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
@@ -36,5 +43,19 @@ public class StockOperationTransactionDataService
 	@Override
 	protected Order[] getDefaultSort() {
 		return new Order[] { Order.desc(HibernateCriteriaConstants.DATE_CREATED), Order.desc(HibernateCriteriaConstants.ID) };
+	}
+	
+	@Override
+	public List<StockOperationTransaction> getTransactionByOperation(final StockOperation operation, PagingInfo paging) {
+		if (operation == null) {
+			throw new IllegalArgumentException("The operation must be defined");
+		}
+
+		return executeCriteria(StockOperationTransaction.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.OPERATION, operation));
+			}
+		}, Order.desc(HibernateCriteriaConstants.DATE_CREATED), Order.desc(HibernateCriteriaConstants.ID));
 	}
 }

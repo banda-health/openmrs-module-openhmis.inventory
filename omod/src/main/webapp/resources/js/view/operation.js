@@ -40,7 +40,7 @@ define(
             events: {
                 'click .completeOp': 'completeOperation',
                 'click .cancelOp': 'cancelOperation',
-                'click .cancel': 'cancel'
+                'click .cancel': 'cancel',
             },
 
             initialize: function(options) {
@@ -56,8 +56,20 @@ define(
                     listFields: ['item', 'quantity', 'batchOperation', 'expiration'],
                     itemView: openhmis.OperationItemListItemView
                 });
+                
+                this.transactionsView = new openhmis.GenericListView({
+                    model: new openhmis.GenericCollection([], {
+                        model: openhmis.OperationTransaction
+                    }),
+                    showRetiredOption: false,
+                    showRetired: true,
+                    listTitle: "Operation Transactions",
+                    listFields: ['item', 'batchOperation',  'expiration', 'quantity'],
+                    itemView: openhmis.OperationItemListItemView
+                });
 
                 this.itemsView.on("fetch", this.fetch);
+                this.transactionsView.on("fetch", this.fetch);
             },
             
         	edit: function(model) {
@@ -128,10 +140,14 @@ define(
 
                 if (this.model.id) {
                     // Fetch and render the operation items list
-                    this.itemsView.fetch(undefined, undefined);
+                	this.itemsView.fetch(undefined, undefined);
+                	this.transactionsView.fetch(undefined, undefined);
 
                     var itemsEl = $("#operation-items");
                     itemsEl.append(this.itemsView.el);
+                    itemsEl.show();
+                    itemsEl = $("#operation-transactions");
+                    itemsEl.append(this.transactionsView.el);
                     itemsEl.show();
                 }
             },

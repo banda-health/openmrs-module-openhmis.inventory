@@ -112,6 +112,7 @@
 		</fieldset>
 		</form>
         <div id="operation-items" style="width: 800px;"></div>
+		<div id="operation-transactions" style="width: 800px;"></div>
         <? if (model.get('status') != "COMPLETED" && model.get('status') != "CANCELLED") { ?>
             <input type="submit" class="completeOp" value="<?= __("Complete Operation") ?>"
         <?= model.get('canProcess') ? '' : 'disabled' ?> />
