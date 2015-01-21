@@ -216,12 +216,16 @@ define(
             },
 
             save: function(event) {
+                this.showProcessingDialog();
+
                 // Load the attributes and set in the model
                 var attributes = openhmis.loadAttributes(this, this.$attributes, openhmis.OperationAttribute);
                 if (attributes) {
                     this.model.set("attributes", attributes);
                 } else if (attributes === false) {
                     // The loadAttributes returns false if there was an error so halt the save if we got that
+                    this.hideProcessingDialog();
+
                     return false;
                 }
 
@@ -265,11 +269,16 @@ define(
                         var errors = self.model.validate(true);
                         if (errors) {
                             openhmis.displayErrors(self, errors);
+                            self.hideProcessingDialog();
                             return false;
                         }
                     },
                     success: function(model) {
+                        self.hideProcessingDialog();
                         self.trigger("save", model);
+                    },
+                    error: function(model) {
+                        self.hideProcessingDialog();
                     }
                 });
             },
@@ -481,6 +490,27 @@ define(
                 }
 
                 return type;
+            },
+
+            showProcessingDialog: function() {
+                $('.cancel').prop('disabled', true);
+                $('.submit').prop('disabled', true);
+
+                $('#processingDialog').dialog({
+                    dialogClass: "no-close",
+                    title: "Processing Operation",
+                    draggable: false,
+                    resizable: false,
+                    modal: true,
+                    width: 350
+                });
+            },
+
+            hideProcessingDialog: function() {
+                $('.cancel').prop('disabled', false);
+                $('.submit').prop('disabled', false);
+
+                $('#processingDialog').dialog("close");
             }
         });
 

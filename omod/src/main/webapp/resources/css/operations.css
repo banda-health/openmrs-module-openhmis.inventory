@@ -7,3 +7,7 @@ input.readonly {
 	border: 1px solid #BDBDBD;
 	color: #BDBDBD;
 }
+
+.no-close .ui-dialog-titlebar-close {
+	display: none;
+}
