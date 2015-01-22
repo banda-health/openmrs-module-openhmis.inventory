@@ -3,10 +3,14 @@ package org.openmrs.module.webservices.rest.search;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationTransactionDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -28,16 +32,21 @@ public class StockOperationTransactionSearchHandler implements SearchHandler {
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE,
 			Arrays.asList("*"),
 			Arrays.asList(
-					new SearchQuery.Builder("Find all transactions by stockroom.")
-							.withRequiredParameters("stockroom_uuid").build()
+					new SearchQuery.Builder("Find all transactions by stockroom or operation.")
+							.withOptionalParameters("stockroom_uuid", "operation_uuid").build()
 			)
 	);
 
 	private IStockroomDataService stockroomDataService;
+	private IStockOperationDataService stockOperationDataService;
+	private IStockOperationTransactionDataService stockOperationTransactionDataService;
 
 	@Autowired
-	public StockOperationTransactionSearchHandler(IStockroomDataService stockroomDataService) {
+	public StockOperationTransactionSearchHandler(IStockroomDataService stockroomDataService, 
+			IStockOperationDataService stockOperationDataService, IStockOperationTransactionDataService stockOperationTransactionDataService) {
 		this.stockroomDataService = stockroomDataService;
+		this.stockOperationDataService = stockOperationDataService;
+		this.stockOperationTransactionDataService = stockOperationTransactionDataService;
 	}
 
 	@Override
@@ -47,21 +56,34 @@ public class StockOperationTransactionSearchHandler implements SearchHandler {
 
 	@Override
 	public PageableResult search(RequestContext context) {
-		return doSearch(stockroomDataService, context);
+		return doSearch(stockroomDataService, stockOperationTransactionDataService, stockOperationDataService, context);
 	}
 
-	public static PageableResult doSearch(IStockroomDataService service, RequestContext context) {
+	public static PageableResult doSearch(IStockroomDataService stockroomService, IStockOperationTransactionDataService transactionService, 
+			 IStockOperationDataService operationService, RequestContext context) {
 		String stockroomUuid = context.getParameter("stockroom_uuid");
-		Stockroom stockroom = service.getByUuid(stockroomUuid);
-
-		if (stockroom == null) {
+		String operationUuid = context.getParameter("operation_uuid");
+		
+		if (StringUtils.isEmpty(stockroomUuid) && StringUtils.isEmpty(operationUuid)) {
+			LOG.warn("Either stockroomUuid or operationUuid must be defined");
 			LOG.warn("Could not find stockroom '" + stockroomUuid + "'");
-
 			return new EmptySearchResult();
 		}
-
+		
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<StockOperationTransaction> transactions = service.getTransactionsByRoom(stockroom, pagingInfo);
+		List<StockOperationTransaction> transactions = null;
+		
+		if (StringUtils.isNotEmpty(stockroomUuid)) { 
+			Stockroom stockroom = stockroomService.getByUuid(stockroomUuid);
+			transactions = stockroomService.getTransactionsByRoom(stockroom, pagingInfo);
+		}
+		
+		if (StringUtils.isNotEmpty(operationUuid)) {
+			StockOperation operation = operationService.getByUuid(operationUuid);
+			transactions = transactionService.getTransactionByOperation(operation, pagingInfo);
+		}
+
+
 		if (transactions == null || transactions.size() == 0) {
 			return new EmptySearchResult();
 		} else {

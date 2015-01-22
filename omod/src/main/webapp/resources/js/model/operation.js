@@ -393,9 +393,14 @@ define(
                     });
                 } else  {
                      var itemError = false;
+                     var expiryDateError = false;
                      items.each(function(item) {
                      	if (item.get("quantity") === 0) {
                      		itemError = true;
+                     	}
+                     	var itemAttribute = item.get("item");
+                     	if (itemAttribute != null && itemAttribute.get("hasExpiration") === true && item.get("expiration") === "") {
+                     		expiryDateError = true;
                      	}
                      });
                      if (itemError) {
@@ -403,6 +408,12 @@ define(
                              selector: "th.field-quantity",
                              message: "The item quantity must not be 0"
                          });
+                     }
+                     if (expiryDateError) {
+                    	 errors.push({
+                    		 selector: "th.field-expiration",
+                    		 message: "The expiration date is missing"
+                    	 });
                      }
                 }
 

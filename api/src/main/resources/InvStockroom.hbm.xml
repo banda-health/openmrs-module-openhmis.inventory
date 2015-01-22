@@ -16,7 +16,7 @@
 		<property name="description" type="java.lang.String" column="description" length="1024" />
 		<many-to-one name="location" class="org.openmrs.Location" column="location_id" />
 
-		<set name="items" lazy="true" inverse="true" cascade="all-delete-orphan">
+		<set name="items" lazy="true" inverse="true" cascade="all-delete-orphan" fetch="subselect">
 			<key column="stockroom_id" />
 			<one-to-many class="ItemStock" />
 		</set>

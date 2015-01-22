@@ -39,6 +39,8 @@ curl(
                 };
             }
 
+            $('.date').datepicker();
+            
             if ($("#generateTakeReport").length > 0) {
                 $("#generateTakeReport").click(printTakeReport)
             }

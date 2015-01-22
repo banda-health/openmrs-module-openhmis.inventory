@@ -53,7 +53,11 @@
                 <option value="Auto" selected><em>Auto</em></option>
                 <? if (expirations) { ?>
                 <? _.each(expirations, function(exp) { ?>
-                    <option value="<?= exp ?>"><?= exp ?></option>
+                    <? if (exp === undefined || exp === "") { ?>
+                        <option value="None">None</option>
+                    <? } else { ?>
+                        <option value="<?= exp ?>"><?= exp ?></option>
+                    <? } ?>
                 <? }); ?>
                 <? } ?>
             </select>

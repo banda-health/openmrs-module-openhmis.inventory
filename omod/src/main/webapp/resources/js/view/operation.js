@@ -8,6 +8,7 @@ define(
         openhmis.url.backboneBase + 'js/view/patient',
         openhmis.url.inventoryBase + 'js/model/operation',
         openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/view/stockroom',
         openhmis.url.inventoryBase + 'js/view/editors',
         'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
@@ -36,28 +37,43 @@ define(
         openhmis.OperationDetailView = openhmis.GenericAddEditView.extend({
             tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
             tmplSelector: '#view-operation-detail',
+            titleSelector: '#operationTabs',
+            selectedTab: null,
+	        currentTx: null,
+	        currentTxForm: null,
+            
 
             events: {
                 'click .completeOp': 'completeOperation',
                 'click .cancelOp': 'cancelOperation',
-                'click .cancel': 'cancel'
+                'click .cancel': 'cancel',
             },
 
             initialize: function(options) {
                 openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-                this.itemsView = new openhmis.GenericListView({
+                this.itemsView = new openhmis.StockroomDetailList({
                     model: new openhmis.GenericCollection([], {
                         model: openhmis.OperationItem
                     }),
                     showRetiredOption: false,
                     showRetired: true,
-                    listTitle: "Operation Items",
                     listFields: ['item', 'quantity', 'batchOperation', 'expiration'],
+                    itemView: openhmis.OperationItemListItemView
+                });
+                
+                this.transactionsView = new openhmis.StockroomDetailList({
+                    model: new openhmis.GenericCollection([], {
+                        model: openhmis.OperationTransaction
+                    }),
+                    showRetiredOption: false,
+                    showRetired: true,
+                    listFields: ['stockroom', 'item', 'batchOperation',  'expiration', 'quantity'],
                     itemView: openhmis.OperationItemListItemView
                 });
 
                 this.itemsView.on("fetch", this.fetch);
+                this.transactionsView.on("fetch", this.fetch);
             },
             
         	edit: function(model) {
@@ -126,14 +142,33 @@ define(
 
                 openhmis.GenericAddEditView.prototype.render.call(this);
 
-                if (this.model.id) {
-                    // Fetch and render the operation items list
-                    this.itemsView.fetch(undefined, undefined);
+                var tabs = $("#operationTabs");
+		        if (this.model.id) {
+			        if (this.selectedTab) {
+				        tabs.tabs({
+					        active: this.selectedTab,
+					        activate: this.activateTab
+				        });
+			        } else {
+				        tabs.tabs({
+					        activate: this.activateTab
+				        });
+			        }
+			        tabs.show();
+			        $('#operationTabList').show();
 
-                    var itemsEl = $("#operation-items");
-                    itemsEl.append(this.itemsView.el);
-                    itemsEl.show();
-                }
+			        this.itemsView.fetch(null);
+			        this.transactionsView.fetch(null);
+
+			        var items = $("#operation-items");
+			        items.append(this.itemsView.el);
+			        var transactions = $("#operation-transactions");
+			        transactions.append(this.transactionsView.el);
+			    } else {
+			        tabs.hide();
+		        }
+		        this.$el.addClass('footer-padding');
+                
             },
 
             updateStatus: function(status) {
@@ -216,12 +251,16 @@ define(
             },
 
             save: function(event) {
+                this.showProcessingDialog();
+
                 // Load the attributes and set in the model
                 var attributes = openhmis.loadAttributes(this, this.$attributes, openhmis.OperationAttribute);
                 if (attributes) {
                     this.model.set("attributes", attributes);
                 } else if (attributes === false) {
                     // The loadAttributes returns false if there was an error so halt the save if we got that
+                    this.hideProcessingDialog();
+
                     return false;
                 }
 
@@ -235,6 +274,19 @@ define(
                     if (!this.model.get("items") || this.model.get("items").length === 0) {
                         this.model.set("items", new openhmis.GenericCollection(this.itemStockView.model.models))
                     }
+
+                    // Check for a Auto/None expiration and set the item attributes accordingly
+                    _.each(this.model.get("items").models, function (item) {
+                        if (item.get("expiration") === "Auto") {
+                            item.set("expiration", undefined);
+                            item.set("calculatedExpiration", true)
+                        } else if (item.get("expiration") === "None") {
+                            item.set("expiration", undefined);
+                            item.set("calculatedExpiration", false)
+                        } else {
+                            item.set("calculatedExpiration", false)
+                        }
+                    });
                 }
 
                 if (this.currentOperationType.get('hasRecipient')) {
@@ -251,12 +303,18 @@ define(
 
                         var errors = self.model.validate(true);
                         if (errors) {
+                        	self.model.set("items", null) ;
                             openhmis.displayErrors(self, errors);
+                            self.hideProcessingDialog();
                             return false;
                         }
                     },
                     success: function(model) {
+                        self.hideProcessingDialog();
                         self.trigger("save", model);
+                    },
+                    error: function(model) {
+                        self.hideProcessingDialog();
                     }
                 });
             },
@@ -468,6 +526,27 @@ define(
                 }
 
                 return type;
+            },
+
+            showProcessingDialog: function() {
+                $('.cancel').prop('disabled', true);
+                $('.submit').prop('disabled', true);
+
+                $('#processingDialog').dialog({
+                    dialogClass: "no-close",
+                    title: "Processing Operation",
+                    draggable: false,
+                    resizable: false,
+                    modal: true,
+                    width: 350
+                });
+            },
+
+            hideProcessingDialog: function() {
+                $('.cancel').prop('disabled', false);
+                $('.submit').prop('disabled', false);
+
+                $('#processingDialog').dialog("close");
             }
         });
 
@@ -600,14 +679,12 @@ define(
                     form.fields.quantity.setValue(1);
                 }
 
-                this.update();
-
                 // Set the focus on the quantity field
                 form.fields.quantity.editor.focus(true);
             },
 
             refreshItemFields: function(item, form) {
-                var hasExpiration = item.get("hasExpiration");
+                var itemHasExpiration = item.get("hasExpiration");
 
                 // TODO: This logic is much too closely coupled to the underlying item editor
                 var stockroomUuid = $(this.options.schema.item.stockroomSelector).val();
@@ -626,13 +703,17 @@ define(
                             var batches = [];
 
                             if (model.models && model.models.length > 0) {
-                                var details = model.models[0].get("details");
+                                var hasExp = false;
+                                var hasNone = false;
 
                                 // Build the expiration and batch lists for this item
-                                _.each(details, function (detail) {
+                                _.each(model.models[0].get("details"), function (detail) {
                                     var exp = detail.get("expiration");
                                     if (exp && exp != "") {
+                                        hasExp = true;
                                         expirations.push(openhmis.dateFormatLocale(exp));
+                                    } else {
+                                        hasNone = true;
                                     }
 
                                     var batch = detail.get("batchOperation");
@@ -640,16 +721,31 @@ define(
                                         batches.push(batch);
                                     }
                                 });
+
+                                if ((hasExp || itemHasExpiration) && hasNone) {
+                                    // Add the 'None' expiration if there was at least one expiration or the item is
+                                    //  expirable and there was an empty expiration
+                                    itemHasExpiration = true;
+                                    expirations.push("");
+                                } else if (hasExp && !itemHasExpiration) {
+                                    // If a non-expirable item has stock with expirations then always include the
+                                    //  'None' expiration
+                                    itemHasExpiration = true;
+                                    expirations.push("");
+                                }
                             }
 
-                            self.updateEditors(form, item, hasExpiration, expirations, batches);
+                            self.updateEditors(form, item, itemHasExpiration, expirations, batches);
+                            self.update();
                         },
                         error: function() {
-                            self.updateEditors(form, item, hasExpiration, undefined, undefined);
+                            self.updateEditors(form, item, itemHasExpiration, undefined, undefined);
+                            this.update();
                         }
                     });
                 } else {
-                    this.updateEditors(form, item, hasExpiration, undefined, undefined);
+                    this.updateEditors(form, item, itemHasExpiration, undefined, undefined);
+                    this.update();
                 }
             },
 

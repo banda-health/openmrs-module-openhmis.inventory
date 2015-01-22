@@ -21,5 +21,6 @@ public class HibernateCriteriaConstants {
 	public static final String BATCH_OPERATION = "batchOperation";
 	public static final String LOCATION = "location";
 	public static final String UUID = "uuid";
+	public static final String OPERATION = "operation";
 
 }

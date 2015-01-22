@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import org.apache.commons.lang.ObjectUtils;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -98,15 +100,43 @@ public class StockOperationServiceImpl
 		}
 	}
 
+	public static void validateOperationItems(StockOperation operation) {
+		if (operation.getItems() == null || operation.getItems().size() == 0) {
+			return;
+		}
+
+		if (operation.getInstanceType().getHasSource()) {
+			return;
+		}
+
+		// Check operation items
+		for (StockOperationItem item : operation.getItems()) {
+			if (Boolean.TRUE.equals(item.getItem().getHasExpiration())) {
+				if ((item.getExpiration() == null && !Boolean.TRUE.equals(item.getCalculatedExpiration()))) {
+					throw new APIException("The item " + item.getItem().getName() + " requires an expiration.");
+				} else if (operation.getSource() == null && item.getExpiration() == null) {
+					throw new APIException("The expiration for item " + item.getItem().getName() + " must be defined.");
+				}
+			}
+		}
+	}
+
 	@Override
 	public StockOperation submitOperation(StockOperation operation) {
+		return submitOperation(operation, true);
+	}
+
+	private StockOperation submitOperation(StockOperation operation, boolean validate) {
 		/*
 			Submitting the operation will copy the items to the operation reservations (if not already done) and then
 			process those reservations based on the operation state.
 		 */
 
-		validateOperation(operation);
-		checkOperationDate(operation);
+		if (validate) {
+			validateOperation(operation);
+			validateOperationItems(operation);
+			checkOperationDate(operation);
+		}
 
 		if (operation.getItems() == null || operation.getItems().size() <= 0) {
 			throw new APIException("The operation must have at least one operation item defined.");
@@ -115,6 +145,7 @@ public class StockOperationServiceImpl
 		// Only allow access to a single caller at a time so that the reservation calculation does not get messed up
 		synchronized (OPERATION_LOCK) {
 			if (operation.getStatus() == StockOperationStatus.NEW) {
+				// If this is a new operation, create the initial reservations based on the operation items
 				for (StockOperationItem item : operation.getItems()) {
 					ReservedTransaction tx = new ReservedTransaction(item);
 					tx.setCreator(Context.getAuthenticatedUser());
@@ -162,8 +193,7 @@ public class StockOperationServiceImpl
 			if (operation.getStatus() == StockOperationStatus.PENDING &&
 					ModuleSettings.loadSettings().getAutoCompleteOperations()) {
 				operation.setStatus(StockOperationStatus.COMPLETED);
-
-				operation = submitOperation(operation);
+				operation = submitOperation(operation, false);
 			}
 
 			return operation;
@@ -181,6 +211,9 @@ public class StockOperationServiceImpl
 
 	@Override
 	public void applyTransactions(StockOperationTransaction... transactions) {
+		// At a high level, this method analyses the specified transactions to create, update, and/or delete the
+		//  appropriate item stock and item stock detail records for the appropriate stockroom
+
 		if (transactions == null || transactions.length == 0) {
 			// Nothing to do
 			return;
@@ -194,16 +227,12 @@ public class StockOperationServiceImpl
 		// Lock on the operation lock in case this method is called directly. If called via submitOperation this lock
 		//  will already be acquired and simply reenter.
 		synchronized (OPERATION_LOCK) {
-			// Note that we don't touch the stockroom operations, transactions, or item stock because that could result
+			// Note that we don't touch the stockroom operations, transactions, or item stock lists because that could result
 			//  in loading a large number of records from the database that we don't need for this. This means that
 			//  any existing stockroom objects must be refreshed before the data updated below will be seen.
 
-			// At a high level, this method analyses the specified transactions to create, update, and/or delete the
-			//  appropriate item stock and item stock detail records for the appropriate stockroom
-
 			// Create a map to store the tx grouped by item and stockroom
 			Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> grouped = createGroupedTransactions(transactions);
-
 			for (Pair<Item, Stockroom> key : grouped.keySet()) {
 				Item item = key.getValue0();
 				Stockroom stockroom = key.getValue1();
@@ -215,7 +244,7 @@ public class StockOperationServiceImpl
 				// For each item transaction
 				int totalQty = 0;
 				for (StockOperationTransaction tx : itemTxs) {
-					// Sum the total quantity for the item
+					// Sum the total quantity for this specific item
 					totalQty += tx.getQuantity();
 
 					ItemStockDetail detail = null;
@@ -232,23 +261,33 @@ public class StockOperationServiceImpl
 						// The stock already exists so try and find the detail
 						detail = findDetail(stock, tx);
 						if (detail == null) {
-							// Could not find the detail so create a new one
+							// Could not find an appropriate detail so create a new one
 							detail = new ItemStockDetail(stock, tx);
 							stock.addDetail(detail);
 						} else {
-							// Found the detail, just update the quantity
+							// Found the detail, update the quantity
+							long currentQuantity = detail.getQuantity();
 							detail.setQuantity(detail.getQuantity() + tx.getQuantity());
+
+							if (currentQuantity < 0 && detail.getQuantity() > 0) {
+								// The quantity was previously negative and is now positive so inherit the batch and
+								// expiration from the transaction
+								detail.setCalculatedBatch(Boolean.TRUE.equals(tx.isCalculatedBatch()));
+								detail.setBatchOperation(tx.getBatchOperation());
+								detail.setCalculatedExpiration(Boolean.TRUE.equals(tx.isCalculatedExpiration()));
+								detail.setExpiration(tx.getExpiration() == null ? null : (Date)tx.getExpiration().clone());
+							}
 						}
 					}
 
 					// If the detail quantity is zero then remove the record. Note, details with quantities less than zero
 					//      still need to be tracked.
-					if(detail.getQuantity() == 0) {
+					if (detail.getQuantity() == 0) {
 						stock.getDetails().remove(detail);
 					}
 				}
 
-				// Update the item quantity
+				// Update the item stock quantity with the total across all details for this specific item in the stockroom
 				stock.setQuantity(stock.getQuantity() + totalQty);
 
 				// Handle the special-case where the stock quantity is negative and ensure that there is only a single
@@ -258,7 +297,13 @@ public class StockOperationServiceImpl
 				}
 
 				if (stock.getQuantity() == 0) {
-					// Remove the stock if the quantity is zero
+					// If the item stock quantity is exactly zero then we can safely delete the record
+
+					// We have to remove the item stock from the stockroom item stock list even though this will load the
+					// full list of items otherwise we may get a ObjectDeletedException when reapplying other operations
+					stock.getStockroom().removeItem(stock);
+
+					// Make sure the record is purged
 					itemStockService.purge(stock);
 				} else {
 					// Save the stock if the quantity is something other than zero (positive or negative)
@@ -289,8 +334,8 @@ public class StockOperationServiceImpl
 	 * @should set the transaction source calculated flags if the source was calculated
 	 * @should process non-calculated transactions before calculated transactions
 	 * @should set batch operation to past operations before future operations
-	 * @should throw APIException if source stockroom is null and the expiration are not specified for an expirable item
-	 * @should throw APIException if calculate expiration is false and expiration is null for an expirable item
+	 * @should support item change to have expiration after nonexpirable stock exists
+	 * @should support item change to not have expiration after expirable stock exists
 	 * @should throw IllegalArgumentException if operation is null
 	 */
 	public void calculateReservations(StockOperation operation) {
@@ -300,11 +345,11 @@ public class StockOperationServiceImpl
 
 		/*
 			We want to ensure that duplicated transactions are combined so they don't cause issues when they are processed.
-			To do this, we loop through each transaction and build a tuple containing the Item, Expiration Date, and Batch Operation
-			and look for it in a map.  If it is not found, we add it and continue to the next transaction. If it is found
-			we update the existing transaction to add the quantity and set the calculated batch operation and expiration.
-			The rule for the calculated qualifiers is that if either of the transactions (existing or current) was set to
-			be calculated then the field is set to true.
+			To do this, we loop through each transaction and build a tuple containing the Item, Expiration Date, and Batch
+			Operation and look for it in a map.  If it is not found, we add it and continue to the next transaction. If it
+			is found we update the existing transaction to add the quantity and set the calculated batch operation and
+			expiration. The rule for the calculated qualifiers is that if either of the transactions (existing or current)
+			was set to be calculated then the calculated field is set to true.
 		 */
 		List<ReservedTransaction> removeList = findDuplicateReservedTransactions(operation);
 		for (ReservedTransaction tx : removeList) {
@@ -327,25 +372,16 @@ public class StockOperationServiceImpl
 		boolean hasSource = operation.getSource() != null;
 
 		for (ReservedTransaction tx : transactions) {
-			if (!hasSource) {
-				if (tx.getItem().hasExpiration() && tx.getExpiration() == null) {
-					throw new APIException("Stock operations with no source stockroom must define an expiration for any expirable items.");
-				}
-
+			if (hasSource) {
+				// Clone the item stock and find the detail record
+				ItemStock stock = findAndCloneStock(stockMap, operation.getSource(), tx.getItem());
+				findAndUpdateSourceDetail(newTransactions, operation, stock, tx);
+			} else {
 				// Set the batch operation to the current operation because this must be some type of receipt operation
 				if (tx.getBatchOperation() == null) {
 					tx.setBatchOperation(operation);
 					tx.setCalculatedBatch(false);
 				}
-			} else {
-				if (tx.getItem().hasExpiration() && tx.getExpiration() == null && !tx.isCalculatedExpiration()) {
-					throw new APIException("The item '" + tx.getItem().getName() + "' requires an expiration date but " +
-							"one was not defined or set to be calculated.");
-				}
-
-				// Clone the item stock and find the detail record
-				ItemStock stock = findAndCloneStock(stockMap, operation.getSource(), tx.getItem());
-				findAndUpdateCalculatedDetail(newTransactions, operation, stock, tx);
 			}
 		}
 
@@ -361,7 +397,7 @@ public class StockOperationServiceImpl
 		// operation was performed.
 
 		// Get operations that were created after the specified operation
-		List<StockOperation> rollbackOperations = operationService.getOperationsSince(operation.getOperationDate(), null);
+		List<StockOperation> rollbackOperations = operationService.getFutureOperations(operation, null);
 
 		// Sort the transactions in reverse order by operation date (most recent first)
 		Collections.sort(rollbackOperations, new Comparator<StockOperation>() {
@@ -394,7 +430,7 @@ public class StockOperationServiceImpl
 
 	private void reapplyFollowingOperations(StockOperation operation) {
 		// Get operations that were created after the specified operation
-		List<StockOperation> rollbackOperations = operationService.getOperationsSince(operation.getOperationDate(), null);
+		List<StockOperation> rollbackOperations = operationService.getFutureOperations(operation, null);
 
 		// Sort the transactions in reverse order by operation date (most recent first)
 		Collections.sort(rollbackOperations, new Comparator<StockOperation>() {
@@ -438,45 +474,6 @@ public class StockOperationServiceImpl
 		}
 
 		// No need to save because this that will happen in submitOperation
-	}
-
-	private void findAndUpdateCalculatedDetail(List<ReservedTransaction> newTransactions, StockOperation operation, ItemStock stock, ReservedTransaction tx) {
-		ItemStockDetail detail = findCalculatedDetail(operation, stock, tx);
-
-		if (detail == null) {
-			tx.setSourceCalculatedExpiration(true);
-			tx.setSourceCalculatedBatch(true);
-			tx.setExpiration(null);
-			tx.setBatchOperation(null);
-		} else {
-			// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
-			detail.setQuantity(detail.getQuantity() - tx.getQuantity());
-
-			// Set the tx fields that derive from the source detail
-			tx.setSourceCalculatedExpiration(detail.isCalculatedExpiration());
-			tx.setSourceCalculatedBatch(detail.isCalculatedBatch());
-			tx.setExpiration(detail.getExpiration());
-			tx.setBatchOperation(detail.getBatchOperation());
-
-			if (detail.getQuantity() == 0) {
-				stock.getDetails().remove(detail);
-			} else if (detail.getQuantity() < 0) {
-				stock.getDetails().remove(detail);
-
-				// Set the tx quantity to the number actually deduced from the detail
-				tx.setQuantity(tx.getQuantity() + detail.getQuantity());
-
-				// Create a new tx to handle the remaining stock request
-				ReservedTransaction newTx = new ReservedTransaction(tx);
-				newTx.setQuantity(Math.abs(detail.getQuantity()));
-
-				// Add the new tx to the list of transactions to add to the operations
-				newTransactions.add(newTx);
-
-				// Find the details to fulfill this new tx
-				findAndUpdateCalculatedDetail(newTransactions, operation, stock, newTx);
-			}
-		}
 	}
 
 	private List<ReservedTransaction> findDuplicateReservedTransactions(StockOperation operation) {
@@ -529,72 +526,6 @@ public class StockOperationServiceImpl
 		return transactions;
 	}
 
-	private ItemStockDetail findCalculatedDetail(StockOperation operation, ItemStock stock, ReservedTransaction tx) {
-		if (stock == null) {
-			return null;
-		}
-
-		ItemStockDetail detail = null;
-
-		if (stock.getItem().hasExpiration() && tx.isCalculatedExpiration()) {
-			List<ItemStockDetail> results = null;
-			if (tx.isCalculatedExpiration()) {
-				results = findClosestExpiration(stock, new DateTime(operation.getOperationDate()));
-			} else {
-				results =  findDetailByExpiration(stock, tx.getExpiration());
-			}
-
-			if (results.size() == 1) {
-				detail = results.get(0);
-			} else if (results.size() > 1) {
-				detail = findOldestBatch(operation, results);
-			}
-		} else if (tx.isCalculatedBatch()) {
-			detail = findOldestBatch(operation, stock);
-		} else {
-			detail = findDetail(stock, tx);
-		}
-
-		return detail;
-	}
-
-	private ItemStockDetail findDetail(ItemStock stock, TransactionBase tx) {
-		if (stock == null || stock.getDetails() == null || stock.getDetails().size() == 0) {
-			return null;
-		}
-
-		// Loop through each detail record and find the first detail with the same expiration and batch operation
-		for (ItemStockDetail detail : stock.getDetails()) {
-			if (ObjectUtils.equals(detail.getExpiration(), tx.getExpiration()) &&
-				ObjectUtils.equals(detail.getBatchOperation(), tx.getBatchOperation())) {
-				return detail;
-			}
-		}
-
-		return null;
-	}
-
-	private List<ItemStockDetail> findDetailByExpiration(ItemStock stock, Date date) {
-		if (stock == null || stock.getDetails() == null || stock.getDetails().size() == 0) {
-			return null;
-		}
-
-		if (date == null) {
-			throw new IllegalArgumentException("The expiration date to find must be defined.");
-		}
-
-		List<ItemStockDetail> results = new ArrayList<ItemStockDetail>();
-
-		// Loop through each detail record and find the first detail with the same expiration and batch operation
-		for (ItemStockDetail detail : stock.getDetails()) {
-			if (detail.getExpiration() != null && detail.getExpiration().equals(date)) {
-				results.add(detail);
-			}
-		}
-
-		return results;
-	}
-
 	private ItemStock findAndCloneStock(Map<Pair<Stockroom, Item>, ItemStock> workingMap, Stockroom stockroom, Item item) {
 		Pair<Stockroom, Item> pair = Pair.with(stockroom, item);
 
@@ -611,32 +542,209 @@ public class StockOperationServiceImpl
 		return stock;
 	}
 
-	private List<ItemStockDetail> findClosestExpiration(ItemStock stock, DateTime date) {
-		List<ItemStockDetail> results = new ArrayList<ItemStockDetail>();
-		int closest = 0;
+	private void findAndUpdateSourceDetail(List<ReservedTransaction> newTransactions, StockOperation operation,
+			ItemStock stock, ReservedTransaction tx) {
+		ItemStockDetail detail = findSourceDetail(operation, stock, tx);
 
-		for (ItemStockDetail detail : stock.getDetails()) {
-			if (results.size() == 0) {
-				results.add(detail);
-				closest = Seconds.secondsBetween(date, new DateTime(detail.getExpiration())).getSeconds();
+		if (detail == null) {
+			// No existing stock could be found to fulfill the request
+			tx.setSourceCalculatedExpiration(true);
+			tx.setSourceCalculatedBatch(true);
+			tx.setExpiration(null);
+			tx.setBatchOperation(null);
+		} else {
+			// Set the tx fields that derive from the source detail
+			tx.setSourceCalculatedExpiration(detail.isCalculatedExpiration());
+			tx.setSourceCalculatedBatch(detail.isCalculatedBatch());
+			tx.setExpiration(detail.getExpiration());
+			tx.setBatchOperation(detail.getBatchOperation());
+
+			if (detail.getQuantity() < 0) {
+				// The detail quantity is already negative so just subtract more
+				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
 			} else {
-				int temp = Seconds.secondsBetween(date, new DateTime(detail.getExpiration())).getSeconds();
-				if (temp == closest) {
-					results.add(detail);
-				} else if (temp < closest) {
-					results.clear();
-					results.add(detail);
+				// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
+				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
 
+				if (detail.getQuantity() == 0) {
+					// If the quantity is exactly zero than we can simply remove the detail record
+					stock.getDetails().remove(detail);
+				} else if (detail.getQuantity() < 0) {
+					stock.getDetails().remove(detail);
+
+					// Set the tx quantity to the number actually deduced from the detail
+					tx.setQuantity(tx.getQuantity() + detail.getQuantity());
+
+					// Create a new tx to handle the remaining stock request
+					ReservedTransaction newTx = new ReservedTransaction(tx);
+					newTx.setQuantity(Math.abs(detail.getQuantity()));
+
+					// Add the new tx to the list of transactions to add to the operations
+					newTransactions.add(newTx);
+
+					// Find the details to fulfill this new tx
+					findAndUpdateSourceDetail(newTransactions, operation, stock, newTx);
+				}
+			}
+		}
+	}
+
+	private ItemStockDetail findSourceDetail(StockOperation operation, ItemStock stock, ReservedTransaction tx) {
+		// This method finds the item stock detail to satisfy the reservation
+
+		if (stock == null) {
+			return null;
+		}
+
+		ItemStockDetail detail = null;
+
+		/* The following scenarios must be considered:
+			The tx has a specific exp and batch so find that specific detail record
+			The tx has a calculated exp
+				OR/AND
+			The tx has a calculated batch
+
+			Also, we need to handle items that have changed whether they have an expiration or not. Because operations can
+			 be reapplied at a later date, the search needs to be flexible enough to work with item stock that has some
+			 details with an expiration and some without.
+
+			Previous	Current
+			----------------------------------------
+			No Exp		Exp	(Calc)	-> Return No-Exp
+			No Exp		Exp			-> Return Null (Create new negative detail)
+			Exp			No Exp		-> Return Exp
+			None		No Exp		-> Return Null
+			None		Exp			-> Return Null
+		*/
+
+		List<ItemStockDetail> results = null;
+		if (Boolean.TRUE.equals(tx.isCalculatedExpiration()) && Boolean.TRUE.equals(tx.isCalculatedBatch())) {
+			// Find the detail that will expire the soonest (could be multiple, each with a different batch op)
+			results = findDetailByClosestExpiration(stock.getDetails(), new DateTime(operation.getOperationDate()));
+
+			if (results == null || results.size() == 0) {
+				detail = null;
+			} else if (results.size() == 1) {
+				detail = results.get(0);
+			} else if (results.size() > 1) {
+				detail = findOldestBatch(operation, results);
+			}
+		} else if (Boolean.TRUE.equals(tx.isCalculatedExpiration())) {
+			// Find the detail with the specific batch and pick the best expiration if there are multiple
+			results = findDetailByBatch(stock, tx.getBatchOperation());
+			results = findDetailByClosestExpiration(results, new DateTime(operation.getOperationDate()));
+
+			detail = results.size() == 0 ? null : results.get(0);
+		} else if (Boolean.TRUE.equals(tx.isCalculatedBatch())) {
+			// Find the detail with the specific exp and the best batch if there are multiple
+			results = findDetailByExpiration(stock, tx.getExpiration());
+			detail = findOldestBatch(operation, results);
+		} else {
+			// Find the detail with the specific exp and specific batch
+			detail = findDetail(stock, tx);
+		}
+
+		return detail;
+	}
+
+	private ItemStockDetail findDetail(ItemStock stock, TransactionBase tx) {
+		if (stock == null || stock.getDetails() == null || stock.getDetails().size() == 0) {
+			return null;
+		}
+
+		// Check if there is only a single detail with a negative quantity
+		if (stock.getDetails().size() == 1) {
+			ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+			if (detail.getQuantity() < 0) {
+				// This detail can be used for all transactions, regardless of batch and expiration
+				return detail;
+			}
+		}
+
+		// Loop through each detail record and find the first detail with the same expiration and batch operation, matching
+		// nulls with nulls
+		for (ItemStockDetail detail : stock.getDetails()) {
+			if (ObjectUtils.equals(detail.getExpiration(), tx.getExpiration()) &&
+				ObjectUtils.equals(detail.getBatchOperation(), tx.getBatchOperation())) {
+				return detail;
+			}
+		}
+
+		return null;
+	}
+
+	private List<ItemStockDetail> findDetailByExpiration(ItemStock stock, final Date date) {
+		if (stock == null || stock.getDetails() == null || stock.getDetails().size() == 0) {
+			return null;
+		}
+
+		List<ItemStockDetail> results = new ArrayList<ItemStockDetail>();
+		results.addAll(Collections2.filter(stock.getDetails(), new Predicate<ItemStockDetail>() {
+			@Override
+			public boolean apply(ItemStockDetail detail) {
+				return (detail.getExpiration() == null && date == null) ||
+						(detail.getExpiration() != null && detail.getExpiration().equals(date));
+			}
+		}));
+
+		return results;
+	}
+
+	private List<ItemStockDetail> findDetailByBatch(ItemStock stock, final StockOperation batchOperation) {
+		if (stock == null || stock.getDetails() == null || stock.getDetails().size() == 0) {
+			return null;
+		}
+
+		List<ItemStockDetail> results = new ArrayList<ItemStockDetail>();
+		results.addAll(Collections2.filter(stock.getDetails(), new Predicate<ItemStockDetail>() {
+			@Override
+			public boolean apply(ItemStockDetail detail) {
+				return (detail.getBatchOperation() == null && batchOperation == null) ||
+						(detail.getBatchOperation() != null && detail.getBatchOperation() == batchOperation);
+			}
+		}));
+
+		return results;
+	}
+
+	private List<ItemStockDetail> findDetailByClosestExpiration(Collection<ItemStockDetail> details, DateTime date) {
+		if (details == null || details.size() == 0) {
+			return null;
+		}
+
+		List<ItemStockDetail> results = new ArrayList<ItemStockDetail>();
+
+		if (details.size() == 1) {
+			// If there is only a single detail record then we can just use that
+			results.addAll(details);
+		} else {
+			// Find the detail(s) with the closest expiration to the specified date
+			int closest = 0;
+			for (ItemStockDetail detail : details) {
+				int temp;
+				if (detail.getExpiration() == null) {
+					temp = Integer.MAX_VALUE;
+				} else {
+					temp = Seconds.secondsBetween(date, new DateTime(detail.getExpiration())).getSeconds();
+				}
+
+				if (results.size() == 0) {
+					results.add(detail);
 					closest = temp;
+				} else {
+					if (temp == closest) {
+						results.add(detail);
+					} else if (temp < closest) {
+						results.clear();
+						results.add(detail);
+
+						closest = temp;
+					}
 				}
 			}
 		}
 
 		return results;
-	}
-
-	private ItemStockDetail findOldestBatch(StockOperation operation, ItemStock stock) {
-		return findOldestBatch(operation, stock.getDetails());
 	}
 
 	private ItemStockDetail findOldestBatch(StockOperation operation, Collection<ItemStockDetail> details) {
@@ -651,8 +759,12 @@ public class StockOperationServiceImpl
 		return Collections.min(details, new Comparator<ItemStockDetail>() {
 			@Override
 			public int compare(ItemStockDetail o1, ItemStockDetail o2) {
-				DateTime o1Time = new DateTime(o1.getBatchOperation().getOperationDate());
-				DateTime o2Time = new DateTime(o2.getBatchOperation().getOperationDate());
+				DateTime o1Time = o1.getBatchOperation() == null ?
+						operationTime :
+						new DateTime(o1.getBatchOperation().getOperationDate());
+				DateTime o2Time = o2.getBatchOperation() == null ?
+						operationTime :
+						new DateTime(o2.getBatchOperation().getOperationDate());
 
 				return ((Integer) Seconds.secondsBetween(operationTime, o1Time).getSeconds()).compareTo(
 						Seconds.secondsBetween(operationTime, o2Time).getSeconds());

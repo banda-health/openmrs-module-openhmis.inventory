@@ -65,10 +65,10 @@
             <br />
             <br />
             <label for="beginDate">Begin Date</label>
-            <input id="beginDate" type="date" />
+            <input id="beginDate" class="date" type="text" />
 
             <label for="endDate">End Date</label>
-            <input id="endDate" type="date" />
+            <input id="endDate" class="date" type="text" />
 
             <input id="stockCardReportId" type="hidden" value="${stockCardReport.reportId}" />
             <br /><br />
@@ -95,10 +95,10 @@
             <br />
 
             <label for="stockroomReport-beginDate">Begin Date</label>
-            <input id="stockroomReport-beginDate" type="date" />
+            <input id="stockroomReport-beginDate" class="date" type="text" />
 
             <label for="stockroomReport-endDate">End Date</label>
-            <input id="stockroomReport-endDate" type="date" />
+            <input id="stockroomReport-endDate" class="date" type="text" />
 
             <input id="stockroomReportId" type="hidden" value="${stockroomReport.reportId}" />
             <br /><br />

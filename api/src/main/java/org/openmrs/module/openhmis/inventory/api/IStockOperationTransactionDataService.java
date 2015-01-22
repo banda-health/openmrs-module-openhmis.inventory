@@ -13,9 +13,24 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
+import java.util.List;
+
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
 
 public interface IStockOperationTransactionDataService extends IObjectDataService<StockOperationTransaction> {
-
+	
+	/**
+	 * Gets all {@link StockOperationTransaction}'s for the specified {@link StockOperation}.
+	 * @param operation The {@link StockOperation}.
+	 * @param paging The paging information.
+	 * @return A list containing all of the operation transactions.
+	 * @should return all the transactions of the peration ordered by the transaction date
+	 * @should return an empty list if there are no transactions
+	 * @should return paged items if paging is specified
+	 * @should throw IllegalArgumentException if the stockroom is null
+	 */
+	public List<StockOperationTransaction> getTransactionByOperation(StockOperation operation, PagingInfo paging);
 }

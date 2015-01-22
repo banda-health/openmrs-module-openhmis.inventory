@@ -111,7 +111,14 @@
 			</ul>
 		</fieldset>
 		</form>
-        <div id="operation-items" style="width: 800px;"></div>
+		<div id="operationTabs" style="width: 802px;">
+			<ul id="operationTabList" style="width: 800px;">
+            	<li><a href="#operation-items">Items</a></li>
+            	<li><a href="#operation-transactions">Transactions</a></li>
+        	</ul>
+	        <div class="box-form" id="operation-items" style="width: 800px;"></div>
+			<div id="operation-transactions" style="width: 800px;"></div>
+		</div>
         <? if (model.get('status') != "COMPLETED" && model.get('status') != "CANCELLED") { ?>
             <input type="submit" class="completeOp" value="<?= __("Complete Operation") ?>"
         <?= model.get('canProcess') ? '' : 'disabled' ?> />

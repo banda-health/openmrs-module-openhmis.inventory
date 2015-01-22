@@ -499,7 +499,7 @@ define(
                     return;
                 }
 
-                var defaultExp = undefined;
+                var defaultExp;
                 var entryRequired = operationType.get('hasSource') !== true;
                 if (entryRequired ) {
                     // Set the default expiration date to the current date plus the number of days defined in the item's
@@ -559,12 +559,17 @@ define(
                 // Try to parse the date into a real Date object
                 if (selected) {
                     try {
-                        selected = new Date(selected);
+                        var date = new Date(selected);
+                        if (!isNaN(date.getTime())) {
+                            selected = date;
+                        }
                     } catch(err) {
-                        selected = undefined;
+                        //selected = undefined;
                     }
                 }
 
+                // If the value could not be parsed as a date ("Auto" or "None") then the value will be parsed by the
+                //  NewOperationView.save method
                 return selected;
             },
 
