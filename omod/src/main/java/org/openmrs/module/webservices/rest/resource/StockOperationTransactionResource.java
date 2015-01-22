@@ -38,10 +38,10 @@ public class StockOperationTransactionResource extends TransactionBaseResource<S
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		if (!(rep instanceof RefRepresentation)) {
-			description.addProperty("stockroom", Representation.REF);
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("institution", Representation.REF);
 		}
+		description.addProperty("stockroom", Representation.REF);
 
 		return description;
 	}

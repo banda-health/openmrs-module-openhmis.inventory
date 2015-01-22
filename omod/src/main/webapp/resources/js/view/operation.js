@@ -68,7 +68,7 @@ define(
                     }),
                     showRetiredOption: false,
                     showRetired: true,
-                    listFields: ['item', 'batchOperation',  'expiration', 'quantity'],
+                    listFields: ['stockroom', 'item', 'batchOperation',  'expiration', 'quantity'],
                     itemView: openhmis.OperationItemListItemView
                 });
 
