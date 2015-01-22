@@ -8,6 +8,7 @@ define(
         openhmis.url.backboneBase + 'js/view/patient',
         openhmis.url.inventoryBase + 'js/model/operation',
         openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/view/stockroom',
         openhmis.url.inventoryBase + 'js/view/editors',
         'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
@@ -36,28 +37,43 @@ define(
         openhmis.OperationDetailView = openhmis.GenericAddEditView.extend({
             tmplFile: openhmis.url.inventoryBase + 'template/operation.html',
             tmplSelector: '#view-operation-detail',
+            titleSelector: '#operationTabs',
+            selectedTab: null,
+	        currentTx: null,
+	        currentTxForm: null,
+            
 
             events: {
                 'click .completeOp': 'completeOperation',
                 'click .cancelOp': 'cancelOperation',
-                'click .cancel': 'cancel'
+                'click .cancel': 'cancel',
             },
 
             initialize: function(options) {
                 openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-                this.itemsView = new openhmis.GenericListView({
+                this.itemsView = new openhmis.StockroomDetailList({
                     model: new openhmis.GenericCollection([], {
                         model: openhmis.OperationItem
                     }),
                     showRetiredOption: false,
                     showRetired: true,
-                    listTitle: "Operation Items",
                     listFields: ['item', 'quantity', 'batchOperation', 'expiration'],
+                    itemView: openhmis.OperationItemListItemView
+                });
+                
+                this.transactionsView = new openhmis.StockroomDetailList({
+                    model: new openhmis.GenericCollection([], {
+                        model: openhmis.OperationTransaction
+                    }),
+                    showRetiredOption: false,
+                    showRetired: true,
+                    listFields: ['item', 'batchOperation',  'expiration', 'quantity'],
                     itemView: openhmis.OperationItemListItemView
                 });
 
                 this.itemsView.on("fetch", this.fetch);
+                this.transactionsView.on("fetch", this.fetch);
             },
             
         	edit: function(model) {
@@ -126,14 +142,33 @@ define(
 
                 openhmis.GenericAddEditView.prototype.render.call(this);
 
-                if (this.model.id) {
-                    // Fetch and render the operation items list
-                    this.itemsView.fetch(undefined, undefined);
+                var tabs = $("#operationTabs");
+		        if (this.model.id) {
+			        if (this.selectedTab) {
+				        tabs.tabs({
+					        active: this.selectedTab,
+					        activate: this.activateTab
+				        });
+			        } else {
+				        tabs.tabs({
+					        activate: this.activateTab
+				        });
+			        }
+			        tabs.show();
+			        $('#operationTabList').show();
 
-                    var itemsEl = $("#operation-items");
-                    itemsEl.append(this.itemsView.el);
-                    itemsEl.show();
-                }
+			        this.itemsView.fetch(null);
+			        this.transactionsView.fetch(null);
+
+			        var items = $("#operation-items");
+			        items.append(this.itemsView.el);
+			        var transactions = $("#operation-transactions");
+			        transactions.append(this.transactionsView.el);
+			    } else {
+			        tabs.hide();
+		        }
+		        this.$el.addClass('footer-padding');
+                
             },
 
             updateStatus: function(status) {
@@ -268,6 +303,7 @@ define(
 
                         var errors = self.model.validate(true);
                         if (errors) {
+                        	self.model.set("items", null) ;
                             openhmis.displayErrors(self, errors);
                             self.hideProcessingDialog();
                             return false;

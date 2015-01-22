@@ -8,6 +8,14 @@ input.readonly {
 	color: #BDBDBD;
 }
 
+#operationTabList li.ui-state-default {
+	background: #d3d3d3 none !important;
+}
+
+#operationTabList li.ui-tabs-active {
+	background: white none !important;
+}
+
 .no-close .ui-dialog-titlebar-close {
 	display: none;
 }
