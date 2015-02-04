@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,6 +50,8 @@ public class JasperReportController {
 			return renderStockCardReport(reportId, request, response);
 		} else if (settings.getStockroomReportId() != null && reportId == settings.getStockroomReportId()) {
 			return renderStockroomReport(reportId, request, response);
+		} else if (settings.getExpiringStockReportId() != null && reportId == settings.getExpiringStockReportId()) {
+			return renderExpiringStocksReport(reportId, request, response);
 		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown report.");
 		}
@@ -171,6 +174,31 @@ public class JasperReportController {
 
 		return renderReport(reportId, params, null, response);
 	}
+	
+	private String renderExpiringStocksReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
+		
+		Date expiryDate = null;
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		String temp = request.getParameter("expiresBy");
+		if (!StringUtils.isEmpty(temp)) {
+			try {
+				expiryDate = dateFormat.parse(temp);
+			} catch (Exception ex) {
+				// Whatevs... dealing with stupid checked exceptions
+			}
+		}
+		
+		if (expiryDate == null) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The expiry date must be defined.");
+			return null;
+		}
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("expiresBy", expiryDate);
+
+		return renderReport(reportId, params, null, response);
+    }
 
 	private String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,
 			HttpServletResponse response) throws IOException {

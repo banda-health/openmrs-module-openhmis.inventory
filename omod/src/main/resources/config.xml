@@ -51,6 +51,11 @@
 		<property>${project.parent.artifactId}.reports.stockroom</property>
 		<description>The ID of the Stockroom report.</description>
 	</globalProperty>
+	
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.expiringStock</property>
+		<description>The ID of the Expiring Stock report.</description>
+	</globalProperty>
 
 	<globalProperty>
 		<property>${project.parent.artifactId}.autoCompleteOperations</property>

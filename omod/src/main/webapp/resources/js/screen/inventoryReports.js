@@ -52,6 +52,10 @@ curl(
             if ($("#generateStockroomReport").length > 0) {
                 $("#generateStockroomReport").click(printStockroomReport);
             }
+            
+            if ($("#generateExpiringStockReport").length > 0) {
+                $("#generateExpiringStockReport").click(printExpiringStockReport);
+            }
         });
 
         function printTakeReport() {
@@ -112,6 +116,23 @@ curl(
             var reportId = $('#stockroomReportId').val();
 
             return printReport(reportId, "stockroomId=" + stockroomId + "&beginDate=" + beginDate + "&endDate=" + endDate);
+        }
+        
+        function printExpiringStockReport() {
+
+            var expiryDate = $("#expiresBy").val();
+
+            if (!expiryDate) {
+                alert("You must select an expiry date to generate the report.");
+                return false;
+            }
+
+            // Get the dates into the expected format (dd-MM-yyyy)
+            expiryDate = openhmis.dateFormat(new Date(expiryDate), false);
+
+            var reportId = $('#expiringStockReportId').val();
+
+            return printReport(reportId, "expiresBy=" + expiryDate);
         }
 
         function printReport(reportId, parameters) {

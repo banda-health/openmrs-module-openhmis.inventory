@@ -70,6 +70,16 @@ public class InventoryReportsController {
 				throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
 			}	
 		}
+		
+		reportId = settings.getExpiringStockReportId();
+		if (reportId != null) {
+			try {
+				model.addAttribute("expiringStockReport", reportService.getJasperReport(reportId));
+			} catch(NullPointerException e) {
+				LOG.error("report with ID <" + reportId + "> not found", e);
+				throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
+			}	
+		}
 
 		model.addAttribute("stockrooms", stockroomDataService.getAll());
 	}
