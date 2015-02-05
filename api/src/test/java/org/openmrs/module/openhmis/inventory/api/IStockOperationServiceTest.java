@@ -2312,15 +2312,6 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(100, stock.getQuantity());
 	}
 
-	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions, final Item item) {
-		return Iterators.find(transactions.iterator(), new Predicate<StockOperationTransaction>() {
-			@Override
-			public boolean apply(StockOperationTransaction input) {
-				return input.getItem() == item;
-			}
-		});
-	}
-
 	/**
 	 * @verifies add the destination stockroom item stock if existing is negative
 	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -2576,5 +2567,271 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 
 		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertNull(detail.getExpiration());
+	}
+
+	/**
+	 * @verifies not include rollback operations when rolling back and reapplying subsequent operations
+	 * @see IStockOperationService#submitOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void submitOperation_shouldNotIncludeRollbackOperationsWhenRollingBackAndReapplyingSubsequentOperations()
+			throws Exception {
+		Stockroom source = stockroomService.getById(0);
+		Stockroom dest = stockroomService.getById(1);
+
+		Item newItem = itemTest.createEntity(true);
+		newItem.setHasExpiration(false);
+		itemService.save(newItem);
+		Context.flushSession();
+
+		StockOperation op1 = new StockOperation();
+		op1.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op1.setStatus(StockOperationStatus.NEW);
+		op1.setDestination(source);
+		op1.setOperationNumber("A123-1");
+		op1.setOperationDate(new Date());
+		op1.addItem(newItem, 25);
+
+		op1 = service.submitOperation(op1);
+		Context.flushSession();
+
+		StockOperation op2 = new StockOperation();
+		op2.setInstanceType(WellKnownOperationTypes.getTransfer());
+		op2.setStatus(StockOperationStatus.NEW);
+		op2.setSource(source);
+		op2.setDestination(dest);
+		op2.setOperationNumber("A123-2");
+		op2.setOperationDate(new Date());
+		op2.addItem(newItem, 25);
+
+		op2 = service.submitOperation(op2);
+		Context.flushSession();
+		op2.setStatus(StockOperationStatus.COMPLETED);
+		op2 = service.submitOperation(op2);
+		Context.flushSession();
+
+		StockOperation op3 = new StockOperation();
+		op3.setInstanceType(WellKnownOperationTypes.getDistribution());
+		op3.setStatus(StockOperationStatus.NEW);
+		op3.setSource(source);
+		op3.setOperationNumber("A123-3");
+		op3.setOperationDate(new Date());
+		op3.setPatient(Context.getPatientService().getPatient(0));
+		op3.addItem(newItem, 10);
+
+		op3 = service.submitOperation(op3);
+		Context.flushSession();
+		op3.setStatus(StockOperationStatus.COMPLETED);
+		op3 = service.submitOperation(op3);
+		Context.flushSession();
+
+		ItemStock stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-35, stock.getQuantity());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(-35, (long)detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+
+		stock = stockroomService.getItem(dest, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(25, stock.getQuantity());
+
+		// State is what we expect so now rollback transfer operation
+		op2 = service.rollbackOperation(op2);
+		Context.flushSession();
+
+		stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-10, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(-10, (long)detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+
+		stock = stockroomService.getItem(dest, newItem);
+		Assert.assertNull(stock);
+
+		// Now apply the first receipt
+		op1.setStatus(StockOperationStatus.COMPLETED);
+		op1 = service.submitOperation(op1);
+		Context.flushSession();
+
+		// Check that transfer (the rolled back operation was not reapplied
+		stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(15, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(15, (long)detail.getQuantity());
+		Assert.assertEquals(op1, detail.getBatchOperation());
+
+		stock = stockroomService.getItem(dest, newItem);
+		Assert.assertNull(stock);
+	}
+
+	/**
+	 * @verifies rollback the specified operation
+	 * @see IStockOperationService#rollbackOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void rollbackOperation_shouldRollbackTheSpecifiedOperation() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		Stockroom source = stockroomService.getById(0);
+		Stockroom dest = stockroomService.getById(1);
+
+		Item newItem = itemTest.createEntity(true);
+		newItem.setHasExpiration(false);
+		itemService.save(newItem);
+		Context.flushSession();
+
+		StockOperation op1 = new StockOperation();
+		op1.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op1.setStatus(StockOperationStatus.NEW);
+		op1.setDestination(source);
+		op1.setOperationNumber("A123-1");
+		op1.setOperationDate(new Date());
+		op1.addItem(newItem, 25);
+
+		op1 = service.submitOperation(op1);
+		Context.flushSession();
+
+		ItemStock stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(25, stock.getQuantity());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(25, (long)detail.getQuantity());
+		Assert.assertEquals(op1, detail.getBatchOperation());
+
+		// State is what we expect so now rollback transfer operation
+		op1 = service.rollbackOperation(op1);
+		Context.flushSession();
+
+		stock = stockroomService.getItem(source, newItem);
+		Assert.assertNull(stock);
+	}
+
+	/**
+	 * @verifies rollback and reapply any following operations
+	 * @see IStockOperationService#rollbackOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void rollbackOperation_shouldRollbackAndReapplyAnyFollowingOperations() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		Stockroom source = stockroomService.getById(0);
+		Stockroom dest = stockroomService.getById(1);
+
+		Item newItem = itemTest.createEntity(true);
+		newItem.setHasExpiration(false);
+		itemService.save(newItem);
+		Context.flushSession();
+
+		StockOperation op1 = new StockOperation();
+		op1.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op1.setStatus(StockOperationStatus.NEW);
+		op1.setDestination(source);
+		op1.setOperationNumber("A123-1");
+		op1.setOperationDate(new Date());
+		op1.addItem(newItem, 25);
+
+		op1 = service.submitOperation(op1);
+		Context.flushSession();
+
+		StockOperation op2 = new StockOperation();
+		op2.setInstanceType(WellKnownOperationTypes.getTransfer());
+		op2.setStatus(StockOperationStatus.NEW);
+		op2.setSource(source);
+		op2.setDestination(dest);
+		op2.setOperationNumber("A123-2");
+		op2.setOperationDate(new Date());
+		op2.addItem(newItem, 25);
+
+		op2 = service.submitOperation(op2);
+		Context.flushSession();
+
+		StockOperation op3 = new StockOperation();
+		op3.setInstanceType(WellKnownOperationTypes.getDistribution());
+		op3.setStatus(StockOperationStatus.NEW);
+		op3.setSource(source);
+		op3.setOperationNumber("A123-3");
+		op3.setOperationDate(new Date());
+		op3.setPatient(Context.getPatientService().getPatient(0));
+		op3.addItem(newItem, 10);
+
+		op3 = service.submitOperation(op3);
+		Context.flushSession();
+
+		ItemStock stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(-10, stock.getQuantity());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(-10, (long)detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+
+		stock = stockroomService.getItem(dest, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(25, stock.getQuantity());
+
+		// State is what we expect so now rollback transfer operation
+		op2 = service.rollbackOperation(op2);
+		Context.flushSession();
+
+		stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(15, stock.getQuantity());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertEquals(15, (long)detail.getQuantity());
+		Assert.assertEquals(op1, detail.getBatchOperation());
+
+		stock = stockroomService.getItem(dest, newItem);
+		Assert.assertNull(stock);
+	}
+
+	/**
+	 * @verifies set the operation status to Rollback
+	 * @see IStockOperationService#rollbackOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void rollbackOperation_shouldSetTheOperationStatusToRollback() throws Exception {
+		StockOperation op = operationService.getById(1);
+
+		Assert.assertEquals(StockOperationStatus.COMPLETED, op.getStatus());
+
+		op = service.rollbackOperation(op);
+
+		Assert.assertEquals(StockOperationStatus.ROLLBACK, op.getStatus());
+	}
+
+	/**
+	 * @verifies throw APIException if operation status is not Completed
+	 * @see IStockOperationService#rollbackOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test(expected = APIException.class)
+	public void rollbackOperation_shouldThrowAPIExceptionIfOperationStatusIsNotCompleted() throws Exception {
+		StockOperation op = operationTest.createEntity(true);
+		Assert.assertNotEquals(StockOperationStatus.COMPLETED, op.getStatus());
+
+		service.rollbackOperation(op);
+	}
+
+	/**
+	 * @verifies throw IllegalArgumentException if operation is null
+	 * @see IStockOperationService#rollbackOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void rollbackOperation_shouldThrowIllegalArgumentExceptionIfOperationIsNull() throws Exception {
+		service.rollbackOperation(null);
+	}
+
+	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions, final Item item) {
+		return Iterators.find(transactions.iterator(), new Predicate<StockOperationTransaction>() {
+			@Override
+			public boolean apply(StockOperationTransaction input) {
+				return input.getItem() == item;
+			}
+		});
 	}
 }

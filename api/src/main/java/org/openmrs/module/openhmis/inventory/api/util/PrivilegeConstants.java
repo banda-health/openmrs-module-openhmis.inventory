@@ -37,6 +37,7 @@ public class PrivilegeConstants {
 
 	public static final String MANAGE_OPERATIONS = "Manage Inventory Operations";
 	public static final String VIEW_OPERATIONS = "View Inventory Operations";
+	public static final String ROLLBACK_OPERATIONS = "Rollback Inventory Operations";
 
 	public static final String[] PRIVILEGE_NAMES = new String[] {
 			MANAGE_ITEMS, VIEW_ITEMS, PURGE_ITEMS,

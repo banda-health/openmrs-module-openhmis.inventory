@@ -163,7 +163,7 @@ public class StockOperationServiceImpl
 			// Roll back any operations with an operation date after the specified operation
 			if (operation.getStatus() == StockOperationStatus.COMPLETED ||
 					operation.getStatus() == StockOperationStatus.CANCELLED) {
-				rollBackFollowingOperations(operation);
+				rollbackFollowingOperations(operation);
 			}
 
 			// Trigger the appropriate status-based event so that the operation type can do what needs doing
@@ -198,6 +198,30 @@ public class StockOperationServiceImpl
 
 			return operation;
 		}
+	}
+
+	@Override
+	public StockOperation rollbackOperation(StockOperation operation) {
+		if (operation == null) {
+			throw new IllegalArgumentException("The operation to rollback must be defined.");
+		}
+		if (operation.getStatus() != StockOperationStatus.COMPLETED) {
+			throw new APIException("Only completed operations can be rolled back.");
+		}
+
+		// Rollback any following operations
+		rollbackFollowingOperations(operation);
+
+		// Rollback the specified operation
+		doOperationRollback(operation);
+
+		// Now reapply the following operations
+		reapplyFollowingOperations(operation);
+
+		// Update the operation status
+		operation.setStatus(StockOperationStatus.ROLLBACK);
+
+		return operationService.save(operation);
 	}
 
 	@Override
@@ -391,7 +415,7 @@ public class StockOperationServiceImpl
 		}
 	}
 
-	private void rollBackFollowingOperations(StockOperation operation) {
+	private void rollbackFollowingOperations(StockOperation operation) {
 		// Rolling back an operation reverses any operation transactions and deletes the reservation transactions for the
 		// operation. Basically, it sets the operation and associated item stock and stockroom data back to before this
 		// operation was performed.
@@ -409,22 +433,28 @@ public class StockOperationServiceImpl
 
 		// // Rollback each operation, starting from the newest
 		for (StockOperation rollbackOp : rollbackOperations) {
-			// To undo the transaction we are merely going to negate the quantity and then reapply the transactions
-			if (rollbackOp.getTransactions() != null) {
-				Set<StockOperationTransaction> transactions = rollbackOp.getTransactions();
-				for (StockOperationTransaction tx : transactions) {
-					tx.setQuantity(tx.getQuantity() * -1);
-				}
+			if (rollbackOp.getStatus() != StockOperationStatus.ROLLBACK) {
+				doOperationRollback(rollbackOp);
+			}
+		}
+	}
 
-				applyTransactions(transactions);
-
-				rollbackOp.getTransactions().clear();
+	private void doOperationRollback(StockOperation operation) {
+		// To undo the transaction we are merely going to negate the quantity and then reapply the transactions
+		if (operation.getTransactions() != null) {
+			Set<StockOperationTransaction> transactions = operation.getTransactions();
+			for (StockOperationTransaction tx : transactions) {
+				tx.setQuantity(tx.getQuantity() * -1);
 			}
 
-			// Now we can delete the transactions and pending transactions
-			if (rollbackOp.getReserved() != null) {
-				rollbackOp.getReserved().clear();
-			}
+			applyTransactions(transactions);
+
+			operation.getTransactions().clear();
+		}
+
+		// Now we can delete the transactions and pending transactions
+		if (operation.getReserved() != null) {
+			operation.getReserved().clear();
 		}
 	}
 
@@ -442,34 +472,36 @@ public class StockOperationServiceImpl
 
 		// Now reapply each operation, starting from the oldest
 		for (StockOperation reapplyOp : rollbackOperations) {
-			// Ensure that the transactions have been cleared
-			if (reapplyOp.getTransactions() != null) {
-				reapplyOp.getTransactions().clear();
-			}
-			if (reapplyOp.getReserved() != null) {
-				reapplyOp.getReserved().clear();
-			}
+			if (reapplyOp.getStatus() != StockOperationStatus.ROLLBACK) {
+				// Ensure that the transactions have been cleared
+				if (reapplyOp.getTransactions() != null) {
+					reapplyOp.getTransactions().clear();
+				}
+				if (reapplyOp.getReserved() != null) {
+					reapplyOp.getReserved().clear();
+				}
 
-			// Recreate the initial set of reserved transactions
-			for (StockOperationItem item : reapplyOp.getItems()) {
-				ReservedTransaction tx = new ReservedTransaction(item);
-				tx.setCreator(Context.getAuthenticatedUser());
-				tx.setDateCreated(new Date());
+				// Recreate the initial set of reserved transactions
+				for (StockOperationItem item : reapplyOp.getItems()) {
+					ReservedTransaction tx = new ReservedTransaction(item);
+					tx.setCreator(Context.getAuthenticatedUser());
+					tx.setDateCreated(new Date());
 
-				reapplyOp.addReserved(tx);
-			}
+					reapplyOp.addReserved(tx);
+				}
 
-			// Now recalculate the reservations
-			calculateReservations(reapplyOp);
+				// Now recalculate the reservations
+				calculateReservations(reapplyOp);
 
-			// Apply the pending transactions
-			reapplyOp.getInstanceType().onPending(reapplyOp);
+				// Apply the pending transactions
+				reapplyOp.getInstanceType().onPending(reapplyOp);
 
-			// If the status is cancelled or completed then also apply those transactions as well
-			if (reapplyOp.getStatus() == StockOperationStatus.CANCELLED) {
-				reapplyOp.getInstanceType().onCancelled(reapplyOp);
-			} else if (reapplyOp.getStatus() == StockOperationStatus.COMPLETED) {
-				reapplyOp.getInstanceType().onCompleted(reapplyOp);
+				// If the status is cancelled or completed then also apply those transactions as well
+				if (reapplyOp.getStatus() == StockOperationStatus.CANCELLED) {
+					reapplyOp.getInstanceType().onCancelled(reapplyOp);
+				} else if (reapplyOp.getStatus() == StockOperationStatus.COMPLETED) {
+					reapplyOp.getInstanceType().onCompleted(reapplyOp);
+				}
 			}
 		}
 
