@@ -156,6 +156,11 @@
 		<description>Able to purge inventory operations</description>
 	</privilege>
 
+	<privilege>
+		<name>Rollback Inventory Operations</name>
+		<description>Able to rollback inventory operations</description>
+	</privilege>
+
 	<!--  Metadata  -->
 	<privilege>
 		<name>View Inventory Metadata</name>

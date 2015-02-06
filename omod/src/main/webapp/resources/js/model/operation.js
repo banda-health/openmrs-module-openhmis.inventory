@@ -207,7 +207,8 @@ define(
                 NEW:        "NEW",
                 PENDING:	"PENDING",
                 CANCELLED:	"CANCELLED",
-                COMPLETED:	"COMPLETED"
+                COMPLETED:	"COMPLETED",
+                ROLLBACK: "ROLLBACK"
             },
 
             initialize: function(attrs, options) {

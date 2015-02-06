@@ -46,7 +46,8 @@ define(
             events: {
                 'click .completeOp': 'completeOperation',
                 'click .cancelOp': 'cancelOperation',
-                'click .cancel': 'cancel',
+                'click .rollbackOp': 'rollbackOperation',
+                'click .cancel': 'cancel'
             },
 
             initialize: function(options) {
@@ -105,6 +106,10 @@ define(
 
                 // Post the status change and then reload the model
                 this.updateStatus("CANCELLED");
+            },
+
+            rollbackOperation: function() {
+                this.updateStatus("ROLLBACK");
             },
 
             prepareModelForm: function(model, options) {

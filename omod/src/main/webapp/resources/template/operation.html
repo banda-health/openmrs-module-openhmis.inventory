@@ -119,11 +119,14 @@
 	        <div class="box-form" id="operation-items" style="width: 800px;"></div>
 			<div id="operation-transactions" style="width: 800px;"></div>
 		</div>
-        <? if (model.get('status') != "COMPLETED" && model.get('status') != "CANCELLED") { ?>
+        <? if (model.get('status') != "COMPLETED" && model.get('status') != "CANCELLED" && model.get('status') != "ROLLBACK") { ?>
             <input type="submit" class="completeOp" value="<?= __("Complete Operation") ?>"
-        <?= model.get('canProcess') ? '' : 'disabled' ?> />
+                <?= model.get('canProcess') ? '' : 'disabled' ?> />
             <input type="submit" class="cancelOp" value="<?= __("Cancel Operation") ?>"
-        <?= model.get('canProcess') ? '' : 'disabled' ?> />
+                <?= model.get('canProcess') ? '' : 'disabled' ?> />
+        <? } else if (model.get('status') == "COMPLETED") { ?>
+            <input type="submit" class="rollbackOp" value="<?= __("Rollback Operation") ?>"
+                <?= model.get('canProcess') && model.get('canRollback') ? '' : 'disabled' ?> />
         <? } ?>
 		<button class="cancel"><?= __("Close") ?></button>
 	</div>
