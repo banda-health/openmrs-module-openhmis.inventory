@@ -244,7 +244,7 @@ define(
             tmplFile: openhmis.url.backboneBase + 'template/search.html',
             tmplSelector: '#generic-search',
 
-            STATUSES: ["Any", "Pending", "Completed", "Cancelled"],
+            STATUSES: ["Any", "Pending", "Completed", "Cancelled", "Rollback"],
 
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
