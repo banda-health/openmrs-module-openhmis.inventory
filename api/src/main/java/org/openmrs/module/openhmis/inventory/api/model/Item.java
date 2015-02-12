@@ -18,6 +18,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openmrs.BaseCustomizableMetadata;
 import org.openmrs.Concept;
 import org.openmrs.customdatatype.Customizable;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleCustomizableMetadata;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -26,7 +27,7 @@ import java.util.Set;
 /**
  * Model class that represents a product or service.
  */
-public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
+public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
 	public static final long serialVersionUID = 0L;
 
 	private Integer itemId;

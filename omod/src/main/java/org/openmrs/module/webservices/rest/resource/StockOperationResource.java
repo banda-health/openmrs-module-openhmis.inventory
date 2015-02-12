@@ -57,9 +57,7 @@ import java.util.Set;
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
 		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class StockOperationResource
-		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, IStockOperationType,
-		StockOperationAttributeType, StockOperationAttribute> {
-
+		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, StockOperationAttribute> {
     private static final Log LOG = LogFactory.getLog(StockOperationResource.class);
 
 	private IStockOperationService operationService;
