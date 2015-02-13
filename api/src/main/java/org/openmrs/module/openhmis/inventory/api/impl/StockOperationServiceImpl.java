@@ -546,7 +546,13 @@ public class StockOperationServiceImpl
 						result = Boolean.valueOf(tx1.isCalculatedBatch()).compareTo(tx2.isCalculatedBatch());
 
 						if (result == 0) {
-							result = tx1.getId().compareTo(tx2.getId());
+							if (tx1.getId() != null && tx2.getId() != null) {
+								result = tx1.getId().compareTo(tx2.getId());
+							} else {
+								// Everything is the same and no ids so just return that tx1 is the first
+								return -1;
+							}
+
 						}
 					}
 				}
