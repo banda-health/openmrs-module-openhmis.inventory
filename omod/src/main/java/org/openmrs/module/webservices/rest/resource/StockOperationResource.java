@@ -36,6 +36,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeTy
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
@@ -64,6 +65,7 @@ public class StockOperationResource
 	private IStockOperationService operationService;
 	private AdministrationService administrationService;
 	private boolean submitRequired = false;
+	private boolean rollbackRequired = false;
 
 	public StockOperationResource() {
 		this.operationService = Context.getService(IStockOperationService.class);
@@ -97,6 +99,7 @@ public class StockOperationResource
 			description.addProperty("department", Representation.REF);
 
 			description.addProperty("canProcess", findMethod("userCanProcess"));
+			description.addProperty("canRollback", findMethod("userCanRollback"));
 		}
 
 		return description;
@@ -114,6 +117,10 @@ public class StockOperationResource
 		return StockOperationTypeResource.userCanProcess(operation.getInstanceType());
 	}
 
+	public Boolean userCanRollback(StockOperation operation) {
+		return Context.hasPrivilege(PrivilegeConstants.ROLLBACK_OPERATIONS);
+	}
+
 	@Override
 	public StockOperation save(StockOperation operation) {
 		// Ensure that the current user can process the operation
@@ -126,6 +133,12 @@ public class StockOperationResource
 		// If the status has changed, submit the operation
 		if (submitRequired) {
 			result = operationService.submitOperation(operation);
+		} else if (rollbackRequired) {
+			if (!userCanRollback(operation)) {
+				throw new RestClientException("The current user not authorized to rollback this operation.");
+			}
+
+			result = operationService.rollbackOperation(operation);
 		} else {
 			result = super.save(operation);
 		}
@@ -165,9 +178,13 @@ public class StockOperationResource
 	@PropertySetter("status")
 	public void setStatus(StockOperation operation, StockOperationStatus status) {
 		if (operation.getStatus() != status) {
-			submitRequired = true;
+			if (status == StockOperationStatus.ROLLBACK) {
+				rollbackRequired = true;
+			} else {
+				submitRequired = true;
 
-			operation.setStatus(status);
+				operation.setStatus(status);
+			}
 		}
 	}
 

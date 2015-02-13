@@ -37,7 +37,7 @@ table.item-stock td input[type="text"], table.item-stock td input[type="number"]
 }
 
 table.item-stock td input[name="quantity"] {
-	width: 50%;
+	width: 75%;
 	background-color: transparent;
 }
 

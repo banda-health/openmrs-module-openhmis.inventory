@@ -21,9 +21,13 @@ public enum StockOperationStatus {
 	 */
 	CANCELLED(),
 	/**
-	 * The operation was completed and the pending transaction were applied.
+	 * The operation was completed and the pending transactions were applied.
 	 */
-	COMPLETED();
+	COMPLETED(),
+	/**
+	 * The operation was rolled back and all applied transactions were reversed.
+	 */
+	ROLLBACK();
 
 	private StockOperationStatus() { }
 }

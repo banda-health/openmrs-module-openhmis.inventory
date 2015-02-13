@@ -110,6 +110,21 @@
 				</select>
 			</spring:bind>
 		</td></tr>
+		<tr><td>
+			<br />
+			<label for="expiringStockReportId">Select Expiring Stock Report</label>
+			<spring:bind path="expiringStockReportId">
+				<select id="expiringStockReportId" name="${status.expression}">
+					<option value=""></option>
+					<c:forEach items="${reports}" var="report">
+						<option value="${report.reportId}"
+						        <c:if test="${settings.expiringStockReportId == report.reportId}">selected</c:if>>
+								${report.name}
+						</option>
+					</c:forEach>
+				</select>
+			</spring:bind>
+		</td></tr>
 	</table>
 	<br />
 	<input type="submit" value="Save" >

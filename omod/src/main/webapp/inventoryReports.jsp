@@ -28,7 +28,7 @@
       </b>
     </td>
     <td>
-      <c:if test="${stockTakeReport == null && stockCardReport == null && stockroomReport == null}" >
+      <c:if test="${stockTakeReport == null && stockCardReport == null && stockroomReport == null && expiringStockReport == null}" >
         <div style="color: grey">No inventory reports have been defined.</div>
       </c:if>
       <c:if test="${stockTakeReport != null}" >
@@ -107,6 +107,29 @@
         </div>
         <br />
         <hr>
+      </c:if>
+      
+      <c:if test="${expiringStockReport != null}" >
+        <h3>${expiringStockReport.name}</h3>
+        <div style="color: grey">${expiringStockReport.description}</div>
+        <br />
+        <div>
+          <form id="expiringStockReport" onsubmit="return false;">
+            <br />
+            <br />
+            <label for="expiresBy">Expires by</label>
+            <input id="expiresBy" class="date" type="text" />
+
+
+            <input id="expiringStockReportId" type="hidden" value="${expiringStockReport.reportId}" />
+            <br /><br />
+            <input id="generateExpiringStockReport" type="submit" value="Generate Report" />
+          </form>
+        </div>
+        <hr>
+      </c:if>
+      <c:if test="${expiringStockReport == null}" >
+      bla
       </c:if>
     </td>
   </tr>

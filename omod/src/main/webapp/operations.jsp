@@ -16,4 +16,7 @@
 	<spring:message code="openhmis.inventory.admin.operations" />
 </h2>
 
+<div id="processingDialog" style="display: none">
+	<spring:message htmlEscape="false" code="openhmis.inventory.admin.create.processing"/>
+</div>
 <%@ include file="/WEB-INF/template/footer.jsp" %>

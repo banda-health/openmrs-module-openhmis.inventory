@@ -33,6 +33,7 @@ public interface IStockOperationService extends OpenmrsService {
 	 * @should add the destination stockroom item stock if existing is negative
 	 * @should remove item stock from destination stockroom if quantity becomes zero
 	 * @should add stock if calculate expiration is false and expiration is null for an expirable item
+	 * @should not include rollback operations when rolling back and reapplying subsequent operations
 	 * @should throw APIException if the operation type is receipt and expiration is not defined for expirable items
 	 * @should throw an IllegalArgumentException if the operation is null
 	 * @should throw an APIException if the operation type is null
@@ -45,6 +46,20 @@ public interface IStockOperationService extends OpenmrsService {
 	@Transactional
 	@Authorized( {PrivilegeConstants.MANAGE_OPERATIONS})
 	StockOperation submitOperation(StockOperation operation);
+
+	/**
+	 * Rolls back a completed operation from the system, re-applying any following operations.
+	 * @param operation The operation to rollback
+	 * @return The rolled back and saved stock operation.
+	 * @should rollback the specified operation
+	 * @should rollback and reapply any following operations
+	 * @should set the operation status to Rollback
+	 * @should throw APIException if operation status is not Completed
+	 * @should throw IllegalArgumentException if operation is null
+	 */
+	@Transactional
+	@Authorized( {PrivilegeConstants.ROLLBACK_OPERATIONS})
+	StockOperation rollbackOperation(StockOperation operation);
 
 	/**
 	 * Applies the specified transactions against the referenced objects.

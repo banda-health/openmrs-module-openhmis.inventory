@@ -46,7 +46,8 @@ define(
             events: {
                 'click .completeOp': 'completeOperation',
                 'click .cancelOp': 'cancelOperation',
-                'click .cancel': 'cancel',
+                'click .rollbackOp': 'rollbackOperation',
+                'click .cancel': 'cancel'
             },
 
             initialize: function(options) {
@@ -105,6 +106,10 @@ define(
 
                 // Post the status change and then reload the model
                 this.updateStatus("CANCELLED");
+            },
+
+            rollbackOperation: function() {
+                this.updateStatus("ROLLBACK");
             },
 
             prepareModelForm: function(model, options) {
@@ -172,6 +177,8 @@ define(
             },
 
             updateStatus: function(status) {
+                this.showProcessingDialog();
+
                 var self = this;
 
                 // Post the status change using the raw ajax request. This just sends up the changed property, status.
@@ -186,11 +193,16 @@ define(
                                 // Once the fetch is complete, sync the changes back to the list and close this edit view
                                 self.model.trigger("sync");
 
+                                self.hideProcessingDialog();
                                 self.cancel();
                             }
                         });
                     },
-                    error: function(model, resp) { openhmis.error(model, resp); },
+                    error: function(model, resp) {
+                        self.hideProcessingDialog();
+
+                        openhmis.error(model, resp);
+                    },
                     contentType: "application/json",
                     dataType: 'json'
                 });
@@ -205,6 +217,27 @@ define(
                 }
 
                 return " ";
+            },
+
+            showProcessingDialog: function() {
+                $('.cancel').prop('disabled', true);
+                $('.submit').prop('disabled', true);
+
+                $('#processingDialog').dialog({
+                    dialogClass: "no-close",
+                    title: "Processing Operation",
+                    draggable: false,
+                    resizable: false,
+                    modal: true,
+                    width: 350
+                });
+            },
+
+            hideProcessingDialog: function() {
+                $('.cancel').prop('disabled', false);
+                $('.submit').prop('disabled', false);
+
+                $('#processingDialog').dialog("close");
             }
         });
 

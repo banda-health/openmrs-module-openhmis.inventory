@@ -9,6 +9,7 @@ public class Settings {
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
 	private Integer stockroomReportId;
+	private Integer expiringStockReportId;
 
 	public Boolean getAutoGenerateOperationNumber() {
 		return autoGenerateOperationNumber;
@@ -57,4 +58,12 @@ public class Settings {
 	public void setStockroomReportId(Integer stockroomReportId) {
 		this.stockroomReportId = stockroomReportId;
 	}
+	
+	public Integer getExpiringStockReportId() {
+	    return expiringStockReportId;
+    }
+
+	public void setExpiringStockReportId(Integer expiringStockReportId) {
+	    this.expiringStockReportId = expiringStockReportId;
+    }
 }
