@@ -43,6 +43,10 @@
                               description="Items that are added into the inventory system from an outside provider."
                               has_source="false" has_destination="true" has_recipient="false" recipient_required="false" available_when_reserved="false"
                               creator="1" date_created="2013-01-01 00:00:00.0" retired="false" uuid="fce0b4fc-9402-424a-aacb-f99599e51a9g" />
+    <inv_stock_operation_type stock_operation_type_id="8" name="Test_Initial" operation_type="initial"
+                              description="Items that are added into the inventory system for the very first time."
+                              has_source="false" has_destination="true" has_recipient="false" recipient_required="false" available_when_reserved="false"
+                              creator="1" date_created="2013-01-01 00:00:00.0" retired="false" uuid="20f3734f-5b1a-490d-8676-1225a9cdddf7" />
 
 	<inv_stock_operation stock_operation_id="0" status="COMPLETED" operation_type_id="3" operation_number="t101"
 						 destination_id="0" name="Test Op 1" operation_date="2012-01-03 00:00:00.0"
@@ -97,7 +101,7 @@
 	<inv_reserved_transaction reserved_transaction_id="2" operation_id="0" item_id="2" quantity="3" expiration="2025-01-01" calculated_expiration="0" batch_operation_id="0" calculated_batch="0"
 	                          is_available="false" creator="1" date_created="2012-01-01 00:00:00.0" uuid="FF8081814250C1CD014250D2DBB3000E" />
 	<inv_stockroom_operations operation_id="2" stockroom_id="1" />
-	
+
 	<inv_item_stock item_stock_id="0" stockroom_id="0" item_id="0" quantity="4" uuid="FF8081814250C1CD014250D46D08000F" />
 	<inv_item_stock item_stock_id="1" stockroom_id="0" item_id="1" quantity="5" uuid="FF8081814250C1CD014250D474980010" />
 	<inv_item_stock item_stock_id="2" stockroom_id="0" item_id="2" quantity="8" uuid="FF8081814250C1CD014250D47D720011" />

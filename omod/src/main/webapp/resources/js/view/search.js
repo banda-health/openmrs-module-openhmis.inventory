@@ -248,8 +248,12 @@ define(
 
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
+                this.events['change #operationType_uuid'] = 'onFormSubmit';
                 openhmis.BaseSearchView.prototype.initialize.call(this, options);
-
+                var operationTypeCollection = new openhmis.GenericCollection([], { model: openhmis.OperationType });
+                operationTypeCollection.on("reset", function(collection) {
+                    collection.unshift(new openhmis.OperationType({ name: __("Any") }));
+                });
                 this.form = new Backbone.Form({
                     className: "inline",
                     schema: {
@@ -257,7 +261,12 @@ define(
                             title: __("Status"),
                             type: "Select",
                             options: this.STATUSES
-                        }
+                        },
+                        operationType_uuid: {
+                            title: __("OperationType"),
+                            type: "Select",
+                            options: operationTypeCollection
+                        },
                     }
                 });
 

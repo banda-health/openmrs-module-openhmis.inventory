@@ -22,5 +22,13 @@ public class HibernateCriteriaConstants {
 	public static final String LOCATION = "location";
 	public static final String UUID = "uuid";
 	public static final String OPERATION = "operation";
+	public static final String USER = "user";
+	public static final String ROLE = "role";
+	public static final String STATUS = "status";
+	public static final String CREATOR = "creator";
+	public static final String INSTANCE_TYPE = "instanceType";
+	public static final String OPERATION_NUMBER = "operationNumber";
+	public static final String OPERATION_DATE = "operationDate";
+	public static final String OPERATION_ORDER = "operationOrder";
 
 }
