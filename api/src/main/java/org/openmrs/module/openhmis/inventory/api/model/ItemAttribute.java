@@ -20,26 +20,6 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleAttributeO
  * A value for a user-defined {@link ItemAttributeType} that is stored on an {@link Item}.
  * @see org.openmrs.attribute.Attribute
  */
-public class ItemAttribute extends BaseSimpleAttributeObject<ItemAttributeType> {
-	public static final long serialVersionUID = 0L;
-
-	private Integer itemAttributeId;
-
-	@Override
-	public Integer getId() {
-		return itemAttributeId;
-	}
-
-	@Override
-	public void setId(Integer id) {
-		this.itemAttributeId = id;
-	}
-
-	public Item getItem() {
-		return getOwner();
-	}
-
-	public void setItem(Item item) {
-		setOwner(item);
-	}
+public class ItemAttribute extends BaseSimpleAttributeObject<Item, ItemAttributeType> {
+	public static final long serialVersionUID = 1L;
 }
