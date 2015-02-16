@@ -174,11 +174,11 @@ public class JasperReportController {
 
 		return renderReport(reportId, params, null, response);
 	}
-	
+
 	private String renderExpiringStocksReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
-		
+
 		Date expiryDate = null;
-		
+
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		String temp = request.getParameter("expiresBy");
 		if (!StringUtils.isEmpty(temp)) {
@@ -188,14 +188,19 @@ public class JasperReportController {
 				// Whatevs... dealing with stupid checked exceptions
 			}
 		}
-		
+
 		if (expiryDate == null) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The expiry date must be defined.");
 			return null;
 		}
-		
+		String stockroomId = request.getParameter("stockroomId");
+
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("expiresBy", expiryDate);
+		if (StringUtils.isNotBlank(stockroomId)) {
+			params.put("stockroomId", stockroomId);
+
+		}
 
 		return renderReport(reportId, params, null, response);
     }

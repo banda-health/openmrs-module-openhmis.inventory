@@ -22,9 +22,9 @@ curl(
 
     ],
     function($, openhmis) {
-    	
+
     	var cache = {};
-    	
+
         $(function() {
             if ($('#itemSearch').length > 0) {
                 $('#itemSearch')
@@ -40,7 +40,7 @@ curl(
             }
 
             $('.date').datepicker();
-            
+
             if ($("#generateTakeReport").length > 0) {
                 $("#generateTakeReport").click(printTakeReport)
             }
@@ -52,7 +52,7 @@ curl(
             if ($("#generateStockroomReport").length > 0) {
                 $("#generateStockroomReport").click(printStockroomReport);
             }
-            
+
             if ($("#generateExpiringStockReport").length > 0) {
                 $("#generateExpiringStockReport").click(printExpiringStockReport);
             }
@@ -117,7 +117,7 @@ curl(
 
             return printReport(reportId, "stockroomId=" + stockroomId + "&beginDate=" + beginDate + "&endDate=" + endDate);
         }
-        
+
         function printExpiringStockReport() {
 
             var expiryDate = $("#expiresBy").val();
@@ -127,12 +127,14 @@ curl(
                 return false;
             }
 
+            var stockroomId = $("#expiringStockReport-StockroomId").val();
+
             // Get the dates into the expected format (dd-MM-yyyy)
             expiryDate = openhmis.dateFormat(new Date(expiryDate), false);
 
             var reportId = $('#expiringStockReportId').val();
 
-            return printReport(reportId, "expiresBy=" + expiryDate);
+            return printReport(reportId, "expiresBy=" + expiryDate + "&stockroomId=" + stockroomId);
         }
 
         function printReport(reportId, parameters) {
@@ -156,7 +158,7 @@ curl(
                 response(cache[cacheSection + query]);
                 return;
             }
-            
+
             search(request, response, openhmis.Item, query, cacheSection,
                 function(model) {
                     return {
