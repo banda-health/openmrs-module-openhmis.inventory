@@ -19,10 +19,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
-import org.openmrs.module.openhmis.inventory.api.ICategoryDataService;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
@@ -46,23 +44,20 @@ public class ItemSearchHandler
 			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("*"),
 					Arrays.asList(
 							new SearchQuery.Builder(
-									"Find an item by its name or code, optionally filtering by category and department")
+									"Find an item by its name or code, optionally filtering by department")
 									.withRequiredParameters("q")
-									.withOptionalParameters("department_uuid", "category_uuid", "has_physical_inventory")
+									.withOptionalParameters("department_uuid", "has_physical_inventory")
 									.build()
 					)
 			);
 
 	private IItemDataService service;
 	private IDepartmentDataService departmentService;
-	private ICategoryDataService categoryService;
 
 	@Autowired
-	public ItemSearchHandler(IItemDataService service, IDepartmentDataService departmentService,
-			ICategoryDataService categoryService) {
+	public ItemSearchHandler(IItemDataService service, IDepartmentDataService departmentService) {
 		this.service = service;
 		this.departmentService = departmentService;
-		this.categoryService = categoryService;
 	}
 
 	@Override
@@ -77,13 +72,12 @@ public class ItemSearchHandler
 		}
 
 		Department department = getOptionalEntityByUuid(departmentService, context.getParameter("department_uuid"));
-		Category category = getOptionalEntityByUuid(categoryService, context.getParameter("category_uuid"));
 
 		List<Item> items = null;
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 		// If no parameters are specified first attempt a search by code (an exact match), then by name
-		if (department == null && category == null && hasPhysicalInventory == null) {
+		if (department == null && hasPhysicalInventory == null) {
 			if (query != null) {
 				// Try searching by code
 				items = service.getItemsByCode(query, context.getIncludeAll(), pagingInfo);
@@ -97,7 +91,7 @@ public class ItemSearchHandler
 			}
 		} else {
 			// Create the item search template with the specified parameters
-			ItemSearch search = createSearchTemplate(context, query, department, category, hasPhysicalInventory);
+			ItemSearch search = createSearchTemplate(context, query, department, hasPhysicalInventory);
 
 			items = service.getItemsByItemSearch(search, pagingInfo);
 		}
@@ -106,8 +100,7 @@ public class ItemSearchHandler
 				pagingInfo.getTotalRecordCount());
 	}
 
-	private ItemSearch createSearchTemplate(RequestContext context, String name, Department department,Category category,
-			Boolean hasPhysicalInventory) {
+	private ItemSearch createSearchTemplate(RequestContext context, String name, Department department, Boolean hasPhysicalInventory) {
 		ItemSearch template = new ItemSearch();
 
 		if (!StringUtils.isEmpty(name)) {
@@ -116,7 +109,6 @@ public class ItemSearchHandler
 		}
 
 		template.getTemplate().setDepartment(department);
-		template.getTemplate().setCategory(category);
 		template.getTemplate().setHasPhysicalInventory(hasPhysicalInventory);
 
 		if (!context.getIncludeAll()) {

@@ -38,15 +38,10 @@ define(
 			 */
 			initialize: function(options) {
 				this.events['change #department_uuid'] = 'onFormSubmit';
-				this.events['change #category_uuid'] = 'onFormSubmit';
 				openhmis.BaseSearchView.prototype.initialize.call(this, options);
 				var departmentCollection = new openhmis.GenericCollection([], { model: openhmis.Department });
-				var categoryCollection = new openhmis.GenericCollection([], { model: openhmis.Category });
 				departmentCollection.on("reset", function(collection) {
 					collection.unshift(new openhmis.Department({ name: __("Any") }));
-				});
-				categoryCollection.on("reset", function(collection) {
-					collection.unshift(new openhmis.Category({ name: __("Any") }));
 				});
 				this.form = new Backbone.Form({
 					className: "inline",
@@ -55,11 +50,6 @@ define(
 							title: __("Department"),
 							type: "Select",
 							options: departmentCollection
-						},
-						category_uuid: {
-							title: __("Category"),
-							type: "Select",
-							options: categoryCollection
 						},
 						q: {
 							title: __("%s Identifier or Name", this.model.meta.name),
@@ -74,7 +64,7 @@ define(
 			/** Collect user input */
 			commitForm: function() {
 				var filters = this.form.getValue();
-				if (!filters.department_uuid && !filters.category_uuid && !filters.q)
+				if (!filters.department_uuid && !filters.q)
 					this.searchFilter = undefined;
 				else
 					this.searchFilter = filters;
@@ -111,8 +101,6 @@ define(
 					this.form.setValue(this.searchFilter);
 				this.$("form").addClass("inline");
 				this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
-				// TODO enable categories in v1.1 (delete folowing hide())
-				this.$('.field-category_uuid').hide();
 				return this;
 			}
 		});

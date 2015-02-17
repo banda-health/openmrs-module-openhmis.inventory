@@ -33,7 +33,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Set<ItemCode> codes;
 	private Set<ItemPrice> prices;
 	private Department department;
-	private Category category;
 	private Concept concept;
 	private ItemPrice defaultPrice;
 	private Boolean hasExpiration;
@@ -150,14 +149,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setDefaultPrice(ItemPrice defaultPrice) {
 		this.defaultPrice = defaultPrice;
-	}
-
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
 	}
 
 	public Concept getConcept() {

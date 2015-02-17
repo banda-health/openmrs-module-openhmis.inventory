@@ -24,7 +24,6 @@
 
 		<!-- Associations -->
 		<many-to-one name="department" class="Department" column="department_id" />
-		<many-to-one name="category" class="Category" column="category_id" />
 		<many-to-one name="defaultPrice" class="ItemPrice" column="default_price_id" />
 		<many-to-one name="concept" class="org.openmrs.Concept" column="concept_id" />
 
@@ -123,7 +122,7 @@
 		<discriminator column="item_price_id" insert="false" />
 
 		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
-		
+
 		<property name="name" type="java.lang.String" column="name" not-null="false" length="255" />
 		<property name="description" type="java.lang.String" column="description" length="1024" />
 		<property name="price" type="java.math.BigDecimal" column="price" not-null="true" />

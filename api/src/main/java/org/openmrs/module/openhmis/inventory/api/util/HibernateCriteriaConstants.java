@@ -3,14 +3,12 @@ package org.openmrs.module.openhmis.inventory.api.util;
 public class HibernateCriteriaConstants {
 
 	protected HibernateCriteriaConstants() {}
-	
+
 	public static final String DEPARTMENT = "department";
 	public static final String RETIRED = "retired";
-	public static final String CATEGORY = "category";
 	public static final String NAME = "name";
 	public static final String CONCEPT = "concept";
 	public static final String CONCEPT_ACCEPTED = "conceptAccepted";
-	public static final String PARENT_CATEGORY = "parentCategory";
 	public static final String STOCKROOM = "stockroom";
 	public static final String DATE_CREATED = "dateCreated";
 	public static final String ID = "id";

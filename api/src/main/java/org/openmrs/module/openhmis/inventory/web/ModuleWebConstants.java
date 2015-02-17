@@ -28,12 +28,9 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String ITEM_CONCEPT_SUGGESTION_ROOT = MODULE_ROOT + "itemConceptSuggestion";
     public static final String ITEM_CONCEPT_SUGGESTION_PAGE = ITEM_CONCEPT_SUGGESTION_ROOT + ".form";
-	
+
 	public static final String DEPARTMENTS_ROOT = MODULE_ROOT + "departments";
 	public static final String DEPARTMENTS_PAGE = DEPARTMENTS_ROOT + ".form";
-
-	public static final String CATEGORIES_ROOT = MODULE_ROOT + "categories";
-	public static final String CATEGORIES_PAGE = CATEGORIES_ROOT + ".form";
 
 	public static final String STOCKROOMS_ROOT = MODULE_ROOT + "stockrooms";
 	public static final String STOCKROOMS_PAGE = STOCKROOMS_ROOT + ".form";
@@ -46,7 +43,7 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String OPERATIONS_ROOT = MODULE_ROOT + "operations";
 	public static final String OPERATIONS_PAGE = OPERATIONS_ROOT + ".form";
-	
+
 	public static final String MODULE_INIT_JS = MODULE_RESOURCE_ROOT + "js/init.js";
 
 	public static final String INVENTORY_ROOT = MODULE_ROOT + "inventory";

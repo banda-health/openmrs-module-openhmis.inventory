@@ -18,7 +18,6 @@ define(
             openhmis.url.backboneBase + 'js/lib/underscore',
             openhmis.url.inventoryBase + 'js/model/item',
             openhmis.url.inventoryBase + 'js/model/department',
-            openhmis.url.inventoryBase + 'js/model/category',
             openhmis.url.inventoryBase + 'js/view/search',
             openhmis.url.inventoryBase + 'js/model/operation',
             openhmis.url.inventoryBase + 'js/model/institution',
@@ -43,12 +42,6 @@ define(
 
         editors.InstitutionSelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Institution,
-            displayAttr: "name",
-            allowNull: true
-        });
-
-        editors.CategorySelect = editors.GenericModelSelect.extend({
-            modelType: openhmis.Category,
             displayAttr: "name",
             allowNull: true
         });

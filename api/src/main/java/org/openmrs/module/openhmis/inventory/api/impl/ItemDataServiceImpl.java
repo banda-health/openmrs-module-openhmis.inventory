@@ -29,7 +29,6 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServi
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
@@ -41,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 		implements IItemDataService, IMetadataAuthorizationPrivileges {
-	
+
 	private static final int MAX_ITEM_CODE_LENGTH = 255;
 
 	@Override
@@ -136,131 +135,6 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByCategory(Category category, boolean includeRetired) {
-		return getItemsByCategory(category, includeRetired, null);
-	}
-
-	@Override
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	@Transactional(readOnly = true)
-	public List<Item> getItemsByCategory(final Category category, final boolean includeRetired, PagingInfo pagingInfo) {
-		if (category == null) {
-			throw new NullPointerException("The category must be defined");
-		}
-
-		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category));
-				if (!includeRetired) {
-					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
-				}
-			}
-		}, getDefaultSort());
-	}
-
-	@Override
-	public List<Item> getItems(Department department,
-			Category category, boolean includeRetired) {
-		return getItems(department, category,
-				includeRetired, null);
-	}
-
-	@Override
-	public List<Item> getItems(
-			final Department department, final Category category, final boolean includeRetired, PagingInfo pagingInfo) {
-		if (department == null) {
-			throw new NullPointerException("The department must be defined");
-		}
-		if (category == null) {
-			throw new NullPointerException("The category must be defined");
-		}
-
-		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department));
-				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category));
-				if (!includeRetired) {
-					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
-				}
-			}
-		}, getDefaultSort());
-	}
-
-	@Override
-	public List<Item> getItems(Category category, String name, boolean includeRetired) {
-		return getItems(category, name, includeRetired, null);
-	}
-
-	@Override
-	public List<Item> getItems(final Category category, final String name,
-			final boolean includeRetired, PagingInfo pagingInfo) {
-		if (category == null) {
-			throw new NullPointerException("The category must be defined");
-		}
-		if (StringUtils.isEmpty(name)) {
-			throw new IllegalArgumentException("The item code must be defined.");
-		}
-		if (name.length() > MAX_ITEM_CODE_LENGTH) {
-			throw new IllegalArgumentException(
-					"The item code must be less than 256 characters.");
-		}
-
-		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category)).add(
-						Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
-
-				if (!includeRetired) {
-					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
-				}
-			}
-		}, getDefaultSort());
-	}
-
-	@Override
-	public List<Item> getItemsByDepartmentAndCategoryAndName(Department department, Category category,
-			String name, boolean includeRetired) {
-		return getItems(department, category, name, includeRetired, null);
-	}
-
-	@Override
-	public List<Item> getItems(final Department department,
-			final Category category, final String name,
-			final boolean includeRetired, PagingInfo pagingInfo) {
-		if (department == null) {
-			throw new NullPointerException("The department must be defined");
-		}
-		if (category == null) {
-			throw new NullPointerException("The category must be defined");
-		}
-		if (StringUtils.isEmpty(name)) {
-			throw new IllegalArgumentException("The item code must be defined.");
-		}
-		if (name.length() > MAX_ITEM_CODE_LENGTH) {
-			throw new IllegalArgumentException(
-					"The item code must be less than 256 characters.");
-		}
-
-		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department))
-						.add(Restrictions.eq(HibernateCriteriaConstants.CATEGORY, category))
-						.add(Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
-
-				if (!includeRetired) {
-					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
-				}
-			}
-		}, getDefaultSort());
-	}
-
-	@Override
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	@Transactional(readOnly = true)
 	public List<Item> getItems(Department department, String name, boolean includeRetired) {
 		return getItems(department, name, includeRetired, null);
 	}
@@ -326,7 +200,7 @@ public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
 			}
 		});
 	}
-	
+
 	@Override
 	public ItemPrice getItemPriceByUuid(final String uuid) {
 		Criteria criteria = getRepository().createCriteria(ItemPrice.class);
