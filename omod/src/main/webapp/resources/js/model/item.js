@@ -225,7 +225,9 @@ define(
 					if (resp.department && _.isObject(resp.department)) {
 						resp.department = new openhmis.Department(resp.department);
 					}
-
+					if (resp.codes){
+						resp.codes = new openhmis.GenericCollection(resp.codes,{ model:openhmis.ItemCode }).models;
+					}
 					if (resp.prices) {
 						resp.prices = new openhmis.GenericCollection(resp.prices, { model: openhmis.ItemPrice }).models;
 					}
