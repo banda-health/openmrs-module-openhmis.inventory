@@ -17,12 +17,12 @@ define(
 		openhmis.url.backboneBase + 'js/lib/underscore',
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
+        openhmis.url.backboneBase + 'js/model/openhmis',
 		openhmis.url.inventoryBase + 'js/model/department',
         openhmis.url.inventoryBase + 'js/model/category',
         openhmis.url.backboneBase + 'js/model/concept'
 	],
 	function(_, openhmis, __) {
-
 		openhmis.ItemCode = openhmis.GenericModel.extend({
 			meta: {
 				name: "Item Code",
@@ -93,9 +93,21 @@ define(
 			}
 		});
 
+        openhmis.ItemAttribute = openhmis.AttributeBase.extend({
+            attributeTypeClass: openhmis.ItemAttributeType
+        });
+
+        openhmis.ItemAttributeType = openhmis.AttributeTypeBase.extend({
+            meta: {
+                restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType'
+            }
+        });
 
 		openhmis.Item = openhmis.GenericModel.extend({
-			meta: {
+            attributeClass: openhmis.ItemAttribute,
+            attributeTypeClass: openhmis.ItemAttributeType,
+
+            meta: {
 				name: "Item",
 				namePlural: "Items",
 				openmrsType: 'metadata',

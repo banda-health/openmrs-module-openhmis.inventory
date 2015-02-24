@@ -16,6 +16,6 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceAttributeObject;
 
 public class StockOperationAttribute
-		extends BaseInstanceAttributeObject<StockOperation, StockOperationAttributeType> {
+		extends BaseInstanceAttributeObject<StockOperation, IStockOperationType, StockOperationAttributeType> {
 	public static final long serialVersionUID = 0L;
 }

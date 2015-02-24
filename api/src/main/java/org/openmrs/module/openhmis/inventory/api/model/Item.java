@@ -26,8 +26,8 @@ import java.util.Set;
 /**
  * Model class that represents a product or service.
  */
-public class Item extends BaseSimpleCustomizableMetadata<ItemAttributeType, ItemAttribute>
-		implements ISimpleCustomizable<ItemAttributeType, ItemAttribute> {
+public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute>
+		implements ISimpleCustomizable<ItemAttribute> {
 	public static final long serialVersionUID = 1L;
 
 	private Integer itemId;

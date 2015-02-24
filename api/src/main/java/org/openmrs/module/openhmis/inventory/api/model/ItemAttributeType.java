@@ -18,6 +18,6 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleAttributeT
 /**
  * A user-defined extension to the {@link Item} class.
  */
-public class ItemAttributeType extends BaseSimpleAttributeType {
+public class ItemAttributeType extends BaseSimpleAttributeType<Item> {
 	public static final long serialVersionUID = 1L;
 }

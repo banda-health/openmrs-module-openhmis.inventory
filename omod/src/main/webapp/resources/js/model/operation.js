@@ -91,8 +91,8 @@ define(
 		    }
 	    });
 
-        openhmis.OperationAttribute = openhmis.InstanceAttributeBase.extend({
-            attributeClass: openhmis.OperationAttributeType
+        openhmis.OperationAttribute = openhmis.AttributeBase.extend({
+            attributeTypeClass: openhmis.OperationAttributeType
         });
 
         openhmis.TransactionBase = openhmis.GenericModel.extend({
