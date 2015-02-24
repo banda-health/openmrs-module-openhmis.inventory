@@ -1,5 +1,7 @@
 package org.openmrs.module.openhmis.inventory.api;
 
+import static org.junit.Assert.*;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -21,6 +23,7 @@ import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
@@ -35,7 +38,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	IStockOperationTypeDataService typeService;
 	IStockroomDataService stockroomService;
 	IItemDataService itemService;
-	
+
 	IItemDataServiceTest itemTest;
 
 	public static void assertStockOperation(StockOperation expected, StockOperation actual) {
@@ -189,12 +192,12 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	protected void assertEntity(StockOperation expected, StockOperation actual) {
 		assertStockOperation(expected, actual);
 	}
-	
+
 	@Test(expected = APIException.class)
 	public void purge_shouldDeleteTheSpecifiedObject() throws Exception {
 		super.purge_shouldDeleteTheSpecifiedObject();
 	}
-	
+
 	@Test
 	public void save_shouldAddMapRecordsToSourceAndDestinationStockRooms() throws Exception {
 		StockOperation operation = new StockOperation();
@@ -203,29 +206,29 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
 		operation.setOperationDate(new Date());
-		
+
 		Stockroom source = stockroomService.getById(0);
 		Stockroom destination = stockroomService.getById(1);
 		Assert.assertFalse(source.getOperations().contains(operation));
 		Assert.assertFalse(destination.getOperations().contains(operation));
-		
+
 		operation.setSource(source);
 		operation.setDestination(destination);
-		
+
 		Assert.assertTrue(source.getOperations().contains(operation));
 		Assert.assertTrue(destination.getOperations().contains(operation));
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
+
 		operation = service.getById(operation.getId());
 		source = stockroomService.getById(0);
 		destination = stockroomService.getById(1);
-		
+
 		Assert.assertTrue(source.getOperations().contains(operation));
 		Assert.assertTrue(destination.getOperations().contains(operation));
 	}
-	
+
 	@Test
 	public void save_shouldRemoveMapRecordsFromNullSourceOrDestinationStockRooms() throws Exception {
 		StockOperation operation = new StockOperation();
@@ -234,29 +237,29 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
 		operation.setOperationDate(new Date());
-		
+
 		Stockroom source = stockroomService.getById(0);
 		Stockroom destination = stockroomService.getById(1);
-		
+
 		operation.setSource(source);
 		operation.setDestination(destination);
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
+
 		source = stockroomService.getById(0);
 		destination = stockroomService.getById(1);
-		
+
 		Assert.assertTrue(source.getOperations().contains(operation));
 		Assert.assertTrue(destination.getOperations().contains(operation));
-		
+
 		operation.setSource(null);
 		operation.setDestination(null);
-		
+
 		Assert.assertFalse(source.getOperations().contains(operation));
 		Assert.assertFalse(destination.getOperations().contains(operation));
 	}
-	
+
 	@Test
 	public void save_shouldUpdatePreviousRoomWhenSourceOrDestinationIsChanged() throws Exception {
 		StockOperation operation = new StockOperation();
@@ -265,32 +268,32 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setCreator(Context.getAuthenticatedUser());
 		operation.setOperationDate(new Date());
-		
+
 		Stockroom source = stockroomService.getById(0);
 		Stockroom destination = stockroomService.getById(1);
-		
+
 		operation.setSource(source);
 		operation.setDestination(destination);
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
+
 		source = stockroomService.getById(0);
 		destination = stockroomService.getById(1);
-		
+
 		Assert.assertTrue(source.getOperations().contains(operation));
 		Assert.assertTrue(destination.getOperations().contains(operation));
-		
+
 		Stockroom newSource = stockroomService.getById(2);
-		
+
 		operation.setSource(newSource);
 		operation.setDestination(null);
-		
+
 		Assert.assertFalse(source.getOperations().contains(operation));
 		Assert.assertTrue(newSource.getOperations().contains(operation));
 		Assert.assertFalse(destination.getOperations().contains(operation));
 	}
-	
+
 	/**
 	 * @verifies return null if number is not found
 	 * @see IStockOperationDataService#getOperationByNumber(String)
@@ -298,10 +301,10 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getOperationByNumber_shouldReturnNullIfNumberIsNotFound() throws Exception {
 		StockOperation result = service.getOperationByNumber("Not a valid number");
-		
+
 		Assert.assertNull(result);
 	}
-	
+
 	/**
 	 * @verifies return operation with specified transaction number
 	 * @see IStockOperationDataService#getOperationByNumber(String)
@@ -309,13 +312,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getOperationByNumber_shouldReturnOperationWithTheSpecifiedNumber() throws Exception {
 		StockOperation operation = service.getById(0);
-		
+
 		StockOperation result = service.getOperationByNumber(operation.getOperationNumber());
-		
+
 		Assert.assertNotNull(result);
 		assertEntity(operation, result);
 	}
-	
+
 	/**
 	 * @verifies throw IllegalArgumentException if number is null
 	 * @see IStockOperationDataService#getOperationByNumber(String)
@@ -324,7 +327,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperationByNumber_shouldThrowIllegalArgumentExceptionIfNumberIsNull() throws Exception {
 		service.getOperationByNumber(null);
 	}
-	
+
 	/**
 	 * @verifies throw IllegalArgumentException if number is empty
 	 * @see IStockOperationDataService#getOperationByNumber(String)
@@ -333,7 +336,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperationByNumber_shouldThrowIllegalArgumentExceptionIfNumberIsEmpty() throws Exception {
 		service.getOperationByNumber("");
 	}
-	
+
 	/**
 	 * @verifies throw IllegalArgumentException is number is longer than 255 characters
 	 * @see IStockOperationDataService#getOperationByNumber(String)
@@ -342,7 +345,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperationByNumber_shouldThrowIllegalArgumentExceptionIsNumberIsLongerThan255Characters() throws Exception {
 		service.getOperationByNumber(StringUtils.repeat("A", 256));
 	}
-	
+
 	/**
 	 * @verifies return operations for specified room
 	 * @see IStockOperationDataService#getOperationsByRoom(Stockroom, PagingInfo)
@@ -350,9 +353,9 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getOperationsByRoom_shouldReturnOperationsForSpecifiedRoom() throws Exception {
 		Stockroom room = stockroomService.getById(2);
-		
+
 		List<StockOperation> results = service.getOperationsByRoom(room, null);
-		
+
 		assertCollection(room.getOperations(), results, new Action2<StockOperation, StockOperation>() {
 			@Override
 			public void apply(StockOperation expected, StockOperation actual) {
@@ -360,7 +363,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 			}
 		});
 	}
-	
+
 	/**
 	 * @verifies return empty list when no operations
 	 * @see IStockOperationDataService#getOperationsByRoom(Stockroom, PagingInfo)
@@ -372,15 +375,15 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		room.setName("New Room");
 		room.setCreator(Context.getAuthenticatedUser());
 		room.setDateCreated(new Date());
-		
+
 		stockroomService.save(room);
 		Context.flushSession();
-		
+
 		List<StockOperation> results = service.getOperationsByRoom(room, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 	}
-	
+
 	/**
 	 * @verifies return paged operations when paging is specified
 	 * @see IStockOperationDataService#getOperationsByRoom(Stockroom, PagingInfo)
@@ -389,7 +392,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperationsByRoom_shouldReturnPagedOperationsWhenPagingIsSpecified() throws Exception {
 		Stockroom room = stockroomService.getById(0);
 		Assert.assertEquals(2, room.getOperations().size());
-		
+
 		// Only return a single result per page
 		PagingInfo paging = new PagingInfo(1, 1);
 		List<StockOperation> results = service.getOperationsByRoom(room, paging);
@@ -399,7 +402,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperation[] roomTrans = new StockOperation[2];
 		room.getOperations().toArray(roomTrans);
 		assertEntity(roomTrans[0], results.get(0));
-		
+
 		// Get the next result
 		paging.setPage(2);
 		results = service.getOperationsByRoom(room, paging);
@@ -407,7 +410,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(1, results.size());
 		assertEntity(roomTrans[1], results.get(0));
 	}
-	
+
 	/**
 	 * @verifies return all operations when paging is null
 	 * @see IStockOperationDataService#getOperationsByRoom(Stockroom, PagingInfo)
@@ -416,12 +419,12 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperationsByRoom_shouldReturnAllOperationsWhenPagingIsNull() throws Exception {
 		Stockroom room = stockroomService.getById(1);
 		Assert.assertEquals(2, room.getOperations().size());
-		
+
 		List<StockOperation> results = service.getOperationsByRoom(room, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
 	}
-	
+
 	/**
 	 * @verifies return operations with any status
 	 * @see IStockOperationDataService#getOperationsByRoom(Stockroom, PagingInfo)
@@ -430,17 +433,17 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperationsByRoom_shouldReturnOperationsWithAnyStatus() throws Exception {
 		Stockroom room = stockroomService.getById(1);
 		Assert.assertEquals(2, room.getOperations().size());
-		
+
 		StockOperation[] roomTrans = new StockOperation[2];
 		room.getOperations().toArray(roomTrans);
 		Assert.assertEquals(StockOperationStatus.PENDING, roomTrans[0].getStatus());
 		Assert.assertEquals(StockOperationStatus.COMPLETED, roomTrans[1].getStatus());
-		
+
 		List<StockOperation> results = service.getOperationsByRoom(room, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
 	}
-	
+
 	/**
 	 * @verifies throw IllegalArgumentException when stockroom is null
 	 * @see IStockOperationDataService#getOperationsByRoom(Stockroom, PagingInfo)
@@ -449,7 +452,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperationsByRoom_shouldThrowIllegalArgumentExceptionWhenStockroomIsNull() throws Exception {
 		service.getOperationsByRoom(null, null);
 	}
-	
+
 	/**
 	 * @verifies throw NullPointerException if operation search is null
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -458,7 +461,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchIsNull() throws Exception {
 		service.getOperations(null, null);
 	}
-	
+
 	/**
 	 * @verifies throw NullPointerException if operation search template object is null
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -467,7 +470,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldThrowIllegalArgumentExceptionIfOperationSearchTemplateObjectIsNull() throws Exception {
 		service.getOperations(new StockOperationSearch(null), null);
 	}
-	
+
 	/**
 	 * @verifies return an empty list if no operations are found via the search
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -476,13 +479,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnAnEmptyListIfNoOperationsAreFoundViaTheSearch() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.CANCELLED);
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 	}
-	
+
 	/**
 	 * @verifies return operations filtered by number
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -491,29 +494,29 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnOperationsFilteredByNumber() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setOperationNumber("ABCD-1234");
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
+
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setOperationNumber("ABCD-1234");
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(operation, results.get(0));
-		
+
 		search.setOperationNumberComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
 		search.getTemplate().setOperationNumber("AB%");
-		
+
 		results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(operation, results.get(0));
 	}
-	
+
 	/**
 	 * @verifies return operations filtered by status
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -522,20 +525,20 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnOperationsFilteredByStatus() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setStatus(StockOperationStatus.CANCELLED);
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
+
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.CANCELLED);
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(operation, results.get(0));
 	}
-	
+
 	/**
 	 * @verifies return operations filtered by type
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -544,20 +547,20 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnOperationsFilteredByType() throws Exception {
 		StockOperation operation = service.getById(0);
 		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
+
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setInstanceType(WellKnownOperationTypes.getReceipt());
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(operation, results.get(0));
 	}
-	
+
 	/**
 	 * @verifies return operations filtered by source stockroom
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -566,25 +569,25 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnOperationsFilteredBySourceStockroom() throws Exception {
 		StockOperation operation = service.getById(1);
 		Stockroom room = operation.getSource();
-		
+
 		Context.flushSession();
-		
+
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setSource(room);
-		
+
 		Context.flushSession();
-		
+
 		List<StockOperation> test = service.getAll();
 		Assert.assertNotNull(test);
 		Assert.assertEquals(getTestEntityCount(), test.size());
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(operation, results.get(0));
 	}
-	
+
 	/**
 	 * @verifies return operations filtered by destination stockroom
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -593,17 +596,17 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnOperationsFilteredByDestinationStockroom() throws Exception {
 		StockOperation operation = service.getById(0);
 		Stockroom room = operation.getDestination();
-		
+
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setDestination(room);
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(operation, results.get(0));
 	}
-	
+
 	/**
 	 * @verifies return all operations if paging is null
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -612,13 +615,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnAllOperationsIfPagingIsNull() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
 	}
-	
+
 	/**
 	 * @verifies return paged operations if paging is specified
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -627,15 +630,15 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getOperations_shouldReturnPagedOperationsIfPagingIsSpecified() throws Exception {
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setStatus(StockOperationStatus.COMPLETED);
-		
+
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
 		List<StockOperation> results = service.getOperations(search, pagingInfo);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (long)pagingInfo.getTotalRecordCount());
 	}
-	
+
 	/**
 	 * @verifies return operations filtered by creation date
 	 * @see IStockOperationDataService#getOperations(StockOperationSearch, PagingInfo)
@@ -645,13 +648,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperationSearch search = new StockOperationSearch();
 		search.getTemplate().setDateCreated(service.getById(0).getDateCreated());
 		search.setDateCreatedComparisonType(BaseObjectTemplateSearch.DateComparisonType.GREATER_THAN_EQUAL);
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
 	}
-	
+
 	/**
 	 * @verifies return operations filtered by patient
 	 * @see IStockOperationDataService#getOperations(org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch,
@@ -662,14 +665,14 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		StockOperationSearch search = new StockOperationSearch();
 		Patient patient = Context.getPatientService().getPatient(1);
 		search.getTemplate().setPatient(patient);
-		
+
 		List<StockOperation> results = service.getOperations(search, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		assertEntity(service.getById(2), results.get(0));
 	}
-	
+
 	/**
 	 * @verifies return operations created by user
 	 * @see IStockOperationDataService#getUserOperations(User, PagingInfo)
@@ -677,107 +680,162 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getUserOperations_shouldReturnOperationsCreatedByUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
-		
+
 		List<StockOperation> results = service.getUserOperations(user, null);
-		
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 	}
-	
+
 	/**
 	 * @verifies return all operations with the specified status for specified user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusForSpecifiedUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
-		
-		List<StockOperation> results = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> results = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
-		
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
-		
+
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null);
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
-		
+
 		Assert.assertEquals(0, (int)results.get(0).getId());
 		Assert.assertEquals(1, (int)results.get(1).getId());
-		
-		results = service.getUserOperations(user, StockOperationStatus.PENDING, null);
-		
+
+		results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null);
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
-		
+
 	}
-	
+
+	/**
+	 * @verifies return all operations with the specified operation type for specified user
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
+	 */
+	@Test
+	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedOperationTypeForSpecifiedUser() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		List<StockOperation> results = service.getUserOperations(user, null, null, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(getTestEntityCount(), results.size());
+
+		results = service.getUserOperations(user, null,  WellKnownOperationTypes.getInitial(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(0, results.size());
+
+		results = service.getUserOperations(user, null, WellKnownOperationTypes.getDistribution(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(2, (int)results.get(0).getId());
+
+	}
+
+	/**
+	 * @verifies return all operations with the specified status and operation type for specified user
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
+	 */
+	@Test
+	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeForSpecifiedUser() throws Exception {
+		User user = Context.getUserService().getUser(1);
+
+		List<StockOperation> results = service.getUserOperations(user, null, null, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(getTestEntityCount(), results.size());
+
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  null, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
+
+		Assert.assertEquals(0, (int)results.get(0).getId());
+		Assert.assertEquals(1, (int)results.get(1).getId());
+
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getTransfer(), null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(1, (int)results.get(0).getId());
+
+	}
+
 	/**
 	 * @verifies return specified operations created by user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsCreatedByUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
-		
-		List<StockOperation> results = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> results = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
-		
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
-		
+
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null);
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
-		
-		results = service.getUserOperations(user, StockOperationStatus.PENDING, null);
-		
+
+		results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null);
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 	}
-	
+
 	/**
 	 * @verifies return specified operations with user as attribute type user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserAsAttributeTypeUser() throws Exception {
 		User baseUser = Context.getUserService().getUser(0);
 		User user = Context.getUserService().getUser(5506);
-		
+
 		StockOperation operation = createEntity(true);
 		operation.setCreator(baseUser);
 		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
 		operation.getInstanceType().setUser(user);
 		operation.setSource(stockroomService.getById(0));
-		
+
 		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
-		
+
 		operation = service.getById(operation.getId());
-		
-		List<StockOperation> operations = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
-	
+
 	/**
 	 * @verifies return specified operations with user role as attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserRoleAsAttributeTypeRole() throws Exception {
@@ -786,257 +844,257 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Set<Role> roles = user.getRoles();
 		Role[] roleArray = new Role[roles.size()];
 		roles.toArray(roleArray);
-		
+
 		StockOperation operation = createEntity(true);
 		operation.setCreator(baseUser);
 		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
 		operation.getInstanceType().setRole(roleArray[0]);
 		operation.setSource(stockroomService.getById(0));
-		
+
 		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
-		
-		List<StockOperation> operations = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
-	
+
 	/**
 	 * @verifies return specified operations with user role as child role of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserRoleAsChildRoleOfAttributeTypeRole()
 	        throws Exception {
 		User baseUser = Context.getUserService().getUser(0);
-		
+
 		// This user has the Child Role which is a child of the Parent role
 		User user = Context.getUserService().getUser(5506);
-		
+
 		StockOperation operation = createEntity(true);
 		operation.setCreator(baseUser);
 		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
 		operation.getInstanceType().setRole(Context.getUserService().getRole("Parent"));
 		operation.setSource(stockroomService.getById(0));
-		
+
 		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
-		
-		List<StockOperation> operations = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
-	
+
 	/**
 	 * @verifies return specified operations with user role as grandchild role of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserRoleAsGrandchildRoleOfAttributeTypeRole()
 	        throws Exception {
 		User baseUser = Context.getUserService().getUser(0);
 		User user = Context.getUserService().getUser(5506);
-		
+
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(Context.getUserService().getRole("Grandchild"));
 		user.setRoles(roles);
 		Context.getUserService().saveUser(user, "1wWhatever");
 		Context.flushSession();
-		
+
 		StockOperation operation = createEntity(true);
 		operation.setCreator(baseUser);
 		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
 		operation.getInstanceType().setRole(Context.getUserService().getRole("Parent"));
 		operation.setSource(stockroomService.getById(0));
-		
+
 		typeService.save(operation.getInstanceType());
 		service.save(operation);
 		Context.flushSession();
-		
-		List<StockOperation> operations = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
-		
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null);
-		
+
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 	}
-	
+
 	/**
 	 * @verifies not return operations when user role not descendant of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldNotReturnOperationsWhenUserRoleNotDescendantOfAttributeTypeRole() throws Exception {
 		User baseUser = Context.getUserService().getUser(0);
 		User user = Context.getUserService().getUser(5506);
-		
+
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(Context.getUserService().getRole("Other"));
 		user.setRoles(roles);
 		Context.getUserService().saveUser(user, "1wWhatever");
 		Context.flushSession();
-		
+
 		StockOperation operation = createEntity(true);
 		operation.setCreator(baseUser);
 		operation.getInstanceType().setRole(Context.getUserService().getRole("Parent"));
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
-		List<StockOperation> operations = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
 	}
-	
+
 	/**
 	 * @verifies not return operations when user role is parent of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldNotReturnOperationsWhenUserRoleIsParentOfAttributeTypeRole() throws Exception {
 		User baseUser = Context.getUserService().getUser(0);
 		User user = Context.getUserService().getUser(5506);
-		
+
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(Context.getUserService().getRole("Parent"));
 		user.setRoles(roles);
 		Context.getUserService().saveUser(user, "1wWhatever");
 		Context.flushSession();
-		
+
 		StockOperation operation = createEntity(true);
 		operation.setCreator(baseUser);
 		operation.getInstanceType().setRole(Context.getUserService().getRole("Child"));
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
-		List<StockOperation> operations = service.getUserOperations(user, null, null);
-		
+
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null);
+
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
 	}
-	
+
 	/**
 	 * @verifies return empty list when no operations
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnEmptyListWhenNoOperations() throws Exception {
 		User user = Context.getUserService().getUser(1);
-		
+
 		StockOperation operation = service.getById(2);
 		operation.setStatus(StockOperationStatus.COMPLETED);
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
-		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.REQUESTED, null);
-		
+
+		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.REQUESTED, null, null);
+
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 	}
-	
+
 	/**
 	 * @verifies return paged operations when paging is specified
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnPagedOperationsWhenPagingIsSpecified() throws Exception {
 		User user = Context.getUserService().getUser(1);
 		StockOperation operation = service.getById(1);
 		operation.setStatus(StockOperationStatus.PENDING);
-		
+
 		service.save(operation);
 		Context.flushSession();
-		
+
 		PagingInfo paging = new PagingInfo(1, 1);
-		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.PENDING, paging);
+		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.PENDING, null, paging);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (long)paging.getTotalRecordCount());
 		int id = results.get(0).getId();
-		
+
 		paging.setPage(2);
 		results = service.getUserOperations(user, paging);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertFalse(id == results.get(0).getId());
 	}
-	
+
 	/**
 	 * @verifies return all operations when paging is null
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWhenPagingIsNull() throws Exception {
 		User user = Context.getUserService().getUser(1);
-		
-		List<StockOperation> results = service.getUserOperations(user, null, null);
+
+		List<StockOperation> results = service.getUserOperations(user, null, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 	}
-	
+
 	/**
 	 * @verifies throw NullPointerException when user is null
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getUserOperations_shouldThrowIllegalArgumentExceptionWhenUserIsNull() throws Exception {
-		service.getUserOperations(null, null, null);
+		service.getUserOperations(null, null, null, null);
 	}
-	
+
 	/**
 	 * @verifies return all operations for user when status is null
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsForUserWhenStatusIsNull() throws Exception {
 		User user = Context.getUserService().getUser(1);
-		
-		List<StockOperation> results = service.getUserOperations(user, null, null);
+
+		List<StockOperation> results = service.getUserOperations(user, null, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 	}
-	
+
 	/**
 	 * @verifies return items for the specified operation
 	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
@@ -1045,22 +1103,22 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getItemsByOperation_shouldReturnItemsForTheSpecifiedOperation() throws Exception {
 		StockOperation operation = service.getById(0);
-		
+
 		List<StockOperationItem> items = service.getItemsByOperation(operation, null);
-		
+
 		Assert.assertNotNull(items);
 		Assert.assertEquals(3, items.size());
-		
+
 		StockOperationItem item = Iterators.get(items.iterator(), 0);
 		Assert.assertEquals(0, (int)item.getId());
-		
+
 		item = Iterators.get(items.iterator(), 1);
 		Assert.assertEquals(1, (int)item.getId());
-		
+
 		item = Iterators.get(items.iterator(), 2);
 		Assert.assertEquals(2, (int)item.getId());
 	}
-	
+
 	/**
 	 * @verifies return empty list when no items
 	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
@@ -1072,16 +1130,16 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		if (newOperation.getItems() != null) {
 			newOperation.getItems().clear();
 		}
-		
+
 		service.save(newOperation);
 		Context.flushSession();
-		
+
 		List<StockOperationItem> items = service.getItemsByOperation(newOperation, null);
-		
+
 		Assert.assertNotNull(items);
 		Assert.assertEquals(0, items.size());
 	}
-	
+
 	/**
 	 * @verifies return paged items when paging is specified
 	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
@@ -1090,31 +1148,31 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getItemsByOperation_shouldReturnPagedItemsWhenPagingIsSpecified() throws Exception {
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
-		
+
 		StockOperation operation = service.getById(0);
-		
+
 		List<StockOperationItem> items = service.getItemsByOperation(operation, pagingInfo);
-		
+
 		Assert.assertNotNull(items);
 		Assert.assertEquals(3, (long)pagingInfo.getTotalRecordCount());
 		Assert.assertEquals(1, items.size());
-		
+
 		StockOperationItem item = Iterators.getOnlyElement(items.iterator());
 		Assert.assertEquals(0, (int)item.getId());
-		
+
 		pagingInfo.setPage(2);
 		items = service.getItemsByOperation(operation, pagingInfo);
-		
+
 		item = Iterators.getOnlyElement(items.iterator());
 		Assert.assertEquals(1, (int)item.getId());
-		
+
 		pagingInfo.setPage(3);
 		items = service.getItemsByOperation(operation, pagingInfo);
-		
+
 		item = Iterators.getOnlyElement(items.iterator());
 		Assert.assertEquals(2, (int)item.getId());
 	}
-	
+
 	/**
 	 * @verifies return all items when paging is null
 	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
@@ -1123,22 +1181,22 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	@Test
 	public void getItemsByOperation_shouldReturnAllItemsWhenPagingIsNull() throws Exception {
 		StockOperation operation = service.getById(0);
-		
+
 		List<StockOperationItem> items = service.getItemsByOperation(operation, null);
-		
+
 		Assert.assertNotNull(items);
 		Assert.assertEquals(3, items.size());
-		
+
 		StockOperationItem item = Iterators.get(items.iterator(), 0);
 		Assert.assertEquals(0, (int)item.getId());
-		
+
 		item = Iterators.get(items.iterator(), 1);
 		Assert.assertEquals(1, (int)item.getId());
-		
+
 		item = Iterators.get(items.iterator(), 2);
 		Assert.assertEquals(2, (int)item.getId());
 	}
-	
+
 	/**
 	 * @verifies throw IllegalArgumentException when operation is null
 	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,

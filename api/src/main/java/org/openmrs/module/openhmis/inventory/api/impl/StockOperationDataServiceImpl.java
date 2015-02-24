@@ -23,7 +23,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Role;
@@ -42,6 +41,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 
 public class StockOperationDataServiceImpl
 		extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
@@ -61,7 +61,7 @@ public class StockOperationDataServiceImpl
 	@Override
 	protected Order[] getDefaultSort() {
 		// Return operations ordered by creation date, desc
-		return new Order[] { Order.desc("dateCreated") };
+		return new Order[] { Order.desc(HibernateCriteriaConstants.DATE_CREATED) };
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class StockOperationDataServiceImpl
 		}
 
 		Criteria criteria = getRepository().createCriteria(getEntityClass());
-		criteria.add(Restrictions.eq("operationNumber", number));
+		criteria.add(Restrictions.eq(HibernateCriteriaConstants.OPERATION_NUMBER, number));
 
 		return getRepository().selectSingle(getEntityClass(), criteria);
 	}
@@ -89,8 +89,8 @@ public class StockOperationDataServiceImpl
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.or(
-						Restrictions.eq("source", stockroom),
-						Restrictions.eq("destination", stockroom)
+						Restrictions.eq(HibernateCriteriaConstants.SOURCE, stockroom),
+						Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom)
 				));
 			}
 		}, getDefaultSort());
@@ -105,19 +105,19 @@ public class StockOperationDataServiceImpl
 		return executeCriteria(StockOperationItem.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.eq("operation", operation));
-				criteria.createCriteria("item", "i");
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.OPERATION, operation));
+				criteria.createCriteria(HibernateCriteriaConstants.ITEM, "i");
 			}
 		}, Order.asc("i.name"));
 	}
 
 	@Override
 	public List<StockOperation> getUserOperations(User user, PagingInfo paging) {
-		return getUserOperations(user, null, paging);
+		return getUserOperations(user, null, null, paging);
 	}
 
 	@Override
-	public List<StockOperation> getUserOperations(final User user, final StockOperationStatus status, PagingInfo paging) {
+	public List<StockOperation> getUserOperations(final User user, final StockOperationStatus status, final IStockOperationType stockOperationType, PagingInfo paging) {
 		if (user == null) {
 			throw new IllegalArgumentException("The user must be defined.");
 		}
@@ -129,40 +129,51 @@ public class StockOperationDataServiceImpl
 					@Override
 					public void apply(Criteria criteria) {
 						DetachedCriteria subQuery = DetachedCriteria.forClass(IStockOperationType.class);
-						subQuery.setProjection(Property.forName("id"));
+						subQuery.setProjection(Property.forName(HibernateCriteriaConstants.ID));
 
 						// Add user/role filter
 						if (roles != null && roles.size() > 0) {
 							subQuery.add(Restrictions.or(
 									// Types that require user approval
-									Restrictions.eq("user", user),
+									Restrictions.eq(HibernateCriteriaConstants.USER, user),
 									// Types that require role approval
-									Restrictions.in("role", roles)
+									Restrictions.in(HibernateCriteriaConstants.ROLE, roles)
 							));
 						} else {
 							// Types that require user approval
-							subQuery.add(Restrictions.eq("user", user));
+							subQuery.add(Restrictions.eq(HibernateCriteriaConstants.USER, user));
 						}
-
-						if (status != null) {
-							criteria.add(Restrictions.and(
-									Restrictions.eq("status", status),
-									Restrictions.or(
-											// Transactions created by the user
-											Restrictions.eq("creator", user),
-											Property.forName("instanceType").in(subQuery)
-									)
-							));
+						if (status != null || stockOperationType != null) {
+							if (status != null) {
+								criteria.add(Restrictions.and(
+										Restrictions.eq(HibernateCriteriaConstants.STATUS, status),
+										Restrictions.or(
+												// Transactions created by the user
+												Restrictions.eq(HibernateCriteriaConstants.CREATOR, user),
+												Property.forName(HibernateCriteriaConstants.INSTANCE_TYPE).in(subQuery)
+										)
+								));
+							}
+							if (stockOperationType != null) {
+								criteria.add(Restrictions.and(
+										Restrictions.eq(HibernateCriteriaConstants.INSTANCE_TYPE, stockOperationType),
+										Restrictions.or(
+												// Transactions created by the user
+												Restrictions.eq(HibernateCriteriaConstants.CREATOR, user),
+												Property.forName(HibernateCriteriaConstants.INSTANCE_TYPE).in(subQuery)
+										)
+								));
+							}
 						} else {
 							criteria.add(Restrictions.or(
 											// Transactions created by the user
-											Restrictions.eq("creator", user),
-											Property.forName("instanceType").in(subQuery)
+											Restrictions.eq(HibernateCriteriaConstants.CREATOR, user),
+											Property.forName(HibernateCriteriaConstants.INSTANCE_TYPE).in(subQuery)
 									)
 							);
 						}
 					}
-				}, Order.desc("dateCreated")
+				}, Order.desc(HibernateCriteriaConstants.DATE_CREATED)
 		);
 	}
 
@@ -196,9 +207,9 @@ public class StockOperationDataServiceImpl
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.gt("operationDate", operationDate));
+				criteria.add(Restrictions.gt(HibernateCriteriaConstants.OPERATION_DATE, operationDate));
 			}
-		}, Order.asc("operationDate"));
+		}, Order.asc(HibernateCriteriaConstants.OPERATION_DATE));
 	}
 
 	@Override
@@ -213,25 +224,25 @@ public class StockOperationDataServiceImpl
 				criteria.add(Restrictions.or(
 						Restrictions.and(
 							createDateRestriction(operation.getOperationDate()),
-							Restrictions.gt("operationOrder", operation.getOperationOrder())
+							Restrictions.gt(HibernateCriteriaConstants.OPERATION_ORDER, operation.getOperationOrder())
 						),
-						Restrictions.gt("operationDate", operation.getOperationDate())
+						Restrictions.gt(HibernateCriteriaConstants.OPERATION_DATE, operation.getOperationDate())
 				));
 			// Note that this ordering may not support all databases
 			}
 		}, CustomizedOrderBy.asc("convert(operation_date, date)"), Order.asc("operationOrder"),
-				Order.asc("operationDate"));
+				Order.asc(HibernateCriteriaConstants.OPERATION_DATE));
 	}
 
 	@Override
 	public List<StockOperation> getOperationsByDate(final Date date, PagingInfo paging) {
-		return getOperationsByDate(date, paging, null, Order.asc("operationOrder"), Order.asc("operationDate"));
+		return getOperationsByDate(date, paging, null, Order.asc(HibernateCriteriaConstants.OPERATION_ORDER), Order.asc(HibernateCriteriaConstants.OPERATION_DATE));
 	}
 
 	@Override
 	public StockOperation getLastOperationByDate(final Date date) {
-		List<StockOperation> results = getOperationsByDate(date, null, 1, Order.desc("operationOrder"),
-				Order.desc("dateCreated"));
+		List<StockOperation> results = getOperationsByDate(date, null, 1, Order.desc(HibernateCriteriaConstants.OPERATION_ORDER),
+				Order.desc(HibernateCriteriaConstants.DATE_CREATED));
 
 		if (results == null || results.size() == 0) {
 			return null;
@@ -243,7 +254,7 @@ public class StockOperationDataServiceImpl
 	@Override
 	public StockOperation getFirstOperationByDate(final Date date) {
 		List<StockOperation> results = getOperationsByDate(date, null, 1, Order.asc("operationOrder"),
-				Order.asc("dateCreated"));
+				Order.asc(HibernateCriteriaConstants.DATE_CREATED));
 
 		if (results == null || results.size() == 0) {
 			return null;
@@ -279,7 +290,7 @@ public class StockOperationDataServiceImpl
 		cal.add(Calendar.MILLISECOND, -1);
 		final Date end = cal.getTime();
 
-		return Restrictions.between("operationDate", start, end);
+		return Restrictions.between(HibernateCriteriaConstants.OPERATION_DATE, start, end);
 	}
 
 	@Override

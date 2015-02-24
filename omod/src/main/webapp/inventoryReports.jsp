@@ -108,28 +108,31 @@
         <br />
         <hr>
       </c:if>
-      
+
       <c:if test="${expiringStockReport != null}" >
         <h3>${expiringStockReport.name}</h3>
         <div style="color: grey">${expiringStockReport.description}</div>
         <br />
         <div>
           <form id="expiringStockReport" onsubmit="return false;">
+
+            <label for="expiringStockReport-StockroomId">Stockroom: </label>
+            <select id="expiringStockReport-StockroomId">
+              <option value="">Any</option>
+              <c:forEach var="stockroom" items="${stockrooms}">
+                <option value="${stockroom.id}">${stockroom.name}</option>
+              </c:forEach>
+            </select>
             <br />
             <br />
             <label for="expiresBy">Expires by</label>
             <input id="expiresBy" class="date" type="text" />
-
-
             <input id="expiringStockReportId" type="hidden" value="${expiringStockReport.reportId}" />
             <br /><br />
             <input id="generateExpiringStockReport" type="submit" value="Generate Report" />
           </form>
         </div>
         <hr>
-      </c:if>
-      <c:if test="${expiringStockReport == null}" >
-      bla
       </c:if>
     </td>
   </tr>

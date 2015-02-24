@@ -26,7 +26,7 @@
 
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.InventoryModuleActivator</activator>
-	
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.autoGenerateOperationNumber</property>
 		<description>true/false whether or not the operation number should be generated automatically.</description>
@@ -51,7 +51,7 @@
 		<property>${project.parent.artifactId}.reports.stockroom</property>
 		<description>The ID of the Stockroom report.</description>
 	</globalProperty>
-	
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.reports.expiringStock</property>
 		<description>The ID of the Expiring Stock report.</description>
@@ -71,22 +71,21 @@
         <point>org.openmrs.headerFull.userBar</point>
         <class>org.openmrs.module.openhmis.inventory.extension.html.InventoryLinkExt</class>
     </extension>
-    
-<!-- 
+
+<!--
     This extension point is not in use at the moment as it is not possible to link from a concept to a specific item
-    As soon as #inv-82 is solved this extension point should be used to display the linked items on the concept page 
+    As soon as #inv-82 is solved this extension point should be used to display the linked items on the concept page
 
     <extension>
         <point>org.openmrs.dictionary.conceptFooter</point>
         <class>org.openmrs.module.openhmis.inventory.extension.html.ItemConceptMappingExt</class>
     </extension>
- -->    
-	
+ -->
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 		InvItem.hbm.xml
 		InvDepartment.hbm.xml
-		InvCategory.hbm.xml
 		InvStockroom.hbm.xml
 		InvInstitution.hbm.xml
 	</mappingFiles>

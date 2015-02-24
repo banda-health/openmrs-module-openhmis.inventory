@@ -19,7 +19,6 @@ curl(
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.inventoryBase + 'js/model/item',
 		openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category',
 		openhmis.url.backboneBase + 'js/view/generic',
 		openhmis.url.backboneBase + 'js/view/list',
 		openhmis.url.backboneBase + 'js/view/editors',
@@ -35,8 +34,6 @@ curl(
 				searchView: openhmis.DepartmentAndNameSearchView,
 				addEditViewType: openhmis.ItemAddEditView,
 				listFields: ['name', 'department', 'codes', 'defaultPrice']
-				// TODO enable categories in v1.1
-				//listFields: ['name', 'department', 'category', 'codes', 'defaultPrice']
 			});
 		});
 	}

@@ -19,7 +19,6 @@ define(
 		openhmis.url.backboneBase + 'js/lib/i18n',
         openhmis.url.backboneBase + 'js/model/openhmis',
 		openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category',
         openhmis.url.backboneBase + 'js/model/concept'
 	],
 	function(_, openhmis, __) {
@@ -35,7 +34,7 @@ define(
 					type: 'Text',
 					validators: [
 						{ type: 'required', message: 'Item Code is required' }
-					] 
+					]
 				}
 			},
 			toString: function() { return this.get('code'); }
@@ -54,7 +53,7 @@ define(
 					type: 'BasicNumber',
 					validators: [
 						{ type: 'required', message: 'Price value is required' }
-					] 
+					]
 				}
 			},
 
@@ -68,7 +67,7 @@ define(
 				}
 				return openhmis.GenericModel.prototype.set.call(this, key, value, options);
 			},
-			
+
 			format: function(price) {
 				if (price === undefined) {
 					return 0;
@@ -78,12 +77,12 @@ define(
 				}
 				return price.toFixed(2);
 			},
-			
+
 			toString: function() {
 				var name = this.get("name") ? " (" + this.get("name") + ")" : "";
 				return this.format(this.get('price')) + name;
 			},
-			
+
 			toJSON: function() {
 				var attributes = openhmis.GenericModel.prototype.toJSON.call(this);
 				if (this.get('uuid') != null && this.get('uuid') != undefined) {
@@ -123,16 +122,6 @@ define(
 					}),
 					objRef: true
 				},
-// TODO enable categories in v1.1
-//                category: {
-//                    type: 'CategorySelect',
-//                    options: new openhmis.GenericCollection(null, {
-//                        model: openhmis.Category,
-//                        url: openhmis.url.inventoryModelBase + 'category',
-//	                    allowNull: true
-//                    }),
-//                    objRef: true
-//                },
 				hasExpiration: { type: "TrueFalseCheckbox" },
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
 				concept: { type: 'ConceptInput'},
@@ -243,9 +232,6 @@ define(
 					}
 					if (resp.defaultPrice) {
 						resp.defaultPrice = new openhmis.ItemPrice(resp.defaultPrice);
-					}
-					if (resp.category && _.isObject(resp.category)) {
-						resp.category = new openhmis.Category(resp.category);
 					}
 					if (resp.concept && _.isObject(resp.concept)) {
 						resp.concept = new openhmis.Concept(resp.concept);

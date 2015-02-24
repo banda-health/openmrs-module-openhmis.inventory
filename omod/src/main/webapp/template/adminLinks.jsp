@@ -24,16 +24,6 @@
             </a>
         </li>
     </openmrs:hasPrivilege>
-    <%-- 
-    // TODO enable categories in v1.1
-    <openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.CATEGORY_PAGE_PRIVILEGES %>">
-        <li>
-            <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.CATEGORIES_PAGE %>">
-                <openmrs:message code="openhmis.inventory.admin.categories"/>
-            </a>
-        </li>
-    </openmrs:hasPrivilege>
-    --%>
         <openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.INSTITUTION_PAGE_PRIVILEGES %>">
         <li>
             <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.INSTITUTIONS_PAGE %>">
