@@ -28,7 +28,8 @@ define(
 				name: "Item Code",
 				namePlural: "Item Codes",
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'itemCode'
+				restUrl: openhmis.url.inventoryModelBase + 'itemCode',
+				confirmDelete: 'Are you sure you want to delete this item code ?'
 			},
 			schema: {
 				code: {
@@ -46,7 +47,8 @@ define(
 				name: "Item Price",
 				namePlural: "Item Prices",
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'itemPrice'
+				restUrl: openhmis.url.inventoryModelBase + 'itemPrice',
+				confirmDelete: "Are you sure you want to delete this item price?"
 			},
 			schema: {
 				name: { type: "Text" },
@@ -99,7 +101,8 @@ define(
 				name: "Item",
 				namePlural: "Items",
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'item'
+				restUrl: openhmis.url.inventoryModelBase + 'item',
+				confirmDelete: "Are you sure you want to delete this item?"
 			},
 			schema: {
 				name: { type: 'Text' },
@@ -225,7 +228,9 @@ define(
 					if (resp.department && _.isObject(resp.department)) {
 						resp.department = new openhmis.Department(resp.department);
 					}
-
+					if(resp.codes){
+						resp.codes = new openhmis.GenericCollection(resp.codes, { model: openhmis.ItemCode}).models;
+					}
 					if (resp.prices) {
 						resp.prices = new openhmis.GenericCollection(resp.prices, { model: openhmis.ItemPrice }).models;
 					}
