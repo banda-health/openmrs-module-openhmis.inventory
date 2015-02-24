@@ -29,7 +29,7 @@ define(
 				namePlural: "Item Codes",
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemCode',
-				confirmDelete: 'Are you sure you want to delete this item code ?'
+				confirmDelete: 'Are you sure you want to delete this item code?'
 			},
 			schema: {
 				code: {
