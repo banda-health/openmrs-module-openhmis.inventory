@@ -35,6 +35,7 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetad
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
@@ -113,11 +114,11 @@ public class StockOperationDataServiceImpl
 
 	@Override
 	public List<StockOperation> getUserOperations(User user, PagingInfo paging) {
-		return getUserOperations(user, null, null, paging);
+		return getUserOperations(user, null, null, null, paging);
 	}
 
 	@Override
-	public List<StockOperation> getUserOperations(final User user, final StockOperationStatus status, final IStockOperationType stockOperationType, PagingInfo paging) {
+	public List<StockOperation> getUserOperations(final User user, final StockOperationStatus status, final IStockOperationType stockOperationType, final Item item, PagingInfo paging) {
 		if (user == null) {
 			throw new IllegalArgumentException("The user must be defined.");
 		}
@@ -143,7 +144,17 @@ public class StockOperationDataServiceImpl
 							// Types that require user approval
 							subQuery.add(Restrictions.eq(HibernateCriteriaConstants.USER, user));
 						}
-						if (status != null || stockOperationType != null) {
+						if (status != null || stockOperationType != null || item != null) {
+							if (item != null) {
+								criteria.createAlias("items", "items").add(Restrictions.and(
+									Restrictions.eq("items.item", item),
+									Restrictions.or(
+											// Transactions created by the user
+											Restrictions.eq(HibernateCriteriaConstants.CREATOR, user),
+											Property.forName(HibernateCriteriaConstants.INSTANCE_TYPE).in(subQuery)
+									)
+								));
+							}
 							if (status != null) {
 								criteria.add(Restrictions.and(
 										Restrictions.eq(HibernateCriteriaConstants.STATUS, status),

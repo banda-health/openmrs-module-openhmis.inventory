@@ -7,7 +7,9 @@ import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.commons.api.entity.model.IInstanceType;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
@@ -77,7 +79,8 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * Returns the {@link StockOperation}s with the specified status for the specified user.
 	 * @param user The {@link User}.
 	 * @param status The {@link StockOperationStatus}.
-	 * @param stockOperationType TODO
+	 * @param stockOperationType {@link IInstanceType}
+	 * @param item {@link Item}
 	 * @param paging The paging information or {@code null} to return all results.
 	 * @return The operations associated with the specified user with the specified status.
 	 * @should return all operations with the specified status for specified user
@@ -96,7 +99,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> getUserOperations(User user, StockOperationStatus status, IStockOperationType stockOperationType, PagingInfo paging);
+	List<StockOperation> getUserOperations(User user, StockOperationStatus status, IStockOperationType stockOperationType, Item item, PagingInfo paging);
 
 	/**
 	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
