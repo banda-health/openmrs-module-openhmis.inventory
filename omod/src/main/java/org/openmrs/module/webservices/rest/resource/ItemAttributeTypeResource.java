@@ -14,6 +14,7 @@
 package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.api.IItemAttributeTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -28,6 +29,6 @@ public class ItemAttributeTypeResource extends BaseRestAttributeTypeResource<Ite
 
 	@Override
 	public Class<? extends IMetadataDataService<ItemAttributeType>> getServiceClass() {
-		return null;
+		return IItemAttributeTypeDataService.class;
 	}
 }

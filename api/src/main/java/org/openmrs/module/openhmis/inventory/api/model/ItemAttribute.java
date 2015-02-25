@@ -13,12 +13,12 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleAttributeObject;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleAttributeMetadata;
 
 /**
  * A value for a user-defined {@link ItemAttributeType} that is stored on an {@link Item}.
  * @see org.openmrs.attribute.Attribute
  */
-public class ItemAttribute extends BaseSimpleAttributeObject<Item, ItemAttributeType> {
+public class ItemAttribute extends BaseSimpleAttributeMetadata<Item, ItemAttributeType> {
 	public static final long serialVersionUID = 1L;
 }

@@ -92,19 +92,19 @@ define(
 			}
 		});
 
-        openhmis.ItemAttribute = openhmis.AttributeBase.extend({
-            attributeTypeClass: openhmis.ItemAttributeType
-        });
-
         openhmis.ItemAttributeType = openhmis.AttributeTypeBase.extend({
             meta: {
                 restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType'
             }
         });
 
-		openhmis.Item = openhmis.GenericModel.extend({
-            attributeClass: openhmis.ItemAttribute,
+        openhmis.ItemAttribute = openhmis.AttributeBase.extend({
             attributeTypeClass: openhmis.ItemAttributeType,
+            attributeTypeEditor: 'ItemAttributeTypeSelect'
+        });
+
+        openhmis.Item = openhmis.CustomizableBase.extend({
+            attributeClass: openhmis.ItemAttribute,
 
             meta: {
 				name: "Item",
@@ -134,7 +134,8 @@ define(
 			},
 
 			initialize: function(attributes, options) {
-				openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
+				openhmis.CustomizableBase.prototype.initialize.call(this, attributes, options);
+
 				this.on("change:defaultPrice", function(model, defaultPrice, options) {
 					this._getDefaultPriceFromPricesIfAvailable(defaultPrice.id || defaultPrice);
 				});
