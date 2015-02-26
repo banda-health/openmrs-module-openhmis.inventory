@@ -238,6 +238,10 @@ define(
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
                 this.events['change #operationType_uuid'] = 'onFormSubmit';
+                this.events['change #item-uuid'] = 'onFormSubmit';
+
+                this.item_uuid = "";
+
                 openhmis.BaseSearchView.prototype.initialize.call(this, options);
                 var operationTypeCollection = new openhmis.GenericCollection([], { model: openhmis.OperationType });
                 operationTypeCollection.on("reset", function(collection) {
@@ -276,6 +280,7 @@ define(
                         if (this.searchFilter[filter] != "Any" && this.searchFilter[filter] !="") {
                             if (filter == "operation_item") {
                                 options.queryString = openhmis.addQueryStringParameter(options.queryString, "operationItem_uuid" + "=" + $("#item-uuid").val());
+                                this.item_uuid = $("#item-uuid").val();
                             } else {
                                 options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
                                 encodeURIComponent(this.searchFilter[filter]));
@@ -287,7 +292,12 @@ define(
                 return options;
             },
 
-            focus: function() { this.$("#q").focus(); },
+            focus: function() {
+                this.$("#q").focus();
+                if (this.item_uuid != "") {
+                	$('#item-uuid').val(this.item_uuid);
+                }
+            },
 
             commitForm: function() {
                 var filters = this.form.getValue();

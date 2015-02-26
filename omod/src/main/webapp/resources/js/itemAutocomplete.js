@@ -52,5 +52,5 @@ function selectItem(event, ui) {
     var name = ui.item.label;
 
     $('#itemSearch').val(name);
-    $('#item-uuid').val(uuid);
+    $('#item-uuid').val(uuid).trigger('change');
 }
