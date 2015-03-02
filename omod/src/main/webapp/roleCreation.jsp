@@ -36,7 +36,7 @@
 </script>
 
 <spring:hasBindErrors name="role">
-	<openmrs:message code="fix.error"/>
+	<openmrs:message code="fix.error" htmlEscape="false"/>
 	<div class="error">
 		<c:forEach items="${errors.allErrors}" var="error">
 			<openmrs:message code="${error.code}" text="${error.defaultMessage}"/><br/>
