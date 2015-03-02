@@ -518,6 +518,7 @@ define(
                     defaultExpirationDate: defaultExp,
                     expirations: this.options.options,
                     cid: this.model.cid
+
                 }));
 
                 this.$('label').labelOver('over-apply');
@@ -527,7 +528,8 @@ define(
 
                     // Turn the expiration text input into a date picker
                     entryEl.datepicker({
-                        defaultDate: defaultExp
+                        defaultDate: defaultExp,
+                        minDate:0
                     });
 
                     // Set the text to the default value, if one has been calculated
