@@ -518,7 +518,6 @@ define(
                     defaultExpirationDate: defaultExp,
                     expirations: this.options.options,
                     cid: this.model.cid
-
                 }));
 
                 this.$('label').labelOver('over-apply');
