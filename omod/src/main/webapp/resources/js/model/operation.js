@@ -354,6 +354,13 @@ define(
                             message: "The operation type " + operationType.get("name") + " requires a destination stockroom"
                         });
                     }
+                    if(operationType.get("hasSource") && operationType.get("hasDestination") &&
+                        this.get("source").id === this.get("destination").id){
+                        errors.push({
+                            selector: ".field-destination",
+                            message: "The destination and the source must be different"
+                        });
+                    }
                     if (operationType.get("hasRecipient")) {
                         var institution = this.get('institution');
                         var department = this.get('department');
