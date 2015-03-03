@@ -90,6 +90,7 @@ public class StockOperationResource
 		description.addProperty("dateCreated", Representation.DEFAULT);
 		description.addProperty("operationDate", Representation.DEFAULT);
 		description.addProperty("operationOrder", Representation.DEFAULT);
+		description.addProperty("cancelReason", Representation.DEFAULT);
 
 		if (!(rep instanceof RefRepresentation)) {
 			description.addProperty("source", Representation.REF);
@@ -186,6 +187,11 @@ public class StockOperationResource
 				operation.setStatus(status);
 			}
 		}
+	}
+
+	@PropertySetter("cancelReason")
+	public void setCancelReason(StockOperation operation, String cancelReason) {
+					operation.setCancelReason(cancelReason);
 	}
 
 	@PropertySetter(value = "items")

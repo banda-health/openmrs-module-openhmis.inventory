@@ -62,6 +62,11 @@
 		<description>Whether or not to automatically complete operations once submitted (true/false).</description>
 	</globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.showOperationCancelReason</property>
+		<description>true/false whether or not the cancel reason field should be used.</description>
+	</globalProperty>
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>

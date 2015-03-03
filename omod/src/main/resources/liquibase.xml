@@ -947,4 +947,10 @@
 			UPDATE inv_stock_operation SET operation_order = (SELECT @counter := @counter + 1) ORDER BY operation_date ASC;
 		</sql>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.3.0-4" author="Stephen Kinyori">
+		<comment>Adding the column "cancel_reason" to the table inv_stock_operation</comment>
+		<addColumn tableName="inv_stock_operation">
+			<column name="cancel_reason" type="varchar(500)"><constraints nullable="true"/></column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
