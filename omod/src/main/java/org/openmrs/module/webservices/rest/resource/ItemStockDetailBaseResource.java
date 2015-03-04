@@ -1,8 +1,13 @@
 package org.openmrs.module.webservices.rest.resource;
 
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetailBase;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+
+import java.util.Date;
 
 public abstract class ItemStockDetailBaseResource<T extends ItemStockDetailBase> extends BaseRestObjectResource<T> {
 	@Override
@@ -16,5 +21,15 @@ public abstract class ItemStockDetailBaseResource<T extends ItemStockDetailBase>
 		description.addProperty("calculatedBatch", Representation.DEFAULT);
 
 		return description;
+	}
+
+	@PropertySetter("expiration")
+	public void setExpiration(ItemStockDetailBase instance, String dateText) {
+		Date date = Utility.parseOpenhmisDateString(dateText);
+		if (date == null) {
+			throw new IllegalArgumentException("Could not parse '" + dateText + "' as a date.");
+		}
+
+		instance.setExpiration(date);
 	}
 }

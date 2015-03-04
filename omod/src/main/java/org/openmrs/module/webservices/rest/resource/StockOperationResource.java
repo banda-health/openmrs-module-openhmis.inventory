@@ -134,16 +134,21 @@ public class StockOperationResource
 		StockOperation result;
 
 		// If the status has changed, submit the operation
-		if (submitRequired) {
-			result = operationService.submitOperation(operation);
-		} else if (rollbackRequired) {
-			if (!userCanRollback(operation)) {
-				throw new RestClientException("The current user not authorized to rollback this operation.");
-			}
+		try {
+			if (submitRequired) {
+				result = operationService.submitOperation(operation);
+			} else if (rollbackRequired) {
+				if (!userCanRollback(operation)) {
+					throw new RestClientException("The current user not authorized to rollback this operation.");
+				}
 
-			result = operationService.rollbackOperation(operation);
-		} else {
-			result = super.save(operation);
+				result = operationService.rollbackOperation(operation);
+			} else {
+				result = super.save(operation);
+			}
+		} finally {
+			submitRequired = false;
+			rollbackRequired = false;
 		}
 
 		return result;

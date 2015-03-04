@@ -2826,6 +2826,76 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		service.rollbackOperation(null);
 	}
 
+	@Test
+	public void submitOperation_shouldUseItemStockWithSpecifiedExpiration() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoCompleteOperations(true);
+		ModuleSettings.saveSettings(settings);
+
+		Stockroom source = stockroomService.getById(0);
+		Stockroom dest = stockroomService.getById(1);
+
+		Item newItem = itemTest.createEntity(true);
+		newItem.setHasExpiration(true);
+		itemService.save(newItem);
+		Context.flushSession();
+
+		StockOperation op1 = new StockOperation();
+		op1.setInstanceType(WellKnownOperationTypes.getReceipt());
+		op1.setStatus(StockOperationStatus.NEW);
+		op1.setDestination(source);
+		op1.setOperationNumber("A123-1");
+		op1.setOperationDate(new Date());
+
+		Calendar exp = Calendar.getInstance();
+		exp.add(Calendar.YEAR, 1);
+		op1.addItem(newItem, 25, exp.getTime());
+
+		op1 = service.submitOperation(op1);
+		Context.flushSession();
+
+		ItemStock stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(25, stock.getQuantity());
+		Assert.assertEquals(1, stock.getDetails().size());
+		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(exp.getTime(), detail.getExpiration());
+		Assert.assertEquals(25, (long)detail.getQuantity());
+
+		StockOperation op2 = new StockOperation();
+		op2.setInstanceType(WellKnownOperationTypes.getTransfer());
+		op2.setStatus(StockOperationStatus.NEW);
+		op2.setSource(source);
+		op2.setDestination(dest);
+		op2.setOperationNumber("A123-2");
+		op2.setOperationDate(new Date());
+
+		op2.addItem(newItem, 10, exp.getTime());
+
+		op2 = service.submitOperation(op2);
+		Context.flushSession();
+
+
+		stock = stockroomService.getItem(source, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(15, stock.getQuantity());
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(exp.getTime(), detail.getExpiration());
+		Assert.assertEquals(15, (long)detail.getQuantity());
+
+		stock = stockroomService.getItem(dest, newItem);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(10, stock.getQuantity());
+		Assert.assertEquals(1, stock.getDetails().size());
+		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(exp.getTime(), detail.getExpiration());
+		Assert.assertEquals(10, (long)detail.getQuantity());
+	}
+
 	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions, final Item item) {
 		return Iterators.find(transactions.iterator(), new Predicate<StockOperationTransaction>() {
 			@Override

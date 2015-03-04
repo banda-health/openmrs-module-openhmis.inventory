@@ -722,7 +722,7 @@ public class StockOperationServiceImpl
 			@Override
 			public boolean apply(ItemStockDetail detail) {
 				return (detail.getExpiration() == null && date == null) ||
-						(detail.getExpiration() != null && detail.getExpiration().equals(date));
+						(detail.getExpiration() != null && detail.getExpiration().compareTo(date) == 0);
 			}
 		}));
 

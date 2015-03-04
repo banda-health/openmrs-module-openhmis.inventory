@@ -554,7 +554,8 @@ define(
                     try {
                         var date = new Date(selected);
                         if (!isNaN(date.getTime())) {
-                            selected = date;
+                            selected = openhmis.dateFormat(date);
+                            //selected = date;
                         }
                     } catch(err) {
                         //selected = undefined;
