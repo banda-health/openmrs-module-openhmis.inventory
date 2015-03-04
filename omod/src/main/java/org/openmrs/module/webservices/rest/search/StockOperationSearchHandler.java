@@ -13,8 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.search;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;

@@ -16,4 +16,7 @@
     <spring:message code="openhmis.inventory.admin.stockrooms" />
 </h2>
 
+<div id="itemDetailsDialog" style="display: none">
+</div>
+
 <%@ include file="/WEB-INF/template/footer.jsp" %>

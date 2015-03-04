@@ -520,7 +520,8 @@ define(
 
                     // Turn the expiration text input into a date picker
                     entryEl.datepicker({
-                        defaultDate: defaultExp
+                        defaultDate: defaultExp,
+                        minDate:0
                     });
 
                     // Set the text to the default value, if one has been calculated

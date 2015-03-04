@@ -17,7 +17,8 @@ define(
 		openhmis.url.backboneBase + 'js/lib/underscore',
 		openhmis.url.backboneBase + 'js/lib/backbone',
 		openhmis.url.backboneBase + 'js/lib/i18n',
-		openhmis.url.backboneBase + 'js/view/search'
+		openhmis.url.backboneBase + 'js/view/search',
+		'js!' + openhmis.url.inventoryBase + 'js/itemAutocomplete.js'
 	],
 	function($, _, Backbone, __, openhmis) {
 		openhmis.DepartmentAndNameSearchView = openhmis.BaseSearchView.extend(
@@ -229,14 +230,18 @@ define(
 		});
 
         openhmis.OperationSearchByStatus = openhmis.BaseSearchView.extend({
-            tmplFile: openhmis.url.backboneBase + 'template/search.html',
-            tmplSelector: '#generic-search',
+            tmplFile: openhmis.url.inventoryBase + 'template/search.html',
+            tmplSelector: '#operation-search',
 
             STATUSES: ["Any", "Pending", "Completed", "Cancelled", "Rollback"],
 
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
                 this.events['change #operationType_uuid'] = 'onFormSubmit';
+                this.events['change #item-uuid'] = 'onFormSubmit';
+
+                this.item_uuid = "";
+
                 openhmis.BaseSearchView.prototype.initialize.call(this, options);
                 var operationTypeCollection = new openhmis.GenericCollection([], { model: openhmis.OperationType });
                 operationTypeCollection.on("reset", function(collection) {
@@ -251,10 +256,15 @@ define(
                             options: this.STATUSES
                         },
                         operationType_uuid: {
-                            title: __("OperationType"),
+                            title: __("Operation Type"),
                             type: "Select",
                             options: operationTypeCollection
                         },
+                        operation_item: {
+                            title: __("Item"),
+                            type: "Text",
+                            editorClass: "search"
+                        }
                     }
                 });
 
@@ -267,9 +277,14 @@ define(
                 options = options ? options : {};
                 if (this.searchFilter) {
                     for (var filter in this.searchFilter) {
-                        if (this.searchFilter[filter] != "Any") {
-                            options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
+                        if (this.searchFilter[filter] != "Any" && this.searchFilter[filter] !="") {
+                            if (filter == "operation_item") {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, "operationItem_uuid" + "=" + $("#item-uuid").val());
+                                this.item_uuid = $("#item-uuid").val();
+                            } else {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
                                 encodeURIComponent(this.searchFilter[filter]));
+                            }
                         }
                     }
                 }
@@ -277,7 +292,12 @@ define(
                 return options;
             },
 
-            focus: function() { this.$("#q").focus(); },
+            focus: function() {
+                this.$("#q").focus();
+                if (this.item_uuid != "") {
+                	$('#item-uuid').val(this.item_uuid);
+                }
+            },
 
             commitForm: function() {
                 var filters = this.form.getValue();
@@ -299,7 +319,15 @@ define(
 
                 this.$("form").addClass("inline");
                 this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
-
+                this.$("#operation_item").autocomplete({
+                    minLength: 2,
+                    source: doSearch,
+                    select: selectItem
+                })
+                .data("autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>").data("item.autocomplete", item)
+                    .append("<a>" + item.label + "</a>").appendTo(ul);
+                };
                 return this;
             }
         });

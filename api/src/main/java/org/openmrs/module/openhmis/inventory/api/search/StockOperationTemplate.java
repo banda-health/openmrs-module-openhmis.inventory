@@ -13,9 +13,13 @@
  */
 package org.openmrs.module.openhmis.inventory.api.search;
 
+import java.util.Set;
+
 import org.openmrs.Patient;
 import org.openmrs.module.openhmis.inventory.api.model.Institution;
+import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
 public class StockOperationTemplate extends StockOperation {
@@ -34,8 +38,26 @@ public class StockOperationTemplate extends StockOperation {
 		this.patient = newPatient;
 	}
 
-    @Override
-    public void setInstitution(Institution newInstitution) {
-        this.institution = newInstitution;
-    }
+	@Override
+	public void setInstitution(Institution newInstitution) {
+		this.institution = newInstitution;
+	}
+
+	public void setItem(Item item) {
+		addItem(item, 0);
+	}
+
+	public Item getItem() {
+		Set<StockOperationItem> items = getItems();
+		Item item = null;
+		if (items != null && items.size() > 0) {
+			for (StockOperationItem stockOperationItem : items) {
+				item = stockOperationItem.getItem();
+				break;
+			}
+		}
+		return item;
+	}
+
+
 }

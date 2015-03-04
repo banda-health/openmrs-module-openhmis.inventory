@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.User;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.Utility;
@@ -32,6 +31,7 @@ import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
 import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
+import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
@@ -43,6 +43,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeTy
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
+import org.openmrs.module.openhmis.inventory.api.search.StockOperationTemplate;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -64,15 +65,15 @@ public class StockOperationResource
 	private static final Log LOG = LogFactory.getLog(StockOperationResource.class);
 
 	private IStockOperationService operationService;
-	private AdministrationService administrationService;
 	private IStockOperationTypeDataService stockOperationTypeDataService;
+	private IItemDataService itemDataService;
 	private boolean submitRequired = false;
 	private boolean rollbackRequired = false;
 
 	public StockOperationResource() {
 		this.operationService = Context.getService(IStockOperationService.class);
-		this.administrationService = Context.getAdministrationService();
 		this.stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
+		this.itemDataService = Context.getService(IItemDataService.class);
 	}
 
 	@Override
@@ -253,8 +254,9 @@ public class StockOperationResource
 		} else {
 			String status = context.getParameter("operation_status");
 			String operationTypeUuid = context.getParameter("operationType_uuid");
-			if (status != null || operationTypeUuid != null) {
-				result = getOperationsByStatusOrOperationType(context);
+			String operationItemUuid = context.getParameter("operationItem_uuid");
+			if (status != null || operationTypeUuid != null || operationItemUuid != null) {
+				result = getOperationsByContextParams(context);
 			} else {
 				result = super.doSearch(context);
 			}
@@ -273,51 +275,47 @@ public class StockOperationResource
 
 		StockOperationStatus status = getStatus(context);
 		IStockOperationType stockOperationType = getStockOperationType(context);
+		Item item = getItem(context);
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 		List<StockOperation> results;
-		if (status == null && stockOperationType == null) {
+		if (status == null && stockOperationType == null && item == null) {
 			results = ((IStockOperationDataService)getService()).getUserOperations(user, pagingInfo);
 		} else {
-			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, stockOperationType, pagingInfo);
+			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, stockOperationType, item, pagingInfo);
 		}
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(),
 				pagingInfo.getTotalRecordCount());
 	}
 
-	protected PageableResult getOperationsByStatusOrOperationType(RequestContext context) {
+	protected PageableResult getOperationsByContextParams(RequestContext context) {
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		StockOperationStatus status = getStatus(context);
 		IStockOperationType stockOperationType = getStockOperationType(context);
+		Item item = getItem(context);
 
 		List<StockOperation> results;
-		if (status == null && stockOperationType == null) {
+		if (status == null && stockOperationType == null && item == null) {
 			results = getService().getAll(context.getIncludeAll(), pagingInfo);
 		} else {
 			StockOperationSearch search = new StockOperationSearch();
-			search.getTemplate().setStatus(status);
-			search.getTemplate().setInstanceType(stockOperationType);
+			StockOperationTemplate template = search.getTemplate();
+			if (status != null) {
+				template.setStatus(status);
+			}
+			if (stockOperationType != null) {
+				template.setInstanceType(stockOperationType);
+			}
+			if (item != null) {
+				template.setItem(item);
+			}
 
 			results = ((IStockOperationDataService)getService()).getOperations(search, pagingInfo);
 		}
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(),
 				pagingInfo.getTotalRecordCount());
-	}
-
-	private IStockOperationType getStockOperationType(RequestContext context) {
-		IStockOperationType stockOperationType = null;
-		String stockOperationUuid = context.getParameter("operationType_uuid");
-		if (StringUtils.isNotEmpty(stockOperationUuid)) {
-			stockOperationType = stockOperationTypeDataService.getByUuid(stockOperationUuid);
-			if (stockOperationType == null) {
-				LOG.warn("Could not parse Stock Operation Type '" + stockOperationUuid + "'");
-				throw new IllegalArgumentException("The status '" + stockOperationUuid + "' is not a valid operation type.");
-			}
-		}
-
-		return stockOperationType;
 	}
 
 	protected StockOperationStatus getStatus(RequestContext context) {
@@ -333,6 +331,33 @@ public class StockOperationResource
 		}
 
 		return status;
+	}
+
+	private IStockOperationType getStockOperationType(RequestContext context) {
+		IStockOperationType stockOperationType = null;
+		String stockOperationTypeUuid = context.getParameter("operationType_uuid");
+		if (StringUtils.isNotEmpty(stockOperationTypeUuid)) {
+			stockOperationType = stockOperationTypeDataService.getByUuid(stockOperationTypeUuid);
+			if (stockOperationType == null) {
+				LOG.warn("Could not parse Stock Operation Type '" + stockOperationTypeUuid + "'");
+				throw new IllegalArgumentException("The type '" + stockOperationTypeUuid + "' is not a valid operation type.");
+			}
+		}
+
+		return stockOperationType;
+	}
+
+	private Item getItem(RequestContext context) {
+		Item item = null;
+		String stockOperationItemUuid = context.getParameter("operationItem_uuid");
+		if (StringUtils.isNotEmpty(stockOperationItemUuid)) {
+			item = itemDataService.getByUuid(stockOperationItemUuid);
+			if (item == null) {
+				LOG.warn("Could not parse Item '" + stockOperationItemUuid + "'");
+				throw new IllegalArgumentException("The item '" + stockOperationItemUuid + "' is not a valid operation type.");
+			}
+		}
+		return item;
 	}
 
 	private void processItemStock(StockOperation operation, Set<StockOperationItem> items) {

@@ -111,3 +111,24 @@
         /><label for="showRetired"><?= __("Show " + strRetiredOrVoided) ?></label></span><? } ?>
     </div>
 </script>
+
+<script id="item-detail-template" type="text/template">
+    <table id="itemDetailsTable" class="display" width="100%">
+        <thead>
+            <tr>
+                <th class="field-batchOperation">
+                    Batch Operation
+                </th>
+                <th class="field-expiration">
+                    Expiration
+                </th>
+                <th class="field-quantity">
+                    Quantity
+                </th>
+            </tr>
+        </thead>
+        <tbody class="list">
+            <?= details ?>
+        </tbody>
+    </table>
+</script>
