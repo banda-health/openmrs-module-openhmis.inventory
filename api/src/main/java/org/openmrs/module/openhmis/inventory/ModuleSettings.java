@@ -16,6 +16,7 @@ public class ModuleSettings {
 	public static final String STOCKROOM_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockroom";
 	public static final String EXPIRING_STOCK_REPORT_ID_PROPERTY = "openhmis.inventory.reports.expiringStock";
 	public static final String AUTO_COMPLETE_OPERATIONS_PROPERTY = "openhmis.inventory.autoCompleteOperations";
+	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
 
 	public static boolean generateOperationNumber() {
 		return generateOperationNumber(Context.getAdministrationService());
@@ -25,10 +26,16 @@ public class ModuleSettings {
 		String property = adminService.getGlobalProperty(AUTO_GENERATE_OPERATION_NUMBER_PROPERTY);
 		return Boolean.parseBoolean(property);
 	}
-	
+
 	public static boolean isOperationAutoCompleted() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
+		return Boolean.parseBoolean(property);
+	}
+
+	public static boolean showOperationCancelReasonField() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(SHOW_OPERATATION_CANCEL_REASEON_FIELD);
 		return Boolean.parseBoolean(property);
 	}
 	

@@ -40,6 +40,7 @@ public class StockOperation
 	protected Patient patient;
 	protected Institution institution;
 	protected Department department;
+	private String cancelReason;
 
 	@Override
 	public Integer getId() {
@@ -108,6 +109,7 @@ public class StockOperation
 		return destination;
 	}
 
+
 	public void setDestination(Stockroom newDestination) {
 		if (this.destination == newDestination) {
 			return;
@@ -147,6 +149,14 @@ public class StockOperation
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public String getCancelReason() {
+		return cancelReason;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
 	}
 
 	public StockOperationItem addItem(Item item, int quantity) {
