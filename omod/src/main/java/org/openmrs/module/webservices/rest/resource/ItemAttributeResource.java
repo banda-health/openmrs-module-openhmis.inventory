@@ -15,16 +15,21 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
+import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 
 @Resource(name = ModuleRestConstants.ITEM_ATTRIBUTE_RESOURCE, supportedClass = ItemAttribute.class,
 		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
-public class ItemAttributeResource extends BaseRestAttributeObjectResource<ItemAttribute> {
-
+public class ItemAttributeResource extends BaseRestAttributeObjectResource<ItemAttribute, ItemAttributeType> {
 	@Override
 	public ItemAttribute newDelegate() {
 		return new ItemAttribute();
+	}
+
+	@Override
+	public void setAttributeType(ItemAttribute instance, ItemAttributeType attributeType) {
+		super.setAttributeType(instance, attributeType);
 	}
 
 	@Override
