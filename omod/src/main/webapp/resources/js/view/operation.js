@@ -189,13 +189,12 @@ define(
             updateStatus: function(status) {
                 var self = this;
                 // Post the status change using the raw ajax request. This just sends up the changed property, status.
-               var data='{"status":"' + status+'"';
+                var data='{"status":"' + status+'"';
                 if (this.model.cancelReason) {
-                    data += ', "cancelReason": "'+ this.model.cancelReason + '"}';
+                data += ', "cancelReason": "'+ this.model.cancelReason + '"}';
                 } else {
-                    data += '}';
+                data += '}';
                 }
-                console.log(data);
                     $.ajax({
                         type: 'POST',
                         url: this.model.url(),
@@ -217,7 +216,6 @@ define(
                     });
 
             },
-
             getAttributeValue: function(model, name) {
                 for (i in model.get('attributes')) {
                     var attribute = model.get('attributes')[i];
