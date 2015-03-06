@@ -12,7 +12,7 @@
 <%@ include file="template/localHeader.jsp"%>
 
 <input type=hidden class="isOperationAutoCompleted" value="${isOperationAutoCompleted}"/>
-
+<input type="hidden" class="showOperationCancelReasonField" id="showOperationCancelReasonField" value="${showOperationCancelReasonField}">
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/operations.css" %>' />
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "js/screen/inventory.js" %>' />
 

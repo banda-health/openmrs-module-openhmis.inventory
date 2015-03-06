@@ -102,6 +102,7 @@ define(
                 this.schema.operation = { type: 'NestedModel', model: openhmis.Operation, objRef: true };
                 this.schema.item = { type: 'NestedModel', model: openhmis.Item, objRef: true };
 			    this.schema.quantity = { type: 'BasicNumber' };
+                this.schema.cancelReason = {type: 'Text'},
 			    this.schema.expiration = { type: 'Date', format: openhmis.dateFormatLocale };
 			    this.schema.dateCreated = { type: 'Date', format: openhmis.dateTimeFormatLocale };
 			    this.schema.batchOperation = { type: 'NestedModel', model: openhmis.Operation, objRef: true };

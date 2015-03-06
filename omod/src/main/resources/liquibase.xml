@@ -955,4 +955,10 @@
 		<dropColumn  columnName="category_id" tableName="inv_item"/>
 		<dropTable tableName="inv_category" />
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.3.0-4" author="Stephen Kinyori">
+		<comment>Adding the column "cancel_reason" to the table inv_stock_operation</comment>
+		<addColumn tableName="inv_stock_operation">
+			<column name="cancel_reason" type="varchar(500)"><constraints nullable="true"/></column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

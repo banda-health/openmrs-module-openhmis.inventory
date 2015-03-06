@@ -103,9 +103,19 @@ define(
 
             cancelOperation: function() {
                 // TODO: Ensure that the current user can cancel the operation
-
+                if ($('#showOperationCancelReasonField').val() !== 'true') {
+                    // Post the status change and then reload the model
+                    this.updateStatus("CANCELLED");
+                } else {
+                    this.model.cancelReason = prompt(("Please enter your cancel reason * (REQUIRED)"));
+                    if (this.model.cancelReason == null || this.model.cancelReason == "") {
+                        alert("Please specify your Operation cancel reason");
+                    } else {
                 // Post the status change and then reload the model
                 this.updateStatus("CANCELLED");
+                    }
+                }
+
             },
 
             rollbackOperation: function() {
@@ -182,10 +192,16 @@ define(
                 var self = this;
 
                 // Post the status change using the raw ajax request. This just sends up the changed property, status.
+                var data = '{"status":"' + status + '"';
+                if (this.model.cancelReason) {
+                    data += ', "cancelReason": "' + this.model.cancelReason + '"}';
+                } else {
+                    data += '}';
+                }
                 $.ajax({
                     type: 'POST',
                     url: this.model.url(),
-                    data: '{"status":"' + status + '"}',
+                        data: data,
                     success: function(data) {
                         // Fetch the updated model
                         self.model.fetch({
