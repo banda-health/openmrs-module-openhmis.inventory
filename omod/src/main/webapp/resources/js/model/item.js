@@ -223,7 +223,9 @@ define(
 			},
 
 			parse: function(resp) {
-				if (resp) {
+                openhmis.CustomizableBase.prototype.parse.call(this, resp);
+
+                if (resp) {
 					if (resp.department && _.isObject(resp.department)) {
 						resp.department = new openhmis.Department(resp.department);
 					}

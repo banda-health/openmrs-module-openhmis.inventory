@@ -524,8 +524,6 @@ define(
                         this.patientView.render();
                     }
 
-                    patientSearch.hide();patientSearch.hide();patientSearch.hide();
-
                     if (this.currentOperationType.get('hasRecipient')) {
                         this.$("#find-patient").show();
                         this.$patientSearch.prop('disabled', false);
