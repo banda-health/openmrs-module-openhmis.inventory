@@ -189,11 +189,6 @@ public class StockOperationResource
 		}
 	}
 
-	@PropertySetter("cancelReason")
-	public void setCancelReason(StockOperation operation, String cancelReason) {
-					operation.setCancelReason(cancelReason);
-	}
-
 	@PropertySetter(value = "items")
 	public void setItems(final StockOperation operation, Set<StockOperationItem> items) {
 		if (operation.getItems() == null) {
