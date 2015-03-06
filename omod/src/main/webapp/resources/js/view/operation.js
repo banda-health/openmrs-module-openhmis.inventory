@@ -189,31 +189,16 @@ define(
             updateStatus: function(status) {
                 var self = this;
                 // Post the status change using the raw ajax request. This just sends up the changed property, status.
+               var cancelReason;
                 if (this.model.cancelReason) {
-                    $.ajax({
-                        type: 'POST',
-                        url: this.model.url(),
-                        data: '{"status":"' + status + '","cancelReason":"' + this.model.cancelReason + '"}',
-                        success: function(data) {
-                            // Fetch the updated model
-                            self.model.fetch({
-                                success: function() {
-                                    // Once the fetch is complete, sync the changes back to the list and close this edit view
-                                    self.model.trigger("sync");
-
-                                    self.cancel();
-                                }
-                            });
-                        },
-                        error: function(model, resp) { openhmis.error(model, resp); },
-                        contentType: "application/json",
-                        dataType: 'json'
-                    });
+                    cancelReason = this.model.cancelReason;
                 } else {
+                    cancelReason = null;
+                }
                     $.ajax({
                         type: 'POST',
                         url: this.model.url(),
-                        data: '{"status":"' + status + '"}',
+                        data: '{"status":"' + status + '","cancelReason":"' + cancelReason + '"}',
                         success: function(data) {
                             // Fetch the updated model
                             self.model.fetch({
@@ -229,7 +214,6 @@ define(
                         contentType: "application/json",
                         dataType: 'json'
                     });
-                }
 
             },
 
