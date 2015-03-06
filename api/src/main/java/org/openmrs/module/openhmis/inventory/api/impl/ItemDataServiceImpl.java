@@ -25,6 +25,7 @@ import org.openmrs.Concept;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
@@ -38,7 +39,7 @@ import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public class ItemDataServiceImpl extends BaseMetadataDataServiceImpl<Item>
+public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl<Item>
 		implements IItemDataService, IMetadataAuthorizationPrivileges {
 
 	private static final int MAX_ITEM_CODE_LENGTH = 255;

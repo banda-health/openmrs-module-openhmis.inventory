@@ -13,23 +13,11 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
-import org.openmrs.attribute.BaseAttributeType;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleAttributeType;
 
 /**
  * A user-defined extension to the {@link Item} class.
  */
-public class ItemAttributeType extends BaseAttributeType<Item> {
-	public static final long serialVersionUID = 0L;
-
-	private Integer itemAttributeTypeId;
-
-	@Override
-	public Integer getId() {
-		return this.itemAttributeTypeId;
-	}
-
-	@Override
-	public void setId(Integer id) {
-		this.itemAttributeTypeId = id;
-	}
+public class ItemAttributeType extends BaseSimpleAttributeType {
+	public static final long serialVersionUID = 1L;
 }

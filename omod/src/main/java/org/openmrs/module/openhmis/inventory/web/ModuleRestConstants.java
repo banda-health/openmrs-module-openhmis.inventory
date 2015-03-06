@@ -31,6 +31,8 @@ public class ModuleRestConstants extends ModuleWebConstants {
 	public static final String ITEM_STOCK_RESOURCE = MODULE_REST_ROOT + "itemStock";
 	public static final String ITEM_STOCK_DETAIL_RESOURCE = MODULE_REST_ROOT + "itemStockDetail";
 	public static final String ITEM_STOCK_ENTRY_RESOURCE = MODULE_REST_ROOT + "itemStockEntry";
+	public static final String ITEM_ATTRIBUTE_RESOURCE = MODULE_REST_ROOT + "itemAttribute";
+	public static final String ITEM_ATTRIBUTE_TYPE_RESOURCE = MODULE_REST_ROOT + "itemAttributeType";
 
 	public static final String OPERATION_RESOURCE = MODULE_REST_ROOT + "stockOperation";
 	public static final String OPERATION_TYPE_RESOURCE = MODULE_REST_ROOT + "stockOperationType";

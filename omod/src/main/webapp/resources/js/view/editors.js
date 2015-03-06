@@ -79,6 +79,11 @@ define(
             displayAttr: "operationNumber"
         });
 
+        editors.ItemAttributeTypeSelect = editors.GenericModelSelect.extend({
+            modelType: openhmis.ItemAttributeType,
+            displayAttr: "name"
+        });
+
         editors.DefaultExpirationPeriodStepper = editors.Base.extend({
             tagName: "span",
             className: "editor",

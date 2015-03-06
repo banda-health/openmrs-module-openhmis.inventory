@@ -30,3 +30,4 @@ public class ItemsController {
 		model.addAttribute("modelBase", "openhmis.inventory.item");
 	}
 }
+

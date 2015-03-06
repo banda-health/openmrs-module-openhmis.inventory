@@ -13,8 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import java.util.List;
-
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
@@ -33,7 +31,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 @Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=IStockOperationType.class,
 		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
 public class StockOperationTypeResource
-		extends BaseRestInstanceTypeResource<IStockOperationType, StockOperation, StockOperationAttributeType, StockOperationAttribute> {
+		extends BaseRestInstanceTypeResource<IStockOperationType, StockOperationAttributeType> {
 	@Override
 	public StockOperationTypeBase newDelegate() {
 		return null;

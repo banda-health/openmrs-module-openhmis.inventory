@@ -1,7 +1,9 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.module.openhmis.commons.api.entity.model.IAttributeType;
 import org.openmrs.module.openhmis.commons.api.entity.model.IInstanceAttributeType;
+import org.openmrs.module.openhmis.inventory.api.IItemAttributeTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class OperationTypeAttributeFragmentController extends AttributeFragmentC
 	}
 
 	@Override
-	protected List<? extends IInstanceAttributeType<?>> getAttributeTypes(HttpServletRequest request) {
+	protected List<? extends IAttributeType> getAttributeTypes(HttpServletRequest request) {
 		String uuid = request.getParameter("uuid");
 		if (StringUtils.isEmpty(uuid)) {
 			throw new IllegalArgumentException("The uuid for the operation type must be defined.");
@@ -39,3 +41,4 @@ public class OperationTypeAttributeFragmentController extends AttributeFragmentC
 		return type.getAttributeTypes();
 	}
 }
+

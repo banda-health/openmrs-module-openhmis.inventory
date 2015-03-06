@@ -955,4 +955,70 @@
 		<dropColumn  columnName="category_id" tableName="inv_item"/>
 		<dropTable tableName="inv_category" />
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.5.0-2" author="ibewes">
+		<dropTable tableName="inv_item_attribute" />
+		<dropTable tableName="inv_item_attribute_type" />
+
+		<createTable tableName="inv_item_attribute_type">
+			<column name="item_attribute_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="name" type="varchar(255)"><constraints nullable="false" /></column>
+			<column name="description" type="varchar(1024)" />
+			<column name="attribute_order" type="int"><constraints nullable="false"/></column>
+			<column name="foreignKey" type="int" />
+			<column name="format" type="varchar(255)" />
+			<column name="reg_exp" type="varchar(255)" />
+			<column name="required" type="BOOLEAN" defaultValueBoolean="false" />
+
+			<column name="creator" type="int"><constraints nullable="false" /></column>
+			<column name="date_created" type="datetime"><constraints nullable="false" /></column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="boolean" defaultValueBoolean="false"><constraints nullable="false" /></column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_item_attribute">
+			<column name="item_attribute_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="item_id" type="int"><constraints nullable="false" /></column>
+			<column name="item_attribute_type_id" type="int"><constraints nullable="false" /></column>
+			<column name="value_reference" type="text"><constraints nullable="false" /></column>
+
+			<column name="creator" type="int"><constraints nullable="false" /></column>
+			<column name="date_created" type="datetime"><constraints nullable="false" /></column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="boolean" defaultValueBoolean="false"><constraints nullable="false" /></column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="inv_item_attribute_type_creator_fk"
+								 baseTableName="inv_item_attribute_type" baseColumnNames="creator"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_type_changed_by_fk"
+								 baseTableName="inv_item_attribute_type" baseColumnNames="changed_by"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="cinv_item_attribute_type_retired_by_fk"
+								 baseTableName="inv_item_attribute_type" baseColumnNames="retired_by"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_item_attribute_item_id_fk"
+								 baseTableName="inv_item_attribute" baseColumnNames="item_id"
+								 referencedTableName="inv_item" referencedColumnNames="item_id"
+								 onDelete="CASCADE" onUpdate="CASCADE"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_inv_item_attribute_type_id_fk"
+								 baseTableName="inv_item_attribute" baseColumnNames="item_attribute_type_id"
+								 referencedTableName="inv_item_attribute_type" referencedColumnNames="item_attribute_type_id"/>
+	</changeSet>
 </databaseChangeLog>

@@ -15,9 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.openmrs.BaseCustomizableMetadata;
 import org.openmrs.Concept;
-import org.openmrs.customdatatype.Customizable;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleCustomizableMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.ISimpleCustomizable;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -26,8 +26,9 @@ import java.util.Set;
 /**
  * Model class that represents a product or service.
  */
-public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
-	public static final long serialVersionUID = 0L;
+public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute>
+		implements ISimpleCustomizable<ItemAttribute> {
+	public static final long serialVersionUID = 1L;
 
 	private Integer itemId;
 	private Set<ItemCode> codes;
@@ -42,8 +43,7 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 	private Boolean conceptAccepted;
 	private BigDecimal buyingPrice;
 
-	public Item() {
-	}
+	public Item() {}
 
 	public Item(Integer itemId) {
 		this.itemId = itemId;

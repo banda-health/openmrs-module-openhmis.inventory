@@ -17,11 +17,11 @@ define(
 		openhmis.url.backboneBase + 'js/lib/underscore',
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
+        openhmis.url.backboneBase + 'js/model/openhmis',
 		openhmis.url.inventoryBase + 'js/model/department',
         openhmis.url.backboneBase + 'js/model/concept'
 	],
 	function(_, openhmis, __) {
-
 		openhmis.ItemCode = openhmis.GenericModel.extend({
 			meta: {
 				name: "Item Code",
@@ -94,9 +94,21 @@ define(
 			}
 		});
 
+        openhmis.ItemAttributeType = openhmis.AttributeTypeBase.extend({
+            meta: {
+                restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType'
+            }
+        });
 
-		openhmis.Item = openhmis.GenericModel.extend({
-			meta: {
+        openhmis.ItemAttribute = openhmis.AttributeBase.extend({
+            attributeTypeClass: openhmis.ItemAttributeType,
+            attributeTypeEditor: 'ItemAttributeTypeSelect'
+        });
+
+        openhmis.Item = openhmis.CustomizableBase.extend({
+            attributeClass: openhmis.ItemAttribute,
+
+            meta: {
 				name: "Item",
 				namePlural: "Items",
 				openmrsType: 'metadata',
@@ -125,7 +137,8 @@ define(
 			},
 
 			initialize: function(attributes, options) {
-				openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
+				openhmis.CustomizableBase.prototype.initialize.call(this, attributes, options);
+
 				this.on("change:defaultPrice", function(model, defaultPrice, options) {
 					this._getDefaultPriceFromPricesIfAvailable(defaultPrice.id || defaultPrice);
 				});
@@ -213,7 +226,9 @@ define(
 			},
 
 			parse: function(resp) {
-				if (resp) {
+                openhmis.CustomizableBase.prototype.parse.call(this, resp);
+
+                if (resp) {
 					if (resp.department && _.isObject(resp.department)) {
 						resp.department = new openhmis.Department(resp.department);
 					}

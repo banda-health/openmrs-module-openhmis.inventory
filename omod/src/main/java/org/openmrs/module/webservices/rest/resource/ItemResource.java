@@ -24,6 +24,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
+import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -38,11 +40,12 @@ import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Resource(name = ModuleRestConstants.ITEM_RESOURCE, supportedClass = Item.class,
-		supportedOpenmrsVersions = { "1.9.*", "1.10.*" })
-public class ItemResource extends BaseRestMetadataResource<Item> {
+		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
+public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Item, ItemAttribute> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
@@ -125,6 +128,12 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 	}
 
 	@Override
+	@PropertySetter("attributes")
+	public void setAttributes(Item instance, List<ItemAttribute> attributes) {
+		super.setAttributes(instance, attributes);
+	}
+
+	@Override
 	public Item newDelegate() {
 		return new Item();
 	}
@@ -169,3 +178,4 @@ public class ItemResource extends BaseRestMetadataResource<Item> {
 		return false;
 	}
 }
+

@@ -26,6 +26,9 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String ITEMS_ROOT = MODULE_ROOT + "items";
 	public static final String ITEMS_PAGE = ITEMS_ROOT + ".form";
 
+	public static final String ITEM_ATTRIBUTE_TYPES_ROOT = MODULE_ROOT + "itemAttributeTypes";
+	public static final String ITEM_ATTRIBUTE_TYPES_PAGE = ITEM_ATTRIBUTE_TYPES_ROOT + ".form";
+
 	public static final String ITEM_CONCEPT_SUGGESTION_ROOT = MODULE_ROOT + "itemConceptSuggestion";
     public static final String ITEM_CONCEPT_SUGGESTION_PAGE = ITEM_CONCEPT_SUGGESTION_ROOT + ".form";
 
