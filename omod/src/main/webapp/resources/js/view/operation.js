@@ -189,10 +189,11 @@ define(
             updateStatus: function(status) {
                 var self = this;
                 // Post the status change using the raw ajax request. This just sends up the changed property, status.
-               var data='{"status":"' + status+'"';if (this.model.cancelReason) {
+               var data='{"status":"' + status+'"';
+                if (this.model.cancelReason) {
                     data += ', "cancelReason": "'+ this.model.cancelReason + '"}';
                 } else {
-                    data += ', "cancelReason": "null"}';
+                    data += '}';
                 }
                 console.log(data);
                     $.ajax({
