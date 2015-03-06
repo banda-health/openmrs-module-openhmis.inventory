@@ -103,7 +103,7 @@ define(
 
             cancelOperation: function() {
                 // TODO: Ensure that the current user can cancel the operation
-                if ($('#showOperationCancelReasonField').val() === 'false') {
+                if ($('#showOperationCancelReasonField').val() !== 'true') {
                     // Post the status change and then reload the model
                     this.updateStatus("CANCELLED");
                 } else {
@@ -188,27 +188,49 @@ define(
 
             updateStatus: function(status) {
                 var self = this;
-
                 // Post the status change using the raw ajax request. This just sends up the changed property, status.
-                $.ajax({
-                    type: 'POST',
-                    url: this.model.url(),
-                    data: '{"status":"' + status + '","cancelReason":"' + this.model.cancelReason + '"}',
-                    success: function(data) {
-                        // Fetch the updated model
-                        self.model.fetch({
-                            success: function() {
-                                // Once the fetch is complete, sync the changes back to the list and close this edit view
-                                self.model.trigger("sync");
+                if (this.model.cancelReason) {
+                    $.ajax({
+                        type: 'POST',
+                        url: this.model.url(),
+                        data: '{"status":"' + status + '","cancelReason":"' + this.model.cancelReason + '"}',
+                        success: function(data) {
+                            // Fetch the updated model
+                            self.model.fetch({
+                                success: function() {
+                                    // Once the fetch is complete, sync the changes back to the list and close this edit view
+                                    self.model.trigger("sync");
 
-                                self.cancel();
-                            }
-                        });
-                    },
-                    error: function(model, resp) { openhmis.error(model, resp); },
-                    contentType: "application/json",
-                    dataType: 'json'
-                });
+                                    self.cancel();
+                                }
+                            });
+                        },
+                        error: function(model, resp) { openhmis.error(model, resp); },
+                        contentType: "application/json",
+                        dataType: 'json'
+                    });
+                } else {
+                    $.ajax({
+                        type: 'POST',
+                        url: this.model.url(),
+                        data: '{"status":"' + status + '"}',
+                        success: function(data) {
+                            // Fetch the updated model
+                            self.model.fetch({
+                                success: function() {
+                                    // Once the fetch is complete, sync the changes back to the list and close this edit view
+                                    self.model.trigger("sync");
+
+                                    self.cancel();
+                                }
+                            });
+                        },
+                        error: function(model, resp) { openhmis.error(model, resp); },
+                        contentType: "application/json",
+                        dataType: 'json'
+                    });
+                }
+
             },
 
             getAttributeValue: function(model, name) {
