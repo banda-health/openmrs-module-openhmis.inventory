@@ -2,7 +2,7 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomizableMetadata;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -22,7 +22,7 @@ import java.util.Set;
  * transitioned to the associated stockroom.
  */
 public class StockOperation
-		extends BaseCustomizableInstanceMetadata<IStockOperationType, StockOperationAttribute>
+		extends BaseInstanceCustomizableMetadata<IStockOperationType, StockOperationAttribute>
 		implements Comparable<StockOperation> {
 	public static final long serialVersionUID = 2L;
 
