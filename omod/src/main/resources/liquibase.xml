@@ -1027,4 +1027,53 @@
 								 baseTableName="inv_item_attribute" baseColumnNames="item_attribute_type_id"
 								 referencedTableName="inv_item_attribute_type" referencedColumnNames="item_attribute_type_id"/>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.5.0-4" author="ibewes">
+		<comment>
+			Update any incorrectly defined expiration dates that include a time portion. This will take into account the
+			timezone for the server.
+		</comment>
+		<sql><![CDATA[
+			UPDATE inv_item_stock_detail
+			SET expiration = ADDTIME(expiration, timediff(now(),convert_tz(now(),@@session.time_zone,'+00:00')))
+			WHERE TIME(expiration) > 0 AND expiration IS NOT NULL;
+		]]></sql>
+
+		<comment>
+			Update any detail records that are now duplicated (that is have the same stockroom, item, expiration, and batch).
+		</comment>
+		<sql><![CDATA[
+			UPDATE inv_item_stock_detail Z INNER JOIN
+					(SELECT A.item_stock_detail_id, SUM(B.quantity) AS sum_quantity
+					 FROM inv_item_stock_detail A INNER JOIN inv_item_stock_detail B ON
+						A.item_stock_detail_id < B.item_stock_detail_id AND
+						A.item_id = B.item_id AND A.stockroom_id = B.stockroom_id AND
+						A.expiration = B.expiration AND A.batch_operation_id = B.batch_operation_id
+					 WHERE A.item_stock_detail_id = (SELECT MIN(item_stock_detail_id)
+													 FROM inv_item_stock_detail
+													 WHERE item_id = A.item_id AND stockroom_id = A.stockroom_id AND
+														expiration = A.expiration AND
+														batch_operation_id = A.batch_operation_id)
+					 GROUP BY A.item_id, A.item_stock_detail_id, A.quantity) CALC ON
+				Z.item_stock_detail_id = CALC.item_stock_detail_id
+			SET Z.quantity = Z.quantity + CALC.sum_quantity;
+		]]></sql>
+
+		<comment>
+			Delete the duplicated records, leaving the only record that was updated.
+		</comment>
+		<sql><![CDATA[
+			DELETE A
+			FROM inv_item_stock_detail AS A INNER JOIN inv_item_stock_detail AS B ON
+				A.item_stock_detail_id > B.item_stock_detail_id AND
+				A.item_id = B.item_id AND A.stockroom_id = B.stockroom_id AND
+				A.expiration = B.expiration AND A.batch_operation_id = B.batch_operation_id;
+		]]></sql>
+
+		<comment>
+			Finally, update the inv_item_stock_detail.expiration column to be only a DATE column, not DATETIME
+		</comment>
+		<modifyColumn tableName="inv_item_stock_detail">
+			<column name="expiration" type="DATE"><constraints nullable="true"/></column>
+		</modifyColumn>
+	</changeSet>
 </databaseChangeLog>
