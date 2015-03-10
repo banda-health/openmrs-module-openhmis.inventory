@@ -1070,10 +1070,34 @@
 		]]></sql>
 
 		<comment>
+			Update operation items and transactions to add a single day if the timezone would have cause the date to be
+			one day in the past
+		</comment>
+		<sql><![CDATA[
+			UPDATE inv_stock_operation_item
+			SET expiration = DATE_ADD(expiration, INTERVAL 1 DAY)
+			WHERE expiration IS NOT NULL AND timediff(now(),convert_tz(now(),@@session.time_zone,'+00:00')) > 0;
+
+			UPDATE inv_transaction
+			SET expiration = DATE_ADD(expiration, INTERVAL 1 DAY)
+			WHERE expiration IS NOT NULL AND timediff(now(),convert_tz(now(),@@session.time_zone,'+00:00')) > 0;
+		]]></sql>
+
+		<comment>
 			Finally, update the inv_item_stock_detail.expiration column to be only a DATE column, not DATETIME
 		</comment>
 		<modifyColumn tableName="inv_item_stock_detail">
 			<column name="expiration" type="DATE"><constraints nullable="true"/></column>
 		</modifyColumn>
+
+		<comment>
+			Remove any invalid reservation transactions that are hanging around.
+		</comment>
+		<sql><![CDATA[
+			DELETE trans
+			FROM inv_stock_operation op INNER JOIN inv_reserved_transaction trans ON
+				op.stock_operation_id = trans.operation_id
+			WHERE op.status = 'COMPLETED'
+		]]></sql>
 	</changeSet>
 </databaseChangeLog>
