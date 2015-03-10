@@ -17,11 +17,12 @@ public class ModuleSettings {
 	public static final String EXPIRING_STOCK_REPORT_ID_PROPERTY = "openhmis.inventory.reports.expiringStock";
 	public static final String AUTO_COMPLETE_OPERATIONS_PROPERTY = "openhmis.inventory.autoCompleteOperations";
 	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
+	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockOperationsByStockroom";
 
 	public static boolean generateOperationNumber() {
 		return generateOperationNumber(Context.getAdministrationService());
 	}
-	
+
 	protected static boolean generateOperationNumber(AdministrationService adminService) {
 		String property = adminService.getGlobalProperty(AUTO_GENERATE_OPERATION_NUMBER_PROPERTY);
 		return Boolean.parseBoolean(property);
@@ -38,7 +39,7 @@ public class ModuleSettings {
 		String property = adminService.getGlobalProperty(SHOW_OPERATATION_CANCEL_REASEON_FIELD);
 		return Boolean.parseBoolean(property);
 	}
-	
+
 	public static Settings loadSettings() {
 		Settings settings = new Settings();
 		AdministrationService adminService = Context.getAdministrationService();
@@ -61,11 +62,16 @@ public class ModuleSettings {
 			settings.setStockCardReportId(Integer.parseInt(prop));
 		}
 
+		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
+		if (!StringUtils.isEmpty(prop)) {
+			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
+		}
+
 		prop = adminService.getGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setStockroomReportId(Integer.parseInt(prop));
 		}
-		
+
 		prop = adminService.getGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setExpiringStockReportId(Integer.parseInt(prop));
@@ -121,7 +127,7 @@ public class ModuleSettings {
 		} else {
 			adminService.setGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY, "");
 		}
-		
+
 		reportId = settings.getExpiringStockReportId();
 		if (reportId != null) {
 			adminService.setGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY, reportId.toString());

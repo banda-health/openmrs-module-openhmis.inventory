@@ -48,6 +48,11 @@
 	</globalProperty>
 
 	<globalProperty>
+		<property>${project.parent.artifactId}.reports.stockOperationsByStockroom</property>
+		<description>The ID of the Stock Operations by Stockroom report.</description>
+	</globalProperty>
+
+	<globalProperty>
 		<property>${project.parent.artifactId}.reports.stockroom</property>
 		<description>The ID of the Stockroom report.</description>
 	</globalProperty>

@@ -50,6 +50,11 @@ public class InventoryReportsController {
 			handleReport(model, reportId, "stockCardReport");
 		}
 
+		reportId = settings.getStockOperationsByStockroomReportId();
+		if (reportId != null) {
+			handleReport(model, reportId, "stockOperationsByStockroomReport");
+		}
+
 		reportId = settings.getStockroomReportId();
 		if (reportId != null) {
 			handleReport(model, reportId, "stockroomReport");

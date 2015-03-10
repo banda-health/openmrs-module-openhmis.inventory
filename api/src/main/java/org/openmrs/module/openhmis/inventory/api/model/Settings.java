@@ -8,6 +8,7 @@ public class Settings {
 	private Integer operationNumberGeneratorSourceId;
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
+	private Integer stockOperationsByStockroomReportId;
 	private Integer stockroomReportId;
 	private Integer expiringStockReportId;
 
@@ -51,6 +52,14 @@ public class Settings {
 		this.stockCardReportId = stockCardReportId;
 	}
 
+	public Integer getStockOperationsByStockroomReportId() {
+		return stockOperationsByStockroomReportId;
+	}
+
+	public void setStockOperationsByStockroomReportId(Integer stockOperationsByStockroomReportId) {
+		this.stockOperationsByStockroomReportId = stockOperationsByStockroomReportId;
+	}
+
 	public Integer getStockroomReportId() {
 		return stockroomReportId;
 	}
@@ -58,7 +67,7 @@ public class Settings {
 	public void setStockroomReportId(Integer stockroomReportId) {
 		this.stockroomReportId = stockroomReportId;
 	}
-	
+
 	public Integer getExpiringStockReportId() {
 	    return expiringStockReportId;
     }
