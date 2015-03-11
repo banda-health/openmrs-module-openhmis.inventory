@@ -242,8 +242,8 @@ public class StockOperationServiceImpl
 		if (transactions == null || transactions.length == 0) {
 			// Nothing to do
 			return;
-		} 
-		
+		}
+
 		if (transactions.length == 1 && transactions[0] == null) {
 			// A single null parameter was passed in.  Nothing to do.
 			return;
@@ -722,7 +722,7 @@ public class StockOperationServiceImpl
 			@Override
 			public boolean apply(ItemStockDetail detail) {
 				return (detail.getExpiration() == null && date == null) ||
-						(detail.getExpiration() != null && detail.getExpiration().compareTo(date) == 0);
+						(detail.getExpiration() != null && date != null && detail.getExpiration().compareTo(date) == 0);
 			}
 		}));
 
