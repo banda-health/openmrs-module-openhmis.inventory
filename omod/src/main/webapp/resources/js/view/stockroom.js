@@ -169,7 +169,7 @@ define(
 
 	        save: function() {
 	        	//trigger POST only for stockroom details update
-	        	if (this.selectedTab === 0) {
+	        	if (this.selectedTab === 0 || this.selectedTab === null) {
 	        		openhmis.GenericAddEditView.prototype.save.call(this);
 	        	}
 	        },
