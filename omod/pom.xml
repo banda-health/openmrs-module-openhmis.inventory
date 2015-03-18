@@ -4,14 +4,14 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>openhmis.inventory</artifactId>
-		<version>1.5.0-SNAPSHOT</version>
+		<version>1.6.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>openhmis.inventory-omod</artifactId>
 	<packaging>jar</packaging>
 	<name>OpenHMIS Inventory Module Module OMOD</name>
 	<description>OMOD project for the OpenHMIS inventory module</description>
-	<version>1.5.0-SNAPSHOT</version>
+	<version>1.6.0-SNAPSHOT</version>
 
 	<dependencies>
 		<!-- Begin OpenMRS modules -->
