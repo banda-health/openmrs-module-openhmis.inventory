@@ -19,14 +19,13 @@ import org.openmrs.Concept;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.openhmis.inventory.api.model.Category;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Transactional
 public interface IItemDataService extends IMetadataDataService<Item> {
@@ -96,58 +95,6 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	List<Item> getItemsByDepartment(Department department, boolean includeRetired, PagingInfo pagingInfo);
 
 	/**
-	 * Gets all the items for the specified {@link Category}.
-	 * @param category The category.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @return All items for the specified {@link Category}.
-	 * @should throw NullPointerException if the category is null
-	 * @should return an empty list if the category has no items
-	 * @should not return retired items unless specified
-	 * @should return all items for the specified category
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItemsByCategory(Category category, boolean includeRetired);
-
-	/**
-	 * Gets all the items for the specified {@link Category}.
-	 * @param category The category.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @param pagingInfo The paging information
-	 * @return All items for the specified {@link Category}.
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItemsByCategory(Category category, boolean includeRetired, PagingInfo pagingInfo);
-
-	/**
-	 * Gets all the items for the specified {@link Department} and {@link Category}.
-	 * @param category The category.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @return All items for the specified {@link Department} and {@link Category}.
-	 * @should throw NullPointerException if the department is null
-	 * @should throw NullPointerException if the category is null
-	 * @should return an empty list if the department and category has no items
-	 * @should not return retired items unless specified
-	 * @should return all items for the specified category
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItems(Department department, Category category, boolean includeRetired);
-
-	/**
-	 * Gets all the items for the specified {@link Department} and {@link Category}.
-	 * @param department The department.
-	 * @param category The category.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @param pagingInfo The paging information
-	 * @return All items for the specified {@link Department} and {@link Category}.
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItems(Department department, Category category, boolean includeRetired, PagingInfo pagingInfo);
-
-	/**
 	 * Gets all items in the specified {@link Department} that start with the specified name.
 	 * @param department The department to search within.
 	 * @param name The item name fragment.
@@ -179,70 +126,6 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	List<Item> getItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo);
 
 	/**
-	 * Gets all items in the specified {@link Category} that start with the specified name.
-	 * @param category The category to search within.
-	 * @param name The item name fragment.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @return All items in the specified {@link Category} that start with the specified name.
-	 * @should throw NullPointerException if the category is null
-	 * @should throw IllegalArgumentException if the name is null
-	 * @should throw IllegalArgumentException if the name is empty
-	 * @should throw IllegalArgumentException if the name is longer than 255 characters
-	 * @should return an empty list if no items are found
-	 * @should not return retired items unless specified
-	 * @should return items that start with the specified name
-	 * @should return items for only the specified category
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItems(Category category, String name, boolean includeRetired);
-
-	/**
-	 * Gets all items in the specified {@link Category} that start with the specified name.
-	 * @param category The category to search within.
-	 * @param name The item name fragment.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @param pagingInfo The paging information.
-	 * @return All items in the specified {@link Category} that start with the specified name.
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItems(Category category, String name, boolean includeRetired, PagingInfo pagingInfo);
-
-	/**
-	 * Gets all items in the specified {@link Department} and {@link Category} that start with the specified name.
-	 * @param department The department to search within.
-	 * @param name The item name fragment.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @return All items in the specified {@link Department} and {@link Category} that start with the specified name.
-	 * @should throw NullPointerException if the department is null
-	 * @should throw NullPointerException if the category is null
-	 * @should throw IllegalArgumentException if the name is null
-	 * @should throw IllegalArgumentException if the name is empty
-	 * @should throw IllegalArgumentException if the name is longer than 255 characters
-	 * @should return an empty list if no items are found
-	 * @should not return retired items unless specified
-	 * @should return items that start with the specified name
-	 * @should return items for only the specified department and category
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItemsByDepartmentAndCategoryAndName(Department department, Category category, String name, boolean includeRetired);
-
-	/**
-	 * Gets all items in the specified {@link Department} and {@link Category} that start with the specified name.
-	 * @param department The department to search within.
-	 * @param category The category to search within.
-	 * @param name The item name fragment.
-	 * @param includeRetired Whether retired items should be included in the results.
-	 * @param pagingInfo The paging information.
-	 * @return All items in the specified {@link Department} and {@link Category} and that start with the specified name.
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-	List<Item> getItems(Department department, Category category, String name, boolean includeRetired, PagingInfo pagingInfo);
-
-	/**
 	 * Gets all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
 	 * @return The items found or an empty list if no items were found.
@@ -261,7 +144,6 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should return an empty list if no items are found via the search
 	 * @should return items filtered by name
 	 * @should return items filtered by department
-	 * @should return items filtered by category
 	 * @should return items filtered by concept
 	 * @should return items filtered by physical inventory
 	 * @should return items filtered by expiration
@@ -296,17 +178,14 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
     List<Item> getItemsWithoutConcept(List<Integer> excludedItemsIds, Integer resultLimit);
-	
+
 	/**
-	 * 
+	 *
 	 * @param uuid
 	 * @return The itemPrice that matches the given uuid
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
 	ItemPrice getItemPriceByUuid(String uuid);
-
-
-
 }
 

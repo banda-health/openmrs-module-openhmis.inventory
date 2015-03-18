@@ -898,7 +898,7 @@
 								 referencedTableName="inv_stock_operation" referencedColumnNames="stock_operation_id"/>
 	</changeSet>
 	<changeSet id="openhmis.inventory-v1.0.0-11" author="marios">
-		<addNotNullConstraint 
+		<addNotNullConstraint
             columnDataType="varchar(255)"
             columnName="operation_number"
             tableName="inv_stock_operation"/>
@@ -946,5 +946,158 @@
 			SET @counter := 0;
 			UPDATE inv_stock_operation SET operation_order = (SELECT @counter := @counter + 1) ORDER BY operation_date ASC;
 		</sql>
+	</changeSet>
+	<changeSet id="openhmis.inventory-v1.5.0-1" author="marios">
+		<dropForeignKeyConstraint baseTableName="inv_item" constraintName="inv_item_category_fk" />
+		<dropForeignKeyConstraint baseTableName="inv_category" constraintName="inv_category_creator_fk" />
+		<dropForeignKeyConstraint baseTableName="inv_category" constraintName="inv_category_changed_by_fk" />
+		<dropForeignKeyConstraint baseTableName="inv_category" constraintName="inv_category_parent_fk" />
+		<dropColumn  columnName="category_id" tableName="inv_item"/>
+		<dropTable tableName="inv_category" />
+	</changeSet>
+    <changeSet id="openhmis.inventory-v1.5.0-2" author="Stephen Kinyori">
+		<comment>Adding the column "cancel_reason" to the table inv_stock_operation</comment>
+		<addColumn tableName="inv_stock_operation">
+			<column name="cancel_reason" type="varchar(500)"><constraints nullable="true"/></column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="openhmis.inventory-v1.5.0-3" author="ibewes">
+		<dropTable tableName="inv_item_attribute" />
+		<dropTable tableName="inv_item_attribute_type" />
+
+		<createTable tableName="inv_item_attribute_type">
+			<column name="item_attribute_type_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="name" type="varchar(255)"><constraints nullable="false" /></column>
+			<column name="description" type="varchar(1024)" />
+			<column name="attribute_order" type="int"><constraints nullable="false"/></column>
+			<column name="foreignKey" type="int" />
+			<column name="format" type="varchar(255)" />
+			<column name="reg_exp" type="varchar(255)" />
+			<column name="required" type="BOOLEAN" defaultValueBoolean="false" />
+
+			<column name="creator" type="int"><constraints nullable="false" /></column>
+			<column name="date_created" type="datetime"><constraints nullable="false" /></column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="boolean" defaultValueBoolean="false"><constraints nullable="false" /></column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+		<createTable tableName="inv_item_attribute">
+			<column name="item_attribute_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="item_id" type="int"><constraints nullable="false" /></column>
+			<column name="item_attribute_type_id" type="int"><constraints nullable="false" /></column>
+			<column name="value_reference" type="text"><constraints nullable="false" /></column>
+
+			<column name="creator" type="int"><constraints nullable="false" /></column>
+			<column name="date_created" type="datetime"><constraints nullable="false" /></column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="boolean" defaultValueBoolean="false"><constraints nullable="false" /></column>
+			<column name="retired_by" type="int" />
+			<column name="date_retired" type="datetime" />
+			<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+
+			<column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+		</createTable>
+
+		<addForeignKeyConstraint constraintName="inv_item_attribute_type_creator_fk"
+								 baseTableName="inv_item_attribute_type" baseColumnNames="creator"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_type_changed_by_fk"
+								 baseTableName="inv_item_attribute_type" baseColumnNames="changed_by"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="cinv_item_attribute_type_retired_by_fk"
+								 baseTableName="inv_item_attribute_type" baseColumnNames="retired_by"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+
+		<addForeignKeyConstraint constraintName="inv_item_attribute_item_id_fk"
+								 baseTableName="inv_item_attribute" baseColumnNames="item_id"
+								 referencedTableName="inv_item" referencedColumnNames="item_id"
+								 onDelete="CASCADE" onUpdate="CASCADE"/>
+		<addForeignKeyConstraint constraintName="inv_item_attribute_inv_item_attribute_type_id_fk"
+								 baseTableName="inv_item_attribute" baseColumnNames="item_attribute_type_id"
+								 referencedTableName="inv_item_attribute_type" referencedColumnNames="item_attribute_type_id"/>
+	</changeSet>
+	<changeSet id="openhmis.inventory-v1.5.0-4" author="ibewes">
+		<comment>
+			Update any incorrectly defined expiration dates that include a time portion. This will take into account the
+			timezone for the server.
+		</comment>
+		<sql><![CDATA[
+			UPDATE inv_item_stock_detail
+			SET expiration = ADDTIME(expiration, timediff(now(),convert_tz(now(),@@session.time_zone,'+00:00')))
+			WHERE TIME(expiration) > 0 AND expiration IS NOT NULL;
+		]]></sql>
+
+		<comment>
+			Update any detail records that are now duplicated (that is have the same stockroom, item, expiration, and batch).
+		</comment>
+		<sql><![CDATA[
+			UPDATE inv_item_stock_detail Z INNER JOIN
+					(SELECT A.item_stock_detail_id, SUM(B.quantity) AS sum_quantity
+					 FROM inv_item_stock_detail A INNER JOIN inv_item_stock_detail B ON
+						A.item_stock_detail_id < B.item_stock_detail_id AND
+						A.item_id = B.item_id AND A.stockroom_id = B.stockroom_id AND
+						A.expiration = B.expiration AND A.batch_operation_id = B.batch_operation_id
+					 WHERE A.item_stock_detail_id = (SELECT MIN(item_stock_detail_id)
+													 FROM inv_item_stock_detail
+													 WHERE item_id = A.item_id AND stockroom_id = A.stockroom_id AND
+														expiration = A.expiration AND
+														batch_operation_id = A.batch_operation_id)
+					 GROUP BY A.item_id, A.item_stock_detail_id, A.quantity) CALC ON
+				Z.item_stock_detail_id = CALC.item_stock_detail_id
+			SET Z.quantity = Z.quantity + CALC.sum_quantity;
+		]]></sql>
+
+		<comment>
+			Delete the duplicated records, leaving the only record that was updated.
+		</comment>
+		<sql><![CDATA[
+			DELETE A
+			FROM inv_item_stock_detail AS A INNER JOIN inv_item_stock_detail AS B ON
+				A.item_stock_detail_id > B.item_stock_detail_id AND
+				A.item_id = B.item_id AND A.stockroom_id = B.stockroom_id AND
+				A.expiration = B.expiration AND A.batch_operation_id = B.batch_operation_id;
+		]]></sql>
+
+		<comment>
+			Update operation items and transactions to add a single day if the timezone would have cause the date to be
+			one day in the past
+		</comment>
+		<sql><![CDATA[
+			UPDATE inv_stock_operation_item
+			SET expiration = DATE_ADD(expiration, INTERVAL 1 DAY)
+			WHERE expiration IS NOT NULL AND timediff(now(),convert_tz(now(),@@session.time_zone,'+00:00')) > 0;
+
+			UPDATE inv_transaction
+			SET expiration = DATE_ADD(expiration, INTERVAL 1 DAY)
+			WHERE expiration IS NOT NULL AND timediff(now(),convert_tz(now(),@@session.time_zone,'+00:00')) > 0;
+		]]></sql>
+
+		<comment>
+			Finally, update the inv_item_stock_detail.expiration column to be only a DATE column, not DATETIME
+		</comment>
+		<modifyColumn tableName="inv_item_stock_detail">
+			<column name="expiration" type="DATE"><constraints nullable="true"/></column>
+		</modifyColumn>
+
+		<comment>
+			Remove any invalid reservation transactions that are hanging around.
+		</comment>
+		<sql><![CDATA[
+			DELETE trans
+			FROM inv_stock_operation op INNER JOIN inv_reserved_transaction trans ON
+				op.stock_operation_id = trans.operation_id
+			WHERE op.status = 'COMPLETED'
+		]]></sql>
 	</changeSet>
 </databaseChangeLog>

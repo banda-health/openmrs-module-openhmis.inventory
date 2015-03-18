@@ -55,9 +55,6 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 		if (item.getDepartment() != null) {
 			criteria.add(Restrictions.eq("department", item.getDepartment()));
 		}
-		if (item.getCategory() != null) {
-			criteria.add(Restrictions.eq("category", item.getCategory()));
-		}
 		if (item.getConcept() != null ||
 				(conceptComparisonType != null && conceptComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("concept", item.getConcept(), conceptComparisonType));

@@ -18,7 +18,6 @@ define(
             openhmis.url.backboneBase + 'js/lib/underscore',
             openhmis.url.inventoryBase + 'js/model/item',
             openhmis.url.inventoryBase + 'js/model/department',
-            openhmis.url.inventoryBase + 'js/model/category',
             openhmis.url.inventoryBase + 'js/view/search',
             openhmis.url.inventoryBase + 'js/model/operation',
             openhmis.url.inventoryBase + 'js/model/institution',
@@ -43,12 +42,6 @@ define(
 
         editors.InstitutionSelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Institution,
-            displayAttr: "name",
-            allowNull: true
-        });
-
-        editors.CategorySelect = editors.GenericModelSelect.extend({
-            modelType: openhmis.Category,
             displayAttr: "name",
             allowNull: true
         });
@@ -84,6 +77,11 @@ define(
         editors.OperationSelect = editors.GenericModelSelect.extend({
             modelType: openhmis.Operation,
             displayAttr: "operationNumber"
+        });
+
+        editors.ItemAttributeTypeSelect = editors.GenericModelSelect.extend({
+            modelType: openhmis.ItemAttributeType,
+            displayAttr: "name"
         });
 
         editors.DefaultExpirationPeriodStepper = editors.Base.extend({
@@ -527,7 +525,8 @@ define(
 
                     // Turn the expiration text input into a date picker
                     entryEl.datepicker({
-                        defaultDate: defaultExp
+                        defaultDate: defaultExp,
+                        minDate:0
                     });
 
                     // Set the text to the default value, if one has been calculated
@@ -561,7 +560,8 @@ define(
                     try {
                         var date = new Date(selected);
                         if (!isNaN(date.getTime())) {
-                            selected = date;
+                            selected = openhmis.dateFormat(date);
+                            //selected = date;
                         }
                     } catch(err) {
                         //selected = undefined;

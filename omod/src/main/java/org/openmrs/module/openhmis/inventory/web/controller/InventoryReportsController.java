@@ -32,55 +32,49 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping(ModuleWebConstants.INVENTORY_REPORTS_ROOT)
 public class InventoryReportsController {
-	
+
 	private static final Log LOG = LogFactory.getLog(InventoryReportsController.class);
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	public void inventory(ModelMap model) throws IOException {
 		Settings settings = ModuleSettings.loadSettings();
-		JasperReportService reportService = Context.getService(JasperReportService.class);
 		IStockroomDataService stockroomDataService = Context.getService(IStockroomDataService.class);
 
 		Integer reportId = settings.getStockTakeReportId();
 		if (reportId != null) {
-			try {
-				model.addAttribute("stockTakeReport", reportService.getJasperReport(reportId));
-			} catch(NullPointerException e) {
-				LOG.error("report with ID <" + reportId + "> not found", e);
-				throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
-			}
+			handleReport(model, reportId, "stockTakeReport");
 		}
 
 		reportId = settings.getStockCardReportId();
 		if (reportId != null) {
-			try {
-				model.addAttribute("stockCardReport", reportService.getJasperReport(reportId));
-			} catch(NullPointerException e) {
-				LOG.error("report with ID <" + reportId + "> not found", e);
-				throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
-			}	
+			handleReport(model, reportId, "stockCardReport");
+		}
+
+		reportId = settings.getStockOperationsByStockroomReportId();
+		if (reportId != null) {
+			handleReport(model, reportId, "stockOperationsByStockroomReport");
 		}
 
 		reportId = settings.getStockroomReportId();
 		if (reportId != null) {
-			try {
-				model.addAttribute("stockroomReport", reportService.getJasperReport(reportId));
-			} catch(NullPointerException e) {
-				LOG.error("report with ID <" + reportId + "> not found", e);
-				throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
-			}	
+			handleReport(model, reportId, "stockroomReport");
 		}
-		
+
 		reportId = settings.getExpiringStockReportId();
 		if (reportId != null) {
-			try {
-				model.addAttribute("expiringStockReport", reportService.getJasperReport(reportId));
-			} catch(NullPointerException e) {
-				LOG.error("report with ID <" + reportId + "> not found", e);
-				throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
-			}	
+			handleReport(model, reportId, "expiringStockReport");
 		}
 
 		model.addAttribute("stockrooms", stockroomDataService.getAll());
+	}
+
+	private void handleReport(ModelMap model, Integer reportId, String reportName) {
+		JasperReportService reportService = Context.getService(JasperReportService.class);
+		try {
+			model.addAttribute(reportName, reportService.getJasperReport(reportId));
+		} catch(NullPointerException e) {
+			LOG.error("report with ID <" + reportId + "> not found", e);
+			throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
+		}
 	}
 }

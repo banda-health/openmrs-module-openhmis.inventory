@@ -15,6 +15,7 @@
 define(
     [
         openhmis.url.backboneBase + 'js/view/generic',
+        openhmis.url.backboneBase + 'js/view/openhmis',
         openhmis.url.backboneBase + 'js/view/editors',
         openhmis.url.backboneBase + 'js/lib/backbone-forms',
         openhmis.url.backboneBase + 'js/model/concept'
@@ -56,9 +57,25 @@ define(
                 openhmis.GenericAddEditView.prototype.render.call(this);
 
                 if (this.model.id) {
-                    this.itemStockView.fetch(null);
-
                     var el = this.$(".submit");
+
+                    // Find or create the attributes element
+                    this.$attributes = this.$("#itemAttributes");
+                    if (!this.$attributes.length) {
+                        // Find the element that the attributes should be added after
+                        el.before("<form id='itemAttributes' class='bbf-form' />");
+                        this.$attributes = this.$("#itemAttributes");
+                    }
+
+                    // Load and display the item attributes
+                    var self = this;
+                    openhmis.renderAttributesFragment(this.$attributes, "Item", null, {
+                        success: function() {
+                            openhmis.displayAttributes(self.$attributes, self.model.get('attributes'));
+                        }
+                    });
+
+                    this.itemStockView.fetch(null);
                     el.before(this.itemStockView.el);
 
                     // Set the itemstock element id so we can style it
@@ -135,8 +152,18 @@ define(
                 } else {
                     this.modelForm.fields.concept.editor.value = this.$('#concept').val();
                 }
+
+                // Load the attributes and set in the model
+                var attributes = openhmis.loadAttributes(this, this.$attributes, openhmis.ItemAttribute);
+                if (attributes) {
+                    this.model.set("attributes", attributes);
+                } else if (attributes === false) {
+                    // The loadAttributes returns false if there was an error so halt the save if we got that
+                    return false;
+                }
+
                 openhmis.GenericAddEditView.prototype.save.call(this, event);
-            },
+            }
             
         });
 

@@ -78,6 +78,40 @@
         <hr>
       </c:if>
 
+      <c:if test="${stockOperationsByStockroomReport != null}" >
+        <h3>${stockOperationsByStockroomReport.name}</h3>
+        <div style="color: grey">${stockOperationsByStockroomReport.description}</div>
+        <br />
+        <div>
+          <form id="stockOperationsByStockroomReport" onsubmit="return false;">
+            <label for="stockroomIdOperationsByStockroom">Stockroom: </label>
+            <select id="stockroomIdOperationsByStockroom">
+              <option value=""></option>
+              <c:forEach var="stockroom" items="${stockrooms}">
+                <option value="${stockroom.id}">${stockroom.name}</option>
+              </c:forEach>
+            </select>
+            <br/>
+            <br/>
+            <label for="itemSearchOperationsByStockroom">Item: </label>
+            <input id="itemSearchOperationsByStockroom" style="width: 350px" type="text" placeholder="Item Name" />
+            <input id="item-uuid-searchOperationsByStockroom" type="hidden" />
+            <br />
+            <br />
+            <label for="beginDate-operationsByStockroom">Begin Date</label>
+            <input id="beginDate-operationsByStockroom" class="date" type="text" />
+
+            <label for="endDate-operationsByStockroom">End Date</label>
+            <input id="endDate-operationsByStockroom" class="date" type="text" />
+
+            <input id="stockOperationsByStockroomReportId" type="hidden" value="${stockOperationsByStockroomReport.reportId}" />
+            <br /><br />
+            <input id="generateOperationsByStockroomReport" type="submit" value="Generate Report" />
+          </form>
+        </div>
+        <hr>
+      </c:if>
+
       <c:if test="${stockroomReport != null}" >
         <h3>${stockroomReport.name}</h3>
         <div style="color: grey">${stockroomReport.description}</div>
@@ -108,28 +142,31 @@
         <br />
         <hr>
       </c:if>
-      
+
       <c:if test="${expiringStockReport != null}" >
         <h3>${expiringStockReport.name}</h3>
         <div style="color: grey">${expiringStockReport.description}</div>
         <br />
         <div>
           <form id="expiringStockReport" onsubmit="return false;">
+
+            <label for="expiringStockReport-StockroomId">Stockroom: </label>
+            <select id="expiringStockReport-StockroomId">
+              <option value="">Any</option>
+              <c:forEach var="stockroom" items="${stockrooms}">
+                <option value="${stockroom.id}">${stockroom.name}</option>
+              </c:forEach>
+            </select>
             <br />
             <br />
             <label for="expiresBy">Expires by</label>
             <input id="expiresBy" class="date" type="text" />
-
-
             <input id="expiringStockReportId" type="hidden" value="${expiringStockReport.reportId}" />
             <br /><br />
             <input id="generateExpiringStockReport" type="submit" value="Generate Report" />
           </form>
         </div>
         <hr>
-      </c:if>
-      <c:if test="${expiringStockReport == null}" >
-      bla
       </c:if>
     </td>
   </tr>

@@ -19,6 +19,44 @@ define(
 	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
     function(openhmis) {
+	    openhmis.StockroomDetailSearchList = openhmis.GenericSearchableListView.extend({
+		    tmplFile: openhmis.url.inventoryBase + 'template/stockroom.html',
+		    tmplSelector: '#stockroom-list',
+
+		    initialize: function(options) {
+		    	openhmis.GenericSearchableListView.prototype.initialize.call(this, options);
+		    	this.itemDetailsTemplate = this.getTemplate(openhmis.url.inventoryBase + "template/stockroom.html", '#item-detail-template');
+		    },
+
+		    onItemSelected: function(view) {
+		    	var item = view.model.get("item");
+		    	this.itemDetails = view.model.get("details");
+		    	this.tableRowString = "";
+		    	for (var i in this.itemDetails) {
+		    		var detail = this.itemDetails[i];
+		    		var batchOperationNumber = detail.get("batchOperation") != null ? detail.get("batchOperation").operationNumber : "No Batch";
+		    		var date = detail.get("expiration") != null ? openhmis.dateFormat( detail.get("expiration")) : "No Expiration"
+
+		    		this.tableRowString +=  "<tr class='" + "'><td class='field-batchOperation'>" + batchOperationNumber +
+		    								"</td><td class='field-expiration numeric'>" + date +
+		    								"</td><td class='field-quantity numeric'>" + detail.get("quantity") + "</td></tr>";
+		    	}
+		    	var self = this;
+		    	$('#itemDetailsTable').remove();
+		    	$('#itemDetailsDialog').append(this.itemDetailsTemplate({
+		    			details: self.tableRowString
+		    		})).dialog({
+	                    dialogClass: "no-close",
+	                    title: "Stock Details for " + item.get("name"),
+	                    draggable: false,
+	                    resizable: false,
+	                    modal: true,
+	                    width: 500,
+                });
+		    	openhmis.GenericSearchableListView.prototype.onItemSelected(this, view);
+		    }
+	    });
+
 	    openhmis.StockroomDetailList = openhmis.GenericListView.extend({
 		    tmplFile: openhmis.url.inventoryBase + 'template/stockroom.html',
 		    tmplSelector: '#stockroom-list'
@@ -36,13 +74,14 @@ define(
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-		        this.itemsView = new openhmis.StockroomDetailList({
+		        this.itemsView = new openhmis.StockroomDetailSearchList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.ItemStock
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['item', 'quantity']
+			        listFields: ['item', 'quantity'],
+			        searchView: openhmis.ByNameSearchView
 		        });
 		        this.operationsView = new openhmis.StockroomDetailList({
 			        model: new openhmis.GenericCollection([], {
@@ -126,6 +165,13 @@ define(
 
 	        fetch: function(options) {
 		        options.queryString = openhmis.addQueryStringParameter(options.queryString, "stockroom_uuid=" + this.model.id);
+	        },
+
+	        save: function() {
+	        	//trigger POST only for stockroom details update
+	        	if (this.selectedTab === 0 || this.selectedTab === null) {
+	        		openhmis.GenericAddEditView.prototype.save.call(this);
+	        	}
 	        },
 
 	        beginAdd: function() {

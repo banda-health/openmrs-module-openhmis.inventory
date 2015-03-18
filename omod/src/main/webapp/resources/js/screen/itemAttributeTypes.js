@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 curl(
 	{ baseUrl: openhmis.url.resources },
@@ -17,7 +17,7 @@ curl(
 		openhmis.url.backboneBase + 'js/lib/jquery',
 		openhmis.url.backboneBase + 'js/openhmis',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
-		openhmis.url.inventoryBase + 'js/model/category',
+		openhmis.url.inventoryBase + 'js/model/item',
 		openhmis.url.backboneBase + 'js/view/generic',
 
 		openhmis.url.backboneBase + 'js/view/list',
@@ -28,7 +28,7 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
-			openhmis.startAddEditScreen(openhmis.Category, {
+			openhmis.startAddEditScreen(openhmis.ItemAttributeType, {
 				listView: openhmis.GenericSearchableListView,
 				searchView: openhmis.ByNameSearchView,
 				listFields: ['name', 'description']

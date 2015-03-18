@@ -21,7 +21,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name = ModuleRestConstants.RESERVATION_TRANSACTION_RESOURCE, supportedClass=ReservedTransaction.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
 public class ReservedTransactionResource extends TransactionBaseResource<ReservedTransaction> {
 	@Override
 	public ReservedTransaction newDelegate() {

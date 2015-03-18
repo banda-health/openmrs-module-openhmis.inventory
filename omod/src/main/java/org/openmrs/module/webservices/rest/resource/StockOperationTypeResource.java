@@ -13,12 +13,12 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.Role;
-import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeType;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -29,9 +29,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import java.util.List;
 
 @Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=IStockOperationType.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
 public class StockOperationTypeResource
-		extends BaseRestInstanceTypeResource<IStockOperationType, StockOperation, StockOperationAttributeType, StockOperationAttribute> {
+		extends BaseRestInstanceTypeResource<IStockOperationType, StockOperationAttributeType> {
 	@Override
 	public StockOperationTypeBase newDelegate() {
 		return null;

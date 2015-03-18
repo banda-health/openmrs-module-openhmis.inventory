@@ -91,8 +91,8 @@ define(
 		    }
 	    });
 
-        openhmis.OperationAttribute = openhmis.InstanceAttributeBase.extend({
-            attributeClass: openhmis.OperationAttributeType
+        openhmis.OperationAttribute = openhmis.AttributeBase.extend({
+            attributeTypeClass: openhmis.OperationAttributeType
         });
 
         openhmis.TransactionBase = openhmis.GenericModel.extend({
@@ -102,6 +102,7 @@ define(
                 this.schema.operation = { type: 'NestedModel', model: openhmis.Operation, objRef: true };
                 this.schema.item = { type: 'NestedModel', model: openhmis.Item, objRef: true };
 			    this.schema.quantity = { type: 'BasicNumber' };
+                this.schema.cancelReason = {type: 'Text'},
 			    this.schema.expiration = { type: 'Date', format: openhmis.dateFormatLocale };
 			    this.schema.dateCreated = { type: 'Date', format: openhmis.dateTimeFormatLocale };
 			    this.schema.batchOperation = { type: 'NestedModel', model: openhmis.Operation, objRef: true };
@@ -352,6 +353,13 @@ define(
                         errors.push({
                             selector: ".field-destination",
                             message: "The operation type " + operationType.get("name") + " requires a destination stockroom"
+                        });
+                    }
+                    if ((operationType.get("hasSource") && operationType.get("hasDestination")) &&
+                        (this.get("source").id === this.get("destination").id)) {
+                        errors.push({
+                            selector: ".field-destination",
+                            message: "The destination and source stockrooms must be different"
                         });
                     }
                     if (operationType.get("hasRecipient")) {

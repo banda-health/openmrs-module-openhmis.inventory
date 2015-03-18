@@ -40,6 +40,13 @@
 			</a>
 		</li>
 	</openmrs:hasPrivilege>
+	<openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.ITEM_ATTRIBUTE_TYPE_PAGE_PRIVILEGES %>">
+		<li <c:if test='<%= request.getRequestURI().contains("inventory/itemAttributeTypes") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}<%= ModuleWebConstants.ITEM_ATTRIBUTE_TYPES_PAGE %>">
+				<spring:message code="openhmis.inventory.admin.item.attribute.types"/>
+			</a>
+		</li>
+	</openmrs:hasPrivilege>
 	<openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.DEPARTMENT_PAGE_PRIVILEGES %>">
 		<li <c:if test='<%= request.getRequestURI().contains("inventory/departments") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}<%= ModuleWebConstants.DEPARTMENTS_PAGE %>">
@@ -47,15 +54,6 @@
 			</a>
 		</li>
 	</openmrs:hasPrivilege>
-	<%--
-	<openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.CATEGORY_PAGE_PRIVILEGES %>">
-		<li <c:if test='<%= request.getRequestURI().contains("inventory/categories") %>'>class="active"</c:if>>
-			<a href="${pageContext.request.contextPath}<%= ModuleWebConstants.CATEGORIES_PAGE %>">
-				<spring:message code="openhmis.inventory.admin.categories"/>
-			</a>
-		</li>
-	</openmrs:hasPrivilege>
-	--%>
 	<openmrs:hasPrivilege privilege="<%= PrivilegeWebConstants.INSTITUTION_PAGE_PRIVILEGES %>">
 		<li <c:if test='<%= request.getRequestURI().contains("inventory/institutions") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}<%= ModuleWebConstants.INSTITUTIONS_PAGE %>">

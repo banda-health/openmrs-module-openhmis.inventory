@@ -18,6 +18,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.Seconds;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -241,8 +242,8 @@ public class StockOperationServiceImpl
 		if (transactions == null || transactions.length == 0) {
 			// Nothing to do
 			return;
-		} 
-		
+		}
+
 		if (transactions.length == 1 && transactions[0] == null) {
 			// A single null parameter was passed in.  Nothing to do.
 			return;
@@ -721,7 +722,7 @@ public class StockOperationServiceImpl
 			@Override
 			public boolean apply(ItemStockDetail detail) {
 				return (detail.getExpiration() == null && date == null) ||
-						(detail.getExpiration() != null && detail.getExpiration().equals(date));
+						(detail.getExpiration() != null && date != null && detail.getExpiration().compareTo(date) == 0);
 			}
 		}));
 
@@ -757,13 +758,13 @@ public class StockOperationServiceImpl
 			results.addAll(details);
 		} else {
 			// Find the detail(s) with the closest expiration to the specified date
-			int closest = 0;
+			long closest = 0;
 			for (ItemStockDetail detail : details) {
-				int temp;
+				long temp;
 				if (detail.getExpiration() == null) {
-					temp = Integer.MAX_VALUE;
+					temp = Long.MAX_VALUE;
 				} else {
-					temp = Seconds.secondsBetween(date, new DateTime(detail.getExpiration())).getSeconds();
+					temp = new Duration(date, new DateTime(detail.getExpiration())).getStandardSeconds();
 				}
 
 				if (results.size() == 0) {

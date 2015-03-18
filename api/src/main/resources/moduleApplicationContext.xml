@@ -32,16 +32,16 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.openhmis.inventory.api.IDepartmentDataService</value>
-				<ref bean="invDepartmentService" />
+				<value>org.openmrs.module.openhmis.inventory.api.IItemAttributeTypeDataService</value>
+				<ref bean="invItemAttributeTypeService" />
 			</list>
 		</property>
 	</bean>
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.openhmis.inventory.api.ICategoryDataService</value>
-				<ref bean="invCategoryService" />
+				<value>org.openmrs.module.openhmis.inventory.api.IDepartmentDataService</value>
+				<ref bean="invDepartmentService" />
 			</list>
 		</property>
 	</bean>
@@ -129,20 +129,20 @@
 		<property name="preInterceptors" ref="serviceInterceptors" />
 		<property name="transactionAttributeSource" ref="transactionAttributeSource" />
 	</bean>
-	<bean id="invDepartmentService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	<bean id="invItemAttributeTypeService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target">
-			<bean class="org.openmrs.module.openhmis.inventory.api.impl.DepartmentDataServiceImpl">
+			<bean class="org.openmrs.module.openhmis.inventory.api.impl.ItemAttributeTypeDataServiceImpl">
 				<property name="repository" ref="genericRepository" />
 			</bean>
 		</property>
 		<property name="preInterceptors" ref="serviceInterceptors" />
 		<property name="transactionAttributeSource" ref="transactionAttributeSource" />
 	</bean>
-	<bean id="invCategoryService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	<bean id="invDepartmentService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target">
-			<bean class="org.openmrs.module.openhmis.inventory.api.impl.CategoryDataServiceImpl">
+			<bean class="org.openmrs.module.openhmis.inventory.api.impl.DepartmentDataServiceImpl">
 				<property name="repository" ref="genericRepository" />
 			</bean>
 		</property>

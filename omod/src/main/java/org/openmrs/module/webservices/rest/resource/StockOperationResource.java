@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.User;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.Utility;
@@ -26,16 +25,18 @@ import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
 import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
+import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
+import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttribute;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
+import org.openmrs.module.openhmis.inventory.api.search.StockOperationTemplate;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -55,21 +56,21 @@ import java.util.List;
 import java.util.Set;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
 public class StockOperationResource
-		extends BaseRestCustomizableInstanceMetadataResource<StockOperation, IStockOperationType,
-		StockOperationAttributeType, StockOperationAttribute> {
-
-    private static final Log LOG = LogFactory.getLog(StockOperationResource.class);
+		extends BaseRestInstanceCustomizableMetadataResource<StockOperation, IStockOperationType, StockOperationAttribute> {
+	private static final Log LOG = LogFactory.getLog(StockOperationResource.class);
 
 	private IStockOperationService operationService;
-	private AdministrationService administrationService;
+	private IStockOperationTypeDataService stockOperationTypeDataService;
+	private IItemDataService itemDataService;
 	private boolean submitRequired = false;
 	private boolean rollbackRequired = false;
 
 	public StockOperationResource() {
 		this.operationService = Context.getService(IStockOperationService.class);
-		this.administrationService = Context.getAdministrationService();
+		this.stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
+		this.itemDataService = Context.getService(IItemDataService.class);
 	}
 
 	@Override
@@ -90,6 +91,7 @@ public class StockOperationResource
 		description.addProperty("dateCreated", Representation.DEFAULT);
 		description.addProperty("operationDate", Representation.DEFAULT);
 		description.addProperty("operationOrder", Representation.DEFAULT);
+		description.addProperty("cancelReason", Representation.DEFAULT);
 
 		if (!(rep instanceof RefRepresentation)) {
 			description.addProperty("source", Representation.REF);
@@ -131,21 +133,26 @@ public class StockOperationResource
 		StockOperation result;
 
 		// If the status has changed, submit the operation
-		if (submitRequired) {
-			result = operationService.submitOperation(operation);
-		} else if (rollbackRequired) {
-			if (!userCanRollback(operation)) {
-				throw new RestClientException("The current user not authorized to rollback this operation.");
-			}
+		try {
+			if (submitRequired) {
+				result = operationService.submitOperation(operation);
+			} else if (rollbackRequired) {
+				if (!userCanRollback(operation)) {
+					throw new RestClientException("The current user not authorized to rollback this operation.");
+				}
 
-			result = operationService.rollbackOperation(operation);
-		} else {
-			result = super.save(operation);
+				result = operationService.rollbackOperation(operation);
+			} else {
+				result = super.save(operation);
+			}
+		} finally {
+			submitRequired = false;
+			rollbackRequired = false;
 		}
 
 		return result;
 	}
-	
+
 	@PropertySetter("operationNumber")
 	public void setOperationNumber(StockOperation instance, String operationNumber) {
 		if (StringUtils.isEmpty(instance.getOperationNumber())) {
@@ -174,7 +181,7 @@ public class StockOperationResource
 			throw new IllegalStateException("The Operation Number was not defined and no generator was configured.");
 		}
 	}
-	
+
 	@PropertySetter("status")
 	public void setStatus(StockOperation operation, StockOperationStatus status) {
 		if (operation.getStatus() != status) {
@@ -244,8 +251,10 @@ public class StockOperationResource
 			result = getUserOperations(context);
 		} else {
 			String status = context.getParameter("operation_status");
-			if (status != null) {
-				result = getOperationsByStatus(context);
+			String operationTypeUuid = context.getParameter("operationType_uuid");
+			String operationItemUuid = context.getParameter("operationItem_uuid");
+			if (status != null || operationTypeUuid != null || operationItemUuid != null) {
+				result = getOperationsByContextParams(context);
 			} else {
 				result = super.doSearch(context);
 			}
@@ -257,35 +266,48 @@ public class StockOperationResource
 	protected PageableResult getUserOperations(RequestContext context) {
 		User user = Context.getAuthenticatedUser();
 		if (user == null) {
-			log.warn("Could not retrieve the current user to be able to find the current user operations.");
+			LOG.warn("Could not retrieve the current user to be able to find the current user operations.");
 
 			return  new EmptySearchResult();
 		}
 
 		StockOperationStatus status = getStatus(context);
+		IStockOperationType stockOperationType = getStockOperationType(context);
+		Item item = getItem(context);
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 		List<StockOperation> results;
-		if (status == null) {
+		if (status == null && stockOperationType == null && item == null) {
 			results = ((IStockOperationDataService)getService()).getUserOperations(user, pagingInfo);
 		} else {
-			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, pagingInfo);
+			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, stockOperationType, item, pagingInfo);
 		}
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(),
 				pagingInfo.getTotalRecordCount());
 	}
 
-	protected PageableResult getOperationsByStatus(RequestContext context) {
+	protected PageableResult getOperationsByContextParams(RequestContext context) {
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		StockOperationStatus status = getStatus(context);
+		IStockOperationType stockOperationType = getStockOperationType(context);
+		Item item = getItem(context);
 
 		List<StockOperation> results;
-		if (status == null) {
+		if (status == null && stockOperationType == null && item == null) {
 			results = getService().getAll(context.getIncludeAll(), pagingInfo);
 		} else {
 			StockOperationSearch search = new StockOperationSearch();
-			search.getTemplate().setStatus(status);
+			StockOperationTemplate template = search.getTemplate();
+			if (status != null) {
+				template.setStatus(status);
+			}
+			if (stockOperationType != null) {
+				template.setInstanceType(stockOperationType);
+			}
+			if (item != null) {
+				template.setItem(item);
+			}
 
 			results = ((IStockOperationDataService)getService()).getOperations(search, pagingInfo);
 		}
@@ -297,17 +319,43 @@ public class StockOperationResource
 	protected StockOperationStatus getStatus(RequestContext context) {
 		StockOperationStatus status = null;
 		String statusText = context.getParameter("operation_status");
-		if (!StringUtils.isEmpty(statusText)) {
+		if (StringUtils.isNotEmpty(statusText)) {
 			status = StockOperationStatus.valueOf(statusText.toUpperCase());
 
 			if (status == null) {
-				log.warn("Could not parse Stock Operation Status '" + statusText + "'");
-
+				LOG.warn("Could not parse Stock Operation Status '" + statusText + "'");
 				throw new IllegalArgumentException("The status '" + statusText + "' is not a valid operation status.");
 			}
 		}
 
 		return status;
+	}
+
+	private IStockOperationType getStockOperationType(RequestContext context) {
+		IStockOperationType stockOperationType = null;
+		String stockOperationTypeUuid = context.getParameter("operationType_uuid");
+		if (StringUtils.isNotEmpty(stockOperationTypeUuid)) {
+			stockOperationType = stockOperationTypeDataService.getByUuid(stockOperationTypeUuid);
+			if (stockOperationType == null) {
+				LOG.warn("Could not parse Stock Operation Type '" + stockOperationTypeUuid + "'");
+				throw new IllegalArgumentException("The type '" + stockOperationTypeUuid + "' is not a valid operation type.");
+			}
+		}
+
+		return stockOperationType;
+	}
+
+	private Item getItem(RequestContext context) {
+		Item item = null;
+		String stockOperationItemUuid = context.getParameter("operationItem_uuid");
+		if (StringUtils.isNotEmpty(stockOperationItemUuid)) {
+			item = itemDataService.getByUuid(stockOperationItemUuid);
+			if (item == null) {
+				LOG.warn("Could not parse Item '" + stockOperationItemUuid + "'");
+				throw new IllegalArgumentException("The item '" + stockOperationItemUuid + "' is not a valid operation type.");
+			}
+		}
+		return item;
 	}
 
 	private void processItemStock(StockOperation operation, Set<StockOperationItem> items) {

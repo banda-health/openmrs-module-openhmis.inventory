@@ -16,7 +16,6 @@ package org.openmrs.module.openhmis.inventory.api.search;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 
 public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperationTemplate> {
 	public StockOperationSearch() {
@@ -86,7 +85,10 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 	public void updateCriteria(Criteria criteria) {
 		super.updateCriteria(criteria);
 
-		StockOperation operation = getTemplate();
+		StockOperationTemplate operation = getTemplate();
+		if(operation.getItem() != null) {
+			criteria.createAlias("items", "items").add(Restrictions.eq("items.item", operation.getItem()));
+		}
 		if (operation.getOperationNumber() != null) {
 			criteria.add(createCriterion("operationNumber", operation.getOperationNumber(), operationNumberComparisonType));
 		}

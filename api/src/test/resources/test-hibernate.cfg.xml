@@ -25,7 +25,6 @@
 		-->
 
 		<mapping resource="InvDepartment.hbm.xml" />
-		<mapping resource="InvCategory.hbm.xml" />
 		<mapping resource="InvItem.hbm.xml" />
 		<mapping resource="InvInstitution.hbm.xml" />
 		<mapping resource="InvStockroom.hbm.xml" />

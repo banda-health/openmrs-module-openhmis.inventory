@@ -18,13 +18,12 @@ curl(
         openhmis.url.backboneBase + 'js/openhmis',
         openhmis.url.backboneBase + 'js/lib/backbone-forms',
         openhmis.url.backboneBase + 'js/view/generic',
-        openhmis.url.inventoryBase + 'js/model/item'
+        openhmis.url.inventoryBase + 'js/model/item',
+        'js!' + openhmis.url.inventoryBase + 'js/itemAutocomplete.js'
 
     ],
     function($, openhmis) {
-    	
-    	var cache = {};
-    	
+
         $(function() {
             if ($('#itemSearch').length > 0) {
                 $('#itemSearch')
@@ -39,8 +38,21 @@ curl(
                 };
             }
 
+            if ($('#itemSearchOperationsByStockroom').length > 0) {
+                $('#itemSearchOperationsByStockroom')
+                    .autocomplete({
+                        minLength: 2,
+                        source: doSearch,
+                        select: selectItemForOperationsByStockroom
+                    })
+                    .data("autocomplete")._renderItem = function (ul, item) {
+                    return $("<li></li>").data("item.autocomplete", item)
+                        .append("<a>" + item.label + "</a>").appendTo(ul);
+                };
+            }
+
             $('.date').datepicker();
-            
+
             if ($("#generateTakeReport").length > 0) {
                 $("#generateTakeReport").click(printTakeReport)
             }
@@ -49,14 +61,27 @@ curl(
                 $("#generateCardReport").click(printCardReport);
             }
 
+            if ($("#generateOperationsByStockroomReport").length > 0) {
+                $("#generateOperationsByStockroomReport").click(printOperationsByStockroomReport);
+            }
+
             if ($("#generateStockroomReport").length > 0) {
                 $("#generateStockroomReport").click(printStockroomReport);
             }
-            
+
             if ($("#generateExpiringStockReport").length > 0) {
                 $("#generateExpiringStockReport").click(printExpiringStockReport);
             }
         });
+
+        //needed because otherwise there would be same ids twice on the reports page
+        function selectItemForOperationsByStockroom(event, ui) {
+            var uuid = ui.item.val;
+            var name = ui.item.label;
+            console.log('test');
+            $('#itemSearchOperationsByStockroom').val(name);
+            $('#item-uuid-searchOperationsByStockroom').val(uuid).trigger('change');
+        }
 
         function printTakeReport() {
             var stockroomId = $("#stockroomId").val();
@@ -94,6 +119,36 @@ curl(
             return printReport(reportId, "itemUuid=" + itemUuid + "&beginDate=" + beginDate + "&endDate=" + endDate);
         }
 
+        function printOperationsByStockroomReport() {
+            var itemUuid = $("#item-uuid-searchOperationsByStockroom").val();
+            if (!itemUuid) {
+                alert("You must select an item to generate the report.");
+                return false;
+            }
+
+            var beginDate = $("#beginDate-operationsByStockroom").val();
+            var endDate = $("#endDate-operationsByStockroom").val();
+
+            if (!beginDate || !endDate) {
+                alert("You must select a begin and end date to generate the report.");
+                return false;
+            }
+
+            // Get the dates into the expected format (dd-MM-yyyy)
+            beginDate = openhmis.dateFormat(new Date(beginDate), false);
+            endDate = openhmis.dateFormat(new Date(endDate), false);
+
+            var stockroomId = $("#stockroomIdOperationsByStockroom").val();
+            if (!stockroomId) {
+                alert("You must select a stockroom to generate the report.");
+                return false;
+            }
+
+            var reportId = $('#stockOperationsByStockroomReportId').val();
+
+            return printReport(reportId, "itemUuid=" + itemUuid + "&beginDate=" + beginDate + "&endDate=" + endDate + "&stockroomId=" +stockroomId);
+        }
+
         function printStockroomReport() {
             var stockroomId = $("#stockroomReport-StockroomId").val();
             if (!stockroomId) {
@@ -117,9 +172,8 @@ curl(
 
             return printReport(reportId, "stockroomId=" + stockroomId + "&beginDate=" + beginDate + "&endDate=" + endDate);
         }
-        
-        function printExpiringStockReport() {
 
+        function printExpiringStockReport() {
             var expiryDate = $("#expiresBy").val();
 
             if (!expiryDate) {
@@ -127,12 +181,14 @@ curl(
                 return false;
             }
 
+            var stockroomId = $("#expiringStockReport-StockroomId").val();
+
             // Get the dates into the expected format (dd-MM-yyyy)
             expiryDate = openhmis.dateFormat(new Date(expiryDate), false);
 
             var reportId = $('#expiringStockReportId').val();
 
-            return printReport(reportId, "expiresBy=" + expiryDate);
+            return printReport(reportId, "expiresBy=" + expiryDate + "&stockroomId=" + stockroomId);
         }
 
         function printReport(reportId, parameters) {
@@ -142,57 +198,6 @@ curl(
             window.open(url, "pdfDownload");
 
             return false;
-        }
-
-        function doSearch(request, response) {
-            // Query the item stock by name
-            var query = "?q=" + encodeURIComponent(request.term);
-
-            // We only want to return items that have physical stock
-            query += "&has_physical_inventory=true";
-
-            var cacheSection = "item"
-            if (cacheSection + query in cache) {
-                response(cache[cacheSection + query]);
-                return;
-            }
-            
-            search(request, response, openhmis.Item, query, cacheSection,
-                function(model) {
-                    return {
-                        val: model.id,
-                        label: model.get('name')
-                    }
-                }
-            );
-        }
-
-        function search(request, response, model, query, cacheSection, mapFn) {
-            var resultCollection = new openhmis.GenericCollection([], { model: model });
-            var fetchQuery = query ? query : "?q=" + encodeURIComponent(request.term);
-
-            resultCollection.fetch({
-                url: resultCollection.url + fetchQuery,
-                success: function(collection, resp) {
-                    var data = collection.map(mapFn);
-                    cache[cacheSection + query] = data;
-                    response(data);
-                },
-                error: openhmis.error,
-                statusCode: {
-                    401: function(data) {
-                        alert("Auth Failure!");
-                    }
-                }
-            });
-        }
-
-        function selectItem(event, ui) {
-            var uuid = ui.item.val;
-            var name = ui.item.label;
-
-            $('#itemSearch').val(name);
-            $('#item-uuid').val(uuid);
         }
     }
 );

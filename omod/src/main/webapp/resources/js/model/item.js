@@ -17,25 +17,25 @@ define(
 		openhmis.url.backboneBase + 'js/lib/underscore',
 		openhmis.url.backboneBase + 'js/model/generic',
 		openhmis.url.backboneBase + 'js/lib/i18n',
+        openhmis.url.backboneBase + 'js/model/openhmis',
 		openhmis.url.inventoryBase + 'js/model/department',
-        openhmis.url.inventoryBase + 'js/model/category',
         openhmis.url.backboneBase + 'js/model/concept'
 	],
 	function(_, openhmis, __) {
-
 		openhmis.ItemCode = openhmis.GenericModel.extend({
 			meta: {
 				name: "Item Code",
 				namePlural: "Item Codes",
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'itemCode'
+				restUrl: openhmis.url.inventoryModelBase + 'itemCode',
+				confirmDelete: 'Are you sure you want to delete this item code?'
 			},
 			schema: {
 				code: {
 					type: 'Text',
 					validators: [
 						{ type: 'required', message: 'Item Code is required' }
-					] 
+					]
 				}
 			},
 			toString: function() { return this.get('code'); }
@@ -46,7 +46,8 @@ define(
 				name: "Item Price",
 				namePlural: "Item Prices",
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'itemPrice'
+				restUrl: openhmis.url.inventoryModelBase + 'itemPrice',
+				confirmDelete: "Are you sure you want to delete this item price?"
 			},
 			schema: {
 				name: { type: "Text" },
@@ -54,7 +55,7 @@ define(
 					type: 'BasicNumber',
 					validators: [
 						{ type: 'required', message: 'Price value is required' }
-					] 
+					]
 				}
 			},
 
@@ -68,7 +69,7 @@ define(
 				}
 				return openhmis.GenericModel.prototype.set.call(this, key, value, options);
 			},
-			
+
 			format: function(price) {
 				if (price === undefined) {
 					return 0;
@@ -78,12 +79,12 @@ define(
 				}
 				return price.toFixed(2);
 			},
-			
+
 			toString: function() {
 				var name = this.get("name") ? " (" + this.get("name") + ")" : "";
 				return this.format(this.get('price')) + name;
 			},
-			
+
 			toJSON: function() {
 				var attributes = openhmis.GenericModel.prototype.toJSON.call(this);
 				if (this.get('uuid') != null && this.get('uuid') != undefined) {
@@ -93,13 +94,26 @@ define(
 			}
 		});
 
+        openhmis.ItemAttributeType = openhmis.AttributeTypeBase.extend({
+            meta: {
+                restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType'
+            }
+        });
 
-		openhmis.Item = openhmis.GenericModel.extend({
-			meta: {
+        openhmis.ItemAttribute = openhmis.AttributeBase.extend({
+            attributeTypeClass: openhmis.ItemAttributeType,
+            attributeTypeEditor: 'ItemAttributeTypeSelect'
+        });
+
+        openhmis.Item = openhmis.CustomizableBase.extend({
+            attributeClass: openhmis.ItemAttribute,
+
+            meta: {
 				name: "Item",
 				namePlural: "Items",
 				openmrsType: 'metadata',
-				restUrl: openhmis.url.inventoryModelBase + 'item'
+				restUrl: openhmis.url.inventoryModelBase + 'item',
+				confirmDelete: "Are you sure you want to delete this item?"
 			},
 			schema: {
 				name: { type: 'Text' },
@@ -111,16 +125,6 @@ define(
 					}),
 					objRef: true
 				},
-// TODO enable categories in v1.1
-//                category: {
-//                    type: 'CategorySelect',
-//                    options: new openhmis.GenericCollection(null, {
-//                        model: openhmis.Category,
-//                        url: openhmis.url.inventoryModelBase + 'category',
-//	                    allowNull: true
-//                    }),
-//                    objRef: true
-//                },
 				hasExpiration: { type: "TrueFalseCheckbox" },
 				defaultExpirationPeriod: { type: 'DefaultExpirationPeriodStepper' },
 				concept: { type: 'ConceptInput'},
@@ -133,7 +137,8 @@ define(
 			},
 
 			initialize: function(attributes, options) {
-				openhmis.GenericModel.prototype.initialize.call(this, attributes, options);
+				openhmis.CustomizableBase.prototype.initialize.call(this, attributes, options);
+
 				this.on("change:defaultPrice", function(model, defaultPrice, options) {
 					this._getDefaultPriceFromPricesIfAvailable(defaultPrice.id || defaultPrice);
 				});
@@ -221,19 +226,20 @@ define(
 			},
 
 			parse: function(resp) {
-				if (resp) {
+                openhmis.CustomizableBase.prototype.parse.call(this, resp);
+
+                if (resp) {
 					if (resp.department && _.isObject(resp.department)) {
 						resp.department = new openhmis.Department(resp.department);
 					}
-
+					if(resp.codes){
+						resp.codes = new openhmis.GenericCollection(resp.codes, { model: openhmis.ItemCode}).models;
+					}
 					if (resp.prices) {
 						resp.prices = new openhmis.GenericCollection(resp.prices, { model: openhmis.ItemPrice }).models;
 					}
 					if (resp.defaultPrice) {
 						resp.defaultPrice = new openhmis.ItemPrice(resp.defaultPrice);
-					}
-					if (resp.category && _.isObject(resp.category)) {
-						resp.category = new openhmis.Category(resp.category);
 					}
 					if (resp.concept && _.isObject(resp.concept)) {
 						resp.concept = new openhmis.Concept(resp.concept);

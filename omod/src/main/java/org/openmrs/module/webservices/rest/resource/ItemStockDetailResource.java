@@ -8,7 +8,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @SubResource(parent = ItemStockResource.class, path="detail", supportedClass = ItemStockDetail.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
 public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemStockDetail> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {

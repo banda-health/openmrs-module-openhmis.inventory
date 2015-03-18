@@ -97,6 +97,21 @@
 		</td></tr>
 		<tr><td>
 			<br />
+			<label for="stockOperationsByStockroomReportId">Select Stock Operations By Stockroom Report</label>
+			<spring:bind path="stockOperationsByStockroomReportId">
+				<select id="stockOperationsByStockroomReportId" name="${status.expression}">
+					<option value=""></option>
+					<c:forEach items="${reports}" var="report">
+						<option value="${report.reportId}"
+						    <c:if test="${settings.stockOperationsByStockroomReportId == report.reportId}">selected</c:if>>
+								${report.name}
+						</option>
+					</c:forEach>
+				</select>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
 			<label for="stockroomReportId">Select Stockroom Report</label>
 			<spring:bind path="stockroomReportId">
 				<select id="stockroomReportId" name="${status.expression}">

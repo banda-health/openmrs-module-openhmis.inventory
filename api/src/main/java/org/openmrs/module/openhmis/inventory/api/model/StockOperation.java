@@ -2,7 +2,7 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomizableMetadata;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -22,7 +22,7 @@ import java.util.Set;
  * transitioned to the associated stockroom.
  */
 public class StockOperation
-		extends BaseCustomizableInstanceMetadata<IStockOperationType, StockOperationAttribute>
+		extends BaseInstanceCustomizableMetadata<IStockOperationType, StockOperationAttribute>
 		implements Comparable<StockOperation> {
 	public static final long serialVersionUID = 2L;
 
@@ -40,6 +40,7 @@ public class StockOperation
 	protected Patient patient;
 	protected Institution institution;
 	protected Department department;
+	private String cancelReason;
 
 	@Override
 	public Integer getId() {
@@ -108,6 +109,7 @@ public class StockOperation
 		return destination;
 	}
 
+
 	public void setDestination(Stockroom newDestination) {
 		if (this.destination == newDestination) {
 			return;
@@ -147,6 +149,14 @@ public class StockOperation
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public String getCancelReason() {
+		return cancelReason;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
 	}
 
 	public StockOperationItem addItem(Item item, int quantity) {

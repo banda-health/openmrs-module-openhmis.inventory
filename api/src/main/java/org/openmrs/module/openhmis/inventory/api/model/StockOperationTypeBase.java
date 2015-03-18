@@ -6,12 +6,12 @@ import java.util.TreeSet;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceType;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomizableType;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 
 public abstract class StockOperationTypeBase
-		extends BaseCustomizableInstanceType<StockOperationAttributeType>
+		extends BaseInstanceCustomizableType<StockOperationAttributeType>
 		implements IStockOperationType {
 	public static final long serialVersionUID = 0L;
 
