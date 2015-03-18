@@ -17,8 +17,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -31,7 +29,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import java.util.List;
 
 @Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass=IStockOperationType.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
 public class StockOperationTypeResource
 		extends BaseRestInstanceTypeResource<IStockOperationType, StockOperationAttributeType> {
 	@Override
