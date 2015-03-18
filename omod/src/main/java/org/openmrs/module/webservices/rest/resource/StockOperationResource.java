@@ -13,12 +13,6 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,8 +49,14 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.web.client.RestClientException;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
 public class StockOperationResource
 		extends BaseRestInstanceCustomizableMetadataResource<StockOperation, IStockOperationType, StockOperationAttribute> {
 	private static final Log LOG = LogFactory.getLog(StockOperationResource.class);

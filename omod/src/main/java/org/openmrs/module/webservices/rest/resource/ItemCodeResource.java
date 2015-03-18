@@ -21,7 +21,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name= ModuleRestConstants.ITEM_CODE_RESOURCE, supportedClass=ItemCode.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*"})
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
 public class ItemCodeResource extends BaseRestMetadataResource<ItemCode> implements IMetadataDataServiceResource<ItemCode> {
 	@Override
 	public ItemCode newDelegate() {
