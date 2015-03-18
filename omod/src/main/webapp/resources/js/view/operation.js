@@ -41,7 +41,7 @@ define(
             selectedTab: null,
 	        currentTx: null,
 	        currentTxForm: null,
-            
+
 
             events: {
                 'click .completeOp': 'completeOperation',
@@ -62,7 +62,7 @@ define(
                     listFields: ['item', 'quantity', 'batchOperation', 'expiration'],
                     itemView: openhmis.OperationItemListItemView
                 });
-                
+
                 this.transactionsView = new openhmis.StockroomDetailList({
                     model: new openhmis.GenericCollection([], {
                         model: openhmis.OperationTransaction
@@ -76,7 +76,7 @@ define(
                 this.itemsView.on("fetch", this.fetch);
                 this.transactionsView.on("fetch", this.fetch);
             },
-            
+
         	edit: function(model) {
         		$("#viewOperation").show();
         		$("#newOperationDialog").hide();
@@ -84,7 +84,7 @@ define(
         		$(".addLink").hide();
         		openhmis.GenericAddEditView.prototype.edit.call(this, model);
         	},
-        	
+
         	cancel: function() {
         		openhmis.GenericAddEditView.prototype.cancel.call(this);
         		$("#newOperationDialog").hide();
@@ -183,7 +183,7 @@ define(
 			        tabs.hide();
 		        }
 		        this.$el.addClass('footer-padding');
-                
+
             },
 
             updateStatus: function(status) {
@@ -261,6 +261,7 @@ define(
             currentOperationType: undefined,
 
             initialize: function(options) {
+
                 openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
                 if (options.element) {
@@ -268,7 +269,8 @@ define(
                 }
 
                 this.events = _.extend({}, this.events, {
-                    'change select[name="instanceType"]': 'instanceTypeChanged'
+                    'change select[name="instanceType"]': 'instanceTypeChanged',
+                    'change select[name="source"]': 'sourceChanged',
                 });
 
                 var self = this;
@@ -387,6 +389,7 @@ define(
 
                     this.itemStockView = new openhmis.OperationItemStockView({
                         model: this.model.get('items'),
+                        id: "itemStock",
                         itemView: openhmis.OperationItemStockItemView,
                         listTitle: 'Operation Items',
                         listFields: ['item', 'quantity', 'expiration', 'batchOperation'],
@@ -409,9 +412,9 @@ define(
                 $(".cancel  ").hide();
                 $("#createOperationLink").hide();
 
+
                 // Insert the item stock list after the form but before the buttons
                 $("#newOperation").find(".bbf-form").after(this.itemStockView.el);
-
 
                 // If the patient search already exists remove it and reset the patient search view
                 this.$patientSearch = this.$("#patientSearch");
@@ -439,12 +442,29 @@ define(
                     this.updateOperationType(this.currentOperationType);
                 }
             },
-            
+
             beginAdd: function() {
             	$("#viewOperation").hide();
             	$("#createOperationLink").hide();
             	$(".addLink").hide();
             	openhmis.GenericAddEditView.prototype.beginAdd.call(this);
+            },
+
+            checkHideItemStock: function() {
+                var selectedSource = $('select[name="source"]').val();
+                if ($('select[name="source"]').is(':enabled') && (selectedSource == null || selectedSource == "")) {
+                	$(".item-stock").hide();
+                    if (!$('#itemStockMessage').length) {
+                        $(".item-stock").after("<div id='itemStockMessage'><b>You must select a stockroom before selecting items</b></div>");
+                    } else {
+                    	$("#itemStockMessage").show();
+                    }
+                } else {
+                	$(".item-stock").show();
+                	if ($('#itemStockMessage').length) {
+                		$("#itemStockMessage").hide();
+                	}
+                }
             },
 
             instanceTypeChanged: function(event) {
@@ -546,6 +566,8 @@ define(
                     } else {
                         this.$patientSearch.prop('disabled', true);
                     }
+
+                    this.checkHideItemStock();
                 }
 
                 // Find or create the attributes element
@@ -575,6 +597,27 @@ define(
                 return type;
             },
 
+            sourceChanged: function(event) {
+                var items = this.itemStockView.model.length;
+                if (items > 0) {
+                    // Confirm operation type change if there are any defined item stock
+                    if (!confirm('Changing the source stockroom will clear the item stock. Are you sure you want to do this?')) {
+                        // Set the value back to the previous value
+                        this.$(event.target).val($.data(event.target, 'current'));
+
+                        return false;
+                    }
+                }
+                // Store the updated operation type as the current value for the select
+                $.data(event.target, 'current', this.$(event.target).val());
+
+                this.checkHideItemStock();
+
+                if (items > 0) {
+                    this.clearItemStock();
+                }
+            },
+
             showProcessingDialog: function() {
                 $('.cancel').prop('disabled', true);
                 $('.submit').prop('disabled', true);
@@ -595,6 +638,7 @@ define(
 
                 $('#processingDialog').dialog("close");
             }
+
         });
 
         openhmis.OperationItemStockView = openhmis.GenericListEntryView.extend({
@@ -748,6 +792,7 @@ define(
                         success: function(model, resp) {
                             var expirations = [];
                             var batches = [];
+                            var stockroomQuantity = null;
 
                             if (model.models && model.models.length > 0) {
                                 var hasExp = false;
@@ -767,9 +812,11 @@ define(
                                     if (batch) {
                                         batches.push(batch);
                                     }
+
+                                    stockroomQuantity = model.models[0].get("quantity")
                                 });
 
-                                if ((hasExp || itemHasExpiration) && hasNone) {
+                                if ((hasExp || itemHasExpiration) && hasNone && stockroomQuantity != null && stockroomQuantity > 0) {
                                     // Add the 'None' expiration if there was at least one expiration or the item is
                                     //  expirable and there was an empty expiration
                                     itemHasExpiration = true;
