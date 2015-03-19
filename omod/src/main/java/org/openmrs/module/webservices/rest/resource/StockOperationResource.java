@@ -231,7 +231,7 @@ public class StockOperationResource
 
 	@PropertySetter("operationDate")
 	public void setOperationDate(StockOperation instance, String dateText) {
-		Date date = Utility.parseOpenhmisDateString(dateText);
+		Date date = Utility.parseOpenhmisDateStringWithSeconds(dateText);
 		if (date == null) {
 			throw new IllegalArgumentException("Could not parse '" + dateText + "' as a date.");
 		}
