@@ -332,6 +332,169 @@ define(
             }
         });
 
-		return openhmis;
-	}
+        openhmis.SearchByOperationItemView = openhmis.BaseSearchView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/search.html',
+            tmplSelector: '#operation-item-search',
+
+
+            initialize: function(options) {
+            	this.itemSelector = "#item-uuid";
+                this.events['change #item-uuid'] = 'onFormSubmit';
+
+                this.item_uuid = "";
+
+                openhmis.BaseSearchView.prototype.initialize.call(this, options);
+                this.form = new Backbone.Form({
+                    className: "inline",
+                    schema: {
+                        operation_item: {
+                            title: __("Item"),
+                            type: "Text",
+                            editorClass: "search"
+                        }
+                    }
+                });
+            },
+
+            getFetchOptions: function(options) {
+                options = options ? options : {};
+                if (this.searchFilter) {
+                    for (var filter in this.searchFilter) {
+                        if (this.searchFilter[filter] !="") {
+                            if (filter == "operation_item") {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, "operationItem_uuid" + "=" + $(this.itemSelector).val());
+                                this.item_uuid = $(this.itemSelector).val();
+                            } else {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
+                                encodeURIComponent(this.searchFilter[filter]));
+                            }
+                        }
+                    }
+                }
+
+                return options;
+            },
+
+            focus: function() {
+                if (this.item_uuid != "") {
+                	$(this.itemSelector).val(this.item_uuid);
+                }
+            },
+
+            commitForm: function() {
+                var filters = this.form.getValue();
+                this.searchFilter = filters;
+            },
+
+            render: function() {
+                this.$el.html(this.template({ __: __ }));
+                this.$("div.box").append(this.form.render().el);
+
+                if (this.searchFilter) {
+                   this.form.setValue(this.searchFilter);
+                }
+
+                this.$("form").addClass("inline");
+                this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+                this.$("#operation_item").autocomplete({
+                    minLength: 2,
+                    source: doSearch,
+                    select: selectItem
+                })
+                .data("autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>").data("item.autocomplete", item)
+                    .append("<a>" + item.label + "</a>").appendTo(ul);
+                };
+                return this;
+            }
+        });
+
+        openhmis.SearchByTransactionItemView = openhmis.BaseSearchView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/search.html',
+            tmplSelector: '#transaction-item-search',
+
+
+            initialize: function(options) {
+            	this.itemSelector = "#transaction-item-uuid";
+                this.events['change #transaction-item-uuid'] = 'onFormSubmit';
+
+                this.item_uuid = "";
+
+                openhmis.BaseSearchView.prototype.initialize.call(this, options);
+                this.form = new Backbone.Form({
+                    className: "inline",
+                    schema: {
+                        transaction_item: {
+                            title: __("Item"),
+                            type: "Text",
+                            editorClass: "search"
+                        }
+                    }
+                });
+            },
+
+            getFetchOptions: function(options) {
+                options = options ? options : {};
+                if (this.searchFilter) {
+                    for (var filter in this.searchFilter) {
+                        if (this.searchFilter[filter] !="") {
+                            if (filter == "transaction_item") {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, "transactionItem_uuid" + "=" + $(this.itemSelector).val());
+                                this.item_uuid = $(this.itemSelector).val();
+                            } else {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
+                                encodeURIComponent(this.searchFilter[filter]));
+                            }
+                        }
+                    }
+                }
+
+                return options;
+            },
+
+            focus: function() {
+                if (this.item_uuid != "") {
+                	$(this.itemSelector).val(this.item_uuid);
+                }
+            },
+
+            commitForm: function() {
+                var filters = this.form.getValue();
+                this.searchFilter = filters;
+            },
+
+            render: function() {
+                this.$el.html(this.template({ __: __ }));
+                this.$("div.box").append(this.form.render().el);
+
+                if (this.searchFilter) {
+                   this.form.setValue(this.searchFilter);
+                }
+
+                this.$("form").addClass("inline");
+                this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+                this.$("#transaction_item").autocomplete({
+                    minLength: 2,
+                    source: doSearch,
+                    select: selectTransactionItem
+                })
+                .data("autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>").data("item.autocomplete", item)
+                    .append("<a>" + item.label + "</a>").appendTo(ul);
+                };
+                return this;
+            },
+
+        });
+
+        //needed because otherwise there would be same ids twice on the reports page
+        function selectTransactionItem(event, ui) {
+            var uuid = ui.item.val;
+            var name = ui.item.label;
+            $('#transaction-item').val(name);
+            $('#transaction-item-uuid').val(uuid).trigger('change');
+        };
+
+        return openhmis;
+    }
 )

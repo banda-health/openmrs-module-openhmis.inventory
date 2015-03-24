@@ -83,21 +83,23 @@ define(
 			        listFields: ['item', 'quantity'],
 			        searchView: openhmis.ByNameSearchView
 		        });
-		        this.operationsView = new openhmis.StockroomDetailList({
+		        this.operationsView = new openhmis.StockroomDetailSearchList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.Operation
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status']
+			        listFields: ['dateCreated', 'instanceType', 'operationNumber', 'status'],
+			        searchView: openhmis.SearchByOperationItemView
 		        });
-		        this.transactionsView = new openhmis.StockroomDetailList({
+		        this.transactionsView = new openhmis.StockroomDetailSearchList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.OperationTransaction
 			        }),
 			        showRetiredOption: false,
 			        showRetired: true,
-			        listFields: ['dateCreated', 'operation', 'item', 'batchOperation',  'expiration', 'quantity']
+			        listFields: ['dateCreated', 'operation', 'item', 'batchOperation',  'expiration', 'quantity'],
+			        searchView: openhmis.SearchByTransactionItemView
 		        });
 
 		        this.itemsView.on("fetch", this.fetch);
