@@ -118,5 +118,11 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 				(dateCreatedComparisonType != null && dateCreatedComparisonType != DateComparisonType.EQUAL)) {
 			criteria.add(createCriterion("dateCreated", operation.getDateCreated(), dateCreatedComparisonType));
 		}
+		if (operation.getStockroom() != null) {
+			criteria.add(Restrictions.or(
+					Restrictions.eq("source", operation.getStockroom()),
+					Restrictions.eq("destination", operation.getStockroom())
+			));
+		}
 	}
 }

@@ -23,6 +23,8 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
 public class StockOperationTemplate extends StockOperation {
+	private Stockroom stockroom;
+
 	@Override
 	public void setSource(Stockroom newSource) {
 		this.source = newSource;
@@ -41,6 +43,14 @@ public class StockOperationTemplate extends StockOperation {
 	@Override
 	public void setInstitution(Institution newInstitution) {
 		this.institution = newInstitution;
+	}
+
+	public Stockroom getStockroom() {
+		return stockroom;
+	}
+
+	public void setStockroom(Stockroom stockroom) {
+		this.stockroom = stockroom;
 	}
 
 	public void setItem(Item item) {

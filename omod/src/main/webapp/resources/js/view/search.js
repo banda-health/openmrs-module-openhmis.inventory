@@ -238,6 +238,7 @@ define(
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
                 this.events['change #operationType_uuid'] = 'onFormSubmit';
+                this.events['change #stockroom_uuid'] = 'onFormSubmit';
                 this.events['change #item-uuid'] = 'onFormSubmit';
 
                 this.item_uuid = "";
@@ -247,6 +248,12 @@ define(
                 operationTypeCollection.on("reset", function(collection) {
                     collection.unshift(new openhmis.OperationType({ name: __("Any") }));
                 });
+
+                var stockroomCollection = new openhmis.GenericCollection([], { model: openhmis.Stockroom });
+                stockroomCollection.on("reset", function(collection) {
+                    collection.unshift(new openhmis.Stockroom({ name: __("Any") }));
+                });
+
                 this.form = new Backbone.Form({
                     className: "inline",
                     schema: {
@@ -259,6 +266,11 @@ define(
                             title: __("Operation Type"),
                             type: "Select",
                             options: operationTypeCollection
+                        },
+                        stockroom_uuid: {
+                            title: __("Stockroom"),
+                            type: "Select",
+                            options: stockroomCollection
                         },
                         operation_item: {
                             title: __("Item"),

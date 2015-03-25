@@ -124,6 +124,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 * @should return operations filtered by source stockroom
 	 * @should return operations filtered by destination stockroom
 	 * @should return operations filtered by creation date
+	 * @should return operations filtered by stockroom
 	 * @should return all operations if paging is null
 	 * @should return paged operations if paging is specified
 	 * @should return operations filtered by patient

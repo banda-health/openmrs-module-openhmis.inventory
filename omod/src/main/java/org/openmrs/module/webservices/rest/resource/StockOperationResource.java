@@ -29,12 +29,14 @@ import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationTemplate;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
@@ -63,6 +65,7 @@ public class StockOperationResource
 
 	private IStockOperationService operationService;
 	private IStockOperationTypeDataService stockOperationTypeDataService;
+	private IStockroomDataService stockroomDataService;
 	private IItemDataService itemDataService;
 	private boolean submitRequired = false;
 	private boolean rollbackRequired = false;
@@ -70,6 +73,7 @@ public class StockOperationResource
 	public StockOperationResource() {
 		this.operationService = Context.getService(IStockOperationService.class);
 		this.stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
+		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.itemDataService = Context.getService(IItemDataService.class);
 	}
 
@@ -252,8 +256,10 @@ public class StockOperationResource
 		} else {
 			String status = context.getParameter("operation_status");
 			String operationTypeUuid = context.getParameter("operationType_uuid");
+			String stockroomUuid = context.getParameter("stockroom_uuid");
 			String operationItemUuid = context.getParameter("operationItem_uuid");
-			if (status != null || operationTypeUuid != null || operationItemUuid != null) {
+
+			if (status != null || operationTypeUuid != null || stockroomUuid != null || operationItemUuid != null) {
 				result = getOperationsByContextParams(context);
 			} else {
 				result = super.doSearch(context);
@@ -291,6 +297,7 @@ public class StockOperationResource
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		StockOperationStatus status = getStatus(context);
 		IStockOperationType stockOperationType = getStockOperationType(context);
+		Stockroom stockroom = getStockroom(context);
 		Item item = getItem(context);
 
 		List<StockOperation> results;
@@ -304,6 +311,9 @@ public class StockOperationResource
 			}
 			if (stockOperationType != null) {
 				template.setInstanceType(stockOperationType);
+			}
+			if (stockroom != null) {
+				template.setStockroom(stockroom);
 			}
 			if (item != null) {
 				template.setItem(item);
@@ -343,6 +353,21 @@ public class StockOperationResource
 		}
 
 		return stockOperationType;
+	}
+
+	private Stockroom getStockroom(RequestContext context) {
+		Stockroom stockroom = null;
+		String stockroomUuid = context.getParameter("stockroom_uuid");
+		if (StringUtils.isNotEmpty(stockroomUuid)) {
+			stockroom = stockroomDataService.getByUuid(stockroomUuid);
+
+			if (stockroom == null) {
+				LOG.warn("Could not parse Stockroom '" + stockroomUuid + "'");
+				throw new IllegalArgumentException("The stockroom '" + stockroomUuid + "' is not a valid stockroom.");
+			}
+		}
+
+		return stockroom;
 	}
 
 	private Item getItem(RequestContext context) {
