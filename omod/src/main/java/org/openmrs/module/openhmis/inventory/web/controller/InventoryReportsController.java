@@ -24,6 +24,7 @@ import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.exception.ReportNotFoundException;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
+import org.openmrs.module.openhmis.inventory.web.controller.util.Util;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +66,7 @@ public class InventoryReportsController {
 			handleReport(model, reportId, "expiringStockReport");
 		}
 
+		model.addAttribute("showStockTakeLink", Util.userCanPerformAdjustmentOperation(Context.getAuthenticatedUser()));
 		model.addAttribute("stockrooms", stockroomDataService.getAll());
 	}
 

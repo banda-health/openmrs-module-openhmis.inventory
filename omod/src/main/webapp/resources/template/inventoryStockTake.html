@@ -1,0 +1,82 @@
+<script id="inventory-stock-take-list" type="text/template">
+<b class="boxHeader"><?= options.listTitle !== undefined ? options.listTitle : __("Current %s", modelType.modelNamePlural()) ?></b>
+<div class="box">
+	<? if (listLength === 0) { ?>
+		<p class="empty"><?= __("There are currently no %s", modelType.modelNamePlural().toLowerCase()) ?></p>
+	<? } else { ?>
+	<table class="display" width="100%">
+		<thead>
+			<tr>
+			<? if (options.itemActions.length > 0) { ?><th class="item-actions end" style="width: <?= options.itemActions.length * 10 ?>px;"></td> <? } ?>
+			<? for (var field in fields) { if (modelSchema[fields[field]] && modelSchema[fields[field]].hidden) continue; ?>
+				<? var fieldClassName = "field-" + fields[field]; ?>
+				<th class="<?= fieldClassName ?>">
+					<? if (modelSchema[fields[field]] !== undefined) {
+						print(modelSchema[fields[field]].title === undefined ? helpers.keyToTitle(fields[field]) : modelSchema[fields[field]].title);
+					}
+					else
+						print(fields[field]);
+					?>
+				</th>
+			<? } ?>
+			<th>Actual Quantity</th>
+			</tr>
+		</thead>
+		<tbody class="list"></tbody>
+		<tfoot></tfoot>
+	</table>
+	<? } ?>
+	<? if (options.spinnerEnabled) { ?>
+		<div class="tSpace">
+			<div class="overlay">
+				<div class="modalSpinner">
+					<div class="spinner"></div>
+					<? if (options.loadingText) { ?>
+					<div class="loadingText"><?=__("Loading %s", modelType.modelNamePlural()) ?></div>
+					<? } ?>
+				</div>
+			</div>
+		</div>
+	<? } ?>
+	<? if (pagingEnabled) { ?>
+		<div class="paging-container ui-helper-clearfix"></div>
+	<? } ?>
+	<? var strRetiredOrVoided = (modelMeta.openmrsType === 'data') ? "voided" : "retired" ?>
+	<? if (pagingEnabled) { ?><span class="pageSize"></span><? } ?>
+	<br/>
+	<br/>
+	<input type="submit" class="submit" value="Save Stock Take">
+</div>
+</script>
+
+<script id="inventory-stock-take-list-item" type="text/template">
+	<? if (actions.indexOf('inlineEdit') !== -1) {
+		// do nothing, leave blank for form to be rendered
+	 } else { ?>
+		<? var cssClass; ?>
+		<? for (var field in fields) { ?>
+			<? cssClass = "field-" + fields[field];
+				if (model.isRetired()) cssClass += " retired";
+				if (model.schema[fields[field]] !== undefined
+					&& model.schema[fields[field]].type in {'Number':0, 'BasicNumber':0, 'Date':0, 'DateTime':0})
+					cssClass += " numeric"; ?>
+			<td class="<?= cssClass ?>">
+				<? if (model.schema[fields[field]] === undefined) {
+					/* leave cell empty */
+				} else if (model.schema[fields[field]].type === 'List' && model.schema[fields[field]].model !== undefined) {
+					print(GenericCollection.prototype.toString.call(
+						model.get([fields[field]]),
+						model.schema[fields[field]])
+					);
+				} else if (model.schema[fields[field]].format !== undefined) {
+					print(model.schema[fields[field]].format(model.get(fields[field])));
+				} else {
+					print(model.get(fields[field]));
+				} ?>
+			</td>
+		<? } ?>
+		<td>
+			<input type="number" id="" class="actual-quantity" style="width:100px;border: 1px solid cadetblue;"/>
+		</td>
+	<? } ?>
+</script>
