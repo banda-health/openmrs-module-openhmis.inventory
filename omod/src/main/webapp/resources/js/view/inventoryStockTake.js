@@ -15,6 +15,7 @@ define(
     [
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/model/inventoryStockTake',
         'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
 
@@ -33,18 +34,49 @@ define(
 
             initialize: function(options) {
                 openhmis.GenericSearchableListView.prototype.initialize.call(this, options);
-                this.itemStockDetails = [];
+                this.itemStockDetails = {};
                 this.searchView.on('resetItemStockAdjustments', this.resetItemStockAdjustments);
-                this.itemView.on('quantityChange', this);
             },
 
             resetItemStockAdjustments: function() {
-            	console.log('resetItemStockAdjustments');
-            	this.itemStockDetails = []
+            	this.itemStockDetails = {}
+            },
+
+            addOne: function(model, schema, lineNumber) {
+                openhmis.GenericSearchableListView.prototype.addOne.call(this, model, schema, lineNumber);
+                var self = this
+                model.view.on('quantityChange', function() {
+                    var uuid = this.model.get('uuid');
+                    if(this.model.get('actualQuantity') != null
+                            && this.model.get('actualQuantity') != "" && this.model.get('actualQuantity') != this.model.get('quantity')) {
+                        self.itemStockDetails[uuid] = this.model;
+                    } else {
+                        delete self.itemStockDetails[uuid];
+                    }
+                });
             },
 
             save: function () {
-                console.log("save");
+                var stockTakeDetails = new openhmis.InventoryStockTake();
+                var itemStockDetailsArray = this.convertToArray(this.itemStockDetails)
+                stockTakeDetails.set("stockTakeDetailList", itemStockDetailsArray);
+
+            	stockTakeDetails.save(null, {
+					success: function(stockTakeDetails, resp) {
+
+					},
+					error: function(stockTakeDetails, resp) {
+						openhmis.error(resp);
+					}
+				});
+            },
+
+            convertToArray: function(associativeArray) {
+                var array = [];
+                for (var key in associativeArray) {
+                    array.push(associativeArray[key]);
+                }
+                return array;
             }
         });
 
@@ -57,7 +89,8 @@ define(
             },
 
             changeItemStockDetail: function(event) {
-                console.log('change');
+            	this.model.set('actualQuantity', event.srcElement.value);
+                this.trigger('quantityChange', this);
             },
         });
 
