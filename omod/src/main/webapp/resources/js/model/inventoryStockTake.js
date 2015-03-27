@@ -30,7 +30,7 @@ define(
 
             schema: {
             	operationNumber: {type: "text"},
-            	itemStockDetailList: { type: "List", itemType: "NestedModel", model: openhmis.itemStockDetail },
+            	stockTakeDetailList: { type: "List", itemType: "NestedModel", model: openhmis.itemStockDetail },
             },
 
         });

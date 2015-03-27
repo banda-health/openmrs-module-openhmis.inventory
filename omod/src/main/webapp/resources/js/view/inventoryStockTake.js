@@ -59,6 +59,7 @@ define(
             save: function () {
                 var stockTakeDetails = new openhmis.InventoryStockTake();
                 var itemStockDetailsArray = this.convertToArray(this.itemStockDetails)
+                stockTakeDetails.set("operationNumber", "bla");
                 stockTakeDetails.set("stockTakeDetailList", itemStockDetailsArray);
 
             	stockTakeDetails.save(null, {
@@ -89,7 +90,12 @@ define(
             },
 
             changeItemStockDetail: function(event) {
-            	this.model.set('actualQuantity', event.srcElement.value);
+            	var inputValue = $(event.currentTarget).val();
+            	if (inputValue < 0) {
+            		inputValue = 0;
+            		$(event.currentTarget).val(inputValue);
+            	};
+            	this.model.set('actualQuantity', inputValue);
                 this.trigger('quantityChange', this);
             },
         });
