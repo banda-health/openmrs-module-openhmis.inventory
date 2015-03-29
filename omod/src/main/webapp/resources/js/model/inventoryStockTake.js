@@ -25,14 +25,28 @@ define(
                 name: __("Inventory Stock Take"),
                 namePlural: __("Inventory Stock Take"),
                 openmrsType: 'metadata',
-                restUrl: openhmis.url.inventoryModelBase + 'itemStockDetailList'
+                restUrl: openhmis.url.inventoryModelBase + 'inventoryStockTake'
             },
 
             schema: {
-            	operationNumber: {type: "text"},
-            	stockTakeDetailList: { type: "List", itemType: "NestedModel", model: openhmis.itemStockDetail },
+                operationNumber: {type: "text"},
+                inventoryStockTakeList: { type: "List", itemType: "NestedModel", model: openhmis.InventoryStockTakeEntity },
             },
 
+        });
+
+        openhmis.InventoryStockTakeEntity = openhmis.GenericModel.extend({
+        	meta: {},
+            schema: {
+                actualQuantity: { type: "BasicNumber" },
+                quantity: { type: "BasicNumber" },
+                expiration: { type: "Date", format: openhmis.dateFormatLocale },
+                batchOperation: { type: "Object", objRef: true },
+                item: { type: "Object", objRef: true },
+                calculatedExpiration: { type: "Text" },
+                calculatedBatch: { type: "Text" },
+                stockroom: {type: "Object", objRef: true}
+            }
         });
 
         return openhmis;

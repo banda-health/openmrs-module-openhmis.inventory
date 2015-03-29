@@ -57,12 +57,12 @@ define(
             },
 
             save: function () {
-                var stockTakeDetails = new openhmis.InventoryStockTake();
+                var inventoryStockTake = new openhmis.InventoryStockTake();
                 var itemStockDetailsArray = this.convertToArray(this.itemStockDetails)
-                stockTakeDetails.set("operationNumber", "bla");
-                stockTakeDetails.set("stockTakeDetailList", itemStockDetailsArray);
+                inventoryStockTake.set("operationNumber", "bla");
+                inventoryStockTake.set("inventoryStockTakeList", itemStockDetailsArray);
 
-            	stockTakeDetails.save(null, {
+                inventoryStockTake.save(null, {
 					success: function(stockTakeDetails, resp) {
 
 					},
@@ -75,7 +75,8 @@ define(
             convertToArray: function(associativeArray) {
                 var array = [];
                 for (var key in associativeArray) {
-                    array.push(associativeArray[key]);
+                	var itemStockDetail = associativeArray[key];
+                    array.push(new openhmis.InventoryStockTakeEntity(itemStockDetail.attributes));
                 }
                 return array;
             }
@@ -95,7 +96,7 @@ define(
             		inputValue = 0;
             		$(event.currentTarget).val(inputValue);
             	};
-            	this.model.set('actualQuantity', inputValue);
+            	this.model.set('actualQuantity', parseInt(inputValue));
                 this.trigger('quantityChange', this);
             },
         });
