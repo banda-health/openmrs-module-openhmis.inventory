@@ -21,10 +21,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 import org.openmrs.module.openhmis.inventory.api.exception.ReportNotFoundException;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
-import org.openmrs.module.openhmis.inventory.web.controller.util.Util;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,7 +66,8 @@ public class InventoryReportsController {
 			handleReport(model, reportId, "expiringStockReport");
 		}
 
-		model.addAttribute("showStockTakeLink", Util.userCanPerformAdjustmentOperation(Context.getAuthenticatedUser()));
+		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null &&
+				WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
 		model.addAttribute("stockrooms", stockroomDataService.getAll());
 	}
 

@@ -3,8 +3,8 @@ package org.openmrs.module.openhmis.inventory.web.controller;
 import java.io.IOException;
 
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
-import org.openmrs.module.openhmis.inventory.web.controller.util.Util;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +16,7 @@ public class InventoryStockTakePageController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void inventory(ModelMap model) throws IOException {
 
-		model.addAttribute("showStockTakeLink", Util.userCanPerformAdjustmentOperation(Context.getAuthenticatedUser()));
+		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null &&
+				WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
 	}
 }
