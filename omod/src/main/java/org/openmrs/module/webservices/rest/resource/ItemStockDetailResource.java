@@ -57,8 +57,14 @@ public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemSto
 	@Override
 	public SimpleObject getAll(RequestContext context) {
 		PageableResult result;
+		String stockroomUuid = context.getParameter("stockroom_uuid");
+		if(stockroomUuid == null) {
+			List<Stockroom> stockrooms = stockroomDataService.getAll();
+			stockroomUuid = stockrooms.get(0).getUuid();
+		}
+		Stockroom stockroom =stockroomDataService.getByUuid(stockroomUuid);
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<ItemStockDetail> itemStockDetails = itemStockDetailDataService.getAllItems(pagingInfo);
+		List<ItemStockDetail> itemStockDetails = itemStockDetailDataService.getItemStockDetailsByStockroom(stockroom,pagingInfo);
 		result = new AlreadyPagedWithLength<ItemStockDetail>(context, itemStockDetails, pagingInfo.hasMoreResults(),
 				pagingInfo.getTotalRecordCount());
 		return result.toSimpleObject(this);
