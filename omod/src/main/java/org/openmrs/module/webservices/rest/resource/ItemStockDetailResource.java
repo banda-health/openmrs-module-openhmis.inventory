@@ -1,7 +1,5 @@
 package org.openmrs.module.webservices.rest.resource;
 
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -11,11 +9,14 @@ import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+
+import java.util.List;
 
 @Resource(name=ModuleRestConstants.ITEM_STOCK_DETAIL_RESOURCE, supportedClass = ItemStockDetail.class,
 		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
@@ -51,6 +52,16 @@ public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemSto
 		}
 
 		return result;
+	}
+
+	@Override
+	public SimpleObject getAll(RequestContext context) {
+		PageableResult result;
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+		List<ItemStockDetail> itemStockDetails = itemStockDetailDataService.getAllItems(pagingInfo);
+		result = new AlreadyPagedWithLength<ItemStockDetail>(context, itemStockDetails, pagingInfo.hasMoreResults(),
+				pagingInfo.getTotalRecordCount());
+		return result.toSimpleObject(this);
 	}
 
 	@Override

@@ -58,12 +58,8 @@ import java.util.Set;
 		if (!userCanProcess(operation)) {
 			throw new RestClientException("The current user not authorized to process this operation.");
 		}
-
 		InventoryStockTake inventoryStockTake = newDelegate();
 		operationService.submitOperation(operation);
-		//		// If the status has changed, submit the operation
-		//		stockOperationResource.save(operation);
-
 		return inventoryStockTake;
 	}
 

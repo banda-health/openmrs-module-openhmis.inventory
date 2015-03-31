@@ -1,7 +1,5 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -12,6 +10,8 @@ import org.openmrs.module.openhmis.inventory.api.IItemStockDetailDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
+
+import java.util.List;
 
 public class ItemStockDetailDataServiceImpl extends BaseObjectDataServiceImpl<ItemStockDetail, BasicObjectAuthorizationPrivileges> implements IItemStockDetailDataService {
 
@@ -29,6 +29,13 @@ public class ItemStockDetailDataServiceImpl extends BaseObjectDataServiceImpl<It
 			}
 		}, Order.asc("i.name"));
     }
+	public List<ItemStockDetail> getAllItems(final PagingInfo pagingInfo) {
+		return executeCriteria(ItemStockDetail.class, pagingInfo, new Action1<Criteria>() {
+			@Override public void apply(Criteria criteria) {
+				criteria.createAlias("item", "i");
+			}
+		}, Order.asc("i.name"));
+	}
 
 	@Override
     protected BasicObjectAuthorizationPrivileges getPrivileges() {

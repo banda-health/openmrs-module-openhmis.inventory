@@ -21,7 +21,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 
 	@PropertySetter("expiration") public void setExpiration(InventoryStockTakeEntity instance, String dateText) {
 	/*
-	*@todo set curent date here
+	*@todo set current date here
 	 */
 		instance.setExpiration(instance.getExpiration());
 	}
