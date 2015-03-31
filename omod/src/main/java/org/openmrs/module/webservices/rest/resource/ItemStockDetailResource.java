@@ -18,66 +18,70 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 
 import java.util.List;
 
-@Resource(name=ModuleRestConstants.ITEM_STOCK_DETAIL_RESOURCE, supportedClass = ItemStockDetail.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
+@Resource(name = ModuleRestConstants.ITEM_STOCK_DETAIL_RESOURCE, supportedClass = ItemStockDetail.class,
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
 public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemStockDetail> {
-
+	
 	private IStockroomDataService stockroomDataService;
 	private IItemStockDetailDataService itemStockDetailDataService;
-
+	
 	public ItemStockDetailResource() {
 		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.itemStockDetailDataService = Context.getService(IItemStockDetailDataService.class);
 	}
-
+	
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
-		DelegatingResourceDescription description =  super.getRepresentationDescription(rep);
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("stockroom", Representation.DEFAULT);
 		return description;
 	}
-
+	
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		PageableResult result;
-
+		
 		String stockroomUuid = context.getParameter("stockroom_uuid");
 		if (StringUtils.isNotBlank(stockroomUuid)) {
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 			Stockroom stockroom = stockroomDataService.getByUuid(stockroomUuid);
-			List<ItemStockDetail> itemStockDetails = itemStockDetailDataService.getItemStockDetailsByStockroom(stockroom, pagingInfo);
-			result = new AlreadyPagedWithLength<ItemStockDetail>(context, itemStockDetails, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			List<ItemStockDetail> itemStockDetails =
+			        itemStockDetailDataService.getItemStockDetailsByStockroom(stockroom, pagingInfo);
+			result =
+			        new AlreadyPagedWithLength<ItemStockDetail>(context, itemStockDetails, pagingInfo.hasMoreResults(),
+			                pagingInfo.getTotalRecordCount());
 		} else {
 			result = super.doSearch(context);
 		}
-
+		
 		return result;
 	}
-
+	
 	@Override
 	public SimpleObject getAll(RequestContext context) {
 		PageableResult result;
 		String stockroomUuid = context.getParameter("stockroom_uuid");
-		if(stockroomUuid == null) {
+		if (stockroomUuid == null) {
 			List<Stockroom> stockrooms = stockroomDataService.getAll();
 			stockroomUuid = stockrooms.get(0).getUuid();
 		}
-		Stockroom stockroom =stockroomDataService.getByUuid(stockroomUuid);
+		Stockroom stockroom = stockroomDataService.getByUuid(stockroomUuid);
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		List<ItemStockDetail> itemStockDetails = itemStockDetailDataService.getItemStockDetailsByStockroom(stockroom,pagingInfo);
-		result = new AlreadyPagedWithLength<ItemStockDetail>(context, itemStockDetails, pagingInfo.hasMoreResults(),
-				pagingInfo.getTotalRecordCount());
+		List<ItemStockDetail> itemStockDetails =
+		        itemStockDetailDataService.getItemStockDetailsByStockroom(stockroom, pagingInfo);
+		result =
+		        new AlreadyPagedWithLength<ItemStockDetail>(context, itemStockDetails, pagingInfo.hasMoreResults(),
+		                pagingInfo.getTotalRecordCount());
 		return result.toSimpleObject(this);
 	}
-
+	
 	@Override
 	public ItemStockDetail newDelegate() {
 		return new ItemStockDetail();
 	}
-
+	
 	@Override
 	public Class<? extends IObjectDataService<ItemStockDetail>> getServiceClass() {
 		return IItemStockDetailDataService.class;
 	}
 }
-

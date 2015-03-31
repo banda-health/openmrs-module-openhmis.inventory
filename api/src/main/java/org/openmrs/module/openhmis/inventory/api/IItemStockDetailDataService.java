@@ -11,6 +11,4 @@ public interface IItemStockDetailDataService extends IObjectDataService<ItemStoc
 
 	List<ItemStockDetail> getItemStockDetailsByStockroom(Stockroom stockroom, PagingInfo pagingInfo);
 
-	List<ItemStockDetail> getAllItems(PagingInfo pagingInfo);
-
 }

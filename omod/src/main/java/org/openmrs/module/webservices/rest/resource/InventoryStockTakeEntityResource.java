@@ -9,28 +9,32 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name = ModuleRestConstants.INVENTORY_STOCK_TAKE_ENTITY_RESOURCE, supportedClass = InventoryStockTakeEntity.class,
-		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" }) public class InventoryStockTakeEntityResource
-		extends ItemStockDetailBaseResource<InventoryStockTakeEntity> {
-
-	@Override public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
+public class InventoryStockTakeEntityResource extends ItemStockDetailBaseResource<InventoryStockTakeEntity> {
+	
+	@Override
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("stockroom", Representation.DEFAULT);
 		description.addProperty("actualQuantity", Representation.DEFAULT);
 		return description;
 	}
-
-	@PropertySetter("expiration") public void setExpiration(InventoryStockTakeEntity instance, String dateText) {
-	/*
-	*@todo set current date here
-	 */
+	
+	@PropertySetter("expiration")
+	public void setExpiration(InventoryStockTakeEntity instance, String dateText) {
+		/*
+		*@todo set current date here
+		 */
 		instance.setExpiration(instance.getExpiration());
 	}
-
-	@Override public Class<? extends IObjectDataService<InventoryStockTakeEntity>> getServiceClass() {
+	
+	@Override
+	public Class<? extends IObjectDataService<InventoryStockTakeEntity>> getServiceClass() {
 		return null;
 	}
-
-	@Override public InventoryStockTakeEntity newDelegate() {
+	
+	@Override
+	public InventoryStockTakeEntity newDelegate() {
 		return new InventoryStockTakeEntity();
 	}
 }

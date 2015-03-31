@@ -18,40 +18,44 @@ import java.util.List;
 import java.util.Set;
 
 @Resource(name = ModuleRestConstants.INVENTORY_STOCK_TAKE_RESOURCE, supportedClass = InventoryStockTake.class,
-		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" }) public class InventoryStockTakeResource
-		extends BaseRestMetadataResource<InventoryStockTake> {
-
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
+public class InventoryStockTakeResource extends BaseRestMetadataResource<InventoryStockTake> {
+	
 	private IStockOperationService operationService;
 	private IStockroomDataService stockroomDataService;
-
+	
 	public InventoryStockTakeResource() {
 		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.operationService = Context.getService(IStockOperationService.class);
 	}
-
-	@Override public Class<? extends IMetadataDataService<InventoryStockTake>> getServiceClass() {
+	
+	@Override
+	public Class<? extends IMetadataDataService<InventoryStockTake>> getServiceClass() {
 		return null;
 	}
-
-	@Override public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+	
+	@Override
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.removeProperty("name");
 		description.removeProperty("description");
 		description.addProperty("operationNumber");
 		description.addProperty("inventoryStockTakeList");
-
+		
 		return description;
 	}
-
+	
 	public Boolean userCanProcess(StockOperation operation) {
 		return StockOperationTypeResource.userCanProcess(operation.getInstanceType());
 	}
-
-	@Override public InventoryStockTake newDelegate() {
+	
+	@Override
+	public InventoryStockTake newDelegate() {
 		return new InventoryStockTake();
 	}
-
-	@Override public InventoryStockTake save(InventoryStockTake delegate) {
+	
+	@Override
+	public InventoryStockTake save(InventoryStockTake delegate) {
 		StockOperation operation = new StockOperation();
 		operation = createOperation(operation, delegate);
 		// Ensure that the current user can process the operation
@@ -62,7 +66,7 @@ import java.util.Set;
 		operationService.submitOperation(operation);
 		return inventoryStockTake;
 	}
-
+	
 	private StockOperation createOperation(StockOperation operation, InventoryStockTake delegate) {
 		operation.setStatus(StockOperationStatus.NEW);
 		IStockOperationType operationType = WellKnownOperationTypes.getAdjustment();
@@ -76,9 +80,9 @@ import java.util.Set;
 		operation.setItems(createOperationsItemSet(operation, delegate.getInventoryStockTakeList()));
 		return operation;
 	}
-
+	
 	private Set<StockOperationItem> createOperationsItemSet(StockOperation operation,
-			List<InventoryStockTakeEntity> stockTakeEntityList) {
+	        List<InventoryStockTakeEntity> stockTakeEntityList) {
 		Set<StockOperationItem> items = new HashSet<StockOperationItem>();
 		for (InventoryStockTakeEntity invitem : stockTakeEntityList) {
 			StockOperationItem item = new StockOperationItem();
@@ -97,5 +101,5 @@ import java.util.Set;
 		}
 		return items;
 	}
-
+	
 }

@@ -29,13 +29,6 @@ public class ItemStockDetailDataServiceImpl extends BaseObjectDataServiceImpl<It
 			}
 		}, Order.asc("i.name"));
     }
-	public List<ItemStockDetail> getAllItems(final PagingInfo pagingInfo) {
-		return executeCriteria(ItemStockDetail.class, pagingInfo, new Action1<Criteria>() {
-			@Override public void apply(Criteria criteria) {
-				criteria.createAlias("item", "i");
-			}
-		}, Order.asc("i.name"));
-	}
 
 	@Override
     protected BasicObjectAuthorizationPrivileges getPrivileges() {
