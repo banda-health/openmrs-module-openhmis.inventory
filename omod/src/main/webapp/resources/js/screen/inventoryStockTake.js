@@ -33,7 +33,7 @@ curl(
                 addEditViewType: openhmis.InventoryStockTakeAddEditView,
                 searchView: openhmis.StockroomSearchView,
                 itemView: openhmis.InventoryStockTakeListItemView,
-				listFields: ['batchOperation', 'item', 'expiration', 'quantity']
+				listFields: ['item', 'expiration', 'quantity']
 			});
 		});
 
