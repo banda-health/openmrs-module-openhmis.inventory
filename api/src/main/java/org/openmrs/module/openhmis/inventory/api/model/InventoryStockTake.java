@@ -9,7 +9,7 @@ public class InventoryStockTake extends BaseOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private String operationNumber;
-	private List <InventoryStockTakeEntity> inventoryStockTakeList;
+	private List <ItemStockSummary> inventoryStockTakeList;
 
 	public String getOperationNumber() {
 		return operationNumber;
@@ -19,11 +19,11 @@ public class InventoryStockTake extends BaseOpenmrsMetadata {
 		this.operationNumber = operationNumber;
 	}
 
-	public List<InventoryStockTakeEntity> getInventoryStockTakeList() {
+	public List<ItemStockSummary> getInventoryStockTakeList() {
 		return inventoryStockTakeList;
 	}
 
-	public void setInventoryStockTakeList(List<InventoryStockTakeEntity> inventoryStockTakeList) {
+	public void setInventoryStockTakeList(List<ItemStockSummary> inventoryStockTakeList) {
 		this.inventoryStockTakeList = inventoryStockTakeList;
 	}
 

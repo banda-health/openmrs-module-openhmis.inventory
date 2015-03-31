@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.InventoryStockTake;
-import org.openmrs.module.openhmis.inventory.api.model.InventoryStockTakeEntity;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -33,7 +33,7 @@ public class InventoryStockTakeResource extends BaseRestMetadataResource<Invento
 	}
 
 	@PropertySetter(value = "inventoryStockTakeList")
-	public void setInventoryStockTakeList(InventoryStockTake instance, List<InventoryStockTakeEntity> list) {
+	public void setInventoryStockTakeList(InventoryStockTake instance, List<ItemStockSummary> list) {
 		System.out.println("ffffffffffff");
 		instance.setInventoryStockTakeList(list);
 	}
