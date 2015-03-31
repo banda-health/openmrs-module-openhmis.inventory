@@ -1,7 +1,5 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -12,6 +10,8 @@ import org.openmrs.module.openhmis.inventory.api.IItemStockDetailDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
+
+import java.util.List;
 
 public class ItemStockDetailDataServiceImpl extends BaseObjectDataServiceImpl<ItemStockDetail, BasicObjectAuthorizationPrivileges> implements IItemStockDetailDataService {
 
