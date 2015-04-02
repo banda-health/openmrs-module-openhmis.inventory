@@ -42,7 +42,12 @@ define(
             },
 
             resetItemStockAdjustments: function() {
-            	this.itemStockDetails = {}
+                this.itemStockDetails = {}
+            },
+
+            onSearch: function(options, sender) {
+                openhmis.GenericSearchableListView.prototype.onSearch.call(this, options, sender);
+                this.stockroom = sender.searchFilter.stockroom_uuid;
             },
 
             addOne: function(model, schema, lineNumber) {
@@ -80,6 +85,7 @@ define(
                 var inventoryStockTake = new openhmis.InventoryStockTake();
                 var itemStockDetailsArray = this.convertToArray(this.itemStockDetails)
                 inventoryStockTake.set("operationNumber", $operationNumber);
+                inventoryStockTake.set("stockroom", this.stockroom);
                 inventoryStockTake.set("itemStockSummaryList", itemStockDetailsArray);
 
                 inventoryStockTake.save(null, {
