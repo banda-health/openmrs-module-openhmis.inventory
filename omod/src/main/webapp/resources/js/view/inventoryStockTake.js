@@ -15,6 +15,7 @@ define(
     [
         openhmis.url.backboneBase + 'js/view/generic',
         openhmis.url.inventoryBase + 'js/model/stockroom',
+        openhmis.url.inventoryBase + 'js/view/stockroom',
         openhmis.url.inventoryBase + 'js/model/inventoryStockTake',
         openhmis.url.inventoryBase + 'js/view/operation',
         'js!' + openhmis.url.inventoryBase + 'js/util.js',
@@ -37,7 +38,17 @@ define(
 
             initialize: function(options) {
                 openhmis.GenericSearchableListView.prototype.initialize.call(this, options);
+                openhmis.StockTakeChangeCounter = 0;
                 this.itemStockDetails = {};
+                this.stockTakeDetailsView = new openhmis.StockroomDetailList({
+                    model: new openhmis.GenericCollection([], {
+                        model: openhmis.ItemStockSummary
+                    }),
+                    showRetiredOption: false,
+                    showRetired: false,
+                    listFields: ['item','expiration', 'quantity', 'actualQuantity'],
+                });
+                this.stockTakeDetailsView.on("fetch", this.fetch);
                 this.searchView.on('resetItemStockAdjustments', this.resetItemStockAdjustments);
             },
 
@@ -56,13 +67,13 @@ define(
                 model.view.on('quantityChange', function() {
                     var hash = this.model.get('item').get('uuid') + '_' + this.model.get('expiration');
                     if(this.model.get('actualQuantity') != null
-                            && this.model.get('actualQuantity') != ""
                             && !isNaN(this.model.get('actualQuantity'))
                             && this.model.get('actualQuantity') != this.model.get('quantity')) {
                         self.itemStockDetails[hash] = this.model;
                     } else {
                         delete self.itemStockDetails[hash];
                     }
+                    self.updateGlobalStockTakeChangeCounter()
                     self.renderAdjustmentChangesShort();
                 });
                 var hash = model.get('item').get('uuid') + '_' + model.get('expiration');
@@ -103,27 +114,25 @@ define(
                 this.renderAdjustmentChangesShort();
             },
 
+            updateGlobalStockTakeChangeCounter: function() {
+                openhmis.StockTakeChangeCounter = Object.keys(this.itemStockDetails).length;
+            },
+
             renderAdjustmentChangesShort: function() {
                 $('#message').remove();
                 if(Object.keys(this.itemStockDetails).length > 0) {
                     $('#stockTakeDetailMessages').append('<div id="message">Changes made: ' + Object.keys(this.itemStockDetails).length +
                     		' <a id="show-details">Show Details</a></div><div id="render-detail"></div>');
+                    $('#submitStockTake').show();
                 } else {
                     $('#stockTakeDetailMessages').append('<div id="message">No changes made yet</div>');
+                    $('#submitStockTake').hide();
                 }
             },
 
             renderAdjustmentChangesDetail: function() {
-                this.itemStockDetailsView = new openhmis.StockroomDetailList({
-                    model: new openhmis.GenericCollection([], {
-                        model: openhmis.OperationTransaction
-                    }),
-                    showRetiredOption: false,
-                    showRetired: false,
-                    listFields: ['item','expiration', 'quantity', 'actualQuantity'],
-                    itemView: openhmis.OperationItemListItemView
-                });
-                $('#stockTakeDetails').after('123');
+            	//this.stockTakeDetailsView.fetch(null);
+                $('#render-detail').append('123').append(this.stockTakeDetailsView.el);
             },
 
             convertToArray: function(associativeArray) {

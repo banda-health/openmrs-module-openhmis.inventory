@@ -32,7 +32,7 @@ curl(
 				listView: openhmis.InventoryStockTakeSearchableListView,
                 listElement: $("#stockTakeList"),
                 addEditViewType: openhmis.InventoryStockTakeAddEditView,
-                searchView: openhmis.StockroomSearchView,
+                searchView: openhmis.StockroomStockTakeSearchView,
                 itemView: openhmis.InventoryStockTakeListItemView,
 				listFields: ['item', 'expiration', 'quantity', 'actualQuantity']
 			});

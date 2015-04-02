@@ -106,7 +106,7 @@ define(
 			}
 		});
 
-		openhmis.StockroomSearchView = openhmis.BaseSearchView.extend({
+		openhmis.StockroomStockTakeSearchView = openhmis.BaseSearchView.extend({
 			tmplFile: openhmis.url.inventoryBase + 'template/search.html',
 			tmplSelector: '#stockroom-search',
 
@@ -114,6 +114,9 @@ define(
 				this.events['change #stockroom_uuid'] = 'onFormSubmit';
 				openhmis.BaseSearchView.prototype.initialize.call(this, options);
 				var stockroomCollection = new openhmis.GenericCollection([], { model: openhmis.Stockroom });
+				stockroomCollection.on("reset", function(collection) {
+                    collection.unshift(new openhmis.Stockroom({ name: __("Any") }));
+                });
 				this.form = new Backbone.Form({
 					className: "inline",
 					schema: {
@@ -153,12 +156,19 @@ define(
 			},
 
 			onFormSubmit: function(event) {
-				if (!confirm('Changing the Stockroom will clear the item stock adjustments. Are you sure you want to do this?')) {
-					this.$(event.target).val($.data(event.target, 'current'));
-					return;
+				if (openhmis.StockTakeChangeCounter != 0) {
+					// if there are stock adjustments to the current stockroom
+					if (!confirm('Changing the Stockroom will clear the item stock adjustments. Are you sure you want to do this?')) {
+						console.log('KKKKKKK' + $.data(event.target, 'current'));
+						this.$(event.target).val($.data(event.target, 'current'));
+						return;
+					}
+					openhmis.BaseSearchView.prototype.onFormSubmit.call(this, event);
+					this.trigger('resetItemStockAdjustments', this);
+				} else {
+					//otherwise just perform search as usual
+					openhmis.BaseSearchView.prototype.onFormSubmit.call(this, event);
 				}
-				openhmis.BaseSearchView.prototype.onFormSubmit.call(this, event);
-				this.trigger('resetItemStockAdjustments', this);
 			},
 
 			/**
