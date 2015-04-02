@@ -18,6 +18,7 @@ curl(
 		openhmis.url.backboneBase + 'js/openhmis',
 		openhmis.url.backboneBase + 'js/lib/backbone-forms',
 		openhmis.url.inventoryBase + 'js/model/stockroom',
+		openhmis.url.inventoryBase + 'js/model/inventoryStockTake',
 		openhmis.url.backboneBase + 'js/view/generic',
 
 		openhmis.url.backboneBase + 'js/view/list',
@@ -27,13 +28,13 @@ curl(
 	],
 	function($, openhmis) {
 		$(function() {
-			openhmis.startAddEditScreen(openhmis.ItemStockDetail, {
+			openhmis.startAddEditScreen(openhmis.ItemStockSummary, {
 				listView: openhmis.InventoryStockTakeSearchableListView,
                 listElement: $("#stockTakeList"),
                 addEditViewType: openhmis.InventoryStockTakeAddEditView,
                 searchView: openhmis.StockroomSearchView,
                 itemView: openhmis.InventoryStockTakeListItemView,
-				listFields: ['item', 'expiration', 'quantity']
+				listFields: ['item', 'expiration', 'quantity', 'actualQuantity']
 			});
 		});
 

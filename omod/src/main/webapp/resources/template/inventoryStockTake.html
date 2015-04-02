@@ -19,7 +19,6 @@
 					?>
 				</th>
 			<? } ?>
-			<th>Actual Quantity</th>
 			</tr>
 		</thead>
 		<tbody class="list"></tbody>
@@ -56,33 +55,11 @@
 </script>
 
 <script id="inventory-stock-take-list-item" type="text/template">
-	<? if (actions.indexOf('inlineEdit') !== -1) {
-		// do nothing, leave blank for form to be rendered
-	 } else { ?>
-		<? var cssClass; ?>
-		<? for (var field in fields) { ?>
-			<? cssClass = "field-" + fields[field];
-				if (model.isRetired()) cssClass += " retired";
-				if (model.schema[fields[field]] !== undefined
-					&& model.schema[fields[field]].type in {'Number':0, 'BasicNumber':0, 'Date':0, 'DateTime':0})
-					cssClass += " numeric"; ?>
-			<td class="<?= cssClass ?>">
-				<? if (model.schema[fields[field]] === undefined) {
-					/* leave cell empty */
-				} else if (model.schema[fields[field]].type === 'List' && model.schema[fields[field]].model !== undefined) {
-					print(GenericCollection.prototype.toString.call(
-						model.get([fields[field]]),
-						model.schema[fields[field]])
-					);
-				} else if (model.schema[fields[field]].format !== undefined) {
-					print(model.schema[fields[field]].format(model.get(fields[field])));
-				} else {
-					print(model.get(fields[field]));
-				} ?>
-			</td>
-		<? } ?>
-		<td>
-			<input type="number" id="actual-quantity-<?=model.get('uuid') ?>" class="actual-quantity" style="width:100px;border: 1px solid cadetblue;"/>
+		<td class="field-item"><? print(model.get('item').get('name')); ?></td>
+		<td class="field-expiration numeric"><? print(model.get('expiration')); ?></td>
+		<td class="field-quantity numeric"><? print(model.get('quantity')); ?></td>
+		<? var id = model.get('item').get('uuid') + '_' + model.get('expiration'); ?>
+		<td class="actualQuantity">
+			<input type="number" id="actual-quantity-<?=id ?>" class="actual-quantity numeric" style="width:100px;border: 1px solid cadetblue;"/>
 		</td>
-	<? } ?>
 </script>

@@ -17,7 +17,7 @@
   ~ Copyright (C) OpenHMIS.  All Rights Reserved.
   --%>
 <c:if test="${!showStockTakeLink}">
-    <c:redirect url="/inventory.form"/>
+    <c:redirect url="/module/openhmis/inventory/inventory.form"/>
 </c:if>
 <openmrs:message var="pageTitle" code="openhmis.inventory.title" scope="page"/>
 

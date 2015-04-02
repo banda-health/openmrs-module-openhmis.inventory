@@ -30,23 +30,41 @@ define(
 
             schema: {
                 operationNumber: {type: "text"},
-                inventoryStockTakeList: { type: "List", itemType: "NestedModel", model: openhmis.InventoryStockTakeEntity },
+                stockroom: { type: "Object", objRef: true },
+                itemStockSummaryList: { type: "List", itemType: "NestedModel", model: openhmis.ItemStockSummary},
             },
 
         });
 
-        openhmis.InventoryStockTakeEntity = openhmis.GenericModel.extend({
-        	meta: {},
+        openhmis.ItemStockSummary = openhmis.GenericModel.extend({
+            meta: {
+            	name: __("Item Stock Summary"),
+                namePlural: __("Item Stock Summaries"),
+                openmrsType: 'metadata',
+                restUrl: openhmis.url.inventoryModelBase + 'inventoryStockTakeSummary'
+            },
+
             schema: {
                 actualQuantity: { type: "BasicNumber" },
                 quantity: { type: "BasicNumber" },
-                expiration: { type: "Date", format: openhmis.dateFormatLocale },
-                batchOperation: { type: "Object", objRef: true },
+                expiration: { type: "Date", format: openhmis.dateFormat },
                 item: { type: "Object", objRef: true },
-                calculatedExpiration: { type: "Text" },
-                calculatedBatch: { type: "Text" },
-                stockroom: {type: "Object", objRef: true}
-            }
+            },
+
+            parse: function(resp) {
+				if (resp) {
+					if (resp.item && _.isObject(resp.item)) {
+						resp.item = new openhmis.Item(resp.item);
+					}
+
+					if (resp.expiration) {
+						var date = new Date(resp.expiration);
+						resp.expiration = openhmis.dateFormat(date);
+					}
+
+				}
+				return resp;
+			},
         });
 
         return openhmis;

@@ -49,19 +49,22 @@ define(
                 openhmis.GenericSearchableListView.prototype.addOne.call(this, model, schema, lineNumber);
                 var self = this
                 model.view.on('quantityChange', function() {
-                    var uuid = this.model.get('uuid');
+                    var hash = this.model.get('item').get('uuid') + '_' + this.model.get('expiration');
                     if(this.model.get('actualQuantity') != null
-                            && this.model.get('actualQuantity') != "" && this.model.get('actualQuantity') != this.model.get('quantity')) {
-                        self.itemStockDetails[uuid] = new openhmis.InventoryStockTakeEntity(this.model.attributes);
+                            && this.model.get('actualQuantity') != ""
+                            && !isNaN(this.model.get('actualQuantity'))
+                            && this.model.get('actualQuantity') != this.model.get('quantity')) {
+                        self.itemStockDetails[hash] = this.model;
                     } else {
-                        delete self.itemStockDetails[uuid];
+                        delete self.itemStockDetails[hash];
                     }
                     self.renderAdjustmentChangesShort();
                 });
-                var uuid = model.get('uuid');
+                var hash = model.get('item').get('uuid') + '_' + model.get('expiration');
                 $('.actual-quantity').forceNumericOnly();
-                if (uuid in self.itemStockDetails) {
-                    $('#actual-quantity-' + uuid).val(self.itemStockDetails[uuid].get('actualQuantity'));
+                if (hash in self.itemStockDetails) {
+                	var actual_quantity_id = '#actual-quantity-' + hash;
+                    $(actual_quantity_id).val(this.itemStockDetails[hash].get('actualQuantity'));
                 }
             },
 
@@ -77,7 +80,7 @@ define(
                 var inventoryStockTake = new openhmis.InventoryStockTake();
                 var itemStockDetailsArray = this.convertToArray(this.itemStockDetails)
                 inventoryStockTake.set("operationNumber", $operationNumber);
-                inventoryStockTake.set("inventoryStockTakeList", itemStockDetailsArray);
+                inventoryStockTake.set("itemStockSummaryList", itemStockDetailsArray);
 
                 inventoryStockTake.save(null, {
                     success: function(stockTakeDetails, resp) {
@@ -105,7 +108,6 @@ define(
             },
 
             renderAdjustmentChangesDetail: function() {
-            	console.log('123');
                 this.itemStockDetailsView = new openhmis.StockroomDetailList({
                     model: new openhmis.GenericCollection([], {
                         model: openhmis.OperationTransaction
@@ -115,7 +117,7 @@ define(
                     listFields: ['item','expiration', 'quantity', 'actualQuantity'],
                     itemView: openhmis.OperationItemListItemView
                 });
-                $('#render-detail').after('123');
+                $('#stockTakeDetails').after('123');
             },
 
             convertToArray: function(associativeArray) {
