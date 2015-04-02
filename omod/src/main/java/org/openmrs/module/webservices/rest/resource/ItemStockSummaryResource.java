@@ -3,6 +3,7 @@ package org.openmrs.module.webservices.rest.resource;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
+import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDetailDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
@@ -45,7 +46,7 @@ public class ItemStockSummaryResource extends DelegatingCrudResource<ItemStockSu
 	
 	@PropertySetter("expiration")
 	public void setExpiration(ItemStockSummary instance, String dateText) {
-		System.out.println("aaaaaaaaaaaaaa");
+		instance.setExpiration(Utility.parseOpenhmisDateString(dateText));
 	}
 	
 	@Override
