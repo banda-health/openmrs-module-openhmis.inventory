@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.common.primitives.Ints;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -94,10 +95,10 @@ public class ItemStockDetailDataServiceImpl
 			// If the expiration column is null is does not appear to be included in the row array
 			if (row.length == 2) {
 				summary.setExpiration(null);
-				summary.setQuantity((Long)row[1]);
+				summary.setQuantity(Ints.checkedCast((Long)row[1]));
 			} else {
 				summary.setExpiration((Date)row[1]);
-				summary.setQuantity((Long)row[2]);
+				summary.setQuantity(Ints.checkedCast((Long)row[2]));
 			}
 
 			results.add(summary);

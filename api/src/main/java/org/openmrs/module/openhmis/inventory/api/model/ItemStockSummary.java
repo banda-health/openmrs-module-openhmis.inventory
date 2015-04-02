@@ -9,8 +9,8 @@ public class ItemStockSummary implements OpenmrsObject {
 
 	private Item item;
 	private Date expiration;
-	private Long quantity;
-	private Long actualQuantity;
+	private Integer quantity;
+	private Integer actualQuantity;
 
 	// These are aggregate models and thus have no id or uuid.
 	@Override
@@ -49,19 +49,19 @@ public class ItemStockSummary implements OpenmrsObject {
 		this.expiration = expiration;
 	}
 
-	public Long getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Long quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
-	public Long getActualQuantity() {
+	public Integer getActualQuantity() {
 		return actualQuantity;
 	}
 
-	public void setActualQuantity(Long actualQuantity) {
+	public void setActualQuantity(Integer actualQuantity) {
 		this.actualQuantity = actualQuantity;
 	}
 }
