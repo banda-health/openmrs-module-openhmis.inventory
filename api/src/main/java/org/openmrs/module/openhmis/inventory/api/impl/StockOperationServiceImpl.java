@@ -29,6 +29,7 @@ import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
@@ -394,7 +395,8 @@ public class StockOperationServiceImpl
 		 */
 		Map<Pair<Stockroom, Item>, ItemStock> stockMap = new HashMap<Pair<Stockroom, Item>, ItemStock>();
 		List<ReservedTransaction> newTransactions = new ArrayList<ReservedTransaction>();
-		boolean hasSource = operation.getSource() != null;
+		boolean hasSource = operation.getSource() != null &&
+				operation.getInstanceType() != WellKnownOperationTypes.getAdjustment();
 
 		for (ReservedTransaction tx : transactions) {
 			if (hasSource) {
