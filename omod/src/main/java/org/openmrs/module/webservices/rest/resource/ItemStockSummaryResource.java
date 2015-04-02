@@ -56,7 +56,8 @@ public class ItemStockSummaryResource extends DelegatingCrudResource<ItemStockSu
 	
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
-		PageableResult result = null;
+		PageableResult result;
+		
 		String stockroomUuid = context.getParameter("stockroom_uuid");
 		if (StringUtils.isNotBlank(stockroomUuid)) {
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
@@ -66,6 +67,8 @@ public class ItemStockSummaryResource extends DelegatingCrudResource<ItemStockSu
 			result =
 			        new AlreadyPagedWithLength<ItemStockSummary>(context, itemStockSummaries, pagingInfo.hasMoreResults(),
 			                pagingInfo.getTotalRecordCount());
+		} else {
+			result = super.doSearch(context);
 		}
 		
 		return result;
