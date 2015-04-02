@@ -3,12 +3,10 @@ package org.openmrs.module.webservices.rest.resource;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 import org.openmrs.module.openhmis.inventory.api.model.*;
 import org.openmrs.module.openhmis.inventory.model.InventoryStockTake;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
-import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
@@ -24,10 +22,8 @@ import java.util.Set;
 public class InventoryStockTakeResource extends BaseRestObjectResource<InventoryStockTake> {
 	
 	private IStockOperationService operationService;
-	private IStockroomDataService stockroomDataService;
 	
 	public InventoryStockTakeResource() {
-		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.operationService = Context.getService(IStockOperationService.class);
 	}
 	
@@ -41,22 +37,6 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 		description.addProperty("itemStockSummaryList");
 		
 		return description;
-	}
-	
-	@PropertySetter(value = "operationNumber")
-	public void setOperationNumber(InventoryStockTake instance, String operationNumber) {
-		instance.setOperationNumber(operationNumber);
-	}
-	
-	@PropertySetter(value = "itemStockSummaryList")
-	public void setInventoryStockTakeList(InventoryStockTake instance, List<ItemStockSummary> list) {
-		instance.setItemStockSummaryList(list);
-	}
-	
-	@PropertySetter(value = "stockroom")
-	public void setInventoryStockTakeList(InventoryStockTake instance, String stockroom) {
-		Stockroom stockroom1 = stockroomDataService.getByUuid(stockroom);
-		instance.setStockroom(stockroom1);
 	}
 	
 	@Override
