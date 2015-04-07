@@ -1,21 +1,24 @@
 package org.openmrs.module.webservices.rest.resource;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
-import org.openmrs.module.openhmis.inventory.api.model.*;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.model.InventoryStockTake;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.springframework.web.client.RestClientException;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Resource(name = ModuleRestConstants.INVENTORY_STOCK_TAKE_RESOURCE, supportedClass = InventoryStockTake.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
@@ -45,6 +48,7 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 	}
 	
 	public Boolean userCanProcess(StockOperation operation) {
+		
 		return StockOperationTypeResource.userCanProcess(operation.getInstanceType());
 	}
 	
@@ -56,20 +60,19 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 		if (!userCanProcess(operation)) {
 			throw new RestClientException("The current user not authorized to process this operation.");
 		}
-		InventoryStockTake inventoryStockTake = newDelegate();
 		operationService.submitOperation(operation);
-		return inventoryStockTake;
+		
+		return newDelegate();
 	}
 	
 	private StockOperation createOperation(StockOperation operation, InventoryStockTake delegate) {
 		operation.setStatus(StockOperationStatus.NEW);
-		IStockOperationType operationType = WellKnownOperationTypes.getAdjustment();
-		operation.setInstanceType(operationType);
-		Stockroom stockroom = delegate.getStockroom();
-		operation.setSource(stockroom);
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setSource(delegate.getStockroom());
 		operation.setOperationNumber(delegate.getOperationNumber());
 		operation.setOperationDate(new Date());
 		operation.setItems(createOperationsItemSet(operation, delegate.getItemStockSummaryList()));
+		
 		return operation;
 	}
 	
@@ -83,12 +86,11 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 			item.setCalculatedExpiration(false);
 			item.setCalculatedBatch(false);
 			item.setExpiration(invitem.getExpiration());
-			Integer actualQuantity = (invitem.getActualQuantity() - invitem.getQuantity());
-			item.setQuantity(actualQuantity);
+			item.setQuantity(invitem.getActualQuantity() - invitem.getQuantity());
 			item.setBatchOperation(operation);
 			items.add(item);
-			
 		}
+		
 		return items;
 	}
 	
