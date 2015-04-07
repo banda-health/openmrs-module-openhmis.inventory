@@ -26,6 +26,9 @@
         </b>
             <br />
             <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.INVENTORY_CREATION_PAGE %>"><spring:message code="openhmis.inventory.admin.create"/></a><br />
+            <c:if test="${showStockTakeLink}">
+	            <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.INVENTORY_STOCK_TAKE_PAGE %>"><spring:message code="openhmis.inventory.admin.stockTake"/></a><br />
+            </c:if>
             <a href="${pageContext.request.contextPath}<%= ModuleWebConstants.INVENTORY_REPORTS_PAGE %>"><spring:message code="openhmis.inventory.admin.reports"/></a>
         </td>
         <td>
