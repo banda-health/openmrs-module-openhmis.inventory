@@ -1,5 +1,10 @@
 package org.openmrs.module.webservices.rest.resource;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
@@ -11,11 +16,6 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.springframework.web.client.RestClientException;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Resource(name = ModuleRestConstants.INVENTORY_STOCK_TAKE_RESOURCE, supportedClass = InventoryStockTake.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
@@ -65,12 +65,10 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 		operation.setStatus(StockOperationStatus.NEW);
 		IStockOperationType operationType = WellKnownOperationTypes.getAdjustment();
 		operation.setInstanceType(operationType);
-		Stockroom stockroom;
-		stockroom = delegate.getStockroom();
+		Stockroom stockroom = delegate.getStockroom();
 		operation.setSource(stockroom);
 		operation.setOperationNumber(delegate.getOperationNumber());
-		Date dNow = new Date();
-		operation.setOperationDate(dNow);
+		operation.setOperationDate(new Date());
 		operation.setItems(createOperationsItemSet(operation, delegate.getItemStockSummaryList()));
 		return operation;
 	}

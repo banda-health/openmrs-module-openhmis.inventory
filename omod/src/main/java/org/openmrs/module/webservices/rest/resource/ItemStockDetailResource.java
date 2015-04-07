@@ -1,5 +1,7 @@
 package org.openmrs.module.webservices.rest.resource;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -7,7 +9,6 @@ import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDetailDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
-import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -15,8 +16,6 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
-
-import java.util.List;
 
 @Resource(name = ModuleRestConstants.ITEM_STOCK_DETAIL_RESOURCE, supportedClass = ItemStockDetail.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
@@ -40,23 +39,18 @@ public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemSto
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		PageableResult result;
-		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-		Stockroom stockroom;
-		String stockroomUuid;
-		stockroomUuid = context.getParameter("stockroom_uuid");
-		
+		String stockroomUuid = context.getParameter("stockroom_uuid");
 		if (StringUtils.isNotBlank(stockroomUuid)) {
-			stockroom = stockroomDataService.getByUuid(stockroomUuid);
+			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+			Stockroom stockroom = stockroomDataService.getByUuid(stockroomUuid);
+			List<ItemStockDetail> itemStockDetails =
+			        itemStockDetailDataService.getItemStockDetailsByStockroom(stockroom, pagingInfo);
+			result =
+			        new AlreadyPagedWithLength<ItemStockDetail>(context, itemStockDetails, pagingInfo.hasMoreResults(),
+			                pagingInfo.getTotalRecordCount());
 		} else {
-			List<Stockroom> stockrooms = stockroomDataService.getAll();
-			stockroomUuid = stockrooms.get(0).getUuid();
-			stockroom = stockroomDataService.getByUuid(stockroomUuid);
+			result = super.doSearch(context);
 		}
-		List<ItemStockSummary> itemStockSummaries =
-		        itemStockDetailDataService.getItemStockSummaryByStockroom(stockroom, pagingInfo);
-		result =
-		        new AlreadyPagedWithLength<ItemStockSummary>(context, itemStockSummaries, pagingInfo.hasMoreResults(),
-		                pagingInfo.getTotalRecordCount());
 		return result;
 	}
 	
