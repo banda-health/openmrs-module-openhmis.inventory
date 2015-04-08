@@ -159,7 +159,7 @@ define(
 				if (openhmis.StockTakeChangeCounter != 0) {
 					// if there are stock adjustments to the current stockroom
 					if (!confirm('Changing the Stockroom will clear the item stock adjustments. Are you sure you want to do this?')) {
-						this.$(event.target).val($.data(event.target, 'current'));
+						event.currentTarget.selectedIndex = this.currentStockroomIndex;
 						return;
 					}
 					openhmis.BaseSearchView.prototype.onFormSubmit.call(this, event);
@@ -168,6 +168,7 @@ define(
 					//otherwise just perform search as usual
 					openhmis.BaseSearchView.prototype.onFormSubmit.call(this, event);
 				}
+				this.currentStockroomIndex = event.currentTarget.selectedIndex;
 			},
 
 			/**
