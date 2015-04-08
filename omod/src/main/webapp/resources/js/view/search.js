@@ -159,7 +159,6 @@ define(
 				if (openhmis.StockTakeChangeCounter != 0) {
 					// if there are stock adjustments to the current stockroom
 					if (!confirm('Changing the Stockroom will clear the item stock adjustments. Are you sure you want to do this?')) {
-						console.log('KKKKKKK' + $.data(event.target, 'current'));
 						this.$(event.target).val($.data(event.target, 'current'));
 						return;
 					}

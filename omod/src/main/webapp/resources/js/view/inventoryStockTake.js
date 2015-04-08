@@ -33,23 +33,23 @@ define(
 
             events: {
                 'click .submit' : 'save',
-                'click #show-details' : 'renderAdjustmentChangesDetail',
+                'click #show-details' : 'toggleAdjustmentChangesDetail',
             },
 
             initialize: function(options) {
                 openhmis.GenericSearchableListView.prototype.initialize.call(this, options);
                 openhmis.StockTakeChangeCounter = 0;
                 this.itemStockDetails = {};
-                this.stockTakeDetailsView = new openhmis.StockroomDetailList({
+                this.searchView.on('resetItemStockAdjustments', this.resetItemStockAdjustments);
+                this.stockTakeDetailsView = new openhmis.StockTakeAdjustmentsList({
                     model: new openhmis.GenericCollection([], {
                         model: openhmis.ItemStockSummary
                     }),
                     showRetiredOption: false,
                     showRetired: false,
                     listFields: ['item','expiration', 'quantity', 'actualQuantity'],
+                    itemView: openhmis.InventoryStockTakeListDetailItemView
                 });
-                this.stockTakeDetailsView.on("fetch", this.fetch);
-                this.searchView.on('resetItemStockAdjustments', this.resetItemStockAdjustments);
             },
 
             resetItemStockAdjustments: function() {
@@ -94,7 +94,7 @@ define(
                     }
                 }
                 var inventoryStockTake = new openhmis.InventoryStockTake();
-                var itemStockDetailsArray = this.convertToArray(this.itemStockDetails)
+                var itemStockDetailsArray = this.convertToArray(this.itemStockDetails);
                 inventoryStockTake.set("operationNumber", $operationNumber);
                 inventoryStockTake.set("stockroom", this.stockroom);
                 inventoryStockTake.set("itemStockSummaryList", itemStockDetailsArray);
@@ -119,7 +119,7 @@ define(
             },
 
             renderAdjustmentChangesShort: function() {
-                $('#message').remove();
+                $('#stockTakeDetailMessages').empty();
                 if(Object.keys(this.itemStockDetails).length > 0) {
                     $('#stockTakeDetailMessages').append('<div id="message">Changes made: ' + Object.keys(this.itemStockDetails).length +
                     		' <a id="show-details">Show Details</a></div><div id="render-detail"></div>');
@@ -130,9 +130,23 @@ define(
                 }
             },
 
-            renderAdjustmentChangesDetail: function() {
-            	//this.stockTakeDetailsView.fetch(null);
-                $('#render-detail').append('123').append(this.stockTakeDetailsView.el);
+            toggleAdjustmentChangesDetail: function() {
+                var itemStockDetailsArray = this.convertToArray(this.itemStockDetails);
+                itemStockDetailsArray.sort(function(a, b){
+                    if(a.get('item').get('name') < b.get('item').get('name')) return -1;
+                    if(a.get('item').get('name') > b.get('item').get('name')) return 1;
+                    return 0;
+                });
+                this.stockTakeDetailsView.model.models = itemStockDetailsArray;
+                if($('#adjustmentList').length) {
+                    $('#show-details').text('Show Details');
+                    $('#adjustmentList').remove();
+                } else {
+                    $('#show-details').text('Hide Details');
+                    $('#render-detail').append('<div id="adjustmentList"></div>');
+                    $('#adjustmentList').append(this.stockTakeDetailsView.el);
+                    this.stockTakeDetailsView.render();
+                }
             },
 
             convertToArray: function(associativeArray) {
@@ -161,6 +175,22 @@ define(
                 this.model.set('actualQuantity', parseInt(inputValue));
                 this.trigger('quantityChange', this);
             },
+        });
+
+        openhmis.StockTakeAdjustmentsList = openhmis.GenericListView.extend({
+		    tmplFile: openhmis.url.inventoryBase + 'template/inventoryStockTake.html',
+		    tmplSelector: '#stockTakeAdjustments-list',
+
+		    render: function(extraContext) {
+		    	openhmis.GenericListView.prototype.render.call(this, extraContext);
+
+		    }
+	    });
+
+        openhmis.InventoryStockTakeListDetailItemView = openhmis.GenericListItemView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/inventoryStockTake.html',
+            tmplSelector: '#inventory-stock-take-list-detail-item',
+
         });
 
         return openhmis;
