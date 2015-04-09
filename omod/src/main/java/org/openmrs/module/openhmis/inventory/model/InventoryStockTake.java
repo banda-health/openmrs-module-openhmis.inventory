@@ -2,7 +2,6 @@ package org.openmrs.module.openhmis.inventory.model;
 
 import java.util.List;
 
-import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;

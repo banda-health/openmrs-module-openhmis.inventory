@@ -13,6 +13,12 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,9 +28,6 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
-import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
-import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
-import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
@@ -39,6 +42,7 @@ import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationTemplate;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.helper.IdgenHelper;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -48,12 +52,6 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.web.client.RestClientException;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
 		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
@@ -156,16 +154,9 @@ public class StockOperationResource
 	@PropertySetter("operationNumber")
 	public void setOperationNumber(StockOperation instance, String operationNumber) {
 		if (StringUtils.isEmpty(instance.getOperationNumber())) {
-			if (ModuleUtil.isLoaded(ModuleUtil.IDGEN_MODULE_ID) && ModuleSettings.generateOperationNumber()) {
-				try {
-					operationNumber = IdgenUtil.generateId(ModuleSettings.OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY);
-
-					instance.setOperationNumber(operationNumber);
-				} catch (Exception ex) {
-					LOG.error("Could not generate operation number: " + ex.getMessage());
-
-					throw new IllegalStateException("The Operation Number was not defined and could not be generated.", ex);
-				}
+			if (IdgenHelper.isOperationNumberGenerated()) {
+				operationNumber = IdgenHelper.generateId();
+				instance.setOperationNumber(operationNumber);
 			} else if (StringUtils.isEmpty(operationNumber)) {
 				LOG.error("Operation Number not defined or generated.");
 
