@@ -1,5 +1,6 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -7,17 +8,16 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Collections2;
 import org.apache.commons.lang.ObjectUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
+import org.openmrs.module.openhmis.inventory.api.IItemStockDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
@@ -37,6 +37,7 @@ import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
 public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTest {
@@ -45,27 +46,36 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	IItemStockDataService itemStockDataService;
 	IStockOperationDataService operationDataService;
 	ITestableStockOperationService service;
-	
+
 	IItemDataServiceTest itemTest;
 	IStockOperationDataServiceTest operationTest;
-	
+	IStockroomDataServiceTest stockroomTest;
+	IItemStockDataServiceTest itemStockTest;
+
 	@Before
 	public void before() throws Exception {
 		executeDataSet(TestConstants.CORE_DATASET);
 		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
 		executeDataSet(IStockroomDataServiceTest.DATASET);
-		
+
 		stockroomDataService = Context.getService(IStockroomDataService.class);
 		itemDataService = Context.getService(IItemDataService.class);
 		itemStockDataService = Context.getService(IItemStockDataService.class);
 		operationDataService = Context.getService(IStockOperationDataService.class);
 		service = Context.getService(ITestableStockOperationService.class);
-		
+
 		itemTest = new IItemDataServiceTest();
 		operationTest = new IStockOperationDataServiceTest();
+		stockroomTest = new IStockroomDataServiceTest();
+		itemStockTest = new IItemStockDataServiceTest();
 	}
 
 	protected ItemStockDetail findDetail(ItemStock stock, final Date expiration) {
+		Collection<ItemStockDetail> results = findDetails(stock, expiration);
+		return results == null ? null : Iterators.get(results.iterator(), 0);
+	}
+
+	protected Collection<ItemStockDetail> findDetails(ItemStock stock, final Date expiration) {
 		if (stock == null || stock.getDetails() == null) {
 			return null;
 		}
@@ -77,7 +87,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			}
 		});
 
-		return results.size() == 0 ? null : Iterators.get(results.iterator(), 0);
+		return results.size() == 0 ? null : results;
 	}
 
 	/**
@@ -88,10 +98,10 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldUseClosestExpirationFromTheSourceStockroom() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item item0 = itemDataService.getById(0);
 		Item item2 = itemDataService.getById(2);
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item2);
@@ -103,7 +113,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item2);
 		detail2.setStockroom(sourceRoom);
@@ -114,14 +124,14 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.YEAR, 1);
 		detail2.setExpiration(calendar2.getTime());
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item2);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -136,13 +146,13 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		final ReservedTransaction tx2 = operation.addReserved(item2, 10);
 		tx2.setCalculatedBatch(true);
 		tx2.setCalculatedExpiration(true);
-		
+
 		// Calculate the reservations
 		service.calculateReservations(operation);
-		
+
 		// Ensure that no new transactions were created
 		Assert.assertEquals(2, operation.getReserved().size());
-		
+
 		// Ensure that no expiration was set as the item is not expirable
 		ReservedTransaction testTx =
 		        Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
@@ -153,7 +163,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		        });
 		Assert.assertEquals(item0, testTx.getItem());
 		Assert.assertNull(testTx.getExpiration());
-		
+
 		// Ensure that the closest expiration stock was selected
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			@Override
@@ -164,7 +174,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(item2, testTx.getItem());
 		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
 	}
-	
+
 	/**
 	 * @verifies use oldest batch operation with the calculated expiration
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -173,9 +183,9 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldUseOldestBatchOperationWithTheCalculatedExpiration() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item item0 = itemDataService.getById(0);
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item0);
@@ -184,7 +194,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		detail1.setCalculatedBatch(false);
 		detail1.setCalculatedExpiration(false);
 		detail1.setBatchOperation(operationDataService.getById(2));
-		
+
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item0);
 		detail2.setStockroom(sourceRoom);
@@ -192,14 +202,14 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		detail2.setCalculatedBatch(false);
 		detail2.setCalculatedExpiration(false);
 		detail2.setBatchOperation(operationDataService.getById(1));
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item0);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -211,18 +221,18 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		ReservedTransaction tx = operation.addReserved(item0, 3);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that no new transactions were created
 		Assert.assertEquals(1, operation.getReserved().size());
-		
+
 		// Ensure that the correct (oldest) batch operation was set
 		tx = Iterators.get(operation.getReserved().iterator(), 0);
 		Assert.assertEquals(item0, tx.getItem());
 		Assert.assertEquals(1, (int)tx.getBatchOperation().getId());
 	}
-	
+
 	/**
 	 * @verifies set the expiration to null if no valid item stock can be found
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -231,13 +241,13 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldSetTheExpirationToNullIfNoValidItemStockCanBeFound() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
-		
+
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -246,17 +256,17 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
-		
+
 		ReservedTransaction tx = operation.addReserved(newItem, 3);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		Assert.assertEquals(1, operation.getReserved().size());
 		Assert.assertNull(tx.getExpiration());
 	}
-	
+
 	/**
 	 * @verifies set the batch to null if no valid item stock can be found
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -265,13 +275,13 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldSetTheBatchToNullIfNoValidItemStockCanBeFound() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
-		
+
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -280,17 +290,17 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
-		
+
 		ReservedTransaction tx = operation.addReserved(newItem, 3);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		Assert.assertEquals(1, operation.getReserved().size());
 		Assert.assertNull(tx.getBatchOperation());
 	}
-	
+
 	/**
 	 * @verifies throw IllegalArgumentException if operation is null
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -299,7 +309,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldThrowIllegalArgumentExceptionIfOperationIsNull() throws Exception {
 		service.calculateReservations(null);
 	}
-	
+
 	/**
 	 * @verifies use date and time for expiration calculation
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -308,9 +318,9 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldUseDateAndTimeForExpirationCalculation() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item item2 = itemDataService.getById(2);
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item2);
@@ -322,7 +332,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item2);
 		detail2.setStockroom(sourceRoom);
@@ -334,7 +344,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		calendar2.add(Calendar.YEAR, 1);
 		calendar2.add(Calendar.MINUTE, 20);
 		detail2.setExpiration(calendar2.getTime());
-		
+
 		ItemStockDetail detail3 = new ItemStockDetail();
 		detail3.setItem(item2);
 		detail3.setStockroom(sourceRoom);
@@ -345,15 +355,15 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar3 = Calendar.getInstance();
 		calendar3.add(Calendar.YEAR, 1);
 		detail3.setExpiration(calendar3.getTime());
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item2);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
 		stock2.addDetail(detail3);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -365,18 +375,18 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		ReservedTransaction tx = operation.addReserved(item2, 10);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that no new transactions were created
 		Assert.assertEquals(1, operation.getReserved().size());
-		
+
 		// Ensure that the closest expiration stock was selected
 		tx = Iterators.get(operation.getReserved().iterator(), 0);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(calendar3.getTime(), tx.getExpiration());
 	}
-	
+
 	/**
 	 * @verifies create additional transactions when when multiple details are need to fulfill request
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -386,9 +396,9 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item item2 = itemDataService.getById(2);
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(item2);
@@ -400,7 +410,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(item2);
 		detail2.setStockroom(sourceRoom);
@@ -411,14 +421,14 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.YEAR, 1);
 		detail2.setExpiration(calendar2.getTime());
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item2);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -430,12 +440,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		final ReservedTransaction tx = operation.addReserved(item2, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that a new transaction was created
 		Assert.assertEquals(2, operation.getReserved().size());
-		
+
 		// Ensure that the closest expiration stock was selected
 		ReservedTransaction testTx =
 		        Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
@@ -448,7 +458,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
 		Assert.assertEquals(1, (int)testTx.getBatchOperation().getId());
 		Assert.assertEquals(20, (int)testTx.getQuantity());
-		
+
 		// And then the next closest
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			@Override
@@ -461,7 +471,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(2, (int)testTx.getBatchOperation().getId());
 		Assert.assertEquals(5, (int)testTx.getQuantity());
 	}
-	
+
 	/**
 	 * @verifies create additional null qualifier transaction when there is not enough valid item stock to fulfill request
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -472,12 +482,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
@@ -485,7 +495,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		ItemStockDetail detail1 = new ItemStockDetail();
 		stock.addDetail(detail1);
 		detail1.setItem(newItem);
@@ -497,10 +507,10 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -512,14 +522,14 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		final ReservedTransaction tx = operation.addReserved(newItem, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that a new transaction was created
 		Assert.assertEquals(2, operation.getReserved().size());
-		
+
 		// Ensure that the existing stock detail was used
-		
+
 		ReservedTransaction testTx =
 		        Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			        @Override
@@ -531,7 +541,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
 		Assert.assertEquals(2, (int)testTx.getBatchOperation().getId());
 		Assert.assertEquals(10, (int)testTx.getQuantity());
-		
+
 		// Ensure that another reservation was created with no expiration or batch for the remaining items
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			@Override
@@ -546,7 +556,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertNull(testTx.getBatchOperation());
 		Assert.assertEquals(15, (int)testTx.getQuantity());
 	}
-	
+
 	/**
 	 * @verifies copy source calculation settings into source calculation fields
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -555,12 +565,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldCopySourceCalculationSettingsIntoSourceCalculationFields() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
@@ -568,7 +578,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		stock.setQuantity(100);
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
 		detail1.setStockroom(sourceRoom);
@@ -579,13 +589,13 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -597,12 +607,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		ReservedTransaction tx = operation.addReserved(newItem, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that no new transactions were created
 		Assert.assertEquals(1, operation.getReserved().size());
-		
+
 		Assert.assertEquals(newItem, tx.getItem());
 		Assert.assertFalse(tx.isSourceCalculatedBatch());
 		Assert.assertTrue(tx.isSourceCalculatedExpiration());
@@ -616,10 +626,10 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldSetTheBatchOperationToTheSpecifiedOperationIfThereIsNoSourceStockroom()
 			throws Exception {
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
@@ -629,16 +639,16 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		ReservedTransaction tx = operation.addReserved(newItem, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that no new transactions were created
 		Assert.assertEquals(1, operation.getReserved().size());
-		
+
 		Assert.assertEquals(newItem, tx.getItem());
 		Assert.assertEquals(operation, tx.getBatchOperation());
 	}
-	
+
 	/**
 	 * @verifies combine transactions for the same item stock and qualifiers
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -647,13 +657,13 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldCombineTransactionsForTheSameItemStockAndQualifiers() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
-		
+
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
@@ -661,7 +671,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		stock.setQuantity(100);
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
 		detail1.setStockroom(sourceRoom);
@@ -672,13 +682,13 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -693,17 +703,17 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		tx = operation.addReserved(newItem, 30);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that the two transactions were combined into one
 		Assert.assertEquals(1, operation.getReserved().size());
-		
+
 		tx = Iterators.get(operation.getReserved().iterator(), 0);
 		Assert.assertEquals(newItem, tx.getItem());
 		Assert.assertEquals(55, (int)tx.getQuantity());
 	}
-	
+
 	/**
 	 * @verifies handle multiple transactions for the same item but with different qualifiers
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -713,12 +723,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
@@ -726,7 +736,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		ItemStockDetail detail1 = new ItemStockDetail();
 		stock.addDetail(detail1);
 		detail1.setItem(newItem);
@@ -738,10 +748,10 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -756,12 +766,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		final ReservedTransaction tx2 = operation.addReserved(newItem, 5, calendar1.getTime());
 		tx2.setCalculatedBatch(true);
 		tx2.setCalculatedExpiration(false);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that there are now 3 transactions
 		Assert.assertEquals(3, operation.getReserved().size());
-		
+
 		ReservedTransaction testTx =
 		        Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			        @Override
@@ -773,7 +783,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(5, (int)testTx.getQuantity());
 		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
 		Assert.assertTrue(testTx.isCalculatedExpiration());
-		
+
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			@Override
 			public boolean apply(@Nullable ReservedTransaction input) {
@@ -784,7 +794,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(5, (int)testTx.getQuantity());
 		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
 		Assert.assertFalse(testTx.isCalculatedExpiration());
-		
+
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			@Override
 			public boolean apply(@Nullable ReservedTransaction input) {
@@ -796,7 +806,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertNull(testTx.getExpiration());
 		Assert.assertTrue(testTx.isCalculatedExpiration());
 	}
-	
+
 	/**
 	 * @verifies set the transaction source calculated flags if the source was calculated
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -806,12 +816,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
@@ -819,7 +829,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
 		detail1.setStockroom(sourceRoom);
@@ -830,13 +840,13 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -850,17 +860,17 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		tx.setBatchOperation(detail1.getBatchOperation());
 		tx.setCalculatedBatch(false);
 		tx.setCalculatedExpiration(false);
-		
+
 		service.calculateReservations(operation);
-		
+
 		Assert.assertEquals(1, operation.getReserved().size());
-		
+
 		Assert.assertEquals(newItem, tx.getItem());
 		Assert.assertEquals(5, (int)tx.getQuantity());
 		Assert.assertTrue(tx.isSourceCalculatedBatch());
 		Assert.assertTrue(tx.isSourceCalculatedExpiration());
 	}
-	
+
 	/**
 	 * @verifies process non-calculated transactions before calculated transactions
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -869,12 +879,12 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldProcessNoncalculatedTransactionsBeforeCalculatedTransactions() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		newItem.setHasExpiration(true);
 		itemDataService.save(newItem);
 		Context.flushSession();
-		
+
 		// Add some item stock with different qualifiers to the source room
 		ItemStock stock = new ItemStock();
 		stock.setItem(newItem);
@@ -882,7 +892,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		stock.setQuantity(10);
 		itemStockDataService.save(stock);
 		Context.flushSession();
-		
+
 		ItemStockDetail detail1 = new ItemStockDetail();
 		detail1.setItem(newItem);
 		detail1.setStockroom(sourceRoom);
@@ -893,7 +903,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.add(Calendar.YEAR, 5);
 		detail1.setExpiration(calendar1.getTime());
-		
+
 		ItemStockDetail detail2 = new ItemStockDetail();
 		detail2.setItem(newItem);
 		detail2.setStockroom(sourceRoom);
@@ -904,14 +914,14 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.add(Calendar.YEAR, 10);
 		detail2.setExpiration(calendar2.getTime());
-		
+
 		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, newItem);
 		stock2.addDetail(detail1);
 		stock2.addDetail(detail2);
-		
+
 		itemStockDataService.save(stock2);
 		Context.flushSession();
-		
+
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
@@ -923,17 +933,17 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		final ReservedTransaction tx = operation.addReserved(newItem, 5);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		final ReservedTransaction tx2 = operation.addReserved(newItem, 10);
 		tx2.setExpiration(calendar2.getTime());
 		tx2.setBatchOperation(detail1.getBatchOperation());
 		tx2.setCalculatedBatch(false);
 		tx2.setCalculatedExpiration(false);
-		
+
 		service.calculateReservations(operation);
-		
+
 		Assert.assertEquals(2, operation.getReserved().size());
-		
+
 		ReservedTransaction testTx =
 		        Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			        @Override
@@ -946,7 +956,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
 		Assert.assertTrue(testTx.isCalculatedBatch());
 		Assert.assertTrue(testTx.isCalculatedExpiration());
-		
+
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
 			@Override
 			public boolean apply(@Nullable ReservedTransaction input) {
@@ -959,7 +969,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertFalse(testTx.isCalculatedBatch());
 		Assert.assertFalse(testTx.isCalculatedExpiration());
 	}
-	
+
 	/**
 	 * @verifies set batch operation to past operations before future operations
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -968,32 +978,32 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	public void calculateReservations_shouldSetBatchOperationToPastOperationsBeforeFutureOperations() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
-		
+
 		Item newItem = itemTest.createEntity(true);
 		Context.flushSession();
-		
+
 		// Create a stock operation in the future
 		StockOperation operation = new StockOperation();
 		operation.setInstanceType(WellKnownOperationTypes.getReceipt());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, 100);
 		operation.setOperationDate(cal.getTime());
-		
+
 		operationDataService.save(operation);
-		
+
 		ReservedTransaction tx = operation.addReserved(newItem, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
-		
+
 		service.calculateReservations(operation);
-		
+
 		// Ensure that no new transactions were created
 		Assert.assertEquals(1, operation.getReserved().size());
-		
+
 		Assert.assertEquals(newItem, tx.getItem());
 		Assert.assertEquals(operation, tx.getBatchOperation());
 	}
@@ -1247,5 +1257,1475 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		detail = findDetail(stock, null);
 		Assert.assertEquals(200, (long)detail.getQuantity());
 		Assert.assertNull(detail.getExpiration());
+	}
+
+	@Test
+	public void submitOperation_dispose_shouldReduceBatchQuantity_singleBatch_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(operationDataService.getById(2));
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 6);
+
+		detail = findDetail(stock, null);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(10), detail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), detail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		ItemStockDetail detailAfterSubmit = findDetail(stock, null);
+		Assert.assertNotNull(detailAfterSubmit);
+		Assert.assertEquals(new Integer(4), detailAfterSubmit.getQuantity());
+	}
+
+	@Test
+	public void submitOperation_dispose_shouldRemoveBatchWithZeroQuantity_singleBatch_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(operationDataService.getById(2));
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 10);
+
+		detail = findDetail(stock, null);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(10), detail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), detail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		ItemStockDetail detailAfterSubmit = findDetail(stock, null);
+		Assert.assertNull(detailAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_dispose_shouldReduceFromNextBatchIfQuantityOfOneBatchIsNotEnough_multipleBatches_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 25);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, null);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(2, findDetails.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		ItemStockDetail detailAfterSubmit = findDetail(stock, null);
+		Assert.assertEquals(new Integer(5), detailAfterSubmit.getQuantity());
+	}
+
+	@Test
+	public void submitOperation_dispose_shouldRemoveMultipleBatchesIfBatchQuantityIsZero_multipleBatches_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 30);
+
+		Collection<ItemStockDetail> details = findDetails(stock, null);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(2, details.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNull(detailsAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_dispose_shouldCreateNewBatchWithNegativeQuantityIfDisposedQuantityIsMoreThanBatchHas_singleBatch_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(operationDataService.getById(2));
+		detail.setExpiration(expirationDate);
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 60, expirationDate);
+
+		detail = findDetail(stock, expirationDate);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(10), detail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), detail.getBatchOperation());
+		Assert.assertEquals(expirationDate, detail.getExpiration());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(-50, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate);
+		Assert.assertNull(detailsAfterSubmit);
+
+		detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		ItemStockDetail detailAfterSubmit = findDetail(stock, null);
+		Assert.assertNotNull(detailAfterSubmit);
+		Assert.assertEquals(new Integer(-50), detailAfterSubmit.getQuantity());
+		Assert.assertNull(detailAfterSubmit.getBatchOperation());
+		Assert.assertNull(detailAfterSubmit.getExpiration());
+	}
+
+	@Test
+	public void submitOperation_dispose_shouldCreateBatchWithoutNumberAndExpIfTooMuchIsDeductedAndStockQuantityResultZero_multipleBatches_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString1 = "31-08-2016";
+		Date expirationDate1 = sdf.parse(dateInString1);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+		detail1.setExpiration(expirationDate1);
+
+		//specify different expiration date
+		String dateInString2 = "31-09-2016";
+		Date expirationDate2 = sdf.parse(dateInString2);
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+		detail2.setExpiration(expirationDate2);
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -30, expirationDate1);
+
+		Collection<ItemStockDetail> details = findDetails(stock, expirationDate1);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(1, details.size());
+
+		details = findDetails(stock, expirationDate2);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(1, details.size());
+
+		details = findDetails(stock, null);
+		Assert.assertNull(details);
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(0, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate2);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		ItemStockDetail detail = findDetail(stock, expirationDate2);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(20), detail.getQuantity());
+
+		detail = findDetail(stock, null);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(-20), detail.getQuantity());
+
+		detailsAfterSubmit = findDetails(stock, expirationDate1);
+		Assert.assertNull(detailsAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldReduceBatchQuantityIfAdjustmentQuantityNegative_singleBatch_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+
+		stock.addDetail(detail1);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -6);
+
+		ItemStockDetail findDetail = findDetail(stock, null);
+		Assert.assertNotNull(findDetail);
+		Assert.assertEquals(new Integer(10), findDetail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), findDetail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(4, stock.getQuantity());
+
+		ItemStockDetail findDetailAfterSubmit = findDetail(stock, null);
+		Assert.assertNotNull(findDetailAfterSubmit);
+		Assert.assertEquals(new Integer(4), findDetail.getQuantity());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldRemoveBatchesWithZeroQuantity_singleBatch__noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(operationDataService.getById(2));
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -10);
+
+		detail = findDetail(stock, null);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(10), detail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), detail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNull(stock);
+		ItemStockDetail detailAfterSubmit = findDetail(stock, null);
+		Assert.assertNull(detailAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldAddNewBatchIfStockAdded_multipleBatch_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 30);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, null);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(2, findDetails.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(60, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(3, findDetails.size());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldRemoveBatchWithNegativeQauntityIfAdjustedToZeroQuantity_singleBatch_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(-10);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(-10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(null);
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 10);
+
+		Collection<ItemStockDetail> details = findDetails(stock, null);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(1, details.size());
+
+		detail = findDetail(stock, null);
+		Assert.assertEquals(new Integer(-10), detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNull(stock);
+
+		Collection<ItemStockDetail> findDetailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNull(findDetailsAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(-10);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(-10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(null);
+
+		stock.addDetail(detail1);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 30);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, null);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(1, findDetails.size());
+		ItemStockDetail detail = findDetail(stock, null);
+		Assert.assertEquals(new Integer(-10), detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(20, stock.getQuantity());
+
+		Collection<ItemStockDetail> findDetailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(findDetailsAfterSubmit);
+		Assert.assertEquals(1, findDetails.size());
+		detail = findDetail(stock, null);
+		Assert.assertEquals("A122", detail.getBatchOperation().getOperationNumber());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldReduceFromNextBatchIfQuantityOfOneBatchIsNotEnough_multipleBatch_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -25);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, null);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(2, findDetails.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(5, stock.getQuantity());
+
+		Collection<ItemStockDetail> findDetailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(findDetailsAfterSubmit);
+		Assert.assertEquals(1, findDetailsAfterSubmit.size());
+		ItemStockDetail findDetailAfterSubmit = findDetail(stock, null);
+		Assert.assertEquals(new Integer(5), findDetailAfterSubmit.getQuantity());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldRemoveMultipleBatchesIfBatchQuantityIsZero_noExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -30);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, null);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(2, findDetails.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNull(stock);
+
+		Collection<ItemStockDetail> findDetailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNull(findDetailsAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldReduceBatchQuantityIfAdjustmentQuantityNegative_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(operationDataService.getById(2));
+		detail.setExpiration(expirationDate);
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -6, expirationDate);
+
+		detail = findDetail(stock, expirationDate);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(10), detail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), detail.getBatchOperation());
+		Assert.assertEquals(expirationDate, detail.getExpiration());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(4, stock.getQuantity());
+
+		ItemStockDetail detailAfterSubmit = findDetail(stock, expirationDate);
+		Assert.assertNotNull(detailAfterSubmit);
+		Assert.assertEquals(new Integer(4), detail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), detailAfterSubmit.getBatchOperation());
+		Assert.assertEquals(expirationDate, detailAfterSubmit.getExpiration());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldReduceBatchQuantityAndGoIntoNegativeIfAdjustmentQuantityIsMoreThanBatchHas_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(operationDataService.getById(2));
+		detail.setExpiration(expirationDate);
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -60, expirationDate);
+
+		detail = findDetail(stock, expirationDate);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(10), detail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), detail.getBatchOperation());
+		Assert.assertEquals(expirationDate, detail.getExpiration());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(-50, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate);
+		Assert.assertNull(detailsAfterSubmit);
+
+		detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		ItemStockDetail detailAfterSubmit = findDetail(stock, null);
+		Assert.assertNotNull(detailAfterSubmit);
+		Assert.assertEquals(new Integer(-50), detailAfterSubmit.getQuantity());
+		Assert.assertNull(detailAfterSubmit.getBatchOperation());
+		Assert.assertNull(detailAfterSubmit.getExpiration());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldRemoveBatchesWithZeroQuantity_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(10);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(operationDataService.getById(2));
+		detail.setExpiration(expirationDate);
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -10);
+
+		ItemStockDetail findDetail = findDetail(stock, expirationDate);
+		Assert.assertNotNull(findDetail);
+		Assert.assertEquals(new Integer(10), findDetail.getQuantity());
+		Assert.assertEquals(operationDataService.getById(2), findDetail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNull(stock);
+		ItemStockDetail findDetailAfterSubmit = findDetail(stock, expirationDate);
+		Assert.assertNull(findDetailAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldAddNewBatchIfStockAdded_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+		detail1.setExpiration(expirationDate);
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+		detail2.setExpiration(expirationDate);
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 30, expirationDate);
+
+		Collection<ItemStockDetail> details = findDetails(stock, expirationDate);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(2, details.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(60, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(3, detailsAfterSubmit.size());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldRemoveBatchWithNegativeQauntityIfAdjustedToZeroQuantity_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(-10);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(-10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(null);
+		detail.setExpiration(expirationDate);
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 10, expirationDate);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, expirationDate);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(1, findDetails.size());
+		detail = findDetail(stock, expirationDate);
+		Assert.assertEquals(new Integer(-10), detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNull(stock);
+
+		Collection<ItemStockDetail> findDetailsAfterSubmit = findDetails(stock, expirationDate);
+		Assert.assertNull(findDetailsAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(-10);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item);
+		detail.setStockroom(sourceRoom);
+		detail.setQuantity(-10);
+		detail.setCalculatedBatch(false);
+		detail.setCalculatedExpiration(false);
+		detail.setBatchOperation(null);
+		detail.setExpiration(expirationDate);
+
+		stock.addDetail(detail);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, 30,expirationDate);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, expirationDate);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(1, findDetails.size());
+		detail = findDetail(stock, expirationDate);
+		Assert.assertEquals(new Integer(-10), detail.getQuantity());
+		Assert.assertNull(detail.getBatchOperation());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(20, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, findDetails.size());
+		ItemStockDetail detailAfterSubmit = findDetail(stock, expirationDate);
+		Assert.assertEquals("A122", detailAfterSubmit.getBatchOperation().getOperationNumber());
+		Assert.assertEquals(new Integer(20), detailAfterSubmit.getQuantity());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldReduceFromNextBatchIfQuantityOfOneBatchIsNotEnough_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+		detail1.setExpiration(expirationDate);
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+		detail2.setExpiration(expirationDate);
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -25, expirationDate);
+
+		Collection<ItemStockDetail> details = findDetails(stock, expirationDate);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(2, details.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertEquals(5, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+		ItemStockDetail findDetailAfterSubmit = findDetail(stock, expirationDate);
+		Assert.assertEquals(new Integer(5), findDetailAfterSubmit.getQuantity());
+		Assert.assertEquals(expirationDate, findDetailAfterSubmit.getExpiration());
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldRemoveMultipleBatchesIfBatchQuantityIsZero_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString = "31-08-2016";
+		Date expirationDate = sdf.parse(dateInString);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+		detail1.setExpiration(expirationDate);
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+		detail2.setExpiration(expirationDate);
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -30, expirationDate);
+
+		Collection<ItemStockDetail> findDetails = findDetails(stock, expirationDate);
+		Assert.assertNotNull(findDetails);
+		Assert.assertEquals(2, findDetails.size());
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNull(stock);
+
+		Collection<ItemStockDetail> findDetailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNull(findDetailsAfterSubmit);
+		findDetailsAfterSubmit = findDetails(stock, expirationDate);
+		Assert.assertNull(findDetailsAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldCreateBatchWithoutNumberAndExpIfTooMuchIsDeducted_multipleBatches_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(35);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString1 = "31-08-2016";
+		Date expirationDate1 = sdf.parse(dateInString1);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(15);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+		detail1.setExpiration(expirationDate1);
+
+		//specify different expiration date
+		String dateInString2 = "31-09-2016";
+		Date expirationDate2 = sdf.parse(dateInString2);
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+		detail2.setExpiration(expirationDate2);
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -30, expirationDate1);
+
+		Collection<ItemStockDetail> details = findDetails(stock, expirationDate1);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(1, details.size());
+
+		details = findDetails(stock, expirationDate2);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(1, details.size());
+
+		details = findDetails(stock, null);
+		Assert.assertNull(details);
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(5, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate2);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		ItemStockDetail detail = findDetail(stock, expirationDate2);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(20), detail.getQuantity());
+
+		detail = findDetail(stock, null);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(-15), detail.getQuantity());
+
+		detailsAfterSubmit = findDetails(stock, expirationDate1);
+		Assert.assertNull(detailsAfterSubmit);
+	}
+
+	@Test
+	public void submitOperation_adjust_shouldCreateBatchWithoutNumberAndExpIfTooMuchIsDeductedAndStockQuantityResultZero_multipleBatches_specificExpirationDate() throws Exception {
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+
+		Item item = itemTest.createEntity(true);
+		itemDataService.save(item);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+
+		stock.setStockroom(sourceRoom);
+		stock.setQuantity(30);
+
+		//specify expiration date
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
+		String dateInString1 = "31-08-2016";
+		Date expirationDate1 = sdf.parse(dateInString1);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+		detail1.setExpiration(expirationDate1);
+
+		//specify different expiration date
+		String dateInString2 = "31-09-2016";
+		Date expirationDate2 = sdf.parse(dateInString2);
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+		detail2.setExpiration(expirationDate2);
+
+		stock.addDetail(detail1);
+		stock.addDetail(detail2);
+
+		itemStockDataService.save(stock);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		operation.setStatus(StockOperationStatus.NEW);
+		operation.setSource(sourceRoom);
+		operation.setOperationNumber("A122");
+		operation.setOperationDate(new Date());
+		operation.addItem(item, -30, expirationDate1);
+
+		Collection<ItemStockDetail> details = findDetails(stock, expirationDate1);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(1, details.size());
+
+		details = findDetails(stock, expirationDate2);
+		Assert.assertNotNull(details);
+		Assert.assertEquals(1, details.size());
+
+		details = findDetails(stock, null);
+		Assert.assertNull(details);
+
+		service.submitOperation(operation);
+		Context.flushSession();
+
+		stock = stockroomDataService.getItem(sourceRoom, item);
+		Assert.assertNotNull(stock);
+		Assert.assertEquals(0, stock.getQuantity());
+
+		Collection<ItemStockDetail> detailsAfterSubmit = findDetails(stock, expirationDate2);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		detailsAfterSubmit = findDetails(stock, null);
+		Assert.assertNotNull(detailsAfterSubmit);
+		Assert.assertEquals(1, detailsAfterSubmit.size());
+
+		ItemStockDetail detail = findDetail(stock, expirationDate2);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(20), detail.getQuantity());
+
+		detail = findDetail(stock, null);
+		Assert.assertNotNull(detail);
+		Assert.assertEquals(new Integer(-20), detail.getQuantity());
+
+		detailsAfterSubmit = findDetails(stock, expirationDate1);
+		Assert.assertNull(detailsAfterSubmit);
 	}
 }

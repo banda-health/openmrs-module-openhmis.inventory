@@ -322,7 +322,7 @@ public class StockOperationServiceImpl
 					createNegativeStockDetail(stock);
 				}
 
-				if (stock.getQuantity() == 0) {
+				if (stock.getQuantity() == 0 && stock.getDetails() == null) {
 					// If the item stock quantity is exactly zero then we can safely delete the record
 
 					// We have to remove the item stock from the stockroom item stock list even though this will load the
@@ -395,11 +395,11 @@ public class StockOperationServiceImpl
 		 */
 		Map<Pair<Stockroom, Item>, ItemStock> stockMap = new HashMap<Pair<Stockroom, Item>, ItemStock>();
 		List<ReservedTransaction> newTransactions = new ArrayList<ReservedTransaction>();
-		boolean hasSource = operation.getSource() != null &&
-				operation.getInstanceType() != WellKnownOperationTypes.getAdjustment();
+		boolean hasSource = operation.getSource() != null;
+		boolean isAdjustment = (WellKnownOperationTypes.getAdjustment()).equals(operation.getInstanceType());
 
 		for (ReservedTransaction tx : transactions) {
-			if (hasSource) {
+			if (hasSource && (!isAdjustment || (isAdjustment && tx.getQuantity() < 0))) {
 				// Clone the item stock and find the detail record
 				ItemStock stock = findAndCloneStock(stockMap, operation.getSource(), tx.getItem());
 				findAndUpdateSourceDetail(newTransactions, operation, stock, tx);

@@ -86,11 +86,18 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 			StockOperationItem item = new StockOperationItem();
 			item.setOperation(operation);
 			item.setItem(invitem.getItem());
-			item.setCalculatedExpiration(false);
-			item.setCalculatedBatch(false);
 			item.setExpiration(invitem.getExpiration());
-			item.setQuantity(invitem.getActualQuantity() - invitem.getQuantity());
-			item.setBatchOperation(operation);
+			item.setCalculatedExpiration(false);
+
+			int quantity = invitem.getActualQuantity() - invitem.getQuantity();
+			item.setQuantity(quantity);
+
+			if (quantity < 0 || invitem.getActualQuantity() == 0) {
+				item.setCalculatedBatch(true);
+				item.setBatchOperation(null);
+			} else  {
+				item.setCalculatedBatch(true);
+			}
 			items.add(item);
 		}
 
