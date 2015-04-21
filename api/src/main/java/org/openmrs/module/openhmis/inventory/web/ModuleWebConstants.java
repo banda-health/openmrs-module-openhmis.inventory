@@ -55,6 +55,9 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String INVENTORY_CREATION_ROOT = MODULE_ROOT + "inventoryCreate";
 	public static final String INVENTORY_CREATION_PAGE =  INVENTORY_CREATION_ROOT + ".form";
 
+	public static final String INVENTORY_STOCK_TAKE_ROOT = MODULE_ROOT + "inventoryStockTake";
+	public static final String INVENTORY_STOCK_TAKE_PAGE =  INVENTORY_STOCK_TAKE_ROOT + ".form";
+
 	public static final String INVENTORY_REPORTS_ROOT = MODULE_ROOT + "inventoryReports";
 	public static final String INVENTORY_REPORTS_PAGE =  INVENTORY_REPORTS_ROOT + ".form";
 
