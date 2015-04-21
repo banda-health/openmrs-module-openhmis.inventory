@@ -14,7 +14,7 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE, supportedClass=ItemConceptSuggestion.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemConceptSuggestionResource
 		extends BaseRestMetadataResource<ItemConceptSuggestion>
 		implements IMetadataDataServiceResource<ItemConceptSuggestion> {
