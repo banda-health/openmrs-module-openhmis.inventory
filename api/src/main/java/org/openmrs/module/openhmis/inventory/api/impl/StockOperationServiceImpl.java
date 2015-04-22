@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import org.apache.commons.lang.ObjectUtils;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
@@ -43,6 +41,8 @@ import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.model.TransactionBase;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
 public class StockOperationServiceImpl
@@ -273,6 +273,7 @@ public class StockOperationServiceImpl
 					// Sum the total quantity for this specific item
 					totalQty += tx.getQuantity();
 
+
 					ItemStockDetail detail = null;
 					if (stock == null) {
 						// Item stock does not exist so create it and then create detail
@@ -283,6 +284,7 @@ public class StockOperationServiceImpl
 
 						detail = new ItemStockDetail(stock, tx);
 						stock.addDetail(detail);
+						mergeNullBatchesToOnlyOne(stock);
 					} else {
 						// The stock already exists so try and find the detail
 						detail = findDetail(stock, tx);
@@ -290,6 +292,7 @@ public class StockOperationServiceImpl
 							// Could not find an appropriate detail so create a new one
 							detail = new ItemStockDetail(stock, tx);
 							stock.addDetail(detail);
+							mergeNullBatchesToOnlyOne(stock);
 						} else {
 							// Found the detail, update the quantity
 							long currentQuantity = detail.getQuantity();
@@ -302,6 +305,9 @@ public class StockOperationServiceImpl
 								detail.setBatchOperation(tx.getBatchOperation());
 								detail.setCalculatedExpiration(Boolean.TRUE.equals(tx.isCalculatedExpiration()));
 								detail.setExpiration(tx.getExpiration() == null ? null : (Date)tx.getExpiration().clone());
+							}
+							if (detail.getQuantity() < 0) {
+								processNegativeStockDetail(stock, detail);
 							}
 						}
 					}
@@ -316,13 +322,7 @@ public class StockOperationServiceImpl
 				// Update the item stock quantity with the total across all details for this specific item in the stockroom
 				stock.setQuantity(stock.getQuantity() + totalQty);
 
-				// Handle the special-case where the stock quantity is negative and ensure that there is only a single
-				//  detail with no qualifiers and the negative quantity
-				if (stock.getQuantity() < 0) {
-					createNegativeStockDetail(stock);
-				}
-
-				if (stock.getQuantity() == 0 && stock.getDetails() == null) {
+				if (stock.getQuantity() == 0 && (!stock.hasDetails())) {
 					// If the item stock quantity is exactly zero then we can safely delete the record
 
 					// We have to remove the item stock from the stockroom item stock list even though this will load the
@@ -335,6 +335,27 @@ public class StockOperationServiceImpl
 					// Save the stock if the quantity is something other than zero (positive or negative)
 					itemStockService.save(stock);
 				}
+			}
+		}
+	}
+
+	private void mergeNullBatchesToOnlyOne(ItemStock stock) {
+		if (!stock.hasDetails()) {
+			return;
+		}
+		List<ItemStockDetail> nullBatches = new ArrayList<ItemStockDetail>();
+		for (ItemStockDetail detail : stock.getDetails()) {
+			if (detail.isNullBatch()) {
+				nullBatches.add(detail);
+			}
+		}
+		if (nullBatches.size() > 1) {
+			ItemStockDetail referenceBatch = nullBatches.get(0);
+			for (int i = 1; i < nullBatches.size(); i++) {
+				ItemStockDetail batchToMerge = nullBatches.get(i);
+				Integer newQuantity = referenceBatch.getQuantity() + batchToMerge.getQuantity();
+				referenceBatch.setQuantity(newQuantity);
+				stock.removeDetail(batchToMerge);
 			}
 		}
 	}
@@ -830,28 +851,42 @@ public class StockOperationServiceImpl
 		return grouped;
 	}
 
-	private void createNegativeStockDetail(ItemStock stock) {
-		ItemStockDetail detail = null;
-		if (stock.getDetails().size() > 1) {
-			// Other detail records exist that should not be around anymore.  Clear them and create a single
-			//  detail record for the unknown stock that has been removed from the stockroom.
-			stock.getDetails().clear();
-
-			detail = new ItemStockDetail();
-			stock.addDetail(detail);
+	private void processNegativeStockDetail(ItemStock stock, ItemStockDetail detail) {
+		ItemStockDetail nullBatchNullExpirationItemStockDetail = findNullBatch(stock);
+		if (nullBatchNullExpirationItemStockDetail != null) {
+			// there is an itemStockDetail without batch and expiration already so just further reduce the quantity
+			Integer nullBatchQuantity = nullBatchNullExpirationItemStockDetail.getQuantity();
+			Integer newQuantity = nullBatchQuantity + detail.getQuantity();
+			nullBatchNullExpirationItemStockDetail.setQuantity(newQuantity);
 		} else {
-			// Use this single record as the unqualified detail record
-			detail = Iterators.get(stock.getDetails().iterator(), 0);
+			//no such detail yet - create one
+			ItemStockDetail newDetail = new ItemStockDetail();
+			newDetail.setItemStock(stock);
+			newDetail.setStockroom(stock.getStockroom());
+			newDetail.setItem(stock.getItem());
+			newDetail.setExpiration(null);
+			newDetail.setBatchOperation(null);
+			newDetail.setCalculatedExpiration(true);
+			newDetail.setCalculatedBatch(true);
+			newDetail.setQuantity(detail.getQuantity());
+			stock.addDetail(newDetail);
 		}
 
-		detail.setItemStock(stock);
-		detail.setStockroom(stock.getStockroom());
-		detail.setItem(stock.getItem());
-		detail.setExpiration(null);
-		detail.setBatchOperation(null);
-		detail.setCalculatedExpiration(true);
-		detail.setCalculatedBatch(true);
-		detail.setQuantity(stock.getQuantity());
+		//delete the "old" detail that is responsible for reduction
+		stock.removeDetail(detail);
+
+	}
+
+	private ItemStockDetail findNullBatch(ItemStock stock) {
+		ItemStockDetail nullBatch = null;
+		if (stock.getDetails() != null && stock.getDetails().size() > 0) {
+			for (ItemStockDetail detail : stock.getDetails()) {
+				if (detail.isNullBatch()) {
+					nullBatch = detail;
+				}
+			}
+		}
+		return nullBatch;
 	}
 
 	private int compareOperationsByDateAndOrder(StockOperation o1, StockOperation o2) {

@@ -128,5 +128,9 @@ public class ItemStock extends BaseOpenmrsObject
 
 		return result;
 	}
+
+	public boolean hasDetails() {
+		return this.getDetails() != null && this.getDetails().size() > 0;
+	}
 }
 

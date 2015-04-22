@@ -107,5 +107,9 @@ public class ItemStockDetail extends ItemStockDetailBase {
 	public void setStockroom(Stockroom stockroom) {
 		this.stockroom = stockroom;
 	}
+
+	public boolean isNullBatch() {
+		return (this.getBatchOperation() == null && this.getExpiration() == null && this.getQuantity() < 0) ? true : false;
+	}
 }
 
