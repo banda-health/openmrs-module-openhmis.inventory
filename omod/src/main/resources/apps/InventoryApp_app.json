@@ -11,7 +11,7 @@
         "label": "inventory",
         "url": "module/openhmis/inventory/inventory.form",
         "icon": "icon-sitemap",
-        "requiredPrivilege": "Manage Inventory Operations"
+        "requiredPrivilege": "App: Manage Inventory Operations"
       }
     ]
   }
