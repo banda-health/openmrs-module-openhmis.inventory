@@ -34,6 +34,9 @@ public abstract class StockOperationTypeBase
 	public abstract void onCompleted(StockOperation operation);
 
 	@Override
+	public abstract boolean isNegativeItemQuantityAllowed();
+
+	@Override
 	public Integer getId() {
 		return id;
 	}

@@ -1,6 +1,5 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -629,6 +628,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
+		itemDataService.save(newItem);
 		Context.flushSession();
 
 		// Create the stock operation
@@ -637,6 +637,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		operation.setDestination(destRoom);
 		operation.setOperationNumber("A123");
 		operation.setOperationDate(new Date());
+		operation.setStatus(StockOperationStatus.PENDING);
 		ReservedTransaction tx = operation.addReserved(newItem, 25);
 		tx.setCalculatedBatch(true);
 		tx.setCalculatedExpiration(true);
@@ -977,10 +978,10 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void calculateReservations_shouldSetBatchOperationToPastOperationsBeforeFutureOperations() throws Exception {
-		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
+		itemDataService.save(newItem);
 		Context.flushSession();
 
 		// Create a stock operation in the future

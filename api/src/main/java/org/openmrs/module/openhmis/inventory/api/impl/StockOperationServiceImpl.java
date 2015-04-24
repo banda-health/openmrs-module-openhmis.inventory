@@ -27,7 +27,6 @@ import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
@@ -105,6 +104,13 @@ public class StockOperationServiceImpl
 	public static void validateOperationItems(StockOperation operation) {
 		if (operation.getItems() == null || operation.getItems().size() == 0) {
 			return;
+		}
+
+		for (StockOperationItem item : operation.getItems()) {
+			boolean allowNegativeItemQuantities = operation.getInstanceType().isNegativeItemQuantityAllowed();
+			if(item.getQuantity() < 0 && !allowNegativeItemQuantities) {
+				throw new APIException("This operation does not allow negative quantities for items.");
+			}
 		}
 
 		if (operation.getInstanceType().getHasSource()) {
@@ -417,7 +423,7 @@ public class StockOperationServiceImpl
 		Map<Pair<Stockroom, Item>, ItemStock> stockMap = new HashMap<Pair<Stockroom, Item>, ItemStock>();
 		List<ReservedTransaction> newTransactions = new ArrayList<ReservedTransaction>();
 		boolean hasSource = operation.getSource() != null;
-		boolean isAdjustment = (WellKnownOperationTypes.getAdjustment()).equals(operation.getInstanceType());
+		boolean isAdjustment = operation.isAdjustmentType();
 
 		for (ReservedTransaction tx : transactions) {
 			if (hasSource && (!isAdjustment || (isAdjustment && tx.getQuantity() < 0))) {
@@ -626,7 +632,7 @@ public class StockOperationServiceImpl
 				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
 			} else {
 				// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
-				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
+				detail.setQuantity(detail.getQuantity() - Math.abs(tx.getQuantity()));
 
 				if (detail.getQuantity() == 0) {
 					// If the quantity is exactly zero than we can simply remove the detail record
@@ -635,11 +641,18 @@ public class StockOperationServiceImpl
 					stock.getDetails().remove(detail);
 
 					// Set the tx quantity to the number actually deduced from the detail
-					tx.setQuantity(tx.getQuantity() + detail.getQuantity());
+					//Math.abs is needed to handle negative adjustments correctly
+					tx.setQuantity(Math.abs(tx.getQuantity()) + detail.getQuantity());
+
+					//if adjustment make sure that the quantity is negaitve (this method is only dealing with negative adjustments)
+					if (operation.isAdjustmentType()) {
+						tx.setQuantity(tx.getQuantity() * -1);
+					}
 
 					// Create a new tx to handle the remaining stock request
 					ReservedTransaction newTx = new ReservedTransaction(tx);
-					newTx.setQuantity(Math.abs(detail.getQuantity()));
+					Integer newTxQuantity = operation.isAdjustmentType() ? detail.getQuantity() : Math.abs(detail.getQuantity());
+					newTx.setQuantity(newTxQuantity);
 
 					// Add the new tx to the list of transactions to add to the operations
 					newTransactions.add(newTx);
@@ -853,6 +866,10 @@ public class StockOperationServiceImpl
 
 	private void processNegativeStockDetail(ItemStock stock, ItemStockDetail detail) {
 		ItemStockDetail nullBatchNullExpirationItemStockDetail = findNullBatch(stock);
+		if (detail.isNullBatch()) {
+			//deduction has already taken place in applyTransactions method and there is no obsolete detail to delete
+			return;
+		}
 		if (nullBatchNullExpirationItemStockDetail != null) {
 			// there is an itemStockDetail without batch and expiration already so just further reduce the quantity
 			Integer nullBatchQuantity = nullBatchNullExpirationItemStockDetail.getQuantity();
@@ -872,8 +889,10 @@ public class StockOperationServiceImpl
 			stock.addDetail(newDetail);
 		}
 
-		//delete the "old" detail that is responsible for reduction
-		stock.removeDetail(detail);
+		//delete the "old" detail that is responsible for reduction if this is not a nullBatch as well
+		if (!detail.isNullBatch()) {
+			stock.removeDetail(detail);
+		}
 
 	}
 

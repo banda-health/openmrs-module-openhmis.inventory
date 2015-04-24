@@ -3,6 +3,7 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomizableMetadata;
+import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -326,15 +327,18 @@ public class StockOperation
 	public void setTransactions(Set<StockOperationTransaction> transactions) {
 		this.transactions = transactions;
 	}
-	
+
 	public boolean hasReservedTransactions() {
 		return (getReserved() != null && getReserved().size() > 0);
 	}
-	
+
 	public boolean hasTransactions() {
 		return (getTransactions() != null && getTransactions().size() > 0);
 	}
-	
+
+	public boolean isAdjustmentType() {
+		return (WellKnownOperationTypes.getAdjustment()).equals(this.getInstanceType());
+	}
 
 	@Override
 	public int compareTo(StockOperation o) {
@@ -354,5 +358,6 @@ public class StockOperation
 
 		return result;
 	}
+
 }
 

@@ -29,7 +29,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
+public class DistributionOperationTest extends BaseModuleContextSensitiveTest {
 
 	IItemDataService itemDataService;
 	IStockroomDataService stockroomDataService;
@@ -92,7 +92,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -154,7 +154,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -213,7 +213,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -246,7 +246,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test(expected = APIException.class)
-	public void submitOperation_shouldThrowExceptionfDisposedQuantityIsNegative_singleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldThrowExceptionIfDistributionQuantityIsNegative_singleBatch_noExpirationDate() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -274,7 +274,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -319,7 +319,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -378,7 +378,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -442,7 +442,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -514,7 +514,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -582,7 +582,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -653,7 +653,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -710,7 +710,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -780,7 +780,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -867,7 +867,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -962,7 +962,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -1061,7 +1061,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
@@ -1139,7 +1139,7 @@ public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
 
 		// Create the stock operation
 		StockOperation operation = new StockOperation();
-		operation.setInstanceType(WellKnownOperationTypes.getDisposed());
+		operation.setInstanceType(WellKnownOperationTypes.getDistribution());
 		operation.setStatus(StockOperationStatus.PENDING);
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A123");

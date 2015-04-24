@@ -129,4 +129,10 @@ public interface IStockOperationType extends OpenmrsMetadata, IInstanceType<Stoc
 	 * @param operation The associated stock operation.
 	 */
 	void onCompleted(StockOperation operation);
+
+	/**
+	 * Determines weather or not negative quantities for items are allowed
+	 * @return true if negative quantities are allowed, else false
+	 */
+	boolean isNegativeItemQuantityAllowed();
 }
