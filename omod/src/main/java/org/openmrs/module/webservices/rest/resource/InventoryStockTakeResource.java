@@ -54,21 +54,21 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 
 	@Override
 	public InventoryStockTake save(InventoryStockTake delegate) {
-		StockOperation operation = new StockOperation();
 		// Ensure that the current user can process the operation
 		if (!userCanProcessAdjustment()) {
 			throw new RestClientException("The current user not authorized to process this operation.");
 		}
-		if (IdgenHelper.isOperationNumberGenerated()) {
-			delegate.setOperationNumber(IdgenHelper.generateId());
-		}
-		operation = createOperation(operation, delegate);
+		StockOperation operation = createOperation(delegate);
 		operationService.submitOperation(operation);
 
 		return newDelegate();
 	}
 
-	private StockOperation createOperation(StockOperation operation, InventoryStockTake delegate) {
+	public StockOperation createOperation(InventoryStockTake delegate) {
+		if (IdgenHelper.isOperationNumberGenerated()) {
+			delegate.setOperationNumber(IdgenHelper.generateId());
+		}
+		StockOperation operation = new StockOperation();
 		operation.setStatus(StockOperationStatus.NEW);
 		operation.setInstanceType(WellKnownOperationTypes.getAdjustment());
 		operation.setSource(delegate.getStockroom());
