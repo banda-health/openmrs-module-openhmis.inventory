@@ -14,6 +14,11 @@ public class AdjustmentOperationType extends StockOperationTypeBase {
 	}
 
 	@Override
+	public boolean isNegativeItemQuantityAllowed() {
+		return true;
+	}
+
+	@Override
 	public void onPending(final StockOperation operation) {
 		executeCopyReserved(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
