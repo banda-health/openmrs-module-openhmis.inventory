@@ -13,6 +13,12 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,23 +28,23 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
-import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
-import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
-import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationTemplate;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.helper.IdgenHelper;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -49,20 +55,15 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.web.client.RestClientException;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class StockOperationResource
 		extends BaseRestInstanceCustomizableMetadataResource<StockOperation, IStockOperationType, StockOperationAttribute> {
 	private static final Log LOG = LogFactory.getLog(StockOperationResource.class);
 
 	private IStockOperationService operationService;
 	private IStockOperationTypeDataService stockOperationTypeDataService;
+	private IStockroomDataService stockroomDataService;
 	private IItemDataService itemDataService;
 	private boolean submitRequired = false;
 	private boolean rollbackRequired = false;
@@ -70,6 +71,7 @@ public class StockOperationResource
 	public StockOperationResource() {
 		this.operationService = Context.getService(IStockOperationService.class);
 		this.stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
+		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.itemDataService = Context.getService(IItemDataService.class);
 	}
 
@@ -156,16 +158,9 @@ public class StockOperationResource
 	@PropertySetter("operationNumber")
 	public void setOperationNumber(StockOperation instance, String operationNumber) {
 		if (StringUtils.isEmpty(instance.getOperationNumber())) {
-			if (ModuleUtil.isLoaded(ModuleUtil.IDGEN_MODULE_ID) && ModuleSettings.generateOperationNumber()) {
-				try {
-					operationNumber = IdgenUtil.generateId(ModuleSettings.OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY);
-
-					instance.setOperationNumber(operationNumber);
-				} catch (Exception ex) {
-					LOG.error("Could not generate operation number: " + ex.getMessage());
-
-					throw new IllegalStateException("The Operation Number was not defined and could not be generated.", ex);
-				}
+			if (IdgenHelper.isOperationNumberGenerated()) {
+				operationNumber = IdgenHelper.generateId();
+				instance.setOperationNumber(operationNumber);
 			} else if (StringUtils.isEmpty(operationNumber)) {
 				LOG.error("Operation Number not defined or generated.");
 
@@ -231,7 +226,7 @@ public class StockOperationResource
 
 	@PropertySetter("operationDate")
 	public void setOperationDate(StockOperation instance, String dateText) {
-		Date date = Utility.parseOpenhmisDateString(dateText);
+		Date date = Utility.parseOpenhmisDateStringWithSeconds(dateText);
 		if (date == null) {
 			throw new IllegalArgumentException("Could not parse '" + dateText + "' as a date.");
 		}
@@ -252,8 +247,10 @@ public class StockOperationResource
 		} else {
 			String status = context.getParameter("operation_status");
 			String operationTypeUuid = context.getParameter("operationType_uuid");
+			String stockroomUuid = context.getParameter("stockroom_uuid");
 			String operationItemUuid = context.getParameter("operationItem_uuid");
-			if (status != null || operationTypeUuid != null || operationItemUuid != null) {
+
+			if (status != null || operationTypeUuid != null || stockroomUuid != null || operationItemUuid != null) {
 				result = getOperationsByContextParams(context);
 			} else {
 				result = super.doSearch(context);
@@ -291,6 +288,7 @@ public class StockOperationResource
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		StockOperationStatus status = getStatus(context);
 		IStockOperationType stockOperationType = getStockOperationType(context);
+		Stockroom stockroom = getStockroom(context);
 		Item item = getItem(context);
 
 		List<StockOperation> results;
@@ -304,6 +302,9 @@ public class StockOperationResource
 			}
 			if (stockOperationType != null) {
 				template.setInstanceType(stockOperationType);
+			}
+			if (stockroom != null) {
+				template.setStockroom(stockroom);
 			}
 			if (item != null) {
 				template.setItem(item);
@@ -343,6 +344,21 @@ public class StockOperationResource
 		}
 
 		return stockOperationType;
+	}
+
+	private Stockroom getStockroom(RequestContext context) {
+		Stockroom stockroom = null;
+		String stockroomUuid = context.getParameter("stockroom_uuid");
+		if (StringUtils.isNotEmpty(stockroomUuid)) {
+			stockroom = stockroomDataService.getByUuid(stockroomUuid);
+
+			if (stockroom == null) {
+				LOG.warn("Could not parse Stockroom '" + stockroomUuid + "'");
+				throw new IllegalArgumentException("The stockroom '" + stockroomUuid + "' is not a valid stockroom.");
+			}
+		}
+
+		return stockroom;
 	}
 
 	private Item getItem(RequestContext context) {

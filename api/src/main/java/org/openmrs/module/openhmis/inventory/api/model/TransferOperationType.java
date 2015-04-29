@@ -3,6 +3,12 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
 public class TransferOperationType extends StockOperationTypeBase {
+
+	@Override
+	public boolean isNegativeItemQuantityAllowed() {
+		return false;
+	}
+
 	@Override
 	public void onPending(final StockOperation operation) {
 		// Remove the item stock from the source stockroom

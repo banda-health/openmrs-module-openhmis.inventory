@@ -115,5 +115,10 @@ public class IStockOperationTypeDataServiceTest
 		public void onCompleted(StockOperation operation) {
 			completedCount++;
 		}
+
+		@Override
+		public boolean isNegativeItemQuantityAllowed() {
+			return false;
+		}
 	}
 }

@@ -802,7 +802,7 @@ define(
             },
 
             getValue: function() {
-                return openhmis.dateFormat(this.currentDateValueEl.val(), true);
+                return openhmis.dateFormatWithSeconds(this.currentDateValueEl.val());
             }
         });
 

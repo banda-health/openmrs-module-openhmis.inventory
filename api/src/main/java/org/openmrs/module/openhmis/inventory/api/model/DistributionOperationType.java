@@ -3,6 +3,12 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
 public class DistributionOperationType extends StockOperationTypeBase {
+
+	@Override
+	public boolean isNegativeItemQuantityAllowed() {
+		return false;
+	}
+
 	@Override
 	public void onPending(final StockOperation operation) {
 		executeCopyReserved(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {

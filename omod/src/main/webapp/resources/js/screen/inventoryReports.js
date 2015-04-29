@@ -78,7 +78,6 @@ curl(
         function selectItemForOperationsByStockroom(event, ui) {
             var uuid = ui.item.val;
             var name = ui.item.label;
-            console.log('test');
             $('#itemSearchOperationsByStockroom').val(name);
             $('#item-uuid-searchOperationsByStockroom').val(uuid).trigger('change');
         }

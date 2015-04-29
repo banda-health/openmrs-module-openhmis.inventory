@@ -76,7 +76,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 
 		Date operationDate = null;
 		if (!StringUtils.isEmpty(operationDateText)) {
-			operationDate = Utility.parseOpenhmisDateString(operationDateText);
+			operationDate = Utility.parseOpenhmisDateStringWithSeconds(operationDateText);
 			if (operationDate == null) {
 				return new EmptySearchResult();
 			}

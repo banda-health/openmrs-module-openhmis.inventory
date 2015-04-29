@@ -106,6 +106,89 @@ define(
 			}
 		});
 
+		openhmis.StockroomStockTakeSearchView = openhmis.BaseSearchView.extend({
+			tmplFile: openhmis.url.inventoryBase + 'template/search.html',
+			tmplSelector: '#stockroom-search',
+
+			initialize: function(options) {
+				this.events['change #stockroom_uuid'] = 'onFormSubmit';
+				openhmis.BaseSearchView.prototype.initialize.call(this, options);
+				var stockroomCollection = new openhmis.GenericCollection([], { model: openhmis.Stockroom });
+				stockroomCollection.on("reset", function(collection) {
+                    collection.unshift(new openhmis.Stockroom({ name: __("Any") }));
+                });
+				this.form = new Backbone.Form({
+					className: "inline",
+					schema: {
+						stockroom_uuid: {
+							title: __("Stockroom"),
+							type: "Select",
+							options: stockroomCollection
+						}
+					},
+					data: {}
+				});
+			},
+
+			/** Collect user input */
+			commitForm: function() {
+				var filters = this.form.getValue();
+				if (!filters.stockroom_uuid)
+					this.searchFilter = undefined;
+				else
+					this.searchFilter = filters;
+			},
+
+			/**
+			 * Get fetch options
+			 *
+			 * @param {map} options Fetch options from base view
+			 * @returns {map} Map of fetch options
+			 */
+			getFetchOptions: function(options) {
+				options = options ? options : {}
+				if (this.searchFilter) {
+					for (var filter in this.searchFilter)
+						options.queryString = openhmis.addQueryStringParameter(
+							options.queryString, filter + "=" + encodeURIComponent(this.searchFilter[filter]));
+				}
+				return options;
+			},
+
+			onFormSubmit: function(event) {
+				if (openhmis.StockTakeChangeCounter != 0) {
+					// if there are stock adjustments to the current stockroom
+					if (!confirm('Changing the Stockroom will clear the item stock adjustments. Are you sure you want to do this?')) {
+						event.currentTarget.selectedIndex = this.currentStockroomIndex;
+						return;
+					}
+					openhmis.BaseSearchView.prototype.onFormSubmit.call(this, event);
+					this.trigger('resetItemStockAdjustments', this);
+				} else {
+					//otherwise just perform search as usual
+					openhmis.BaseSearchView.prototype.onFormSubmit.call(this, event);
+				}
+				this.currentStockroomIndex = event.currentTarget.selectedIndex;
+			},
+
+			/**
+			 * Render the view
+			 *
+			 * @returns {View} The rendered view
+			 */
+			render: function() {
+				this.$el.html(this.template({ __: __ }));
+				this.$("div.box").append(this.form.render().el);
+				if (this.searchFilter)
+					this.form.setValue(this.searchFilter);
+				this.$("form").addClass("inline");
+				this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+				return this;
+			},
+
+			focus: function() {this.$("#stockroom_uuid").focus();}
+		});
+
 		openhmis.LocationAndNameSearchView = openhmis.BaseSearchView.extend({
 			tmplFile: openhmis.url.inventoryBase + 'template/search.html',
 			tmplSelector: '#location-name-search',
@@ -238,6 +321,7 @@ define(
             initialize: function(options) {
                 this.events['change #operation_status'] = 'onFormSubmit';
                 this.events['change #operationType_uuid'] = 'onFormSubmit';
+                this.events['change #stockroom_uuid'] = 'onFormSubmit';
                 this.events['change #item-uuid'] = 'onFormSubmit';
 
                 this.item_uuid = "";
@@ -247,6 +331,12 @@ define(
                 operationTypeCollection.on("reset", function(collection) {
                     collection.unshift(new openhmis.OperationType({ name: __("Any") }));
                 });
+
+                var stockroomCollection = new openhmis.GenericCollection([], { model: openhmis.Stockroom });
+                stockroomCollection.on("reset", function(collection) {
+                    collection.unshift(new openhmis.Stockroom({ name: __("Any") }));
+                });
+
                 this.form = new Backbone.Form({
                     className: "inline",
                     schema: {
@@ -259,6 +349,11 @@ define(
                             title: __("Operation Type"),
                             type: "Select",
                             options: operationTypeCollection
+                        },
+                        stockroom_uuid: {
+                            title: __("Stockroom"),
+                            type: "Select",
+                            options: stockroomCollection
                         },
                         operation_item: {
                             title: __("Item"),
@@ -332,6 +427,169 @@ define(
             }
         });
 
-		return openhmis;
-	}
+        openhmis.SearchByOperationItemView = openhmis.BaseSearchView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/search.html',
+            tmplSelector: '#operation-item-search',
+
+
+            initialize: function(options) {
+            	this.itemSelector = "#item-uuid";
+                this.events['change #item-uuid'] = 'onFormSubmit';
+
+                this.item_uuid = "";
+
+                openhmis.BaseSearchView.prototype.initialize.call(this, options);
+                this.form = new Backbone.Form({
+                    className: "inline",
+                    schema: {
+                        operation_item: {
+                            title: __("Item"),
+                            type: "Text",
+                            editorClass: "search"
+                        }
+                    }
+                });
+            },
+
+            getFetchOptions: function(options) {
+                options = options ? options : {};
+                if (this.searchFilter) {
+                    for (var filter in this.searchFilter) {
+                        if (this.searchFilter[filter] !="") {
+                            if (filter == "operation_item") {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, "operationItem_uuid" + "=" + $(this.itemSelector).val());
+                                this.item_uuid = $(this.itemSelector).val();
+                            } else {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
+                                encodeURIComponent(this.searchFilter[filter]));
+                            }
+                        }
+                    }
+                }
+
+                return options;
+            },
+
+            focus: function() {
+                if (this.item_uuid != "") {
+                	$(this.itemSelector).val(this.item_uuid);
+                }
+            },
+
+            commitForm: function() {
+                var filters = this.form.getValue();
+                this.searchFilter = filters;
+            },
+
+            render: function() {
+                this.$el.html(this.template({ __: __ }));
+                this.$("div.box").append(this.form.render().el);
+
+                if (this.searchFilter) {
+                   this.form.setValue(this.searchFilter);
+                }
+
+                this.$("form").addClass("inline");
+                this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+                this.$("#operation_item").autocomplete({
+                    minLength: 2,
+                    source: doSearch,
+                    select: selectItem
+                })
+                .data("autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>").data("item.autocomplete", item)
+                    .append("<a>" + item.label + "</a>").appendTo(ul);
+                };
+                return this;
+            }
+        });
+
+        openhmis.SearchByTransactionItemView = openhmis.BaseSearchView.extend({
+            tmplFile: openhmis.url.inventoryBase + 'template/search.html',
+            tmplSelector: '#transaction-item-search',
+
+
+            initialize: function(options) {
+            	this.itemSelector = "#transaction-item-uuid";
+                this.events['change #transaction-item-uuid'] = 'onFormSubmit';
+
+                this.item_uuid = "";
+
+                openhmis.BaseSearchView.prototype.initialize.call(this, options);
+                this.form = new Backbone.Form({
+                    className: "inline",
+                    schema: {
+                        transaction_item: {
+                            title: __("Item"),
+                            type: "Text",
+                            editorClass: "search"
+                        }
+                    }
+                });
+            },
+
+            getFetchOptions: function(options) {
+                options = options ? options : {};
+                if (this.searchFilter) {
+                    for (var filter in this.searchFilter) {
+                        if (this.searchFilter[filter] !="") {
+                            if (filter == "transaction_item") {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, "transactionItem_uuid" + "=" + $(this.itemSelector).val());
+                                this.item_uuid = $(this.itemSelector).val();
+                            } else {
+                                options.queryString = openhmis.addQueryStringParameter(options.queryString, filter + "=" +
+                                encodeURIComponent(this.searchFilter[filter]));
+                            }
+                        }
+                    }
+                }
+
+                return options;
+            },
+
+            focus: function() {
+                if (this.item_uuid != "") {
+                	$(this.itemSelector).val(this.item_uuid);
+                }
+            },
+
+            commitForm: function() {
+                var filters = this.form.getValue();
+                this.searchFilter = filters;
+            },
+
+            render: function() {
+                this.$el.html(this.template({ __: __ }));
+                this.$("div.box").append(this.form.render().el);
+
+                if (this.searchFilter) {
+                   this.form.setValue(this.searchFilter);
+                }
+
+                this.$("form").addClass("inline");
+                this.$("form ul").append('<button id="submit">'+__("Search")+'</button>');
+                this.$("#transaction_item").autocomplete({
+                    minLength: 2,
+                    source: doSearch,
+                    select: selectTransactionItem
+                })
+                .data("autocomplete")._renderItem = function (ul, item) {
+                return $("<li></li>").data("item.autocomplete", item)
+                    .append("<a>" + item.label + "</a>").appendTo(ul);
+                };
+                return this;
+            },
+
+        });
+
+        //needed because otherwise there would be same ids twice on the reports page
+        function selectTransactionItem(event, ui) {
+            var uuid = ui.item.val;
+            var name = ui.item.label;
+            $('#transaction-item').val(name);
+            $('#transaction-item-uuid').val(uuid).trigger('change');
+        };
+
+        return openhmis;
+    }
 )

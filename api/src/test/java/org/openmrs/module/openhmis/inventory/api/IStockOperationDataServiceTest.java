@@ -675,6 +675,44 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	}
 
 	/**
+	 * @verifies return operations filtered by stockroom
+	 * @see IStockOperationDataService#getOperations(org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch,
+	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 */
+	@Test
+	public void getOperations_shouldReturnOperationsFilteredByStockroom() throws Exception {
+		StockOperation operation = service.getById(1);
+		Stockroom room = operation.getSource();
+
+		Context.flushSession();
+
+		StockOperationSearch search = new StockOperationSearch();
+		search.getTemplate().setStockroom(room);
+
+		Context.flushSession();
+
+		List<StockOperation> results = service.getOperations(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
+		Assert.assertEquals(0, (int)results.get(0).getId());
+		Assert.assertEquals(1, (int)results.get(1).getId());
+
+		room = operation.getDestination();
+		search = new StockOperationSearch();
+		search.getTemplate().setStockroom(room);
+
+		Context.flushSession();
+
+		results = service.getOperations(search, null);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(2, results.size());
+		Assert.assertEquals(2, (int)results.get(0).getId());
+		Assert.assertEquals(1, (int)results.get(1).getId());
+	}
+
+	/**
 	 * @verifies return operations created by user
 	 * @see IStockOperationDataService#getUserOperations(User, PagingInfo)
 	 */

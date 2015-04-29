@@ -95,6 +95,25 @@ public class StockroomDataServiceImpl
 	}
 
 	@Override
+	public List<StockOperationTransaction> getTransactionsByRoomAndItem(final Stockroom stockroom, final Item item, PagingInfo paging) {
+		if (stockroom == null) {
+			throw new IllegalArgumentException("The stockroom must be defined");
+		}
+
+		if (item == null) {
+			throw new IllegalArgumentException("The item must be defined");
+		}
+
+		return executeCriteria(StockOperationTransaction.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.STOCKROOM, stockroom));
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.ITEM, item));
+			}
+		}, Order.desc(HibernateCriteriaConstants.DATE_CREATED), Order.desc(HibernateCriteriaConstants.ID));
+	}
+
+	@Override
 	public List<StockOperation> getOperations(final Stockroom stockroom, final StockOperationSearch search, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined");

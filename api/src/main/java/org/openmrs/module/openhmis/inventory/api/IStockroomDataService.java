@@ -62,6 +62,22 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	List<StockOperationTransaction> getTransactionsByRoom(Stockroom stockroom, PagingInfo paging);
 
 	/**
+	 * Gets all {@link StockOperationTransaction}'s in the specified {@link Stockroom}.
+	 * @param stockroom The {@link Stockroom}.
+	 * @param item The {@link Item}.
+	 * @param paging The paging information.
+	 * @return A list containing all of the stockroom transactions that contain the given item.
+	 * @should return all the transactions in the stockroom ordered by the transaction date
+	 * @should return an empty list if there are no transactions
+	 * @should return paged items if paging is specified
+	 * @should throw IllegalArgumentException if the stockroom is null
+	 * @should throw IllegalArgumentException if the item is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	List<StockOperationTransaction> getTransactionsByRoomAndItem(Stockroom stockroom, Item item, PagingInfo paging);
+
+	/**
 	 * Gets all the items in the stockroom that match the {@link ItemSearch} settings.
  	 * @param stockroom The {@link Stockroom} items to search within.
 	 * @param itemSearch The {@link ItemSearch} settings.

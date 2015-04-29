@@ -3,6 +3,12 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
 public class ReceiptOperationType extends StockOperationTypeBase {
+
+	@Override
+	public boolean isNegativeItemQuantityAllowed() {
+		return false;
+	}
+
 	@Override
 	public void onPending(StockOperation operation) {
 		// Don't need to do anything
