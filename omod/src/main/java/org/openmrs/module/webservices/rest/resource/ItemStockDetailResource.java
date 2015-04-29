@@ -18,7 +18,7 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
 @Resource(name = ModuleRestConstants.ITEM_STOCK_DETAIL_RESOURCE, supportedClass = ItemStockDetail.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemStockDetail> {
 	
 	private IStockroomDataService stockroomDataService;
@@ -33,6 +33,7 @@ public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemSto
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("stockroom", Representation.DEFAULT);
+
 		return description;
 	}
 	

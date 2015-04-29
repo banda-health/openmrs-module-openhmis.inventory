@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Set;
 
 @Resource(name = ModuleRestConstants.ITEM_RESOURCE, supportedClass = Item.class,
-		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
+		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Item, ItemAttribute> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {

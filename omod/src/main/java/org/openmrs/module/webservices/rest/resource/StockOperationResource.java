@@ -56,7 +56,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.web.client.RestClientException;
 
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class StockOperationResource
 		extends BaseRestInstanceCustomizableMetadataResource<StockOperation, IStockOperationType, StockOperationAttribute> {
 	private static final Log LOG = LogFactory.getLog(StockOperationResource.class);

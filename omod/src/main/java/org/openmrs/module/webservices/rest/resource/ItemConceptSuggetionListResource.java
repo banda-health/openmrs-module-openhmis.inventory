@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_LIST_RESOURCE, supportedClass=ItemConceptSuggestionList.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*" })
+		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemConceptSuggetionListResource
 		extends BaseRestMetadataResource<ItemConceptSuggestionList>
 		implements IMetadataDataServiceResource<ItemConceptSuggestionList> {

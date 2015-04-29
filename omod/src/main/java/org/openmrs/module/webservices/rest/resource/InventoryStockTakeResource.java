@@ -22,7 +22,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.springframework.web.client.RestClientException;
 
 @Resource(name = ModuleRestConstants.INVENTORY_STOCK_TAKE_RESOURCE, supportedClass = InventoryStockTake.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class InventoryStockTakeResource extends BaseRestObjectResource<InventoryStockTake> {
 
 	private IStockOperationService operationService;
