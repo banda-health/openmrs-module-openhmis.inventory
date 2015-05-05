@@ -114,11 +114,11 @@ public class StockOperationDataServiceImpl
 
 	@Override
 	public List<StockOperation> getUserOperations(User user, PagingInfo paging) {
-		return getUserOperations(user, null, null, null, paging);
+		return getUserOperations(user, null, null, null, null, paging);
 	}
 
 	@Override
-	public List<StockOperation> getUserOperations(final User user, final StockOperationStatus status, final IStockOperationType stockOperationType, final Item item, PagingInfo paging) {
+	public List<StockOperation> getUserOperations(final User user, final StockOperationStatus status, final IStockOperationType stockOperationType, final Item item, final Stockroom stockroom, PagingInfo paging) {
 		if (user == null) {
 			throw new IllegalArgumentException("The user must be defined.");
 		}
@@ -144,7 +144,7 @@ public class StockOperationDataServiceImpl
 							// Types that require user approval
 							subQuery.add(Restrictions.eq(HibernateCriteriaConstants.USER, user));
 						}
-						if (status != null || stockOperationType != null || item != null) {
+						if (status != null || stockOperationType != null || item != null || stockroom != null) {
 							if (item != null) {
 								criteria.createAlias("items", "items").add(Restrictions.and(
 									Restrictions.eq("items.item", item),
@@ -168,6 +168,19 @@ public class StockOperationDataServiceImpl
 							if (stockOperationType != null) {
 								criteria.add(Restrictions.and(
 										Restrictions.eq(HibernateCriteriaConstants.INSTANCE_TYPE, stockOperationType),
+										Restrictions.or(
+												// Transactions created by the user
+												Restrictions.eq(HibernateCriteriaConstants.CREATOR, user),
+												Property.forName(HibernateCriteriaConstants.INSTANCE_TYPE).in(subQuery)
+										)
+								));
+							}
+							if (stockroom != null) {
+								criteria.add(Restrictions.and(
+										Restrictions.or(
+											Restrictions.eq(HibernateCriteriaConstants.SOURCE, stockroom),
+											Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom)
+										),
 										Restrictions.or(
 												// Transactions created by the user
 												Restrictions.eq(HibernateCriteriaConstants.CREATOR, user),

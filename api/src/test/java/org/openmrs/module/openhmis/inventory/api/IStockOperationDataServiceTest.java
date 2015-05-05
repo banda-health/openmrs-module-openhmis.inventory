@@ -734,12 +734,12 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusForSpecifiedUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
@@ -747,7 +747,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(0, (int)results.get(0).getId());
 		Assert.assertEquals(1, (int)results.get(1).getId());
 
-		results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -762,17 +762,17 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedOperationTypeForSpecifiedUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 
-		results = service.getUserOperations(user, null,  WellKnownOperationTypes.getInitial(), null, null);
+		results = service.getUserOperations(user, null,  WellKnownOperationTypes.getInitial(), null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 
-		results = service.getUserOperations(user, null, WellKnownOperationTypes.getDistribution(), null, null);
+		results = service.getUserOperations(user, null, WellKnownOperationTypes.getDistribution(), null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
@@ -789,7 +789,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedItemForSpecifiedUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
@@ -797,7 +797,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item = itemService.getById(0);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, null,  null, item, null);
+		results = service.getUserOperations(user, null,  null, item,  null,null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
@@ -808,7 +808,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		item = itemService.getById(6);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, null,  null, item, null);
+		results = service.getUserOperations(user, null,  null, item,  null,null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(3, (int)results.get(0).getId());
@@ -816,7 +816,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		item = itemService.getById(5);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, null,  null, item, null);
+		results = service.getUserOperations(user, null,  null, item, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 	}
@@ -829,12 +829,12 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeForSpecifiedUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  null, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
@@ -842,7 +842,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(0, (int)results.get(0).getId());
 		Assert.assertEquals(1, (int)results.get(1).getId());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getTransfer(), null, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getTransfer(), null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -858,7 +858,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndItemForSpecifiedUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
@@ -866,13 +866,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item = itemService.getById(1);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, StockOperationStatus.PENDING,  null, item, null);
+		results = service.getUserOperations(user, StockOperationStatus.PENDING,  null, item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (int)results.get(0).getId());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  null, item, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  null, item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
@@ -882,7 +882,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		item = itemService.getById(6);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, StockOperationStatus.ROLLBACK,  null, item, null);
+		results = service.getUserOperations(user, StockOperationStatus.ROLLBACK,  null, item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -898,7 +898,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeAndItemForSpecifiedUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
@@ -906,13 +906,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item = itemService.getById(1);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  WellKnownOperationTypes.getReceipt(), item, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  WellKnownOperationTypes.getReceipt(), item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(0, (int)results.get(0).getId());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  WellKnownOperationTypes.getInitial(), item, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  WellKnownOperationTypes.getInitial(), item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
@@ -927,17 +927,17 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnSpecifiedOperationsCreatedByUser() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
 
-		results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -964,18 +964,18 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		operation = service.getById(operation.getId());
 
-		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
 
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
@@ -1004,18 +1004,18 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
 
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
@@ -1044,18 +1044,18 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
 
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
@@ -1088,18 +1088,18 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
 		Assert.assertEquals(operation.getId(), operations.get(0).getId());
 
-		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
 
-		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null);
+		operations = service.getUserOperations(user, StockOperationStatus.NEW, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(1, operations.size());
@@ -1128,7 +1128,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
@@ -1156,7 +1156,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> operations = service.getUserOperations(user, null, null, null, null, null);
 
 		Assert.assertNotNull(operations);
 		Assert.assertEquals(0, operations.size());
@@ -1176,7 +1176,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.REQUESTED, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.REQUESTED, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
@@ -1196,7 +1196,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Context.flushSession();
 
 		PagingInfo paging = new PagingInfo(1, 1);
-		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null, paging);
+		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null, null, paging);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (long)paging.getTotalRecordCount());
@@ -1217,7 +1217,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsWhenPagingIsNull() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 	}
@@ -1228,7 +1228,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getUserOperations_shouldThrowIllegalArgumentExceptionWhenUserIsNull() throws Exception {
-		service.getUserOperations(null, null, null, null, null);
+		service.getUserOperations(null, null, null, null, null, null);
 	}
 
 	/**
@@ -1239,7 +1239,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	public void getUserOperations_shouldReturnAllOperationsForUserWhenStatusIsNull() throws Exception {
 		User user = Context.getUserService().getUser(1);
 
-		List<StockOperation> results = service.getUserOperations(user, null, null, null, null);
+		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 	}
