@@ -19,12 +19,15 @@ define(
 	    'link!' + openhmis.url.inventoryBase + 'css/style.css'
     ],
     function(openhmis) {
-	    openhmis.StockroomDetailSearchList = openhmis.GenericSearchableListView.extend({
+    	openhmis.StockroomDetailSearchList = openhmis.GenericSearchableListView.extend({
 		    tmplFile: openhmis.url.inventoryBase + 'template/stockroom.html',
 		    tmplSelector: '#stockroom-list',
 
-		    initialize: function(options) {
-		    	openhmis.GenericSearchableListView.prototype.initialize.call(this, options);
+	    });
+
+    	openhmis.StockroomDetailItemSearchList = openhmis.StockroomDetailSearchList.extend({
+    		initialize: function(options) {
+		    	openhmis.StockroomDetailSearchList.prototype.initialize.call(this, options);
 		    	this.itemDetailsTemplate = this.getTemplate(openhmis.url.inventoryBase + "template/stockroom.html", '#item-detail-template');
 		    },
 
@@ -53,7 +56,7 @@ define(
 	                    modal: true,
 	                    width: 500,
                 });
-		    	openhmis.GenericSearchableListView.prototype.onItemSelected(this, view);
+		    	openhmis.StockroomDetailSearchList.prototype.onItemSelected(this, view);
 		    }
 	    });
 
@@ -74,7 +77,7 @@ define(
 	        initialize: function(options) {
 		        openhmis.GenericAddEditView.prototype.initialize.call(this, options);
 
-		        this.itemsView = new openhmis.StockroomDetailSearchList({
+		        this.itemsView = new openhmis.StockroomDetailItemSearchList({
 			        model: new openhmis.GenericCollection([], {
 				        model: openhmis.ItemStock
 			        }),
