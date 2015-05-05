@@ -271,13 +271,14 @@ public class StockOperationResource
 		StockOperationStatus status = getStatus(context);
 		IStockOperationType stockOperationType = getStockOperationType(context);
 		Item item = getItem(context);
+		Stockroom stockroom = getStockroom(context);
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 		List<StockOperation> results;
-		if (status == null && stockOperationType == null && item == null) {
+		if (status == null && stockOperationType == null && item == null && stockroom == null) {
 			results = ((IStockOperationDataService)getService()).getUserOperations(user, pagingInfo);
 		} else {
-			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, stockOperationType, item, pagingInfo);
+			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, stockOperationType, item, stockroom, pagingInfo);
 		}
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(),
