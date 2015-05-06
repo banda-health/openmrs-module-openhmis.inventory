@@ -96,7 +96,8 @@ define(
 
         openhmis.ItemAttributeType = openhmis.AttributeTypeBase.extend({
             meta: {
-                restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType'
+                restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType',
+                confirmDelete: 'Are you sure you want to delete this Item Attribute Type?'
             }
         });
 

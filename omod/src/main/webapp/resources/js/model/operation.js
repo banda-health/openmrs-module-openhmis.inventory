@@ -27,7 +27,8 @@ define(
     function(openhmis, __) {
         openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
 			meta: {
-				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType'
+				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType',
+				confirmDelete: 'Are you sure you want to delete this Operation Attribute Type?'
 			}
 		});
 
@@ -333,7 +334,7 @@ define(
                         message: "An operation must have an operation number."
                     });
                 }
-                
+
                 if (this.get("instanceType") === undefined) {
                     errors.push({
                         selector: ".field-instanceType",
