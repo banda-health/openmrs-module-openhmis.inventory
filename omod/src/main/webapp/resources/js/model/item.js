@@ -262,9 +262,20 @@ define(
 				return openhmis.GenericModel.prototype.toJSON.call(this, options);
 			},
 
+			codeUndefined: function(code) {
+				return code == null || code == undefined;
+			},
+
 			toString: function() {
 				if (this.get("codes") && this.get("codes").length > 0) {
-					return this.get("name") + ' - ' + this.get("codes")[0].code;
+					var code = this.get("codes")[0].code;
+					if (this.codeUndefined(code)) {
+						code = this.get("codes")[0].get("code");
+					}
+					if (this.codeUndefined(code)) {
+						return this.get("name")
+					}
+					return this.get("name") + ' - ' + code;
 				}
 				if (this.get("name")) {
 					return this.get("name");
