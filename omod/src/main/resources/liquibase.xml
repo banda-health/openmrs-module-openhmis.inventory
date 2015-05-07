@@ -1100,4 +1100,10 @@
 			WHERE op.status = 'COMPLETED'
 		]]></sql>
 	</changeSet>
+	<changeSet id="openhmis.inventory-v1.7.0-0" author="marios">
+		<dropNotNullConstraint
+			columnDataType="varchar(255)"
+			columnName="attribute_order"
+			tableName="inv_item_attribute_type"/>
+	</changeSet>
 </databaseChangeLog>

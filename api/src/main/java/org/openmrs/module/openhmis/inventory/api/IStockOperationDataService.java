@@ -99,7 +99,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	 */
 	@Transactional(readOnly = true)
 	@Authorized( {PrivilegeConstants.VIEW_OPERATIONS})
-	List<StockOperation> getUserOperations(User user, StockOperationStatus status, IStockOperationType stockOperationType, Item item, PagingInfo paging);
+	List<StockOperation> getUserOperations(User user, StockOperationStatus status, IStockOperationType stockOperationType, Item item, Stockroom stockroom, PagingInfo paging);
 
 	/**
 	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
