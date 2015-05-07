@@ -77,6 +77,11 @@ public class ModuleSettings {
 			settings.setExpiringStockReportId(Integer.parseInt(prop));
 		}
 
+		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
+		if (!StringUtils.isEmpty(prop)) {
+			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
+		}
+
 		prop = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setAutoCompleteOperations(Boolean.parseBoolean(prop));
@@ -133,6 +138,13 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY, reportId.toString());
 		} else {
 			adminService.setGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY, "");
+		}
+
+		reportId = settings.getStockOperationsByStockroomReportId();
+		if (reportId != null) {
+			adminService.setGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY, reportId.toString());
+		} else {
+			adminService.setGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY, "");
 		}
 
 		Boolean autoComplete = settings.getAutoCompleteOperations();
