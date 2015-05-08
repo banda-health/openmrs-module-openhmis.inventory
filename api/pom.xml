@@ -4,14 +4,14 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>openhmis.inventory</artifactId>
-		<version>1.7.0-SNAPSHOT</version>
+		<version>1.6.2</version>
 	</parent>
 
 	<artifactId>openhmis.inventory-api</artifactId>
 	<packaging>jar</packaging>
 	<name>OpenHMIS Inventory Module Module API</name>
 	<description>API project for the OpenHMIS inventory module</description>
-	<version>1.7.0-SNAPSHOT</version>
+	<version>1.6.2</version>
 
 	<dependencies>
 	
