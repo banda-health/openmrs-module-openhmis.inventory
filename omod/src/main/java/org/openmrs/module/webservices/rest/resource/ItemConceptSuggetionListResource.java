@@ -32,7 +32,7 @@ public class ItemConceptSuggetionListResource
 
         return description;
     }
-	
+
 	@Override
     public ItemConceptSuggestionList newDelegate() {
 	    return new ItemConceptSuggestionList();
@@ -42,17 +42,19 @@ public class ItemConceptSuggetionListResource
     public Class<? extends IMetadataDataService<ItemConceptSuggestionList>> getServiceClass() {
 	    return null;
     }
-	
+
 	@PropertySetter("itemConceptSuggestions")
 	public void setItemConceptSuggestionList(ItemConceptSuggestionList instance, List<ItemConceptSuggestion> itemConceptSuggestions) {
 		instance.setItemConceptSuggestions(itemConceptSuggestions);
 	}
-	
+
 	@Override
 	public ItemConceptSuggestionList save(ItemConceptSuggestionList itemConceptSuggestionList) {
 		List<Item> acceptedItemConceptMappings = processAcceptedItems(itemConceptSuggestionList);
 		IItemDataService itemDataService = Context.getService(IItemDataService.class);
-		itemDataService.saveAll(acceptedItemConceptMappings);
+		for (Item item : acceptedItemConceptMappings) {
+	        itemDataService.save(item);
+        }
 	    return null;
 	}
 
@@ -70,5 +72,5 @@ public class ItemConceptSuggetionListResource
         }
 		return itemsToSave;
     }
-	
+
 }
