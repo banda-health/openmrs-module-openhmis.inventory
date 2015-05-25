@@ -66,5 +66,8 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String JASPER_REPORT_PAGE = MODULE_ROOT + "jasperReport";
 
+	public static final String LANDING_PAGE_EXTENSION_POINT_ID = "org.openmrs.module.openhmis.inventory.landing";
+	public static final String MANAGE_MODULE_PAGE_EXTENSION_POINT_ID = "org.openmrs.module.openhmis.inventory.manage.module";
+
 	protected ModuleWebConstants() { }
 }

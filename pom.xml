@@ -33,11 +33,13 @@
 		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</connection>
 		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</developerConnection>
 		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</url>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 
 	<modules>
 		<module>api</module>
+		<module>omod_1.x</module>
+		<module>omod_2.x</module>
 		<module>omod</module>
 	</modules>
 
@@ -179,6 +181,39 @@
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>jasperreport-api</artifactId>
 				<version>[1.5.5,)</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+					<groupId>org.openmrs.module</groupId>
+					<artifactId>appframework-api</artifactId>
+					<version>2.0</version>
+					<type>jar</type>
+					<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>appframework-api</artifactId>
+				<type>test-jar</type>
+				<scope>test</scope>
+				<version>2.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>providermanagement-api</artifactId>
+				<version>2.0</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+
+			 <!-- Depends on uiframework module -->
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>uiframework-api</artifactId>
+				<version>2.0</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>

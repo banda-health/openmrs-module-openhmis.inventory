@@ -22,8 +22,13 @@
 
 	<!-- Add here beans related to the web context -->
 
+	<!-- UI Framework setup -->
+	<bean class="org.openmrs.ui.framework.StandardModuleUiConfiguration">
+		<property name="moduleId" value="${project.parent.artifactId}"/>
+	</bean>
+
 	<!-- Annotation based controllers -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-	
+
 	<context:component-scan base-package="org.openmrs.module.openhmis.inventory.web" />
 </beans>
