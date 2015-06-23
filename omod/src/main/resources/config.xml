@@ -261,5 +261,9 @@
 		<description>Able to access item mappings page</description>
 	</privilege>
 	
+	<privilege>
+		<name>App: Edit Visit</name>
+		<description>Able to access old patient search page to edit visit</description>
+	</privilege>
 </module>
 

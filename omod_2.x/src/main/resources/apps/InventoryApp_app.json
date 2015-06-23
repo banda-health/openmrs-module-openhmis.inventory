@@ -13,6 +13,16 @@
         "icon": "icon-book",
         "requiredPrivilege": "App: View Inventory App"
       },
+      
+      {
+        "id": "openhmis.inventory.registration.editVisit",
+        "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+        "type": "link",
+        "label": "Edit Visit",
+        "url": "findPatient.htm",
+        "icon": "icon-stethoscope",
+        "requiredPrivilege": "App: Edit Visit"
+      },
 
       {
         "id": "openhmis.inventory.inventoryTasksLink",
