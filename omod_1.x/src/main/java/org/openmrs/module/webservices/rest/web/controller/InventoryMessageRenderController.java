@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/**
- * Created by dubdabasoduba on 16/04/15.
- */
-@Controller @RequestMapping(ModuleWebConstants.MESSAGE_PROPERTIES_JS_URI) public class InventoryMessageRenderController {
+@Controller
+@RequestMapping(ModuleWebConstants.MESSAGE_PROPERTIES_JS_URI)
+public class InventoryMessageRenderController {
 
-	@RequestMapping(method = RequestMethod.GET) public ModelAndView MessageRenderController(HttpServletRequest request) {
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView MessageRenderController(HttpServletRequest request) {
 		Locale locale = RequestContextUtils.getLocale(request);
 		ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", locale);
 		return new ModelAndView(ModuleWebConstants.MESSAGE_PAGE, "keys", resourceBundle.getKeys());
