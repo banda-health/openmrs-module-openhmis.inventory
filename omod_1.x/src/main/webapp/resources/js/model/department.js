@@ -32,7 +32,7 @@ define(
 			},
 
 			validate: function(attrs, options) {
-				if (!attrs.name) return { name: __(openhmis.inventoryMessages('openhmis.inventory.department.nameRequiredError')) };
+				if (!attrs.name) return { name: __(openhmis.inventoryMessages('openhmis.inventory.nameRequiredError')) };
 				return null;
 			},
 

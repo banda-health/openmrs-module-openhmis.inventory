@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 /**
  * Created by dubdabasoduba on 16/04/15.
  */
-@Controller @RequestMapping(ModuleWebConstants.MESSAGEPROPERTIES_JS_URI) public class InventoryMessageRenderController {
+@Controller @RequestMapping(ModuleWebConstants.MESSAGE_PROPERTIES_JS_URI) public class InventoryMessageRenderController {
 
 	@RequestMapping(method = RequestMethod.GET) public ModelAndView MessageRenderController(HttpServletRequest request) {
 		Locale locale = RequestContextUtils.getLocale(request);

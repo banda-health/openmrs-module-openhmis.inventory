@@ -69,8 +69,9 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String LANDING_PAGE_EXTENSION_POINT_ID = "org.openmrs.module.openhmis.inventory.landing";
 	public static final String MANAGE_MODULE_PAGE_EXTENSION_POINT_ID = "org.openmrs.module.openhmis.inventory.manage.module";
 
-	public static final String MESSAGEPROPERTIES_JS_URI = MODULE_ROOT + "messageProperties.js";
-	public static final String MESSAGE_PAGE = MODULE_ROOT + "messageProperties";
+	public static final String MESSAGE_PROPERTIES_JS_URI = MODULE_ROOT + "inventoryMessageProperties.js";
+	public static final String MESSAGE_PAGE = MODULE_ROOT + "inventoryMessageProperties";
+	public static final String MESSAGE_PROPERTIES_JS = "/ws/module/openhmis/inventory/inventoryMessageProperties.js";
 
 	protected ModuleWebConstants() { }
 }
