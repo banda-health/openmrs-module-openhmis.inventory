@@ -158,7 +158,7 @@ define(
 			onFormSubmit: function(event) {
 				if (openhmis.StockTakeChangeCounter != 0) {
 					// if there are stock adjustments to the current stockroom
-					if (!confirm(openhmis.inventoryMessages('openhmis.inventory.search.confirm.stockroomChange'))) {
+					if (!confirm(openhmis.getMessage('openhmis.inventory.search.confirm.stockroomChange'))) {
 						event.currentTarget.selectedIndex = this.currentStockroomIndex;
 						return;
 					}

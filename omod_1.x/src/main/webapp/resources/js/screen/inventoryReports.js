@@ -85,7 +85,7 @@ curl(
         function printTakeReport() {
             var stockroomId = $("#stockroomId").val();
             if (!stockroomId) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.stockroomRequired'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.stockroomRequired'));
                 return false;
             }
 
@@ -97,7 +97,7 @@ curl(
         function printCardReport() {
             var itemUuid = $("#item-uuid").val();
             if (!itemUuid) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.itemRequired'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.itemRequired'));
                 return false;
             }
 
@@ -105,7 +105,7 @@ curl(
             var endDate = $("#endDate").val();
 
             if (!beginDate || !endDate) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.beginAndEndDate'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.beginAndEndDate'));
                 return false;
             }
 
@@ -121,7 +121,7 @@ curl(
         function printOperationsByStockroomReport() {
             var itemUuid = $("#item-uuid-searchOperationsByStockroom").val();
             if (!itemUuid) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.itemRequired'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.itemRequired'));
                 return false;
             }
 
@@ -129,7 +129,7 @@ curl(
             var endDate = $("#endDate-operationsByStockroom").val();
 
             if (!beginDate || !endDate) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.beginAndEndDate'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.beginAndEndDate'));
                 return false;
             }
 
@@ -139,7 +139,7 @@ curl(
 
             var stockroomId = $("#stockroomIdOperationsByStockroom").val();
             if (!stockroomId) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.stockroomRequired'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.stockroomRequired'));
                 return false;
             }
 
@@ -151,7 +151,7 @@ curl(
         function printStockroomReport() {
             var stockroomId = $("#stockroomReport-StockroomId").val();
             if (!stockroomId) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.stockroomRequired'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.stockroomRequired'));
                 return false;
             }
 
@@ -159,7 +159,7 @@ curl(
             var endDate = $("#stockroomReport-endDate").val();
 
             if (!beginDate || !endDate) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.beginAndEndDate'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.beginAndEndDate'));
                 return false;
             }
 
@@ -176,7 +176,7 @@ curl(
             var expiryDate = $("#expiresBy").val();
 
             if (!expiryDate) {
-                alert(openhmis.inventoryMessages('openhmis.inventory.report.error.expiryDate'));
+                alert(openhmis.getMessage('openhmis.inventory.report.error.expiryDate'));
                 return false;
             }
 

@@ -28,7 +28,7 @@ define(
         openhmis.OperationAttributeType = openhmis.AttributeTypeBase.extend({
 			meta: {
 				restUrl: openhmis.url.inventoryModelBase + 'stockOperationAttributeType',
-				confirmDelete: openhmis.inventoryMessages('openhmis.inventory.operations.delete.confirm.attributeType')
+				confirmDelete: openhmis.getMessage('openhmis.inventory.operations.delete.confirm.attributeType')
 			}
 		});
 
@@ -79,7 +79,7 @@ define(
 		    },
 
 			validate: function(attrs, options) {
-			    if (!attrs.name) return { name: __(openhmis.inventoryMessages('openhmis.inventory.nameRequiredError')) };
+			    if (!attrs.name) return { name: __(openhmis.getMessage('openhmis.inventory.nameRequiredError')) };
 			    return null;
 		    },
 
@@ -331,14 +331,14 @@ define(
                 if (operationNumber === undefined || operationNumber === '') {
                     errors.push({
                         selector: ".field-operationNumber",
-                        message: openhmis.inventoryMessages('openhmis.inventory.operations.error.number')
+                        message: openhmis.getMessage('openhmis.inventory.operations.error.number')
                     });
                 }
 
                 if (this.get("instanceType") === undefined) {
                     errors.push({
                         selector: ".field-instanceType",
-                        message: openhmis.inventoryMessages('An operation must have an operation type.')
+                        message: openhmis.getMessage('An operation must have an operation type.')
                     });
                 } else {
                     var operationType = this.get("instanceType");
@@ -346,21 +346,21 @@ define(
                         (this.get("source") === undefined || this.get("source").id === "")) {
                         errors.push({
                             selector: ".field-source",
-                            message: openhmis.inventoryMessages('openhmis.inventory.operations.error.prefix')+ " " + operationType.get("name") + " " + openhmis.inventoryMessages('openhmis.inventory.operations.required.sourceStockroom')
+                            message: openhmis.getMessage('openhmis.inventory.operations.error.prefix')+ " " + operationType.get("name") + " " + openhmis.getMessage('openhmis.inventory.operations.required.sourceStockroom')
                         });
                     }
                     if (operationType.get("hasDestination") &&
                         (this.get("destination") === undefined || this.get("destination").id === "")) {
                         errors.push({
                             selector: ".field-destination",
-                            message: openhmis.inventoryMessages('openhmis.inventory.operations.error.prefix')+ " " + operationType.get("name") + " " + openhmis.inventoryMessages('openhmis.inventory.operations.required.destinationStockroom')
+                            message: openhmis.getMessage('openhmis.inventory.operations.error.prefix')+ " " + operationType.get("name") + " " + openhmis.getMessage('openhmis.inventory.operations.required.destinationStockroom')
                         });
                     }
                     if ((operationType.get("hasSource") && operationType.get("hasDestination")) &&
                         (this.get("source").id === this.get("destination").id)) {
                         errors.push({
                             selector: ".field-destination",
-                            message: openhmis.inventoryMessages('openhmis.inventory.operations.error.destinationStockroom')
+                            message: openhmis.getMessage('openhmis.inventory.operations.error.destinationStockroom')
                         });
                     }
                     if (operationType.get("hasRecipient")) {
@@ -374,7 +374,7 @@ define(
                             (!patient || patient.id === "")) {
                             errors.push({
                                 selector: ".field-institution",
-                                message: openhmis.inventoryMessages('openhmis.inventory.operations.error.prefix') + operationType.get("name") + " " + openhmis.inventoryMessages('openhmis.inventory.operations.required.variables')
+                                message: openhmis.getMessage('openhmis.inventory.operations.error.prefix') + operationType.get("name") + " " + openhmis.getMessage('openhmis.inventory.operations.required.variables')
                             });
                         } else {
                             var defined = 0;
@@ -385,7 +385,7 @@ define(
                             if (defined > 1) {
                                 errors.push({
                                     selector: ".field-institution",
-                                    message: openhmis.inventoryMessages('openhmis.inventory.operations.error.prefix') + operationType.get("name") + " " + openhmis.inventoryMessages('openhmis.inventory.operations.required.variables')
+                                    message: openhmis.getMessage('openhmis.inventory.operations.error.prefix') + operationType.get("name") + " " + openhmis.getMessage('openhmis.inventory.operations.required.variables')
                                 });
                             }
                         }
@@ -398,7 +398,7 @@ define(
                 if (items === undefined || items.length === 0) {
                     errors.push({
                         selector: ".item-stock",
-                        message: openhmis.inventoryMessages('openhmis.inventory.operations.error.itemQuantity'),
+                        message: openhmis.getMessage('openhmis.inventory.operations.error.itemQuantity'),
                         selectParent: true
                     });
                 } else  {
@@ -416,13 +416,13 @@ define(
                      if (itemError) {
                      	errors.push({
                              selector: "th.field-quantity",
-                             message: openhmis.inventoryMessages('openhmis.inventory.operations.error.itemError')
+                             message: openhmis.getMessage('openhmis.inventory.operations.error.itemError')
                          });
                      }
                      if (expiryDateError) {
                     	 errors.push({
                     		 selector: "th.field-expiration",
-                    		 message: openhmis.inventoryMessages('openhmis.inventory.operations.error.expiryDate')
+                    		 message: openhmis.getMessage('openhmis.inventory.operations.error.expiryDate')
                     	 });
                      }
                 }

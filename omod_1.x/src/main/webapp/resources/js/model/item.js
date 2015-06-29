@@ -28,13 +28,13 @@ define(
 				namePlural: "Item Codes",
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemCode',
-				confirmDelete: openhmis.inventoryMessages('openhmis.inventory.item.delete.confirm.itemCode')
+				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.itemCode')
 			},
 			schema: {
 				code: {
 					type: 'Text',
 					validators: [
-						{ type: 'required', message: openhmis.inventoryMessages('openhmis.inventory.item.required.itemCode') }
+						{ type: 'required', message: openhmis.getMessage('openhmis.inventory.item.required.itemCode') }
 					]
 				}
 			},
@@ -47,14 +47,14 @@ define(
 				namePlural: "Item Prices",
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemPrice',
-				confirmDelete: openhmis.inventoryMessages('openhmis.inventory.item.delete.confirm.itemPrice')
+				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.itemPrice')
 			},
 			schema: {
 				name: { type: "Text" },
 				price: {
 					type: 'BasicNumber',
 					validators: [
-						{ type: 'required', message: openhmis.inventoryMessages('openhmis.inventory.item.required.price') }
+						{ type: 'required', message: openhmis.getMessage('openhmis.inventory.item.required.price') }
 					]
 				}
 			},
@@ -97,7 +97,7 @@ define(
         openhmis.ItemAttributeType = openhmis.AttributeTypeBase.extend({
             meta: {
                 restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType',
-                confirmDelete: openhmis.inventoryMessages('openhmis.inventory.item.delete.confirm.AttributeType')
+                confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.AttributeType')
             }
         });
 
@@ -114,7 +114,7 @@ define(
 				namePlural: "Items",
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'item',
-				confirmDelete: openhmis.inventoryMessages('openhmis.inventory.item.delete.confirm.Item')
+				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.Item')
 			},
 			schema: {
 				name: { type: 'Text' },
@@ -205,22 +205,22 @@ define(
 
 			validate: function(attrs, options) {
 				if (!attrs.name) {
-					return { name: __(openhmis.inventoryMessages('openhmis.inventory.nameRequiredError')) }
+					return { name: __(openhmis.getMessage('openhmis.inventory.nameRequiredError')) }
 				}
 				if (!attrs.department) {
-					return { department: __(openhmis.inventoryMessages('openhmis.inventory.item.required.departmentError')) }
+					return { department: __(openhmis.getMessage('openhmis.inventory.item.required.departmentError')) }
 				}
 				if (!attrs.prices || attrs.prices.length < 1) {
-					return { prices: __(openhmis.inventoryMessages('openhmis.inventory.item.required.priceError')) }
+					return { prices: __(openhmis.getMessage('openhmis.inventory.item.required.priceError')) }
 				}
 				if (!attrs.defaultPrice) {
-					return { defaultPrice: openhmis.inventoryMessages('openhmis.inventory.item.required.default.PriceError')}
+					return { defaultPrice: openhmis.getMessage('openhmis.inventory.item.required.default.PriceError')}
 				}
 				if (attrs.defaultExpirationPeriod && attrs.defaultExpirationPeriod <= 0) {
-					return { defaultExpirationPeriod: openhmis.inventoryMessages('openhmis.inventory.item.required.default.ExpirationPeriodError')}
+					return { defaultExpirationPeriod: openhmis.getMessage('openhmis.inventory.item.required.default.ExpirationPeriodError')}
 				}
 				if (attrs.minimumQuantity && attrs.minimumQuantity !== parseInt(attrs.minimumQuantity)) {
-					return { minimumQuantity: openhmis.inventoryMessages('openhmis.inventory.item.required.minimumQuantity')}
+					return { minimumQuantity: openhmis.getMessage('openhmis.inventory.item.required.minimumQuantity')}
 				}
 
 				return null;

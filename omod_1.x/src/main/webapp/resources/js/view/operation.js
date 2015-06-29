@@ -472,7 +472,7 @@ define(
 
                 if (items > 0) {
                     // Confirm operation type change if there are any defined item stock
-                    if (!confirm(openhmis.inventoryMessages('openhmis.inventory.operations.confirm.operationTypeChange'))) {
+                    if (!confirm(openhmis.getMessage('openhmis.inventory.operations.confirm.operationTypeChange'))) {
                         // Set the value back to the previous value
                         this.$(event.target).val($.data(event.target, 'current'));
 
@@ -601,7 +601,7 @@ define(
                 var items = this.itemStockView.model.length;
                 if (items > 0) {
                     // Confirm operation type change if there are any defined item stock
-                    if (!confirm(openhmis.inventoryMessages('openhmis.inventory.operations.confirm.sourceStockroomChange'))) {
+                    if (!confirm(openhmis.getMessage('openhmis.inventory.operations.confirm.sourceStockroomChange'))) {
                         // Set the value back to the previous value
                         this.$(event.target).val($.data(event.target, 'current'));
 

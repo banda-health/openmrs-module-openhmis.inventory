@@ -27,5 +27,5 @@
 	<%--Pass the messagemap to the funtion variable message--%>
 	var messages = new Messages(messageMap);
 	<%--Associating the result with the openhmis global variable to enable global access--%>
-	openhmis.inventoryMessages = messages.getMessage;
+	openhmis.getMessage = messages.getMessage;
 })();
