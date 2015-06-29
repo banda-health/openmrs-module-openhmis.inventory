@@ -472,7 +472,7 @@ define(
 
                 if (items > 0) {
                     // Confirm operation type change if there are any defined item stock
-                    if (!confirm('Changing the Operation Type will clear the item stock. Are you sure you want to do this?')) {
+                    if (!confirm(openhmis.inventoryMessages('openhmis.inventory.operations.confirm.operationTypeChange'))) {
                         // Set the value back to the previous value
                         this.$(event.target).val($.data(event.target, 'current'));
 
@@ -601,7 +601,7 @@ define(
                 var items = this.itemStockView.model.length;
                 if (items > 0) {
                     // Confirm operation type change if there are any defined item stock
-                    if (!confirm('Changing the source stockroom will clear the item stock. Are you sure you want to do this?')) {
+                    if (!confirm(openhmis.inventoryMessages('openhmis.inventory.operations.confirm.sourceStockroomChange'))) {
                         // Set the value back to the previous value
                         this.$(event.target).val($.data(event.target, 'current'));
 

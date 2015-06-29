@@ -40,7 +40,7 @@ define(
 			},
 
 			validate: function(attrs, options) {
-				if (!attrs.name) return { name: __("A name is required.") };
+				if (!attrs.name) return { name: __(openhmis.inventoryMessages('openhmis.inventory.nameRequiredError')) };
 				return null;
 			},
 
@@ -94,8 +94,8 @@ define(
 			},
 
 			validate: function(attrs, options) {
-				if (!attrs.quantity) return { quantity: __("An item quantity is required.") };
-				if (!attrs.item || !attrs.item.id) return { item: __("Please choose an item") };
+				if (!attrs.quantity) return { quantity: __(openhmis.inventoryMessages('openhmis.inventory.stockroom.error.itemQuantityRequired')) };
+				if (!attrs.item || !attrs.item.id) return { item: __(openhmis.inventoryMessages('openhmis.inventory.stockroom.error.itemChoose')) };
 
 				return null;
 			},
@@ -212,7 +212,7 @@ define(
 
             validate: function(attrs, options) {
                 if (!attrs.item) {
-                    return { item: __("An item is required") }
+                    return { item: __(openhmis.inventoryMessages('openhmis.inventory.stockroom.error.itemRequired')) }
                 }
 
                 return null;
