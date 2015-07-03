@@ -338,7 +338,7 @@ define(
                 if (this.get("instanceType") === undefined) {
                     errors.push({
                         selector: ".field-instanceType",
-                        message: openhmis.getMessage('An operation must have an operation type.')
+                        message: openhmis.getMessage('openhmis.inventory.operations.error.type')
                     });
                 } else {
                     var operationType = this.get("instanceType");

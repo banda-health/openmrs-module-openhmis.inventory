@@ -107,9 +107,9 @@ define(
                     // Post the status change and then reload the model
                     this.updateStatus("CANCELLED");
                 } else {
-                    this.model.cancelReason = prompt(("Please enter your cancel reason * (REQUIRED)"));
+                    this.model.cancelReason = prompt((openhmis.getMessage('openhmis.inventory.operations.cancel.reason')));
                     if (this.model.cancelReason == null || this.model.cancelReason == "") {
-                        alert("Please specify your Operation cancel reason");
+                        alert(openhmis.getMessage('openhmis.inventory.operations.error.cancel.reasonRequired'));
                     } else {
                 // Post the status change and then reload the model
                 this.updateStatus("CANCELLED");
