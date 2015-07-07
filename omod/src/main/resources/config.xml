@@ -15,10 +15,10 @@
 
 	<aware_of_modules>
 		<aware_of_module version="2.8">org.openmrs.module.idgen</aware_of_module>
-		<aware_of_module version="${uiframeworkVersion}">org.openmrs.module.uiframework</aware_of_module>
-		<aware_of_module version="${appframeworkVersion}">org.openmrs.module.appframework</aware_of_module>
-		<aware_of_module version="${providerManagementVersion}">org.openmrs.module.providermanagement</aware_of_module>
-		<aware_of_module version="${uicommonsVersion}">org.openmrs.module.uicommons</aware_of_module>
+		<aware_of_module version="3.3.1">org.openmrs.module.uiframework</aware_of_module>
+		<aware_of_module version="2.3">org.openmrs.module.appframework</aware_of_module>
+		<aware_of_module version="2.2">org.openmrs.module.providermanagement</aware_of_module>
+		<aware_of_module version="1.6">org.openmrs.module.uicommons</aware_of_module>
 	</aware_of_modules>
 
 	<require_modules>
@@ -260,7 +260,10 @@
 		<name>Task: Access Inventory Settings</name>
 		<description>Able to access item mappings page</description>
 	</privilege>
-
-
+	
+	<privilege>
+		<name>App: Edit Visit</name>
+		<description>Able to access old patient search page to edit visit</description>
+	</privilege>
 </module>
 

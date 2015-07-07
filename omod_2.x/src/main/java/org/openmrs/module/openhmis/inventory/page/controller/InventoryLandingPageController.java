@@ -11,8 +11,10 @@ import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.page.PageModel;
 import org.openmrs.ui.framework.page.PageRequest;
 import org.springframework.stereotype.Controller;
+import org.openmrs.annotation.OpenmrsProfile;
 
 @Controller
+@OpenmrsProfile(modules = { "uiframework:*.*" })
 public class InventoryLandingPageController {
 
 	/**
