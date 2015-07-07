@@ -28,13 +28,13 @@ define(
 				namePlural: "Item Codes",
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemCode',
-				confirmDelete: 'Are you sure you want to delete this item code?'
+				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.itemCode')
 			},
 			schema: {
 				code: {
 					type: 'Text',
 					validators: [
-						{ type: 'required', message: 'Item Code is required' }
+						{ type: 'required', message: openhmis.getMessage('openhmis.inventory.item.required.itemCode') }
 					]
 				}
 			},
@@ -47,14 +47,14 @@ define(
 				namePlural: "Item Prices",
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemPrice',
-				confirmDelete: "Are you sure you want to delete this item price?"
+				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.itemPrice')
 			},
 			schema: {
 				name: { type: "Text" },
 				price: {
 					type: 'BasicNumber',
 					validators: [
-						{ type: 'required', message: 'Price value is required' }
+						{ type: 'required', message: openhmis.getMessage('openhmis.inventory.item.required.price') }
 					]
 				}
 			},
@@ -97,7 +97,7 @@ define(
         openhmis.ItemAttributeType = openhmis.AttributeTypeBase.extend({
             meta: {
                 restUrl: openhmis.url.inventoryModelBase + 'itemAttributeType',
-                confirmDelete: 'Are you sure you want to delete this Item Attribute Type?'
+                confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.AttributeType')
             }
         });
 
@@ -114,7 +114,7 @@ define(
 				namePlural: "Items",
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'item',
-				confirmDelete: "Are you sure you want to delete this item?"
+				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.Item')
 			},
 			schema: {
 				name: { type: 'Text' },
@@ -205,22 +205,22 @@ define(
 
 			validate: function(attrs, options) {
 				if (!attrs.name) {
-					return { name: __("A name is required") }
+					return { name: __(openhmis.getMessage('openhmis.inventory.nameRequiredError')) }
 				}
 				if (!attrs.department) {
-					return { department: __("An item needs to be associated with a department") }
+					return { department: __(openhmis.getMessage('openhmis.inventory.item.required.departmentError')) }
 				}
 				if (!attrs.prices || attrs.prices.length < 1) {
-					return { prices: __("An item should have at least one price") }
+					return { prices: __(openhmis.getMessage('openhmis.inventory.item.required.priceError')) }
 				}
 				if (!attrs.defaultPrice) {
-					return { defaultPrice: "Please specify a default price"}
+					return { defaultPrice: openhmis.getMessage('openhmis.inventory.item.required.default.PriceError')}
 				}
 				if (attrs.defaultExpirationPeriod && attrs.defaultExpirationPeriod <= 0) {
-					return { defaultExpirationPeriod: "Value must be greater than 0"}
+					return { defaultExpirationPeriod: openhmis.getMessage('openhmis.inventory.item.required.default.ExpirationPeriodError')}
 				}
 				if (attrs.minimumQuantity && attrs.minimumQuantity !== parseInt(attrs.minimumQuantity)) {
-					return { minimumQuantity: "Value must be an integer"}
+					return { minimumQuantity: openhmis.getMessage('openhmis.inventory.item.required.minimumQuantity')}
 				}
 
 				return null;
