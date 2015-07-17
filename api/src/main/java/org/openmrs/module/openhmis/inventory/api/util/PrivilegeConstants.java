@@ -16,6 +16,7 @@ package org.openmrs.module.openhmis.inventory.api.util;
 import org.openmrs.Privilege;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.web.PrivilegeConstantsCompatibility;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -101,13 +102,15 @@ public class PrivilegeConstants {
 		}
 
 		List<String> names = new ArrayList<String>();
-		names.add(org.openmrs.util.PrivilegeConstants.EDIT_PATIENT_IDENTIFIERS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_ADMIN_FUNCTIONS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_CONCEPTS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_LOCATIONS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_NAVIGATION_MENU);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_USERS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_ROLES);
+		PrivilegeConstantsCompatibility  privilegeConstantsCompatibility = new  PrivilegeConstantsCompatibility();
+		
+		names.add(privilegeConstantsCompatibility.getEditPatientIdentifiersPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewAdminFunctionsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewConceptsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewLocationsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewNavigationMenuPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewUsersPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewRolesPrivilege());
 
 		for (String name : names) {
 			privileges.add(service.getPrivilege(name));
