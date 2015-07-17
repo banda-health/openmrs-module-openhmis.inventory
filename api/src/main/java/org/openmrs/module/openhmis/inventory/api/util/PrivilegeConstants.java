@@ -102,13 +102,13 @@ public class PrivilegeConstants {
 		}
 
 		List<String> names = new ArrayList<String>();
-		names.add(org.openmrs.util.PrivilegeConstants.EDIT_PATIENT_IDENTIFIERS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_ADMIN_FUNCTIONS);
-		names.add(new PrivilegeConstantsCompatibility().getConcepts());
-		names.add(new PrivilegeConstantsCompatibility().getLocations());
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_NAVIGATION_MENU);
-		names.add(new PrivilegeConstantsCompatibility().getUsers());
-		names.add(new PrivilegeConstantsCompatibility().getRoles());
+		names.add(new PrivilegeConstantsCompatibility().getEditPatientIdentifiersPrivilege());
+		names.add(new PrivilegeConstantsCompatibility().getViewAdminFunctionsPrivilege());
+		names.add(new PrivilegeConstantsCompatibility().getViewConceptsPrivilege());
+		names.add(new PrivilegeConstantsCompatibility().getViewLocationsPrivilege());
+		names.add(new PrivilegeConstantsCompatibility().getViewNavigationMenuPrivilege());
+		names.add(new PrivilegeConstantsCompatibility().getViewUsersPrivilege());
+		names.add(new PrivilegeConstantsCompatibility().getViewRolesPrivilege());
 
 		for (String name : names) {
 			privileges.add(service.getPrivilege(name));
