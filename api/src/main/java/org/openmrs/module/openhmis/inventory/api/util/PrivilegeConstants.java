@@ -102,13 +102,15 @@ public class PrivilegeConstants {
 		}
 
 		List<String> names = new ArrayList<String>();
-		names.add(new PrivilegeConstantsCompatibility().getEditPatientIdentifiersPrivilege());
-		names.add(new PrivilegeConstantsCompatibility().getViewAdminFunctionsPrivilege());
-		names.add(new PrivilegeConstantsCompatibility().getViewConceptsPrivilege());
-		names.add(new PrivilegeConstantsCompatibility().getViewLocationsPrivilege());
-		names.add(new PrivilegeConstantsCompatibility().getViewNavigationMenuPrivilege());
-		names.add(new PrivilegeConstantsCompatibility().getViewUsersPrivilege());
-		names.add(new PrivilegeConstantsCompatibility().getViewRolesPrivilege());
+		PrivilegeConstantsCompatibility  privilegeConstantsCompatibility = new  PrivilegeConstantsCompatibility();
+		
+		names.add(privilegeConstantsCompatibility.getEditPatientIdentifiersPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewAdminFunctionsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewConceptsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewLocationsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewNavigationMenuPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewUsersPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewRolesPrivilege());
 
 		for (String name : names) {
 			privileges.add(service.getPrivilege(name));
