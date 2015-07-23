@@ -657,6 +657,8 @@ define(
                     modal: true,
                     width: 350,
                     height: 175,
+                    draggable: false,
+                    resizable: false,
                     buttons: [
                         {
                             text: "Cancel",
