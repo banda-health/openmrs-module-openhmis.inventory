@@ -1,0 +1,148 @@
+[
+  {
+    "id": "${project.parent.artifactId}",
+    "description": "Provides inventory services that can be used by other modules",
+    "order": 20,
+    "extensions": [
+      {
+        "id": "openhmis.inventory.inventoryLandingPageLink",
+        "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+        "type": "link",
+        "label": "Inventory",
+        "url": "openhmis.inventory/inventoryLanding.page",
+        "icon": "icon-book",
+        "requiredPrivilege": "App: View Inventory App"
+      },
+      
+      {
+        "id": "openhmis.inventory.registration.editVisit",
+        "extensionPointId": "org.openmrs.referenceapplication.homepageLink",
+        "type": "link",
+        "label": "Edit Visit",
+        "url": "findPatient.htm",
+        "icon": "icon-stethoscope",
+        "requiredPrivilege": "App: Edit Visit"
+      },
+
+      {
+        "id": "openhmis.inventory.inventoryTasksLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.landing",
+        "type": "link",
+        "label": "Inventory Tasks",
+        "url": "module/openhmis/inventory/inventory.form",
+        "icon": "icon-book",
+        "requiredPrivilege": "App: Access Inventory Tasks"
+      },
+
+      {
+        "id": "openhmis.inventory.manageInventoryModuleLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.landing",
+        "type": "link",
+        "label": "Manage Inventory Module",
+        "url": "openhmis.inventory/inventory/manageModule.page",
+        "icon": "icon-cogs",
+        "requiredPrivilege": "App: Access Manage Inventory Module"
+      },
+
+      {
+        "id": "openhmis.inventory.inventoryRoleCreationLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Inventory Role Creation",
+        "url": "module/openhmis/inventory/roleCreation.form",
+        "icon": "icon-user",
+        "requiredPrivilege": "Task: Access Inventory Role Creation"
+      },
+
+      {
+        "id": "openhmis.inventory.manageItemsLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Manage Items",
+        "url": "module/openhmis/inventory/items.form",
+        "icon": "icon-italic",
+        "requiredPrivilege": "Task: Access Manage Items"
+      },
+
+      {
+        "id": "openhmis.inventory.manageItemAttributeTypesLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Manage Item Attribute Types",
+        "url": "module/openhmis/inventory/itemAttributeTypes.form",
+        "icon": "icon-edit",
+        "requiredPrivilege": "Task: Access Manage Item Attribute Types"
+      },
+
+      {
+        "id": "openhmis.inventory.manageDepartmentsLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Manage Departments",
+        "url": "module/openhmis/inventory/departments.form",
+        "icon": "icon-briefcase",
+        "requiredPrivilege": "Task: Access Manage Departments"
+      },
+
+      {
+        "id": "openhmis.inventory.manageInstitutionsLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Manage Institutions",
+        "url": "module/openhmis/inventory/institutions.form",
+        "icon": "icon-building",
+        "requiredPrivilege": "Task: Access Manage Institutions"
+      },
+
+      {
+        "id": "openhmis.inventory.manageStockroomsLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Manage Stockrooms",
+        "url": "module/openhmis/inventory/stockrooms.form",
+        "icon": "icon-home",
+        "requiredPrivilege": "Task: Access Manage Stockrooms"
+      },
+
+      {
+        "id": "openhmis.inventory.manageOperationTypesLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Manage Operation Types",
+        "url": "module/openhmis/inventory/operationTypes.form",
+        "icon": "icon-edit",
+        "requiredPrivilege": "Task: Access Manage Operation Types"
+      },
+
+      {
+        "id": "openhmis.inventory.viewStockOperationLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "View Stock Operation",
+        "url": "module/openhmis/inventory/operations.form",
+        "icon": "icon-list",
+        "requiredPrivilege": "Task: Access View Stock Operations"
+      },
+
+      {
+        "id": "openhmis.inventory.generateItemMappingsLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Generate Item Mappings",
+        "url": "module/openhmis/inventory/itemConceptSuggestion.form",
+        "icon": "icon-random",
+        "requiredPrivilege": "Task: Access Generate Item Mappings"
+      },
+
+      {
+        "id": "openhmis.inventory.inventorySettingsLink",
+        "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
+        "type": "link",
+        "label": "Inventory Settings",
+        "url": "module/openhmis/inventory/settings.form",
+        "icon": "icon-cog",
+        "requiredPrivilege": "Task: Access Inventory Settings"
+      }
+    ]
+  }
+]

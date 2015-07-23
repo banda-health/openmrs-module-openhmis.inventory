@@ -16,6 +16,7 @@ package org.openmrs.module.openhmis.inventory.api.util;
 import org.openmrs.Privilege;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.web.PrivilegeConstantsCompatibility;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,11 +40,32 @@ public class PrivilegeConstants {
 	public static final String VIEW_OPERATIONS = "View Inventory Operations";
 	public static final String ROLLBACK_OPERATIONS = "Rollback Inventory Operations";
 
+	public static final String APP_VIEW_INVENTORY_APP = "App: View Inventory App";
+	public static final String APP_ACCESS_INVENTORY_TASKS_PAGE = "App: Access Inventory Tasks";
+	public static final String APP_ACCESS_MANAGE_INVENTORY_MODULE_PAGE = "App: Access Manage Inventory Module";
+	public static final String TASK_ACCESS_INVENTORY_TASK_PAGE = "Task: Access Inventory Task";
+	public static final String TASK_ACCESS_INVENTORY_ROLE_CREATION_PAGE = "Task: Access Inventory Role Creation";
+	public static final String TASK_ACCESS_MANAGE_ITEMS_PAGE = "Task: Access Manage Items";
+	public static final String TASK_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE = "Task: Access Manage Item Attribute Types";
+	public static final String TASK_ACCESS_MANAGE_DEPARTMENTS_PAGE = "Task: Access Manage Departments";
+	public static final String TASK_ACCESS_MANAGE_INSTITUTIONS_PAGE = "Task: Access Manage Institutions";
+	public static final String TASK_ACCESS_MANAGE_STOCKROOMS_PAGE = "Task: Access Manage Stockrooms";
+	public static final String TASK_ACCESS_MANAGE_OPERATION_TYPES_PAGE = "Task: Access Manage Operation Types";
+	public static final String TASK_ACCESS_VIEW_STOCK_OPERATIONS_PAGE = "Task: Access View Stock Operations";
+	public static final String TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE = "Task: Access Generate Item Mappings";
+	public static final String TASK_ACCESS_INVENTORY_SETTINGS_PAGE = "Task: Access Inventory Settings";
+
 	public static final String[] PRIVILEGE_NAMES = new String[] {
-			MANAGE_ITEMS, VIEW_ITEMS, PURGE_ITEMS,
-			MANAGE_STOCKROOMS, VIEW_STOCKROOMS, PURGE_STOCKROOMS,
-			MANAGE_OPERATIONS, VIEW_OPERATIONS,
-			MANAGE_METADATA, VIEW_METADATA, PURGE_METADATA
+			MANAGE_ITEMS, VIEW_ITEMS, PURGE_ITEMS, MANAGE_STOCKROOMS,
+			VIEW_STOCKROOMS, PURGE_STOCKROOMS, MANAGE_OPERATIONS, VIEW_OPERATIONS,
+			MANAGE_METADATA, VIEW_METADATA, PURGE_METADATA, APP_VIEW_INVENTORY_APP,
+			APP_ACCESS_INVENTORY_TASKS_PAGE, APP_ACCESS_MANAGE_INVENTORY_MODULE_PAGE,
+			TASK_ACCESS_INVENTORY_TASK_PAGE, TASK_ACCESS_INVENTORY_ROLE_CREATION_PAGE,
+			TASK_ACCESS_MANAGE_ITEMS_PAGE, TASK_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE,
+			TASK_ACCESS_MANAGE_DEPARTMENTS_PAGE, TASK_ACCESS_MANAGE_INSTITUTIONS_PAGE,
+			TASK_ACCESS_MANAGE_STOCKROOMS_PAGE, TASK_ACCESS_MANAGE_OPERATION_TYPES_PAGE,
+			TASK_ACCESS_VIEW_STOCK_OPERATIONS_PAGE, TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE,
+			TASK_ACCESS_INVENTORY_SETTINGS_PAGE
 	};
 
 	protected PrivilegeConstants() { }
@@ -80,13 +102,15 @@ public class PrivilegeConstants {
 		}
 
 		List<String> names = new ArrayList<String>();
-		names.add(org.openmrs.util.PrivilegeConstants.EDIT_PATIENT_IDENTIFIERS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_ADMIN_FUNCTIONS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_CONCEPTS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_LOCATIONS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_NAVIGATION_MENU);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_USERS);
-		names.add(org.openmrs.util.PrivilegeConstants.VIEW_ROLES);
+		PrivilegeConstantsCompatibility  privilegeConstantsCompatibility = new  PrivilegeConstantsCompatibility();
+		
+		names.add(privilegeConstantsCompatibility.getEditPatientIdentifiersPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewAdminFunctionsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewConceptsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewLocationsPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewNavigationMenuPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewUsersPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewRolesPrivilege());
 
 		for (String name : names) {
 			privileges.add(service.getPrivilege(name));

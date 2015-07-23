@@ -15,6 +15,10 @@
 
 	<aware_of_modules>
 		<aware_of_module version="2.8">org.openmrs.module.idgen</aware_of_module>
+		<aware_of_module version="3.3.1">org.openmrs.module.uiframework</aware_of_module>
+		<aware_of_module version="2.3">org.openmrs.module.appframework</aware_of_module>
+		<aware_of_module version="2.2">org.openmrs.module.providermanagement</aware_of_module>
+		<aware_of_module version="1.6">org.openmrs.module.uicommons</aware_of_module>
 	</aware_of_modules>
 
 	<require_modules>
@@ -184,6 +188,82 @@
 	<privilege>
 		<name>Purge Inventory Metadata</name>
 		<description>Able to purge inventory module metadata</description>
+	</privilege>
+
+	<!-- App privileges for OpenMRS 2.x -->
+	<privilege>
+		<name>App: View Inventory App</name>
+		<description>Able to see the Inventory App Icon on the home page</description>
+	</privilege>
+
+	<privilege>
+		<name>App: Access Inventory Tasks</name>
+		<description>Able to access inventory tasks page</description>
+	</privilege>
+
+	<privilege>
+		<name>App: Access Manage Inventory Module</name>
+		<description>Able to access manage inventory module page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Inventory Task</name>
+		<description>Able to access inventory tasks page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Inventory Role Creation</name>
+		<description>Able to access inventory role creation page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Manage Items</name>
+		<description>Able to access manage items page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Manage Item Attribute Types</name>
+		<description>Able to access manage item attributes page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Manage Departments</name>
+		<description>Able to access manage departments page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Manage Institutions</name>
+		<description>Able to access manage institutions page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Manage Stockrooms</name>
+		<description>Able to access manage stockrooms page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Manage Operation Types</name>
+		<description>Able to access manage operation types page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access View Stock Operations</name>
+		<description>Able to access vie stock operations page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Generate Item Mappings</name>
+		<description>Able to access item mappings page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Inventory Settings</name>
+		<description>Able to access item mappings page</description>
+	</privilege>
+	
+	<privilege>
+		<name>App: Edit Visit</name>
+		<description>Able to access old patient search page to edit visit</description>
 	</privilege>
 </module>
 
