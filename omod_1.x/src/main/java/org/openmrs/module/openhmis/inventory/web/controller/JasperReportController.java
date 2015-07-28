@@ -283,11 +283,15 @@ public class JasperReportController {
 			report.setName(reportName);
 		}
 
-		try {
-			ReportGenerator.generate(report, parameters, false, true);
-		} catch (IOException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating report");
-			return null;
+		if(reportName == null ) {
+			return "redirect" + ModuleWebConstants.INVENTORY_REPORT_ERROR_PAGE;
+		} else {
+			try {
+				ReportGenerator.generate(report, parameters, false, true);
+			} catch (IOException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating report ");
+				return null;
+			}
 		}
 
 		return "redirect:" + ModuleWebConstants.REPORT_DOWNLOAD_URL + "?reportName="
