@@ -25,6 +25,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReport;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.jasperreport.ReportGenerator;
+import org.openmrs.module.jasperreport.util.JasperReportConstants;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
@@ -284,7 +285,7 @@ public class JasperReportController {
 		}
 
 		if(reportName == null ) {
-			return "redirect" + ModuleWebConstants.INVENTORY_REPORT_ERROR_PAGE;
+			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE +"?reportId="+reportId;
 		} else {
 			try {
 				ReportGenerator.generate(report, parameters, false, true);
