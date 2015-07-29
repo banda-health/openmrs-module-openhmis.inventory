@@ -25,6 +25,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReport;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.jasperreport.ReportGenerator;
+import org.openmrs.module.jasperreport.util.JasperReportConstants;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
@@ -283,11 +284,15 @@ public class JasperReportController {
 			report.setName(reportName);
 		}
 
-		try {
-			ReportGenerator.generate(report, parameters, false, true);
-		} catch (IOException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating report");
-			return null;
+		if(reportName == null ) {
+			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE +"?reportId="+reportId;
+		} else {
+			try {
+				ReportGenerator.generate(report, parameters, false, true);
+			} catch (IOException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating report ");
+				return null;
+			}
 		}
 
 		return "redirect:" + ModuleWebConstants.REPORT_DOWNLOAD_URL + "?reportName="
