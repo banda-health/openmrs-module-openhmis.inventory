@@ -275,9 +275,11 @@ public class JasperReportController {
 			HttpServletResponse response) throws IOException {
 		JasperReportService jasperService = Context.getService(JasperReportService.class);
 		JasperReport report = jasperService.getJasperReport(reportId);
+		String message = null;
 		if (report == null) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not find report '" + reportId + "'");
-			return null;
+			message = "Could not find report. The Report could not be found in the system. Please upload the reports and "
+					+ "try again";
+			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId="+reportId+"&message="+message;
 		}
 
 		if (!StringUtils.isEmpty(reportName)) {
@@ -285,7 +287,9 @@ public class JasperReportController {
 		}
 
 		if(reportName == null ) {
-			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE +"?reportId="+reportId;
+			message = "Error Generating the report. The Report files are not present. Please Upload the report"
+					+ " files and try again";
+			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId="+reportId+"&message="+message;
 		} else {
 			try {
 				ReportGenerator.generate(report, parameters, false, true);
