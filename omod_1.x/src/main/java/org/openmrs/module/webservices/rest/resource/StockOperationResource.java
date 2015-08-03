@@ -88,6 +88,7 @@ public class StockOperationResource
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		description.addProperty("instanceType", Representation.DEFAULT);
 		description.addProperty("status", Representation.DEFAULT);
 		description.addProperty("operationNumber", Representation.DEFAULT);
 		description.addProperty("dateCreated", Representation.DEFAULT);
