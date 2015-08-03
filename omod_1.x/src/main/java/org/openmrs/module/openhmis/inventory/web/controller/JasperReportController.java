@@ -244,7 +244,6 @@ public class JasperReportController {
 
 	private String renderExpiringStocksReport(int reportId, WebRequest request, HttpServletResponse response)
 			throws IOException {
-
 		Date expiryDate = null;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
