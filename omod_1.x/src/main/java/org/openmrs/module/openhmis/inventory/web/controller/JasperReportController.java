@@ -133,7 +133,8 @@ public class JasperReportController {
 		return renderReport(reportId, params, "Item Stock Card - " + itemName, response);
 	}
 
-	private String renderStockOperationsByStockroomReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
+	private String renderStockOperationsByStockroomReport(int reportId, WebRequest request, HttpServletResponse response)
+			throws IOException {
 		int itemId;
 		Date beginDate = null, endDate = null;
 		int stockroomId;
@@ -241,8 +242,8 @@ public class JasperReportController {
 		return renderReport(reportId, params, null, response);
 	}
 
-	private String renderExpiringStocksReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
-
+	private String renderExpiringStocksReport(int reportId, WebRequest request, HttpServletResponse response)
+			throws IOException {
 		Date expiryDate = null;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -269,33 +270,32 @@ public class JasperReportController {
 		}
 
 		return renderReport(reportId, params, null, response);
-    }
+	}
 
 	private String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,
 			HttpServletResponse response) throws IOException {
 		JasperReportService jasperService = Context.getService(JasperReportService.class);
 		JasperReport report = jasperService.getJasperReport(reportId);
+		String message = null;
 		if (report == null) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not find report '" + reportId + "'");
-			return null;
+			message = "Could not find report. The Report could not be found in the system. Please upload the reports and "
+					+ "try again";
+			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId=" + reportId + "&message=" + message;
 		}
 
 		if (!StringUtils.isEmpty(reportName)) {
 			report.setName(reportName);
 		}
 
-		if(reportName == null ) {
-			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE +"?reportId="+reportId;
-		} else {
-			try {
-				ReportGenerator.generate(report, parameters, false, true);
-			} catch (IOException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error generating report ");
-				return null;
-			}
+		try {
+			ReportGenerator.generate(report, parameters, false, true);
+		} catch (IOException e) {
+			message = "Error Generating the report. The Report files are not present. Please Upload the report"
+					+ " files and try again. The following error occurred " +e.getMessage();
+			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId=" + reportId + "&message=" + message;
 		}
 
-		return "redirect:" + ModuleWebConstants.REPORT_DOWNLOAD_URL + "?reportName="
-				+ report.getName().replaceAll("\\W", "") + ".pdf";
+		return "redirect:" + ModuleWebConstants.REPORT_DOWNLOAD_URL + "?reportName=" + report.getName().replaceAll("\\W", "")
+				+ ".pdf";
 	}
 }
