@@ -41,6 +41,10 @@
 					<label for="op-field-status">Status</label>
 					<div class="bbf-editor"><label id="op-field-status"><?= model.get('status') ?></label></div>
 				</li>
+				<li class="bbf-field field-creator">
+					<label for="op-field-creator">Operation Creators</label>
+					<div class="bbf-editor"><label id="op-field-creator"><?= model.get('creator') ?></label></div>
+				</li>
 				<? if (model.get('status') === 'CANCELLED' && model.get('cancelReason') != "null" && model.get('cancelReason') != "undefined" ){?>
 				<li class="bbf-field field-cancelReason">
 					<label for="op-field-cancelReason">Cancel Reason</label>
