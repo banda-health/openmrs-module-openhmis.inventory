@@ -102,6 +102,7 @@ public class StockOperationResource
 			description.addProperty("patient", Representation.REF);
 			description.addProperty("institution", Representation.REF);
 			description.addProperty("department", Representation.REF);
+			description.addProperty("creator", Representation.DEFAULT);
 
 			description.addProperty("canProcess", findMethod("userCanProcess"));
 			description.addProperty("canRollback", findMethod("userCanRollback"));
