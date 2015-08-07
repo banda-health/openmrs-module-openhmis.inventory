@@ -309,7 +309,9 @@ define(
                     if (resp.department) {
                         resp.department = new openhmis.Department(resp.department);
                     }
-
+	                if (resp.creator) {
+		                resp.creator = new openhmis.User(resp.creator.person);
+	                }
                     if (resp.attributes) {
                         resp.attributes = new openhmis.GenericCollection(resp.attributes,
                             { model: openhmis.OperationAttribute }).models;
