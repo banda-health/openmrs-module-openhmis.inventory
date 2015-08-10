@@ -28,9 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Resource(name = ModuleRestConstants.ITEM_STOCK_RESOURCE, supportedClass=ItemStock.class,
 		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
