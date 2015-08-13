@@ -288,7 +288,11 @@ public class JasperReportController {
 		}
 
 		try {
-			ReportGenerator.generate(report, parameters, false, true);
+			if (Context.getAuthenticatedUser() == null) {
+				return "redirect:/login.htm";
+			} else {
+				ReportGenerator.generate(report, parameters, false, true);
+			}
 		} catch (IOException e) {
 			message = "Error Generating the report. The Report files are not present. Please Upload the report"
 					+ " files and try again. The following error occurred " +e.getMessage();
