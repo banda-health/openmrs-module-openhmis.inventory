@@ -45,20 +45,23 @@ public class JasperReportController {
 	public String render(@RequestParam(value = "reportId", required = true) int reportId, WebRequest request,
 			HttpServletResponse response) throws IOException {
 		Settings settings = ModuleSettings.loadSettings();
-		if (settings.getStockTakeReportId() != null && reportId == settings.getStockTakeReportId()) {
-			return renderStockTakeReport(reportId, request, response);
-		} else if (settings.getStockCardReportId() != null && reportId == settings.getStockCardReportId()) {
-			return renderStockCardReport(reportId, request, response);
-		} else if (settings.getStockOperationsByStockroomReportId() != null && reportId == settings.getStockOperationsByStockroomReportId()) {
-			return renderStockOperationsByStockroomReport(reportId, request, response);
-		} else if (settings.getStockroomReportId() != null && reportId == settings.getStockroomReportId()) {
-			return renderStockroomReport(reportId, request, response);
-		} else if (settings.getExpiringStockReportId() != null && reportId == settings.getExpiringStockReportId()) {
-			return renderExpiringStocksReport(reportId, request, response);
+		if (Context.getAuthenticatedUser() == null) {
+			return "redirect:/login.htm";
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown report.");
+			if (settings.getStockTakeReportId() != null && reportId == settings.getStockTakeReportId()) {
+				return renderStockTakeReport(reportId, request, response);
+			} else if (settings.getStockCardReportId() != null && reportId == settings.getStockCardReportId()) {
+				return renderStockCardReport(reportId, request, response);
+			} else if (settings.getStockOperationsByStockroomReportId() != null && reportId == settings.getStockOperationsByStockroomReportId()) {
+				return renderStockOperationsByStockroomReport(reportId, request, response);
+			} else if (settings.getStockroomReportId() != null && reportId == settings.getStockroomReportId()) {
+				return renderStockroomReport(reportId, request, response);
+			} else if (settings.getExpiringStockReportId() != null && reportId == settings.getExpiringStockReportId()) {
+				return renderExpiringStocksReport(reportId, request, response);
+			} else {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown report.");
+			}
 		}
-
 		return null;
 	}
 
@@ -288,11 +291,7 @@ public class JasperReportController {
 		}
 
 		try {
-			if (Context.getAuthenticatedUser() == null) {
-				return "redirect:/login.htm";
-			} else {
-				ReportGenerator.generate(report, parameters, false, true);
-			}
+			ReportGenerator.generate(report, parameters, false, true);
 		} catch (IOException e) {
 			message = "Error Generating the report. The Report files are not present. Please Upload the report"
 					+ " files and try again. The following error occurred " +e.getMessage();
