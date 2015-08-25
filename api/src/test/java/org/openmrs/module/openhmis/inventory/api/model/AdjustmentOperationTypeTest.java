@@ -15,7 +15,7 @@ import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
 public class AdjustmentOperationTypeTest extends BaseOperationTypeTest {
 	IStockOperationTypeDataService stockOperationTypeDataService;
 	IStockOperationDataService stockOperationDataService;
-
+	
 	@Before
 	public void before() throws Exception {
 		executeDataSet(IItemDataServiceTest.ITEM_DATASET);

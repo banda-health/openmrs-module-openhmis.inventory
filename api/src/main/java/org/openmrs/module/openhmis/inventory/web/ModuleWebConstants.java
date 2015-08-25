@@ -16,6 +16,9 @@ package org.openmrs.module.openhmis.inventory.web;
 import org.openmrs.module.openhmis.commons.web.WebConstants;
 import org.openmrs.module.openhmis.inventory.api.util.ModuleConstants;
 
+/**
+ * Constants class for the module web resources.
+ */
 public class ModuleWebConstants extends WebConstants {
 	public static final String MODULE_ROOT = WebConstants.MODULE_BASE + ModuleConstants.MODULE_NAME + "/";
 	public static final String MODULE_RESOURCE_ROOT = WebConstants.MODULE_RESOURCE_BASE + ModuleConstants.MODULE_NAME + "/";

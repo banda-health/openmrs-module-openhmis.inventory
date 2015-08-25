@@ -16,6 +16,9 @@ package org.openmrs.module.openhmis.inventory.api.security;
 import org.openmrs.module.openhmis.commons.api.entity.security.IObjectAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
+/**
+ * Default authorization privileges for {@link org.openmrs.OpenmrsObject} data services.
+ */
 public class BasicObjectAuthorizationPrivileges implements IObjectAuthorizationPrivileges {
 	@Override
 	public String getSavePrivilege() {

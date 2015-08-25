@@ -154,8 +154,7 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
-	public List<StockOperation> getOperations(final Stockroom stockroom, final StockOperationSearch search,
-			PagingInfo paging) {
+	public List<StockOperation> getOperations(final Stockroom stockroom, final StockOperationSearch search, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined");
 		}

@@ -38,9 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServiceImpl<ItemConceptSuggestion>
         implements IItemConceptSuggestionDataService {
 	private static final int DEFAULT_RESULT_LIMIT = 50;
-
+	
 	private IItemDataService itemDataService;
-
+	
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return null;

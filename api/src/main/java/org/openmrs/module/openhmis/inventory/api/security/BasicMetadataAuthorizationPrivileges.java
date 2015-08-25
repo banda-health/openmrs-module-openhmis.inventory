@@ -16,6 +16,9 @@ package org.openmrs.module.openhmis.inventory.api.security;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
+/**
+ * Default authorization privileges for {@link org.openmrs.OpenmrsMetadata} data services.
+ */
 public class BasicMetadataAuthorizationPrivileges extends BasicObjectAuthorizationPrivileges
         implements IMetadataAuthorizationPrivileges {
 	@Override

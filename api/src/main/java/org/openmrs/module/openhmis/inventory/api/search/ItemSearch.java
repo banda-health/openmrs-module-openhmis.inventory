@@ -18,6 +18,9 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseMetadataTemplateSearch;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 
+/**
+ * A search template class for the {@link Item} model.
+ */
 public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 	public static final long serialVersionUID = 0L;
 	

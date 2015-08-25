@@ -20,6 +20,9 @@ import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 
+/**
+ * Helper class to load and save the inventory module global settings.
+ */
 public class ModuleSettings {
 	public static final String AUTO_GENERATE_OPERATION_NUMBER_PROPERTY = "openhmis.inventory.autoGenerateOperationNumber";
 	public static final String OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY =

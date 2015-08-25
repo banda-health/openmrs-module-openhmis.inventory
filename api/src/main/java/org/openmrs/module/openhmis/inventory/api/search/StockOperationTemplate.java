@@ -22,6 +22,10 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
+/**
+ * Search template to override {@link StockOperation} model properties that can cause issues when performing a template
+ * search.
+ */
 public class StockOperationTemplate extends StockOperation {
 	private Stockroom stockroom;
 	

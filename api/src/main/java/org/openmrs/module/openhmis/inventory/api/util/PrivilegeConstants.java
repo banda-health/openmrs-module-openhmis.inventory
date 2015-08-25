@@ -23,6 +23,9 @@ import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.web.PrivilegeConstantsCompatibility;
 
+/**
+ * Constants class for module privilege constants.
+ */
 public class PrivilegeConstants {
 	public static final String MANAGE_ITEMS = "Manage Inventory Items";
 	public static final String VIEW_ITEMS = "View Inventory Items";

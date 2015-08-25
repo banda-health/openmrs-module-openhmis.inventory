@@ -33,19 +33,19 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 	private IItemDataService itemDataService;
 	private IStockroomDataService stockroomDataService;
 	private IStockOperationDataService stockOperationDataService;
-
+	
 	@Before
 	public void before() throws Exception {
 		this.service = Context.getService(IItemStockDetailDataService.class);
 		this.itemDataService = Context.getService(IItemDataService.class);
 		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.stockOperationDataService = Context.getService(IStockOperationDataService.class);
-
+		
 		executeDataSet(TestConstants.CORE_DATASET);
 		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
 		executeDataSet(IStockroomDataServiceTest.DATASET);
 	}
-
+	
 	/**
 	 * @verifies throw IllegalArgumentException if the stockroom is null
 	 * @see IItemStockDetailDataService#getItemStockSummaryByStockroom(Stockroom, PagingInfo)
@@ -55,7 +55,7 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
 		service.getItemStockSummaryByStockroom(null, pagingInfo);
 	}
-
+	
 	/**
 	 * @verifies return an empty list if no records are found
 	 * @see IItemStockDetailDataService#getItemStockSummaryByStockroom(Stockroom, PagingInfo)
@@ -64,16 +64,16 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 	public void getItemStockSummaryByStockroom_shouldReturnAnEmptyListIfNoRecordsAreFound() throws Exception {
 		Stockroom newStockroom = new Stockroom();
 		newStockroom.setName("new");
-
+		
 		stockroomDataService.save(newStockroom);
 		Context.flushSession();
-
+		
 		List<ItemStockSummary> results = service.getItemStockSummaryByStockroom(newStockroom, null);
-
+		
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 	}
-
+	
 	/**
 	 * @verifies return the item stock summary records
 	 * @see IItemStockDetailDataService#getItemStockSummaryByStockroom(Stockroom, PagingInfo)
@@ -82,20 +82,20 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 	public void getItemStockSummaryByStockroom_shouldReturnTheItemStockSummaryRecords() throws Exception {
 		Stockroom sr = new Stockroom();
 		sr.setName("new");
-
+		
 		stockroomDataService.save(sr);
 		Context.flushSession();
-
+		
 		Item item2 = itemDataService.getById(2);
-
+		
 		ItemStock stock = new ItemStock();
 		stock.setItem(item2);
 		stock.setStockroom(sr);
 		stock.setQuantity(100);
-
+		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, 2);
-
+		
 		ItemStockDetail detail = new ItemStockDetail();
 		detail.setItem(item2);
 		detail.setExpiration(cal.getTime());
@@ -104,9 +104,9 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(true);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(20);
-
+		
 		stock.addDetail(detail);
-
+		
 		detail = new ItemStockDetail();
 		detail.setItem(item2);
 		detail.setExpiration(cal.getTime());
@@ -115,9 +115,9 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(true);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(20);
-
+		
 		stock.addDetail(detail);
-
+		
 		Calendar cal2 = Calendar.getInstance();
 		cal2.add(Calendar.YEAR, 3);
 		detail = new ItemStockDetail();
@@ -128,18 +128,18 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(true);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(60);
-
+		
 		stock.addDetail(detail);
-
+		
 		sr.addItem(stock);
-
+		
 		Item item0 = itemDataService.getById(0);
-
+		
 		stock = new ItemStock();
 		stock.setItem(item0);
 		stock.setStockroom(sr);
 		stock.setQuantity(50);
-
+		
 		detail = new ItemStockDetail();
 		detail.setItem(item0);
 		detail.setExpiration(null);
@@ -148,9 +148,9 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(null);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(20);
-
+		
 		stock.addDetail(detail);
-
+		
 		detail = new ItemStockDetail();
 		detail.setItem(item0);
 		detail.setExpiration(null);
@@ -159,35 +159,35 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(null);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(30);
-
+		
 		stock.addDetail(detail);
-
+		
 		sr.addItem(stock);
-
+		
 		stockroomDataService.save(sr);
 		Context.flushSession();
-
+		
 		List<ItemStockSummary> results = service.getItemStockSummaryByStockroom(sr, null);
-
+		
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
-
+		
 		ItemStockSummary summary = results.get(0);
 		Assert.assertEquals(item0, summary.getItem());
 		Assert.assertEquals(50, (long)summary.getQuantity());
 		Assert.assertNull(summary.getExpiration());
-
+		
 		summary = results.get(1);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(40, (long)summary.getQuantity());
 		Assert.assertEquals(cal.getTime(), summary.getExpiration());
-
+		
 		summary = results.get(2);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(60, (long)summary.getQuantity());
 		Assert.assertEquals(cal2.getTime(), summary.getExpiration());
 	}
-
+	
 	/**
 	 * @verifies return paged results if paging is specified
 	 * @see IItemStockDetailDataService#getItemStockSummaryByStockroom(Stockroom, PagingInfo)
@@ -196,20 +196,20 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 	public void getItemStockSummaryByStockroom_shouldReturnPagedResultsIfPagingIsSpecified() throws Exception {
 		Stockroom sr = new Stockroom();
 		sr.setName("new");
-
+		
 		stockroomDataService.save(sr);
 		Context.flushSession();
-
+		
 		Item item2 = itemDataService.getById(2);
-
+		
 		ItemStock stock = new ItemStock();
 		stock.setItem(item2);
 		stock.setStockroom(sr);
 		stock.setQuantity(100);
-
+		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.YEAR, 2);
-
+		
 		ItemStockDetail detail = new ItemStockDetail();
 		detail.setItem(item2);
 		detail.setExpiration(cal.getTime());
@@ -218,9 +218,9 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(true);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(20);
-
+		
 		stock.addDetail(detail);
-
+		
 		detail = new ItemStockDetail();
 		detail.setItem(item2);
 		detail.setExpiration(cal.getTime());
@@ -229,9 +229,9 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(true);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(20);
-
+		
 		stock.addDetail(detail);
-
+		
 		Calendar cal2 = Calendar.getInstance();
 		cal2.add(Calendar.YEAR, 3);
 		detail = new ItemStockDetail();
@@ -242,18 +242,18 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(true);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(60);
-
+		
 		stock.addDetail(detail);
-
+		
 		sr.addItem(stock);
-
+		
 		Item item0 = itemDataService.getById(0);
-
+		
 		stock = new ItemStock();
 		stock.setItem(item0);
 		stock.setStockroom(sr);
 		stock.setQuantity(50);
-
+		
 		detail = new ItemStockDetail();
 		detail.setItem(item0);
 		detail.setExpiration(null);
@@ -262,9 +262,9 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(null);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(20);
-
+		
 		stock.addDetail(detail);
-
+		
 		detail = new ItemStockDetail();
 		detail.setItem(item0);
 		detail.setExpiration(null);
@@ -273,37 +273,37 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		detail.setCalculatedExpiration(null);
 		detail.setCalculatedBatch(true);
 		detail.setQuantity(30);
-
+		
 		stock.addDetail(detail);
-
+		
 		sr.addItem(stock);
-
+		
 		stockroomDataService.save(sr);
 		Context.flushSession();
-
+		
 		PagingInfo pagingInfo = new PagingInfo(1, 1);
 		List<ItemStockSummary> results = service.getItemStockSummaryByStockroom(sr, pagingInfo);
-
+		
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(3, (long)pagingInfo.getTotalRecordCount());
-
+		
 		ItemStockSummary summary = results.get(0);
 		Assert.assertEquals(item0, summary.getItem());
 		Assert.assertEquals(50, (long)summary.getQuantity());
 		Assert.assertNull(summary.getExpiration());
-
+		
 		pagingInfo.setPage(2);
 		results = service.getItemStockSummaryByStockroom(sr, pagingInfo);
-
+		
 		summary = results.get(0);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(40, (long)summary.getQuantity());
 		Assert.assertEquals(cal.getTime(), summary.getExpiration());
-
+		
 		pagingInfo.setPage(3);
 		results = service.getItemStockSummaryByStockroom(sr, pagingInfo);
-
+		
 		summary = results.get(0);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(60, (long)summary.getQuantity());

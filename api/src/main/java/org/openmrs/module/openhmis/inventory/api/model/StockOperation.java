@@ -23,19 +23,16 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomiz
 import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 
 /**
- * This class represents an operation performed on item stock.
- *
- * Examples of an operation include transferring item stock from one stockroom to another or selling item stock to a
- * patient. Each of these types of operations is modeled by a specific {@link IStockOperationType} class that defines what
- * happens when a stock operation is initially created (NEW), being processed (PENDING), cancelled (CANCELLED), or
- * completed (COMPLETED).
- *
- * A stock operation is composed of the item stock changes and two types of stock transactions: reserved and completed. The
- * reserved transactions denote the state of the item stock while the operation is in progress (PENDING). For example, when
- * stock is transferred from one stockroom to another it is considered "owned" by the operation while the status is PENDING
- * and there will be the associated reserved transactions for each item stock while in that state. Once the operation is
- * CANCELLED or COMPLETED the pending transactions become completed transactions and the ownership of the item stock is
- * transitioned to the associated stockroom.
+ * This class represents an operation performed on item stock. Examples of an operation include transferring item stock from
+ * one stockroom to another or selling item stock to a patient. Each of these types of operations is modeled by a specific
+ * {@link IStockOperationType} class that defines what happens when a stock operation is initially created (NEW), being
+ * processed (PENDING), cancelled (CANCELLED), or completed (COMPLETED). A stock operation is composed of the item stock
+ * changes and two types of stock transactions: reserved and completed. The reserved transactions denote the state of the
+ * item stock while the operation is in progress (PENDING). For example, when stock is transferred from one stockroom to
+ * another it is considered "owned" by the operation while the status is PENDING and there will be the associated reserved
+ * transactions for each item stock while in that state. Once the operation is CANCELLED or COMPLETED the pending
+ * transactions become completed transactions and the ownership of the item stock is transitioned to the associated
+ * stockroom.
  */
 public class StockOperation extends BaseInstanceCustomizableMetadata<IStockOperationType, StockOperationAttribute>
         implements Comparable<StockOperation> {

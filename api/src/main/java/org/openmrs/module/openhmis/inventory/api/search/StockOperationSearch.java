@@ -16,7 +16,11 @@ package org.openmrs.module.openhmis.inventory.api.search;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
+import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 
+/**
+ * A search template class for the {@link StockOperation} model.
+ */
 public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperationTemplate> {
 	public StockOperationSearch() {
 		this(new StockOperationTemplate());

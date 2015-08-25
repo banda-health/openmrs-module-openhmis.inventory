@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.openhmis.inventory.api.util;
 
+/**
+ * Constants class for Hibernate criteria fields.
+ */
 public class HibernateCriteriaConstants {
 	
 	protected HibernateCriteriaConstants() {}

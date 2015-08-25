@@ -16,8 +16,8 @@ package org.openmrs.module.openhmis.inventory.api.model;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
 /**
- * Model class that represents an adjustment stock operation type. Adjustment operations directly alter the item stock for
- * a given stockroom and are used to correct item stock mistakes.
+ * Model class that represents an adjustment stock operation type. Adjustment operations directly alter the item stock for a
+ * given stockroom and are used to correct item stock mistakes.
  */
 public class AdjustmentOperationType extends StockOperationTypeBase {
 	/**
