@@ -20,15 +20,17 @@ import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Data service implementation class for {@link ItemAttributeType}s.
+ */
 @Transactional
-public class ItemAttributeTypeDataServiceImpl
-	extends BaseMetadataDataServiceImpl<ItemAttributeType>
-	implements IItemAttributeTypeDataService {
+public class ItemAttributeTypeDataServiceImpl extends BaseMetadataDataServiceImpl<ItemAttributeType>
+        implements IItemAttributeTypeDataService {
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-
+	
 	@Override
 	protected void validate(ItemAttributeType entity) {
 		return;

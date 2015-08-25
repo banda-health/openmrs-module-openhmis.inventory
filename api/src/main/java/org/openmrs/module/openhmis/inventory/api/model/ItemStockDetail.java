@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
@@ -20,18 +20,18 @@ import java.util.Date;
  */
 public class ItemStockDetail extends ItemStockDetailBase {
 	public static final long serialVersionUID = 0L;
-
+	
 	private ItemStock itemStock;
 	private Stockroom stockroom;
-
+	
 	/**
 	 * Creates a new empty {@link ItemStockDetail} object.
 	 */
-	public ItemStockDetail() { }
-
+	public ItemStockDetail() {}
+	
 	/**
-	 * Create a new {@link ItemStockDetail} object from the specified {@link ItemStock} and
-	 * {@link StockOperationTransaction} objects.
+	 * Create a new {@link ItemStockDetail} object from the specified {@link ItemStock} and {@link StockOperationTransaction}
+	 * objects.
 	 * @param stock The item stock this stock detail is related to.
 	 * @param tx The operation transaction used to populate the detail properties.
 	 */
@@ -42,7 +42,7 @@ public class ItemStockDetail extends ItemStockDetailBase {
 		if (tx == null) {
 			throw new IllegalArgumentException("The stock operation transaction must be defined.");
 		}
-
+		
 		this.setItemStock(stock);
 		this.setStockroom(tx.getStockroom());
 		this.setItem(tx.getItem());
@@ -54,7 +54,7 @@ public class ItemStockDetail extends ItemStockDetailBase {
 		this.setCalculatedBatch(tx.isCalculatedBatch());
 		this.setQuantity(tx.getQuantity());
 	}
-
+	
 	/**
 	 * Create a copy of the specified {@link ItemStockDetail}.
 	 * @param base The detail to copy.
@@ -63,7 +63,7 @@ public class ItemStockDetail extends ItemStockDetailBase {
 		if (base == null) {
 			throw new IllegalArgumentException("The item stock detail to copy must be defined.");
 		}
-
+		
 		this.itemStock = base.itemStock;
 		this.stockroom = base.stockroom;
 		setItem(base.getItem());
@@ -75,7 +75,7 @@ public class ItemStockDetail extends ItemStockDetailBase {
 		setCalculatedExpiration(base.isCalculatedExpiration());
 		setQuantity(base.getQuantity());
 	}
-
+	
 	/**
 	 * Gets the parent {@link ItemStock} object.
 	 * @return The item stock.
@@ -83,7 +83,7 @@ public class ItemStockDetail extends ItemStockDetailBase {
 	public ItemStock getItemStock() {
 		return itemStock;
 	}
-
+	
 	/**
 	 * Sets the parent {@link ItemStock} object.
 	 * @param itemStock The item stock.
@@ -91,7 +91,7 @@ public class ItemStockDetail extends ItemStockDetailBase {
 	public void setItemStock(ItemStock itemStock) {
 		this.itemStock = itemStock;
 	}
-
+	
 	/**
 	 * Gets the stockroom.
 	 * @return The stockroom.
@@ -99,7 +99,7 @@ public class ItemStockDetail extends ItemStockDetailBase {
 	public Stockroom getStockroom() {
 		return stockroom;
 	}
-
+	
 	/**
 	 * Sets the stockroom.
 	 * @param stockroom The stockroom.
@@ -107,9 +107,8 @@ public class ItemStockDetail extends ItemStockDetailBase {
 	public void setStockroom(Stockroom stockroom) {
 		this.stockroom = stockroom;
 	}
-
+	
 	public boolean isNullBatch() {
 		return (this.getBatchOperation() == null && this.getExpiration() == null && this.getQuantity() < 0) ? true : false;
 	}
 }
-

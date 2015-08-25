@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
@@ -19,28 +19,28 @@ import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
 
-public class StockOperationTypeDataServiceImpl
-	extends BaseMetadataDataServiceImpl<IStockOperationType>
-	implements IStockOperationTypeDataService {
-
+/**
+ * Data service implementation class for {@link IStockOperationType}.
+ */
+public class StockOperationTypeDataServiceImpl extends BaseMetadataDataServiceImpl<IStockOperationType>
+        implements IStockOperationTypeDataService {
+	
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-
+	
 	@Override
-	protected void validate(IStockOperationType object) {
-	}
-
+	protected void validate(IStockOperationType object) {}
+	
 	@Override
 	public IStockOperationType save(IStockOperationType type) {
 		// Check to see if this is a new entity
 		if (type.getId() == null) {
 			throw new UnsupportedOperationException("New stock operation types can not be created.");
 		}
-
+		
 		// Update the existing entity
 		return super.save(type);
 	}
 }
-

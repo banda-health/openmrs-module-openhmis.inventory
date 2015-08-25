@@ -17,7 +17,10 @@ import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Interface that represents classes which perform data operations for {@link ItemAttributeType}s.
+ */
 @Transactional
 public interface IItemAttributeTypeDataService extends IMetadataDataService<ItemAttributeType> {
-
+	
 }

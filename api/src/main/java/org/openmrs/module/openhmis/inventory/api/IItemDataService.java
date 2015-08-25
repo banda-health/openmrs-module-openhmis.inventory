@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api;
 
@@ -21,12 +21,14 @@ import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
-import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Interface that represents classes which perform data operations for {@link Item}s.
+ */
 @Transactional
 public interface IItemDataService extends IMetadataDataService<Item> {
 	/**
@@ -38,13 +40,13 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should return the item with the specified item code
 	 * @should return null if the item code is not found
 	 */
-	@Transactional(readOnly =  true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	Item getItemByCode(String itemCode);
-
+	
 	/**
-	 * Gets all items with the specified code or {@code null} if not found.
-	 * This is needed as long as it is not mandatory for codes to be unique
+	 * Gets all items with the specified code or {@code null} if not found. This is needed as long as it is not mandatory for
+	 * codes to be unique
 	 * @param itemCode The item code to find.
 	 * @return All items with the specified item code or {@code null}.
 	 * @param includeRetired Whether retired items should be included in the results.
@@ -53,22 +55,21 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should return the item with the specified item code
 	 * @should return null if the item code is not found
 	 */
-	@Transactional(readOnly =  true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByCode(String itemCode, boolean includeRetired);
-
+	
 	/**
-	 * Gets all the items for the specified code.
-	 * This is needed as long as it is not mandatory for codes to be unique
+	 * Gets all the items for the specified code. This is needed as long as it is not mandatory for codes to be unique
 	 * @param itemCode The item code to find.
 	 * @param includeRetired Whether retired items should be included in the results.
 	 * @param pagingInfo The paging information
 	 * @return All items for the specified code.
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByCode(String itemCode, boolean includeRetired, PagingInfo pagingInfo);
-
+	
 	/**
 	 * Gets all the items for the specified {@link Department}.
 	 * @param department The department.
@@ -80,9 +81,9 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should return all items for the specified department
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByDepartment(Department department, boolean includeRetired);
-
+	
 	/**
 	 * Gets all the items for the specified {@link Department}.
 	 * @param department The department.
@@ -91,9 +92,9 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @return All items for the specified {@link Department}.
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByDepartment(Department department, boolean includeRetired, PagingInfo pagingInfo);
-
+	
 	/**
 	 * Gets all items in the specified {@link Department} that start with the specified name.
 	 * @param department The department to search within.
@@ -110,9 +111,9 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should return items for only the specified department
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItems(Department department, String name, boolean includeRetired);
-
+	
 	/**
 	 * Gets all items in the specified {@link Department} that start with the specified name.
 	 * @param department The department to search within.
@@ -122,18 +123,18 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @return All items in the specified {@link Department} that start with the specified name.
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo);
-
+	
 	/**
 	 * Gets all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
 	 * @return The items found or an empty list if no items were found.
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByItemSearch(ItemSearch itemSearch);
-
+	
 	/**
 	 * Gets all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
@@ -152,18 +153,18 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should not return retired items from search unless specified
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByItemSearch(ItemSearch itemSearch, PagingInfo pagingInfo);
-
+	
 	/**
 	 * Gets all items by {@link Concept} settings.
 	 * @param concept The concept.
 	 * @return The items found or an empty list if no items were found.
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-    List<Item> getItemsByConcept(Concept concept);
-
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	List<Item> getItemsByConcept(Concept concept);
+	
 	/**
 	 * Gets all items where {@link Concept} is null
 	 * @param resultLimit Maximum size of returned items.
@@ -176,16 +177,14 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @should only return items where concept suggestion was not accepted
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
-    List<Item> getItemsWithoutConcept(List<Integer> excludedItemsIds, Integer resultLimit);
-
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	List<Item> getItemsWithoutConcept(List<Integer> excludedItemsIds, Integer resultLimit);
+	
 	/**
-	 *
 	 * @param uuid
 	 * @return The itemPrice that matches the given uuid
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_ITEMS})
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	ItemPrice getItemPriceByUuid(String uuid);
 }
-

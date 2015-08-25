@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
@@ -25,6 +25,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Location;
 import org.openmrs.OpenmrsObject;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
@@ -40,7 +41,11 @@ import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
+import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Data service implementation class for {@link Stockroom}.
+ */
 public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockroom>
         implements IStockroomDataService, IMetadataAuthorizationPrivileges {
 	private static final int MAX_STOCKROOM_CODE_LENGTH = 255;
@@ -64,6 +69,8 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<ItemStock> getItemsByRoom(final Stockroom stockroom, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined");
@@ -80,6 +87,8 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<StockOperationTransaction> getTransactionsByRoom(final Stockroom stockroom, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined");
@@ -94,6 +103,8 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<StockOperationTransaction> getTransactionsByRoomAndItem(final Stockroom stockroom, final Item item,
 	        PagingInfo paging) {
 		if (stockroom == null) {
@@ -114,24 +125,8 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
-	public List<StockOperation> getOperations(final Stockroom stockroom, final StockOperationSearch search, PagingInfo paging) {
-		if (stockroom == null) {
-			throw new IllegalArgumentException("The stockroom must be defined");
-		}
-		
-		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
-			@Override
-			public void apply(Criteria criteria) {
-				if (search != null) {
-					search.updateCriteria(criteria);
-				}
-				criteria.add(Restrictions.or(Restrictions.eq(HibernateCriteriaConstants.SOURCE, stockroom),
-				    Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom)));
-			}
-		}, Order.desc("dateChanged"), Order.desc("dateCreated"));
-	}
-	
-	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<ItemStock> getItems(final Stockroom stockroom, final ItemSearch itemSearch, PagingInfo paging) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined.");
@@ -157,6 +152,29 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	public List<StockOperation> getOperations(final Stockroom stockroom, final StockOperationSearch search,
+			PagingInfo paging) {
+		if (stockroom == null) {
+			throw new IllegalArgumentException("The stockroom must be defined");
+		}
+		
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				if (search != null) {
+					search.updateCriteria(criteria);
+				}
+				criteria.add(Restrictions.or(Restrictions.eq(HibernateCriteriaConstants.SOURCE, stockroom),
+				    Restrictions.eq(HibernateCriteriaConstants.DESTINATION, stockroom)));
+			}
+		}, Order.desc("dateChanged"), Order.desc("dateCreated"));
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public ItemStock getItem(Stockroom stockroom, Item item) {
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined.");
@@ -173,6 +191,8 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public ItemStockDetail getStockroomItemDetail(Stockroom stockroom, Item item, Date expiration,
 	        StockOperation batchOperation) {
 		if (stockroom == null) {
@@ -202,11 +222,15 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired) {
 		return getStockroomsByLocation(location, includeRetired, null);
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<Stockroom> getStockroomsByLocation(final Location location, final boolean includeRetired,
 	        PagingInfo pagingInfo) {
 		if (location == null) {
@@ -225,11 +249,15 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired) {
 		return getStockrooms(location, name, includeRetired, null);
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<Stockroom> getStockrooms(final Location location, final String name, final boolean includeRetired,
 	        PagingInfo pagingInfo) {
 		if (location == null) {
@@ -246,7 +274,7 @@ public class StockroomDataServiceImpl extends BaseMetadataDataServiceImpl<Stockr
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq(HibernateCriteriaConstants.LOCATION, location)).add(
-						Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
+				    Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
 				
 				if (!includeRetired) {
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));

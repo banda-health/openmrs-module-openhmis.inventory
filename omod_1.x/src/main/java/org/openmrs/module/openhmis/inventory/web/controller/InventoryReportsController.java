@@ -19,10 +19,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReportService;
+import org.openmrs.module.openhmis.commons.api.exception.ReportNotFoundException;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
-import org.openmrs.module.openhmis.inventory.api.exception.ReportNotFoundException;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
@@ -75,7 +75,7 @@ public class InventoryReportsController {
 		JasperReportService reportService = Context.getService(JasperReportService.class);
 		try {
 			model.addAttribute(reportName, reportService.getJasperReport(reportId));
-		} catch(NullPointerException e) {
+		} catch (NullPointerException e) {
 			LOG.error("report with ID <" + reportId + "> not found", e);
 			throw new ReportNotFoundException("The report could not be found. Check configuration under Inventory Settings");
 		}

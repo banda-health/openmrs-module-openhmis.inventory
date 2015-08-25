@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api;
 
@@ -31,6 +31,10 @@ import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Interface that represents classes which perform data operations for {@link Stockroom}s.
+ */
+@Transactional
 public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	/**
 	 * Gets all {@link ItemStock}'s in the specified {@link Stockroom}.
@@ -44,9 +48,9 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @should throw IllegalArgumentException if the stockroom is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<ItemStock> getItemsByRoom(Stockroom stockroom, PagingInfo paging);
-
+	
 	/**
 	 * Gets all {@link StockOperationTransaction}'s in the specified {@link Stockroom}.
 	 * @param stockroom The {@link Stockroom}.
@@ -58,9 +62,9 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @should throw IllegalArgumentException if the stockroom is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<StockOperationTransaction> getTransactionsByRoom(Stockroom stockroom, PagingInfo paging);
-
+	
 	/**
 	 * Gets all {@link StockOperationTransaction}'s in the specified {@link Stockroom}.
 	 * @param stockroom The {@link Stockroom}.
@@ -74,12 +78,12 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @should throw IllegalArgumentException if the item is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<StockOperationTransaction> getTransactionsByRoomAndItem(Stockroom stockroom, Item item, PagingInfo paging);
-
+	
 	/**
 	 * Gets all the items in the stockroom that match the {@link ItemSearch} settings.
- 	 * @param stockroom The {@link Stockroom} items to search within.
+	 * @param stockroom The {@link Stockroom} items to search within.
 	 * @param itemSearch The {@link ItemSearch} settings.
 	 * @param paging The paging information.
 	 * @return The stockroom items found or and empty list if none were found.
@@ -93,9 +97,9 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @should throw IllegalArgumentException if item search is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<ItemStock> getItems(Stockroom stockroom, ItemSearch itemSearch, PagingInfo paging);
-
+	
 	/**
 	 * Gets all operations associated with the stockroom that match the {@link StockOperationSearch} settings.
 	 * @param stockroom The {@link Stockroom} operations to search within.
@@ -109,9 +113,9 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @should not throw IllegalArgumentException if operation search is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<StockOperation> getOperations(Stockroom stockroom, StockOperationSearch search, PagingInfo paging);
-
+	
 	/**
 	 * Gets the {@link ItemStock} for the specified {@link Item} with the optionally defined expiration.
 	 * @param stockroom The {@link Stockroom} items to search.
@@ -124,9 +128,9 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @should throw IllegalArgumentException when item is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized({PrivilegeConstants.VIEW_STOCKROOMS})
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	ItemStock getItem(Stockroom stockroom, Item item);
-
+	
 	/**
 	 * Gets the {@link ItemStockDetail} for the specified {@link Item} and qualifiers.
 	 * @param stockroom The stockroom item details to search.
@@ -144,63 +148,62 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	 * @should throw IllegalArgumentException when item is null
 	 */
 	@Transactional(readOnly = true)
-	@Authorized({PrivilegeConstants.VIEW_STOCKROOMS})
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	ItemStockDetail getStockroomItemDetail(Stockroom stockroom, Item item, Date expiration, StockOperation batchOperation);
-
-    /**
-    * Gets all the stockrooms for the specified {@link Location}.
-    * @param location The location.
-    * @param includeRetired Whether retired stockrooms should be included in the results.
-    * @return All stockrooms for the specified {@link Location}.
-    * @should throw NullPointerException if the location is null
-    * @should return an empty list if the location has no stockrooms
-    * @should not return retired stockrooms unless specified
-    * @should return all stockrooms for the specified location
-    */
-   @Transactional(readOnly = true)
-   @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired);
-
-   /**
-    * Gets all the stockrooms for the specified {@link Location}.
-    * @param location The location.
-    * @param includeRetired Whether retired stockrooms should be included in the results.
-    * @param pagingInfo The paging information
-    * @return All stockrooms for the specified {@link location}.
-    */
-   @Transactional(readOnly = true)
-   @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo);
-
-   /**
-    * Gets all stockrooms in the specified {@link location} that start with the specified name.
-    * @param location The location to search within.
-    * @param name The stockroom name fragment.
-    * @param includeRetired Whether retired stockrooms should be included in the results.
-    * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
-    * @should throw NullPointerException if the location is null
-    * @should throw IllegalArgumentException if the name is null
-    * @should throw IllegalArgumentException if the name is empty
-    * @should throw IllegalArgumentException if the name is longer than 255 characters
-    * @should return an empty list if no stockrooms are found
-    * @should not return retired stockrooms unless specified
-    * @should return stockrooms that start with the specified name
-    * @should return stockrooms for only the specified location
-    */
-   @Transactional(readOnly = true)
-   @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired);
-
-   /**
-    * Gets all stockrooms in the specified {@link Location} that start with the specified name.
-    * @param location The location to search within.
-    * @param name The stockroom name fragment.
-    * @param includeRetired Whether retired stockrooms should be included in the results.
-    * @param pagingInfo The paging information.
-    * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
-    */
-   @Transactional(readOnly = true)
-   @Authorized( {PrivilegeConstants.VIEW_STOCKROOMS})
-   List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo);
+	
+	/**
+	 * Gets all the stockrooms for the specified {@link Location}.
+	 * @param location The location.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @return All stockrooms for the specified {@link Location}.
+	 * @should throw NullPointerException if the location is null
+	 * @should return an empty list if the location has no stockrooms
+	 * @should not return retired stockrooms unless specified
+	 * @should return all stockrooms for the specified location
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired);
+	
+	/**
+	 * Gets all the stockrooms for the specified {@link Location}.
+	 * @param location The location.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @param pagingInfo The paging information
+	 * @return All stockrooms for the specified {@link location}.
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo);
+	
+	/**
+	 * Gets all stockrooms in the specified {@link location} that start with the specified name.
+	 * @param location The location to search within.
+	 * @param name The stockroom name fragment.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
+	 * @should throw NullPointerException if the location is null
+	 * @should throw IllegalArgumentException if the name is null
+	 * @should throw IllegalArgumentException if the name is empty
+	 * @should throw IllegalArgumentException if the name is longer than 255 characters
+	 * @should return an empty list if no stockrooms are found
+	 * @should not return retired stockrooms unless specified
+	 * @should return stockrooms that start with the specified name
+	 * @should return stockrooms for only the specified location
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired);
+	
+	/**
+	 * Gets all stockrooms in the specified {@link Location} that start with the specified name.
+	 * @param location The location to search within.
+	 * @param name The stockroom name fragment.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @param pagingInfo The paging information.
+	 * @return All stockrooms in the specified {@link org.openmrs.Location} that start with the specified name.
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired, PagingInfo pagingInfo);
 }
-

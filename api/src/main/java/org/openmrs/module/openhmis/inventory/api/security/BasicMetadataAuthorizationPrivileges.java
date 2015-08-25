@@ -5,23 +5,21 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.security;
 
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
-public class BasicMetadataAuthorizationPrivileges
-		extends BasicObjectAuthorizationPrivileges
-		implements IMetadataAuthorizationPrivileges {
+public class BasicMetadataAuthorizationPrivileges extends BasicObjectAuthorizationPrivileges
+        implements IMetadataAuthorizationPrivileges {
 	@Override
 	public String getRetirePrivilege() {
 		return PrivilegeConstants.MANAGE_METADATA;
 	}
 }
-

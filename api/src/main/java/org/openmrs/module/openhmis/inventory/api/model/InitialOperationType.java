@@ -15,9 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 /**
  * The initial operation type is used to populate a stockroom with the initial set of item stock at the time when the system
- * is first set up. It is currently implemented as a distinct class that inherits the behavior of the receipt operation
- * type however it may need to add it's own implementation if we extend the behavior of receipt operations.
+ * is first set up. It is currently implemented as a distinct class that inherits the behavior of the receipt operation type
+ * however it may need to add it's own implementation if we extend the behavior of receipt operations.
  */
 public class InitialOperationType extends ReceiptOperationType {
-
+	
 }
