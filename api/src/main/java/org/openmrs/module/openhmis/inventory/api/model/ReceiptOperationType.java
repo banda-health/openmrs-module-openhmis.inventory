@@ -15,6 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
+/**
+ * Model class that represents a receipt stock operation type. Receipt operations bring new item stock into the system.
+ */
 public class ReceiptOperationType extends StockOperationTypeBase {
 	
 	@Override

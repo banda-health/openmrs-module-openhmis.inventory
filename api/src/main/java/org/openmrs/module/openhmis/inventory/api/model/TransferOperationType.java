@@ -15,6 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
+/**
+ * Model class that represents a transfer stock operation type. Transfers move item stock from one stockroom to another.
+ */
 public class TransferOperationType extends StockOperationTypeBase {
 	
 	@Override

@@ -17,6 +17,9 @@ import java.util.List;
 
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
+/**
+ * Model class that represents a list of {@link ItemConceptSuggestion}s.
+ */
 public class ItemConceptSuggestionList extends BaseSerializableOpenmrsMetadata {
 	
 	private static final long serialVersionUID = 0L;

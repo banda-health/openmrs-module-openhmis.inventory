@@ -17,6 +17,9 @@ import java.util.Date;
 
 import org.openmrs.BaseOpenmrsObject;
 
+/**
+ * Base model class used by models that have item stock detail information.
+ */
 public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public static final long serialVersionUID = 0L;
 	

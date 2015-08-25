@@ -17,6 +17,9 @@ import java.util.Date;
 
 import org.openmrs.OpenmrsObject;
 
+/**
+ * Model class that represents summary information of item stock details for a specific stockroom.
+ */
 public class ItemStockSummary implements OpenmrsObject {
 	public static final long serialVersionUID = 0L;
 	

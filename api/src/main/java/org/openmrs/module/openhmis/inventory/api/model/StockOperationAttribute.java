@@ -15,6 +15,10 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceAttributeObject;
 
+/**
+ * A value for a user-defined {@link StockOperationAttributeType} that is stored with a {@link StockOperation}.
+ * @see org.openmrs.module.openhmis.commons.api.entity.model.IInstanceAttribute
+ */
 public class StockOperationAttribute
         extends BaseInstanceAttributeObject<StockOperation, IStockOperationType, StockOperationAttributeType> {
 	public static final long serialVersionUID = 0L;

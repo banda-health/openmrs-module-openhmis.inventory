@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
+/**
+ * Model class that represents the configurable inventory module settings
+ */
 public class Settings {
 	public static final long serialVersionUID = 1L;
 	

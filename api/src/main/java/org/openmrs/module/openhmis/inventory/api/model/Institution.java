@@ -16,6 +16,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
+/**
+ * Model class that represents an external institution.
+ */
 public class Institution extends BaseSerializableOpenmrsMetadata {
 	
 	public static final long serialVersionUID = 0L;

@@ -15,6 +15,10 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 
+/**
+ * Model class that represents a distribution stock operation type. Distribution operations remove item stock from the
+ * system and record who received it.
+ */
 public class DistributionOperationType extends StockOperationTypeBase {
 	
 	@Override

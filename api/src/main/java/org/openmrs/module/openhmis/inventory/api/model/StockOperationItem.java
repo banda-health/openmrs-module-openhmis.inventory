@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
+/**
+ * Model class that represents the item stock details being changed by the owning {@link StockOperation}.
+ */
 public class StockOperationItem extends ItemStockDetailBase {
 	private StockOperation operation;
 	

@@ -15,6 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceAttributeType;
 
+/**
+ * A user-defined extension to the {@link StockOperation} class, specific to a single {@link IStockOperationType}.
+ */
 public class StockOperationAttributeType extends BaseInstanceAttributeType<IStockOperationType> {
 	public static final long serialVersionUID = 0L;
 }

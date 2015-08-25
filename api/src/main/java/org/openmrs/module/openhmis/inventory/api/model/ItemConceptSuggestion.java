@@ -15,6 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.BaseOpenmrsMetadata;
 
+/**
+ * Model class that represents an item to concept mapping suggestion.
+ */
 public class ItemConceptSuggestion extends BaseOpenmrsMetadata {
 	
 	private static final long serialVersionUID = 0L;

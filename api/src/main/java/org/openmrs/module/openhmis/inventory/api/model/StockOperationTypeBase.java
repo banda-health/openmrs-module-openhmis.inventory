@@ -23,6 +23,9 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomiz
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 
+/**
+ * Base model class used by models that represent a stock operation type.
+ */
 public abstract class StockOperationTypeBase extends BaseInstanceCustomizableType<StockOperationAttributeType>
         implements IStockOperationType {
 	public static final long serialVersionUID = 0L;

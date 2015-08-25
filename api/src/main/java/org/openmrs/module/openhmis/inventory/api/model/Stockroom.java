@@ -19,6 +19,9 @@ import java.util.TreeSet;
 import org.openmrs.Location;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
+/**
+ * Model class that represents a physical location where item stock are stored.
+ */
 public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 1L;
 	

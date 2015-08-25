@@ -18,6 +18,9 @@ import java.util.Date;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.User;
 
+/**
+ * Base model class used by models that have transaction information.
+ */
 public abstract class TransactionBase extends BaseOpenmrsObject implements Comparable<TransactionBase> {
 	public static final long serialVersionUID = 0L;
 	

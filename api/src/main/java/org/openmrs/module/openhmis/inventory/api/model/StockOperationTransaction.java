@@ -15,6 +15,9 @@ package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.Patient;
 
+/**
+ * Model class that represents individual item stock actions performed by a {@link StockOperation}.
+ */
 public class StockOperationTransaction extends TransactionBase {
 	public static final long serialVersionUID = 0L;
 	

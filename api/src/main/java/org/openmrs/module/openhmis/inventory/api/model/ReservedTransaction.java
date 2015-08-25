@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
+/**
+ * Model class that represents individual item stock actions while an operation is pending.
+ */
 public class ReservedTransaction extends TransactionBase {
 	public static final long serialVersionUID = 0L;
 	
