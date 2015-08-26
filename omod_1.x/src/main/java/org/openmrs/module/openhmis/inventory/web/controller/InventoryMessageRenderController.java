@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
-package org.openmrs.module.webservices.rest.web.controller;
+package org.openmrs.module.openhmis.inventory.web.controller;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
