@@ -44,6 +44,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 
+/**
+ * REST resource representing an {@link Item}.
+ */
 @Resource(name = ModuleRestConstants.ITEM_RESOURCE, supportedClass = Item.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Item, ItemAttribute> {

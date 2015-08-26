@@ -26,6 +26,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the inventory role creation page.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.ROLE_CREATION_ROOT)
 public class InventoryRoleController {

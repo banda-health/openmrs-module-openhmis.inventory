@@ -20,6 +20,9 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link Stockroom}s.
+ */
 @Component
 public class StockroomSearchHandler implements SearchHandler {
 

@@ -11,6 +11,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the stock take page.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.INVENTORY_STOCK_TAKE_ROOT)
 public class InventoryStockTakePageController {

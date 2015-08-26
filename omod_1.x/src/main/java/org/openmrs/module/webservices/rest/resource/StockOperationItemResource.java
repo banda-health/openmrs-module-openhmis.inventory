@@ -8,6 +8,9 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+/**
+ * REST resource representing a {@link StockOperationItem}.
+ */
 @Resource(name = ModuleRestConstants.OPERATION_ITEM_RESOURCE, supportedClass = StockOperationItem.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class StockOperationItemResource extends ItemStockDetailBaseResource<StockOperationItem> {

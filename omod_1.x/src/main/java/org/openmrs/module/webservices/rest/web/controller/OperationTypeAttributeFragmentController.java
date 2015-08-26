@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Controller for the operation type attribute fragment.
+ */
 @Controller
 @RequestMapping(value = OperationTypeAttributeFragmentController.REQUEST_MAPPING_PATH)
 public class OperationTypeAttributeFragmentController extends AttributeFragmentControllerBase {

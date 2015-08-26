@@ -28,6 +28,9 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+/**
+ * REST resource representing a {@link IStockOperationType}.
+ */
 @Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass = IStockOperationType.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class StockOperationTypeResource

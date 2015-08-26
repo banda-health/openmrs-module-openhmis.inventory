@@ -37,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * Controller for the Jasper report renderer.
+ */
 @Controller(value = "invJasperReportController")
 @RequestMapping(value = ModuleWebConstants.JASPER_REPORT_PAGE)
 public class JasperReportController {

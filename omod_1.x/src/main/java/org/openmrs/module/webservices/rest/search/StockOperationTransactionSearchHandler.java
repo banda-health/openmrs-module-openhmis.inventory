@@ -25,6 +25,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link StockOperationTransaction}s.
+ */
 @Component
 public class StockOperationTransactionSearchHandler implements SearchHandler {
 	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);

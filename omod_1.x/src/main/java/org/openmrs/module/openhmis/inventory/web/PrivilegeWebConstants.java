@@ -2,6 +2,9 @@ package org.openmrs.module.openhmis.inventory.web;
 
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
+/**
+ * Constants class for privilges required by web resources.
+ */
 public class PrivilegeWebConstants extends PrivilegeConstants {
 	public static final String ROLE_CREATION_PAGE_PRIVILEGES = org.openmrs.util.PrivilegeConstants.MANAGE_ROLES;
 	public static final String ITEM_PAGE_PRIVILEGES = MANAGE_ITEMS + ", " + VIEW_ITEMS;

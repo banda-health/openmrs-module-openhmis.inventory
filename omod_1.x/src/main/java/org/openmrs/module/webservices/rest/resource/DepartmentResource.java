@@ -22,6 +22,9 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+/**
+ * REST resource representing a {@link Department}.
+ */
 @Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass = Department.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 @Handler(supports = { Department.class }, order = 0)

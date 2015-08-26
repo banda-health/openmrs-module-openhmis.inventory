@@ -4,6 +4,9 @@ import org.openmrs.module.openhmis.inventory.api.model.TransactionBase;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+/**
+ * Base REST resource for classes that represent a {@link TransactionBase}.
+ */
 public abstract class TransactionBaseResource<T extends TransactionBase> extends BaseRestObjectResource<T> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {

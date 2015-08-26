@@ -32,6 +32,9 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link Department}s.
+ */
 @Component
 public class DepartmentSearchHandler implements SearchHandler {
 

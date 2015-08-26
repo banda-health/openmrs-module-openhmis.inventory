@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 
 import org.openmrs.module.webservices.rest.web.response.ConversionException;
 
+/**
+ * Helper class for data-type conversions.
+ */
 public class Converter {
 	protected Converter() {}
 

@@ -4,6 +4,9 @@ import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants;
 import org.openmrs.module.web.extension.LinkExt;
 
+/**
+ * Link extension class to add an inventory link to OpenMRS.
+ */
 public class InventoryLinkExt extends LinkExt {
 
 	@Override

@@ -24,6 +24,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the Create Operation page.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.INVENTORY_CREATION_ROOT)
 public class InventoryCreatePageController {

@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.webservices.rest.web.controller;
+package org.openmrs.module.openhmis.inventory.web.controller;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+/**
+ * Controller for the message properties fragment.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.MESSAGE_PROPERTIES_JS_URI)
 public class InventoryMessageRenderController {

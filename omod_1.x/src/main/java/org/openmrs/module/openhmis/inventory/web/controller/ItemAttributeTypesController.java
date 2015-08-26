@@ -21,6 +21,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the item attribute fragment/page.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.ITEM_ATTRIBUTE_TYPES_ROOT)
 public class ItemAttributeTypesController {

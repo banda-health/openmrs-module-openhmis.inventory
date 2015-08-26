@@ -15,6 +15,9 @@ package org.openmrs.module.openhmis.inventory.web;
 
 import org.openmrs.module.webservices.rest.web.RestConstants;
 
+/**
+ * Constants class for REST urls.
+ */
 public class ModuleRestConstants extends ModuleWebConstants {
 	public static final String MODULE_REST_ROOT = RestConstants.VERSION_2 + "/inventory/";
 

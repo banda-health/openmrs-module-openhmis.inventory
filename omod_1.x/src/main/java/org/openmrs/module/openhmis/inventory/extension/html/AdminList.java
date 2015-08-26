@@ -24,6 +24,9 @@ import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
+/**
+ * Class that defines the inventory module administration links.
+ */
 public class AdminList extends AdministrationSectionExt {
 	/**
 	 * @see AdministrationSectionExt#getMediaType()

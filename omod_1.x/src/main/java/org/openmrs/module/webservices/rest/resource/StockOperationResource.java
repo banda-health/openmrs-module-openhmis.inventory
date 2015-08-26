@@ -55,6 +55,9 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.web.client.RestClientException;
 
+/**
+ * REST resource representing a {@link StockOperation}.
+ */
 @Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass = StockOperation.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class StockOperationResource

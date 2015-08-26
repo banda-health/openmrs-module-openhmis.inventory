@@ -8,6 +8,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the Manage Institutions page.
+ */
 //The non-standard controller name is to avoid name conflicts with old versions of the cashier module
 @Controller(value = "invInstitutionController")
 @RequestMapping(ModuleWebConstants.INSTITUTIONS_ROOT)

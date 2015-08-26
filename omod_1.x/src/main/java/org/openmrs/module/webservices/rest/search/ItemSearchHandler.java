@@ -36,6 +36,9 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link Item}s.
+ */
 @Component
 public class ItemSearchHandler
         extends BaseSearchHandler

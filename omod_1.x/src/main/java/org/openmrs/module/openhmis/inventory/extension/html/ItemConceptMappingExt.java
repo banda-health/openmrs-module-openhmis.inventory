@@ -12,6 +12,10 @@ import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 
+/**
+ * Extension to add items to concept page. Not currently in use as OpenMRS does not currently support an extension on the
+ * concept page.
+ */
 public class ItemConceptMappingExt extends Extension {
 
 	private String conceptId;

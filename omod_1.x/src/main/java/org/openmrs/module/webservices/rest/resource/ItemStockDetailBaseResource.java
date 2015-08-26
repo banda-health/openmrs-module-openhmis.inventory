@@ -8,6 +8,9 @@ import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+/**
+ * Base REST resource for classes that represent an {@link ItemStockDetailBase}.
+ */
 public abstract class ItemStockDetailBaseResource<T extends ItemStockDetailBase> extends BaseRestObjectResource<T> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {

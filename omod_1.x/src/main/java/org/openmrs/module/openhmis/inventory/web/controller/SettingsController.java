@@ -19,6 +19,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the Inventory Settings page.
+ */
 @Controller(value = "invSettingsController")
 @RequestMapping(ModuleWebConstants.SETTINGS_ROOT)
 public class SettingsController {

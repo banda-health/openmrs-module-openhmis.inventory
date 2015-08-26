@@ -21,6 +21,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the Manage Stockrooms page.
+ */
 @Controller(value = "invStockroomsController")
 @RequestMapping(ModuleWebConstants.STOCKROOMS_ROOT)
 public class StockroomsController {

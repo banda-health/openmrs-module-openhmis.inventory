@@ -20,6 +20,9 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
+/**
+ * REST resource representing a {@link ReservedTransaction}.
+ */
 @Resource(name = ModuleRestConstants.RESERVATION_TRANSACTION_RESOURCE, supportedClass = ReservedTransaction.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ReservedTransactionResource extends TransactionBaseResource<ReservedTransaction> {
