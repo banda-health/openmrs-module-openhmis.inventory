@@ -69,8 +69,8 @@ public class InventoryReportsController {
 			handleReport(model, reportId, "expiringStockReport");
 		}
 
-		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null &&
-		        WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
+		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null
+		        && WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
 		model.addAttribute("stockrooms", stockroomDataService.getAll());
 	}
 

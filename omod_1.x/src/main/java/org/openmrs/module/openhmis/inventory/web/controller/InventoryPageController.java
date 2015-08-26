@@ -21,8 +21,8 @@ public class InventoryPageController {
 	public void inventory(ModelMap model) throws IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.institution");
 
-		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null &&
-		        WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
+		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null
+		        && WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
 		model.addAttribute("isOperationAutoCompleted", ModuleSettings.isOperationAutoCompleted());
 		model.addAttribute("showOperationCancelReasonField", ModuleSettings.showOperationCancelReasonField());
 	}

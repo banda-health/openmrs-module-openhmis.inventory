@@ -72,8 +72,8 @@ public class JasperReportController {
 		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
 			stockroomId = Integer.parseInt(temp);
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
-			        "defined and be numeric.");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be "
+			        + "defined and be numeric.");
 			return null;
 		}
 
@@ -147,8 +147,8 @@ public class JasperReportController {
 		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
 			stockroomId = Integer.parseInt(temp);
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
-			        "defined and be numeric.");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be "
+			        + "defined and be numeric.");
 			return null;
 		}
 
@@ -209,8 +209,8 @@ public class JasperReportController {
 		if (!StringUtils.isEmpty(temp) && StringUtils.isNumeric(temp)) {
 			stockroomId = Integer.parseInt(temp);
 		} else {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
-			        "defined and be numeric.");
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be "
+			        + "defined and be numeric.");
 			return null;
 		}
 

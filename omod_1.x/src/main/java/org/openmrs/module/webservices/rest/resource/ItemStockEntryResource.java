@@ -1,11 +1,10 @@
 package org.openmrs.module.webservices.rest.resource;
 
+import org.openmrs.api.APIException;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.model.ItemStockEntry;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * REST resource representing an {@link ItemStockEntry}.
@@ -15,9 +14,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class ItemStockEntryResource extends ItemStockDetailBaseResource<ItemStockEntry> {
 	@Override
 	public ItemStockEntry save(ItemStockEntry item) {
-		// Parse the item stock and create the required item stock and item stock detail objects
-
-		throw new NotImplementedException();
+		throw new APIException("Not implemented.");
 	}
 
 	@Override

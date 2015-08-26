@@ -407,8 +407,8 @@ public class StockOperationResource
 
 				if (opItem.getExpiration() == null) {
 					// If the operation has no source then all expirable items must define an expiration
-					throw new IllegalArgumentException("The expiration for item '" + opItem.getItem().getName() +
-					        "' must be defined");
+					throw new IllegalArgumentException("The expiration for item '" + opItem.getItem().getName()
+					        + "' must be defined");
 				} else {
 					// An expiration was specified so make sure that the calculated flag is not set
 					opItem.setCalculatedExpiration(false);

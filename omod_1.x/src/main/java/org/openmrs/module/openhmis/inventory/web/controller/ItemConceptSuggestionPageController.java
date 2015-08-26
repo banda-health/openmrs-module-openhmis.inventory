@@ -31,6 +31,7 @@ public class ItemConceptSuggestionPageController {
 
 	private static final String ITEM_CONCEPT_SUGGESTION_BASE = "openhmis.inventory.itemConceptSuggestion";
 	private static final String ITEM_CONCEPT_SUGGESTION_PAGE = "itemConceptSuggestion.form";
+	private static final int REFEFFER_START_INDEX = 8;
 
 	@RequestMapping(value = ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
 	public void render(ModelMap model, HttpServletRequest request) throws IOException {
@@ -44,8 +45,7 @@ public class ItemConceptSuggestionPageController {
 		String returnUrl = ModuleWebConstants.INVENTORY_PAGE;
 		String referer = request.getHeader("referer");
 		if (!referer.contains(ITEM_CONCEPT_SUGGESTION_PAGE)) {
-			int startIndex = 8;
-			int refererWithoutHostPrefixStartIndex = referer.indexOf('/', startIndex);
+			int refererWithoutHostPrefixStartIndex = referer.indexOf('/', REFEFFER_START_INDEX);
 			String refererWithoutHostPrefix = referer.substring(refererWithoutHostPrefixStartIndex);
 			returnUrl = refererWithoutHostPrefix;
 		}

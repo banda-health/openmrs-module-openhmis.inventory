@@ -26,8 +26,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.web.client.RestClientException;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Context.class, StockOperationTypeResource.class,
-				WellKnownOperationTypes.class, IdgenHelper.class})
+@PrepareForTest({ Context.class, StockOperationTypeResource.class,
+        WellKnownOperationTypes.class, IdgenHelper.class })
 public class InventoryStockTakeResourceTest {
 
 	private IStockOperationService stockOperationService;
@@ -123,6 +123,6 @@ public class InventoryStockTakeResourceTest {
 
 		Assert.assertEquals("M-Test-2", operation.getOperationNumber());
 
-    }
+	}
 
 }
