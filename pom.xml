@@ -16,6 +16,11 @@
 			<name>Modules</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>
 		</repository>
+		<snapshotRepository>
+    		<id>openhmis-repo</id>
+			<name>Snapshots</name>
+    		<url>http://mavenrepo.openhmisafrica.org/content/repositories/snapshots</url>
+  		</snapshotRepository>
 	</distributionManagement>
 
 	<developers>
@@ -180,7 +185,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>jasperreport-api</artifactId>
-				<version>[1.5.5,)</version>
+				<version>1.5.6-SNAPSHOT</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
