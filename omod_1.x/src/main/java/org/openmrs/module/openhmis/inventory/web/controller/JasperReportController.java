@@ -37,19 +37,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 
-@Controller(value="invJasperReportController")
+@Controller(value = "invJasperReportController")
 @RequestMapping(value = ModuleWebConstants.JASPER_REPORT_PAGE)
 public class JasperReportController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String render(@RequestParam(value = "reportId", required = true) int reportId, WebRequest request,
-			HttpServletResponse response) throws IOException {
+	        HttpServletResponse response) throws IOException {
 		Settings settings = ModuleSettings.loadSettings();
 		if (settings.getStockTakeReportId() != null && reportId == settings.getStockTakeReportId()) {
 			return renderStockTakeReport(reportId, request, response);
 		} else if (settings.getStockCardReportId() != null && reportId == settings.getStockCardReportId()) {
 			return renderStockCardReport(reportId, request, response);
-		} else if (settings.getStockOperationsByStockroomReportId() != null && reportId == settings.getStockOperationsByStockroomReportId()) {
+		} else if (settings.getStockOperationsByStockroomReportId() != null
+		        && reportId == settings.getStockOperationsByStockroomReportId()) {
 			return renderStockOperationsByStockroomReport(reportId, request, response);
 		} else if (settings.getStockroomReportId() != null && reportId == settings.getStockroomReportId()) {
 			return renderStockroomReport(reportId, request, response);
@@ -69,7 +70,7 @@ public class JasperReportController {
 			stockroomId = Integer.parseInt(temp);
 		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
-					"defined and be numeric.");
+			        "defined and be numeric.");
 			return null;
 		}
 
@@ -93,7 +94,7 @@ public class JasperReportController {
 				itemName = item.getName();
 			} else {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-						"No item with UUID '" + temp + "' could be found.");
+				    "No item with UUID '" + temp + "' could be found.");
 				return null;
 			}
 		} else {
@@ -134,7 +135,7 @@ public class JasperReportController {
 	}
 
 	private String renderStockOperationsByStockroomReport(int reportId, WebRequest request, HttpServletResponse response)
-			throws IOException {
+	        throws IOException {
 		int itemId;
 		Date beginDate = null, endDate = null;
 		int stockroomId;
@@ -144,7 +145,7 @@ public class JasperReportController {
 			stockroomId = Integer.parseInt(temp);
 		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
-					"defined and be numeric.");
+			        "defined and be numeric.");
 			return null;
 		}
 
@@ -156,7 +157,7 @@ public class JasperReportController {
 				itemId = item.getId();
 			} else {
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-						"No item with UUID '" + temp + "' could be found.");
+				    "No item with UUID '" + temp + "' could be found.");
 				return null;
 			}
 		} else {
@@ -206,7 +207,7 @@ public class JasperReportController {
 			stockroomId = Integer.parseInt(temp);
 		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "The stockroom id ('" + temp + "') must be " +
-					"defined and be numeric.");
+			        "defined and be numeric.");
 			return null;
 		}
 
@@ -243,7 +244,7 @@ public class JasperReportController {
 	}
 
 	private String renderExpiringStocksReport(int reportId, WebRequest request, HttpServletResponse response)
-			throws IOException {
+	        throws IOException {
 		Date expiryDate = null;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -273,13 +274,13 @@ public class JasperReportController {
 	}
 
 	private String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,
-			HttpServletResponse response) throws IOException {
+	        HttpServletResponse response) throws IOException {
 		JasperReportService jasperService = Context.getService(JasperReportService.class);
 		JasperReport report = jasperService.getJasperReport(reportId);
 		String message = null;
 		if (report == null) {
 			message = "Could not find report. The Report could not be found in the system. Please upload the reports and "
-					+ "try again";
+			        + "try again";
 			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId=" + reportId + "&message=" + message;
 		}
 
@@ -291,11 +292,12 @@ public class JasperReportController {
 			ReportGenerator.generate(report, parameters, false, true);
 		} catch (IOException e) {
 			message = "Error Generating the report. The Report files are not present. Please Upload the report"
-					+ " files and try again. The following error occurred " +e.getMessage();
+			        + " files and try again. The following error occurred " + e.getMessage();
 			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId=" + reportId + "&message=" + message;
 		}
 
-		return "redirect:" + ModuleWebConstants.REPORT_DOWNLOAD_URL + "?reportName=" + report.getName().replaceAll("\\W", "")
-				+ ".pdf";
+		return "redirect:" + ModuleWebConstants.REPORT_DOWNLOAD_URL + "?reportName="
+		        + report.getName().replaceAll("\\W", "")
+		        + ".pdf";
 	}
 }

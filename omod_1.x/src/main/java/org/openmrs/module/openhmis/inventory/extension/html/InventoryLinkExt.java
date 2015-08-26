@@ -6,24 +6,23 @@ import org.openmrs.module.web.extension.LinkExt;
 
 public class InventoryLinkExt extends LinkExt {
 
+	@Override
+	public String getLabel() {
+		return "openhmis.inventory.page";
+	}
 
-    @Override
-    public String getLabel() {
-    	return "openhmis.inventory.page";
-    }
+	@Override
+	public String getUrl() {
+		return ModuleWebConstants.INVENTORY_PAGE;
+	}
 
-    @Override
-    public String getUrl() {
-        return ModuleWebConstants.INVENTORY_PAGE;
-    }
+	@Override
+	public String getRequiredPrivilege() {
+		return PrivilegeWebConstants.INVENTORY_PAGE_PRIVILEGES;
+	}
 
-    @Override
-    public String getRequiredPrivilege() {
-        return PrivilegeWebConstants.INVENTORY_PAGE_PRIVILEGES;
-    }
-
-    public String getPortletUrl() {
-        return null;
-    }
+	public String getPortletUrl() {
+		return null;
+	}
 
 }

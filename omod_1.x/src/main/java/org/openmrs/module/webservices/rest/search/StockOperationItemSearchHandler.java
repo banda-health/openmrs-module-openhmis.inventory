@@ -26,12 +26,12 @@ public class StockOperationItemSearchHandler implements SearchHandler {
 	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_ITEM_RESOURCE,
-			Arrays.asList("*"),
-			Arrays.asList(
-					new SearchQuery.Builder("Find all operation items by operation.")
-							.withRequiredParameters("operation_uuid").build()
-			)
-	);
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Find all operation items by operation.")
+	                        .withRequiredParameters("operation_uuid").build()
+	                )
+	        );
 
 	private IStockOperationDataService operationDataService;
 
@@ -66,7 +66,7 @@ public class StockOperationItemSearchHandler implements SearchHandler {
 			return new EmptySearchResult();
 		} else {
 			return new AlreadyPagedWithLength<StockOperationItem>(context, items,
-					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		}
 	}
 }

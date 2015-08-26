@@ -45,18 +45,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ItemStockSearchHandler
-		extends BaseSearchHandler
-		implements SearchHandler {
+        extends BaseSearchHandler
+        implements SearchHandler {
 	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_STOCK_RESOURCE,
-			Arrays.asList("*"),
-			Arrays.asList(
-					new SearchQuery.Builder("Find item stock by stockroom and an optional name fragment.")
-							.withOptionalParameters("q", "item_uuid", "stockroom_uuid")
-							.build()
-			)
-	);
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Find item stock by stockroom and an optional name fragment.")
+	                        .withOptionalParameters("q", "item_uuid", "stockroom_uuid")
+	                        .build()
+	                )
+	        );
 
 	private IStockroomDataService stockroomDataService;
 	private IItemDataService itemDataService;
@@ -64,7 +64,7 @@ public class ItemStockSearchHandler
 
 	@Autowired
 	public ItemStockSearchHandler(IStockroomDataService stockroomDataService, IItemDataService itemDataService,
-			IItemStockDataService itemStockDataService) {
+	    IItemStockDataService itemStockDataService) {
 		this.stockroomDataService = stockroomDataService;
 		this.itemDataService = itemDataService;
 		this.itemStockDataService = itemStockDataService;
@@ -120,14 +120,13 @@ public class ItemStockSearchHandler
 
 		if (items == null || items.size() == 0) {
 			return new EmptySearchResult();
-		} 
-			
+		}
+
 		if (pagingInfo == null) {
 			return new AlreadyPaged<ItemStock>(context, items, false);
 		}
-		
+
 		return new AlreadyPagedWithLength<ItemStock>(context, items, pagingInfo.hasMoreResults(),
-			pagingInfo.getTotalRecordCount());
+		        pagingInfo.getTotalRecordCount());
 	}
 }
-

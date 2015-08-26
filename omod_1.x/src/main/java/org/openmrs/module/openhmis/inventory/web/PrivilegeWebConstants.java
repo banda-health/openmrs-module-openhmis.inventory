@@ -15,5 +15,5 @@ public class PrivilegeWebConstants extends PrivilegeConstants {
 	public static final String INVENTORY_PAGE_PRIVILEGES = MANAGE_OPERATIONS + ", " + VIEW_OPERATIONS;
 	public static final String SETTINGS_PAGE_PRIVILEGES = MANAGE_METADATA;
 
-	protected PrivilegeWebConstants() { }
+	protected PrivilegeWebConstants() {}
 }

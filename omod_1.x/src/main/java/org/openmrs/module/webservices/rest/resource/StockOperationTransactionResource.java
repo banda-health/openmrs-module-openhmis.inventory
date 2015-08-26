@@ -32,8 +32,8 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE, supportedClass=StockOperationTransaction.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+@Resource(name = ModuleRestConstants.OPERATION_TRANSACTION_RESOURCE, supportedClass = StockOperationTransaction.class,
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class StockOperationTransactionResource extends TransactionBaseResource<StockOperationTransaction> {
 
 	private IStockroomDataService stockroomDataService;
@@ -78,8 +78,11 @@ public class StockOperationTransactionResource extends TransactionBaseResource<S
 			Stockroom stockroom = stockroomDataService.getByUuid(stockroomUuid);
 			Item item = itemDataService.getByUuid(transactionItemUuid);
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-			List<StockOperationTransaction> results = stockroomDataService.getTransactionsByRoomAndItem(stockroom, item, pagingInfo);
-			result = new AlreadyPagedWithLength<StockOperationTransaction>(context, results,  pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			List<StockOperationTransaction> results =
+			        stockroomDataService.getTransactionsByRoomAndItem(stockroom, item, pagingInfo);
+			result =
+			        new AlreadyPagedWithLength<StockOperationTransaction>(context, results, pagingInfo.hasMoreResults(),
+			                pagingInfo.getTotalRecordCount());
 		} else {
 			result = super.doSearch(context);
 		}
@@ -87,4 +90,3 @@ public class StockOperationTransactionResource extends TransactionBaseResource<S
 		return result;
 	}
 }
-

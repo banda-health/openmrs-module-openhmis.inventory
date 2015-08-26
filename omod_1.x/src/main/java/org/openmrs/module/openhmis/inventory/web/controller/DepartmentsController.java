@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 // The non-standard controller name is to avoid name conflicts with old versions of the cashier module
-@Controller(value="invDepartmentsController")
+@Controller(value = "invDepartmentsController")
 @RequestMapping(ModuleWebConstants.DEPARTMENTS_ROOT)
 public class DepartmentsController {
 	@RequestMapping(method = RequestMethod.GET)
@@ -30,4 +30,3 @@ public class DepartmentsController {
 		model.addAttribute("modelBase", "openhmis.inventory.department");
 	}
 }
-

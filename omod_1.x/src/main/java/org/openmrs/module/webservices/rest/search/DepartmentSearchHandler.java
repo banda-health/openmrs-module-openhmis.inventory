@@ -35,35 +35,37 @@ import org.springframework.stereotype.Component;
 @Component
 public class DepartmentSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.DEPARTMENT_RESOURCE,
-		    Arrays.asList("*"),
-            Arrays.asList(
-                    new SearchQuery.Builder("Find a department by its name")
-                            .withRequiredParameters("q")
-                            .build()
-            )
-    );
+	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.DEPARTMENT_RESOURCE,
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Find a department by its name")
+	                        .withRequiredParameters("q")
+	                        .build()
+	                )
+	        );
 
-    @Override
-    public SearchConfig getSearchConfig() {
-        return searchConfig;
-    }
+	@Override
+	public SearchConfig getSearchConfig() {
+		return searchConfig;
+	}
 
-    @Override
-    public PageableResult search(RequestContext context) {
-        String query = context.getParameter("q");
-        IDepartmentDataService service = Context.getService(IDepartmentDataService.class);
-        PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+	@Override
+	public PageableResult search(RequestContext context) {
+		String query = context.getParameter("q");
+		IDepartmentDataService service = Context.getService(IDepartmentDataService.class);
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
-        List<Department> departments;
-        if (StringUtils.isBlank(query)) {
-            departments = service.getAll(context.getIncludeAll(), pagingInfo);
-        } else {
-            departments = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
-        }
+		List<Department> departments;
+		if (StringUtils.isBlank(query)) {
+			departments = service.getAll(context.getIncludeAll(), pagingInfo);
+		} else {
+			departments = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
+		}
 
-        AlreadyPagedWithLength<Department> results = new AlreadyPagedWithLength<Department>(context, departments, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-        return results;
-    }
+		AlreadyPagedWithLength<Department> results =
+		        new AlreadyPagedWithLength<Department>(context, departments, pagingInfo.hasMoreResults(),
+		                pagingInfo.getTotalRecordCount());
+		return results;
+	}
 
 }

@@ -22,5 +22,5 @@ public class IdgenHelper {
 			LOG.error("Could not generate operation number: " + ex.getMessage());
 			throw new IllegalStateException("The Operation Number was not defined and could not be generated.", ex);
 		}
-    }
+	}
 }

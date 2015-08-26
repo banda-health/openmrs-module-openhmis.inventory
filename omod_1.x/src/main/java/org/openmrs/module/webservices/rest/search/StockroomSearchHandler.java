@@ -22,12 +22,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StockroomSearchHandler implements SearchHandler {
-	
+
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.STOCKROOM_RESOURCE,
 	        Arrays.asList("*"), Arrays.asList(new SearchQuery.Builder(
 	                "Find a stockroom by its name, optionally filtering by location").withRequiredParameters("q")
 	                .withOptionalParameters("location_uuid").build()));
-	
+
 	@Override
 	public PageableResult search(RequestContext context) {
 		String query = context.getParameter("q");
@@ -36,7 +36,7 @@ public class StockroomSearchHandler implements SearchHandler {
 		locationUuid = StringUtils.isEmpty(locationUuid) ? null : locationUuid;
 		IStockroomDataService service = Context.getService(IStockroomDataService.class);
 		List<Stockroom> stockrooms;
-		
+
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 		if (locationUuid == null) {
 			// Search by name
@@ -53,11 +53,11 @@ public class StockroomSearchHandler implements SearchHandler {
 				stockrooms = service.getStockrooms(location, query, context.getIncludeAll(), pagingInfo);
 			}
 		}
-		
+
 		return new AlreadyPagedWithLength<Stockroom>(context, stockrooms, pagingInfo.hasMoreResults(),
 		        pagingInfo.getTotalRecordCount());
 	}
-	
+
 	@Override
 	public SearchConfig getSearchConfig() {
 		return searchConfig;

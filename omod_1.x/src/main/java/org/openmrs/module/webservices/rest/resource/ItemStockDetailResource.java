@@ -20,15 +20,15 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 @Resource(name = ModuleRestConstants.ITEM_STOCK_DETAIL_RESOURCE, supportedClass = ItemStockDetail.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemStockDetail> {
-	
+
 	private IStockroomDataService stockroomDataService;
 	private IItemStockDetailDataService itemStockDetailDataService;
-	
+
 	public ItemStockDetailResource() {
 		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.itemStockDetailDataService = Context.getService(IItemStockDetailDataService.class);
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
@@ -36,7 +36,7 @@ public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemSto
 
 		return description;
 	}
-	
+
 	@Override
 	protected PageableResult doSearch(RequestContext context) {
 		PageableResult result;
@@ -54,17 +54,17 @@ public class ItemStockDetailResource extends ItemStockDetailBaseResource<ItemSto
 		}
 		return result;
 	}
-	
+
 	@Override
 	public PageableResult doGetAll(RequestContext context) {
 		return doSearch(context);
 	}
-	
+
 	@Override
 	public ItemStockDetail newDelegate() {
 		return new ItemStockDetail();
 	}
-	
+
 	@Override
 	public Class<? extends IObjectDataService<ItemStockDetail>> getServiceClass() {
 		return IItemStockDetailDataService.class;

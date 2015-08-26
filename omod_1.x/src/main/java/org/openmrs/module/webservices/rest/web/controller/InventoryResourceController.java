@@ -26,4 +26,3 @@ public class InventoryResourceController extends MainResourceController {
 		return ModuleRestConstants.MODULE_REST_ROOT;
 	}
 }
-

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 //The non-standard controller name is to avoid name conflicts with old versions of the cashier module
-@Controller(value="invInstitutionController")
+@Controller(value = "invInstitutionController")
 @RequestMapping(ModuleWebConstants.INSTITUTIONS_ROOT)
 public class InstitutionsController {
 	@RequestMapping(method = RequestMethod.GET)

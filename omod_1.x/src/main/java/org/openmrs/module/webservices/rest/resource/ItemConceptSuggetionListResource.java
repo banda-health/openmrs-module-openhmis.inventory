@@ -1,5 +1,8 @@
 package org.openmrs.module.webservices.rest.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
@@ -14,37 +17,36 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Resource(name= ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_LIST_RESOURCE, supportedClass=ItemConceptSuggestionList.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+@Resource(name = ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_LIST_RESOURCE,
+        supportedClass = ItemConceptSuggestionList.class,
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemConceptSuggetionListResource
-		extends BaseRestMetadataResource<ItemConceptSuggestionList>
-		implements IMetadataDataServiceResource<ItemConceptSuggestionList> {
+        extends BaseRestMetadataResource<ItemConceptSuggestionList>
+        implements IMetadataDataServiceResource<ItemConceptSuggestionList> {
 
 	@Override
-    public DelegatingResourceDescription getRepresentationDescription(Representation rep)  {
-        DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-        description.removeProperty("name");
-        description.removeProperty("description");
-        description.addProperty("itemConceptSuggestions");
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		description.removeProperty("name");
+		description.removeProperty("description");
+		description.addProperty("itemConceptSuggestions");
 
-        return description;
-    }
-
-	@Override
-    public ItemConceptSuggestionList newDelegate() {
-	    return new ItemConceptSuggestionList();
-    }
+		return description;
+	}
 
 	@Override
-    public Class<? extends IMetadataDataService<ItemConceptSuggestionList>> getServiceClass() {
-	    return null;
-    }
+	public ItemConceptSuggestionList newDelegate() {
+		return new ItemConceptSuggestionList();
+	}
+
+	@Override
+	public Class<? extends IMetadataDataService<ItemConceptSuggestionList>> getServiceClass() {
+		return null;
+	}
 
 	@PropertySetter("itemConceptSuggestions")
-	public void setItemConceptSuggestionList(ItemConceptSuggestionList instance, List<ItemConceptSuggestion> itemConceptSuggestions) {
+	public void setItemConceptSuggestionList(ItemConceptSuggestionList instance,
+	        List<ItemConceptSuggestion> itemConceptSuggestions) {
 		instance.setItemConceptSuggestions(itemConceptSuggestions);
 	}
 
@@ -53,13 +55,13 @@ public class ItemConceptSuggetionListResource
 		List<Item> acceptedItemConceptMappings = processAcceptedItems(itemConceptSuggestionList);
 		IItemDataService itemDataService = Context.getService(IItemDataService.class);
 		for (Item item : acceptedItemConceptMappings) {
-	        itemDataService.save(item);
-        }
-	    return null;
+			itemDataService.save(item);
+		}
+		return null;
 	}
 
 	private List<Item> processAcceptedItems(ItemConceptSuggestionList itemConceptSuggestionList) {
-	    List<Item> itemsToSave = new ArrayList<Item>();
+		List<Item> itemsToSave = new ArrayList<Item>();
 		ConceptService conceptService = Context.getConceptService();
 		for (ItemConceptSuggestion itemConceptSuggestion : itemConceptSuggestionList.getItemConceptSuggestions()) {
 			if (itemConceptSuggestion.isConceptAccepted()) {
@@ -69,8 +71,8 @@ public class ItemConceptSuggetionListResource
 				itemToSave.setConceptAccepted(true);
 				itemsToSave.add(itemToSave);
 			}
-        }
+		}
 		return itemsToSave;
-    }
+	}
 
 }

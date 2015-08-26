@@ -20,7 +20,7 @@ import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 
 @Resource(name = ModuleRestConstants.ITEM_ATTRIBUTE_TYPE_RESOURCE, supportedClass = ItemAttributeType.class,
-		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemAttributeTypeResource extends BaseRestAttributeTypeResource<ItemAttributeType> {
 	@Override
 	public ItemAttributeType newDelegate() {

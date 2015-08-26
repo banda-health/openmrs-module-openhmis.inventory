@@ -74,10 +74,10 @@ public class AdminList extends AdministrationSectionExt {
 		}
 
 		Boolean stockroomPrivilege = PrivilegeUtil.hasPrivileges(authenticatedUser,
-				PrivilegeWebConstants.STOCKROOM_PAGE_PRIVILEGES);
+		    PrivilegeWebConstants.STOCKROOM_PAGE_PRIVILEGES);
 		if (stockroomPrivilege) {
 			map.put(ModuleWebConstants.STOCKROOMS_PAGE, "openhmis.inventory.admin.stockrooms");
-            map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
+			map.put(ModuleWebConstants.OPERATION_TYPES_PAGE, "openhmis.inventory.admin.operationTypes");
 		}
 
 		// These links are put down here so that the links layout a little nicer

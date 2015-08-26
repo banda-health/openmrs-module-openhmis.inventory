@@ -38,18 +38,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ItemSearchHandler
-		extends BaseSearchHandler
-		implements SearchHandler {
+        extends BaseSearchHandler
+        implements SearchHandler {
 	private final SearchConfig searchConfig =
-			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("*"),
-					Arrays.asList(
-							new SearchQuery.Builder(
-									"Find an item by its name or code, optionally filtering by department")
-									.withRequiredParameters("q")
-									.withOptionalParameters("department_uuid", "has_physical_inventory")
-									.build()
-					)
-			);
+	        new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("*"),
+	                Arrays.asList(
+	                        new SearchQuery.Builder(
+	                                "Find an item by its name or code, optionally filtering by department")
+	                                .withRequiredParameters("q")
+	                                .withOptionalParameters("department_uuid", "has_physical_inventory")
+	                                .build()
+	                        )
+	        );
 
 	private IItemDataService service;
 	private IDepartmentDataService departmentService;
@@ -97,10 +97,11 @@ public class ItemSearchHandler
 		}
 
 		return new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(),
-				pagingInfo.getTotalRecordCount());
+		        pagingInfo.getTotalRecordCount());
 	}
 
-	private ItemSearch createSearchTemplate(RequestContext context, String name, Department department, Boolean hasPhysicalInventory) {
+	private ItemSearch createSearchTemplate(RequestContext context, String name, Department department,
+	        Boolean hasPhysicalInventory) {
 		ItemSearch template = new ItemSearch();
 
 		if (!StringUtils.isEmpty(name)) {

@@ -19,9 +19,9 @@ public class InventoryPageController {
 		model.addAttribute("modelBase", "openhmis.inventory.institution");
 
 		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null &&
-				WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
+		        WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
 		model.addAttribute("isOperationAutoCompleted", ModuleSettings.isOperationAutoCompleted());
-		model.addAttribute("showOperationCancelReasonField",ModuleSettings.showOperationCancelReasonField());
+		model.addAttribute("showOperationCancelReasonField", ModuleSettings.showOperationCancelReasonField());
 	}
 
 }

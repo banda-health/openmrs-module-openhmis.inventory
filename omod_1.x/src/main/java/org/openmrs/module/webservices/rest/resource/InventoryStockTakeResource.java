@@ -95,7 +95,7 @@ public class InventoryStockTakeResource extends BaseRestObjectResource<Inventory
 			if (quantity < 0 || invitem.getActualQuantity() == 0) {
 				item.setCalculatedBatch(true);
 				item.setBatchOperation(null);
-			} else  {
+			} else {
 				item.setCalculatedBatch(true);
 			}
 			items.add(item);

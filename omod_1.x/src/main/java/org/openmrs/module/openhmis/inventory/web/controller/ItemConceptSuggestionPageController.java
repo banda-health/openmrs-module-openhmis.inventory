@@ -12,6 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
+
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,19 +23,19 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Controller(value="invItemConceptSuggestionPageController")
+@Controller(value = "invItemConceptSuggestionPageController")
 public class ItemConceptSuggestionPageController {
 
 	private static final String ITEM_CONCEPT_SUGGESTION_BASE = "openhmis.inventory.itemConceptSuggestion";
 	private static final String ITEM_CONCEPT_SUGGESTION_PAGE = "itemConceptSuggestion.form";
-	
-    @RequestMapping(value=ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
-    public void render(ModelMap model, HttpServletRequest request) throws IOException {
-    	String returnUrl = getReturnUrl(request);
 
-    	model.addAttribute("returnUrl", returnUrl);
-        model.addAttribute("modelBase", ITEM_CONCEPT_SUGGESTION_BASE);
-    }
+	@RequestMapping(value = ModuleWebConstants.ITEM_CONCEPT_SUGGESTION_ROOT, method = RequestMethod.GET)
+	public void render(ModelMap model, HttpServletRequest request) throws IOException {
+		String returnUrl = getReturnUrl(request);
+
+		model.addAttribute("returnUrl", returnUrl);
+		model.addAttribute("modelBase", ITEM_CONCEPT_SUGGESTION_BASE);
+	}
 
 	private String getReturnUrl(HttpServletRequest request) {
 		String returnUrl = ModuleWebConstants.INVENTORY_PAGE;
@@ -45,7 +46,6 @@ public class ItemConceptSuggestionPageController {
 			String refererWithoutHostPrefix = referer.substring(refererWithoutHostPrefixStartIndex);
 			returnUrl = refererWithoutHostPrefix;
 		}
-	    return returnUrl;
-    }
+		return returnUrl;
+	}
 }
-
