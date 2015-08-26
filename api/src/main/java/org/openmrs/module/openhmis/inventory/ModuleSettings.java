@@ -1,3 +1,16 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.openhmis.inventory;
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,17 +20,21 @@ import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
 
+/**
+ * Helper class to load and save the inventory module global settings.
+ */
 public class ModuleSettings {
 	public static final String AUTO_GENERATE_OPERATION_NUMBER_PROPERTY = "openhmis.inventory.autoGenerateOperationNumber";
 	public static final String OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY =
-			"openhmis.inventory.operationNumberIdentifierSourceId";
+	        "openhmis.inventory.operationNumberIdentifierSourceId";
 	public static final String STOCK_TAKE_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockTake";
 	public static final String STOCK_CARD_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockCard";
 	public static final String STOCKROOM_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockroom";
 	public static final String EXPIRING_STOCK_REPORT_ID_PROPERTY = "openhmis.inventory.reports.expiringStock";
 	public static final String AUTO_COMPLETE_OPERATIONS_PROPERTY = "openhmis.inventory.autoCompleteOperations";
 	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
-	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY = "openhmis.inventory.reports.stockOperationsByStockroom";
+	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
+	        "openhmis.inventory.reports.stockOperationsByStockroom";
 
 	public static boolean generateOperationNumber() {
 		return generateOperationNumber(Context.getAdministrationService());

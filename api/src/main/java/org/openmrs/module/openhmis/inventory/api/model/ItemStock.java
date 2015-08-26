@@ -5,26 +5,25 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.model;
-
-import org.openmrs.BaseOpenmrsObject;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.openmrs.BaseOpenmrsObject;
+
 /**
- * Model class that represents item stock in a stockroom.  The item stock quantity is the overall item quantity in the
- * stockroom and is not qualified (that is, broken down) by expiration or batch operation. Those quantities are stored
- * in the item stock details.
+ * Model class that represents item stock in a stockroom. The item stock quantity is the overall item quantity in the
+ * stockroom and is not qualified (that is, broken down) by expiration or batch operation. Those quantities are stored in the
+ * item stock details.
  */
-public class ItemStock extends BaseOpenmrsObject
-	implements Comparable<ItemStock> {
+public class ItemStock extends BaseOpenmrsObject implements Comparable<ItemStock> {
 	public static final long serialVersionUID = 1L;
 
 	private Integer stockroomItemId;
@@ -99,7 +98,7 @@ public class ItemStock extends BaseOpenmrsObject
 	}
 
 	public void removeDetail(ItemStockDetail detail) {
-		if (detail!= null) {
+		if (detail != null) {
 			if (details == null) {
 				return;
 			}
@@ -133,4 +132,3 @@ public class ItemStock extends BaseOpenmrsObject
 		return this.getDetails() != null && this.getDetails().size() > 0;
 	}
 }
-

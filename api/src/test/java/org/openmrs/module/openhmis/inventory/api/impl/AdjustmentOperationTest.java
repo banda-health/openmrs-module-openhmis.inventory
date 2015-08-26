@@ -63,7 +63,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldReduceBatchQuantityIfAdjustmentQuantityNegative_singleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldReduceBatchQuantityIfAdjustmentQuantityNegative_singleBatch_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -122,7 +123,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldReduceBatchQuantityIfAdjustmentQuantityNegative_singleBatch_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldReduceBatchQuantityIfAdjustmentQuantityNegative_singleBatch_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -189,7 +191,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldReduceNullBatchQuantityFurtherIfAdjustmentQuantityNegative_singleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldReduceNullBatchQuantityFurtherIfAdjustmentQuantityNegative_singleBatch_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -509,7 +512,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldRemoveBatchWithNegativeQauntityIfAdjustedToZeroQuantity_singleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldRemoveBatchWithNegativeQauntityIfAdjustedToZeroQuantity_singleBatch_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -569,7 +573,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldRemoveBatchWithNegativeQauntityIfAdjustedToZeroQuantity_singleBatch_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldRemoveBatchWithNegativeQauntityIfAdjustedToZeroQuantity_singleBatch_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -634,7 +639,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -697,7 +703,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -736,7 +743,7 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 		operation.setSource(sourceRoom);
 		operation.setOperationNumber("A122");
 		operation.setOperationDate(new Date());
-		operation.addItem(item, 30,expirationDate);
+		operation.addItem(item, 30, expirationDate);
 
 		Collection<ItemStockDetail> details = stockOperationServiceImplTest.findDetails(stock, expirationDate);
 		Assert.assertNotNull(details);
@@ -766,7 +773,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldReduceFromNextBatchIfQuantityOfOneBatchIsNotEnough_multipleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldReduceFromNextBatchIfQuantityOfOneBatchIsNotEnough_multipleBatch_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -834,7 +842,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldReduceFromNextBatchIfQuantityOfOneBatchIsNotEnough_multipleBatch_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldReduceFromNextBatchIfQuantityOfOneBatchIsNotEnough_multipleBatch_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -1106,7 +1115,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_multipleBatches_noExpirationDate() throws Exception {
+	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_multipleBatches_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -1178,7 +1188,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_multipleBatches_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_multipleBatches_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -1257,7 +1268,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_singleBatch_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_singleBatch_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -1331,7 +1343,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeductedFromASpecificBatchAndLeaveTheOtherBatchUnchanged_multipleBatches_noExpirationDateForOperationItem() throws Exception {
+	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeductedFromASpecificBatchAndLeaveTheOtherBatchUnchanged_multipleBatches_noExpirationDateForOperationItem()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -1422,7 +1435,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeductedFromASpecificBatchAndLeaveTheOtherBatchUnchanged_multipleBatches_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeductedFromASpecificBatchAndLeaveTheOtherBatchUnchanged_multipleBatches_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -1522,7 +1536,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeductedAndStockQuantityResultZero_multipleBatches_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeductedAndStockQuantityResultZero_multipleBatches_specificExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);

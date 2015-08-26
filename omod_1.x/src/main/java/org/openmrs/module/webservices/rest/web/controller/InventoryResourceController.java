@@ -18,6 +18,9 @@ import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceContr
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * REST controller for inventory resources.
+ */
 @Controller
 @RequestMapping("/rest/" + ModuleRestConstants.MODULE_REST_ROOT)
 public class InventoryResourceController extends MainResourceController {
@@ -26,4 +29,3 @@ public class InventoryResourceController extends MainResourceController {
 		return ModuleRestConstants.MODULE_REST_ROOT;
 	}
 }
-

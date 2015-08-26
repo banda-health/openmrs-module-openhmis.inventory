@@ -19,6 +19,9 @@ import org.openmrs.module.openhmis.commons.api.util.IdgenUtil;
 import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 
+/**
+ * Helper class for ID number generation.
+ */
 public class IdgenHelper {
 
 	private static final Log LOG = LogFactory.getLog(IdgenHelper.class);
@@ -35,5 +38,5 @@ public class IdgenHelper {
 			LOG.error("Could not generate operation number: " + ex.getMessage());
 			throw new IllegalStateException("The Operation Number was not defined and could not be generated.", ex);
 		}
-    }
+	}
 }

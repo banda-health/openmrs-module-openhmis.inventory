@@ -30,39 +30,45 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link ItemConceptSuggestion}s.
+ */
 @Component
 public class ItemConceptSuggestionSearchHandler implements SearchHandler {
 
-    private static final int DEFAULT_PAGE_SIZE = 50;
+	private static final int DEFAULT_PAGE_SIZE = 50;
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE,
-		    Arrays.asList("*"),
-            Arrays.asList(
-                    new SearchQuery.Builder("Find concept mappings for items that do not have a concept")
-                            .withOptionalParameters("q")
-                            .build()
-            )
-    );
+	private final SearchConfig searchConfig = new SearchConfig("default",
+	        ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_RESOURCE,
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Find concept mappings for items that do not have a concept")
+	                        .withOptionalParameters("q")
+	                        .build()
+	                )
+	        );
 
-    @Override
-    public SearchConfig getSearchConfig() {
-        return searchConfig;
-    }
+	@Override
+	public SearchConfig getSearchConfig() {
+		return searchConfig;
+	}
 
-    @Override
-    public PageableResult search(RequestContext context) {
-         return doSearch(Context.getService(IItemConceptSuggestionDataService.class), context);
-    }
+	@Override
+	public PageableResult search(RequestContext context) {
+		return doSearch(Context.getService(IItemConceptSuggestionDataService.class), context);
+	}
 
-    public static PageableResult doSearch(IItemConceptSuggestionDataService service, RequestContext context) {
-        PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-        pagingInfo.setPageSize(DEFAULT_PAGE_SIZE);
+	public static PageableResult doSearch(IItemConceptSuggestionDataService service, RequestContext context) {
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+		pagingInfo.setPageSize(DEFAULT_PAGE_SIZE);
 
-        List<ItemConceptSuggestion> itemsWithConceptSuggestions = service.getItemsWithConceptSuggestions();
-        Long totalRecordCount = new Long(itemsWithConceptSuggestions.size());
-        pagingInfo.setTotalRecordCount(totalRecordCount);
+		List<ItemConceptSuggestion> itemsWithConceptSuggestions = service.getItemsWithConceptSuggestions();
+		Long totalRecordCount = new Long(itemsWithConceptSuggestions.size());
+		pagingInfo.setTotalRecordCount(totalRecordCount);
 
-        AlreadyPagedWithLength<ItemConceptSuggestion> results = new AlreadyPagedWithLength<ItemConceptSuggestion>(context, itemsWithConceptSuggestions, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-        return results;
-    }
+		AlreadyPagedWithLength<ItemConceptSuggestion> results =
+		        new AlreadyPagedWithLength<ItemConceptSuggestion>(context, itemsWithConceptSuggestions,
+		                pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+		return results;
+	}
 }

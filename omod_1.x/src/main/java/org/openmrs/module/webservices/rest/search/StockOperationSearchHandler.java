@@ -40,25 +40,29 @@ import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link StockOperation}s.
+ */
 @Component
 public class StockOperationSearchHandler implements SearchHandler {
 	private static final Log LOG = LogFactory.getLog(StockOperationSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_RESOURCE,
-			Arrays.asList("*"),
-			Arrays.asList(
-					new SearchQuery.Builder("Finds stock operations with an optional status and/or stockroom.")
-							.withOptionalParameters("status", "stockroom_uuid", "operation_date")
-							.build()
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Finds stock operations with an optional status and/or stockroom.")
+	                        .withOptionalParameters("status", "stockroom_uuid", "operation_date")
+	                        .build()
 
-			)
-	);
+	                )
+	        );
 
 	private IStockroomDataService stockroomDataService;
 	private IStockOperationDataService operationDataService;
 
 	@Autowired
-	public StockOperationSearchHandler(IStockroomDataService stockroomDataService, IStockOperationDataService operationDataService) {
+	public StockOperationSearchHandler(IStockroomDataService stockroomDataService,
+	    IStockOperationDataService operationDataService) {
 		this.stockroomDataService = stockroomDataService;
 		this.operationDataService = operationDataService;
 	}
@@ -131,7 +135,7 @@ public class StockOperationSearchHandler implements SearchHandler {
 			return new EmptySearchResult();
 		} else {
 			return new AlreadyPagedWithLength<StockOperation>(context, operations, pagingInfo.hasMoreResults(),
-					pagingInfo.getTotalRecordCount());
+			        pagingInfo.getTotalRecordCount());
 		}
 	}
 }

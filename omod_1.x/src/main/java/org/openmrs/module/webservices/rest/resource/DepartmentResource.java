@@ -22,18 +22,21 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass=Department.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*"  })
+/**
+ * REST resource representing a {@link Department}.
+ */
+@Resource(name = ModuleRestConstants.DEPARTMENT_RESOURCE, supportedClass = Department.class,
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 @Handler(supports = { Department.class }, order = 0)
 public class DepartmentResource extends BaseRestMetadataResource<Department> {
 
-    @Override
-    public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
-        DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-        description.addProperty("description", Representation.REF);
+	@Override
+	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		description.addProperty("description", Representation.REF);
 
-        return description;
-    }
+		return description;
+	}
 
 	@Override
 	public Department newDelegate() {
@@ -46,5 +49,3 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 	}
 
 }
-
-

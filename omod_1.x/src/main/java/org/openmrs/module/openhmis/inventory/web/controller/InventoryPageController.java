@@ -24,6 +24,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the inventory landing page.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.INVENTORY_ROOT)
 public class InventoryPageController {
@@ -31,10 +34,10 @@ public class InventoryPageController {
 	public void inventory(ModelMap model) throws IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.institution");
 
-		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null &&
-				WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
+		model.addAttribute("showStockTakeLink", Context.getAuthenticatedUser() != null
+		        && WellKnownOperationTypes.getAdjustment().userCanProcess(Context.getAuthenticatedUser()));
 		model.addAttribute("isOperationAutoCompleted", ModuleSettings.isOperationAutoCompleted());
-		model.addAttribute("showOperationCancelReasonField",ModuleSettings.showOperationCancelReasonField());
+		model.addAttribute("showOperationCancelReasonField", ModuleSettings.showOperationCancelReasonField());
 	}
 
 }

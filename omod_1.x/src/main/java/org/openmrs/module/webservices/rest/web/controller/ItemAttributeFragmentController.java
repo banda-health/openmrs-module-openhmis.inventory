@@ -13,15 +13,19 @@
  */
 package org.openmrs.module.webservices.rest.web.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.openmrs.module.openhmis.commons.api.entity.model.IAttributeType;
 import org.openmrs.module.openhmis.inventory.api.IItemAttributeTypeDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
+/**
+ * Controller for the item attribute fragment.
+ */
 @Controller
 @RequestMapping(value = ItemAttributeFragmentController.REQUEST_MAPPING_PATH)
 public class ItemAttributeFragmentController extends AttributeFragmentControllerBase {

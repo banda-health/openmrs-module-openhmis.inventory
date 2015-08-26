@@ -32,38 +32,43 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link Institution}s.
+ */
 @Component
 public class InstitutionSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.INSTITUTION_RESOURCE,
-		    Arrays.asList("*"),
-            Arrays.asList(
-                    new SearchQuery.Builder("Find a institution by its name")
-                            .withRequiredParameters("q")
-                            .build()
-            )
-    );
+	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.INSTITUTION_RESOURCE,
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Find a institution by its name")
+	                        .withRequiredParameters("q")
+	                        .build()
+	                )
+	        );
 
-    @Override
-    public SearchConfig getSearchConfig() {
-        return searchConfig;
-    }
+	@Override
+	public SearchConfig getSearchConfig() {
+		return searchConfig;
+	}
 
-    @Override
-    public PageableResult search(RequestContext context) {
-        String query = context.getParameter("q");
-        IInstitutionDataService service = Context.getService(IInstitutionDataService.class);
-        PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+	@Override
+	public PageableResult search(RequestContext context) {
+		String query = context.getParameter("q");
+		IInstitutionDataService service = Context.getService(IInstitutionDataService.class);
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
-        List<Institution> institution;
-        if (StringUtils.isBlank(query)) {
-            institution = service.getAll(context.getIncludeAll(), pagingInfo);
-        } else {
-            institution = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
-        }
+		List<Institution> institution;
+		if (StringUtils.isBlank(query)) {
+			institution = service.getAll(context.getIncludeAll(), pagingInfo);
+		} else {
+			institution = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
+		}
 
-        AlreadyPagedWithLength<Institution> results = new AlreadyPagedWithLength<Institution>(context, institution, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-        return results;
-    }
+		AlreadyPagedWithLength<Institution> results =
+		        new AlreadyPagedWithLength<Institution>(context, institution, pagingInfo.hasMoreResults(),
+		                pagingInfo.getTotalRecordCount());
+		return results;
+	}
 
 }

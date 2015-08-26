@@ -11,24 +11,31 @@
  *
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
-package org.openmrs.module.openhmis.inventory.web.controller;
+package org.openmrs.module.webservices.rest.web.controller;
 
-import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
- * Controller for the Manage Operation Types page.
+ * Controller for the message properties fragment.
  */
-@Controller(value = "invOperationTypesController")
-@RequestMapping(ModuleWebConstants.OPERATION_TYPES_ROOT)
-public class OperationTypesController {
+@Controller
+@RequestMapping(ModuleWebConstants.MESSAGE_PROPERTIES_JS_URI)
+public class InventoryMessageRenderController {
+
 	@RequestMapping(method = RequestMethod.GET)
-	public void render(ModelMap model) throws IOException {
-		model.addAttribute("modelBase", "openhmis.inventory.operationType");
+	public ModelAndView render(HttpServletRequest request) {
+		Locale locale = RequestContextUtils.getLocale(request);
+		ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", locale);
+		return new ModelAndView(ModuleWebConstants.MESSAGE_PAGE, "keys", resourceBundle.getKeys());
 	}
 }

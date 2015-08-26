@@ -21,7 +21,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Controller(value="invMyOperationsController")
+/**
+ * Controller for the View Operations page.
+ */
+@Controller(value = "invMyOperationsController")
 @RequestMapping(ModuleWebConstants.OPERATIONS_ROOT)
 public class OperationsController {
 	@RequestMapping(method = RequestMethod.GET)

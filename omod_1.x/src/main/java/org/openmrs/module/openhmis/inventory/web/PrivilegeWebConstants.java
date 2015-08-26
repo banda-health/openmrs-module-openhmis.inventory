@@ -1,5 +1,8 @@
 /*
  * The contents of this file are subject to the OpenMRS Public License
+
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
+
  * Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://license.openmrs.org
@@ -15,6 +18,9 @@ package org.openmrs.module.openhmis.inventory.web;
 
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 
+/**
+ * Constants class for privilges required by web resources.
+ */
 public class PrivilegeWebConstants extends PrivilegeConstants {
 	public static final String ROLE_CREATION_PAGE_PRIVILEGES = org.openmrs.util.PrivilegeConstants.MANAGE_ROLES;
 	public static final String ITEM_PAGE_PRIVILEGES = MANAGE_ITEMS + ", " + VIEW_ITEMS;
@@ -28,5 +34,5 @@ public class PrivilegeWebConstants extends PrivilegeConstants {
 	public static final String INVENTORY_PAGE_PRIVILEGES = MANAGE_OPERATIONS + ", " + VIEW_OPERATIONS;
 	public static final String SETTINGS_PAGE_PRIVILEGES = MANAGE_METADATA;
 
-	protected PrivilegeWebConstants() { }
+	protected PrivilegeWebConstants() {}
 }

@@ -13,19 +13,21 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import java.util.Date;
+
 import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetailBase;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-import java.util.Date;
-
+/**
+ * Base REST resource for classes that represent an {@link ItemStockDetailBase}.
+ */
 public abstract class ItemStockDetailBaseResource<T extends ItemStockDetailBase> extends BaseRestObjectResource<T> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
-		DelegatingResourceDescription description =  super.getRepresentationDescription(rep);
+		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("item", Representation.DEFAULT);
 		description.addProperty("quantity", Representation.DEFAULT);
 		description.addProperty("expiration", Representation.DEFAULT);

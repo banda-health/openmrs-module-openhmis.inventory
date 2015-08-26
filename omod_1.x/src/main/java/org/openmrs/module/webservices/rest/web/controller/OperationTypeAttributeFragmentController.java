@@ -13,24 +13,26 @@
  */
 package org.openmrs.module.webservices.rest.web.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.entity.model.IAttributeType;
-import org.openmrs.module.openhmis.commons.api.entity.model.IInstanceAttributeType;
-import org.openmrs.module.openhmis.inventory.api.IItemAttributeTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
+/**
+ * Controller for the operation type attribute fragment.
+ */
 @Controller
 @RequestMapping(value = OperationTypeAttributeFragmentController.REQUEST_MAPPING_PATH)
 public class OperationTypeAttributeFragmentController extends AttributeFragmentControllerBase {
-	public static final String REQUEST_MAPPING_PATH = AttributeFragmentControllerBase.REQUEST_MAPPING_PATH_BASE +
-			"OperationType";
+	public static final String REQUEST_MAPPING_PATH = AttributeFragmentControllerBase.REQUEST_MAPPING_PATH_BASE
+	        + "OperationType";
 
 	private IStockOperationTypeDataService service;
 
@@ -54,4 +56,3 @@ public class OperationTypeAttributeFragmentController extends AttributeFragmentC
 		return type.getAttributeTypes();
 	}
 }
-

@@ -13,6 +13,9 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
+import java.util.Calendar;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,9 +27,6 @@ import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
-
-import java.util.Calendar;
-import java.util.List;
 
 public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveTest {
 	private IItemStockDetailDataService service;

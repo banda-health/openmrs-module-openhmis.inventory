@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
@@ -26,7 +26,6 @@ import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseCustomizableMetadataDataServiceImpl;
-import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
@@ -38,9 +37,12 @@ import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Data service implementation class for {@link Item}s.
+ */
 @Transactional
 public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl<Item>
-		implements IItemDataService, IMetadataAuthorizationPrivileges {
+        implements IItemDataService, IMetadataAuthorizationPrivileges {
 
 	private static final int MAX_ITEM_CODE_LENGTH = 255;
 
@@ -61,20 +63,18 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 	}
 
 	@Override
-	@Authorized( { PrivilegeConstants.VIEW_ITEMS } )
 	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	public Item getItemByCode(String itemCode) {
 		if (StringUtils.isEmpty(itemCode)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
 		if (itemCode.length() > MAX_ITEM_CODE_LENGTH) {
-			throw new IllegalArgumentException(
-					"The item code must be less than 256 characters.");
+			throw new IllegalArgumentException("The item code must be less than 256 characters.");
 		}
 
 		Criteria criteria = getRepository().createCriteria(getEntityClass());
-		criteria.createAlias("codes", "c").add(
-				Restrictions.ilike("c.code", itemCode));
+		criteria.createAlias("codes", "c").add(Restrictions.ilike("c.code", itemCode));
 
 		return getRepository().selectSingle(getEntityClass(), criteria);
 	}
@@ -89,8 +89,7 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByCode(final String itemCode,
-			final boolean includeRetired, PagingInfo pagingInfo) {
+	public List<Item> getItemsByCode(final String itemCode, final boolean includeRetired, PagingInfo pagingInfo) {
 		if (StringUtils.isEmpty(itemCode)) {
 			throw new NullPointerException("The item code must be defined");
 		}
@@ -98,8 +97,7 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.createAlias("codes", "c").add(
-						Restrictions.eq("c.code", itemCode));
+				criteria.createAlias("codes", "c").add(Restrictions.eq("c.code", itemCode));
 				if (!includeRetired) {
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
@@ -110,14 +108,15 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByDepartment(Department department, boolean includeRetired)  {
+	public List<Item> getItemsByDepartment(Department department, boolean includeRetired) {
 		return getItemsByDepartment(department, includeRetired, null);
 	}
 
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired, PagingInfo pagingInfo) {
+	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired,
+	        PagingInfo pagingInfo) {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -143,7 +142,8 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItems(final Department department, final String name, final boolean includeRetired, PagingInfo pagingInfo) {
+	public List<Item> getItems(final Department department, final String name, final boolean includeRetired,
+	        PagingInfo pagingInfo) {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -151,15 +151,14 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
 		if (name.length() > MAX_ITEM_CODE_LENGTH) {
-			throw new IllegalArgumentException(
-					"The item code must be less than 256 characters.");
+			throw new IllegalArgumentException("The item code must be less than 256 characters.");
 		}
 
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department)).add(
-						Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
+				    Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
 
 				if (!includeRetired) {
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
@@ -180,8 +179,7 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		if (itemSearch == null) {
 			throw new NullPointerException("The item search must be defined.");
 		} else if (itemSearch.getTemplate() == null) {
-			throw new NullPointerException(
-					"The item search template must be defined.");
+			throw new NullPointerException("The item search template must be defined.");
 		}
 
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
@@ -215,11 +213,12 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		return executeCriteria(Item.class, null, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.isNull(HibernateCriteriaConstants.CONCEPT)).add(
-						Restrictions.eq(HibernateCriteriaConstants.RETIRED, false)).add(
-						Restrictions.eq(HibernateCriteriaConstants.CONCEPT_ACCEPTED, false));
+				criteria.add(Restrictions.isNull(HibernateCriteriaConstants.CONCEPT))
+				        .add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false))
+				        .add(Restrictions.eq(HibernateCriteriaConstants.CONCEPT_ACCEPTED, false));
 				if (excludedItemsIds != null && excludedItemsIds.size() > 0) {
-					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID, excludedItemsIds.toArray())));
+					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID,
+					    excludedItemsIds.toArray())));
 				}
 				if (resultLimit != null && resultLimit > 0) {
 					criteria.setMaxResults(resultLimit);

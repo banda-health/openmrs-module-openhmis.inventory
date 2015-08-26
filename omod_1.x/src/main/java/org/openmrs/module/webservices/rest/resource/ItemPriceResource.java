@@ -22,18 +22,20 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-@Resource(name= ModuleRestConstants.ITEM_PRICE_RESOURCE, supportedClass=ItemPrice.class, 
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
-
+/**
+ * REST resource representing an {@link ItemPrice}.
+ */
+@Resource(name = ModuleRestConstants.ITEM_PRICE_RESOURCE, supportedClass = ItemPrice.class,
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemPriceResource
-		extends BaseRestMetadataResource<ItemPrice>
-		implements IMetadataDataServiceResource<ItemPrice> {
-	
+        extends BaseRestMetadataResource<ItemPrice>
+        implements IMetadataDataServiceResource<ItemPrice> {
+
 	@PropertySetter(value = "price")
 	public void setPrice(ItemPrice instance, Object price) {
 		instance.setPrice(Converter.objectToBigDecimal(price));
 	}
-	
+
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);

@@ -19,6 +19,9 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
+/**
+ * View model class that represents the information needed for the stock take page.
+ */
 public class InventoryStockTake extends BaseOpenmrsObject {
 	public static final long serialVersionUID = 0L;
 

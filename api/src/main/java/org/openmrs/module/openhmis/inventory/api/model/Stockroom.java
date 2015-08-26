@@ -5,20 +5,23 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.model;
-
-import org.openmrs.Location;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.openmrs.Location;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
+
+/**
+ * Model class that represents a physical location where item stock are stored.
+ */
 public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 1L;
 
@@ -78,10 +81,8 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	}
 
 	/**
-	 * Adds new item stock to the stockroom.
-	 *
-	 * Note that this will result in the full item list being loaded and should
-	 * only be used when that is needed. A better alternative to add item stock is to use the
+	 * Adds new item stock to the stockroom. Note that this will result in the full item list being loaded and should only be
+	 * used when that is needed. A better alternative to add item stock is to use the
 	 * {@link org.openmrs.module.openhmis.inventory.api.IItemStockDataService#save(org.openmrs.OpenmrsObject)} method.
 	 * @param item The item stock to add to this stockroom.
 	 */
@@ -97,10 +98,8 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	}
 
 	/**
-	 * Removes item stock from the stockroom.
-	 *
-	 * Note that this will result in the full item list being loaded and should
-	 * only be used when that is needed. A better alternative to remove item stock is to use the
+	 * Removes item stock from the stockroom. Note that this will result in the full item list being loaded and should only
+	 * be used when that is needed. A better alternative to remove item stock is to use the
 	 * {@link org.openmrs.module.openhmis.inventory.api.IItemStockDataService#purge(org.openmrs.OpenmrsObject)} method.
 	 * @param item The item stock to remove.
 	 */
@@ -132,14 +131,12 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	}
 
 	/**
-	 * Adds an operation to this stockroom.
-	 *
-	 * This will not apply the operation or otherwise process it.  To apply the operation use the
+	 * Adds an operation to this stockroom. This will not apply the operation or otherwise process it. To apply the operation
+	 * use the
 	 * {@link org.openmrs.module.openhmis.inventory.api.IStockOperationDataService#applyTransactions(java.util.Collection)}
-	 * method.
-	 *
-	 * Note that this will result in the full set of operations being loaded and should only be used when that is needed.
-	 * The correct way to add operations is to apply them and let the records be created through the normal processing.
+	 * method. Note that this will result in the full set of operations being loaded and should only be used when that is
+	 * needed. The correct way to add operations is to apply them and let the records be created through the normal
+	 * processing.
 	 * @param operation The operation to add to this stockroom.
 	 */
 	public void addOperation(StockOperation operation) {
@@ -153,9 +150,8 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	}
 
 	/**
-	 * Removes an operation from this stockroom.
-	 *
-	 * Note that this will result in the full set of operations being loaded and should only be used when that is needed.
+	 * Removes an operation from this stockroom. Note that this will result in the full set of operations being loaded and
+	 * should only be used when that is needed.
 	 * @param operation The operation to remove from this stockroom.
 	 */
 	public void removeOperation(StockOperation operation) {

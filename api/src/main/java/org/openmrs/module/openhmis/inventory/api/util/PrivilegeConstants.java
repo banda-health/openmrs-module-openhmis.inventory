@@ -5,24 +5,27 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.util;
-
-import org.openmrs.Privilege;
-import org.openmrs.api.UserService;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.web.PrivilegeConstantsCompatibility;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.Privilege;
+import org.openmrs.api.UserService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.web.PrivilegeConstantsCompatibility;
+
+/**
+ * Constants class for module privilege constants.
+ */
 public class PrivilegeConstants {
 	public static final String MANAGE_ITEMS = "Manage Inventory Items";
 	public static final String VIEW_ITEMS = "View Inventory Items";
@@ -55,20 +58,17 @@ public class PrivilegeConstants {
 	public static final String TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE = "Task: Access Generate Item Mappings";
 	public static final String TASK_ACCESS_INVENTORY_SETTINGS_PAGE = "Task: Access Inventory Settings";
 
-	public static final String[] PRIVILEGE_NAMES = new String[] {
-			MANAGE_ITEMS, VIEW_ITEMS, PURGE_ITEMS, MANAGE_STOCKROOMS,
-			VIEW_STOCKROOMS, PURGE_STOCKROOMS, MANAGE_OPERATIONS, VIEW_OPERATIONS,
-			MANAGE_METADATA, VIEW_METADATA, PURGE_METADATA, APP_VIEW_INVENTORY_APP,
-			APP_ACCESS_INVENTORY_TASKS_PAGE, APP_ACCESS_MANAGE_INVENTORY_MODULE_PAGE,
-			TASK_ACCESS_INVENTORY_TASK_PAGE, TASK_ACCESS_INVENTORY_ROLE_CREATION_PAGE,
-			TASK_ACCESS_MANAGE_ITEMS_PAGE, TASK_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE,
-			TASK_ACCESS_MANAGE_DEPARTMENTS_PAGE, TASK_ACCESS_MANAGE_INSTITUTIONS_PAGE,
-			TASK_ACCESS_MANAGE_STOCKROOMS_PAGE, TASK_ACCESS_MANAGE_OPERATION_TYPES_PAGE,
-			TASK_ACCESS_VIEW_STOCK_OPERATIONS_PAGE, TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE,
-			TASK_ACCESS_INVENTORY_SETTINGS_PAGE
-	};
+	public static final String[] PRIVILEGE_NAMES = new String[] { MANAGE_ITEMS, VIEW_ITEMS, PURGE_ITEMS, MANAGE_STOCKROOMS,
+	        VIEW_STOCKROOMS, PURGE_STOCKROOMS, MANAGE_OPERATIONS, VIEW_OPERATIONS, MANAGE_METADATA, VIEW_METADATA,
+	        PURGE_METADATA, APP_VIEW_INVENTORY_APP, APP_ACCESS_INVENTORY_TASKS_PAGE,
+	        APP_ACCESS_MANAGE_INVENTORY_MODULE_PAGE, TASK_ACCESS_INVENTORY_TASK_PAGE,
+	        TASK_ACCESS_INVENTORY_ROLE_CREATION_PAGE, TASK_ACCESS_MANAGE_ITEMS_PAGE,
+	        TASK_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE, TASK_ACCESS_MANAGE_DEPARTMENTS_PAGE,
+	        TASK_ACCESS_MANAGE_INSTITUTIONS_PAGE, TASK_ACCESS_MANAGE_STOCKROOMS_PAGE,
+	        TASK_ACCESS_MANAGE_OPERATION_TYPES_PAGE, TASK_ACCESS_VIEW_STOCK_OPERATIONS_PAGE,
+	        TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE, TASK_ACCESS_INVENTORY_SETTINGS_PAGE };
 
-	protected PrivilegeConstants() { }
+	protected PrivilegeConstants() {}
 
 	/**
 	 * Gets all the privileges defined by the module.
@@ -102,8 +102,8 @@ public class PrivilegeConstants {
 		}
 
 		List<String> names = new ArrayList<String>();
-		PrivilegeConstantsCompatibility  privilegeConstantsCompatibility = new  PrivilegeConstantsCompatibility();
-		
+		PrivilegeConstantsCompatibility privilegeConstantsCompatibility = new PrivilegeConstantsCompatibility();
+
 		names.add(privilegeConstantsCompatibility.getEditPatientIdentifiersPrivilege());
 		names.add(privilegeConstantsCompatibility.getViewAdminFunctionsPrivilege());
 		names.add(privilegeConstantsCompatibility.getViewConceptsPrivilege());

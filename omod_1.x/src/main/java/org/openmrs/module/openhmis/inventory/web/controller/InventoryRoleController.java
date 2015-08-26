@@ -13,6 +13,13 @@
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,12 +39,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+/**
+ * Controller for the inventory role creation page.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.ROLE_CREATION_ROOT)
 public class InventoryRoleController {
