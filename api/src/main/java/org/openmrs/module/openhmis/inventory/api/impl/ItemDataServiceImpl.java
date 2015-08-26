@@ -115,7 +115,8 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
-	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired, PagingInfo pagingInfo) {
+	public List<Item> getItemsByDepartment(final Department department, final boolean includeRetired,
+	        PagingInfo pagingInfo) {
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
@@ -216,7 +217,8 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 				        .add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false))
 				        .add(Restrictions.eq(HibernateCriteriaConstants.CONCEPT_ACCEPTED, false));
 				if (excludedItemsIds != null && excludedItemsIds.size() > 0) {
-					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID, excludedItemsIds.toArray())));
+					criteria.add(Restrictions.not(Restrictions.in(HibernateCriteriaConstants.ID,
+					    excludedItemsIds.toArray())));
 				}
 				if (resultLimit != null && resultLimit > 0) {
 					criteria.setMaxResults(resultLimit);

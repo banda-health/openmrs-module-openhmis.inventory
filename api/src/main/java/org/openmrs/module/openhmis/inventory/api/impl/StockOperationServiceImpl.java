@@ -558,7 +558,8 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		List<ReservedTransaction> removeList = new ArrayList<ReservedTransaction>();
 		
 		for (ReservedTransaction tx : operation.getReserved()) {
-			Triplet<Item, Date, StockOperation> key = Triplet.with(tx.getItem(), tx.getExpiration(), tx.getBatchOperation());
+			Triplet<Item, Date, StockOperation> key =
+			        Triplet.with(tx.getItem(), tx.getExpiration(), tx.getBatchOperation());
 			if (!map.containsKey(key)) {
 				map.put(key, tx);
 			} else {

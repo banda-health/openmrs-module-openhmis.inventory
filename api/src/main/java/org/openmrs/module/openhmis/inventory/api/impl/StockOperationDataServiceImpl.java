@@ -149,7 +149,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 				// Add user/role filter
 				if (roles != null && roles.size() > 0) {
 					subQuery.add(Restrictions.or(
-					// Types that require user approval
+					    // Types that require user approval
 					    Restrictions.eq(HibernateCriteriaConstants.USER, user),
 					    // Types that require role approval
 					    Restrictions.in(HibernateCriteriaConstants.ROLE, roles)));

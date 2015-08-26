@@ -1142,7 +1142,8 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
-	public void calculateReservations_shouldSupportItemChangeToHaveExpirationAfterNonexpirableStockExists() throws Exception {
+	public void calculateReservations_shouldSupportItemChangeToHaveExpirationAfterNonexpirableStockExists()
+	        throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);
@@ -1202,7 +1203,8 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
-	public void calculateReservations_shouldSupportItemChangeToNotHaveExpirationAfterExpirableStockExists() throws Exception {
+	public void calculateReservations_shouldSupportItemChangeToNotHaveExpirationAfterExpirableStockExists()
+	        throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);

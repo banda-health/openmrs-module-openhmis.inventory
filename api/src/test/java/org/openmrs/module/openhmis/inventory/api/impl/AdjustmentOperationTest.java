@@ -1115,7 +1115,8 @@ public class AdjustmentOperationTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	@Test
-	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_multipleBatches_noExpirationDate() throws Exception {
+	public void submitOperation_shouldCreateNullBatchIfTooMuchIsDeducted_multipleBatches_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		
 		Item item = itemTest.createEntity(true);

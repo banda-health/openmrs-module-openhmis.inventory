@@ -102,7 +102,8 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 		if (operation.getStatus() != null) {
 			criteria.add(Restrictions.eq("status", operation.getStatus()));
 		}
-		if (operation.getSource() != null || (sourceComparisonType != null && sourceComparisonType != ComparisonType.EQUAL)) {
+		if (operation.getSource() != null || (sourceComparisonType != null
+		        && sourceComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("source", operation.getSource(), sourceComparisonType));
 		}
 		if (operation.getDestination() != null

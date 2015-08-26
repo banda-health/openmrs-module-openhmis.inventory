@@ -1,7 +1,11 @@
 package org.openmrs.module.openhmis.inventory.api;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +25,8 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 
 public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	IStockOperationTypeDataService typeService;

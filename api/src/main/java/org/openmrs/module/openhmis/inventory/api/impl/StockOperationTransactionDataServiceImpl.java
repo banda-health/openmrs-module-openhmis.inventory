@@ -47,7 +47,10 @@ public class StockOperationTransactionDataServiceImpl
 	
 	@Override
 	protected Order[] getDefaultSort() {
-		return new Order[] { Order.desc(HibernateCriteriaConstants.DATE_CREATED), Order.desc(HibernateCriteriaConstants.ID) };
+		return new Order[] {
+		        Order.desc(HibernateCriteriaConstants.DATE_CREATED),
+		        Order.desc(HibernateCriteriaConstants.ID)
+		};
 	}
 	
 	@Override

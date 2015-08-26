@@ -336,7 +336,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperationByNumber(String)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getOperationByNumber_shouldThrowIllegalArgumentExceptionIsNumberIsLongerThan255Characters() throws Exception {
+	public void getOperationByNumber_shouldThrowIllegalArgumentExceptionIsNumberIsLongerThan255Characters()
+	        throws Exception {
 		service.getOperationByNumber(StringUtils.repeat("A", 256));
 	}
 	
@@ -839,8 +840,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(1, (int)results.get(1).getId());
 		
 		results =
-		        service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getTransfer(), null,
-		            null, null);
+		        service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getTransfer(),
+		            null, null, null);
 		
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
