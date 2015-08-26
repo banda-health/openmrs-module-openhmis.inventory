@@ -17,9 +17,9 @@ package org.openmrs.module.openhmis.inventory.api.util;
  * Constants class for Hibernate criteria fields.
  */
 public class HibernateCriteriaConstants {
-	
+
 	protected HibernateCriteriaConstants() {}
-	
+
 	public static final String DEPARTMENT = "department";
 	public static final String RETIRED = "retired";
 	public static final String NAME = "name";
@@ -44,5 +44,5 @@ public class HibernateCriteriaConstants {
 	public static final String OPERATION_NUMBER = "operationNumber";
 	public static final String OPERATION_DATE = "operationDate";
 	public static final String OPERATION_ORDER = "operationOrder";
-	
+
 }

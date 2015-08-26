@@ -50,7 +50,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<ItemStock> getItemsByRoom(Stockroom stockroom, PagingInfo paging);
-	
+
 	/**
 	 * Gets all {@link StockOperationTransaction}'s in the specified {@link Stockroom}.
 	 * @param stockroom The {@link Stockroom}.
@@ -64,7 +64,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<StockOperationTransaction> getTransactionsByRoom(Stockroom stockroom, PagingInfo paging);
-	
+
 	/**
 	 * Gets all {@link StockOperationTransaction}'s in the specified {@link Stockroom}.
 	 * @param stockroom The {@link Stockroom}.
@@ -80,7 +80,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<StockOperationTransaction> getTransactionsByRoomAndItem(Stockroom stockroom, Item item, PagingInfo paging);
-	
+
 	/**
 	 * Gets all the items in the stockroom that match the {@link ItemSearch} settings.
 	 * @param stockroom The {@link Stockroom} items to search within.
@@ -99,7 +99,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<ItemStock> getItems(Stockroom stockroom, ItemSearch itemSearch, PagingInfo paging);
-	
+
 	/**
 	 * Gets all operations associated with the stockroom that match the {@link StockOperationSearch} settings.
 	 * @param stockroom The {@link Stockroom} operations to search within.
@@ -115,7 +115,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<StockOperation> getOperations(Stockroom stockroom, StockOperationSearch search, PagingInfo paging);
-	
+
 	/**
 	 * Gets the {@link ItemStock} for the specified {@link Item} with the optionally defined expiration.
 	 * @param stockroom The {@link Stockroom} items to search.
@@ -130,7 +130,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	ItemStock getItem(Stockroom stockroom, Item item);
-	
+
 	/**
 	 * Gets the {@link ItemStockDetail} for the specified {@link Item} and qualifiers.
 	 * @param stockroom The stockroom item details to search.
@@ -150,7 +150,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	ItemStockDetail getStockroomItemDetail(Stockroom stockroom, Item item, Date expiration, StockOperation batchOperation);
-	
+
 	/**
 	 * Gets all the stockrooms for the specified {@link Location}.
 	 * @param location The location.
@@ -164,7 +164,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired);
-	
+
 	/**
 	 * Gets all the stockrooms for the specified {@link Location}.
 	 * @param location The location.
@@ -175,7 +175,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<Stockroom> getStockroomsByLocation(Location location, boolean includeRetired, PagingInfo pagingInfo);
-	
+
 	/**
 	 * Gets all stockrooms in the specified {@link location} that start with the specified name.
 	 * @param location The location to search within.
@@ -194,7 +194,7 @@ public interface IStockroomDataService extends IMetadataDataService<Stockroom> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
 	List<Stockroom> getStockrooms(Location location, String name, boolean includeRetired);
-	
+
 	/**
 	 * Gets all stockrooms in the specified {@link Location} that start with the specified name.
 	 * @param location The location to search within.

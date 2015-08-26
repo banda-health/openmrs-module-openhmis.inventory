@@ -61,7 +61,7 @@ public interface IStockOperationService extends OpenmrsService {
 	@Transactional
 	@Authorized({ PrivilegeConstants.MANAGE_OPERATIONS })
 	StockOperation submitOperation(StockOperation operation);
-	
+
 	/**
 	 * Rolls back a completed operation from the system, re-applying any following operations.
 	 * @param operation The operation to rollback
@@ -75,7 +75,7 @@ public interface IStockOperationService extends OpenmrsService {
 	@Transactional
 	@Authorized({ PrivilegeConstants.ROLLBACK_OPERATIONS })
 	StockOperation rollbackOperation(StockOperation operation);
-	
+
 	/**
 	 * Applies the specified transactions against the referenced objects.
 	 * @param transactions The transactions to apply.
@@ -93,7 +93,7 @@ public interface IStockOperationService extends OpenmrsService {
 	@Transactional
 	@Authorized({ PrivilegeConstants.MANAGE_OPERATIONS })
 	void applyTransactions(Collection<StockOperationTransaction> transactions);
-	
+
 	/**
 	 * Applies the specified transactions against the referenced objects.
 	 * @param transactions The transactions to apply.

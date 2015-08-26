@@ -38,7 +38,7 @@ public interface IItemStockDetailDataService extends IObjectDataService<ItemStoc
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_METADATA })
 	List<ItemStockDetail> getItemStockDetailsByStockroom(Stockroom stockroom, PagingInfo pagingInfo);
-	
+
 	/**
 	 * Returns the aggregate {@link ItemStockSummary} records for the specified {@link Stockroom}.
 	 * @param stockroom The stockroom.

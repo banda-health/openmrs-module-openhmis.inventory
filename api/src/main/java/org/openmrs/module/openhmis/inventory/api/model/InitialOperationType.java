@@ -19,5 +19,5 @@ package org.openmrs.module.openhmis.inventory.api.model;
  * however it may need to add it's own implementation if we extend the behavior of receipt operations.
  */
 public class InitialOperationType extends ReceiptOperationType {
-	
+
 }

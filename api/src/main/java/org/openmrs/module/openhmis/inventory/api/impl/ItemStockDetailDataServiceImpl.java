@@ -47,12 +47,12 @@ public class ItemStockDetailDataServiceImpl
 	protected BasicObjectAuthorizationPrivileges getPrivileges() {
 		return new BasicObjectAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(ItemStockDetail object) {
-		
+
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_METADATA })
@@ -60,7 +60,7 @@ public class ItemStockDetailDataServiceImpl
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
-		
+
 		return executeCriteria(ItemStockDetail.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -69,7 +69,7 @@ public class ItemStockDetailDataServiceImpl
 			}
 		}, Order.asc("i.name"));
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_METADATA })
@@ -77,46 +77,46 @@ public class ItemStockDetailDataServiceImpl
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
-		
+
 		// Because this is an aggregate query we cannot use the normal executeCriteria method and instead have to do it
 		// manually.
 		Criteria criteria = getRepository().createCriteria(ItemStockDetail.class);
 		criteria.createAlias("item", "i");
 		criteria.add(Restrictions.eq("stockroom", stockroom));
-		
+
 		criteria.setProjection(Projections.projectionList().add(Projections.groupProperty("item"))
 		        .add(Projections.groupProperty("expiration")).add(Projections.sum("quantity")));
-		
+
 		// Load the record count (for paging)
 		if (pagingInfo != null && pagingInfo.shouldLoadRecordCount()) {
 			// Because we're already doing a group by query, we can't just use the loadPagingTotal method.
-			
+
 			// This is horrible, it just executes the full query to get the count.
 			List countList = criteria.list();
 			Integer count = countList.size();
-			
+
 			pagingInfo.setTotalRecordCount(count.longValue());
 			pagingInfo.setLoadRecordCount(false);
 		}
-		
+
 		// Add the ordering
 		criteria.addOrder(Order.asc("i.name"));
 		criteria.addOrder(Order.asc("expiration"));
-		
+
 		// Add the paging stuff
 		criteria = this.createPagingCriteria(pagingInfo, criteria);
-		
+
 		// Load the criteria into an untyped list
 		List list = criteria.list();
-		
+
 		// Parse the aggregate query into an ItemStockSummary object
 		List<ItemStockSummary> results = new ArrayList<ItemStockSummary>(list.size());
 		for (Object obj : list) {
 			Object[] row = (Object[])obj;
-			
+
 			ItemStockSummary summary = new ItemStockSummary();
 			summary.setItem((Item)row[0]);
-			
+
 			// If the expiration column is null it does not appear to be included in the row array
 			if (row.length == 2) {
 				summary.setExpiration(null);
@@ -125,10 +125,10 @@ public class ItemStockDetailDataServiceImpl
 				summary.setExpiration((Date)row[1]);
 				summary.setQuantity(Ints.checkedCast((Long)row[2]));
 			}
-			
+
 			results.add(summary);
 		}
-		
+
 		// We done.
 		return results;
 	}

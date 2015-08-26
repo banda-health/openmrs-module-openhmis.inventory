@@ -43,7 +43,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	Item getItemByCode(String itemCode);
-	
+
 	/**
 	 * Gets all items with the specified code or {@code null} if not found. This is needed as long as it is not mandatory for
 	 * codes to be unique
@@ -58,7 +58,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByCode(String itemCode, boolean includeRetired);
-	
+
 	/**
 	 * Gets all the items for the specified code. This is needed as long as it is not mandatory for codes to be unique
 	 * @param itemCode The item code to find.
@@ -69,7 +69,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByCode(String itemCode, boolean includeRetired, PagingInfo pagingInfo);
-	
+
 	/**
 	 * Gets all the items for the specified {@link Department}.
 	 * @param department The department.
@@ -83,7 +83,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByDepartment(Department department, boolean includeRetired);
-	
+
 	/**
 	 * Gets all the items for the specified {@link Department}.
 	 * @param department The department.
@@ -94,7 +94,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByDepartment(Department department, boolean includeRetired, PagingInfo pagingInfo);
-	
+
 	/**
 	 * Gets all items in the specified {@link Department} that start with the specified name.
 	 * @param department The department to search within.
@@ -113,7 +113,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItems(Department department, String name, boolean includeRetired);
-	
+
 	/**
 	 * Gets all items in the specified {@link Department} that start with the specified name.
 	 * @param department The department to search within.
@@ -125,7 +125,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItems(Department department, String name, boolean includeRetired, PagingInfo pagingInfo);
-	
+
 	/**
 	 * Gets all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
@@ -134,7 +134,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByItemSearch(ItemSearch itemSearch);
-	
+
 	/**
 	 * Gets all items using the specified {@link ItemSearch} settings.
 	 * @param itemSearch The item search settings.
@@ -155,7 +155,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByItemSearch(ItemSearch itemSearch, PagingInfo pagingInfo);
-	
+
 	/**
 	 * Gets all items by {@link Concept} settings.
 	 * @param concept The concept.
@@ -164,7 +164,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsByConcept(Concept concept);
-	
+
 	/**
 	 * Gets all items where {@link Concept} is null
 	 * @param resultLimit Maximum size of returned items.
@@ -179,7 +179,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	List<Item> getItemsWithoutConcept(List<Integer> excludedItemsIds, Integer resultLimit);
-	
+
 	/**
 	 * @param uuid
 	 * @return The itemPrice that matches the given uuid

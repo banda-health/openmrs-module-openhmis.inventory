@@ -38,31 +38,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServiceImpl<ItemConceptSuggestion>
         implements IItemConceptSuggestionDataService {
 	private static final int DEFAULT_RESULT_LIMIT = 50;
-	
+
 	private IItemDataService itemDataService;
-	
+
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return null;
 	}
-	
+
 	@Override
 	protected void validate(ItemConceptSuggestion object) {
 		return;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	public List<ItemConceptSuggestion> getItemsWithConceptSuggestions() {
 		int resultLimit = DEFAULT_RESULT_LIMIT;
 		List<ItemConceptSuggestion> itemConceptSuggestions = getItemToConceptMatches(resultLimit);
-		
+
 		List<Integer> excludedItemsIds = new ArrayList<Integer>();
 		for (ItemConceptSuggestion suggestion : itemConceptSuggestions) {
 			excludedItemsIds.add(suggestion.getItemId());
 		}
-		
+
 		if (itemConceptSuggestions.size() < resultLimit) {
 			int reachDefaultReultLimit = resultLimit - itemConceptSuggestions.size();
 			List<Item> itemsWithoutConcept =
@@ -74,12 +74,12 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
 		}
 		return itemConceptSuggestions;
 	}
-	
+
 	public List<ItemConceptSuggestion> getItemToConceptMatches(Integer resultLimit) {
 		String itemKey = "0";
 		String conceptNameKey = "1";
 		String conceptUuidKey = "2";
-		
+
 		List<ItemConceptSuggestion> itemToConceptMatches = new ArrayList<ItemConceptSuggestion>();
 		String queryString =
 		        "select new map(item, MAX(concept_name.name), MAX(concept.uuid)) " + "from " + Item.class.getName()
@@ -102,7 +102,7 @@ public class ItemConceptSuggestionDataServiceImpl extends BaseMetadataDataServic
 		}
 		return itemToConceptMatches;
 	}
-	
+
 	public void setItemDataService(IItemDataService itemDataService) {
 		this.itemDataService = itemDataService;
 	}

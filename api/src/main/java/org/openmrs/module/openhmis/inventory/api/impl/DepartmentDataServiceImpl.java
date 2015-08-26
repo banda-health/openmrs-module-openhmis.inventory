@@ -29,7 +29,7 @@ public class DepartmentDataServiceImpl extends BaseMetadataDataServiceImpl<Depar
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(Department entity) {
 		return;

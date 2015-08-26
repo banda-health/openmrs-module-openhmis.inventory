@@ -29,33 +29,33 @@ public class AdjustmentOperationType extends StockOperationTypeBase {
 		// Note that the quantity is NOT negated because the adjustment quantity is the difference
 		return false;
 	}
-	
+
 	@Override
 	public boolean isNegativeItemQuantityAllowed() {
 		return true;
 	}
-	
+
 	@Override
 	public void onPending(final StockOperation operation) {
 		executeCopyReserved(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
 				tx.setStockroom(operation.getSource());
-				
+
 				if (negateAppliedQuantity()) {
 					tx.setQuantity(tx.getQuantity() * -1);
 				}
 			}
 		});
 	}
-	
+
 	@Override
 	public void onCancelled(final StockOperation operation) {
 		executeCopyReservedAndClear(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {
 			@Override
 			public void apply(ReservedTransaction reserved, StockOperationTransaction tx) {
 				tx.setStockroom(operation.getSource());
-				
+
 				// Undo the previously applied transaction by setting the quantity to the opposite of the pending transaction
 				if (!negateAppliedQuantity()) {
 					tx.setQuantity(tx.getQuantity() * -1);
@@ -63,7 +63,7 @@ public class AdjustmentOperationType extends StockOperationTypeBase {
 			}
 		});
 	}
-	
+
 	@Override
 	public void onCompleted(StockOperation operation) {
 		// Clear out the transactions for the operation

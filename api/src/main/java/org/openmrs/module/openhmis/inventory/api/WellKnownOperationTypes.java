@@ -27,41 +27,41 @@ public final class WellKnownOperationTypes {
 	public static final String RECEIPT_UUID = "fce0b4fc-9402-424a-aacb-f99599e51a9f";
 	public static final String RETURN_UUID = "128924d7-72ee-414e-ae40-52f1f89d3e7d";
 	public static final String TRANSFER_UUID = "db40707f-9175-4199-8df2-a5702f41ec7d";
-	
+
 	// Make this class static
 	private WellKnownOperationTypes() {}
-	
+
 	public static IStockOperationType getAdjustment() {
 		return getOperationType(ADJUSTMENT_UUID);
 	}
-	
+
 	public static IStockOperationType getDisposed() {
 		return getOperationType(DISPOSED_UUID);
 	}
-	
+
 	public static IStockOperationType getDistribution() {
 		return getOperationType(DISTRIBUTION_UUID);
 	}
-	
+
 	public static IStockOperationType getReceipt() {
 		return getOperationType(RECEIPT_UUID);
 	}
-	
+
 	public static IStockOperationType getReturn() {
 		return getOperationType(RETURN_UUID);
 	}
-	
+
 	public static IStockOperationType getTransfer() {
 		return getOperationType(TRANSFER_UUID);
 	}
-	
+
 	public static IStockOperationType getInitial() {
 		return getOperationType(INITIAL_UUID);
 	}
-	
+
 	private static IStockOperationType getOperationType(String uuid) {
 		IStockOperationTypeDataService service = Context.getService(IStockOperationTypeDataService.class);
-		
+
 		return service.getByUuid(uuid);
 	}
 }

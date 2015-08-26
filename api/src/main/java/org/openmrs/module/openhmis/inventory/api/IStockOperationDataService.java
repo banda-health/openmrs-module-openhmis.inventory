@@ -49,7 +49,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	StockOperation getOperationByNumber(String operationNumber);
-	
+
 	/**
 	 * Returns the {@link StockOperation}s for the specified {@link Stockroom}.
 	 * @param stockroom The {@link Stockroom} that the transactions occurred in.
@@ -65,7 +65,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS })
 	List<StockOperation> getOperationsByRoom(Stockroom stockroom, PagingInfo paging);
-	
+
 	/**
 	 * Returns the {@link StockOperationItem}s for the specified {@link StockOperation}.
 	 * @param operation The {@link StockOperation}
@@ -80,7 +80,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperationItem> getItemsByOperation(StockOperation operation, PagingInfo paging);
-	
+
 	/**
 	 * Returns the {@link StockOperation}s that are associated with the specified user.
 	 * @param user The {@link org.openmrs.User}.
@@ -90,7 +90,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperation> getUserOperations(User user, PagingInfo paging);
-	
+
 	/**
 	 * Returns the {@link StockOperation}s with the specified status for the specified user.
 	 * @param user The {@link User}.
@@ -117,7 +117,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperation> getUserOperations(User user, StockOperationStatus status, IStockOperationType stockOperationType,
 	        Item item, Stockroom stockroom, PagingInfo paging);
-	
+
 	/**
 	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
 	 * @param search The transaction search settings.
@@ -126,7 +126,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperation> getOperations(StockOperationSearch search);
-	
+
 	/**
 	 * Gets all {@link StockOperation}s using the specified {@link StockOperationSearch} settings.
 	 * @param search The operation search settings.
@@ -149,7 +149,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperation> getOperations(StockOperationSearch search, PagingInfo paging);
-	
+
 	/**
 	 * Gets all {@link StockOperation}s with an operation date past the specified date
 	 * @param operationDate The starting operation date (not inclusive)
@@ -164,7 +164,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperation> getOperationsSince(Date operationDate, PagingInfo paging);
-	
+
 	/**
 	 * Gets all {@link StockOperation}s with an operation date after the specified operation date, taking into account the
 	 * operation order for operations that occurred on the same day.
@@ -182,7 +182,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperation> getFutureOperations(StockOperation operation, PagingInfo paging);
-	
+
 	/**
 	 * Gets all operations that occurred on the specified operation date. The time portion of the operation date is not
 	 * considered.
@@ -199,7 +199,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	List<StockOperation> getOperationsByDate(Date date, PagingInfo paging);
-	
+
 	/**
 	 * Gets the last {@link StockOperation} (that is, with the largest operation order) on the specified date.
 	 * @param date The operation date.
@@ -212,7 +212,7 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	StockOperation getLastOperationByDate(Date date);
-	
+
 	/**
 	 * Gets the first {@link StockOperation} (that is, with the smallest operation order) on the specified date.
 	 * @param date The operation date.

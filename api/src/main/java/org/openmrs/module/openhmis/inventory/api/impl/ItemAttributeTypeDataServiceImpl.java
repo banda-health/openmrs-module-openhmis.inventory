@@ -30,7 +30,7 @@ public class ItemAttributeTypeDataServiceImpl extends BaseMetadataDataServiceImp
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(ItemAttributeType entity) {
 		return;

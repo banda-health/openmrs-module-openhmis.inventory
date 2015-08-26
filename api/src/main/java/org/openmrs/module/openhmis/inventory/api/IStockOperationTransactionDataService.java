@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface IStockOperationTransactionDataService extends IObjectDataService<StockOperationTransaction> {
-	
+
 	/**
 	 * Gets all {@link StockOperationTransaction}'s for the specified {@link StockOperation}.
 	 * @param operation The {@link StockOperation}.

@@ -24,22 +24,22 @@ import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthoriza
  */
 public class StockOperationTypeDataServiceImpl extends BaseMetadataDataServiceImpl<IStockOperationType>
         implements IStockOperationTypeDataService {
-	
+
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(IStockOperationType object) {}
-	
+
 	@Override
 	public IStockOperationType save(IStockOperationType type) {
 		// Check to see if this is a new entity
 		if (type.getId() == null) {
 			throw new UnsupportedOperationException("New stock operation types can not be created.");
 		}
-		
+
 		// Update the existing entity
 		return super.save(type);
 	}

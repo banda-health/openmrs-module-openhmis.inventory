@@ -28,7 +28,7 @@ import org.openmrs.module.openhmis.commons.api.entity.model.ISimpleCustomizable;
  */
 public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implements ISimpleCustomizable<ItemAttribute> {
 	public static final long serialVersionUID = 1L;
-	
+
 	private Integer itemId;
 	private Set<ItemCode> codes;
 	private Set<ItemPrice> prices;
@@ -41,41 +41,41 @@ public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implemen
 	private Boolean hasPhysicalInventory;
 	private Boolean conceptAccepted;
 	private BigDecimal buyingPrice;
-	
+
 	public Item() {}
-	
+
 	public Item(Integer itemId) {
 		this.itemId = itemId;
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return this.itemId;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		this.itemId = id;
 	}
-	
+
 	public Set<ItemCode> getCodes() {
 		return codes;
 	}
-	
+
 	public void setCodes(Set<ItemCode> codes) {
 		this.codes = codes;
 	}
-	
+
 	public ItemCode addCode(String codeName, String code) {
 		if (StringUtils.isEmpty(code)) {
 			throw new IllegalArgumentException("The item code must be defined.");
 		}
 		ItemCode itemCode = new ItemCode(code, codeName);
 		addCode(itemCode);
-		
+
 		return itemCode;
 	}
-	
+
 	public void addCode(ItemCode code) {
 		if (code != null) {
 			if (codes == null) {
@@ -85,7 +85,7 @@ public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implemen
 			codes.add(code);
 		}
 	}
-	
+
 	public void removeCode(ItemCode code) {
 		if (code != null) {
 			if (codes == null) {
@@ -94,15 +94,15 @@ public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implemen
 			codes.remove(code);
 		}
 	}
-	
+
 	public Set<ItemPrice> getPrices() {
 		return prices;
 	}
-	
+
 	public void setPrices(Set<ItemPrice> prices) {
 		this.prices = prices;
 	}
-	
+
 	public ItemPrice addPrice(String priceName, BigDecimal price) {
 		if (StringUtils.isEmpty(priceName)) {
 			throw new IllegalArgumentException("The price name must be defined.");
@@ -114,7 +114,7 @@ public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implemen
 		addPrice(itemPrice);
 		return itemPrice;
 	}
-	
+
 	public void addPrice(ItemPrice price) {
 		if (price != null) {
 			if (prices == null) {
@@ -124,7 +124,7 @@ public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implemen
 			prices.add(price);
 		}
 	}
-	
+
 	public void removePrice(ItemPrice price) {
 		if (price != null) {
 			if (prices == null) {
@@ -133,91 +133,91 @@ public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implemen
 			prices.remove(price);
 		}
 	}
-	
+
 	public Department getDepartment() {
 		return department;
 	}
-	
+
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
-	
+
 	public ItemPrice getDefaultPrice() {
 		return defaultPrice;
 	}
-	
+
 	public void setDefaultPrice(ItemPrice defaultPrice) {
 		this.defaultPrice = defaultPrice;
 	}
-	
+
 	public Concept getConcept() {
 		return concept;
 	}
-	
+
 	public void setConcept(Concept concept) {
 		this.concept = concept;
 	}
-	
+
 	public Boolean getHasPhysicalInventory() {
 		return hasPhysicalInventory;
 	}
-	
+
 	public boolean hasPhysicalInventory() {
 		return Boolean.TRUE.equals(hasPhysicalInventory);
 	}
-	
+
 	public void setHasPhysicalInventory(Boolean hasPhysicalInventory) {
 		this.hasPhysicalInventory = hasPhysicalInventory;
 	}
-	
+
 	public Boolean getHasExpiration() {
 		return hasExpiration;
 	}
-	
+
 	public boolean hasExpiration() {
 		return Boolean.TRUE.equals(hasExpiration);
 	}
-	
+
 	public void setHasExpiration(Boolean hasExpiration) {
 		this.hasExpiration = hasExpiration;
 	}
-	
+
 	public Integer getDefaultExpirationPeriod() {
 		return defaultExpirationPeriod;
 	}
-	
+
 	public void setDefaultExpirationPeriod(Integer defaultExpirationPeriod) {
 		this.defaultExpirationPeriod = defaultExpirationPeriod;
 	}
-	
+
 	public Boolean getConceptAccepted() {
 		return this.conceptAccepted;
 	}
-	
+
 	public boolean isConceptAccepted() {
 		return Boolean.TRUE.equals(getConceptAccepted());
 	}
-	
+
 	public void setConceptAccepted(Boolean conceptAccepted) {
 		this.conceptAccepted = conceptAccepted;
 	}
-	
+
 	public Integer getMinimumQuantity() {
 		return minimumQuantity;
 	}
-	
+
 	public void setMinimumQuantity(Integer minimumQuantity) {
 		this.minimumQuantity = minimumQuantity;
 	}
-	
+
 	public BigDecimal getBuyingPrice() {
 		return buyingPrice;
 	}
-	
+
 	public void setBuyingPrice(BigDecimal buyingPrice) {
 		this.buyingPrice = buyingPrice;
 	}
-	
+
 	@Override
 	@JsonIgnore
 	public Boolean getRetired() {

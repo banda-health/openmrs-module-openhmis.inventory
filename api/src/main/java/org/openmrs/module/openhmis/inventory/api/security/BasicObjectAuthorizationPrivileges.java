@@ -24,12 +24,12 @@ public class BasicObjectAuthorizationPrivileges implements IObjectAuthorizationP
 	public String getSavePrivilege() {
 		return PrivilegeConstants.MANAGE_METADATA;
 	}
-	
+
 	@Override
 	public String getPurgePrivilege() {
 		return PrivilegeConstants.PURGE_METADATA;
 	}
-	
+
 	@Override
 	public String getGetPrivilege() {
 		return PrivilegeConstants.VIEW_METADATA;

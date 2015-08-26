@@ -20,14 +20,14 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpen
  */
 public class Department extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
-	
+
 	private Integer departmentId;
-	
+
 	@Override
 	public Integer getId() {
 		return departmentId;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		departmentId = id;

@@ -19,23 +19,23 @@ import org.openmrs.module.openhmis.commons.api.f.Action2;
  * Model class that represents a receipt stock operation type. Receipt operations bring new item stock into the system.
  */
 public class ReceiptOperationType extends StockOperationTypeBase {
-	
+
 	@Override
 	public boolean isNegativeItemQuantityAllowed() {
 		return false;
 	}
-	
+
 	@Override
 	public void onPending(StockOperation operation) {
 		// Don't need to do anything
 	}
-	
+
 	@Override
 	public void onCancelled(StockOperation operation) {
 		// Clear out the transactions for the operation
 		operation.getReserved().clear();
 	}
-	
+
 	@Override
 	public void onCompleted(final StockOperation operation) {
 		executeCopyReservedAndClear(operation, new Action2<ReservedTransaction, StockOperationTransaction>() {

@@ -43,25 +43,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl<Item>
         implements IItemDataService, IMetadataAuthorizationPrivileges {
-	
+
 	private static final int MAX_ITEM_CODE_LENGTH = 255;
-	
+
 	@Override
 	protected void validate(Item entity) {
 		return;
 	}
-	
+
 	@Override
 	protected Collection<? extends OpenmrsObject> getRelatedObjects(Item entity) {
 		ArrayList<OpenmrsObject> results = new ArrayList<OpenmrsObject>();
-		
+
 		results.addAll(entity.getCodes());
 		results.addAll(entity.getPrices());
 		results.addAll(entity.getAttributes());
-		
+
 		return results;
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
@@ -72,20 +72,20 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		if (itemCode.length() > MAX_ITEM_CODE_LENGTH) {
 			throw new IllegalArgumentException("The item code must be less than 256 characters.");
 		}
-		
+
 		Criteria criteria = getRepository().createCriteria(getEntityClass());
 		criteria.createAlias("codes", "c").add(Restrictions.ilike("c.code", itemCode));
-		
+
 		return getRepository().selectSingle(getEntityClass(), criteria);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	public List<Item> getItemsByCode(String itemCode, boolean includeRetired) {
 		return getItemsByCode(itemCode, includeRetired, null);
 	}
-	
+
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
@@ -93,7 +93,7 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		if (StringUtils.isEmpty(itemCode)) {
 			throw new NullPointerException("The item code must be defined");
 		}
-		
+
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -104,14 +104,14 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 			}
 		}, getDefaultSort());
 	}
-	
+
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
 	public List<Item> getItemsByDepartment(Department department, boolean includeRetired) {
 		return getItemsByDepartment(department, includeRetired, null);
 	}
-	
+
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
@@ -120,7 +120,7 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		if (department == null) {
 			throw new NullPointerException("The department must be defined");
 		}
-		
+
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -131,14 +131,14 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 			}
 		}, getDefaultSort());
 	}
-	
+
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
 	public List<Item> getItems(Department department, String name, boolean includeRetired) {
 		return getItems(department, name, includeRetired, null);
 	}
-	
+
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	@Transactional(readOnly = true)
@@ -153,26 +153,26 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		if (name.length() > MAX_ITEM_CODE_LENGTH) {
 			throw new IllegalArgumentException("The item code must be less than 256 characters.");
 		}
-		
+
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				criteria.add(Restrictions.eq(HibernateCriteriaConstants.DEPARTMENT, department)).add(
 				    Restrictions.ilike(HibernateCriteriaConstants.NAME, name, MatchMode.START));
-				
+
 				if (!includeRetired) {
 					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
 				}
 			}
 		}, getDefaultSort());
 	}
-	
+
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	public List<Item> getItemsByItemSearch(ItemSearch itemSearch) {
 		return getItemsByItemSearch(itemSearch, null);
 	}
-	
+
 	@Override
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	public List<Item> getItemsByItemSearch(final ItemSearch itemSearch, PagingInfo pagingInfo) {
@@ -181,7 +181,7 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		} else if (itemSearch.getTemplate() == null) {
 			throw new NullPointerException("The item search template must be defined.");
 		}
-		
+
 		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -189,7 +189,7 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 			}
 		}, getDefaultSort());
 	}
-	
+
 	@Override
 	public List<Item> getItemsByConcept(final Concept concept) {
 		return executeCriteria(Item.class, new Action1<Criteria>() {
@@ -199,15 +199,15 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 			}
 		});
 	}
-	
+
 	@Override
 	public ItemPrice getItemPriceByUuid(final String uuid) {
 		Criteria criteria = getRepository().createCriteria(ItemPrice.class);
 		criteria.add(Restrictions.eq("uuid", uuid));
-		
+
 		return getRepository().selectSingle(ItemPrice.class, criteria);
 	}
-	
+
 	@Override
 	public List<Item> getItemsWithoutConcept(final List<Integer> excludedItemsIds, final Integer resultLimit) {
 		return executeCriteria(Item.class, null, new Action1<Criteria>() {
@@ -226,30 +226,30 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 			}
 		}, getDefaultSort());
 	}
-	
+
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return this;
 	}
-	
+
 	@Override
 	public String getSavePrivilege() {
 		return PrivilegeConstants.MANAGE_ITEMS;
 	}
-	
+
 	@Override
 	public String getPurgePrivilege() {
 		return PrivilegeConstants.PURGE_ITEMS;
 	}
-	
+
 	@Override
 	public String getGetPrivilege() {
 		return PrivilegeConstants.VIEW_ITEMS;
 	}
-	
+
 	@Override
 	public String getRetirePrivilege() {
 		return PrivilegeConstants.MANAGE_ITEMS;
 	}
-	
+
 }

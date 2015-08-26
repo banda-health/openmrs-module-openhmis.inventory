@@ -24,12 +24,12 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpen
  */
 public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 1L;
-	
+
 	private Integer stockroomId;
 	private Location location;
 	private Set<ItemStock> items;
 	private Set<StockOperation> operations;
-	
+
 	/**
 	 * Gets the unique database record identifier.
 	 * @return The record identifier or {@code null} if the object is new.
@@ -38,7 +38,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public Integer getId() {
 		return stockroomId;
 	}
-	
+
 	/**
 	 * Sets the unique database record identifier.
 	 * @param id The record identifier.
@@ -47,7 +47,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public void setId(Integer id) {
 		stockroomId = id;
 	}
-	
+
 	/**
 	 * Gets the optional {@link org.openmrs.Location} where this stockroom is located.
 	 * @return The stockroom location.
@@ -55,7 +55,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public Location getLocation() {
 		return location;
 	}
-	
+
 	/**
 	 * Sets the optional {@link org.openmrs.Location} where this stockroom is located.
 	 * @param location The stockroom location.
@@ -63,7 +63,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	
+
 	/**
 	 * Gets the set of item stock for this stockroom.
 	 * @return The item stock.
@@ -71,7 +71,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public Set<ItemStock> getItems() {
 		return items;
 	}
-	
+
 	/**
 	 * Sets the set of item stock for this stockroom.
 	 * @param items The item stock set.
@@ -79,7 +79,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public void setItems(Set<ItemStock> items) {
 		this.items = items;
 	}
-	
+
 	/**
 	 * Adds new item stock to the stockroom. Note that this will result in the full item list being loaded and should only be
 	 * used when that is needed. A better alternative to add item stock is to use the
@@ -91,12 +91,12 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 			if (items == null) {
 				items = new TreeSet<ItemStock>();
 			}
-			
+
 			item.setStockroom(this);
 			items.add(item);
 		}
 	}
-	
+
 	/**
 	 * Removes item stock from the stockroom. Note that this will result in the full item list being loaded and should only
 	 * be used when that is needed. A better alternative to remove item stock is to use the
@@ -108,12 +108,12 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 			if (items == null) {
 				return;
 			}
-			
+
 			item.setStockroom(null);
 			items.remove(item);
 		}
 	}
-	
+
 	/**
 	 * Gets the set of operations for this stockroom.
 	 * @return The stockroom operations.
@@ -121,7 +121,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public Set<StockOperation> getOperations() {
 		return operations;
 	}
-	
+
 	/**
 	 * Sets the set of operations for this stockroom.
 	 * @param operations The stockroom operations.
@@ -129,7 +129,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 	public void setOperations(Set<StockOperation> operations) {
 		this.operations = operations;
 	}
-	
+
 	/**
 	 * Adds an operation to this stockroom. This will not apply the operation or otherwise process it. To apply the operation
 	 * use the
@@ -144,11 +144,11 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 			if (operations == null) {
 				operations = new TreeSet<StockOperation>();
 			}
-			
+
 			operations.add(operation);
 		}
 	}
-	
+
 	/**
 	 * Removes an operation from this stockroom. Note that this will result in the full set of operations being loaded and
 	 * should only be used when that is needed.
@@ -159,7 +159,7 @@ public class Stockroom extends BaseSerializableOpenmrsMetadata {
 			if (operations == null) {
 				return;
 			}
-			
+
 			operations.remove(operation);
 		}
 	}

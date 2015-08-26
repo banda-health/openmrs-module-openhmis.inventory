@@ -22,7 +22,7 @@ public class DisposedOperationType extends AdjustmentOperationType {
 	protected boolean negateAppliedQuantity() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isNegativeItemQuantityAllowed() {
 		return false;

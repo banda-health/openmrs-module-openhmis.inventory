@@ -41,6 +41,6 @@ public enum StockOperationStatus {
 	 * The operation was rolled back and all applied transactions were reversed.
 	 */
 	ROLLBACK();
-	
+
 	private StockOperationStatus() {}
 }

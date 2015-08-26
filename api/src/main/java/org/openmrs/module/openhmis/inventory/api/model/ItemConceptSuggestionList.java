@@ -21,27 +21,27 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpen
  * Model class that represents a list of {@link ItemConceptSuggestion}s.
  */
 public class ItemConceptSuggestionList extends BaseSerializableOpenmrsMetadata {
-	
+
 	private static final long serialVersionUID = 0L;
-	
+
 	private List<ItemConceptSuggestion> itemConceptSuggestions;
-	
+
 	public List<ItemConceptSuggestion> getItemConceptSuggestions() {
 		return itemConceptSuggestions;
 	}
-	
+
 	public void setItemConceptSuggestions(List<ItemConceptSuggestion> itemConceptSuggestions) {
 		this.itemConceptSuggestions = itemConceptSuggestions;
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return null;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
-		
+
 	}
-	
+
 }

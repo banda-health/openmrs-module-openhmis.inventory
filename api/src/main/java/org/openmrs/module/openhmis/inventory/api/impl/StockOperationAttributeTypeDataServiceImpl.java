@@ -24,14 +24,14 @@ import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthoriza
  */
 public class StockOperationAttributeTypeDataServiceImpl extends BaseMetadataDataServiceImpl<StockOperationAttributeType>
         implements IStockOperationAttributeTypeDataService {
-	
+
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(StockOperationAttributeType object) {
-		
+
 	}
 }

@@ -33,24 +33,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ItemStockDataServiceImpl extends BaseObjectDataServiceImpl<ItemStock, BasicObjectAuthorizationPrivileges>
         implements IItemStockDataService {
-	
+
 	@Override
 	protected BasicObjectAuthorizationPrivileges getPrivileges() {
 		return new BasicObjectAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(ItemStock object) {
-		
+
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<ItemStock> getItemStockByItem(final Item item, PagingInfo pagingInfo) {
 		if (item == null) {
 			throw new IllegalArgumentException("The item must be defined.");
 		}
-		
+
 		return executeCriteria(ItemStock.class, pagingInfo, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {

@@ -25,70 +25,70 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 	public StockOperationSearch() {
 		this(new StockOperationTemplate());
 	}
-	
+
 	public StockOperationSearch(StockOperationTemplate template) {
 		super(template);
 	}
-	
+
 	private StringComparisonType operationNumberComparisonType;
 	private ComparisonType sourceComparisonType;
 	private ComparisonType destinationComparisonType;
 	private ComparisonType patientComparisonType;
 	private ComparisonType institutionComparisonType;
 	private DateComparisonType dateCreatedComparisonType;
-	
+
 	public void setOperationNumberComparisonType(StringComparisonType operationNumberComparisonType) {
 		this.operationNumberComparisonType = operationNumberComparisonType;
 	}
-	
+
 	public StringComparisonType getOperationNumberComparisonType() {
 		return operationNumberComparisonType;
 	}
-	
+
 	public ComparisonType getSourceComparisonType() {
 		return sourceComparisonType;
 	}
-	
+
 	public void setSourceComparisonType(ComparisonType sourceComparisonType) {
 		this.sourceComparisonType = sourceComparisonType;
 	}
-	
+
 	public ComparisonType getDestinationComparisonType() {
 		return destinationComparisonType;
 	}
-	
+
 	public void setDestinationComparisonType(ComparisonType destinationComparisonType) {
 		this.destinationComparisonType = destinationComparisonType;
 	}
-	
+
 	public DateComparisonType getDateCreatedComparisonType() {
 		return dateCreatedComparisonType;
 	}
-	
+
 	public void setDateCreatedComparisonType(DateComparisonType dateCreatedComparisonType) {
 		this.dateCreatedComparisonType = dateCreatedComparisonType;
 	}
-	
+
 	public ComparisonType getPatientComparisonType() {
 		return patientComparisonType;
 	}
-	
+
 	public void setPatientComparisonType(ComparisonType patientComparisonType) {
 		this.patientComparisonType = patientComparisonType;
 	}
-	
+
 	public ComparisonType getInstitutionComparisonType() {
 		return institutionComparisonType;
 	}
-	
+
 	public void setInstitutionComparisonType(ComparisonType institutionComparisonType) {
 		this.institutionComparisonType = institutionComparisonType;
 	}
-	
+
 	@Override
 	public void updateCriteria(Criteria criteria) {
 		super.updateCriteria(criteria);
-		
+
 		StockOperationTemplate operation = getTemplate();
 		if (operation.getItem() != null) {
 			criteria.createAlias("items", "items").add(Restrictions.eq("items.item", operation.getItem()));

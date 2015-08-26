@@ -22,16 +22,16 @@ import org.openmrs.BaseOpenmrsObject;
  */
 public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public static final long serialVersionUID = 0L;
-	
+
 	private Integer id;
-	
+
 	private Item item;
 	private Integer quantity;
 	private Date expiration;
 	private StockOperation batchOperation;
 	private Boolean calculatedExpiration;
 	private Boolean calculatedBatch;
-	
+
 	/**
 	 * Gets the unique database record identifier.
 	 * @return The record identifier or {@code null} if the object is new.
@@ -40,7 +40,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public Integer getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Sets the unique database record identifier.
 	 * @return The record identifier or {@code null} if the object is new.
@@ -49,7 +49,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gets the item.
 	 * @return The item.
@@ -57,7 +57,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public Item getItem() {
 		return item;
 	}
-	
+
 	/**
 	 * Sets the item.
 	 * @param item The item.
@@ -65,7 +65,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public void setItem(Item item) {
 		this.item = item;
 	}
-	
+
 	/**
 	 * Gets the quantity.
 	 * @return The quantity.
@@ -73,7 +73,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public Integer getQuantity() {
 		return quantity;
 	}
-	
+
 	/**
 	 * Sets the quantity.
 	 * @param quantity The quantity.
@@ -81,7 +81,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
-	
+
 	/**
 	 * Gets the item expiration date.
 	 * @return The item expiration date or {@code null} if there is no expiration.
@@ -89,7 +89,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public Date getExpiration() {
 		return expiration;
 	}
-	
+
 	/**
 	 * Sets the item expiration date.
 	 * @param expiration The item expiration date or {@code null} if there is no expiration.
@@ -97,7 +97,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public void setExpiration(Date expiration) {
 		this.expiration = expiration;
 	}
-	
+
 	/**
 	 * Gets the batch {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation} that brought this item stock
 	 * into the system.
@@ -106,7 +106,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public StockOperation getBatchOperation() {
 		return batchOperation;
 	}
-	
+
 	/**
 	 * Sets the batch {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation} that brought this item stock
 	 * into the system.
@@ -115,7 +115,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public void setBatchOperation(StockOperation batchOperation) {
 		this.batchOperation = batchOperation;
 	}
-	
+
 	/**
 	 * Gets whether the expiration date was calculated by the owning
 	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be
@@ -125,11 +125,11 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public Boolean isCalculatedExpiration() {
 		return calculatedExpiration;
 	}
-	
+
 	public Boolean getCalculatedExpiration() {
 		return calculatedExpiration;
 	}
-	
+
 	/**
 	 * Sets whether the expiration date was calculated by the owning
 	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be
@@ -139,7 +139,7 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public void setCalculatedExpiration(Boolean calculatedExpiration) {
 		this.calculatedExpiration = calculatedExpiration;
 	}
-	
+
 	/**
 	 * Gets whether the batch operation was calculated by the owning
 	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be
@@ -149,11 +149,11 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public Boolean isCalculatedBatch() {
 		return calculatedBatch;
 	}
-	
+
 	public Boolean getCalculatedBatch() {
 		return calculatedBatch;
 	}
-	
+
 	/**
 	 * Sets whether the batch operation was calculated by the owning
 	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be

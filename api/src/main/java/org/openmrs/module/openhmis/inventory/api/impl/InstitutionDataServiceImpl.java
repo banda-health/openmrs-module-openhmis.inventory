@@ -29,7 +29,7 @@ public class InstitutionDataServiceImpl extends BaseMetadataDataServiceImpl<Inst
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(Institution entity) {
 		return;

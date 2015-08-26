@@ -28,39 +28,39 @@ import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
  */
 public class StockOperationTemplate extends StockOperation {
 	private Stockroom stockroom;
-	
+
 	@Override
 	public void setSource(Stockroom newSource) {
 		this.source = newSource;
 	}
-	
+
 	@Override
 	public void setDestination(Stockroom newDestination) {
 		this.destination = newDestination;
 	}
-	
+
 	@Override
 	public void setPatient(Patient newPatient) {
 		this.patient = newPatient;
 	}
-	
+
 	@Override
 	public void setInstitution(Institution newInstitution) {
 		this.institution = newInstitution;
 	}
-	
+
 	public Stockroom getStockroom() {
 		return stockroom;
 	}
-	
+
 	public void setStockroom(Stockroom stockroom) {
 		this.stockroom = stockroom;
 	}
-	
+
 	public void setItem(Item item) {
 		addItem(item, 0);
 	}
-	
+
 	public Item getItem() {
 		Set<StockOperationItem> items = getItems();
 		Item item = null;
@@ -72,5 +72,5 @@ public class StockOperationTemplate extends StockOperation {
 		}
 		return item;
 	}
-	
+
 }

@@ -22,5 +22,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface IItemAttributeTypeDataService extends IMetadataDataService<ItemAttributeType> {
-	
+
 }

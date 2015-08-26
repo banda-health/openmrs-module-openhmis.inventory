@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional(readOnly = true)
 public interface IItemConceptSuggestionDataService extends IMetadataDataService<ItemConceptSuggestion> {
-	
+
 	/**
 	 * Returns a list containing the item concept suggestions.
 	 * @return A list containing the item concept suggestions or an empty list if no items were found.

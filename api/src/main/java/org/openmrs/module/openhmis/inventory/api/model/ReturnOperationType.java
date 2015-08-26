@@ -19,5 +19,5 @@ package org.openmrs.module.openhmis.inventory.api.model;
  * same as a receipt operation, this type is mostly here for reporting purposes.
  */
 public class ReturnOperationType extends ReceiptOperationType {
-	
+
 }

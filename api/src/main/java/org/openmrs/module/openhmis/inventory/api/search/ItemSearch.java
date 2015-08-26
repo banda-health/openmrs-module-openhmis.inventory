@@ -23,37 +23,37 @@ import org.openmrs.module.openhmis.inventory.api.model.Item;
  */
 public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 	public static final long serialVersionUID = 0L;
-	
+
 	public ItemSearch() {
 		this(new Item(), StringComparisonType.EQUAL, false);
 	}
-	
+
 	public ItemSearch(Item itemTemplate) {
 		this(itemTemplate, StringComparisonType.EQUAL, false);
 	}
-	
+
 	public ItemSearch(Item itemTemplate, Boolean includeRetired) {
 		this(itemTemplate, StringComparisonType.EQUAL, includeRetired);
 	}
-	
+
 	public ItemSearch(Item itemTemplate, StringComparisonType nameComparisonType, Boolean includeRetired) {
 		super(itemTemplate, nameComparisonType, includeRetired);
 	}
-	
+
 	private ComparisonType conceptComparisonType;
-	
+
 	public ComparisonType getConceptComparisonType() {
 		return conceptComparisonType;
 	}
-	
+
 	public void setConceptComparisonType(ComparisonType conceptComparisonType) {
 		this.conceptComparisonType = conceptComparisonType;
 	}
-	
+
 	@Override
 	public void updateCriteria(Criteria criteria) {
 		super.updateCriteria(criteria);
-		
+
 		Item item = getTemplate();
 		if (item.getDepartment() != null) {
 			criteria.add(Restrictions.eq("department", item.getDepartment()));

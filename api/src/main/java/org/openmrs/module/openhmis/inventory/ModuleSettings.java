@@ -35,32 +35,32 @@ public class ModuleSettings {
 	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
 	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
 	        "openhmis.inventory.reports.stockOperationsByStockroom";
-	
+
 	public static boolean generateOperationNumber() {
 		return generateOperationNumber(Context.getAdministrationService());
 	}
-	
+
 	protected static boolean generateOperationNumber(AdministrationService adminService) {
 		String property = adminService.getGlobalProperty(AUTO_GENERATE_OPERATION_NUMBER_PROPERTY);
 		return Boolean.parseBoolean(property);
 	}
-	
+
 	public static boolean isOperationAutoCompleted() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
 		return Boolean.parseBoolean(property);
 	}
-	
+
 	public static boolean showOperationCancelReasonField() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(SHOW_OPERATATION_CANCEL_REASEON_FIELD);
 		return Boolean.parseBoolean(property);
 	}
-	
+
 	public static Settings loadSettings() {
 		Settings settings = new Settings();
 		AdministrationService adminService = Context.getAdministrationService();
-		
+
 		settings.setAutoGenerateOperationNumber(generateOperationNumber(adminService));
 		if (settings.getAutoGenerateOperationNumber()) {
 			IdentifierSource source = IdgenUtil.getIdentifierSource(OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY);
@@ -68,52 +68,52 @@ public class ModuleSettings {
 				settings.setOperationNumberGeneratorSourceId(source.getId());
 			}
 		}
-		
+
 		String prop = adminService.getGlobalProperty(STOCK_TAKE_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setStockTakeReportId(Integer.parseInt(prop));
 		}
-		
+
 		prop = adminService.getGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setStockCardReportId(Integer.parseInt(prop));
 		}
-		
+
 		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
 		}
-		
+
 		prop = adminService.getGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setStockroomReportId(Integer.parseInt(prop));
 		}
-		
+
 		prop = adminService.getGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setExpiringStockReportId(Integer.parseInt(prop));
 		}
-		
+
 		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
 		}
-		
+
 		prop = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
 		if (!StringUtils.isEmpty(prop)) {
 			settings.setAutoCompleteOperations(Boolean.parseBoolean(prop));
 		} else {
 			settings.setAutoCompleteOperations(false);
 		}
-		
+
 		return settings;
 	}
-	
+
 	public static void saveSettings(Settings settings) {
 		if (settings == null) {
 			throw new IllegalArgumentException("The settings to save must be defined.");
 		}
-		
+
 		AdministrationService adminService = Context.getAdministrationService();
 		Boolean generate = settings.getAutoGenerateOperationNumber();
 		if (Boolean.TRUE.equals(generate)) {
@@ -121,49 +121,49 @@ public class ModuleSettings {
 		} else {
 			adminService.setGlobalProperty(AUTO_GENERATE_OPERATION_NUMBER_PROPERTY, Boolean.FALSE.toString());
 		}
-		
+
 		Integer sourceId = settings.getOperationNumberGeneratorSourceId();
 		if (sourceId != null) {
 			adminService.setGlobalProperty(OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY, sourceId.toString());
 		} else {
 			adminService.setGlobalProperty(OPERATION_NUMBER_IDENTIFIER_SOURCE_ID_PROPERTY, "");
 		}
-		
+
 		Integer reportId = settings.getStockTakeReportId();
 		if (reportId != null) {
 			adminService.setGlobalProperty(STOCK_TAKE_REPORT_ID_PROPERTY, reportId.toString());
 		} else {
 			adminService.setGlobalProperty(STOCK_TAKE_REPORT_ID_PROPERTY, "");
 		}
-		
+
 		reportId = settings.getStockCardReportId();
 		if (reportId != null) {
 			adminService.setGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY, reportId.toString());
 		} else {
 			adminService.setGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY, "");
 		}
-		
+
 		reportId = settings.getStockroomReportId();
 		if (reportId != null) {
 			adminService.setGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY, reportId.toString());
 		} else {
 			adminService.setGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY, "");
 		}
-		
+
 		reportId = settings.getExpiringStockReportId();
 		if (reportId != null) {
 			adminService.setGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY, reportId.toString());
 		} else {
 			adminService.setGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY, "");
 		}
-		
+
 		reportId = settings.getStockOperationsByStockroomReportId();
 		if (reportId != null) {
 			adminService.setGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY, reportId.toString());
 		} else {
 			adminService.setGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY, "");
 		}
-		
+
 		Boolean autoComplete = settings.getAutoCompleteOperations();
 		if (Boolean.TRUE.equals(autoComplete)) {
 			adminService.setGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY, Boolean.TRUE.toString());
@@ -171,6 +171,6 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY, Boolean.FALSE.toString());
 		}
 	}
-	
+
 	protected ModuleSettings() {}
 }

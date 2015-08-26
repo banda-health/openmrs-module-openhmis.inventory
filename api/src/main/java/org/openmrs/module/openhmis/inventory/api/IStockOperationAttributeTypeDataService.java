@@ -20,5 +20,5 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationAttributeTy
  * Interface that represents classes which perform data operations for {@link StockOperationAttributeType}s.
  */
 public interface IStockOperationAttributeTypeDataService extends IMetadataDataService<StockOperationAttributeType> {
-	
+
 }

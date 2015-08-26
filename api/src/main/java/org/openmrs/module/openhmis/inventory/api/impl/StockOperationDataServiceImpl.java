@@ -53,23 +53,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl<StockOperation>
         implements IStockOperationDataService {
 	private static final int MAX_OPERATION_NUMBER_LENGTH = 255;
-	
+
 	@Override
 	protected BasicMetadataAuthorizationPrivileges getPrivileges() {
 		return new BasicMetadataAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(StockOperation operation) {
 		StockOperationServiceImpl.validateOperation(operation);
 	}
-	
+
 	@Override
 	protected Order[] getDefaultSort() {
 		// Return operations ordered by creation date, desc
 		return new Order[] { Order.desc(HibernateCriteriaConstants.DATE_CREATED) };
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -80,13 +80,13 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		if (number.length() > MAX_OPERATION_NUMBER_LENGTH) {
 			throw new IllegalArgumentException("The operation number must be less than 256 characters.");
 		}
-		
+
 		Criteria criteria = getRepository().createCriteria(getEntityClass());
 		criteria.add(Restrictions.eq(HibernateCriteriaConstants.OPERATION_NUMBER, number));
-		
+
 		return getRepository().selectSingle(getEntityClass(), criteria);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS })
@@ -94,7 +94,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		if (stockroom == null) {
 			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
-		
+
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -103,7 +103,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 			}
 		}, getDefaultSort());
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -111,7 +111,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		if (operation == null) {
 			throw new IllegalArgumentException("The operation must be defined.");
 		}
-		
+
 		return executeCriteria(StockOperationItem.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -120,14 +120,14 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 			}
 		}, Order.asc("i.name"));
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	public List<StockOperation> getUserOperations(User user, PagingInfo paging) {
 		return getUserOperations(user, null, null, null, null, paging);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -136,16 +136,16 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		if (user == null) {
 			throw new IllegalArgumentException("The user must be defined.");
 		}
-		
+
 		// Get all the roles for this user (this traverses the role relationships to get any parent roles)
 		final Set<Role> roles = user.getAllRoles();
-		
+
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
 				DetachedCriteria subQuery = DetachedCriteria.forClass(IStockOperationType.class);
 				subQuery.setProjection(Property.forName(HibernateCriteriaConstants.ID));
-				
+
 				// Add user/role filter
 				if (roles != null && roles.size() > 0) {
 					subQuery.add(Restrictions.or(
@@ -201,14 +201,14 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 			}
 		}, Order.desc(HibernateCriteriaConstants.DATE_CREATED));
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	public List<StockOperation> getOperations(StockOperationSearch search) {
 		return getOperations(search, null);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -218,7 +218,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		} else if (search.getTemplate() == null) {
 			throw new IllegalArgumentException("The operation search template must be defined.");
 		}
-		
+
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -226,7 +226,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 			}
 		}, getDefaultSort());
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -234,7 +234,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		if (operationDate == null) {
 			throw new IllegalArgumentException("The operation date must be defined.");
 		}
-		
+
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -242,7 +242,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 			}
 		}, Order.asc(HibernateCriteriaConstants.OPERATION_DATE));
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -250,7 +250,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		if (operation == null) {
 			throw new IllegalArgumentException("The operation must be defined.");
 		}
-		
+
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -263,7 +263,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		}, CustomizedOrderBy.asc("convert(operation_date, date)"), Order.asc("operationOrder"),
 		    Order.asc(HibernateCriteriaConstants.OPERATION_DATE));
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -271,7 +271,7 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		return getOperationsByDate(date, paging, null, Order.asc(HibernateCriteriaConstants.OPERATION_ORDER),
 		    Order.asc(HibernateCriteriaConstants.OPERATION_DATE));
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -279,14 +279,14 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		List<StockOperation> results =
 		        getOperationsByDate(date, null, 1, Order.desc(HibernateCriteriaConstants.OPERATION_ORDER),
 		            Order.desc(HibernateCriteriaConstants.DATE_CREATED));
-		
+
 		if (results == null || results.size() == 0) {
 			return null;
 		} else {
 			return results.get(0);
 		}
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -294,20 +294,20 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		List<StockOperation> results =
 		        getOperationsByDate(date, null, 1, Order.asc("operationOrder"),
 		            Order.asc(HibernateCriteriaConstants.DATE_CREATED));
-		
+
 		if (results == null || results.size() == 0) {
 			return null;
 		} else {
 			return results.get(0);
 		}
 	}
-	
+
 	private List<StockOperation> getOperationsByDate(final Date date, PagingInfo paging, final Integer maxResults,
 	        Order... orders) {
 		if (date == null) {
 			throw new IllegalArgumentException("The date to search for must be defined.");
 		}
-		
+
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
@@ -318,26 +318,26 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 			}
 		}, orders);
 	}
-	
+
 	private Criterion createDateRestriction(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		Utility.clearCalendarTime(cal);
 		final Date start = cal.getTime();
-		
+
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		cal.add(Calendar.MILLISECOND, -1);
 		final Date end = cal.getTime();
-		
+
 		return Restrictions.between(HibernateCriteriaConstants.OPERATION_DATE, start, end);
 	}
-	
+
 	@Override
 	public void purge(StockOperation operation) {
 		if (operation != null && ((operation.hasReservedTransactions()) || operation.hasTransactions())) {
 			throw new APIException("Stock operations can not be deleted if there are any associated transactions.");
 		}
-		
+
 		super.purge(operation);
 	}
 }

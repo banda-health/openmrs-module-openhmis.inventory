@@ -36,15 +36,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class StockOperationTransactionDataServiceImpl
         extends BaseObjectDataServiceImpl<StockOperationTransaction, BasicObjectAuthorizationPrivileges>
         implements IStockOperationTransactionDataService {
-	
+
 	@Override
 	protected BasicObjectAuthorizationPrivileges getPrivileges() {
 		return new BasicObjectAuthorizationPrivileges();
 	}
-	
+
 	@Override
 	protected void validate(StockOperationTransaction object) {}
-	
+
 	@Override
 	protected Order[] getDefaultSort() {
 		return new Order[] {
@@ -52,7 +52,7 @@ public class StockOperationTransactionDataServiceImpl
 		        Order.desc(HibernateCriteriaConstants.ID)
 		};
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
@@ -60,7 +60,7 @@ public class StockOperationTransactionDataServiceImpl
 		if (operation == null) {
 			throw new IllegalArgumentException("The operation must be defined");
 		}
-		
+
 		return executeCriteria(StockOperationTransaction.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {

@@ -22,7 +22,7 @@ import org.openmrs.module.BaseModuleActivator;
  */
 public class InventoryModuleActivator extends BaseModuleActivator {
 	private static final Log LOG = LogFactory.getLog(InventoryModuleActivator.class);
-	
+
 	/**
 	 * @see BaseModuleActivator#contextRefreshed()
 	 */
@@ -30,7 +30,7 @@ public class InventoryModuleActivator extends BaseModuleActivator {
 	public void contextRefreshed() {
 		LOG.info("OpenHMIS Inventory Module refreshed");
 	}
-	
+
 	/**
 	 * @see BaseModuleActivator#started()
 	 */
@@ -38,7 +38,7 @@ public class InventoryModuleActivator extends BaseModuleActivator {
 	public void started() {
 		LOG.info("OpenHMIS Inventory Module started");
 	}
-	
+
 	/**
 	 * @see BaseModuleActivator#stopped()
 	 */

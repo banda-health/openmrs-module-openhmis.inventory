@@ -22,44 +22,44 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpen
  */
 public class ItemPrice extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
-	
+
 	private Integer itemPriceId;
 	private BigDecimal price;
 	private Item item;
-	
+
 	public ItemPrice() {
 		super();
 	}
-	
+
 	public ItemPrice(BigDecimal price, String name) {
 		super();
-		
+
 		this.price = price;
 		setName(name);
 	}
-	
+
 	@Override
 	public Integer getId() {
 		return itemPriceId;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		itemPriceId = id;
 	}
-	
+
 	public Item getItem() {
 		return item;
 	}
-	
+
 	public void setItem(Item item) {
 		this.item = item;
 	}
-	
+
 	public BigDecimal getPrice() {
 		return price;
 	}
-	
+
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
