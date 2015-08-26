@@ -1,9 +1,25 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.openhmis.inventory.api.model;
-
-import org.openmrs.BaseOpenmrsObject;
 
 import java.util.Date;
 
+import org.openmrs.BaseOpenmrsObject;
+
+/**
+ * Base model class used by models that have item stock detail information.
+ */
 public class ItemStockDetailBase extends BaseOpenmrsObject {
 	public static final long serialVersionUID = 0L;
 
@@ -83,7 +99,8 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	}
 
 	/**
-	 * Gets the batch {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation} that brought this item stock into the system.
+	 * Gets the batch {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation} that brought this item stock
+	 * into the system.
 	 * @return The batch operation or {@code null} if it is unknown.
 	 */
 	public StockOperation getBatchOperation() {
@@ -91,7 +108,8 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	}
 
 	/**
-	 * Sets the batch {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation} that brought this item stock into the system.
+	 * Sets the batch {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation} that brought this item stock
+	 * into the system.
 	 * @param batchOperation The batch operation or {@code null} if it is unknown.
 	 */
 	public void setBatchOperation(StockOperation batchOperation) {
@@ -99,9 +117,9 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	}
 
 	/**
-	 * Gets whether the expiration date was calculated by the owning {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
+	 * Gets whether the expiration date was calculated by the owning
+	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be
+	 * recalculated when historical operations are added to the system.
 	 * @return Whether the expiration date was calculated.
 	 */
 	public Boolean isCalculatedExpiration() {
@@ -113,9 +131,9 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	}
 
 	/**
-	 * Sets whether the expiration date was calculated by the owning {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
+	 * Sets whether the expiration date was calculated by the owning
+	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be
+	 * recalculated when historical operations are added to the system.
 	 * @oaran calculatedExpiration Whether the expiration date was calculated.
 	 */
 	public void setCalculatedExpiration(Boolean calculatedExpiration) {
@@ -123,9 +141,9 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	}
 
 	/**
-	 * Gets whether the batch operation was calculated by the owning {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
+	 * Gets whether the batch operation was calculated by the owning
+	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be
+	 * recalculated when historical operations are added to the system.
 	 * @return Whether the batch operation was calculated.
 	 */
 	public Boolean isCalculatedBatch() {
@@ -137,13 +155,12 @@ public class ItemStockDetailBase extends BaseOpenmrsObject {
 	}
 
 	/**
-	 * Sets whether the batch operation was calculated by the owning {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}.
-	 *
-	 * Details that are calculated can be recalculated when historical operations are added to the system.
+	 * Sets whether the batch operation was calculated by the owning
+	 * {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. Details that are calculated can be
+	 * recalculated when historical operations are added to the system.
 	 * @param calculatedBatch Whether the batch operation was calculated.
 	 */
 	public void setCalculatedBatch(Boolean calculatedBatch) {
 		this.calculatedBatch = calculatedBatch;
 	}
 }
-

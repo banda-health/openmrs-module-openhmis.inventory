@@ -1,3 +1,16 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.webservices.rest.search;
 
 import java.util.Arrays;
@@ -21,17 +34,20 @@ import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link StockOperationItem}s.
+ */
 @Component
 public class StockOperationItemSearchHandler implements SearchHandler {
 	private static final Log LOG = LogFactory.getLog(ItemStockSearchHandler.class);
 
 	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.OPERATION_ITEM_RESOURCE,
-			Arrays.asList("*"),
-			Arrays.asList(
-					new SearchQuery.Builder("Find all operation items by operation.")
-							.withRequiredParameters("operation_uuid").build()
-			)
-	);
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Find all operation items by operation.")
+	                        .withRequiredParameters("operation_uuid").build()
+	                )
+	        );
 
 	private IStockOperationDataService operationDataService;
 
@@ -66,7 +82,7 @@ public class StockOperationItemSearchHandler implements SearchHandler {
 			return new EmptySearchResult();
 		} else {
 			return new AlreadyPagedWithLength<StockOperationItem>(context, items,
-					pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		}
 	}
 }

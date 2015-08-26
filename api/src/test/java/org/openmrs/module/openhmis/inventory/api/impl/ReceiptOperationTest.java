@@ -223,7 +223,8 @@ public class ReceiptOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test(expected = APIException.class)
-	public void submitOperation_shouldThrowExceptionfDisposedQuantityIsNegative_singleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldThrowExceptionfDisposedQuantityIsNegative_singleBatch_noExpirationDate()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 
 		Item item = itemTest.createEntity(true);
@@ -268,7 +269,8 @@ public class ReceiptOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_noExpirationDate() throws Exception {
+	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_noExpirationDate()
+	        throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);
@@ -338,7 +340,8 @@ public class ReceiptOperationTest extends BaseModuleContextSensitiveTest {
 	}
 
 	@Test
-	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_specificExpirationDate() throws Exception {
+	public void submitOperation_shouldUpdateBatchIfStockAddedToNegtiveQuantityBatch_singleBatch_specificExpirationDate()
+	        throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);
@@ -411,7 +414,5 @@ public class ReceiptOperationTest extends BaseModuleContextSensitiveTest {
 
 		Assert.assertEquals(1, operation.getTransactions().size());
 	}
-
-
 
 }

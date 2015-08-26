@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.webservices.rest.resource;
 
@@ -55,10 +55,13 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.springframework.web.client.RestClientException;
 
-@Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass=StockOperation.class,
-		supportedOpenmrsVersions={"1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+/**
+ * REST resource representing a {@link StockOperation}.
+ */
+@Resource(name = ModuleRestConstants.OPERATION_RESOURCE, supportedClass = StockOperation.class,
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class StockOperationResource
-		extends BaseRestInstanceCustomizableMetadataResource<StockOperation, IStockOperationType, StockOperationAttribute> {
+        extends BaseRestInstanceCustomizableMetadataResource<StockOperation, IStockOperationType, StockOperationAttribute> {
 	private static final Log LOG = LogFactory.getLog(StockOperationResource.class);
 
 	private IStockOperationService operationService;
@@ -201,18 +204,18 @@ public class StockOperationResource
 		processItemStock(operation, items);
 
 		BaseRestDataResource.syncCollection(operation.getItems(), items,
-				new Action2<Collection<StockOperationItem>, StockOperationItem>() {
-					@Override
-					public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
-						operation.addItem(item);
-					}
-				},
-				new Action2<Collection<StockOperationItem>, StockOperationItem>() {
-					@Override
-					public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
-						operation.removeItem(item);
-					}
-				});
+		    new Action2<Collection<StockOperationItem>, StockOperationItem>() {
+			    @Override
+			    public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
+				    operation.addItem(item);
+			    }
+		    },
+		    new Action2<Collection<StockOperationItem>, StockOperationItem>() {
+			    @Override
+			    public void apply(Collection<StockOperationItem> collection, StockOperationItem item) {
+				    operation.removeItem(item);
+			    }
+		    });
 	}
 
 	@PropertySetter("instanceType")
@@ -267,7 +270,7 @@ public class StockOperationResource
 		if (user == null) {
 			LOG.warn("Could not retrieve the current user to be able to find the current user operations.");
 
-			return  new EmptySearchResult();
+			return new EmptySearchResult();
 		}
 
 		StockOperationStatus status = getStatus(context);
@@ -280,11 +283,13 @@ public class StockOperationResource
 		if (status == null && stockOperationType == null && item == null && stockroom == null) {
 			results = ((IStockOperationDataService)getService()).getUserOperations(user, pagingInfo);
 		} else {
-			results = ((IStockOperationDataService)getService()).getUserOperations(user, status, stockOperationType, item, stockroom, pagingInfo);
+			results =
+			        ((IStockOperationDataService)getService()).getUserOperations(user, status, stockOperationType, item,
+			            stockroom, pagingInfo);
 		}
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(),
-				pagingInfo.getTotalRecordCount());
+		        pagingInfo.getTotalRecordCount());
 	}
 
 	protected PageableResult getOperationsByContextParams(RequestContext context) {
@@ -317,7 +322,7 @@ public class StockOperationResource
 		}
 
 		return new AlreadyPagedWithLength<StockOperation>(context, results, pagingInfo.hasMoreResults(),
-				pagingInfo.getTotalRecordCount());
+		        pagingInfo.getTotalRecordCount());
 	}
 
 	protected StockOperationStatus getStatus(RequestContext context) {
@@ -342,7 +347,8 @@ public class StockOperationResource
 			stockOperationType = stockOperationTypeDataService.getByUuid(stockOperationTypeUuid);
 			if (stockOperationType == null) {
 				LOG.warn("Could not parse Stock Operation Type '" + stockOperationTypeUuid + "'");
-				throw new IllegalArgumentException("The type '" + stockOperationTypeUuid + "' is not a valid operation type.");
+				throw new IllegalArgumentException("The type '" + stockOperationTypeUuid
+				        + "' is not a valid operation type.");
 			}
 		}
 
@@ -371,7 +377,8 @@ public class StockOperationResource
 			item = itemDataService.getByUuid(stockOperationItemUuid);
 			if (item == null) {
 				LOG.warn("Could not parse Item '" + stockOperationItemUuid + "'");
-				throw new IllegalArgumentException("The item '" + stockOperationItemUuid + "' is not a valid operation type.");
+				throw new IllegalArgumentException("The item '" + stockOperationItemUuid
+				        + "' is not a valid operation type.");
 			}
 		}
 		return item;
@@ -400,8 +407,8 @@ public class StockOperationResource
 
 				if (opItem.getExpiration() == null) {
 					// If the operation has no source then all expirable items must define an expiration
-					throw new IllegalArgumentException("The expiration for item '" + opItem.getItem().getName() +
-							"' must be defined");
+					throw new IllegalArgumentException("The expiration for item '" + opItem.getItem().getName()
+					        + "' must be defined");
 				} else {
 					// An expiration was specified so make sure that the calculated flag is not set
 					opItem.setCalculatedExpiration(false);

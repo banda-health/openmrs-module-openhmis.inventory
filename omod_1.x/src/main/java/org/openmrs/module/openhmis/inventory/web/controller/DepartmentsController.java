@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 
@@ -21,8 +21,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+/**
+ * Controller for the Manage Departments page.
+ */
 // The non-standard controller name is to avoid name conflicts with old versions of the cashier module
-@Controller(value="invDepartmentsController")
+@Controller(value = "invDepartmentsController")
 @RequestMapping(ModuleWebConstants.DEPARTMENTS_ROOT)
 public class DepartmentsController {
 	@RequestMapping(method = RequestMethod.GET)
@@ -30,4 +33,3 @@ public class DepartmentsController {
 		model.addAttribute("modelBase", "openhmis.inventory.department");
 	}
 }
-

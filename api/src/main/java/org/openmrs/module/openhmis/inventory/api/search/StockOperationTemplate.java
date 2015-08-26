@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.search;
 
@@ -22,6 +22,10 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 
+/**
+ * Search template to override {@link StockOperation} model properties that can cause issues when performing a template
+ * search.
+ */
 public class StockOperationTemplate extends StockOperation {
 	private Stockroom stockroom;
 
@@ -68,6 +72,5 @@ public class StockOperationTemplate extends StockOperation {
 		}
 		return item;
 	}
-
 
 }

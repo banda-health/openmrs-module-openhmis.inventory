@@ -5,17 +5,20 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 
+/**
+ * This class provides a standard way to get the various system-defined {@link IStockOperationType}s.
+ */
 public final class WellKnownOperationTypes {
 	public static final String ADJUSTMENT_UUID = "288fd7fe-1374-4f7a-89e6-d5f1ac97d4a5";
 	public static final String DISPOSED_UUID = "84be0aaf-70cf-4ebb-83e3-088e5d375905";

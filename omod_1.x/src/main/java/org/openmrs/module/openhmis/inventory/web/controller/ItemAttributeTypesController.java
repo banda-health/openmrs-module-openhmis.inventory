@@ -13,14 +13,17 @@
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 
+import java.io.IOException;
+
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.IOException;
-
+/**
+ * Controller for the item attribute fragment/page.
+ */
 @Controller
 @RequestMapping(ModuleWebConstants.ITEM_ATTRIBUTE_TYPES_ROOT)
 public class ItemAttributeTypesController {

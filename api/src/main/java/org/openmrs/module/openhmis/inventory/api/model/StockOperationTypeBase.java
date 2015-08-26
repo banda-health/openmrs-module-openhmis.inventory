@@ -1,3 +1,16 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import java.util.Set;
@@ -10,9 +23,11 @@ import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomiz
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 
-public abstract class StockOperationTypeBase
-		extends BaseInstanceCustomizableType<StockOperationAttributeType>
-		implements IStockOperationType {
+/**
+ * Base model class used by models that represent a stock operation type.
+ */
+public abstract class StockOperationTypeBase extends BaseInstanceCustomizableType<StockOperationAttributeType>
+        implements IStockOperationType {
 	public static final long serialVersionUID = 0L;
 
 	private Integer id;
@@ -129,8 +144,7 @@ public abstract class StockOperationTypeBase
 		}
 
 		// If there is a user restriction and either the role test did not pass or if there is no role test
-		if (user != null &&
-				((role != null && !canProcess) || (role == null))) {
+		if (user != null && ((role != null && !canProcess) || (role == null))) {
 			if (currentUser.getUserId().equals(user.getUserId())) {
 				canProcess = true;
 			} else {
@@ -141,9 +155,8 @@ public abstract class StockOperationTypeBase
 		return canProcess;
 	}
 
-	protected Set<StockOperationTransaction> executeCopyReserved(
-			StockOperation operation,
-			Action2<ReservedTransaction, StockOperationTransaction> action) {
+	protected Set<StockOperationTransaction> executeCopyReserved(StockOperation operation,
+	        Action2<ReservedTransaction, StockOperationTransaction> action) {
 		Set<StockOperationTransaction> transactions = new TreeSet<StockOperationTransaction>();
 
 		// Loop through the reserved transactions
@@ -167,9 +180,8 @@ public abstract class StockOperationTypeBase
 		return transactions;
 	}
 
-	protected Set<StockOperationTransaction> executeCopyReservedAndClear(
-			StockOperation operation,
-			Action2<ReservedTransaction, StockOperationTransaction> action) {
+	protected Set<StockOperationTransaction> executeCopyReservedAndClear(StockOperation operation,
+	        Action2<ReservedTransaction, StockOperationTransaction> action) {
 		Set<StockOperationTransaction> result = executeCopyReserved(operation, action);
 
 		// Clear out the transactions for the operation
@@ -178,4 +190,3 @@ public abstract class StockOperationTypeBase
 		return result;
 	}
 }
-
