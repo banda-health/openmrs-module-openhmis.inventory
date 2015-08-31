@@ -13,19 +13,9 @@
  */
 package org.openmrs.module.openhmis.inventory.web.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.jasperreport.JasperReport;
-import org.openmrs.module.jasperreport.JasperReportService;
-import org.openmrs.module.jasperreport.ReportGenerator;
-import org.openmrs.module.jasperreport.util.JasperReportConstants;
+import org.openmrs.module.jasperreport.ReportsControllerBase;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
@@ -33,20 +23,23 @@ import org.openmrs.module.openhmis.inventory.api.model.Settings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Controller for the Jasper report renderer.
  */
 @Controller(value = "invJasperReportController")
 @RequestMapping(value = ModuleWebConstants.JASPER_REPORT_PAGE)
-public class JasperReportController {
+public class JasperReportController extends ReportsControllerBase {
 
-	@RequestMapping(method = RequestMethod.GET)
-	public String render(@RequestParam(value = "reportId", required = true) int reportId, WebRequest request,
-	        HttpServletResponse response) throws IOException {
+	@Override
+	public String parse(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
 		Settings settings = ModuleSettings.loadSettings();
 		if (settings.getStockTakeReportId() != null && reportId == settings.getStockTakeReportId()) {
 			return renderStockTakeReport(reportId, request, response);
@@ -62,7 +55,6 @@ public class JasperReportController {
 		} else {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown report.");
 		}
-
 		return null;
 	}
 
@@ -274,33 +266,5 @@ public class JasperReportController {
 		}
 
 		return renderReport(reportId, params, null, response);
-	}
-
-	private String renderReport(int reportId, HashMap<String, Object> parameters, String reportName,
-	        HttpServletResponse response) throws IOException {
-		JasperReportService jasperService = Context.getService(JasperReportService.class);
-		JasperReport report = jasperService.getJasperReport(reportId);
-		String message = null;
-		if (report == null) {
-			message = "Could not find report. The Report could not be found in the system. Please upload the reports and "
-			        + "try again";
-			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId=" + reportId + "&message=" + message;
-		}
-
-		if (!StringUtils.isEmpty(reportName)) {
-			report.setName(reportName);
-		}
-
-		try {
-			ReportGenerator.generate(report, parameters, false, true);
-		} catch (IOException e) {
-			message = "Error Generating the report. The Report files are not present. Please Upload the report"
-			        + " files and try again. The following error occurred " + e.getMessage();
-			return "redirect:" + JasperReportConstants.REPORT_ERROR_PAGE + "?reportId=" + reportId + "&message=" + message;
-		}
-
-		return "redirect:" + ModuleWebConstants.REPORT_DOWNLOAD_URL + "?reportName="
-		        + report.getName().replaceAll("\\W", "")
-		        + ".pdf";
 	}
 }
