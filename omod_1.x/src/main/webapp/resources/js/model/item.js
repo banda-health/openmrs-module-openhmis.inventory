@@ -24,8 +24,8 @@ define(
 	function(_, openhmis, __) {
 		openhmis.ItemCode = openhmis.GenericModel.extend({
 			meta: {
-				name: "Item Code",
-				namePlural: "Item Codes",
+				name: openhmis.getMessage('openhmis.inventory.item.code.name'),
+				namePlural: openhmis.getMessage('openhmis.inventory.item.code.namePlural'),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemCode',
 				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.itemCode')
@@ -43,8 +43,8 @@ define(
 
 		openhmis.ItemPrice = openhmis.GenericModel.extend({
 			meta: {
-				name: "Item Price",
-				namePlural: "Item Prices",
+				name: openhmis.getMessage('openhmis.inventory.item.price.name'),
+				namePlural: openhmis.getMessage('openhmis.inventory.item.price.namePlural'),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemPrice',
 				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.itemPrice')
@@ -110,8 +110,8 @@ define(
             attributeClass: openhmis.ItemAttribute,
 
             meta: {
-				name: "Item",
-				namePlural: "Items",
+				name: openhmis.getMessage('openhmis.inventory.item.name'),
+				namePlural: openhmis.getMessage('openhmis.inventory.item.namePlural'),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'item',
 				confirmDelete: openhmis.getMessage('openhmis.inventory.item.delete.confirm.Item')

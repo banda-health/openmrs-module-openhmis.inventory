@@ -22,8 +22,8 @@ define(
     function(openhmis, __) {
         openhmis.ItemConceptSuggestion = openhmis.GenericModel.extend({
             meta: {
-                name: __("Item <-> Concept Suggestion"),
-                namePlural: __("Item <-> Concept Suggestions"),
+                name: __(openhmis.getMessage('openhmis.inventory.item.concept.suggestion.name')),
+                namePlural: __(openhmis.getMessage('openhmis.inventory.item.concept.suggestion.namePlural')),
                 openmrsType: 'metadata',
                 restUrl: openhmis.url.inventoryModelBase + 'itemConceptSuggestion'
             },
