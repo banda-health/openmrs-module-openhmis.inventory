@@ -21,8 +21,8 @@ define(
 	function(openhmis, __) {
         openhmis.Stockroom = openhmis.GenericModel.extend({
 			meta: {
-				name: __("Stockroom"),
-				namePlural: __("Stockrooms"),
+				name: __(openhmis.getMessage('openhmis.inventory.stockroom.name')),
+				namePlural: __(openhmis.getMessage('openhmis.inventory.stockroom.namePlural')),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'stockroom'
 			},
@@ -60,8 +60,8 @@ define(
 
 		openhmis.ItemStock = openhmis.GenericModel.extend({
 			meta: {
-				name: __("Item Stock"),
-				namePlural: __("Item Stock"),
+				name: __(openhmis.getMessage('openhmis.inventory.item.stock.name')),
+				namePlural: __(openhmis.getMessage('openhmis.inventory.item.stock.namePlural')),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemStock'
 			},
@@ -166,8 +166,8 @@ define(
 
 		openhmis.ItemStockDetail = openhmis.ItemStockDetailBase.extend({
 			meta: {
-				name: __("Item Stock Detail"),
-				namePlural: __("Item Stock Detail"),
+				name: __(openhmis.getMessage('openhmis.inventory.item.stock.details.name')),
+				namePlural: __(openhmis.getMessage('openhmis.inventory.item.stock.details.namePlural')),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'itemStockDetail'
 			},
@@ -190,8 +190,8 @@ define(
 
         openhmis.ItemStockEntry = openhmis.ItemStockDetailBase.extend({
             meta: {
-                name: __("Item Stock"),
-                namePlural: __("Item Stock"),
+                name: __(openhmis.getMessage('openhmis.inventory.item.stock.name')),
+                namePlural: __(openhmis.getMessage('openhmis.inventory.item.stock.namePlural')),
                 openmrsType: 'metadata',
                 restUrl: openhmis.url.inventoryModelBase + 'itemStockEntry'
             },

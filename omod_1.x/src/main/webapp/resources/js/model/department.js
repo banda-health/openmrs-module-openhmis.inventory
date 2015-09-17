@@ -20,8 +20,8 @@ define(
 	function(openhmis, __) {
 		openhmis.Department = openhmis.GenericModel.extend({
 			meta: {
-				name: __("Department"),
-				namePlural: __("Departments"),
+				name: __(openhmis.getMessage('openhmis.inventory.department.name')),
+				namePlural: __(openhmis.getMessage('openhmis.inventory.department.namePlural')),
 				openmrsType: 'metadata',
 				restUrl: openhmis.url.inventoryModelBase + 'department'
 			},

@@ -48,7 +48,7 @@ define(
 					className: "inline",
 					schema: {
 						department_uuid: {
-							title: __("Department"),
+							title: __(openhmis.getMessage('openhmis.inventory.department.name')),
 							type: "Select",
 							options: departmentCollection
 						},
@@ -207,7 +207,7 @@ define(
 					className: "inline",
 					schema: {
 						location_uuid: {
-							title: __("Location"),
+							title: __(openhmis.getMessage('openhmis.inventory.location.name')),
 							type: "Select",
 							options: locationCollection
 						},
@@ -346,17 +346,17 @@ define(
                             options: this.STATUSES
                         },
                         operationType_uuid: {
-                            title: __("Operation Type"),
+                            title: __(openhmis.getMessage('openhmis.inventory.operations.type.name')),
                             type: "Select",
                             options: operationTypeCollection
                         },
                         stockroom_uuid: {
-                            title: __("Stockroom"),
+                            title: __(openhmis.getMessage('openhmis.inventory.stockroom.name')),
                             type: "Select",
                             options: stockroomCollection
                         },
                         operation_item: {
-                            title: __("Item"),
+                            title: __(openhmis.getMessage('openhmis.inventory.item.name')),
                             type: "Text",
                             editorClass: "search"
                         }
@@ -443,7 +443,7 @@ define(
                     className: "inline",
                     schema: {
                         operation_item: {
-                            title: __("Item"),
+                            title: __(openhmis.getMessage('openhmis.inventory.item.name')),
                             type: "Text",
                             editorClass: "search"
                         }
@@ -520,7 +520,7 @@ define(
                     className: "inline",
                     schema: {
                         transaction_item: {
-                            title: __("Item"),
+                            title: __(openhmis.getMessage('openhmis.inventory.item.name')),
                             type: "Text",
                             editorClass: "search"
                         }

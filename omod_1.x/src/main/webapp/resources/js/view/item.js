@@ -36,7 +36,7 @@ define(
                     }),
                     showRetiredOption: false,
                     showRetired: true,
-                    listTitle: "Item Stock",
+                    listTitle: openhmis.getMessage('openhmis.inventory.item.stock.name'),
                     listFields: ['stockroom', 'quantity']
                 });
 
