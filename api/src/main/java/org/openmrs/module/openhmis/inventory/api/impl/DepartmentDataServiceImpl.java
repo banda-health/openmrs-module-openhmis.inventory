@@ -13,6 +13,10 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
@@ -33,5 +37,28 @@ public class DepartmentDataServiceImpl extends BaseMetadataDataServiceImpl<Depar
 	@Override
 	protected void validate(Department entity) {
 		return;
+	}
+
+	@Override
+	public List<Department> getAll(boolean includeVoided) {
+		return super.getAll(includeVoided);
+	}
+
+	/**
+	 * Gets a list of all departments sorted by name
+	 * @return sorted departments list
+	 */
+	@Override
+	public List<Department> getAllDepartmentsSorted(boolean includeVoided) {
+		List<Department> departments = getAll(includeVoided);
+		Collections.sort(departments, new Comparator<Department>() {
+
+			public int compare(Department d1, Department d2) {
+				return d1.getName().toLowerCase()
+				        .compareTo(d2.getName().toLowerCase());
+			}
+		});
+
+		return departments;
 	}
 }
