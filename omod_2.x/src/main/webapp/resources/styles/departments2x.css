@@ -1,0 +1,18 @@
+/*Contains CSS used to style manageDepartments.gsp*/
+.clickable-tr, .department-pagination span a {
+	cursor:pointer;
+}
+
+.clickable-tr:hover {
+	background-color: #dddddd;
+}
+
+.department-pagination {
+	float:right;
+}
+
+.linkDisabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  color: grey;
+}
