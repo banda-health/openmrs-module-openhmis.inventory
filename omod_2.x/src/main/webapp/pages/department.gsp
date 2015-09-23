@@ -17,13 +17,15 @@
 </script>
 
 <div id="current-department" ng-app="departmentApp" ng-controller="departmentController">
-	<h3>${ ui.message('openhmis.inventory.department.name') }</h3>
+	<h2 align="center">{{h2SubString}} ${ ui.message('openhmis.inventory.department.name') }</h2>
 	
-	<input type="hidden" ng-model="uuid"><br />
+	<input type="hidden" ng-model="uuid">
 		
-	${ ui.message('general.name') }
-	<input type="text" ng-model="name"><br /><br />
+	<h3>${ ui.message('general.name') }</h3>
+	<input type="text" ng-model="name" size="80" placeholder="${ ui.message('general.name') }">
 		
-	${ ui.message('general.description') }
-	<input type="text" ng-model="description">
+	<h3>${ ui.message('general.description') }</h3>
+	<input type="text" ng-model="description" size="80" placeholder="${ ui.message('general.description') }">
+	<br /><br />
+	<input type="button" class="confirm" value="${ ui.message('general.save') }" />
 </div>

@@ -15,20 +15,24 @@
 	];
 </script>
 
-<h1 align="center">${ ui.message('openhmis.inventory.department.namePlural') }</h1>
 <div id="departments-body">
-	<h2>${ ui.message('openhmis.inventory.department.existing') }</h2>
-	<div id="display-departments"  ng-app="departmentsApp" ng-controller="departmentsController">
-		<h3>${ ui.message('openhmis.inventory.department.search') }</h3>
-		<div id="search-departments">
-			<span><input type="text" ng-model="searchByName" class="field-display ui-autocomplete-input" placeholder="${ ui.message('openhmis.inventory.department.enterSearchPhrase') }" size="40" autofocus></span>
-			<span>${ ui.message('general.show') }: </span>
-			<span><select ng-model="numberToShow"><option value='5'>5</option><option value='10'>10</option><option value='25'>25</option><option value='50'>50</option><option value='100'>100</option><select></span>
-		</div>
-		
-		<h3>${ ui.message('openhmis.inventory.department.namePlural') }: ${ ui.message('openhmis.inventory.department.total')}({{departments.length}})</h3>
+	<div id="manage-departments-header">
+		<span class="h1-substitue-left" style="float:left;">
+			${ ui.message('openhmis.inventory.admin.departments') }
+		</span>
+		<span style="float:right;">
+			<a class="button confirm" href="department.page" >
+				<i class ="icon-plus"></i>
+		        ${ ui.message('openhmis.inventory.department.new') }
+		    </a>
+		</span>
+	</div>
+	<br /><br /><br />
+	<div id="display-departments" ng-app="departmentsApp" ng-controller="departmentsController">
 		<div id="departments">
-			<table>
+			<input type="text" ng-model="searchByName" class="field-display ui-autocomplete-input" placeholder="${ ui.message('openhmis.inventory.department.enterSearchPhrase') }" size="80" autofocus>
+			<br /><br />
+			<table style="margin-bottom:5px;">
 				<thead>
 					<tr>
 						<th>${ ui.message('general.name') }</th>
@@ -36,28 +40,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="clickable-tr" ng-repeat="department in departments | filter:searchByName | orderBy: 'name' | startFrom:currentPage*numberToShow | limitTo:numberToShow" ng-click="loadDepartment(department.uuid)">
+					<tr class="clickable-tr" ng-repeat="department in departments | filter:searchByName | orderBy: 'name' | startFrom:currentPage*10 | limitTo:10" ng-click="loadDepartment(department.uuid)">
 						<td>{{department.name}}</td>
 						<td>{{department.description}}</td>
 					</tr>
 				</tbody>
 			</table>
-			<br />
-			<div class="department-pagination">
-				<span><button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">${ ui.message('general.previous') }</button></span>
-				    <span>{{currentPage+1}}/{{numberOfPages()}}</span>
-				<span><button ng-disabled="currentPage >= (departments.length/numberOfPages) - 1" ng-click="currentPage=currentPage+1">${ ui.message('general.next') }</button></span>
+			<div id="below-departments-table">
+				<span style="float:left;">
+					<div id="showing-departments">
+						<span>${ ui.message('openhmis.inventory.general.showing') } <b>{{pagingFrom()}}</b> ${ ui.message('openhmis.inventory.general.to') } <b>{{pagingTo()}}</b></span>
+						<span> ${ ui.message('openhmis.inventory.general.of') } <b>{{departments.length}}</b> ${ ui.message('openhmis.inventory.general.entries') }</span>
+					</div>
+				</span>
+				<span style="float:right;">
+					<div class="department-pagination">
+						<span><button class="paging-button" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">${ ui.message('general.previous') }</button></span>
+						<span>${ ui.message('openhmis.inventory.general.page') } {{currentPage+1}}/{{numberOfPages()}}</span>
+						<span><button class="paging-button" ng-disabled="currentPage == numberOfPages() - 1" ng-click="currentPage=currentPage+1">${ ui.message('general.next') }</button></span>
+					</div>
+				</span>
+				<span style="float:center;">
+					<div id="includeVoided-departments">
+						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="includeRetiredDepartments()"></span>
+						<span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
+					</div>
+				</span>
 			</div>
 		</div>
-	</div>
-	
-	<br />
-	
-	<h2>${ ui.message('openhmis.inventory.department.addNew') }</h2>
-	<div id="add-new-department">
-		<a class="button" href="department.page" >
-			<i class ="icon-plus"></i>
-            ${ ui.message('openhmis.inventory.department.new') }
-        </a>
 	</div>
 </div>

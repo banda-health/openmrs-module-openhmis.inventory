@@ -8,15 +8,35 @@ var departmentApp = angular.module('departmentsApp', []);
 departmentApp.controller('departmentsController', function($scope, $http) {
     $http.get(departmentsRestUrl)
         .success(function(response) {
-            $scope.departments = response.results;
-            $scope.length = response.length;
+            $scope.includeRetired = false;
             $scope.currentPage = 0;
-            $scope.numberToShow = "5";
+            $scope.initialDepartments = response.results;
+            var departments = [];
+            
+            for(i = 0; i < $scope.initialDepartments.length; i++) {
+            	if(!$scope.includeRetired && $scope.initialDepartments[i].retired === false) {
+            		departments.push($scope.initialDepartments[i]);
+            	}
+            }
+            $scope.departments = departments.length > 0 ? departments : $scope.initialDepartments;
+            $scope.initialDepartments = $scope.departments;
+            $scope.length = $scope.departments.length;
             $scope.loadDepartment = function(uuid) {
             	window.location = departmentUrl + "?uuid=" + uuid;
             };
             $scope.numberOfPages=function(){
-                return Math.ceil($scope.departments.length/parseInt($scope.numberToShow));                
+                return Math.ceil($scope.departments.length/10);                
+            };
+            $scope.pagingFrom = function() {
+            	return $scope.currentPage <= 0 ? 0 : ($scope.currentPage) * 10;
+            };
+            $scope.pagingTo = function() {
+            	return $scope.currentPage <= 0 ? 10 : ($scope.currentPage + 1) * 10;
+            };
+            $scope.includeRetiredDepartments = function() {//TODO not yet working; $scope.initialDepartments doesn't contain retired Departments
+            	if($scope.includeRetired) {
+            		$scope.departments = $scope.initialDepartments;
+            	}
             };
         });
 });

@@ -5,12 +5,13 @@ var departmentsRestUrl = window.location.protocol + "//" + window.location.host 
  */
 angular.module('departmentApp', []).controller('departmentController', function($scope, $http) {
 	var uuid = window.location.search.split("=")[1];//search looks like; '?uuid=09404'
-    var departmentRestUrl = departmentsRestUrl + "/" + (uuid === undefined ? "" : uuid);
+    var departmentRestUrl = departmentsRestUrl + (uuid === undefined ? "" :  "/" + uuid);
     
     $scope.name = "";
     $scope.description = "";
     $scope.uuid = "";
     $scope.retired = false;
+    $scope.h2SubString = "New";
     
     if(departmentRestUrl !== departmentsRestUrl) {
 	    $http.get(departmentRestUrl)
@@ -19,6 +20,7 @@ angular.module('departmentApp', []).controller('departmentController', function(
 	            $scope.description = response.description;
 	            $scope.uuid = response.uuid;
 	            $scope.retired = response.retired;
+	            $scope.h2SubString = "Edit";
 	        });
     }
 });

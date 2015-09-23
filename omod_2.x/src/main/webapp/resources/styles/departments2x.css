@@ -7,12 +7,28 @@
 	background-color: #dddddd;
 }
 
-.department-pagination {
-	float:right;
-}
-
 .linkDisabled {
   cursor: not-allowed;
   pointer-events: none;
   color: grey;
+}
+
+.paging-button {
+	border: 0.5;
+	height:20px;
+	padding-top:1.4px;
+}
+
+.showing-summary-select {
+	height:20px;
+}
+
+#below-departments-table {
+	font-size: 13px;
+}
+
+.h1-substitue-left {
+	color: #00463f;
+    clear: both;
+    font-size: 1.5em;;
 }
