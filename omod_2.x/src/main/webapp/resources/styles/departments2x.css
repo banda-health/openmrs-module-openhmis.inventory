@@ -32,3 +32,20 @@
     clear: both;
     font-size: 1.5em;;
 }
+
+/*Supplements bootstrap.css*/
+.searchinput {
+    width: 700px;
+}
+.searchclear {
+    position:absolute;
+    right:5px;
+    top:0;
+    bottom:0;
+    height:14px;
+    margin:auto;
+    font-size:24px;
+    cursor:pointer;
+    color:#ccc;
+    margin-top:7px;
+}

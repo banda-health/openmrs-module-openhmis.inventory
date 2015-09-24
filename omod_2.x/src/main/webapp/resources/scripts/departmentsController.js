@@ -8,34 +8,16 @@ var departmentApp = angular.module('departmentsApp', []);
 departmentApp.controller('departmentsController', function($scope, $http) {
     $http.get(departmentsRestUrl)
         .success(function(response) {
-            $scope.includeRetired = false;
-            $scope.currentPage = 0;
-            $scope.initialDepartments = response.results;
-            var departments = [];
-            
-            for(i = 0; i < $scope.initialDepartments.length; i++) {
-            	if(!$scope.includeRetired && $scope.initialDepartments[i].retired === false) {
-            		departments.push($scope.initialDepartments[i]);
-            	}
-            }
-            $scope.departments = departments.length > 0 ? departments : $scope.initialDepartments;
-            $scope.initialDepartments = $scope.departments;
-            $scope.length = $scope.departments.length;
-            $scope.loadDepartment = function(uuid) {
-            	window.location = departmentUrl + "?uuid=" + uuid;
-            };
-            $scope.numberOfPages=function(){
-                return Math.ceil($scope.departments.length/10);                
-            };
-            $scope.pagingFrom = function() {
-            	return $scope.currentPage <= 0 ? 0 : ($scope.currentPage) * 10;
-            };
-            $scope.pagingTo = function() {
-            	return $scope.currentPage <= 0 ? 10 : ($scope.currentPage + 1) * 10;
-            };
-            $scope.includeRetiredDepartments = function() {//TODO not yet working; $scope.initialDepartments doesn't contain retired Departments
+        	initialize($scope, response, departmentUrl, false);
+            $scope.includeRetiredDepartments = function() {
             	if($scope.includeRetired) {
-            		$scope.departments = $scope.initialDepartments;
+            		$http.get(departmentsRestUrl + "?includeAll=true").success(function(resp) {//returns retired departments as well
+            			initialize($scope, resp, departmentUrl, true);
+                    });
+            	} else {
+            		$http.get(departmentsRestUrl).success(function(resp) {
+            			initialize($scope, resp, departmentUrl, false);
+                    });
             	}
             };
         });
@@ -44,7 +26,27 @@ departmentApp.controller('departmentsController', function($scope, $http) {
 //initialize a new startFrom filter
 departmentApp.filter('startFrom', function() {
   return function(input, start) {
+      if (!input || !input.length) { return; }
       start = +start; //parse to int
       return input.slice(start);
   }
 });
+
+function initialize(scopeObj, response, departmentUrl, includeRetired) {
+	scopeObj.includeRetired = includeRetired;
+    scopeObj.currentPage = 0;
+    scopeObj.departments = response.results;
+    scopeObj.length = scopeObj.departments.length;
+    scopeObj.loadDepartment = function(uuid) {
+    	window.location = departmentUrl + "?uuid=" + uuid;
+    };
+    scopeObj.numberOfPages=function(){
+        return Math.ceil(scopeObj.departments.length/10);                
+    };
+    scopeObj.pagingFrom = function() {
+    	return scopeObj.currentPage <= 0 ? 0 : (scopeObj.currentPage) * 10;//TODO must the default number to be paged = 10 be available for change by the user?
+    };
+    scopeObj.pagingTo = function() {
+    	return scopeObj.currentPage <= 0 ? 10 : (scopeObj.currentPage + 1) * 10;
+    };
+}

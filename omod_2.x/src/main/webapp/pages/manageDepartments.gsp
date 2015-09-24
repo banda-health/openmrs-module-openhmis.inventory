@@ -1,6 +1,7 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.departments") ])
     ui.includeJavascript("uicommons", "angular.min.js")
+    ui.includeCss("openhmis.inventory", "bootstrap.css")
     ui.includeCss("openhmis.inventory", "departments2x.css")
     ui.includeJavascript("openhmis.inventory", "departmentsController.js")
 %>
@@ -13,6 +14,18 @@
 	    { label: "${ ui.message("openhmis.inventory.manage.module")}", link: 'inventory/manageModule.page' },
 	    { label: "${ ui.message("openhmis.inventory.admin.departments")}" }
 	];
+	var jq = jQuery;
+	
+	jq(document).ready(function () {//supports reseting search phrase to blank
+	    jq(".searchinput").keyup(function () {
+	        jq(this).next().toggle(Boolean(jq(this).val()));
+	    });
+	    jq(".searchclear").toggle(Boolean(jq(".searchinput").val()));
+	    jq(".searchclear").click(function () {
+	    	jq(this).prev().val('').focus();
+	        jq(this).hide();
+	    });
+	});
 </script>
 
 <div id="departments-body">
@@ -30,7 +43,11 @@
 	<br /><br /><br />
 	<div id="display-departments" ng-app="departmentsApp" ng-controller="departmentsController">
 		<div id="departments">
-			<input type="text" ng-model="searchByName" class="field-display ui-autocomplete-input" placeholder="${ ui.message('openhmis.inventory.department.enterSearchPhrase') }" size="80" autofocus>
+			<div class="btn-group">
+				<input type="text" ng-model="searchByName" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.department.enterSearchPhrase') }" size="80" autofocus>
+				<span id="searchclear" class="searchclear icon-remove-circle"></span>
+			</div>
+			
 			<br /><br />
 			<table style="margin-bottom:5px;">
 				<thead>
