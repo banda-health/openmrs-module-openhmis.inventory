@@ -1,4 +1,4 @@
-var departmentsRestUrl = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname.split("/")[1] + "/ws/rest/v2/inventory/department";
+var departmentsRestUrl = "../ws/rest/v2/inventory/department";
 
 /*
  * Defines the Angular Application/Module and controller for either an existing or empty department used in OpenMRS 2.x

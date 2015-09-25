@@ -1,6 +1,6 @@
 /*Contains CSS used to style manageDepartments.gsp*/
 .clickable-tr, .department-pagination span a {
-	cursor:pointer;
+	cursor:pointer;/*turns to a finger instead of pointer*/
 }
 
 .clickable-tr:hover {
@@ -11,6 +11,13 @@
   cursor: not-allowed;
   pointer-events: none;
   color: grey;
+}
+
+a.disabled {
+    color: #A2D0DB;
+    cursor: default;
+    pointer-events: none;
+    text-decoration: none;
 }
 
 .paging-button {
@@ -24,7 +31,7 @@
 }
 
 #below-departments-table {
-	font-size: 13px;
+	font-size: 14px;
 }
 
 .h1-substitue-left {

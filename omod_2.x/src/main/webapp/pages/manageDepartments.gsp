@@ -23,6 +23,7 @@
 	    jq(".searchclear").toggle(Boolean(jq(".searchinput").val()));
 	    jq(".searchclear").click(function () {
 	    	jq(this).prev().val('').focus();
+	    	jq(this).prev().trigger('input');
 	        jq(this).hide();
 	    });
 	});
@@ -72,9 +73,11 @@
 				</span>
 				<span style="float:right;">
 					<div class="department-pagination">
-						<span><button class="paging-button" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">${ ui.message('general.previous') }</button></span>
-						<span>${ ui.message('openhmis.inventory.general.page') } {{currentPage+1}}/{{numberOfPages()}}</span>
-						<span><button class="paging-button" ng-disabled="currentPage == numberOfPages() - 1" ng-click="currentPage=currentPage+1">${ ui.message('general.next') }</button></span>
+						<span><a a-disabled="currentPage == 0" ng-click="currentPage=0">${ ui.message('searchWidget.first') }</a>  </span>
+						<span><a a-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">${ ui.message('searchWidget.previous') }</a></span>
+						<span><a ng-repeat="page in existingPages()" ng-click="loadPageByNumber(page)" a-disabled="disAbleSinglePage(page)">{{page}} </a></span>
+						<span><a a-disabled="currentPage == numberOfPages() - 1" ng-click="currentPage=currentPage+1">${ ui.message('searchWidget.next') }</a></span>
+						<span>  <a a-disabled="currentPage == numberOfPages()-1" ng-click="currentPage=numberOfPages() - 1">${ ui.message('searchWidget.last') }</a></span>
 					</div>
 				</span>
 				<span style="float:center;">
