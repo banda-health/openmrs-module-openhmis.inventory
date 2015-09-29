@@ -28,7 +28,7 @@ departmentsApp.directive('aDisabled', function() {
     return {
         compile: function(tElement, tAttrs, transclude) {
             //Disable ngClick
-            tAttrs["ngClick"] = "!("+tAttrs["aDisabled"]+") && ("+tAttrs["ngClick"]+")";
+            tAttrs["ngClick"] = "!(" + tAttrs["aDisabled"] + ") && (" + tAttrs["ngClick"] + ")";
 
             //return a link function
             return function (scope, iElement, iAttrs) {

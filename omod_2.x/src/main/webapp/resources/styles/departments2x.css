@@ -56,3 +56,19 @@ a.disabled {
     color:#ccc;
     margin-top:7px;
 }
+
+.checkRequired {
+	color:red;
+}
+
+#current-department input.ng-invalid.ng-touched {
+    border-color: red;
+}
+
+ #current-department input.ng-valid.ng-touched {
+    border-color: #EBE9ED;
+}
+
+.successfulMessage {
+	color:green;
+}

@@ -13,8 +13,6 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
-import java.util.List;
-
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +22,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface IDepartmentDataService extends IMetadataDataService<Department> {
-
-	List<Department> getAllDepartmentsSorted(boolean includeVoided);
 
 }
