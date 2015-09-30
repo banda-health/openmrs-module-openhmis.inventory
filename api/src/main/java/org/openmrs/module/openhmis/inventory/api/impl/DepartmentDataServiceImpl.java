@@ -34,5 +34,4 @@ public class DepartmentDataServiceImpl extends BaseMetadataDataServiceImpl<Depar
 	protected void validate(Department entity) {
 		return;
 	}
-
 }

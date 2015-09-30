@@ -84,24 +84,32 @@ function persistDepartment(scope, http, departmentsRestUrl, action) {
 	if(action === "save") {
 		scope.nameIsRequiredMsg = "";
 		
-		if(!checkIfDepartmentExists(scope, departmentsRestUrl, http)) {
-			http.post(scope.uuid === "" ? departmentsRestUrl : departmentsRestUrl + "/" + scope.uuid, department).success(function(savedDepartment) {
-				message += "Saved Department";
+		if(scope.thisIsANewBill) {
+			http.get(departmentsRestUrl).success(function(departments) {
+				var names = [];
 				
-				initializeDepartment(departmentsRestUrl + "/" + savedDepartment.uuid, departmentsRestUrl, http, scope);
-				scope.successfulMsg = message;
-		    });
+				for(i = 0; i < departments.length; i++) {
+					names.push(departments.results[i].name);
+				}
+				if(names.indexOf(scope.name) === -1) {//save new department only if it doesn't exist
+					saveDepartment(http, scope, departmentsRestUrl, department, message, departmentsRestUrl);
+				}
+			});
 		} else {
-			
+			saveDepartment(http, scope, departmentsRestUrl + "/" + scope.uuid, department, message, departmentsRestUrl)
 		}
 	} else if(action === "retire") {
 		scope.retireReasonIsRequiredMsg = "";
-		http.delete(departmentsRestUrl + "/" + scope.uuid + "?!purge", {"retireReason" : scope.retireReason}).success(function(retiredDepartment) {
-			message += scope.retireOrUnretire + "d Department";
-			
-			initializeDepartment(departmentsRestUrl + "/" + retiredDepartment.uuid, departmentsRestUrl, http, scope);
-			scope.successfulMsg = message;
-	    });
+		if(!scope.retired) {
+			http.delete(departmentsRestUrl + "/" + scope.uuid + "?!purge", {"retireReason" : scope.retireReason}).success(function(retiredDepartment) {
+				message += scope.retireOrUnretire + "d Department";
+				
+				initializeDepartment(departmentsRestUrl + "/" + retiredDepartment.uuid, departmentsRestUrl, http, scope);
+				scope.successfulMsg = message;
+		    });
+		} else {
+			saveDepartment(http, scope, departmentsRestUrl + "/" + scope.uuid, {"retired" : false, "retireReason" : ""}, message, departmentsRestUrl);
+		}
 	} else if(action === "purge") {
 		if(confirm("Do you surely want to delete: " + scope.name + " ?")) {
 			http.delete(departmentsRestUrl + "/" + scope.uuid + "?purge").success(function(response) {
@@ -111,26 +119,11 @@ function persistDepartment(scope, http, departmentsRestUrl, action) {
 	}
 }
 
-function checkIfDepartmentExists(scope, departmentsRestUrl) {
-	var exists = true;
-	
-	if(scope.thisIsANewBill) {
-		var names = [];
+function saveDepartment(http, scope, url, department, message, departmentsRestUrl) {
+	http.post(url, department).success(function(savedDepartment) {
+		message += "Saved Department";
 		
-		http({
-	        url : departmentsRestUrl,
-	        method : 'GET',
-	        async: false,
-	        dataType : "json",
-	        headers : {'Content-Type': 'application/json'}
-        }).success(function(departments) {
-			for(i = 0; i < departments.length; i++) {
-				names.push(departments[i].name);
-			}
-		});
-		if(names.indexOf(scope.name) === -1) {
-			exists = false;
-		}
-	}
-	return exists;
+		initializeDepartment(departmentsRestUrl + "/" + savedDepartment.uuid, departmentsRestUrl, http, scope);
+		scope.successfulMsg = message;
+    });
 }
