@@ -16,7 +16,7 @@
 	    { label: "${ ui.message("openhmis.inventory.institution.name")}" }
 	];
 	
-	/*emr.loadMessages([
+	/*TODO not yet working, may need upgrade; emr.loadMessages([
         "openhmis.inventory.institution.name",
         "general.edit",
         "general.new"
@@ -35,15 +35,15 @@
 	<h3>${ ui.message('general.description') }</h3>
 	<input type="text" ng-model="institution.description" size="80" placeholder="${ ui.message('general.description') }" />
 	<br />
-	<h3 ng-hide="institution.uuid != ''">${ ui.message('openhmis.inventory.institution.retire') }</h3>
-	<p ng-hide="institution.uuid != ''">
+	<h3 ng-hide="institution.uuid == ''">${ ui.message('openhmis.inventory.institution.retire') }</h3>
+	<p ng-hide="institution.uuid == ''">
 		<input type="text" placeholder="${ ui.message('general.retireReason') }" size="80" ng-model="institution.retireReason" />
-		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == ''" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretire()" />
+		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretire()" />
 	</p>
 	<p class="checkRequired" ng-hide="institution.retireReason != ''">{{retireReasonIsRequiredMsg}}</p>
 	
 	<p>
-		<input type="button" ng-hide="thisIsANewBill" class="cancel" value="${ ui.message('general.purge') }" ng-click="purge()"/>
+		<input type="button" ng-hide="institution.uuid == ''" class="cancel" value="${ ui.message('general.purge') }" ng-click="purge()"/>
 	</p>
 	
 	<p>

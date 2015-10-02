@@ -19,37 +19,47 @@ institutionApp.factory('InstitutionService', ['$resource',
 	$scope.loadInstitution = function(uuid) {
     	institutionService.$get({uuid: uuid}, function(institution) {
         	setInstitutionProperties(emr, $scope, institution.uuid, institution.name, institution.description, institution.retired, institution.retireReason);
+        }, function(responseError) {
+        	setInstitutionProperties(emr, $scope, "", "", "", false, "");
+            emr.errorMessage("Requested institution was not found!");////TODO after emr upgrades, use emr.message("openhmis.inventory.institution.error.notFound");
         });
     }
     $scope.save = function() {
     	InstitutionService.save({"name" : $scope.institution.name, "description" : $scope.institution.description}, function(data) {
             $scope.loadInstitution(data.uuid);
+            emr.successMessage("Successfully Created Institution"/*TODO after emr upgrades, use emr.message("openhmis.inventory.institution.created.success")*/);
         });
     }
     $scope.update = function() {
-    	institutionService.$update({"name" : $scope.institution.name, "description" : $scope.institution.description}, function(data) {
+    	InstitutionService.save({"name" : $scope.institution.name, "description" : $scope.institution.description}, function(data) {
             $scope.loadInstitution(data.uuid);
+            emr.successMessage("Successfully Updated Institution"/*TODO after emr upgrades, use emr.message("openhmis.inventory.institution.updated.success")*/);
         });
     }
     $scope.retire = function() {
-    	institutionService.$remove({"uuid" : $scope.institution.uuid, "reason" : $scope.institution.retireReason}, function(data) {
+    	InstitutionService.remove({"uuid" : $scope.institution.uuid, "reason" : $scope.institution.retireReason}, function(data) {
             $scope.loadInstitution(data.uuid);
+            emr.successMessage("Successfully retired Institution"/*TODO after emr upgrades, use emr.message("openhmis.inventory.institution.retired.success")*/);
         });
     }
     $scope.unretire = function() {
-    	institutionService.$save({"uuid" : $scope.institution.uuid, "retired": false },
+    	InstitutionService.save({"uuid" : $scope.institution.uuid, "retired" : false },
 	    	function(data) {
 	            	$scope.loadInstitution(data.uuid);
+	            	emr.successMessage("Successfully un-retired Institution"/*TODO after emr upgrades, use emr.message("openhmis.inventory.institution.unretired.success")*/);
 	        });
     }
     $scope.purge = function() {//TODO instead of deleting all, it's retiring
-    	InstitutionService.delete({ "uuid" : $scope.institution.uuid }, function() {
-    			window.location = "manageInstitutions.page";
-    	});
+    	if(confirm("Do you intentionally intend to delete this Institution?")) {//TODO after emr upgrades, use emr.message("openhmis.inventory.institution.confirm.delete")
+	    	InstitutionService.remove({ "uuid" : $scope.institution.uuid, purge: "" }, function() {
+	    			window.location = "manageInstitutions.page";
+	    			emr.successMessage("Successfully deleted Institution"/*TODO after emr upgrades, use emr.message("openhmis.inventory.institution.deleted.success")*/);
+	    	});
+    	}
     }
     $scope.saveOrUpdate = function() {
     	if ($scope.institution.name === "") {
-        	$scope.nameIsRequiredMsg = emr.message("openhmis.inventory.institution.name.required");
+        	$scope.nameIsRequiredMsg = "Name is required";//TODO after emr upgrades, use emr.message("openhmis.inventory.institution.name.required");
         } else {
         	$scope.nameIsRequiredMsg = "";
 	        if ($scope.institution.uuid === "" || $scope.institution.uuid === undefined) {//TODO check if name is at the server
@@ -59,12 +69,15 @@ institutionApp.factory('InstitutionService', ['$resource',
 	        }
         }
     }
+    $scope.cancel = function() {
+    	window.location = "manageInstitutions.page";
+    }
     $scope.retireOrUnretire = function() {
-        if ($scope.institution.retireReason === true) {
-            $scope.unretire();
+        if ($scope.institution.retired === true) {
+        	$scope.unretire();
         } else {
         	if($scope.institution.retireReason === "") {
-        		$scope.retireReasonIsRequiredMsg = emr.message("openhmis.inventory.institution.retireReason.required");
+        		$scope.retireReasonIsRequiredMsg = "Retire reason is required";//TODO after emr upgrades, use emr.message("openhmis.inventory.institution.retireReason.required");
         	} else {
         		$scope.retireReasonIsRequiredMsg = "";
 	            $scope.retire();
@@ -85,10 +98,16 @@ function setInstitutionProperties(emr, scope, uuid, name, description, retired, 
 	scope.institution.uuid = uuid;
     scope.institution.name = name;
     scope.institution.description = description;
+    scope.institution.retired = retired;
     scope.institution.retireReason = retireReason;
     if (uuid === null || uuid === undefined || uuid === "") {
-        scope.h2SubString = emr.message("general.new");
+        scope.h2SubString = "New";//TODO after emr upgrades, use emr.message("general.new");
     } else {
-        scope.h2SubString = emr.message("general.edit");
+    	scope.h2SubString = "Edit";//TODO after emr upgrades, use emr.message("general.edit");
+    }
+    if (scope.institution.retired === true) {
+    	scope.retireOrUnretire = "Un-retire";//TODO after emr upgrades, use emr.message("openhmis.inventory.institution.unretire");
+    } else {
+    	scope.retireOrUnretire = "Retire";//TODO after emr upgrades, use emr.message("openhmis.inventory.institution.retire");
     }
 }
