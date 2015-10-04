@@ -35,10 +35,10 @@
 	<h3>${ ui.message('general.description') }</h3>
 	<input type="text" ng-model="institution.description" size="80" placeholder="${ ui.message('general.description') }" />
 	<br />
-	<h3 ng-hide="institution.uuid == ''">${ ui.message('openhmis.inventory.institution.retire') }</h3>
+	<h3 ng-hide="institution.uuid == ''">{{retireOrUnretire}} ${ ui.message('openhmis.inventory.institution.name') }</h3>
 	<p ng-hide="institution.uuid == ''">
-		<input type="text" placeholder="${ ui.message('general.retireReason') }" size="80" ng-model="institution.retireReason" />
-		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretire()" />
+		<input type="text" placeholder="${ ui.message('general.retireReason') }" size="80" ng-model="institution.retireReason" ng-disabled="institution.retired" />
+		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireFunction()" />
 	</p>
 	<p class="checkRequired" ng-hide="institution.retireReason != ''">{{retireReasonIsRequiredMsg}}</p>
 	
@@ -48,7 +48,7 @@
 	
 	<p>
 		<span><input type="button" class="cancel" value="${ ui.message('general.cancel') }" ng-click="cancel()" /></span>
-		<span><input type="button" class="confirm right" value="${ ui.message('general.save') }" ng-click="saveOrUpdate()" /></span>
+		<span><input type="button" class="confirm right" value="${ ui.message('general.save') }"  ng-disabled="institution.name == ''" ng-click="saveOrUpdate()" /></span>
 	</p>
 </form>
 
