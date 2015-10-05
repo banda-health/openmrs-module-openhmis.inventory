@@ -51,7 +51,7 @@
 		<input type="text" placeholder="${ ui.message('general.retireReason') }" size="80" ng-model="institution.retireReason" ng-disabled="institution.retired" />
 		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireFunction()" />
 	</p>
-	<p class="checkRequired" ng-hide="institution.retireReason != '' || retireReasonIsRequiredMsg == "" || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
+	<p class="checkRequired" ng-hide="institution.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
 	
 	<p>
 		<input type="button" ng-hide="institution.uuid == ''" class="cancel" value="${ ui.message('general.purge') }" ng-click="purge()"/>

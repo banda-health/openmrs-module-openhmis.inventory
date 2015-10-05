@@ -8,9 +8,6 @@ institutionApp.factory('InstitutionService', ['$resource',
         return $resource('../ws/rest/v2/inventory/institution/:uuid', {
             uuid: '@uuid'
         }, {
-            update: {
-                method: 'PUT'
-            },
             query: {
                 method: 'GET',
                 isArray: false
@@ -21,12 +18,6 @@ institutionApp.factory('InstitutionService', ['$resource',
     var institutionService = new InstitutionService();
 
     var institutions = InstitutionService.query(function(response) {
-        $scope.fetchedInstitutions = response.results;
-        $scope.fetchedInstitutionNames = [];//used to stop saving new duplicate names
-        
-        for(i = 0; i < $scope.fetchedInstitutions.length; i++) {
-        	$scope.fetchedInstitutionNames.push($scope.fetchedInstitutions[i].name);
-        }
         initialize($scope, response, false);
     });
 
@@ -47,12 +38,20 @@ institutionApp.factory('InstitutionService', ['$resource',
             });
         }
     }
-
+    $scope.updateExistingInstitutionNames = function() {
+    	InstitutionService.query({
+            "includeAll": true
+        }, function(resp) {
+            $scope.fetchedInstitutionNames = [];//used to stop saving new duplicate names
+            
+            for(i = 0; i < resp.results.length; i++) {
+            	$scope.fetchedInstitutionNames.push(resp.results[i].name.toLowerCase());
+            }
+        });
+    }
     $scope.strikeThrough = function(retired) {
         if (retired) {
-            return {
-                "text-decoration": "line-through"
-            };
+            return { "text-decoration": "line-through" };
         } else {
             return {};
         }
@@ -60,7 +59,7 @@ institutionApp.factory('InstitutionService', ['$resource',
 
     $scope.loadInstitution = function(uuid) {
         institutionService.$get({
-            uuid: uuid
+            "uuid": uuid
         }, function(institution) {
             setInstitutionProperties(emr, $scope, institution.uuid, institution.name, institution.description, institution.retired, institution.retireReason);
         }, function(responseError) {
@@ -109,7 +108,7 @@ institutionApp.factory('InstitutionService', ['$resource',
         if (confirm(emr.message("openhmis.inventory.institution.confirm.delete"))) {
             InstitutionService.remove({
                 "uuid": $scope.institution.uuid,
-                purge: ""
+                "purge": ""
             }, function() {
                 window.location = "manageInstitutions.page";
                 emr.successMessage(emr.message("openhmis.inventory.institution.deleted.success"));
@@ -123,7 +122,7 @@ institutionApp.factory('InstitutionService', ['$resource',
         } else {
             $scope.nameIsRequiredMsg = "";
             if ($scope.institution.uuid === "" || $scope.institution.uuid === undefined) {
-                if($scope.fetchedInstitutionNames.indexOf($scope.institution.name) === -1) {
+                if($scope.fetchedInstitutionNames.indexOf($scope.institution.name.toLowerCase()) === -1) {
                 	$scope.nameIsRequiredMsg = "";
                 	$scope.save();
                 } else {
@@ -157,7 +156,6 @@ institutionApp.factory('InstitutionService', ['$resource',
     } else { //load model for create existing institution page
         $scope.loadInstitution(uuid);
     }
-
 });
 
 function setInstitutionProperties(emr, scope, uuid, name, description, retired, retireReason) {
@@ -219,6 +217,8 @@ institutionApp.filter('startFrom', function() {
 });
 
 function initialize(scopeObj, response, includeRetired) {
+	scopeObj.updateExistingInstitutionNames();
+	
     scopeObj.includeRetired = includeRetired;
     scopeObj.currentPage = 0;
     scopeObj.fetchedInstitutions = response.results;
