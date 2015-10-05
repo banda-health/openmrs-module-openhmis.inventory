@@ -48,7 +48,7 @@
 	
 	<p>
 		<span><input type="button" class="cancel" value="${ ui.message('general.cancel') }" ng-click="cancel()" /></span>
-		<span><input type="button" class="confirm right" value="${ ui.message('general.save') }"  ng-disabled="institution.name == ''" ng-click="saveOrUpdate()" /></span>
+		<span><input type="button" class="confirm right" value="${ ui.message('general.save') }"  ng-disabled="institution.name == '' || institution.name == undefined" ng-click="saveOrUpdate()" /></span>
 	</p>
 </form>
 
