@@ -78,6 +78,7 @@ institutionApp.factory('InstitutionService', ['$resource',
     }
     $scope.update = function() {
         InstitutionService.save({
+        	"uuid": $scope.institution.uuid,
             "name": $scope.institution.name,
             "description": $scope.institution.description
         }, function(data) {
@@ -166,7 +167,7 @@ function setInstitutionProperties(emr, scope, uuid, name, description, retired, 
     scope.institution.retired = retired;
     scope.institution.retireReason = retired ? retireReason : "";
     if (uuid === null || uuid === undefined || uuid === "") {
-        scope.h2SubString = emr.message("general.new");
+        scope.h2SubString = emr.message("general.new") == "general.new" ? "New" : emr.message("general.new");
     } else {
         scope.h2SubString = emr.message("general.edit");
     }
@@ -177,7 +178,7 @@ function setInstitutionProperties(emr, scope, uuid, name, description, retired, 
     }
 }
 
-/*Adds a new a-disabled directive to povide the same functionality as ng-disabled for anchors/links(<a>)*/
+/*Adds a new a-disabled directive to provide the same functionality as ng-disabled for anchors/links(<a>)*/
 institutionApp.directive('aDisabled', function() {
     return {
         compile: function(tElement, tAttrs, transclude) {

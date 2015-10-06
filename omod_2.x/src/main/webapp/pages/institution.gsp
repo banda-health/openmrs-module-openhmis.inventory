@@ -40,22 +40,25 @@
 	<input type="hidden" ng-model="institution.uuid" />
 		
 	<h3>${ ui.message('general.name') }</h3>
-	<input type="text" ng-model="institution.name" size="80" placeholder="${ ui.message('general.name') }" required />
+	<input type="text" ng-model="institution.name" style="min-width: 50%;" placeholder="${ ui.message('general.name') }" required />
 	<p class="checkRequired" ng-hide="nameIsRequiredMsg == '' || nameIsRequiredMsg == undefined">{{nameIsRequiredMsg}}</p>
 				
 	<h3>${ ui.message('general.description') }</h3>
 	<input type="text" ng-model="institution.description" size="80" placeholder="${ ui.message('general.description') }" />
 	<br />
+	
 	<h3 ng-hide="institution.uuid == ''">{{retireOrUnretire}} ${ ui.message('openhmis.inventory.institution.name') }</h3>
 	<p ng-hide="institution.uuid == ''">
-		<input type="text" placeholder="${ ui.message('general.retireReason') }" size="80" ng-model="institution.retireReason" ng-disabled="institution.retired" />
+		<span ng-show="institution.retired"><b>${ ui.message('openhmis.inventory.institution.retired.reason') }</b></span><span><input type="text" placeholder="${ ui.message('general.retireReason') }" style="min-width: 50%;" ng-model="institution.retireReason" ng-disabled="institution.retired" /></span>
 		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireFunction()" />
 	</p>
 	<p class="checkRequired" ng-hide="institution.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
 	
+	<h3 ng-hide="institution.uuid == ''">${ ui.message('openhmis.inventory.institution.delete') }</h3>
 	<p>
 		<input type="button" ng-hide="institution.uuid == ''" class="cancel" value="${ ui.message('general.purge') }" ng-click="purge()"/>
 	</p>
+	<br />
 	
 	<p>
 		<span><input type="button" class="cancel" value="${ ui.message('general.cancel') }" ng-click="cancel()" /></span>
