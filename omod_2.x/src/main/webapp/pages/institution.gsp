@@ -46,10 +46,15 @@
 	<h3>${ ui.message('general.description') }</h3>
 	<input type="text" ng-model="institution.description" size="80" placeholder="${ ui.message('general.description') }" />
 	<br />
-	
+	<p>
+		<span><input type="button" class="cancel" value="${ ui.message('general.cancel') }" ng-click="cancel()" /></span>
+		<span><input type="button" class="confirm right" value="${ ui.message('general.save') }"  ng-disabled="institution.name == '' || institution.name == undefined" ng-click="saveOrUpdate()" /></span>
+	</p>
+	<br />
 	<h3 ng-hide="institution.uuid == ''">{{retireOrUnretire}} ${ ui.message('openhmis.inventory.institution.name') }</h3>
 	<p ng-hide="institution.uuid == ''">
-		<span ng-show="institution.retired"><b>${ ui.message('openhmis.inventory.institution.retired.reason') }</b></span><span><input type="text" placeholder="${ ui.message('general.retireReason') }" style="min-width: 50%;" ng-model="institution.retireReason" ng-disabled="institution.retired" /></span>
+		<span ng-show="institution.retired">${ ui.message('openhmis.inventory.institution.retired.reason') } <b>{{institution.retireReason}}</b><br /></span>
+		<span ng-hide="institution.retired"><input type="text" placeholder="${ ui.message('general.retireReason') }" style="min-width: 50%;" ng-model="institution.retireReason" ng-disabled="institution.retired" /></span>
 		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireFunction()" />
 	</p>
 	<p class="checkRequired" ng-hide="institution.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
@@ -58,11 +63,6 @@
 	<p>
 		<input type="button" ng-hide="institution.uuid == ''" class="cancel" value="${ ui.message('general.purge') }" ng-click="purge()"/>
 	</p>
-	<br />
 	
-	<p>
-		<span><input type="button" class="cancel" value="${ ui.message('general.cancel') }" ng-click="cancel()" /></span>
-		<span><input type="button" class="confirm right" value="${ ui.message('general.save') }"  ng-disabled="institution.name == '' || institution.name == undefined" ng-click="saveOrUpdate()" /></span>
-	</p>
 </form>
 
