@@ -20,7 +20,7 @@ angular.module('departmentApp', []).controller('departmentController', function(
     $scope.retireReasonIsRequiredMsg = "";
     $scope.successfulMsg = "";
     $scope.canNotRetire = function() {
-    	if(($scope.retireReason !== "" && $scope.retireReason !== undefined && $scope.retireReason !== null) || !$scope.retired) {
+    	if(($scope.retireReason !== "" && $scope.retireReason !== undefined && $scope.retireReason !== null) || $scope.retired) {
     		$scope.retireReasonIsRequiredMsg = "";
     		return false;
     	} else {
