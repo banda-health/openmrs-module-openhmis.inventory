@@ -89,7 +89,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Institutions",
-        "url": "module/openhmis/inventory/institutions.form",
+        "url": "openhmis.inventory/manageInstitutions.page",
         "icon": "icon-building",
         "requiredPrivilege": "Task: Access Manage Institutions"
       },
