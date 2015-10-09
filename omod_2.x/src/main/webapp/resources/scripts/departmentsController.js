@@ -19,7 +19,16 @@ departmentsApp.controller('departmentsController', function($scope, $http) {
             			initialize($scope, resp, departmentUrl, false);
                     });
             	}
-            };
+            }
+            
+            $scope.strikeThrough = function(retired) {
+            	if(retired) {
+            		return { "text-decoration": "line-through" };
+            	} else {
+            		return {};
+            	}
+            }
+            
         });
 });
 
@@ -55,7 +64,6 @@ departmentsApp.directive('aDisabled', function() {
 departmentsApp.filter('startFrom', function() {
   return function(input, start) {
       if (!input || !input.length) { return; }
-      start = +start; //parse to int
       return input.slice(start);
   }
 });

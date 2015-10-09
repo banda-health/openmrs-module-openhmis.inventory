@@ -59,8 +59,8 @@
 				</thead>
 				<tbody>
 					<tr class="clickable-tr" ng-repeat="department in departments | filter:searchByName | orderBy: 'name' | startFrom:currentPage*10 | limitTo:10" ng-click="loadDepartment(department.uuid)">
-						<td>{{department.name}}</td>
-						<td>{{department.description}}</td>
+						<td ng-style="strikeThrough(department.retired)">{{department.name}}</td>
+						<td ng-style="strikeThrough(department.retired)">{{department.description}}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -76,8 +76,8 @@
 						<span><a a-disabled="currentPage == 0" ng-click="currentPage=0">${ ui.message('searchWidget.first') }</a>  </span>
 						<span><a a-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">${ ui.message('searchWidget.previous') }</a></span>
 						<span><a ng-repeat="page in existingPages()" ng-click="loadPageByNumber(page)" a-disabled="disAbleSinglePage(page)">{{page}} </a></span>
-						<span><a a-disabled="currentPage == numberOfPages() - 1" ng-click="currentPage=currentPage+1">${ ui.message('searchWidget.next') }</a></span>
-						<span>  <a a-disabled="currentPage == numberOfPages()-1" ng-click="currentPage=numberOfPages() - 1">${ ui.message('searchWidget.last') }</a></span>
+						<span><a a-disabled="currentPage == numberOfPages() - 1  || departments.length == 0" ng-click="currentPage=currentPage+1">${ ui.message('searchWidget.next') }</a></span>
+						<span><a a-disabled="currentPage == numberOfPages()-1  || departments.length == 0" ng-click="currentPage=numberOfPages() - 1">${ ui.message('searchWidget.last') }</a></span>
 					</div>
 				</span>
 				<span style="float:center;">
