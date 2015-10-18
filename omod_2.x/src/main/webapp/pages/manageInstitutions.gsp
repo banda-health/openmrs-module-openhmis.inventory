@@ -1,10 +1,29 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.institutions") ])
     ui.includeJavascript("uicommons", "angular.min.js")
-    ui.includeJavascript("uicommons", "angular-resource.min.js")
     ui.includeCss("openhmis.inventory", "bootstrap.css")
     ui.includeCss("openhmis.inventory", "institutions2x.css")
-    ui.includeJavascript("openhmis.inventory", "institutionsController.js")
+    
+    ui.includeJavascript("openhmis.inventory", "lib/restangular.js")
+    
+    ui.includeCss("openhmis.inventory", "institutions2x.css")
+    
+    ui.includeJavascript("openhmis.inventory", "manage-institution/manage-institution.module.js");
+    ui.includeJavascript("openhmis.inventory", "institution/models/models.module.js");
+    ui.includeJavascript("openhmis.inventory", "institution/models/institution.model.js")
+
+    ui.includeJavascript("openhmis.inventory", "reusable-components/reusable-components.module.js")
+    ui.includeJavascript("openhmis.inventory", "reusable-components/restful-services/restful-services.module.js")
+    ui.includeJavascript("openhmis.inventory", "reusable-components/css/css.module.js")
+    ui.includeJavascript("openhmis.inventory", "reusable-components/restful-services/restful-settings.js")
+    ui.includeJavascript("openhmis.inventory", "reusable-components/restful-services/restful-service.js")
+    ui.includeJavascript("openhmis.inventory", "reusable-components/css/css-styles.js")
+
+    ui.includeJavascript("openhmis.inventory", "manage-institution/factories/manage-institution-rest.factory.js")
+    
+    ui.includeJavascript("openhmis.inventory", "manage-institution/controllers/manage-institution.controller.js")
+    
+    ui.includeJavascript("openhmis.inventory", "manage-institution/filters/start-from.filter.js");
 %>
 
 
@@ -44,7 +63,7 @@
 		</span>
 	</div>
 	<br /><br /><br />
-	<div id="display-institutions" ng-app="institutionApp" ng-controller="InstitutionController">
+	<div id="display-institutions" ng-app="manageInstitutionApp" ng-controller="ManageInstitutionController">
 		<div id="institutions">
 			<div class="btn-group">
 				<input type="text" ng-model="searchByName" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.institution.enterSearchPhrase') }" size="80" autofocus>
