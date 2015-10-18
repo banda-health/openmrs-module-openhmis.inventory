@@ -4,7 +4,7 @@
     ui.includeCss("openhmis.inventory", "bootstrap.css")
     ui.includeCss("openhmis.inventory", "institutions2x.css")
     
-    ui.includeJavascript("openhmis.inventory", "lib/restangular.js")
+    ui.includeJavascript("openhmis.inventory", "lib/restangular.min.js")
     
     ui.includeCss("openhmis.inventory", "institutions2x.css")
     
