@@ -1,8 +1,6 @@
 (function() {
 	'use strict';
 
-	console.log("institution.controller...");
-	
 	// create main institution controller..
 	angular.module('institutionApp').controller('InstitutionController',
 			InstitutionController);
@@ -16,21 +14,18 @@
 			
 	function InstitutionController($scope, InstitutionModel, InstitutionRestFactory) {
 		
-		console.log("InstitutionController func..");
-		
 		/* ENTRY POINT: Load an institution */
 		//use uuid extracted from the url
-		loadInstitution(uuid);
+		entryPoint(emr, $scope, uuid);
 		
 		function saveOrUpdate(){
-			console.log("save or update..");
-			if ($scope.institution.name() === undefined || $scope.institution.name() === "") {
+			if ($scope.institution.name === undefined || $scope.institution.name === "") {
 	        	emr.errorMessage(emr.message("openhmis.inventory.institution.name.required"));
 	            $scope.nameIsRequiredMsg = emr.message("openhmis.inventory.institution.name.required");
 	        } else {
 	            $scope.nameIsRequiredMsg = "";
-	            if ($scope.institution.uuid() === "" || $scope.institution.uuid() === undefined) {
-	                if($scope.fetchedInstitutionNames.indexOf($scope.institution.name().toLowerCase()) === -1) {
+	            if ($scope.institution.uuid === "" || $scope.institution.uuid === undefined) {
+	                if(!InstitutionRestFactory.checkExistingInstitution($scope.institution.name)) {
 	                	$scope.nameIsRequiredMsg = "";
 	                	save();
 	                } else {
@@ -44,10 +39,10 @@
 		}
 		
 		function retireOrUnretireFunction() {
-	        if ($scope.institution.retired() === true) {
+	        if ($scope.institution.retired === true) {
 	            unretire();
 	        } else {
-	            if ($scope.institution.reason() === "") {
+	            if ($scope.institution.retireReason === "") {
 	            	emr.errorMessage(emr.message("openhmis.inventory.institution.retireReason.required"));
 	                $scope.retireReasonIsRequiredMsg = emr.message("openhmis.inventory.institution.retireReason.required");
 	            } else {
@@ -77,7 +72,7 @@
 		}
 		
 		function purge(){
-			InstitutionRestFactory.purge($scope.institution, onLoadSuccessful, onLoadError);
+			InstitutionRestFactory.purgeInstitution($scope.institution, onPurgeSuccessful, onLoadError);
 		}
 		
 		/* ########### END RESTFUL OPERATIONS ################### */
@@ -89,35 +84,38 @@
 		
 		// load an institution given @uuid
 		function loadInstitution(uuid){
-			console.log('load institution.....');
 			InstitutionRestFactory.loadInstitution(uuid, onLoadInstitution, onLoadErrorInstitution);
 		}
 		
 		/* ########## START CALLBACK FUNCTIONS ########## */
 		
 		function onLoadSuccessful(data){
-			loadInstitution(data.uuid);
+			if(angular.isDefined(data) && angular.isDefined(data.uuid)){
+				loadInstitution(data.uuid);
+			}
+			else{
+				init(emr, $scope, "");
+			}
+			
+		}
+		
+		function onPurgeSuccessful(data){
+			var institution = InstitutionModel.newModelInstance();
+			bindInstitutionToScope($scope, institution);
+			init(emr, $scope, "");
 		}
 		
 		//callback for a successfully loaded institution
 		function onLoadInstitution(data){
-			console.log("successful callback ");
-			console.log(data);
 			var institution = InstitutionModel.populateModel(data);	
-			
-			console.log('institution model...');
-			console.log(institution);
-			
-			setInstitutionProperties($scope, institution);
-			
+			bindInstitutionToScope($scope, institution);
 			init(emr, $scope, uuid);
 		}
 		
 		// callback for an unsuccessfully loaded institution
 		function onLoadErrorInstitution(error){
-			console.log("failed callback.. " + error);
 			var institution = InstitutionModel.newModelInstance();
-			setInstitutionProperties($scope, institution);
+			bindInstitutionToScope($scope, institution);
             emr.errorMessage(emr.message("openhmis.inventory.institution.error.notFound"));
 		}
 
@@ -128,19 +126,18 @@
 		
 		/* ############# END CALLBACK FUNCTIONS ################ */
 		
-		// bind institution to scope
-		function setInstitutionProperties(scope, institution) {
+		function bindInstitutionToScope(scope, institution) {
 		    scope.institution = institution;
 		}
 		
-		// initialize page and bind functions
+		// bind view functions and variables
 		function init(emr, scope, uuid){
 		    if (uuid === null || uuid === undefined || uuid === "") {
 		        scope.h2SubString = emr.message("general.new") == "general.new" ? "New" : emr.message("general.new");
 		    } else {
 		        scope.h2SubString = emr.message("general.edit");
 		    }
-		    if (scope.institution.retired() === true) {
+		    if (scope.institution.retired === true) {
 		        scope.retireOrUnretire = emr.message("openhmis.inventory.institution.unretire");
 		    } else {
 		        scope.retireOrUnretire = emr.message("openhmis.inventory.institution.retire");
@@ -152,5 +149,15 @@
 			scope.retireOrUnretireFunction = retireOrUnretireFunction;
 		}
 		
+		function entryPoint(emr, scope, uuid){
+			//no uuid given. create a new "institution" instance
+			if (uuid === null || uuid === undefined || uuid === "") {
+				bindInstitutionToScope($scope, InstitutionModel.newModelInstance());
+				init(emr, scope, uuid);
+			}
+			else{
+				loadInstitution(uuid);
+			}
+		}
 	}
 })();

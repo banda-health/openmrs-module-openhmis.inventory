@@ -11,11 +11,11 @@
 
 		service = {
 			setBaseUrl : setBaseUrl,
-			get : get,
-			post : post,
 			all : all,
-			customGET : customGET,
-			customPOST : customPOST
+			one : one,
+			remove: remove,
+			save: save,
+			update: update
 		};
 
 		return service;
@@ -26,32 +26,9 @@
 			}
 		}
 
-		function get(resource, request, successCallback, errorCallback) {
-			console.log('get: resource url = ' + resource + ' | request = '
-					+ request);
-			Restangular.one(resource).get(request).then(function(data) {
-				if (typeof successCallback === 'function')
-					successCallback(data);
-			}, function(error) {
-				if (typeof errorCallback === 'function')
-					errorCallback(error);
-			});
-		}
-
-		function post(resource, request, successCallback, errorCallback) {
-			console.log('post: resource url = ' + resource + ' | request = '
-					+ request);
-			Restangular.service(resource).post(request).then(function(data) {
-				if (typeof successCallback === 'function')
-					successCallback(data);
-			}, function(error) {
-				if (typeof errorCallback === 'function')
-					errorCallback(error);
-			});
-		}
-
 		/*
-		 * Using Restangular.all(resource).getList() requires the response to be
+		 * Retrieve a List of Objects:
+		 * Note: Using Restangular.all(resource).getList() requires the response to be
 		 * an ARRAY. This is NOT always the case, therefore customGET has been used
 		 * instead.
 		 */
@@ -65,14 +42,16 @@
 			});
 		}
 
-		function customGET(resource, uuid, request, successCallback,
+		/*
+		 * Retrieve ONLY one result.
+		 */
+		function one(resource, uuid, request, successCallback,
 				errorCallback) {
 			var params = '';
 			if(angular.isDefined(request)){
 				params = JSON.stringify(request);
 			}
-			console.log('customGET: resource url = ' + resource
-					+ ' | request = ' + params);
+
 			Restangular.one(resource, uuid).customGET('/', params).then(
 					function(data) {
 						if (typeof successCallback === 'function')
@@ -83,11 +62,34 @@
 					});
 		}
 
+		function save(resource, uuid, request, successCallback,
+				errorCallback) {
+			customPOST(resource, uuid, request, successCallback, errorCallback);
+		}
+		
+		function update(resource, uuid, request, successCallback,
+				errorCallback) {
+			customPOST(resource, uuid, request, successCallback, errorCallback);
+		}
+		
+		function remove(resource, uuid, request, successCallback,
+				errorCallback) {
+			var params = JSON.stringify(request);
+
+			Restangular.one(resource, uuid).remove(params).then(
+					function(data) {
+						if (typeof successCallback === 'function')
+							successCallback(data);
+					}, function(error) {
+						if (typeof errorCallback === 'function')
+							errorCallback(error);
+					});
+		}
+		
 		function customPOST(resource, uuid, request, successCallback,
 				errorCallback) {
 			var params = JSON.stringify(request);
-			console.log('customPOST: resource url = ' + resource
-					+ ' | request = ' + params);
+
 			Restangular.one(resource, uuid).customPOST(params).then(
 					function(data) {
 						if (typeof successCallback === 'function')

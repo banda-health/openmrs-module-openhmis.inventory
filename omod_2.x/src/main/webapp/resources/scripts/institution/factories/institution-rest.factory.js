@@ -15,6 +15,7 @@
 	
     var service = {
       loadInstitution: loadInstitution,
+      checkExistingInstitution: checkExistingInstitution,
       saveInstitution: saveInstitution,
       updateInstitution: updateInstitution,
       retireInstitution: retireInstitution,
@@ -32,65 +33,80 @@
     }
     
     function loadInstitution(uuid, successCallback, errorCallback){
-    	 console.log('loadinstitution: uuid = ' + uuid);
-    	 RestfulService.customGET('institution', uuid, '', successCallback, errorCallback); 
+    	 RestfulService.one('institution', uuid, '', successCallback, errorCallback); 
     }
     
-    function saveInstitution(institution, successCallback, errorCallback){
-    	var _institution = JSON.parse(institution);
+    /* Checks for an existing institution. 
+     * It's very expensive fetching all records and checking for matching names. 
+     * A search by name service should be exposed. */
+    function checkExistingInstitution(name){
+    	var uuid;
+    	var params = [];
+    	params["includeAll"] = true;
+    	var request = { "name": name };
+    	RestfulService.all('institution', uuid, params, 
+    			function(data){
+    				for(var i = 0; i < data.results.length; i++){
+    					if(data.results[i].name.toLowerCase() === name.toLowerCase()){
+    						return true;
+    					}
+    				}
+    			}, 
+    			function(error){
+    				//return false;
+    			});
+    	
+    	return false;
+    }
+    
+    function saveInstitution(_institution, successCallback, errorCallback){
     	var uuid = _institution.uuid;
         var name = _institution.name;
         var description = _institution.description;
           
         var request = {"name": name, "description": description};
-        console.log('saveInstitution: request = ' + request);
 
-        RestfulService.customPOST('institution', uuid, request, successCallback, errorCallback);
+        RestfulService.save('institution', uuid, request, successCallback, errorCallback);
     }
         
-    function updateInstitution(institution, successCallback, errorCallback){
-       	var _institution = JSON.parse(institution);
+    function updateInstitution(_institution, successCallback, errorCallback){
        	var uuid = _institution.uuid;
         var name = _institution.name;
         var description = _institution.description;
             
         var request = {"name": name, "description": description};
-        console.log('updateInstiution: request = ' + request);
        	
-        RestfulService.customPOST('institution', uuid, request, successCallback, errorCallback);
+        RestfulService.update('institution', uuid, request, successCallback, errorCallback);
      }
         
-    function retireInstitution(institution, successCallback, errorCallback){
-       	var _institution = JSON.parse(institution);
+    function retireInstitution(_institution, successCallback, errorCallback){
        	var uuid = _institution.uuid;
-       	var reason = _institution.reason;
+       	var retireReason = _institution.retireReason;
             
-        var request = {"reason": reason};
-        console.log('retireInstituion: request = ' + request);
-            
-        RestfulService.customPOST('institution', uuid, request, successCallback, errorCallback);
+        var request = {"reason": retireReason};
+        
+        RestfulService.remove('institution', uuid, request, successCallback, errorCallback);
     }
         
-    function unretireInstitution(institution, successCallback, errorCallback){
-    	var _institution = JSON.parse(institution);
+    function unretireInstitution(_institution, successCallback, errorCallback){
         var uuid = _institution.uuid;
-        var retired = _institution.retired;
+        var retired = false;
            
         var request = {"retired": retired};
-        console.log('unretireInstitution: request = ' + request);
             
-        RestfulService.customPOST('institution', uuid, request, successCallback, errorCallback);
+        RestfulService.save('institution', uuid, request, successCallback, errorCallback);
     }
-        
-    function purgeInstitution(institution, successCallback, errorCallback){
-       	var _institution = JSON.parse(institution);
+    
+    /*
+     * Remove institution.
+     */
+    function purgeInstitution(_institution, successCallback, errorCallback){
        	var uuid = _institution.uuid;
        	var purge = _institution.purge;
             
         var request = {"purge": purge};
-        console.log('purgeInstitution: request = ' + request);
             
-        RestfulService.customPOST('institution', uuid, request, successCallback, errorCallback);
+        RestfulService.remove('institution', uuid, request, successCallback, errorCallback);
       }
     }
 })();

@@ -28,13 +28,10 @@
     }
     
     function loadInstitutions(requestParams, successCallback, errorCallback){
-    	console.log("load institutions: request params = " + requestParams);
     	RestfulService.all('institution', requestParams, successCallback, errorCallback);
     }
     
     function includeRetiredInstitutions(params, successCallback, errorCallback) {
-    	console.log('includeRetiredInstitutions: params = ' + params);
-    	
     	RestfulService.all('institution', params, successCallback, errorCallback);
       }
   }

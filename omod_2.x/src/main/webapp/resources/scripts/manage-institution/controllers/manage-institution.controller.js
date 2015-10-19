@@ -1,8 +1,6 @@
 (function() {
 	'use strict';
 
-	console.log("manage-institution.controller...");
-	
 	// create manage institution main controller..
 	angular.module('manageInstitutionApp').controller('ManageInstitutionController',
 			ManageInstitutionController);
@@ -12,8 +10,6 @@
 
 	function ManageInstitutionController($scope, ManageInstitutionRestFactory, CssStylesFactory, InstitutionModel) {
 		
-		console.log("ManageInstitutionController func..");
-
 		/* ENTRY POINT: load institutions */
 		console.log("load all institutions");
 		loadInstitutions();
@@ -29,18 +25,15 @@
 			ManageInstitutionRestFactory.loadInstitutions('', onLoadInstitutionsSuccess, onLoadError);	
 		}
 		
-		function includeRetiredInsitutions(){
-			var params = [];
+		function includeRetiredInstitutions(){
 			if($scope.includeRetired){
+				var params = [];
 				params["includeAll"] = true;
+				ManageInstitutionRestFactory.includeRetiredInstitutions(params, onLoadRetiredInstitutionSuccess, onLoadError);
 			}
-			ManageInstitutionRestFactory.includeRetiredInstitutions(params, onLoadRetiredInstitutionSuccess, onLoadError);
-		}
-		
-		function updateExistingInstitutionNames(){
-			var params = [];
-			params["includeAll"] = true;
-			ManageInstitutionRestFactory.includeRetiredInstitutions(params, onLoadExistingInstitutionNames, onLoadError);
+			else{
+				loadInstitutions();
+			}
 		}
 		
 		/* ########### END RESTFUL OPERATIONS ################### */
@@ -49,31 +42,14 @@
 		
 		// successful call back on loading institutions
 		function onLoadInstitutionsSuccess(data){
-			console.log('institutions loaded successfully.... ' + data);
 			initialize($scope, data, false);
 		}
 		
 		//callback for a successful retiredInstitution 
-		function onLoadRetiredInstitutionSuccess(data, params) {
-			if(params["includeAll"] == true){
-				initialize($scope, data, true);
-			}
-			else{
-				initialize($scope, data, false);
-			}
+		function onLoadRetiredInstitutionSuccess(data) {
+			initialize($scope, data, true);
 		}
 		
-		//callback function for updating existing institutions
-		function onLoadExistingInstitutionNames(data){
-			console.log('pnLoadExistingInstitutionNames');
-			console.log(data);
-			$scope.fetchedInstitutionNames = []; 
-             
-            for(var i = 0; i < data.results.length; i++) {
-            	$scope.fetchedInstitutionNames.push(data.results[i].name.toLowerCase());
-            }
-		}
-
 		function onLoadError(error) {
 			console.error(error);
 			emr.errorMessage(error);
@@ -84,22 +60,15 @@
 		// bind scope with required attributes and/or functions..
 		function initialize(scopeObj, data, includeRetired) {
 			
-			updateExistingInstitutionNames();
-			
 		    scopeObj.includeRetired = includeRetired;
 		    scopeObj.currentPage = 0;
 		    
-		    var institutions = InstitutionModel.populateModels(data.results);
-		    
-		    console.log('institution model..');
-		    for(var j = 0; j < institutions.length; j++){
-		    	console.log(institutions[j].name);
-		    	console.log(institutions[j].description);
-		    }
-		    
-		    scopeObj.fetchedInstitutions = institutions;
+		    scopeObj.fetchedInstitutions = InstitutionModel.populateModels(data.results);
 		    scopeObj.length = scopeObj.fetchedInstitutions.length;
 		    scopeObj.loadInstitutionFromManagePage = loadInstitutionFromManagePage;
+		    scopeObj.includeRetiredInstitutions = includeRetiredInstitutions;
+		    
+		    //paging logic
 		    scopeObj.numberOfPages = function() {
 		        return Math.ceil(scopeObj.fetchedInstitutions.length / 10);
 		    }
