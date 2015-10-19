@@ -29,7 +29,7 @@
 			if($scope.includeRetired){
 				var params = [];
 				params["includeAll"] = true;
-				ManageInstitutionRestFactory.includeRetiredInstitutions(params, onLoadRetiredInstitutionSuccess, onLoadError);
+				ManageInstitutionRestFactory.loadInstitutions(params, onLoadRetiredInstitutionSuccess, onLoadError);
 			}
 			else{
 				loadInstitutions();

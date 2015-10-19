@@ -14,8 +14,7 @@
 	var baseUrl = "../ws/rest/v2/inventory/";
 	
     var service = {
-      loadInstitutions: loadInstitutions,
-      includeRetiredInstitutions: includeRetiredInstitutions,
+      loadInstitutions: loadInstitutions
     }
     
     initialize();
@@ -31,9 +30,6 @@
     	RestfulService.all('institution', requestParams, successCallback, errorCallback);
     }
     
-    function includeRetiredInstitutions(params, successCallback, errorCallback) {
-    	RestfulService.all('institution', params, successCallback, errorCallback);
-      }
   }
 
 })();
