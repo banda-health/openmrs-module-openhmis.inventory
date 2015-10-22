@@ -25,7 +25,7 @@
 				Restangular.setBaseUrl(restWsUrl);
 			}
 		}
-
+		
 		/*
 		 * Retrieve a List of Objects:
 		 * Note: Using Restangular.all(resource).getList() requires the response to be
@@ -33,7 +33,7 @@
 		 * instead.
 		 */
 		function all(resource, request, successCallback, errorCallback) {
-			Restangular.all(resource).customGET(request).then(function(data) {
+			Restangular.all(resource).customGET('', request).then(function(data) {
 				if (typeof successCallback === 'function')
 					successCallback(data);
 			}, function(error) {

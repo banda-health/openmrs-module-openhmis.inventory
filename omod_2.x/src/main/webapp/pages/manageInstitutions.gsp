@@ -5,6 +5,7 @@
     ui.includeCss("openhmis.inventory", "institutions2x.css")
     
     ui.includeJavascript("openhmis.inventory", "lib/restangular.min.js")
+    ui.includeJavascript("openhmis.inventory", "lib/dirPagination.js")
     
     ui.includeCss("openhmis.inventory", "institutions2x.css")
     
@@ -79,7 +80,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="clickable-tr" ng-repeat="institution in fetchedInstitutions | filter:searchByName | orderBy: 'name' | startFrom:currentPage*10 | limitTo:10" ng-click="loadInstitutionFromManagePage(institution.uuid)">
+					<tr class="clickable-tr" dir-paginate="institution in fetchedInstitutions | itemsPerPage: limit" total-items="totalNumOfResults" current-page="currentPage" ng-click="loadInstitutionFromManagePage(institution.uuid)">
 						<td ng-style="strikeThrough(institution.retired)">{{institution.name}}</td>
 						<td ng-style="strikeThrough(institution.retired)">{{institution.description}}</td>
 					</tr>
@@ -89,21 +90,17 @@
 				<span style="float:left;">
 					<div id="showing-institutions">
 						<span>${ ui.message('openhmis.inventory.general.showing') } <b>{{pagingFrom()}}</b> ${ ui.message('openhmis.inventory.general.to') } <b>{{pagingTo()}}</b></span>
-						<span> ${ ui.message('openhmis.inventory.general.of') } <b>{{fetchedInstitutions.length}}</b> ${ ui.message('openhmis.inventory.general.entries') }</span>
+						<span> ${ ui.message('openhmis.inventory.general.of') } <b>{{totalNumOfResults}}</b> ${ ui.message('openhmis.inventory.general.entries') }</span>
 					</div>
 				</span>
 				<span style="float:right;">
 					<div class="institution-pagination">
-						<span><a a-disabled="currentPage == 0" ng-click="currentPage=0">${ ui.message('searchWidget.first') }</a>  </span>
-						<span><a a-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">${ ui.message('searchWidget.previous') }</a></span>
-						<span><a ng-repeat="page in existingPages()" ng-click="loadPageByNumber(page)" a-disabled="disAbleSinglePage(page)">{{page}} </a></span>
-						<span><a a-disabled="currentPage == numberOfPages() - 1 || fetchedInstitutions.length == 0" ng-click="currentPage=currentPage+1">${ ui.message('searchWidget.next') }</a></span>
-						<span><a a-disabled="currentPage == numberOfPages() - 1 || fetchedInstitutions.length == 0" ng-click="currentPage=numberOfPages() - 1">${ ui.message('searchWidget.last') }</a></span>
+    					<dir-pagination-controls on-page-change="paginate(currentPage, limit)"></dir-pagination-controls>	
 					</div>
 				</span>
 				<span style="float:center;">
 					<div id="includeVoided-institutions">
-						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="includeRetiredInstitutions()"></span>
+						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="loadPage()"></span>
 						<span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
 					</div>
 				</span>

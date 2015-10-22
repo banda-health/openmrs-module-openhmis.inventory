@@ -6,13 +6,26 @@
 			ManageInstitutionController);
 
 	// inject dependencies..
-	ManageInstitutionController.$inject = [ '$scope', 'ManageInstitutionRestFactory', 'CssStylesFactory', 'InstitutionModel' ];
-
+	ManageInstitutionController.$inject = [ '$scope', 'ManageInstitutionRestFactory', 'CssStylesFactory', 'InstitutionModel'];
+	
 	function ManageInstitutionController($scope, ManageInstitutionRestFactory, CssStylesFactory, InstitutionModel) {
 		
-		/* ENTRY POINT: load institutions */
-		console.log("load all institutions");
-		loadInstitutions();
+		/* ENTRY POINT: loadPage() */
+		loadPage();
+		
+		function loadPage(){
+			// initialize variables.
+			$scope.currentPage = 1;
+			$scope.limit = 5;
+			$scope.numberOfPages = 0;
+			//get total count of results
+			getTotalCount();
+			//load 1st page..
+			paginate($scope.currentPage, $scope.limit);
+			//bind required functions
+			initialize($scope);
+	
+		}
 		
 		// function called to view institution details.
 		function loadInstitutionFromManagePage(uuid) {
@@ -20,84 +33,91 @@
 		}
 		
 		/* ######## START RESTFUL OPERATIONS ############## */
-		
-		function loadInstitutions(){
-			ManageInstitutionRestFactory.loadInstitutions('', onLoadInstitutionsSuccess, onLoadError);	
-		}
-		
-		function includeRetiredInstitutions(){
+		function paginate(start, limit){
+			var limit = $scope.limit;
+			var startIndex = ((start - 1) * limit) + 1;
+			var params;
 			if($scope.includeRetired){
-				var params = [];
-				params["includeAll"] = true;
-				ManageInstitutionRestFactory.loadInstitutions(params, onLoadRetiredInstitutionSuccess, onLoadError);
+				params = {
+					limit : limit,
+					includeAll : true,
+					startIndex : startIndex
+				};
 			}
 			else{
-				loadInstitutions();
+				params = {
+					limit : limit,
+					startIndex : startIndex
+				};
 			}
+				
+			ManageInstitutionRestFactory.loadInstitutions(params, function(data){
+				$scope.fetchedInstitutions = InstitutionModel.populateModels(data.results);
+			},
+			onLoadError);
 		}
 		
+		// retrieve total number of institutions.
+		// TODO: implement a webservice method to fetch total number of results
+		function getTotalCount(){
+			var params;
+			if($scope.includeRetired){
+				params = {includeAll : true};
+			}
+			
+			ManageInstitutionRestFactory.loadInstitutions(params, onLoadGetTotalCountSuccess, onLoadError);
+		}
 		/* ########### END RESTFUL OPERATIONS ################### */
 		
 		/* ########## START CALLBACK FUNCTIONS ########## */
 		
 		// successful call back on loading institutions
-		function onLoadInstitutionsSuccess(data){
-			initialize($scope, data, false);
-		}
-		
-		//callback for a successful retiredInstitution 
-		function onLoadRetiredInstitutionSuccess(data) {
-			initialize($scope, data, true);
-		}
-		
 		function onLoadError(error) {
 			console.error(error);
 			emr.errorMessage(error);
 		}
 		
+		function onLoadGetTotalCountSuccess(data){
+			var results = data.results;
+			var totalNumOfResults = results.length;
+			var limit = $scope.limit;
+			var numberOfPages = Math.ceil(totalNumOfResults / limit);
+			
+			$scope.totalNumOfResults = totalNumOfResults;
+			$scope.numberOfPages = numberOfPages;
+		}
+		
 		/* ############# END CALLBACK FUNCTIONS ################ */
 		
 		// bind scope with required attributes and/or functions..
-		function initialize(scopeObj, data, includeRetired) {
+		function initialize(scopeObj) {
 			
-		    scopeObj.includeRetired = includeRetired;
-		    scopeObj.currentPage = 0;
-		    
-		    scopeObj.fetchedInstitutions = InstitutionModel.populateModels(data.results);
-		    scopeObj.length = scopeObj.fetchedInstitutions.length;
+			scopeObj.loadPage = loadPage;
+			
 		    scopeObj.loadInstitutionFromManagePage = loadInstitutionFromManagePage;
-		    scopeObj.includeRetiredInstitutions = includeRetiredInstitutions;
 		    
-		    //paging logic
-		    scopeObj.numberOfPages = function() {
-		        return Math.ceil(scopeObj.fetchedInstitutions.length / 10);
-		    }
 		    scopeObj.pagingFrom = function() {
-		        return scopeObj.currentPage <= 0 ? 1 : (scopeObj.currentPage) * 10; //TODO must the default number to be paged = 10 be available for change by the user?
+		    	var limit = scopeObj.limit;
+		    	return scopeObj.currentPage <= 1 ? 1 : (scopeObj.currentPage - 1) * limit;
 		    }
-		    scopeObj.pagingTo = function() {
-		        return scopeObj.currentPage <= 0 ? 10 : (scopeObj.currentPage + 1) * 10;
-		    }
-		    scopeObj.existingPages = function() {
-		        var pages = [];
 
-		        for (var i = 1; i <= scopeObj.numberOfPages(); i++) {
-		            pages.push(i);
-		        }
-		        return pages;
-		    }
-		    scopeObj.loadPageByNumber = function(page) {
-		        scopeObj.currentPage = page - 1;
-		    }
-		    scopeObj.disAbleSinglePage = function(page) {
-		        if (page === scopeObj.currentPage + 1 || (page === scopeObj.currentPage + 1 && (page - 1 === 0 || page === scopeObj.numberOfPages()))) {
-		            return true;
-		        } else {
-		            return false;
-		        }
+		    scopeObj.pagingTo = function() {
+		    	var limit = scopeObj.limit;
+		    	if(scopeObj.currentPage <= 0){
+		    		return limit;
+		    	}
+		    	else{
+		    		var num = scopeObj.currentPage * limit;
+		    		if(num > scopeObj.totalNumOfResults){
+		    			return scopeObj.totalNumOfResults;
+		    		}
+		    		return num;
+		    	}
 		    }
 		    
 		    scopeObj.strikeThrough = CssStylesFactory.strikeThrough;
+		    
+		    scopeObj.paginate = paginate;
 		}
 	}
 })();
