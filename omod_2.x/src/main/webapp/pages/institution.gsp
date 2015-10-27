@@ -1,28 +1,10 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.institution.name") ])
-    
     ui.includeJavascript("uicommons", "angular.min.js")
-    ui.includeJavascript("openhmis.inventory", "lib/restangular.min.js")
-
     ui.includeCss("openhmis.inventory", "institutions2x.css")
-    
-    ui.includeJavascript("openhmis.inventory", "institution/institution.module.js");
-    ui.includeJavascript("openhmis.inventory", "institution/models/models.module.js");
-    ui.includeJavascript("openhmis.inventory", "reusable-components/reusable-components.module.js")
-    ui.includeJavascript("openhmis.inventory", "reusable-components/restful-services/restful-services.module.js")
-    ui.includeJavascript("openhmis.inventory", "reusable-components/css/css.module.js")
-    
-    ui.includeJavascript("openhmis.inventory", "institution/models/institution.model.js")    
-    ui.includeJavascript("openhmis.inventory", "reusable-components/restful-services/restful-settings.js")
-    ui.includeJavascript("openhmis.inventory", "reusable-components/restful-services/restful-service.js")
-    
-    ui.includeJavascript("openhmis.inventory", "reusable-components/css/css-styles.js")
-    ui.includeJavascript("openhmis.inventory", "institution/factories/institution-rest.factory.js")
-    
-    ui.includeJavascript("openhmis.inventory", "institution/directives/institution-disable.directive.js")
-    
-    ui.includeJavascript("openhmis.inventory", "institution/controllers/institution.controller.js")
 %>
+
+<script data-main="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/main.js" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <script type="text/javascript">
 	var breadcrumbs = [
