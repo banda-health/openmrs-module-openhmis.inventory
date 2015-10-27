@@ -16,9 +16,15 @@
 		function loadPage(){
 			// initialize variables.
 			$scope.currentPage = 1;
+			
 			if(angular.isUndefined($scope.limit)){
 				$scope.limit = 5;
 			}
+			
+			if(angular.isUndefined($scope.limit)){
+				$scope.searchByName = '';
+			}
+			
 			$scope.numberOfPages = 0;
 			//load 1st page..
 			paginate($scope.currentPage, $scope.limit);
@@ -36,6 +42,7 @@
 			var limit = $scope.limit;
 			var startIndex = ((start - 1) * limit) + 1;
 			var params;
+			
 			if($scope.includeRetired){
 				params = {
 					limit : limit,
@@ -49,9 +56,14 @@
 					startIndex : startIndex
 				};
 			}
+			
+			if(!angular.isUndefined($scope.searchByName) && $scope.searchByName !== ''){
+				params['q'] = $scope.searchByName;
+			}
 				
 			ManageInstitutionRestFactory.loadInstitutions(params, onLoadInstitutions, onLoadError);
 		}
+		
 		/* ########### END RESTFUL OPERATIONS ################### */
 		
 		function setTotalCount(length){
