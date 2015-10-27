@@ -10,24 +10,21 @@
 	
 	function ManageInstitutionController($scope, ManageInstitutionRestFactory, CssStylesFactory, InstitutionModel) {
 		
-		/* ENTRY POINT: loadPage() */
+		/* ENTRY POINT */
 		loadPage();
 		
 		function loadPage(){
 			// initialize variables.
 			$scope.currentPage = 1;
-			$scope.limit = 5;
+			$scope.limit = 10;
 			$scope.numberOfPages = 0;
-			//get total count of results
-			getTotalCount();
 			//load 1st page..
 			paginate($scope.currentPage, $scope.limit);
 			//bind required functions
 			initialize($scope);
-	
 		}
 		
-		// function called to view institution details.
+		// navigate to edit/view institution details
 		function loadInstitutionFromManagePage(uuid) {
 			window.location = "institution.page?uuid=" + uuid;
 		}
@@ -51,35 +48,12 @@
 				};
 			}
 				
-			ManageInstitutionRestFactory.loadInstitutions(params, function(data){
-				$scope.fetchedInstitutions = InstitutionModel.populateModels(data.results);
-			},
-			onLoadError);
-		}
-		
-		// retrieve total number of institutions.
-		// TODO: implement a webservice method to fetch total number of results
-		function getTotalCount(){
-			var params;
-			if($scope.includeRetired){
-				params = {includeAll : true};
-			}
-			
-			ManageInstitutionRestFactory.loadInstitutions(params, onLoadGetTotalCountSuccess, onLoadError);
+			ManageInstitutionRestFactory.loadInstitutions(params, onLoadInstitutions, onLoadError);
 		}
 		/* ########### END RESTFUL OPERATIONS ################### */
 		
-		/* ########## START CALLBACK FUNCTIONS ########## */
-		
-		// successful call back on loading institutions
-		function onLoadError(error) {
-			console.error(error);
-			emr.errorMessage(error);
-		}
-		
-		function onLoadGetTotalCountSuccess(data){
-			var results = data.results;
-			var totalNumOfResults = results.length;
+		function setTotalCount(length){
+			var totalNumOfResults = length;
 			var limit = $scope.limit;
 			var numberOfPages = Math.ceil(totalNumOfResults / limit);
 			
@@ -87,6 +61,18 @@
 			$scope.numberOfPages = numberOfPages;
 		}
 		
+		/* ########## START CALLBACK FUNCTIONS ########## */
+		
+		// successful call back on loading institutions
+		function onLoadInstitutions(data){
+			$scope.fetchedInstitutions = InstitutionModel.populateModels(data.results);
+			setTotalCount(data.length);
+		}
+		
+		function onLoadError(error) {
+			console.error(error);
+			emr.errorMessage(error);
+		}
 		/* ############# END CALLBACK FUNCTIONS ################ */
 		
 		// bind scope with required attributes and/or functions..

@@ -43,7 +43,7 @@
 		</span>
 	</div>
 	<br /><br /><br />
-	<div id="display-institutions" ng-app="manageInstitutionApp" ng-controller="ManageInstitutionController">
+	<div id="manageInstitutionApp" ng-controller="ManageInstitutionController">
 		<div id="institutions">
 			<div class="btn-group">
 				<input type="text" ng-model="searchByName" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.institution.enterSearchPhrase') }" size="80" autofocus>

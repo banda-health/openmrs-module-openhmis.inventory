@@ -34,7 +34,7 @@
     ]);
 </script>
 
-<form id="current-institution" ng-app="institutionApp" ng-controller="InstitutionController" novalidate >
+<form id="institutionApp" ng-controller="InstitutionController" novalidate >
 	<h1>{{h2SubString}} ${ ui.message('openhmis.inventory.institution.name') }</h1>
 	
 	<input type="hidden" ng-model="institution.uuid" />

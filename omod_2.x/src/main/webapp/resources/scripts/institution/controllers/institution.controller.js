@@ -18,6 +18,45 @@
 		//use uuid extracted from the url
 		entryPoint(emr, $scope, uuid);
 		
+		function entryPoint(emr, scope, uuid){
+			//no uuid given. create a new "institution" instance
+			if (uuid === null || uuid === undefined || uuid === "") {
+				bindInstitutionToScope($scope, InstitutionModel.newModelInstance());
+				init(emr, scope, uuid);
+			}
+			else{
+				loadInstitution(uuid);
+			}
+		}
+		
+		// bind view functions and variables
+		function init(emr, scope, uuid){
+		    if (uuid === null || uuid === undefined || uuid === "") {
+		        scope.h2SubString = emr.message("general.new") == "general.new" ? "New" : emr.message("general.new");
+		    } else {
+		        scope.h2SubString = emr.message("general.edit");
+		    }
+		    if (scope.institution.retired === true) {
+		        scope.retireOrUnretire = emr.message("openhmis.inventory.institution.unretire");
+		    } else {
+		        scope.retireOrUnretire = emr.message("openhmis.inventory.institution.retire");
+		    }
+		    
+			scope.saveOrUpdate = saveOrUpdate;
+			scope.cancel = cancel;
+			scope.purge = purge;
+			scope.retireOrUnretireFunction = retireOrUnretireFunction;
+		}
+		
+		function bindInstitutionToScope(scope, institution) {
+		    scope.institution = institution;
+		}
+		
+		// load an institution given @uuid
+		function loadInstitution(uuid){
+			InstitutionRestFactory.loadInstitution(uuid, onLoadInstitution, onLoadErrorInstitution);
+		}
+		
 		function saveOrUpdate(){
 			if ($scope.institution.name === undefined || $scope.institution.name === "") {
 	        	emr.errorMessage(emr.message("openhmis.inventory.institution.name.required"));
@@ -52,9 +91,7 @@
 	        }
 	    }
 
-
 		/* ######## START RESTFUL OPERATIONS ############## */
-		
 		function save(){
 			InstitutionRestFactory.saveInstitution($scope.institution, onLoadSuccessful, onLoadError);
 		}
@@ -82,11 +119,6 @@
 			window.location = "manageInstitutions.page";
 		}
 		
-		// load an institution given @uuid
-		function loadInstitution(uuid){
-			InstitutionRestFactory.loadInstitution(uuid, onLoadInstitution, onLoadErrorInstitution);
-		}
-		
 		/* ########## START CALLBACK FUNCTIONS ########## */
 		
 		function onLoadSuccessful(data){
@@ -96,7 +128,6 @@
 			else{
 				init(emr, $scope, "");
 			}
-			
 		}
 		
 		function onPurgeSuccessful(data){
@@ -123,41 +154,6 @@
 			console.error(error);
 			emr.errorMessage(error);
 		}
-		
 		/* ############# END CALLBACK FUNCTIONS ################ */
-		
-		function bindInstitutionToScope(scope, institution) {
-		    scope.institution = institution;
-		}
-		
-		// bind view functions and variables
-		function init(emr, scope, uuid){
-		    if (uuid === null || uuid === undefined || uuid === "") {
-		        scope.h2SubString = emr.message("general.new") == "general.new" ? "New" : emr.message("general.new");
-		    } else {
-		        scope.h2SubString = emr.message("general.edit");
-		    }
-		    if (scope.institution.retired === true) {
-		        scope.retireOrUnretire = emr.message("openhmis.inventory.institution.unretire");
-		    } else {
-		        scope.retireOrUnretire = emr.message("openhmis.inventory.institution.retire");
-		    }
-		    
-			scope.saveOrUpdate = saveOrUpdate;
-			scope.cancel = cancel;
-			scope.purge = purge;
-			scope.retireOrUnretireFunction = retireOrUnretireFunction;
-		}
-		
-		function entryPoint(emr, scope, uuid){
-			//no uuid given. create a new "institution" instance
-			if (uuid === null || uuid === undefined || uuid === "") {
-				bindInstitutionToScope($scope, InstitutionModel.newModelInstance());
-				init(emr, scope, uuid);
-			}
-			else{
-				loadInstitution(uuid);
-			}
-		}
 	}
 })();
