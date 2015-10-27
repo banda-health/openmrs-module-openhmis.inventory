@@ -16,7 +16,9 @@
 		function loadPage(){
 			// initialize variables.
 			$scope.currentPage = 1;
-			$scope.limit = 10;
+			if(angular.isUndefined($scope.limit)){
+				$scope.limit = 5;
+			}
 			$scope.numberOfPages = 0;
 			//load 1st page..
 			paginate($scope.currentPage, $scope.limit);
@@ -77,16 +79,12 @@
 		
 		// bind scope with required attributes and/or functions..
 		function initialize(scopeObj) {
-			
 			scopeObj.loadPage = loadPage;
-			
 		    scopeObj.loadInstitutionFromManagePage = loadInstitutionFromManagePage;
-		    
 		    scopeObj.pagingFrom = function() {
 		    	var limit = scopeObj.limit;
 		    	return scopeObj.currentPage <= 1 ? 1 : (scopeObj.currentPage - 1) * limit;
 		    }
-
 		    scopeObj.pagingTo = function() {
 		    	var limit = scopeObj.limit;
 		    	if(scopeObj.currentPage <= 0){
@@ -100,9 +98,7 @@
 		    		return num;
 		    	}
 		    }
-		    
 		    scopeObj.strikeThrough = CssStylesFactory.strikeThrough;
-		    
 		    scopeObj.paginate = paginate;
 		}
 	}

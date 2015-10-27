@@ -68,8 +68,8 @@
 			<div id="below-institutions-table">
 				<span style="float:left;">
 					<div id="showing-institutions">
-						<span>${ ui.message('openhmis.inventory.general.showing') } <b>{{pagingFrom()}}</b> ${ ui.message('openhmis.inventory.general.to') } <b>{{pagingTo()}}</b></span>
-						<span> ${ ui.message('openhmis.inventory.general.of') } <b>{{totalNumOfResults}}</b> ${ ui.message('openhmis.inventory.general.entries') }</span>
+						<span><b>${ ui.message('openhmis.inventory.general.showing') } {{pagingFrom()}} ${ ui.message('openhmis.inventory.general.to') } {{pagingTo()}}</b></span>
+						<span><b>${ ui.message('openhmis.inventory.general.of') } {{totalNumOfResults}} ${ ui.message('openhmis.inventory.general.entries') }</b></span>
 					</div>
 				</span>
 				<span style="float:right;">
@@ -77,8 +77,18 @@
     					<dir-pagination-controls on-page-change="paginate(currentPage, limit)"></dir-pagination-controls>	
 					</div>
 				</span>
-				<span style="float:center;">
+				<br />
+				<span style="float:left;">
 					<div id="includeVoided-institutions">
+						${ui.message('openhmis.inventory.general.show')} 
+						<select id="pageSize" ng-model="limit" ng-change="loadPage()">
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="25">25</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select> 
+						${ui.message('openhmis.inventory.general.entries')}
 						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="loadPage()"></span>
 						<span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
 					</div>
