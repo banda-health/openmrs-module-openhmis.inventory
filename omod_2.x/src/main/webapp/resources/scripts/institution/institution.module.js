@@ -1,5 +1,5 @@
 (function() {
 'use strict';
 angular
-    .module('institutionApp', ['app.genericController', 'app.restfulServices', 'app.models']);
+    .module('institutionApp', ['app.genericEntityController', 'app.restfulServices', 'app.genericModel']);
 })();

@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	var base = angular.module('app.genericController');
+	var base = angular.module('app.genericManageController');
 	base.controller("ManageInstitutionController", ManageInstitutionController);
 	ManageInstitutionController.$inject = ['$injector', '$scope', 'ManageInstitutionRestFactory', 'CssStylesFactory', 'InstitutionModel', 'PaginationService'];
 	

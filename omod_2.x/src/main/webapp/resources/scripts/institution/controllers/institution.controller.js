@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	var base = angular.module('app.genericController');
+	var base = angular.module('app.genericEntityController');
 
 	var uuid = window.location.search.split("=")[0] === "?uuid" ? window.location.search
 			.split("=")[1]
@@ -29,7 +29,6 @@
 		self.loadEntity = self.loadEntity || function(){
 			if(angular.isDefined(uuid) && uuid !== ""){
 				$scope.uuid = uuid;
-				console.log(uuid);
 				InstitutionRestFactory.loadInstitution(uuid, onLoadInstitutionSuccessful, onLoadInstitutionError);
 			}
 			else{
@@ -92,6 +91,7 @@
 
 		function bindInstitutionToScope(scope, institution) {
 		    scope.institution = institution;
+		    scope.entity = institution;
 		}
 		/* ############# END LOCAL METHODS ################ */
 		

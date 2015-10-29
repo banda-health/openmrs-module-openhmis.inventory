@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	var baseController = angular.module('app.genericController');
+	var baseController = angular.module('app.genericManageController');
 	
 	function GenericManageController($scope) {
 		

@@ -6,7 +6,8 @@ require(
      	'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/lib/dirPagination.js',
      	
      	/* models */
-        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/models/models.module.js',
+        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/models/generic.model.module.js',
+        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/models/generic.model.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/models/institution.model.js',
         
         /* reusable components */
@@ -17,7 +18,7 @@ require(
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/restful-services/restful-settings.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/restful-services/restful-service.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/css/css-styles.js',
-        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/controllers/generic.controller.module.js',
+        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/controllers/generic.manage.controller.module.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/controllers/generic.manage.controller.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/pagination/pagination.module.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/pagination/pagination.service.js',
