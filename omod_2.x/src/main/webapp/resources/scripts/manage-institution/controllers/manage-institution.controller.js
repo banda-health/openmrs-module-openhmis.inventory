@@ -1,70 +1,34 @@
 (function() {
 	'use strict';
 
-	// create manage institution main controller..
-	angular.module('manageInstitutionApp').controller('ManageInstitutionController',
-			ManageInstitutionController);
-
-	// inject dependencies..
-	ManageInstitutionController.$inject = [ '$scope', 'ManageInstitutionRestFactory', 'CssStylesFactory', 'InstitutionModel'];
+	var base = angular.module('app.genericController');
+	base.controller("ManageInstitutionController", ManageInstitutionController);
+	ManageInstitutionController.$inject = ['$injector', '$scope', 'ManageInstitutionRestFactory', 'CssStylesFactory', 'InstitutionModel', 'PaginationService'];
 	
-	function ManageInstitutionController($scope, ManageInstitutionRestFactory, CssStylesFactory, InstitutionModel) {
-		
-		/* ENTRY POINT */
-		loadPage();
-		
-		function loadPage(){
-			// initialize variables.
-			$scope.currentPage = 1;
-			
-			if(angular.isUndefined($scope.limit)){
-				$scope.limit = 5;
-			}
-			
-			if(angular.isUndefined($scope.limit)){
-				$scope.searchByName = '';
-			}
-			
-			$scope.numberOfPages = 0;
-			//load 1st page..
-			paginate($scope.currentPage, $scope.limit);
-			//bind required functions
-			initialize($scope);
+	function ManageInstitutionController($injector, $scope, ManageInstitutionRestFactory, CssStylesFactory, InstitutionModel, PaginationService) {
+
+		// @Override
+		this.bindExtraVariablesToScope = this.bindExtraVariablesToScope || function(){
+			$scope.pagingFrom = PaginationService.pagingFrom;
+			$scope.pagingTo = PaginationService.pagingTo;
+			$scope.strikeThrough = CssStylesFactory.strikeThrough;
 		}
 		
-		// navigate to edit/view institution details
-		function loadInstitutionFromManagePage(uuid) {
-			window.location = "institution.page?uuid=" + uuid;
-		}
-		
-		/* ######## START RESTFUL OPERATIONS ############## */
-		function paginate(start, limit){
-			var limit = $scope.limit;
-			var startIndex = ((start - 1) * limit) + 1;
-			var params;
-			
-			if($scope.includeRetired){
-				params = {
-					limit : limit,
-					includeAll : true,
-					startIndex : startIndex
-				};
-			}
-			else{
-				params = {
-					limit : limit,
-					startIndex : startIndex
-				};
-			}
-			
-			if(!angular.isUndefined($scope.searchByName) && $scope.searchByName !== ''){
-				params['q'] = $scope.searchByName;
-			}
-				
+		// @Override
+		this.paginate = this.paginate || function(start, limit){
+			var params = PaginationService.paginateParams(start, limit, $scope.includeRetired, $scope.searchByName);
 			ManageInstitutionRestFactory.loadInstitutions(params, onLoadInstitutions, onLoadError);
 		}
 		
-		/* ########### END RESTFUL OPERATIONS ################### */
+		function onLoadInstitutions(data){
+			$scope.fetchedInstitutions = InstitutionModel.populateModels(data.results);
+			setTotalCount(data.length);
+		}
+		
+		function onLoadError(error) {
+			console.error(error);
+			emr.errorMessage(error);
+		}
 		
 		function setTotalCount(length){
 			var totalNumOfResults = length;
@@ -75,43 +39,9 @@
 			$scope.numberOfPages = numberOfPages;
 		}
 		
-		/* ########## START CALLBACK FUNCTIONS ########## */
-		
-		// successful call back on loading institutions
-		function onLoadInstitutions(data){
-			$scope.fetchedInstitutions = InstitutionModel.populateModels(data.results);
-			setTotalCount(data.length);
-		}
-		
-		function onLoadError(error) {
-			console.error(error);
-			emr.errorMessage(error);
-		}
-		/* ############# END CALLBACK FUNCTIONS ################ */
-		
-		// bind scope with required attributes and/or functions..
-		function initialize(scopeObj) {
-			scopeObj.loadPage = loadPage;
-		    scopeObj.loadInstitutionFromManagePage = loadInstitutionFromManagePage;
-		    scopeObj.pagingFrom = function() {
-		    	var limit = scopeObj.limit;
-		    	return scopeObj.currentPage <= 1 ? 1 : (scopeObj.currentPage - 1) * limit;
-		    }
-		    scopeObj.pagingTo = function() {
-		    	var limit = scopeObj.limit;
-		    	if(scopeObj.currentPage <= 0){
-		    		return limit;
-		    	}
-		    	else{
-		    		var num = scopeObj.currentPage * limit;
-		    		if(num > scopeObj.totalNumOfResults){
-		    			return scopeObj.totalNumOfResults;
-		    		}
-		    		return num;
-		    	}
-		    }
-		    scopeObj.strikeThrough = CssStylesFactory.strikeThrough;
-		    scopeObj.paginate = paginate;
-		}
+		/* ENTRY POINT: Instantiate the base controller which loads the page */
+		$injector.invoke(base.GenericManageController, this, {
+			$scope: $scope
+		});
 	}
 })();

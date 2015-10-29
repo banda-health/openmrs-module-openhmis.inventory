@@ -11,15 +11,12 @@
 
   function InstitutionRestFactory(RestfulService) {
 	 
-	var baseUrl = "../ws/rest/v2/inventory/";
+	var baseUrl = "/openmrs/ws/rest/v2/inventory/";
 	
     var service = {
       loadInstitution: loadInstitution,
-      checkExistingInstitution: checkExistingInstitution,
-      saveInstitution: saveInstitution,
-      updateInstitution: updateInstitution,
-      retireInstitution: retireInstitution,
-      unretireInstitution: unretireInstitution,
+      saveOrUpdateInstitution: saveOrUpdateInstitution,
+      retireOrUnretireInstitution: retireOrUnretireInstitution,
       purgeInstitution: purgeInstitution,
     }
     
@@ -36,67 +33,57 @@
     	 RestfulService.one('institution', uuid, '', successCallback, errorCallback); 
     }
     
-    /* Checks for an existing institution. 
-     * It's very expensive fetching all records and checking for matching names. 
-     * A search by name service should be exposed. */
-    function checkExistingInstitution(name){
-    	var uuid;
-    	var params = [];
-    	params["includeAll"] = true;
-    	var request = { "name": name };
-    	RestfulService.all('institution', uuid, params, 
-    			function(data){
-    				for(var i = 0; i < data.results.length; i++){
-    					if(data.results[i].name.toLowerCase() === name.toLowerCase()){
-    						return true;
-    					}
-    				}
-    			}, 
-    			function(error){
-    				//return false;
-    			});
-    	
-    	return false;
+    function checkExistingInstitution(name, successCallback, errorCallback){
+    	console.log('check existing institution..');
+    	var params = {
+    		includeAll : true,
+    		q : name,
+    		startIndex : 1,
+    		limit : 1
+    	};
+    	console.log(params);
+    	RestfulService.all('institution', params, successCallback, errorCallback);
     }
     
-    function saveInstitution(_institution, successCallback, errorCallback){
+    function saveOrUpdateInstitution(_institution, successCallback, errorCallback){
     	var uuid = _institution.uuid;
         var name = _institution.name;
         var description = _institution.description;
           
         var request = {"name": name, "description": description};
-
-        RestfulService.save('institution', uuid, request, successCallback, errorCallback);
+        
+        if(!angular.isDefined(uuid) || uuid === ""){
+        	checkExistingInstitution(name, function(data){
+	        		if(data.length > 0){
+	    	        	emr.errorMessage(emr.message("openhmis.inventory.institution.error.duplicate"));
+	    	        	successCallback(emr.message("openhmis.inventory.institution.error.duplicate"));
+	        		}
+	        		else{
+	    	        	RestfulService.saveOrUpdate('institution', uuid, request, successCallback, errorCallback);
+	    	        }
+        		}, function(error){});
+        }
+        else{
+        	RestfulService.saveOrUpdate('institution', uuid, request, successCallback, errorCallback);
+        }
     }
         
-    function updateInstitution(_institution, successCallback, errorCallback){
-       	var uuid = _institution.uuid;
-        var name = _institution.name;
-        var description = _institution.description;
-            
-        var request = {"name": name, "description": description};
-       	
-        RestfulService.update('institution', uuid, request, successCallback, errorCallback);
-     }
-        
-    function retireInstitution(_institution, successCallback, errorCallback){
-       	var uuid = _institution.uuid;
+    function retireOrUnretireInstitution(_institution, successCallback, errorCallback){
+    	var request;
+    	var uuid = _institution.uuid;
        	var retireReason = _institution.retireReason;
-            
-        var request = {"reason": retireReason};
-        
-        RestfulService.remove('institution', uuid, request, successCallback, errorCallback);
+       	var retired = _institution.retired;
+       	
+       	if(!retired){
+            request = {"reason": retireReason};
+            RestfulService.remove('institution', uuid, request, successCallback, errorCallback);
+       	}
+       	else{
+       		request = {"retired": false};
+       		RestfulService.saveOrUpdate('institution', uuid, request, successCallback, errorCallback);
+       	}
     }
         
-    function unretireInstitution(_institution, successCallback, errorCallback){
-        var uuid = _institution.uuid;
-        var retired = false;
-           
-        var request = {"retired": retired};
-            
-        RestfulService.save('institution', uuid, request, successCallback, errorCallback);
-    }
-    
     /*
      * Remove institution.
      */

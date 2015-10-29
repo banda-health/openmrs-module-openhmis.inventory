@@ -15,19 +15,7 @@
 	    { label: "${ ui.message("openhmis.inventory.admin.institutions")}"}
 	];
 	
-    var jq = jQuery;
-	
-	jq(document).ready(function () {//supports reseting search phrase to blank
-	    jq(".searchinput").keyup(function () {
-	        jq(this).next().toggle(Boolean(jq(this).val()));
-	    });
-	    jq(".searchclear").toggle(Boolean(jq(".searchinput").val()));
-	    jq(".searchclear").click(function () {
-	    	jq(this).prev().val('').focus();
-	    	jq(this).prev().trigger('input');
-	        jq(this).hide();
-	    });
-	});
+    
 </script>
 
 <div id="institutions-body">
@@ -46,7 +34,7 @@
 	<div id="manageInstitutionApp" ng-controller="ManageInstitutionController">
 		<div id="institutions">
 			<div class="btn-group">
-				<input type="text" ng-model="searchByName" ng-change="loadPage()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.institution.enterSearchPhrase') }" size="80" autofocus>
+				<input type="text" ng-model="searchByName" ng-change="reloadPage()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.institution.enterSearchPhrase') }" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
 			</div>
 			
@@ -59,7 +47,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="clickable-tr" dir-paginate="institution in fetchedInstitutions | itemsPerPage: limit" total-items="totalNumOfResults" current-page="currentPage" ng-click="loadInstitutionFromManagePage(institution.uuid)">
+					<tr class="clickable-tr" dir-paginate="institution in fetchedInstitutions | itemsPerPage: limit" total-items="totalNumOfResults" current-page="currentPage" ng-click="loadEntityPage('institution.page?uuid=' + institution.uuid)">
 						<td ng-style="strikeThrough(institution.retired)">{{institution.name}}</td>
 						<td ng-style="strikeThrough(institution.retired)">{{institution.description}}</td>
 					</tr>
@@ -68,7 +56,7 @@
 			<div id="below-institutions-table">
 				<span style="float:left;">
 					<div id="showing-institutions">
-						<span><b>${ ui.message('openhmis.inventory.general.showing') } {{pagingFrom()}} ${ ui.message('openhmis.inventory.general.to') } {{pagingTo()}}</b></span>
+						<span><b>${ ui.message('openhmis.inventory.general.showing') } {{pagingFrom(currentPage, limit)}} ${ ui.message('openhmis.inventory.general.to') } {{pagingTo(currentPage, limit, totalNumOfResults)}}</b></span>
 						<span><b>${ ui.message('openhmis.inventory.general.of') } {{totalNumOfResults}} ${ ui.message('openhmis.inventory.general.entries') }</b></span>
 					</div>
 				</span>
@@ -81,7 +69,7 @@
 				<span style="float:left;">
 					<div id="includeVoided-institutions">
 						${ui.message('openhmis.inventory.general.show')} 
-						<select id="pageSize" ng-model="limit" ng-change="loadPage()">
+						<select id="pageSize" ng-model="limit" ng-change="reloadPage()">
 							<option value="5">5</option>
 							<option value="10">10</option>
 							<option value="25">25</option>
@@ -89,7 +77,7 @@
 							<option value="100">100</option>
 						</select> 
 						${ui.message('openhmis.inventory.general.entries')}
-						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="loadPage()"></span>
+						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="reloadPage()"></span>
 						<span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
 					</div>
 				</span>

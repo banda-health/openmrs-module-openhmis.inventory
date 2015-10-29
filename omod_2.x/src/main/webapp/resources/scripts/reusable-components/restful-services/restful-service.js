@@ -14,8 +14,7 @@
 			all : all,
 			one : one,
 			remove: remove,
-			save: save,
-			update: update
+			saveOrUpdate: saveOrUpdate
 		};
 
 		return service;
@@ -34,8 +33,9 @@
 		 */
 		function all(resource, request, successCallback, errorCallback) {
 			Restangular.all(resource).customGET('', request).then(function(data) {
-				if (typeof successCallback === 'function')
+				if (typeof successCallback === 'function'){
 					successCallback(data);
+				}
 			}, function(error) {
 				if (typeof errorCallback === 'function')
 					errorCallback(error);
@@ -62,12 +62,7 @@
 					});
 		}
 
-		function save(resource, uuid, request, successCallback,
-				errorCallback) {
-			customPOST(resource, uuid, request, successCallback, errorCallback);
-		}
-		
-		function update(resource, uuid, request, successCallback,
+		function saveOrUpdate(resource, uuid, request, successCallback,
 				errorCallback) {
 			customPOST(resource, uuid, request, successCallback, errorCallback);
 		}

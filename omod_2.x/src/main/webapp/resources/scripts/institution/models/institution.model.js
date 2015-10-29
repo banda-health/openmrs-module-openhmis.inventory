@@ -14,16 +14,8 @@
 				
 		InstitutionModel.populateModels = function(data){
 			var institutions = [];
-			
 			for(var i = 0; i < data.length; i++){
-				var uuid = data[i].uuid;
-				var name = data[i].name;
-				var description = data[i].description;
-				var retired = data[i].retired;
-				
-				//uuid, name, description, retireReason, purge, retired
-				var institution = new InstitutionModel(uuid, name, description, '', '', retired);
-		    	
+				var institution = InstitutionModel.populateModel(data[i]);
 			    institutions.push(institution);
 			}
 				
@@ -31,16 +23,16 @@
 		};
 			
 		InstitutionModel.populateModel = function(data){
-			
 			var institution;
-			
 			if(angular.isDefined(data)){
-				
 				var uuid = data.uuid;
 				var name = data.name;
 				var description = data.description;
 				var retired = data.retired;
-				var retireReason = data.retireReason;
+				var retireReason = '';
+				if(angular.isDefined(data.retireReason)){
+					retireReason = data.retireReason;
+				}
 				
 				//uuid, name, description, retireReason, purge, retired
 				institution = new InstitutionModel(uuid, name, description, retireReason, '', retired);

@@ -55,7 +55,7 @@
 	<p ng-hide="institution.uuid == ''">
 		<span ng-show="institution.retired">${ ui.message('openhmis.inventory.institution.retired.reason') } <b>{{institution.retireReason}}</b><br /></span>
 		<span ng-hide="institution.retired"><input type="text" placeholder="${ ui.message('general.retireReason') }" style="min-width: 50%;" ng-model="institution.retireReason" ng-disabled="institution.retired" /></span>
-		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireFunction()" />
+		<input type="button" ng-disabled="institution.uuid == '' || institution.retireReason == '' || institution.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()" />
 	</p>
 	<p class="checkRequired" ng-hide="institution.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
 	
