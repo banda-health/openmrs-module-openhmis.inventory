@@ -12,28 +12,14 @@
 		var self = this;
 		
 		// @Override
-		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function(uuid){
-			if (uuid === null || uuid === undefined || uuid === "") {
-		        $scope.h2SubString = emr.message("general.new") == "general.new" ? "New" : emr.message("general.new");
-		    } else {
-		        $scope.h2SubString = emr.message("general.edit");
-		    }
-		    if (angular.isDefined($scope.institution) && $scope.institution.retired === true) {
-		        $scope.retireOrUnretire = emr.message("openhmis.inventory.institution.unretire");
-		    } else {
-		        $scope.retireOrUnretire = emr.message("openhmis.inventory.institution.retire");
-		    }
-		}
-		
-		// @Override
 		self.loadEntity = self.loadEntity || function(){
 			if(angular.isDefined(uuid) && uuid !== ""){
 				$scope.uuid = uuid;
 				InstitutionRestFactory.loadInstitution(uuid, onLoadInstitutionSuccessful, onLoadInstitutionError);
 			}
 			else{
-				var institution = InstitutionModel.newModelInstance();
-				bindInstitutionToScope($scope, institution);
+				var entity = InstitutionModel.newModelInstance();
+				bindEntityToScope($scope, entity);
 			}
 		}
 		
@@ -74,14 +60,14 @@
 		}
 		
 		function onLoadInstitutionSuccessful(data){
-			var institution = InstitutionModel.populateModel(data);	
-			bindInstitutionToScope($scope, institution);
-			self.bindExtraVariablesToScope(institution.uuid);
+			var entity = InstitutionModel.populateModel(data);	
+			bindInstitutionToScope($scope, entity);
+			self.bindExtraVariablesToScope(entity.uuid);
 		}
 		
 		function onLoadInstitutionError(error){
-			var institution = InstitutionModel.newModelInstance();
-			bindInstitutionToScope($scope, institution);
+			var entity = InstitutionModel.newModelInstance();
+			bindInstitutionToScope($scope, entity);
             emr.errorMessage(emr.message("openhmis.inventory.institution.error.notFound"));
 		}
 		
@@ -89,9 +75,8 @@
 			self.cancel();
 		}
 
-		function bindInstitutionToScope(scope, institution) {
-		    scope.institution = institution;
-		    scope.entity = institution;
+		function bindInstitutionToScope(scope, entity) {
+		    scope.entity = entity;
 		}
 		/* ############# END LOCAL METHODS ################ */
 		

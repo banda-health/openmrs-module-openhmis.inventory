@@ -7,7 +7,8 @@ require(
      	
      	/* models */
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/models/generic.model.module.js',
-        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/models/generic.model.js',
+        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/models/generic.object.model.js',
+        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/models/generic.metadata.model.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/models/institution.model.js',
         
         /* reusable components */

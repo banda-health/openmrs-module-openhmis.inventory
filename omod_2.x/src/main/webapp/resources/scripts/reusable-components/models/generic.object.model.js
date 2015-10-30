@@ -1,17 +1,12 @@
 (function() {
 	'use strict';
 
-	var baseModel = angular.module('app.genericModel');
+	var baseModel = angular.module('app.genericMetadataModel');
 
-	function GenericModel() {
+	/* Core functions */
+	function GenericObjectModel() {
 		
 		var self = this;
-		
-		/* default fields. override to implement own fields */
-		self.openmrsModel = function() {
-	        var fields =  ["uuid", "name", "description", "retireReason", "purge", "retired"];
-	        return fields;
-	    };
 		
 		self.populateModels = function(data){
 			var entities = [];
@@ -26,7 +21,7 @@
 		self.populateModel = function(data){
 			var entity = {};
 			if(angular.isDefined(data)){
-				var fields = self.openmrsModel();
+				var fields = self.getModelFields();
 				for(var i = 0; i < fields.length; i++){
 					var field = fields[i];
 					if(angular.isDefined(data[field])){
@@ -42,7 +37,7 @@
 		};
 		
 		self.newModelInstance = function(){
-			var fields = self.openmrsModel();
+			var fields = self.getModelFields();
 			var entity = {};
 			for(var i = 0; i < fields.length; i++){
 				var field = fields[i];
@@ -54,5 +49,5 @@
 		return self;
 	}
 	
-	baseModel.factory("GenericModel", GenericModel);
+	baseModel.factory("GenericObjectModel", GenericObjectModel);
 })();

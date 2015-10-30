@@ -26,7 +26,16 @@
 		}
 		
 		this.bindExtraVariablesToScope = this.bindExtraVariablesToScope || function(uuid){
-			console.log('generic bind extra variables to scope');
+			if (uuid === null || uuid === undefined || uuid === "") {
+		        $scope.h2SubString = emr.message("general.new") == "general.new" ? "New" : emr.message("general.new");
+		    } else {
+		        $scope.h2SubString = emr.message("general.edit");
+		    }
+		    if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired) && $scope.entity.retired === true) {
+		        $scope.retireOrUnretire = emr.message("openhmis.inventory.institution.unretire");
+		    } else {
+		        $scope.retireOrUnretire = emr.message("openhmis.inventory.institution.retire");
+		    }
 		}
 		
 		this.initialize = this.initialize || function(){

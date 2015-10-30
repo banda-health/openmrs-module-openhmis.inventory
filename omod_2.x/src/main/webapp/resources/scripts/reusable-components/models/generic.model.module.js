@@ -1,4 +1,4 @@
 (function() {
 	'use strict';
-	angular.module('app.genericModel', []);
+	angular.module('app.genericMetadataModel', []);
 })();
