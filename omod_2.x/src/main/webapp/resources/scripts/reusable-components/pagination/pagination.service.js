@@ -11,7 +11,8 @@
 		service = {
 			pagingTo : pagingTo,
 			pagingFrom : pagingFrom,
-			paginateParams: paginateParams
+			paginateParams: paginateParams,
+			computeNumberOfPages: computeNumberOfPages
 		};
 
 		return service;
@@ -56,6 +57,10 @@
 			}
 			
 			return params;
+		}
+		
+		function computeNumberOfPages(totalNumOfResults, limit){
+			return Math.ceil(totalNumOfResults / limit);
 		}
 	}
 })();

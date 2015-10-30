@@ -9,7 +9,6 @@ require(
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/reusable-components.module.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/restful-services/restful-services.module.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/models/institution.model.js',
-        '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/restful-services/restful-settings.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/restful-services/restful-service.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/factories/institution-rest.factory.js',
         '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/directives/institution-disable.directive.js',

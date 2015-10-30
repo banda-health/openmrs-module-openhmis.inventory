@@ -62,7 +62,7 @@
 				</span>
 				<span style="float:right;">
 					<div class="institution-pagination">
-    					<dir-pagination-controls on-page-change="paginate(currentPage, limit)"></dir-pagination-controls>	
+    					<dir-pagination-controls on-page-change="paginate(currentPage)"></dir-pagination-controls>	
 					</div>
 				</span>
 				<br />

@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	angular.module('app.genericEntityController', []);
+	angular.module('app.genericEntityController', ['app.restfulServices']);
 
 })();
 

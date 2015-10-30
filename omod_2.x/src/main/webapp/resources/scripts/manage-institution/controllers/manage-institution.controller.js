@@ -3,45 +3,38 @@
 
 	var base = angular.module('app.genericManageController');
 	base.controller("ManageInstitutionController", ManageInstitutionController);
-	ManageInstitutionController.$inject = ['$injector', '$scope', 'ManageInstitutionRestFactory', 'CssStylesFactory', 'InstitutionModel', 'PaginationService'];
+	ManageInstitutionController.$inject = ['$injector', '$scope', 'ManageEntityRestFactory', 'CssStylesFactory', 'PaginationService', 'InstitutionModel'];
 	
-	function ManageInstitutionController($injector, $scope, ManageInstitutionRestFactory, CssStylesFactory, InstitutionModel, PaginationService) {
+	function ManageInstitutionController($injector, $scope, ManageEntityRestFactory, CssStylesFactory, PaginationService, InstitutionModel) {
 
+		var self = this;
+		
+		var resource = 'inventory';
+		var entity_name = 'institution';
+		
 		// @Override
-		this.bindExtraVariablesToScope = this.bindExtraVariablesToScope || function(){
-			$scope.pagingFrom = PaginationService.pagingFrom;
-			$scope.pagingTo = PaginationService.pagingTo;
-			$scope.strikeThrough = CssStylesFactory.strikeThrough;
+		self.getResourceAndEntityName = self.getResourceAndEntityName || function(){
+			self.bindBaseParameters(resource, entity_name);
 		}
 		
 		// @Override
-		this.paginate = this.paginate || function(start, limit){
-			var params = PaginationService.paginateParams(start, limit, $scope.includeRetired, $scope.searchByName);
-			ManageInstitutionRestFactory.loadInstitutions(params, onLoadInstitutions, onLoadError);
-		}
-		
-		function onLoadInstitutions(data){
+		self.onLoadEntitiesSuccess = self.onLoadEntitiesSuccess || function(data){
 			$scope.fetchedInstitutions = InstitutionModel.populateModels(data.results);
-			setTotalCount(data.length);
+			self.computeNumberOfPages(data.length);
 		}
 		
-		function onLoadError(error) {
+		// @Override
+		self.onLoadEntitiesError = self.onLoadEntitiesError || function(error){
 			console.error(error);
 			emr.errorMessage(error);
 		}
 		
-		function setTotalCount(length){
-			var totalNumOfResults = length;
-			var limit = $scope.limit;
-			var numberOfPages = Math.ceil(totalNumOfResults / limit);
-			
-			$scope.totalNumOfResults = totalNumOfResults;
-			$scope.numberOfPages = numberOfPages;
-		}
-		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
-		$injector.invoke(base.GenericManageController, this, {
-			$scope: $scope
+		$injector.invoke(base.GenericManageController, self, {
+			$scope: $scope,
+			ManageEntityRestFactory: ManageEntityRestFactory, 
+			PaginationService: PaginationService, 
+			CssStylesFactory: CssStylesFactory
 		});
 	}
 })();

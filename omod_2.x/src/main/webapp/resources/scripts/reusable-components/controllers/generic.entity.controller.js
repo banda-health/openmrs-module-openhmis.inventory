@@ -3,7 +3,7 @@
 
 	var baseController = angular.module('app.genericEntityController');
 
-	function GenericEntityController($scope) {
+	function GenericEntityController($scope, EntityRestFactory) {
 		
 		this.saveOrUpdate = this.saveOrUpdate || function(){
 			console.log('generic save or update');

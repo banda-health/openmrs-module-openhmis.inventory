@@ -10,29 +10,33 @@
   EntityRestFactory.$inject = ['RestfulService'];
 
   function EntityRestFactory(RestfulService) {
-	 
-	var baseUrl = "/openmrs/ws/rest/v2/inventory/";
+	var resource = '';
+	var entity_name = '';
 	
     var service = {
+      setBaseParameters: setBaseParameters,
       loadEntity: loadEntity,
       saveOrUpdateEntity: saveOrUpdateEntity,
       retireOrUnretireEntity: retireOrUnretireEntity,
       purgeEntity: purgeEntity,
     }
     
-    initialize();
-    
     return service;
     
-    // set ws url
-    function initialize(){
+    /* Set base parameters: the resource name e.g 'inventory' and entity_name e.g 'institution' */
+    function setBaseParameters(_resource, _entity_name){
+    	resource = _resource;
+    	entity_name = _entity_name;
+    	var baseUrl = "/openmrs/ws/rest/v2/{0}/{1}/".format(resource, entity_name);
     	RestfulService.setBaseUrl(baseUrl);
     }
     
+    /* Retrieve only one entity */
     function loadEntity(uuid, successCallback, errorCallback){
-    	 RestfulService.one('institution', uuid, '', successCallback, errorCallback); 
+    	 RestfulService.one(entity_name, uuid, '', successCallback, errorCallback); 
     }
     
+    /* Check if an entity exists! */
     function checkExistingEntity(name, successCallback, errorCallback){
     	var params = {
     		includeAll : true,
@@ -40,59 +44,52 @@
     		startIndex : 1,
     		limit : 1
     	};
-    	console.log(params);
-    	RestfulService.all('institution', params, successCallback, errorCallback);
+    	RestfulService.all(entity_name, params, successCallback, errorCallback);
     }
     
-    function saveOrUpdateEntity(_institution, successCallback, errorCallback){
-    	var uuid = _institution.uuid;
-        var name = _institution.name;
-        var description = _institution.description;
-          
-        var request = {"name": name, "description": description};
-        
+    /* Either persist a new entity or update an existing one */
+    function saveOrUpdateEntity(request, successCallback, errorCallback){
+    	var uuid = request['uuid'];
+    	var name = request['name'];
+    	delete request['uuid'];
+    	delete request['name'];
         if(!angular.isDefined(uuid) || uuid === ""){
         	checkExistingEntity(name, function(data){
 	        		if(data.length > 0){
-	    	        	emr.errorMessage(emr.message("openhmis.inventory.institution.error.duplicate"));
-	    	        	successCallback(emr.message("openhmis.inventory.institution.error.duplicate"));
+	        			var msg = "openhmis." + resource + "." + entity_name + ".error.duplicate";
+	    	        	emr.errorMessage(emr.message(msg));
+	    	        	errorCallback(emr.message(msg));
 	        		}
 	        		else{
-	    	        	RestfulService.saveOrUpdate('institution', uuid, request, successCallback, errorCallback);
+	    	        	RestfulService.saveOrUpdate(entity_name, uuid, request, successCallback, errorCallback);
 	    	        }
         		}, function(error){});
         }
         else{
-        	RestfulService.saveOrUpdate('institution', uuid, request, successCallback, errorCallback);
+        	RestfulService.saveOrUpdate(entity_name, uuid, request, successCallback, errorCallback);
         }
     }
-        
-    function retireOrUnretireEntity(_institution, successCallback, errorCallback){
-    	var request;
-    	var uuid = _institution.uuid;
-       	var retireReason = _institution.retireReason;
-       	var retired = _institution.retired;
-       	
+    
+    /* Checks retired attribute and makes the appropriate call */
+    function retireOrUnretireEntity(request, successCallback, errorCallback){
+    	var retired = request['retired'];
+    	var uuid = request['uuid'];
+    	
+    	delete request['retired'];
+    	delete request['uuid'];
        	if(!retired){
-            request = {"reason": retireReason};
-            RestfulService.remove('institution', uuid, request, successCallback, errorCallback);
+            RestfulService.remove(entity_name, uuid, request, successCallback, errorCallback);
        	}
        	else{
-       		request = {"retired": false};
-       		RestfulService.saveOrUpdate('institution', uuid, request, successCallback, errorCallback);
+       		RestfulService.saveOrUpdate(entity_name, uuid, request, successCallback, errorCallback);
        	}
     }
         
-    /*
-     * Remove institution.
-     */
-    function purgeEntity(_institution, successCallback, errorCallback){
-       	var uuid = _institution.uuid;
-       	var purge = _institution.purge;
-            
-        var request = {"purge": purge};
-            
-        RestfulService.remove('institution', uuid, request, successCallback, errorCallback);
+    /* Delete an entity */
+    function purgeEntity(request, successCallback, errorCallback){
+    	var uuid = request['uuid'];
+    	delete request['uuid'];
+        RestfulService.remove(resource, uuid, request, successCallback, errorCallback);
       }
     }
 })();
