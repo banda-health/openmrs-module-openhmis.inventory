@@ -3,57 +3,147 @@
 
 	var baseController = angular.module('app.genericEntityController');
 
-	function GenericEntityController($scope, EntityRestFactory) {
+	function GenericEntityController($scope, EntityRestFactory, GenericObjectModel) {
 		
-		this.saveOrUpdate = this.saveOrUpdate || function(){
-			console.log('generic save or update');
+		var self = this;
+		
+		self.resource = '';
+		self.entity_name = '';
+		self.uuid = '';
+		
+		// protected
+		self.getResourceAndEntityName = self.getResourceAndEntityName || function(){
+			console.log('generic get entity name and url');
+		}
+
+		// protected
+		self.bindBaseParameters = function(resource, entity_name){
+			self.resource = resource;
+			self.entity_name = entity_name;
 		}
 		
-		this.retireOrUnretireCall = this.retireOrUnretireCall || function(retire){
-			console.log('generic retire or unretire');
+		// protected
+		self.bindEntityToScope = self.bindEntityToScope || function(scope, entity){
+			scope.entity = entity;
 		}
 		
-		this.purge = this.purge || function(){
-			console.log('generic purge');
+		// protected
+		// TODO: Look for a better way of retrieving url parameters
+		self.getUuid = self.getUuid || function(){
+			var uuid = window.location.search.split("=")[0] === "?uuid" ? window.location.search
+					.split("=")[1]
+					: "";
+			return uuid;
 		}
 		
-		this.loadEntity = this.loadEntity || function(){
-			console.log('generic load entity..');
+		self.saveOrUpdate = self.saveOrUpdate || function(){
+			var params = {
+				uuid: $scope.entity.uuid,
+				name: $scope.entity.name,
+				description: $scope.entity.description,
+				resource: self.resource
+			};
+			params = self.appendBaseParams(params);
+			EntityRestFactory.saveOrUpdateEntity(params, self.onChangeEntitySuccessful, self.onChangeEntityError);
 		}
 		
-		this.cancel = this.cancel || function(){
-			console.log('generic cancel');
+		self.retireOrUnretireCall = self.retireOrUnretireCall || function(retire){
+			var params = {
+				uuid: $scope.entity.uuid,
+				retireReason: $scope.entity.retireReason,
+				retired: $scope.entity.retired
+			};
+			params = self.appendBaseParams(params);
+			EntityRestFactory.retireOrUnretireEntity(params, self.onChangeEntitySuccessful, self.onChangeEntityError);
 		}
 		
-		this.bindExtraVariablesToScope = this.bindExtraVariablesToScope || function(uuid){
+		self.purge = self.purge || function(){
+			var params = {
+				uuid: $scope.entity.uuid,
+				purge: $scope.entity.purge
+			};
+			params = self.appendBaseParams(params);
+			EntityRestFactory.purgeEntity(params, self.onPurgeEntitySuccessful, self.onChangeEntityError);
+		}
+		
+		self.loadEntity = self.loadEntity || function(uuid){
+			if(angular.isDefined(uuid) && uuid !== ""){
+				var params = {
+					uuid: uuid
+				};
+				params = self.appendBaseParams(params);
+				EntityRestFactory.loadEntity(params, self.onLoadEntitySuccessful, self.onLoadEntityError);
+			}
+			else{
+				var entity = GenericObjectModel.newModelInstance();
+				self.bindEntityToScope($scope, entity);
+			}
+		}
+		
+		/* #### START CALLBACK Methods #### */
+		self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function(data){
+			console.log('generic onChangeEntitySuccessful');
+		} 
+		
+		self.onChangeEntityError = self.onChangeEntityError || function(error){
+			console.log('generic onSaveOrUpdateEntityError');
+		}
+		
+		self.onPurgeEntitySuccessful = self.onPurgeEntitySuccessful || function(data){
+			console.log('generic onPurgeEntitySuccessful');
+		} 
+		
+		self.onLoadEntitySuccessful = self.onLoadEntitySuccessful || function(data){
+			console.log('generic onLoadEntitySuccessful');
+		} 
+		
+		self.onLoadEntityError = self.onLoadEntityError || function(error){
+			console.log('generic onLoadEntityError');
+		}
+		/* #### END CALLBACK Methods #### */
+		
+		self.cancel = function(){
+			window.location = "manageInstitutions.page";
+		}
+		
+		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function(uuid){
 			if (uuid === null || uuid === undefined || uuid === "") {
 		        $scope.h2SubString = emr.message("general.new") == "general.new" ? "New" : emr.message("general.new");
 		    } else {
 		        $scope.h2SubString = emr.message("general.edit");
 		    }
 		    if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired) && $scope.entity.retired === true) {
-		        $scope.retireOrUnretire = emr.message("openhmis.inventory.institution.unretire");
+		        $scope.retireOrUnretire = emr.message("openhmis." + self.resource + "." + self.entity_name + ".unretire");
 		    } else {
-		        $scope.retireOrUnretire = emr.message("openhmis.inventory.institution.retire");
+		        $scope.retireOrUnretire = emr.message("openhmis." + self.resource + "." + self.entity_name + ".retire");
 		    }
 		}
 		
-		this.initialize = this.initialize || function(){
-			$scope.cancel = this.cancel;
-			$scope.purge = this.purge;
-			$scope.saveOrUpdate = this.saveOrUpdate;
-			$scope.retireOrUnretireCall = this.retireOrUnretireCall;
-			
-			this.bindExtraVariablesToScope('');
+		self.initialize = self.initialize || function(){
+			self.uuid = self.getUuid();
+			self.getResourceAndEntityName();
+			EntityRestFactory.setBaseUrl(self.resource);
+			$scope.cancel = self.cancel;
+			$scope.purge = self.purge;
+			$scope.saveOrUpdate = self.saveOrUpdate;
+			$scope.retireOrUnretireCall = self.retireOrUnretireCall;
+			self.bindExtraVariablesToScope('');
 		}
 		
-		this.loadPage = this.loadPage || function(){
-			this.loadEntity();
-			this.initialize();
+		self.loadPage = self.loadPage || function(){
+			self.initialize();
+			self.loadEntity(self.uuid);
+		}
+		
+		self.appendBaseParams = self.appendBaseParams || function(params){
+			if(params){
+				params['entity_name'] = self.entity_name;
+				return params;
+			}
 		}
 		
 		/* ENTRY POINT */
-		this.loadPage();
+		self.loadPage();
 	}
 	
 	baseController.GenericEntityController = GenericEntityController;

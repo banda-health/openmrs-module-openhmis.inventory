@@ -14,7 +14,7 @@
 	var self = this;
 	  
     var service = {
-    		setBaseUrl: setBaseUrl,
+      setBaseUrl: setBaseUrl,
       loadEntities: loadEntities
     }
     

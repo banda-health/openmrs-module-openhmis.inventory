@@ -2,90 +2,65 @@
 	'use strict';
 
 	var base = angular.module('app.genericEntityController');
+	base.controller("InstitutionController", InstitutionController);
+	InstitutionController.$inject = ['$injector', '$scope', 'EntityRestFactory', 'InstitutionModel'];
 
-	var uuid = window.location.search.split("=")[0] === "?uuid" ? window.location.search
-			.split("=")[1]
-			: ""; // search looks like; '?uuid=09404'
-			
-	function InstitutionController($injector, $scope, InstitutionModel, InstitutionRestFactory) {
+	function InstitutionController($injector, $scope, EntityRestFactory, InstitutionModel) {
 		
 		var self = this;
 		
+		var resource = 'inventory';
+		var entity_name = 'institution';
+		
 		// @Override
-		self.loadEntity = self.loadEntity || function(){
-			if(angular.isDefined(uuid) && uuid !== ""){
-				$scope.uuid = uuid;
-				InstitutionRestFactory.loadInstitution(uuid, onLoadInstitutionSuccessful, onLoadInstitutionError);
-			}
-			else{
-				var entity = InstitutionModel.newModelInstance();
-				bindEntityToScope($scope, entity);
-			}
+		self.getResourceAndEntityName = self.getResourceAndEntityName || function(){
+			self.bindBaseParameters(resource, entity_name);
 		}
 		
 		// @Override
-		self.saveOrUpdate = self.saveOrUpdate || function(){
-			InstitutionRestFactory.saveOrUpdateInstitution($scope.institution, onChangeInstitutionSuccessful, onChangeInstitutionError);
+		self.bindEntityToScope = self.bindEntityToScope || function(scope, entity){
+			scope.entity = entity;
 		}
 		
 		// @Override
-		self.retireOrUnretireCall = self.retireOrUnretireCall || function() {
-			InstitutionRestFactory.retireOrUnretireInstitution($scope.institution, onChangeInstitutionSuccessful, onChangeInstitutionError);
-	    }
-
-		// @Override
-		self.purge = self.purge || function(){
-			InstitutionRestFactory.purgeInstitution($scope.institution, onPurgeSuccessful, onChangeInstitutionError);
-		}
-		
-		// @Override
-		self.cancel = self.cancel || function(){
-			window.location = "manageInstitutions.page";
-		}
-		
-		/* ########## START LOCAL METHODS ########## */
-		function onChangeInstitutionSuccessful(data){
+		self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function(data){
 			if(angular.isDefined(data) && angular.isDefined(data.uuid)){
-				uuid = data.uuid;
-				self.loadEntity();
+				self.loadEntity(data.uuid);
 			}
 			else{
 				self.bindExtraVariablesToScope("");
 			}
-		}
+		} 
 		
-		function onChangeInstitutionError(error) {
+		// @Override
+		self.onChangeEntityError = self.onChangeEntityError || function(error){
 			console.error(error);
 			emr.errorMessage(error);
 		}
 		
-		function onLoadInstitutionSuccessful(data){
-			var entity = InstitutionModel.populateModel(data);	
-			bindInstitutionToScope($scope, entity);
-			self.bindExtraVariablesToScope(entity.uuid);
-		}
+		// @Override
+		self.onPurgeEntitySuccessful = self.onPurgeEntitySuccessful || function(data){
+			self.cancel();
+		} 
 		
-		function onLoadInstitutionError(error){
+		// @Override
+		self.onLoadEntitySuccessful = self.onLoadEntitySuccessful || function(data){
+			var entity = InstitutionModel.populateModel(data);
+			self.bindEntityToScope($scope, entity);
+			self.bindExtraVariablesToScope(entity.uuid);
+		} 
+		
+		// @Override
+		self.onLoadEntityError = self.onLoadEntityError || function(error){
 			var entity = InstitutionModel.newModelInstance();
-			bindInstitutionToScope($scope, entity);
+			self.bindEntityToScope($scope, entity);
             emr.errorMessage(emr.message("openhmis.inventory.institution.error.notFound"));
 		}
 		
-		function onPurgeSuccessful(data){
-			self.cancel();
-		}
-
-		function bindInstitutionToScope(scope, entity) {
-		    scope.entity = entity;
-		}
-		/* ############# END LOCAL METHODS ################ */
-		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
-		$injector.invoke(base.GenericEntityController, this, {
-			$scope: $scope
+		$injector.invoke(base.GenericEntityController, self, {
+			$scope: $scope,
+			EntityRestFactory: EntityRestFactory
 		});
 	}
-	
-	base.controller("InstitutionController", InstitutionController);
-	InstitutionController.$inject = ['$injector', '$scope', 'InstitutionModel', 'InstitutionRestFactory'];
 })();
