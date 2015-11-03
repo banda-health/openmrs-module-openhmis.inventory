@@ -47,9 +47,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="clickable-tr" dir-paginate="institution in fetchedInstitutions | itemsPerPage: limit" total-items="totalNumOfResults" current-page="currentPage" ng-click="loadEntityPage('institution.page?uuid=' + institution.uuid)">
-						<td ng-style="strikeThrough(institution.retired)">{{institution.name}}</td>
-						<td ng-style="strikeThrough(institution.retired)">{{institution.description}}</td>
+					<tr class="clickable-tr" dir-paginate="entity in fetchedEntities | itemsPerPage: limit" total-items="totalNumOfResults" current-page="currentPage" ng-click="loadEntityPage('institution.page?uuid=' + entity.uuid)">
+						<td ng-style="strikeThrough(entity.retired)">{{entity.name}}</td>
+						<td ng-style="strikeThrough(entity.retired)">{{entity.description}}</td>
 					</tr>
 				</tbody>
 			</table>

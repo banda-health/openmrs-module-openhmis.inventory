@@ -17,24 +17,13 @@
 			self.bindBaseParameters(resource, entity_name);
 		}
 		
-		// @Override
-		self.onLoadEntitiesSuccess = self.onLoadEntitiesSuccess || function(data){
-			$scope.fetchedInstitutions = InstitutionModel.populateModels(data.results);
-			self.computeNumberOfPages(data.length);
-		}
-		
-		// @Override
-		self.onLoadEntitiesError = self.onLoadEntitiesError || function(error){
-			console.error(error);
-			emr.errorMessage(error);
-		}
-		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericManageController, self, {
 			$scope: $scope,
 			ManageEntityRestFactory: ManageEntityRestFactory, 
 			PaginationService: PaginationService, 
-			CssStylesFactory: CssStylesFactory
+			CssStylesFactory: CssStylesFactory,
+			GenericMetadataModel: InstitutionModel
 		});
 	}
 })();

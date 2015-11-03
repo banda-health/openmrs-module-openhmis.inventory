@@ -3,7 +3,7 @@
 
 	var baseController = angular.module('app.genericManageController');
 	
-	function GenericManageController($scope, ManageEntityRestFactory, PaginationService, CssStylesFactory) {
+	function GenericManageController($scope, ManageEntityRestFactory, PaginationService, CssStylesFactory, GenericMetadataModel) {
 		
 		var self = this;
 		
@@ -35,12 +35,14 @@
 		
 		// protected
 		self.onLoadEntitiesSuccess = self.onLoadEntitiesSuccess || function(data){
-			console.log('generic callback success..');
+			$scope.fetchedEntities = GenericMetadataModel.populateModels(data.results);
+			self.computeNumberOfPages(data.length);
 		}
 		
 		// protected
 		self.onLoadEntitiesError = self.onLoadEntitiesError || function(error){
-			console.log('generic callback error')
+			console.error(error);
+			emr.errorMessage(error);
 		}
 		
 		// protected
@@ -79,6 +81,10 @@
 			// initialize restful webservice..
 			self.getResourceAndEntityName();
 			ManageEntityRestFactory.setBaseUrl(self.resource);
+			
+			if(!angular.isDefined($scope.fetchedEntities)){
+				$scope.fetchedEntities = [];
+			}
 			
 			if(!angular.isDefined($scope.searchByName)){
 				$scope.searchByName = '';	
