@@ -8,8 +8,8 @@ requirejs(['/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable
 				'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/pagination/pagination.service.js',
 				'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/controllers/generic.manage.controller.module.js',
 				'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/controllers/generic.manage.controller.js',
-				'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/manage-institution/manage-institution.module.js',
-				'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/manage-institution/controllers/manage-institution.controller.js',
+				'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/manage-institution.module.js',
+				'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/controllers/manage-institution.controller.js',
 			], function () {
 		        angular.bootstrap(document, ['manageInstitutionApp']);
 		    });

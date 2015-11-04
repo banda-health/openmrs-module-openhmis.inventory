@@ -5,7 +5,7 @@
     ui.includeCss("openhmis.inventory", "institutions2x.css")
 %>
 
-<script data-main="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/manage-institution/main.js" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/manage-institution.main.js" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <script type="text/javascript">
 	var breadcrumbs = [
@@ -14,8 +14,6 @@
 	    { label: "${ ui.message("openhmis.inventory.manage.module")}", link: 'inventory/manageModule.page' },
 	    { label: "${ ui.message("openhmis.inventory.admin.institutions")}"}
 	];
-	
-    
 </script>
 
 <div id="institutions-body">
