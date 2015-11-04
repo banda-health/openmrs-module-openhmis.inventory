@@ -26,7 +26,7 @@
 		<span style="float:right;">
 			<a class="button confirm" href="institution.page" >
 				<i class ="icon-plus"></i>
-		        ${ ui.message('openhmis.inventory.institution.new') }
+		        ${ sprintf(ui.message('openhmis.inventory.general.new'), ui.message('openhmis.inventory.institution.name'))}
 		    </a>
 		</span>
 	</div>
@@ -34,7 +34,7 @@
 	<div id="manageInstitutionApp" ng-controller="ManageInstitutionController">
 		<div id="institutions">
 			<div class="btn-group">
-				<input type="text" ng-model="searchByName" ng-change="reloadPage()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.institution.enterSearchPhrase') }" size="80" autofocus>
+				<input type="text" ng-model="searchByName" ng-change="reloadPage()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis..enterSearchPhrase') }" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
 			</div>
 			

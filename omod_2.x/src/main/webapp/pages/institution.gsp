@@ -17,18 +17,19 @@
 	
 	emr.loadMessages([
         "openhmis.inventory.institution.name",
-        "openhmis.inventory.institution.error.notFound",
-        "openhmis.inventory.institution.created.success",
-        "openhmis.inventory.institution.updated.success",
-        "openhmis.inventory.institution.retired.success",
-        "openhmis.inventory.institution.unretired.success",
-        "openhmis.inventory.institution.confirm.delete",
-        "openhmis.inventory.institution.deleted.success",
-        "openhmis.inventory.institution.name.required",
-        "openhmis.inventory.institution.retireReason.required",
-        "openhmis.inventory.institution.unretire",
-        "openhmis.inventory.institution.retire",
-        "openhmis.inventory.institution.error.duplicate",
+        "openhmis.inventory.general.error.notFound",
+        "openhmis.inventory.general.created.success",
+        "openhmis.inventory.general.updated.success",
+        "openhmis.inventory.general.retired.success",
+        "openhmis.inventory.general.unretired.success",
+        "openhmis.inventory.general.confirm.delete",
+        "openhmis.inventory.general.deleted.success",
+        "openhmis.inventory.general.name.required",
+        "openhmis.inventory.general.retireReason.required",
+        "openhmis.inventory.general.unretire",
+        "openhmis.inventory.general.retire",
+        "openhmis.inventory.general.delete",
+        "openhmis.inventory.general.error.duplicate",
         "general.edit",
         "general.new"
     ]);
@@ -51,18 +52,19 @@
 		<span><input type="button" class="confirm right" value="${ ui.message('general.save') }"  ng-disabled="entity.name == '' || entity.name == undefined" ng-click="saveOrUpdate()" /></span>
 	</p>
 	<br />
-	<h3 ng-hide="entity.uuid == ''">{{retireOrUnretire}} ${ ui.message('openhmis.inventory.institution.name') }</h3>
+	<h3 ng-hide="entity.uuid == ''">{{retireOrUnretire}}</h3>
 	<p ng-hide="entity.uuid == ''">
-		<span ng-show="entity.retired">${ ui.message('openhmis.inventory.institution.retired.reason') } <b>{{entity.retireReason}}</b><br /></span>
+		<span ng-show="entity.retired">${ ui.message('openhmis.general.retired.reason') } <b>{{entity.retireReason}}</b><br /></span>
 		<span ng-hide="entity.retired"><input type="text" placeholder="${ ui.message('general.retireReason') }" style="min-width: 50%;" ng-model="entity.retireReason" ng-disabled="entity.retired" /></span>
 		<input type="button" ng-disabled="entity.uuid == '' || entity.retireReason == '' || entity.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()" />
 	</p>
 	<p class="checkRequired" ng-hide="entity.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
 	
-	<h3 ng-hide="entity.uuid == ''">${ ui.message('openhmis.inventory.institution.delete') }</h3>
+	<h3 ng-hide="entity.uuid == ''">
+		{{deleteForeverMsg}}
+	</h3>
 	<p>
 		<input type="button" ng-hide="entity.uuid == ''" class="cancel" value="${ ui.message('general.purge') }" ng-click="purge()"/>
 	</p>
 	
 </form>
-
