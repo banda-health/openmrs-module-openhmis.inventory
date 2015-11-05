@@ -32,7 +32,7 @@
 	<div id="manageInstitutionApp" ng-controller="ManageInstitutionController">
 		<div id="institutions">
 			<div class="btn-group">
-				<input type="text" ng-model="searchByName" ng-change="reloadPage()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis..enterSearchPhrase') }" size="80" autofocus>
+				<input type="text" ng-model="searchByName" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis..enterSearchPhrase') }" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
 			</div>
 			
@@ -67,7 +67,7 @@
 				<span style="float:left;">
 					<div id="includeVoided-institutions">
 						${ui.message('openhmis.inventory.general.show')} 
-						<select id="pageSize" ng-model="limit" ng-change="reloadPage()">
+						<select id="pageSize" ng-model="limit" ng-change="updateContent()">
 							<option value="5">5</option>
 							<option value="10">10</option>
 							<option value="25">25</option>
@@ -75,7 +75,7 @@
 							<option value="100">100</option>
 						</select> 
 						${ui.message('openhmis.inventory.general.entries')}
-						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="reloadPage()"></span>
+						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-model="includeRetired" ng-change="updateContent()"></span>
 						<span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
 					</div>
 				</span>

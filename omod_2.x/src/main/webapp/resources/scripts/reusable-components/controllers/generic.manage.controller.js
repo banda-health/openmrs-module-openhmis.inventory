@@ -58,7 +58,7 @@
 		}
 
 		// public
-		self.reloadPage = function() {
+		self.updateContent = function() {
 			self.paginate($scope.currentPage);
 		}
 
@@ -108,7 +108,7 @@
 				$scope.includeRetired = false;
 			}
 
-			$scope.reloadPage = self.reloadPage;
+			$scope.updateContent = self.updateContent;
 			$scope.loadEntityPage = self.loadEntityPage;
 			$scope.paginate = self.paginate;
 
