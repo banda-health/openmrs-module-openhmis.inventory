@@ -3,7 +3,7 @@
 
 	var baseController = angular.module('app.genericEntityController');
 
-	function GenericEntityController($scope, $filter, EntityRestFactory, GenericMetadataModel) {
+	function GenericEntityController($scope, $filter, $stateParams, EntityRestFactory, GenericMetadataModel) {
 
 		var self = this;
 		self.module_name = '';
@@ -31,10 +31,8 @@
 		}
 
 		// protected
-		// TODO: Look for a better way of retrieving url parameters
 		self.getUuid = self.getUuid || function() {
-			var uuid = window.location.search.split("=")[0] === "?uuid" ? window.location.search.split("=")[1] : "";
-			return uuid;
+			return $stateParams['uuid'];
 		}
 
 		self.saveOrUpdate = self.saveOrUpdate || function() {
@@ -59,10 +57,9 @@
 		}
 
 		self.purge = self.purge || function() {
-			console.log('purge entity');
 			var params = {
 				uuid : $scope.entity.uuid,
-				purge : ''
+				purge : true
 			};
 			params = self.appendBaseParams(params);
 			EntityRestFactory.purgeEntity(params, self.onPurgeEntitySuccessful, self.onChangeEntityError);
@@ -114,14 +111,14 @@
 		/* #### END CALLBACK Methods #### */
 
 		self.cancel = function() {
-			window.location = "manageInstitutions.page";
+			window.location = "institutions.page";
 		}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function(uuid) {
 			if (uuid === null || uuid === undefined || uuid === "") {
-				$scope.h2SubString = emr.message("openhmis.inventory.general.new") == "openhmis.inventory.general.new" ? "New" : emr.message("openhmis.inventory.general.new");
+				$scope.h2SubString = $filter('EmrFormat')(emr.message("openhmis.inventory.general.new"), [ self.entity_name ]);
 			} else {
-				$scope.h2SubString = emr.message("general.edit");
+				$scope.h2SubString = emr.message("general.edit") + ' ' + self.entity_name;
 			}
 			if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired) && $scope.entity.retired === true) {
 				$scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.unretire"), [ self.entity_name ]);

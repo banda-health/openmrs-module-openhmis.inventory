@@ -63,11 +63,10 @@
 		}
 
 		function remove(resource, uuid, request, successCallback, errorCallback) {
-			var params = JSON.stringify(request);
-
-			Restangular.one(resource, uuid).remove(params).then(function(data) {
-				if (typeof successCallback === 'function')
+			Restangular.one(resource, uuid).remove(request).then(function(data) {
+				if (typeof successCallback === 'function') {
 					successCallback(data);
+				}
 			}, function(error) {
 				if (typeof errorCallback === 'function')
 					errorCallback(error);

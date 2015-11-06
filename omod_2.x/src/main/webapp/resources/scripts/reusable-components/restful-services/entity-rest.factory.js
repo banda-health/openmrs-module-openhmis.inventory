@@ -114,7 +114,7 @@
 				var uuid = requestParams['uuid'];
 
 				delete requestParams['entity_name'];
-				// delete requestParams['uuid'];
+				delete requestParams['uuid'];
 
 				RestfulService.remove(entity_name, uuid, requestParams, successCallback, errorCallback);
 			} else {

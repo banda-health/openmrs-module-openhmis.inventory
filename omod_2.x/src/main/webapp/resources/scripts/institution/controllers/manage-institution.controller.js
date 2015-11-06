@@ -3,27 +3,29 @@
 
 	var base = angular.module('app.genericManageController');
 	base.controller("ManageInstitutionController", ManageInstitutionController);
-	ManageInstitutionController.$inject = ['$injector', '$scope', 'ManageEntityRestFactory', 'CssStylesFactory', 'PaginationService', 'InstitutionModel'];
-	
-	function ManageInstitutionController($injector, $scope, ManageEntityRestFactory, CssStylesFactory, PaginationService, InstitutionModel) {
+	ManageInstitutionController.$inject = [ '$injector', '$scope', '$filter', 'ManageEntityRestFactory', 'CssStylesFactory', 'PaginationService', 'InstitutionModel' ];
+
+	function ManageInstitutionController($injector, $scope, $filter, ManageEntityRestFactory, CssStylesFactory, PaginationService, InstitutionModel) {
 
 		var self = this;
-		
-		var resource = 'inventory';
-		var entity_name = 'institution';
-		
+
+		var module_name = 'inventory';
+		var entity_rest_name = 'institution';
+		var entity_name = emr.message("openhmis.inventory.institution.name");
+
 		// @Override
-		self.getResourceAndEntityName = self.getResourceAndEntityName || function(){
-			self.bindBaseParameters(resource, entity_name);
+		self.getModelAndEntityName = self.getModelAndEntityName || function() {
+			self.bindBaseParameters(module_name, entity_rest_name, entity_name);
 		}
-		
+
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericManageController, self, {
-			$scope: $scope,
-			ManageEntityRestFactory: ManageEntityRestFactory, 
-			PaginationService: PaginationService, 
-			CssStylesFactory: CssStylesFactory,
-			GenericMetadataModel: InstitutionModel
+			$scope : $scope,
+			$filter : $filter,
+			ManageEntityRestFactory : ManageEntityRestFactory,
+			PaginationService : PaginationService,
+			CssStylesFactory : CssStylesFactory,
+			GenericMetadataModel : InstitutionModel
 		});
 	}
 })();

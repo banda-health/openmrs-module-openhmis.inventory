@@ -3,21 +3,23 @@
 
 	var baseController = angular.module('app.genericManageController');
 
-	function GenericManageController($scope, ManageEntityRestFactory, PaginationService, CssStylesFactory, GenericMetadataModel) {
+	function GenericManageController($scope, $filter, ManageEntityRestFactory, PaginationService, CssStylesFactory, GenericMetadataModel) {
 
 		var self = this;
 
-		self.resource = '';
+		self.module_name = '';
+		self.entity_rest_name = '';
 		self.entity_name = '';
 
 		// protected
-		self.getResourceAndEntityName = self.getResourceAndEntityName || function() {
+		self.getModelAndEntityName = self.getModelAndEntityName || function() {
 			console.log('generic get entity name and url');
 		}
 
 		// protected
-		self.bindBaseParameters = function(resource, entity_name) {
-			self.resource = resource;
+		self.bindBaseParameters = function(module_name, entity_rest_name, entity_name) {
+			self.module_name = module_name;
+			self.entity_rest_name = entity_rest_name;
 			self.entity_name = entity_name;
 		}
 
@@ -29,7 +31,7 @@
 
 		// protected
 		self.loadEntities = function(params, onLoadEntitiesSuccess, onLoadEntitiesError) {
-			params['entity_name'] = self.entity_name;
+			params['entity_name'] = self.entity_rest_name;
 			ManageEntityRestFactory.loadEntities(params, self.onLoadEntitiesSuccess, self.onLoadEntitiesError);
 		}
 
@@ -54,7 +56,7 @@
 
 		// protected
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
-			console.log('generic bind extra variables to scope');
+			// console.log('generic bind extra variables to scope');
 		}
 
 		// public
@@ -79,8 +81,8 @@
 		// protected
 		self.initialize = function() {
 			// initialize restful webservice..
-			self.getResourceAndEntityName();
-			ManageEntityRestFactory.setBaseUrl(self.resource);
+			self.getModelAndEntityName();
+			ManageEntityRestFactory.setBaseUrl(self.module_name);
 
 			if (!angular.isDefined($scope.fetchedEntities)) {
 				$scope.fetchedEntities = [];
@@ -117,11 +119,12 @@
 			$scope.strikeThrough = CssStylesFactory.strikeThrough;
 
 			self.bindExtraVariablesToScope();
+
+			$scope.newEntityLabel = $filter('EmrFormat')(emr.message("openhmis.inventory.general.new"), [ self.entity_name ]);
 		}
 
 		// load page..
 		self.loadPage();
 	}
-
 	baseController.GenericManageController = GenericManageController;
 })();

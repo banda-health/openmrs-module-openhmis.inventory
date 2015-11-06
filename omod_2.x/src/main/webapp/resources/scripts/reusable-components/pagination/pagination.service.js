@@ -3,7 +3,7 @@
 
 	angular.module('app.pagination').service('PaginationService', PaginationService);
 
-	PaginationService.$inject = [];
+	PaginationService.$inject = ['ManageEntityRestFactory', 'PaginateModel'];
 
 	/*
 	 * TODO: Write a method that accepts Generic rest factory and GenericMetaData
@@ -16,7 +16,8 @@
 			pagingTo : pagingTo,
 			pagingFrom : pagingFrom,
 			paginateParams : paginateParams,
-			computeNumberOfPages : computeNumberOfPages
+			computeNumberOfPages : computeNumberOfPages,
+			paginate : paginate
 		};
 
 		return service;
@@ -63,6 +64,26 @@
 
 		function computeNumberOfPages(totalNumOfResults, limit) {
 			return Math.ceil(totalNumOfResults / limit);
+		}
+		
+		/*
+		 * Fetch a list of paginated entities and return a paginate model.
+		 */
+		function paginate(params){
+			var model = new PaginateModel();
+			ManageEntityRestFactory.loadEntities(params, function(data){
+				var entities = PaginateModel.populateModels(data.results);
+				var pages = computeNumberOfPages(data.length);
+				var totalResults = data.length;
+				
+				model.setEntities(entities);
+				model.setTotalNumOfResults(totalResults);
+				model.setNumberOfPages(pages);
+				
+				return model;
+			}, function(error){
+				console.log(error);
+			});
 		}
 	}
 })();

@@ -83,13 +83,13 @@
         "icon": "icon-briefcase",
         "requiredPrivilege": "Task: Access Manage Departments"
       },
-
+      
       {
         "id": "openhmis.inventory.manageInstitutionsLink",
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Institutions",
-        "url": "openhmis.inventory/manageInstitutions.page",
+        "url": "openhmis.inventory/institutions.page",
         "icon": "icon-building",
         "requiredPrivilege": "Task: Access Manage Institutions"
       },

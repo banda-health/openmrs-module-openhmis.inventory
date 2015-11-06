@@ -1,38 +1,22 @@
-<%
-    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.institutions") ])
-    ui.includeJavascript("uicommons", "angular.min.js")
-    ui.includeCss("openhmis.inventory", "bootstrap.css")
-    ui.includeCss("openhmis.inventory", "institutions2x.css")
-%>
-
-<script data-main="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/manage-institution.main.js" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
-
-<script type="text/javascript">
-	var breadcrumbs = [
-	    { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
-	    { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
-	    { label: "${ ui.message("openhmis.inventory.manage.module")}", link: 'inventory/manageModule.page' },
-	    { label: "${ ui.message("openhmis.inventory.admin.institutions")}"}
-	];
-</script>
-
 <div id="institutions-body">
+	 
+	<br /><br /><br />
 	<div id="manage-institutions-header">
 		<span class="h1-substitue-left" style="float:left;">
 			${ ui.message('openhmis.inventory.admin.institutions') }
 		</span>
 		<span style="float:right;">
-			<a class="button confirm" href="institution.page" >
+			<a class="button confirm" ui-sref="new" >
 				<i class ="icon-plus"></i>
-		        ${ sprintf(ui.message('openhmis.inventory.general.new'), ui.message('openhmis.inventory.institution.name'))}
+		        {{newEntityLabel}}
 		    </a>
 		</span>
 	</div>
 	<br /><br /><br />
-	<div id="manageInstitutionApp" ng-controller="ManageInstitutionController">
+	<div id="manageInstitionApp" ng-controller="ManageInstitutionController">
 		<div id="institutions">
 			<div class="btn-group">
-				<input type="text" ng-model="searchByName" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis..enterSearchPhrase') }" size="80" autofocus>
+				<input type="text" ng-model="searchByName" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.general.enterSearchPhrase') }" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
 			</div>
 			
@@ -45,7 +29,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="clickable-tr" dir-paginate="entity in fetchedEntities | itemsPerPage: limit" total-items="totalNumOfResults" current-page="currentPage" ng-click="loadEntityPage('institution.page?uuid=' + entity.uuid)">
+					<tr class="clickable-tr" dir-paginate="entity in fetchedEntities | itemsPerPage: limit" total-items="totalNumOfResults" current-page="currentPage"  ui-sref="edit({uuid: entity.uuid})">
 						<td ng-style="strikeThrough(entity.retired)">{{entity.name}}</td>
 						<td ng-style="strikeThrough(entity.retired)">{{entity.description}}</td>
 					</tr>
