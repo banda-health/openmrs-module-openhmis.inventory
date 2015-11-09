@@ -26,32 +26,20 @@
 		// public
 		self.paginate = function(start) {
 			var params = PaginationService.paginateParams(start, $scope.limit, $scope.includeRetired, $scope.searchByName);
-			self.loadEntities(params, self.onLoadEntitiesSuccess, self.onLoadEntitiesError);
-		}
-
-		// protected
-		self.loadEntities = function(params, onLoadEntitiesSuccess, onLoadEntitiesError) {
 			params['entity_name'] = self.entity_rest_name;
-			ManageEntityRestFactory.loadEntities(params, self.onLoadEntitiesSuccess, self.onLoadEntitiesError);
+			PaginationService.paginate(params, self.onPaginateSuccess, self.onPaginateError);
 		}
 
 		// protected
-		self.onLoadEntitiesSuccess = self.onLoadEntitiesSuccess || function(data) {
-			$scope.fetchedEntities = GenericMetadataModel.populateModels(data.results);
-			self.computeNumberOfPages(data.length);
+		self.onPaginateSuccess = self.onPaginateSuccess || function(paginateModel) {
+			$scope.fetchedEntities = paginateModel.getEntities();
+			$scope.totalNumOfResults = paginateModel.getTotalNumOfResults();
+			$scope.numberOfPages = paginateModel.getNumberOfPages();
 		}
 
 		// protected
-		self.onLoadEntitiesError = self.onLoadEntitiesError || function(error) {
+		self.onPaginateError = self.onPaginateError || function(error) {
 			console.error(error);
-			emr.errorMessage(error);
-		}
-
-		// protected
-		self.computeNumberOfPages = function(totalNumOfResults) {
-			var numberOfPages = PaginationService.computeNumberOfPages(totalNumOfResults, $scope.limit);
-			$scope.totalNumOfResults = totalNumOfResults;
-			$scope.numberOfPages = numberOfPages;
 		}
 
 		// protected

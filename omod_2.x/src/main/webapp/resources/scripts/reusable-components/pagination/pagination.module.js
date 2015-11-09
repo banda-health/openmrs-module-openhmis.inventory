@@ -1,6 +1,4 @@
 (function() {
 	'use strict';
-
-	angular.module('app.pagination', []);
-
+	angular.module('app.pagination', ['app.genericMetadataModel']);
 })();
