@@ -52,6 +52,7 @@
 					<div id="includeVoided-institutions">
 						${ui.message('openhmis.inventory.general.show')} 
 						<select id="pageSize" ng-model="limit" ng-change="updateContent()">
+							<option value="2">2</option>
 							<option value="5">5</option>
 							<option value="10">10</option>
 							<option value="25">25</option>

@@ -214,7 +214,32 @@
     }
 
     function dirPaginationControlsTemplateInstaller($templateCache) {
-        $templateCache.put('angularUtils.directives.dirPagination.template', '<ul class="pagination" ng-if="1 < pages.length || !autoHide"><li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }"><a href="" ng-click="setCurrent(1)">&laquo;</a></li><li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }"><a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a></li><li ng-repeat="pageNumber in pages track by tracker(pageNumber, $index)" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == \'...\' || ( ! autoHide && pages.length === 1 ) }"><a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a></li><li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }"><a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a></li><li ng-if="boundaryLinks"  ng-class="{ disabled : pagination.current == pagination.last }"><a href="" ng-click="setCurrent(pagination.last)">&raquo;</a></li></ul>');
+    	console.log('dir paginate stuff..');
+    		var paginateUI = '<ul class="pagination" ng-if="1 < pages.length || !autoHide">';
+    		paginateUI += '<li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }">';
+    		paginateUI += '<a href="" ng-click="setCurrent(1)">&laquo;</a>';
+    		paginateUI += '</li>';
+    		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">';
+    		paginateUI += '<a href="" ng-click="setCurrent(1)">&lsaquo;</a>';
+    		paginateUI += '</li>';
+    		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">';
+    		paginateUI += '<a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;&lsaquo;</a>';
+    		paginateUI += '</li>';
+    		paginateUI += '<li ng-repeat="pageNumber in pages track by tracker(pageNumber, $index)" ';
+    		paginateUI += 'ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == \'...\' || ( ! autoHide && pages.length === 1 ) }">';
+    		paginateUI += '<a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a>';
+    		paginateUI += '</li>';
+    		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">';
+    		paginateUI += '<a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;&rsaquo;</a>';
+    		paginateUI += '</li>';
+    		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">';
+    		paginateUI += '<a href="" ng-click="setCurrent(pagination.last)">&rsaquo;</a>';
+    		paginateUI += '</li>';
+    		paginateUI += '<li ng-if="boundaryLinks"  ng-class="{ disabled : pagination.current == pagination.last }">';
+    		paginateUI += '<a href="" ng-click="setCurrent(pagination.last)">&raquo;</a>';
+    		paginateUI += '</li>';
+    		paginateUI += '</ul>';
+        $templateCache.put('angularUtils.directives.dirPagination.template', paginateUI);
     }
 
     function dirPaginationControlsDirective(paginationService, paginationTemplate) {
@@ -253,7 +278,7 @@
             scope.directionLinks = angular.isDefined(attrs.directionLinks) ? scope.$parent.$eval(attrs.directionLinks) : true;
             scope.boundaryLinks = angular.isDefined(attrs.boundaryLinks) ? scope.$parent.$eval(attrs.boundaryLinks) : false;
 
-            var paginationRange = Math.max(scope.maxSize, 5);
+            var paginationRange = Math.min(scope.maxSize, 5);
             scope.pages = [];
             scope.pagination = {
                 last: 1,
@@ -552,7 +577,7 @@
         this.isAsyncMode = function(instanceId) {
             return instances[instanceId].asyncMode;
         };
-    }
+    } 
 
     /**
      * This provider allows global configuration of the template path used by the dir-pagination-controls directive.
