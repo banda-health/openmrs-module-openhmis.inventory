@@ -1,6 +1,6 @@
 (function() {
 	'use strict';
-	angular.module('institutionsApp', [ 'ui.router', 'angularUtils.directives.dirPagination', 'app.css', 'app.filters', 'app.pagination', 'app.genericMetadataModel', 'app.restfulServices', 'app.genericEntityController', 'app.genericManageController' ])
+	angular.module('institutionsApp', [ 'ui.router', 'angularUtils.directives.dirPagination', 'app.css', 'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices', 'app.genericEntityController', 'app.genericManageController' ])
 
 	.config(function($stateProvider, $urlRouterProvider) {
 

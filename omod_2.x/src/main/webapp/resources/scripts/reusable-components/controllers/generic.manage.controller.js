@@ -3,7 +3,7 @@
 
 	var baseController = angular.module('app.genericManageController');
 
-	function GenericManageController($scope, $filter, ManageEntityRestFactory, PaginationService, CssStylesFactory, GenericMetadataModel) {
+	function GenericManageController($scope, $filter, ManageEntityRestFactory, PaginationService, CssStylesFactory, GenericMetadataModel, CookiesService) {
 
 		var self = this;
 
@@ -25,7 +25,10 @@
 
 		// public
 		self.paginate = function(start) {
-			var params = PaginationService.paginateParams(start, $scope.limit, $scope.includeRetired, $scope.searchByName);
+			CookiesService.set('currentPage', start);
+			CookiesService.set('limit', $scope.limit);
+
+			var params = PaginationService.paginateParams(CookiesService.get('currentPage'), $scope.limit, CookiesService.get('includeRetired'), $scope.searchByName);
 			params['entity_name'] = self.entity_rest_name;
 			PaginationService.paginate(params, self.onPaginateSuccess, self.onPaginateError);
 		}
@@ -49,6 +52,7 @@
 
 		// public
 		self.updateContent = function() {
+			CookiesService.set('includeRetired', $scope.includeRetired);
 			self.paginate($scope.currentPage);
 		}
 
@@ -80,12 +84,16 @@
 				$scope.searchByName = '';
 			}
 
-			if (!angular.isDefined($scope.currentPage)) {
+			if (!angular.isDefined(CookiesService.get('currentPage')) || (CookiesService.get('currentPage') === "undefined")) {
 				$scope.currentPage = 1;
+			} else {
+				$scope.currentPage = CookiesService.get('currentPage');
 			}
 
-			if (!angular.isDefined($scope.limit)) {
+			if (!angular.isDefined(CookiesService.get('limit')) || (CookiesService.get('limit') === "undefined")) {
 				$scope.limit = 10;
+			} else {
+				$scope.limit = CookiesService.get('limit');
 			}
 			if (!angular.isDefined($scope.numberOfPages)) {
 				$scope.numberOfPages = 0;
@@ -94,8 +102,11 @@
 				$scope.totalNumOfResults = 0;
 			}
 
-			if (!angular.isDefined($scope.includeRetired)) {
+			if (!angular.isDefined(CookiesService.get('includeRetired'))) {
 				$scope.includeRetired = false;
+				CookiesService.set('includeRetired', $scope.includeRetired);
+			} else {
+				$scope.includeRetired = (CookiesService.get('includeRetired') === 'true');
 			}
 
 			$scope.updateContent = self.updateContent;

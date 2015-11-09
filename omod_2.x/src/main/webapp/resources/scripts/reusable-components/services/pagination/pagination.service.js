@@ -42,7 +42,7 @@
 			var startIndex = ((start - 1) * limit) + 1;
 			var params;
 
-			if (includeRetired) {
+			if (includeRetired === true || includeRetired === "true") {
 				params = {
 					limit : limit,
 					includeAll : true,

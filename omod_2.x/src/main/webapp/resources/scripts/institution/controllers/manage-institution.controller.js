@@ -3,16 +3,16 @@
 
 	var base = angular.module('app.genericManageController');
 	base.controller("ManageInstitutionController", ManageInstitutionController);
-	ManageInstitutionController.$inject = [ '$injector', '$scope', '$filter', 'ManageEntityRestFactory', 'CssStylesFactory', 'PaginationService', 'InstitutionModel' ];
+	ManageInstitutionController.$inject = [ '$injector', '$scope', '$filter', 'ManageEntityRestFactory', 'CssStylesFactory', 'PaginationService', 'InstitutionModel', 'CookiesService'];
 
-	function ManageInstitutionController($injector, $scope, $filter, ManageEntityRestFactory, CssStylesFactory, PaginationService, InstitutionModel) {
+	function ManageInstitutionController($injector, $scope, $filter, ManageEntityRestFactory, CssStylesFactory, PaginationService, InstitutionModel, CookiesService) {
 
 		var self = this;
 
 		var module_name = 'inventory';
 		var entity_rest_name = 'institution';
 		var entity_name = emr.message("openhmis.inventory.institution.name");
-
+		
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName || function() {
 			self.bindBaseParameters(module_name, entity_rest_name, entity_name);
@@ -25,7 +25,8 @@
 			ManageEntityRestFactory : ManageEntityRestFactory,
 			PaginationService : PaginationService,
 			CssStylesFactory : CssStylesFactory,
-			GenericMetadataModel : InstitutionModel
+			GenericMetadataModel : InstitutionModel,
+			CookiesService : CookiesService
 		});
 	}
 })();

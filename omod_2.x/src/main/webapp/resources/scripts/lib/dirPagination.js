@@ -214,7 +214,6 @@
     }
 
     function dirPaginationControlsTemplateInstaller($templateCache) {
-    	console.log('dir paginate stuff..');
     		var paginateUI = '<ul class="pagination" ng-if="1 < pages.length || !autoHide">';
     		paginateUI += '<li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }">';
     		paginateUI += '<a href="" ng-click="setCurrent(1)">&laquo;</a>';
