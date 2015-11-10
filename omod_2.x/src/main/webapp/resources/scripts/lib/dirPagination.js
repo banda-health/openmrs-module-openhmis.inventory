@@ -219,20 +219,14 @@
     		paginateUI += '<a href="" ng-click="setCurrent(1)">&laquo;</a>';
     		paginateUI += '</li>';
     		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">';
-    		paginateUI += '<a href="" ng-click="setCurrent(1)">&lsaquo;</a>';
-    		paginateUI += '</li>';
-    		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }">';
-    		paginateUI += '<a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;&lsaquo;</a>';
+    		paginateUI += '<a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a>';
     		paginateUI += '</li>';
     		paginateUI += '<li ng-repeat="pageNumber in pages track by tracker(pageNumber, $index)" ';
     		paginateUI += 'ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == \'...\' || ( ! autoHide && pages.length === 1 ) }">';
     		paginateUI += '<a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a>';
     		paginateUI += '</li>';
     		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">';
-    		paginateUI += '<a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;&rsaquo;</a>';
-    		paginateUI += '</li>';
-    		paginateUI += '<li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }">';
-    		paginateUI += '<a href="" ng-click="setCurrent(pagination.last)">&rsaquo;</a>';
+    		paginateUI += '<a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a>';
     		paginateUI += '</li>';
     		paginateUI += '<li ng-if="boundaryLinks"  ng-class="{ disabled : pagination.current == pagination.last }">';
     		paginateUI += '<a href="" ng-click="setCurrent(pagination.last)">&raquo;</a>';
@@ -413,13 +407,19 @@
             var i = 1;
             while (i <= totalPages && i <= paginationRange) {
                 var pageNumber = calculatePageNumber(i, currentPage, paginationRange, totalPages);
-
                 var openingEllipsesNeeded = (i === 2 && (position === 'middle' || position === 'end'));
                 var closingEllipsesNeeded = (i === paginationRange - 1 && (position === 'middle' || position === 'start'));
                 if (ellipsesNeeded && (openingEllipsesNeeded || closingEllipsesNeeded)) {
-                    pages.push('...');
+                	if(openingEllipsesNeeded){
+                		pages.push('...');
+                    pages.push(pageNumber);	
+                	}
+                	if(closingEllipsesNeeded){
+                	  pages.push(pageNumber);
+                		pages.push('...');
+                	}
                 } else {
-                    pages.push(pageNumber);
+                  pages.push(pageNumber);
                 }
                 i ++;
             }
