@@ -11,7 +11,7 @@
 		self.entity_name = '';
 		self.uuid = '';
 
-		self.name = emr.message("openhmis.inventory.institution.name")
+		self.name = emr.message("openhmis.inventory.institution.name");
 
 		// protected
 		self.getModelAndEntityName = self.getModuleAndEntityName || function() {
@@ -81,7 +81,7 @@
 		/* #### START CALLBACK Methods #### */
 		self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function(data) {
 			if (angular.isDefined(data) && angular.isDefined(data.uuid)) {
-				self.loadEntity(data.uuid);
+				self.cancel();
 			} else {
 				self.bindExtraVariablesToScope("");
 			}
