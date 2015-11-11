@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
 
 <!-- Application context definition for OpenMRS business services. -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 			http://www.springframework.org/schema/context
 			http://www.springframework.org/schema/context/spring-context-3.0.xsd
@@ -22,25 +33,25 @@
             http://www.springframework.org/schema/util
             http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 	<!--  **************************  Transactional Intercepter  *************************  -->
-	<!--  	
-		Looks for advisors (TransactionAttributeSourceAdvisor) in the context, and automatically 
-		creates proxy objects which are the transactional wrappers.  This object looks at every 
-		class defined below to see whether it contains the Transactional annotation attribute. 
+	<!--
+		Looks for advisors (TransactionAttributeSourceAdvisor) in the context, and automatically
+		creates proxy objects which are the transactional wrappers.  This object looks at every
+		class defined below to see whether it contains the Transactional annotation attribute.
 		NOTE:  I believe this needs to be defined at the top of the file (or before all Transactional
-		components) because it needs to do processing on objects after they are initialized. 
+		components) because it needs to do processing on objects after they are initialized.
 	-->
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
-	<!-- 
-		AOP advisor: Contains TransactionAttributeSource which tells Spring what to do (advice) 
-		and when to do it (pointcut).  Pointcuts, in our case, are defined by the use of the 
+	<!--
+		AOP advisor: Contains TransactionAttributeSource which tells Spring what to do (advice)
+		and when to do it (pointcut).  Pointcuts, in our case, are defined by the use of the
 		Transactional annotation attribute.
 	-->
 	<bean class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
 		<property name="transactionInterceptor" ref="transactionInterceptor"/>
 	</bean>
-	<!-- 
-		AOP transaction advice: Intercepts method call and wraps it with a transaction.  The 
-		transactionAttributeSource is what reads/remembers all Transactional attributeTypes of a given
+	<!--
+		AOP transaction advice: Intercepts method call and wraps it with a transaction.  The
+		transactionAttributeSource is what reads/remembers all Transactional attributes of a given
 		method or class (which is done during initialization)
 	-->
 	<bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
@@ -193,9 +204,9 @@
 
 
 	<!--  **************************  SCHEDULER SERVICE  *************************  -->
-	<!-- 
+	<!--
 		Note that we have circular dependency between service and context object.
-		There's nothing we could do about this.  
+		There's nothing we could do about this.
 	-->
 	<bean id="patientServiceTarget" class="org.openmrs.api.impl.PatientServiceImpl">
 		<property name="patientDAO"><ref bean="patientDAO"/></property>
@@ -260,6 +271,7 @@
 		<property name="administrationDAO"><ref bean="adminDAO"/></property>
 		<property name="eventListeners"><ref bean="openmrsEventListeners"/></property>
 		<property name="globalLocaleList"><ref bean="globalLocaleList"/></property>
+		<property name="implementationIdHttpClient"><ref bean="implementationIdHttpClient"/></property>
 	</bean>
 	<bean id="datatypeServiceTarget" class="org.openmrs.api.impl.DatatypeServiceImpl">
 		<property name="dao"><ref bean="datatypeDAO"/></property>
@@ -618,8 +630,8 @@
 		<property name="targetBeanName"><value>schedulerServiceTarget</value></property>
 		<property name="maxSize"><value>10</value></property>
 	</bean>
-	--><!-- 
-		Scheduler service 
+	--><!--
+		Scheduler service
 	--><!--
 	<bean id="schedulerService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="targetSource"><ref local="schedulerServicePool"/></property>
@@ -656,7 +668,7 @@
 	</bean>
 
 	<!-- will be autowired to the HibernateSessionFactoryBean by type -->
-	<!-- interceptors are used in attributeOrder of name, this needs to be one of the first and should be since auditable happens to start with 'a' -->
+	<!-- interceptors are used in order of name, this needs to be one of the first and should be since auditable happens to start with 'a' -->
 	<bean id="auditableInterceptor" class="org.openmrs.api.db.hibernate.AuditableInterceptor" />
 
 	<bean id="sessionFactory" class="org.openmrs.api.db.hibernate.HibernateSessionFactoryBean">
@@ -668,7 +680,16 @@
 		<property name="mappingJarLocations">
 			<ref bean="mappingJarResources" />
 		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>org.openmrs</value>
+			</list>
+		</property>
 		<!--  default properties must be set in the hibernate.default.properties -->
+	</bean>
+
+	<bean id="dbSessionFactory" class="org.openmrs.api.db.hibernate.DbSessionFactory">
+		<constructor-arg name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<!--  **************************  TRANSACTION MANAGER CONFIGURATION  *************************  -->
@@ -689,7 +710,7 @@
 
         <property name="messagePreparator">
 			<bean id="mailMessagePreparator" class="org.openmrs.notification.mail.velocity.VelocityMessagePreparator"/>
-		</property>        
+		</property>
 
         <property name="messageSender">
 			<bean id="mailMessageSender" class="org.openmrs.notification.mail.MailMessageSender">
@@ -698,9 +719,9 @@
 					    <property name="jndiName"><value>java:comp/env/mail/OpenmrsMailSession</value></property>
 					</bean>
 				</property>
-			</bean> 		
+			</bean>
 		</property>
-    </bean>   
+    </bean>
 	-->
 
 
@@ -771,12 +792,17 @@
 	<bean id="personMergeLogValidator" class="org.openmrs.validator.PersonMergeLogValidator" />
 	<bean id="conceptReferenceTermValidator" class="org.openmrs.validator.ConceptReferenceTermValidator" />
 	<bean id="conceptMapTypeValidator" class="org.openmrs.validator.ConceptMapTypeValidator" />
+	<bean id="implementationIdHttpClient" class="org.openmrs.util.HttpClient">
+		<constructor-arg name="url" value="http://resources.openmrs.org/tools/implementationid"/>
+	</bean>
 
 	<!--  ************************ END VALIDATOR CONFIGURATION  ************************  -->
 
 	<context:component-scan base-package="org.openmrs">
 		<context:include-filter type="annotation" expression="org.openmrs.annotation.Handler"/>
+		<context:include-filter type="custom" expression="org.openmrs.annotation.OpenmrsProfileIncludeFilter" />
 		<context:exclude-filter type="custom" expression="org.openmrs.util.TestTypeFilter"/> <!-- Excludes classes with unit test super classes -->
+		<context:exclude-filter type="custom" expression="org.openmrs.annotation.OpenmrsProfileExcludeFilter" />
 	</context:component-scan>
 
 </beans>
