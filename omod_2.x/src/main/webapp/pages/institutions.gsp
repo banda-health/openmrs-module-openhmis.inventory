@@ -4,6 +4,7 @@
     ui.includeCss("openhmis.inventory", "bootstrap.css")
     ui.includeCss("openhmis.inventory", "institutions2x.css")
     ui.includeJavascript("uicommons", "angular-ui/angular-ui-router.min.js")
+    
 %>
 
 <script type="text/javascript">
@@ -40,6 +41,6 @@
 	];
 </script>
 
-<div id="institutionsApp">
+<div id="institutionsAp">
 	<div ui-view></div>
 </div>
