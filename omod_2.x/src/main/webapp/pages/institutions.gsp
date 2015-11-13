@@ -30,7 +30,8 @@
     ]);
 </script>
 
-<script data-main="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/institutions.main.js" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+<script type="text/javascript" src="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/config.js"></script>
+<script data-main="institution/institutions.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <script type="text/javascript">
 	var breadcrumbs = [

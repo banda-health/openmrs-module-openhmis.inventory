@@ -1,7 +1,7 @@
 /* Define states and routes */
 (function() {
 	define([
-	  '/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/modules.require.js'
+	  'institution/modules.require'
 	], function(ng){
 				'use strict';
 				var app = angular.module('institutionsApp', [ 'ui.router', 'angularUtils.directives.dirPagination', 'app.css', 'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices', 'app.genericEntityController', 'app.genericManageController' ]);

@@ -1,9 +1,9 @@
 /* initialize and bootstrap application */
-requirejs([
-	'/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/institutions.module.js',
+requirejs(['institution/institutions.module',
 ], function() {
-		requirejs(['/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/lib/domReady.js'], function (domReady) {
+		requirejs(['lib/domReady'], function (domReady) {
 			domReady(function(){
+				console.log('bootstrap');
 				angular.bootstrap(domReady, [ 'institutionsApp' ]);
 			});
 		});
