@@ -5,6 +5,6 @@ define([
 	'reusable-components/controllers/generic.entity.controller.module',
 	'reusable-components/controllers/generic.entity.controller',
 	'institution/institution.module',
-	'institution/controllers/institution.controller'
+	'institution/controllers/institution.controller',
 ], function(){
 });

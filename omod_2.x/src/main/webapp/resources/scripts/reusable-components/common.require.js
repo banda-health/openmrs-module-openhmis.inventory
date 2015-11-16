@@ -24,5 +24,4 @@ define([
 	'reusable-components/services/cookies/cookies.module',
 	'reusable-components/services/cookies/cookies.service',
 ], function(){
-	console.log('common require');
 });
