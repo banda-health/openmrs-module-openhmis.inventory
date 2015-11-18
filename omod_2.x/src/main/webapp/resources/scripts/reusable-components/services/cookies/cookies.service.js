@@ -1,31 +1,31 @@
 (function() {
-	'use strict';
+  'use strict';
 
-	angular.module('app.cookies').service('CookiesService', CookiesService);
+  angular.module('app.cookies').service('CookiesService', CookiesService);
 
-	CookiesService.$inject = [ '$cookies' ];
+  CookiesService.$inject = ['$cookies'];
 
-	function CookiesService($cookies) {
-		var service;
+  function CookiesService($cookies) {
+    var service;
 
-		service = {
-			set : set,
-			get : get,
-			remove : remove
-		};
+    service = {
+      set: set,
+      get: get,
+      remove: remove
+    };
 
-		return service;
+    return service;
 
-		function set(key, value) {
-			$cookies[key] = value;
-		}
+    function set(key, value) {
+      $cookies[key] = value;
+    }
 
-		function get(key) {
-			return $cookies[key];
-		}
+    function get(key) {
+      return $cookies[key];
+    }
 
-		function remove(key) {
-			delete $cookies[key];
-		}
-	}
+    function remove(key) {
+      delete $cookies[key];
+    }
+  }
 })();

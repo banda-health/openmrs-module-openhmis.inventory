@@ -1,45 +1,33 @@
 (function() {
-	'use strict';
+  'use strict';
 
-	var baseModel = angular.module('app.genericMetadataModel');
+  var baseModel = angular.module('app.paginateModel', []);
 
-	function PaginateModel(GenericMetadataModel) {
+  function PaginateModel() {
 
-		var extended = angular.extend(GenericMetadataModel, {});
+    function Paginate(totalNumOfResults, numberOfPages, entities) {
+      this.totalNumOfResults = totalNumOfResults;
+      this.numberOfPages = numberOfPages;
+      this.entities = entities;
+    }
 
-		var defaultFields = extended.getModelFields();
+    Paginate.prototype = {
 
-		// @Override
-		extended.getModelFields = function() {
-			var fields = [ "totalNumOfResults", "numberOfPages", "entities" ];
-			return fields.concat(defaultFields);
-		};
+      getTotalNumOfResults: function() {
+        return this.totalNumOfResults;
+      },
 
-		function Paginate(totalNumOfResults, numberOfPages, entities) {
-			this.totalNumOfResults = totalNumOfResults;
-			this.numberOfPages = numberOfPages;
-			this.entities = entities;
-		}
+      getNumberOfPages: function() {
+        return this.numberOfPages;
+      },
 
-		Paginate.prototype = {
+      getEntities: function() {
+        return this.entities;
+      }
+    };
 
-			getTotalNumOfResults : function() {
-				return this.totalNumOfResults;
-			},
-
-			getNumberOfPages : function() {
-				return this.numberOfPages;
-			},
-
-			getEntities : function() {
-				return this.entities;
-			}
-		};
-
-		Paginate.populateModels = extended.populateModels;
-		
-		return Paginate;
-	}
-	baseModel.factory("PaginateModel", PaginateModel);
-	PaginateModel.$inject = [ 'GenericMetadataModel' ];
+    return Paginate;
+  }
+  baseModel.factory("PaginateModel", PaginateModel);
+  PaginateModel.$inject = [];
 })();

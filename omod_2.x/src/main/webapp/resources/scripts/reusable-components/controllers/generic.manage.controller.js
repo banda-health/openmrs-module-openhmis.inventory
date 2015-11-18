@@ -1,129 +1,145 @@
 (function() {
-	'use strict';
+  'use strict';
 
-	var baseController = angular.module('app.genericManageController');
+  var baseController = angular.module('app.genericManageController');
 
-	function GenericManageController($scope, $filter, ManageEntityRestFactory, PaginationService, CssStylesFactory, GenericMetadataModel, CookiesService) {
+  function GenericManageController($scope, $filter, ManageEntityRestFactory,
+          PaginationService, CssStylesFactory, GenericMetadataModel,
+          CookiesService) {
 
-		var self = this;
+    var self = this;
 
-		self.module_name = '';
-		self.entity_rest_name = '';
-		self.entity_name = '';
+    self.module_name = '';
+    self.rest_entity_name = '';
+    self.entity_name = '';
 
-		// protected
-		self.getModelAndEntityName = self.getModelAndEntityName || function() {
-			console.log('generic get entity name and url');
-		}
+    self.currentPage = self.entity_name + 'currentPage';
+    self.limit = self.entity_name + 'limit';
+    self.includeRetired = self.entity_name + 'includeRetired';
 
-		// protected
-		self.bindBaseParameters = function(module_name, entity_rest_name, entity_name) {
-			self.module_name = module_name;
-			self.entity_rest_name = entity_rest_name;
-			self.entity_name = entity_name;
-		}
+    // protected
+    self.getModelAndEntityName = self.getModelAndEntityName || function() {
+      console.log('generic get entity name and url');
+    }
 
-		// public
-		self.paginate = function(start) {
-			CookiesService.set('currentPage', start);
-			CookiesService.set('limit', $scope.limit);
+    // protected
+    self.bindBaseParameters = function(module_name, entity_name) {
+      self.module_name = module_name;
+      self.rest_entity_name = entity_name.toLowerCase();
+      self.entity_name = entity_name;
+    }
 
-			var params = PaginationService.paginateParams(CookiesService.get('currentPage'), $scope.limit, CookiesService.get('includeRetired'), $scope.searchByName);
-			params['entity_name'] = self.entity_rest_name;
-			PaginationService.paginate(params, self.onPaginateSuccess, self.onPaginateError);
-		}
+    // public
+    self.paginate = function(start) {
+      CookiesService.set(self.currentPage, start);
+      CookiesService.set(self.limit, $scope.limit);
 
-		// protected
-		self.onPaginateSuccess = self.onPaginateSuccess || function(paginateModel) {
-			$scope.fetchedEntities = paginateModel.getEntities();
-			$scope.totalNumOfResults = paginateModel.getTotalNumOfResults();
-			$scope.numberOfPages = paginateModel.getNumberOfPages();
-		}
+      var params = PaginationService.paginateParams(CookiesService
+              .get(self.currentPage), $scope.limit, CookiesService
+              .get(self.includeRetired), $scope.searchByName);
+      params['rest_entity_name'] = self.rest_entity_name;
+      PaginationService.paginate(params, self.onPaginateSuccess,
+              self.onPaginateError);
+    }
 
-		// protected
-		self.onPaginateError = self.onPaginateError || function(error) {
-			console.error(error);
-		}
+    // protected
+    self.onPaginateSuccess = self.onPaginateSuccess || function(paginateModel) {
+      $scope.fetchedEntities = paginateModel.getEntities();
+      $scope.totalNumOfResults = paginateModel.getTotalNumOfResults();
+      $scope.numberOfPages = paginateModel.getNumberOfPages();
+    }
 
-		// protected
-		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
-			// console.log('generic bind extra variables to scope');
-		}
+    // protected
+    self.onPaginateError = self.onPaginateError || function(error) {
+      console.error(error);
+      emr.errorMessage(error);
+    }
 
-		// public
-		self.updateContent = function() {
-			CookiesService.set('includeRetired', $scope.includeRetired);
-			self.paginate($scope.currentPage);
-		}
+    // protected
+    self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
+            || function() {
+              // console.log('generic bind extra variables to scope');
+            }
 
-		// protected
-		self.loadPage = function() {
-			// define and/or instantiate variables
-			self.initialize();
-			// load 1st page..
-			self.paginate($scope.currentPage);
-		}
+    // public
+    self.updateContent = function() {
+      CookiesService.set(self.entity_name + 'includeRetired',
+              $scope.includeRetired);
+      self.paginate($scope.currentPage);
+    }
 
-		// public
-		// navigate to entity page
-		self.loadEntityPage = function(url) {
-			window.location = url;
-		}
+    // protected
+    self.loadPage = function() {
+      // define and/or instantiate variables
+      self.initialize();
+      // load 1st page..
+      self.paginate($scope.currentPage);
+    }
 
-		// protected
-		self.initialize = function() {
-			// initialize restful webservice..
-			self.getModelAndEntityName();
-			ManageEntityRestFactory.setBaseUrl(self.module_name);
+    // public
+    // navigate to entity page
+    self.loadEntityPage = function(url) {
+      window.location = url;
+    }
 
-			if (!angular.isDefined($scope.fetchedEntities)) {
-				$scope.fetchedEntities = [];
-			}
+    // protected
+    self.initialize = function() {
+      // initialize restful webservice..
+      self.getModelAndEntityName();
+      ManageEntityRestFactory.setBaseUrl(self.module_name);
 
-			if (!angular.isDefined($scope.searchByName)) {
-				$scope.searchByName = '';
-			}
+      if (!angular.isDefined($scope.fetchedEntities)) {
+        $scope.fetchedEntities = [];
+      }
 
-			if (!angular.isDefined(CookiesService.get('currentPage')) || (CookiesService.get('currentPage') === "undefined")) {
-				$scope.currentPage = 1;
-			} else {
-				$scope.currentPage = CookiesService.get('currentPage');
-			}
+      if (!angular.isDefined($scope.searchByName)) {
+        $scope.searchByName = '';
+      }
 
-			if (!angular.isDefined(CookiesService.get('limit')) || (CookiesService.get('limit') === "undefined")) {
-				$scope.limit = 10;
-			} else {
-				$scope.limit = CookiesService.get('limit');
-			}
-			if (!angular.isDefined($scope.numberOfPages)) {
-				$scope.numberOfPages = 0;
-			}
-			if (!angular.isDefined($scope.totalNumOfResults)) {
-				$scope.totalNumOfResults = 0;
-			}
+      if (!angular.isDefined(CookiesService.get(self.currentPage))
+              || (CookiesService.get(self.currentPage) === "undefined")) {
+        $scope.currentPage = 1;
+      } else {
+        $scope.currentPage = CookiesService.get(self.currentPage);
+      }
 
-			if (!angular.isDefined(CookiesService.get('includeRetired'))) {
-				$scope.includeRetired = false;
-				CookiesService.set('includeRetired', $scope.includeRetired);
-			} else {
-				$scope.includeRetired = (CookiesService.get('includeRetired') === 'true');
-			}
+      if (!angular.isDefined(CookiesService.get(self.limit))
+              || (CookiesService.get(self.limit) === "undefined")) {
+        $scope.limit = 10;
+      } else {
+        $scope.limit = CookiesService.get(self.limit);
+      }
+      if (!angular.isDefined($scope.numberOfPages)) {
+        $scope.numberOfPages = 0;
+      }
+      if (!angular.isDefined($scope.totalNumOfResults)) {
+        $scope.totalNumOfResults = 0;
+      }
 
-			$scope.updateContent = self.updateContent;
-			$scope.loadEntityPage = self.loadEntityPage;
-			$scope.paginate = self.paginate;
+      if (!angular.isDefined(CookiesService.get(self.includeRetired))) {
+        $scope.includeRetired = false;
+        CookiesService.set(self.includeRetired, $scope.includeRetired);
+      } else {
+        $scope.includeRetired = (CookiesService.get(self.includeRetired) === 'true');
+      }
 
-			$scope.pagingFrom = PaginationService.pagingFrom;
-			$scope.pagingTo = PaginationService.pagingTo;
-			$scope.strikeThrough = CssStylesFactory.strikeThrough;
+      $scope.updateContent = self.updateContent;
+      $scope.loadEntityPage = self.loadEntityPage;
+      $scope.paginate = self.paginate;
 
-			self.bindExtraVariablesToScope();
+      $scope.pagingFrom = PaginationService.pagingFrom;
+      $scope.pagingTo = PaginationService.pagingTo;
+      $scope.strikeThrough = CssStylesFactory.strikeThrough;
 
-			$scope.newEntityLabel = $filter('EmrFormat')(emr.message("openhmis.inventory.general.new"), [ self.entity_name ]);
-		}
+      self.bindExtraVariablesToScope();
 
-		// load page..
-		self.loadPage();
-	}
-	baseController.GenericManageController = GenericManageController;
+      $scope.newEntityLabel = $filter('EmrFormat')
+              (emr.message("openhmis.inventory.general.new"),
+                      [self.entity_name]);
+    }
+
+    // load page..
+    self.loadPage();
+  }
+  baseController.GenericManageController = GenericManageController;
 })();

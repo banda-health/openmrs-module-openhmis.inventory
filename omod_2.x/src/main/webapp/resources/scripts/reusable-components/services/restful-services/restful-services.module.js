@@ -1,6 +1,4 @@
 (function() {
-	'use strict';
-
-	angular.module('app.restfulServices', [ 'restangular' ]);
-
+  'use strict';
+  angular.module('app.restfulServices', ['restangular']);
 })();

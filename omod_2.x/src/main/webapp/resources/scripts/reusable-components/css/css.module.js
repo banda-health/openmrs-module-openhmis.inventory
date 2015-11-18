@@ -1,6 +1,4 @@
 (function() {
-	'use strict';
-
-	angular.module('app.css', []);
-
+  'use strict';
+  angular.module('app.css', []);
 })();
