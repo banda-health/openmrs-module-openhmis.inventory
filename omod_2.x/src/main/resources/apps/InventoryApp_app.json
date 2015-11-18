@@ -79,7 +79,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Departments",
-        "url": "openhmis.inventory/departments.page",
+        "url": "module/openhmis/inventory/departments.form",
         "icon": "icon-briefcase",
         "requiredPrivilege": "Task: Access Manage Departments"
       },
