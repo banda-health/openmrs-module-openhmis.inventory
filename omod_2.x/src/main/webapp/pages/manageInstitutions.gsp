@@ -16,7 +16,7 @@
 	<div ng-controller="ManageInstitutionController">
 		<div id="institutions">
 			<div class="btn-group">
-				<input type="text" ng-model="searchByName" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.general.enterSearchPhrase') }" size="80" autofocus>
+				<input type="text" ng-model="searchField" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.general.enterSearchPhrase') }" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
 			</div>
 			

@@ -1,14 +1,11 @@
 (function() {
   'use strict';
 
-  angular.module('app.pagination').service('PaginationService',
-          PaginationService);
+  angular.module('app.pagination').service('PaginationService', PaginationService);
 
-  PaginationService.$inject = ['PaginateModel', 'GenericMetadataModel',
-      'EntityRestFactory'];
+  PaginationService.$inject = ['PaginateModel', 'GenericMetadataModel', 'EntityRestFactory'];
 
-  function PaginationService(PaginateModel, GenericMetadataModel,
-          EntityRestFactory) {
+  function PaginationService(PaginateModel, GenericMetadataModel, EntityRestFactory) {
     var service;
 
     service = {

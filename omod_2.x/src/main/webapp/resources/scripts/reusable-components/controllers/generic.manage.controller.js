@@ -3,9 +3,8 @@
 
   var baseController = angular.module('app.genericManageController');
 
-  function GenericManageController($scope, $filter, EntityRestFactory,
-          PaginationService, CssStylesFactory, GenericMetadataModel,
-          CookiesService) {
+  function GenericManageController($scope, $filter, EntityRestFactory, PaginationService, CssStylesFactory,
+          GenericMetadataModel, CookiesService) {
 
     var self = this;
 
@@ -18,15 +17,14 @@
     self.includeRetired = self.entity_name + 'includeRetired';
 
     // protected
-    self.getModelAndEntityName = self.getModelAndEntityName
-            || function() {
-              var msg = 'This method sets the required base parameters ';
-              msg += '(i.e module_name, rest_entity_name, entity_name) and MUST be implemented ';
-              msg += 'by the implementing controller. \n';
-              msg += 'To bind the parameters, simply call self.bindBaseParameters from within ';
-              msg += 'self.getModelAndEntityName and pass module_name and entity_name';
-              console.log(msg);
-            }
+    self.getModelAndEntityName = self.getModelAndEntityName || function() {
+      var msg = 'This method sets the required base parameters ';
+      msg += '(i.e module_name, rest_entity_name, entity_name) and MUST be implemented ';
+      msg += 'by the implementing controller. \n';
+      msg += 'To bind the parameters, simply call self.bindBaseParameters from within ';
+      msg += 'self.getModelAndEntityName and pass module_name and entity_name';
+      console.log(msg);
+    }
 
     // protected
     self.bindBaseParameters = function(module_name, entity_name) {
@@ -40,12 +38,10 @@
       CookiesService.set(self.currentPage, start);
       CookiesService.set(self.limit, $scope.limit);
 
-      var params = PaginationService.paginateParams(CookiesService
-              .get(self.currentPage), $scope.limit, CookiesService
-              .get(self.includeRetired), $scope.searchByName);
+      var params = PaginationService.paginateParams(CookiesService.get(self.currentPage), $scope.limit, CookiesService
+              .get(self.includeRetired), $scope.searchField);
       params['rest_entity_name'] = self.rest_entity_name;
-      PaginationService.paginate(params, self.onPaginateSuccess,
-              self.onPaginateError);
+      PaginationService.paginate(params, self.onPaginateSuccess, self.onPaginateError);
     }
 
     // protected
@@ -62,14 +58,12 @@
     }
 
     // protected
-    self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
-            || function() {
-              // console.log('generic bind extra variables to scope');
-            }
+    self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
+      // console.log('generic bind extra variables to scope');
+    }
 
     // public
     self.updateContent = function() {
-      console.log('update content');
       CookiesService.set(self.includeRetired, $scope.includeRetired);
       self.paginate($scope.currentPage);
     }
@@ -98,8 +92,8 @@
         $scope.fetchedEntities = [];
       }
 
-      if (!angular.isDefined($scope.searchByName)) {
-        $scope.searchByName = '';
+      if (!angular.isDefined($scope.searchField)) {
+        $scope.searchField = '';
       }
 
       if (!angular.isDefined(CookiesService.get(self.currentPage))
@@ -109,8 +103,7 @@
         $scope.currentPage = CookiesService.get(self.currentPage);
       }
 
-      if (!angular.isDefined(CookiesService.get(self.limit))
-              || (CookiesService.get(self.limit) === "undefined")) {
+      if (!angular.isDefined(CookiesService.get(self.limit)) || (CookiesService.get(self.limit) === "undefined")) {
         $scope.limit = 10;
       } else {
         $scope.limit = CookiesService.get(self.limit);
@@ -139,9 +132,7 @@
 
       self.bindExtraVariablesToScope();
 
-      $scope.newEntityLabel = $filter('EmrFormat')
-              (emr.message("openhmis.inventory.general.new"),
-                      [self.entity_name]);
+      $scope.newEntityLabel = $filter('EmrFormat')(emr.message("openhmis.inventory.general.new"), [self.entity_name]);
     }
 
     // load page..

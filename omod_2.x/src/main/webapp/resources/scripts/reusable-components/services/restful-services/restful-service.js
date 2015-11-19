@@ -1,8 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('app.restfulServices').service('RestfulService',
-          RestfulService);
+  angular.module('app.restfulServices').service('RestfulService', RestfulService);
 
   RestfulService.$inject = ['Restangular'];
 
@@ -52,20 +51,17 @@
         params = JSON.stringify(request);
       }
 
-      Restangular.one(resource, uuid).customGET('/', params).then(
-              function(data) {
-                if (typeof successCallback === 'function')
-                  successCallback(data);
-              }, function(error) {
-                if (typeof errorCallback === 'function') {
-                  commonErrorHandling(resource, uuid, params, error);
-                  errorCallback(error);
-                }
-              });
+      Restangular.one(resource, uuid).customGET('/', params).then(function(data) {
+        if (typeof successCallback === 'function') successCallback(data);
+      }, function(error) {
+        if (typeof errorCallback === 'function') {
+          commonErrorHandling(resource, uuid, params, error);
+          errorCallback(error);
+        }
+      });
     }
 
-    function saveOrUpdate(resource, uuid, request, successCallback,
-            errorCallback) {
+    function saveOrUpdate(resource, uuid, request, successCallback, errorCallback) {
       customPOST(resource, uuid, request, successCallback, errorCallback);
     }
 

@@ -9,12 +9,16 @@
 
   function loadpage() {
     'use strict';
-    var app = angular.module('institutionsApp', ['ui.router',
-        'angularUtils.directives.dirPagination', 'app.css', 'app.filters',
-        'app.pagination', 'app.cookies', 'app.genericMetadataModel',
-        'app.restfulServices', 'app.genericEntityController',
-        'app.genericManageController']);
+    var app = angular.module('institutionsApp', ['ui.router', 'angularUtils.directives.dirPagination', 'app.css',
+        'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
+        'app.genericEntityController', 'app.genericManageController']);
     app.config(function($stateProvider, $urlRouterProvider, $provide) {
+      /*
+       * Configure routes and urls. The default route is '/' which loads
+       * manageInstitutions.page. 'edit' route calls institution.page -- it
+       * appends a 'uuid' to the url to edit an existing institution. 'new'
+       * route is called to create a new institution.
+       */
       $urlRouterProvider.otherwise('/');
       $stateProvider.state('/', {
         url: '/',
@@ -47,10 +51,15 @@
            * and reload the page. TODO: Find a better solution to ensure all
            * dependencies are loaded before bootstrapping the application.
            */
-          if (cause.indexOf("ng-scope") !== -1) {
-            window.location = "institutions.page";
+          // unknown provider..
+          if (cause.indexOf("unpr") !== -1) {
+            window.location.reload();
+          } else if (cause.indexOf("session") !== -1 || cause.indexOf("timeout") !== -1) {
+            console.log(exception + " - " + cause);
+            emr.message("SESSION TIMEOUT");
           } else {
             console.log(exception + " - " + cause);
+            emr.message(cause);
           }
         }
       });
