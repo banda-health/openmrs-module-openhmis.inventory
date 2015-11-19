@@ -25,7 +25,13 @@
         "openhmis.inventory.general.error.duplicate",
         "openhmis.inventory.general.retired.reason",
         "general.edit",
-        "general.new"
+        "general.new",
+        "general.name",
+        "general.description",
+        "general.cancel",
+        "general.save",
+        "general.retireReason",
+        "general.purge"
     ]);
 </script>
 

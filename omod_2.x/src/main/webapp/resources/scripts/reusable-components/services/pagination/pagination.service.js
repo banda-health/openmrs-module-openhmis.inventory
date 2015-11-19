@@ -5,10 +5,10 @@
           PaginationService);
 
   PaginationService.$inject = ['PaginateModel', 'GenericMetadataModel',
-      'ManageEntityRestFactory'];
+      'EntityRestFactory'];
 
   function PaginationService(PaginateModel, GenericMetadataModel,
-          ManageEntityRestFactory) {
+          EntityRestFactory) {
     var service;
 
     service = {
@@ -68,7 +68,7 @@
      */
     function paginate(params, onPaginateSuccess, onPaginateError) {
       var model;
-      ManageEntityRestFactory.loadEntities(params, function(data) {
+      EntityRestFactory.loadEntities(params, function(data) {
         var entities = GenericMetadataModel.populateModels(data.results);
         var pages = computeNumberOfPages(data.length, params['limit']);
         var totalResults = data.length;

@@ -3,7 +3,7 @@
 
   var baseController = angular.module('app.genericManageController');
 
-  function GenericManageController($scope, $filter, ManageEntityRestFactory,
+  function GenericManageController($scope, $filter, EntityRestFactory,
           PaginationService, CssStylesFactory, GenericMetadataModel,
           CookiesService) {
 
@@ -18,9 +18,15 @@
     self.includeRetired = self.entity_name + 'includeRetired';
 
     // protected
-    self.getModelAndEntityName = self.getModelAndEntityName || function() {
-      console.log('generic get entity name and url');
-    }
+    self.getModelAndEntityName = self.getModelAndEntityName
+            || function() {
+              var msg = 'This method sets the required base parameters ';
+              msg += '(i.e module_name, rest_entity_name, entity_name) and MUST be implemented ';
+              msg += 'by the implementing controller. \n';
+              msg += 'To bind the parameters, simply call self.bindBaseParameters from within ';
+              msg += 'self.getModelAndEntityName and pass module_name and entity_name';
+              console.log(msg);
+            }
 
     // protected
     self.bindBaseParameters = function(module_name, entity_name) {
@@ -63,8 +69,8 @@
 
     // public
     self.updateContent = function() {
-      CookiesService.set(self.entity_name + 'includeRetired',
-              $scope.includeRetired);
+      console.log('update content');
+      CookiesService.set(self.includeRetired, $scope.includeRetired);
       self.paginate($scope.currentPage);
     }
 
@@ -86,7 +92,7 @@
     self.initialize = function() {
       // initialize restful webservice..
       self.getModelAndEntityName();
-      ManageEntityRestFactory.setBaseUrl(self.module_name);
+      EntityRestFactory.setBaseUrl(self.module_name);
 
       if (!angular.isDefined($scope.fetchedEntities)) {
         $scope.fetchedEntities = [];

@@ -4,11 +4,11 @@
   var base = angular.module('app.genericManageController');
   base.controller("ManageInstitutionController", ManageInstitutionController);
   ManageInstitutionController.$inject = ['$injector', '$scope', '$filter',
-      'ManageEntityRestFactory', 'CssStylesFactory', 'PaginationService',
+      'EntityRestFactory', 'CssStylesFactory', 'PaginationService',
       'InstitutionModel', 'CookiesService'];
 
   function ManageInstitutionController($injector, $scope, $filter,
-          ManageEntityRestFactory, CssStylesFactory, PaginationService,
+          EntityRestFactory, CssStylesFactory, PaginationService,
           InstitutionModel, CookiesService) {
 
     var self = this;
@@ -25,7 +25,7 @@
     $injector.invoke(base.GenericManageController, self, {
       $scope: $scope,
       $filter: $filter,
-      ManageEntityRestFactory: ManageEntityRestFactory,
+      EntityRestFactory: EntityRestFactory,
       PaginationService: PaginationService,
       CssStylesFactory: CssStylesFactory,
       GenericMetadataModel: InstitutionModel,

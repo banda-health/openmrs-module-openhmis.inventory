@@ -93,12 +93,8 @@
     /* #### START CALLBACK Methods #### */
     self.onChangeEntitySuccessful = self.onChangeEntitySuccessful
             || function(data) {
-              // check if the data object is defined and that the uuid is set.
-              if (angular.isDefined(data) && angular.isDefined(data.uuid)) {
-                self.cancel();
-              } else {
-                self.bindExtraVariablesToScope("");
-              }
+              // functionality changed. navigate back to the manage entity page
+              self.cancel();
             }
 
     self.onChangeEntityError = self.onChangeEntityError || function(error) {
