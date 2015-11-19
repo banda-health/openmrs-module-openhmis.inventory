@@ -52,13 +52,14 @@
            * dependencies are loaded before bootstrapping the application.
            */
           // unknown provider..
-          if (cause.indexOf("unpr") !== -1) {
+          var exc = String(exception);
+          if (exc.indexOf("unpr") !== -1) {
             window.location.reload();
-          } else if (cause.indexOf("session") !== -1 || cause.indexOf("timeout") !== -1) {
-            console.log(exception + " - " + cause);
+          } else if (exc.indexOf("session") !== -1 || exc.indexOf("timeout") !== -1) {
+            console.log(exc + " - " + cause);
             emr.message("SESSION TIMEOUT");
           } else {
-            console.log(exception + " - " + cause);
+            console.log(exc + " - " + cause);
             emr.message(cause);
           }
         }

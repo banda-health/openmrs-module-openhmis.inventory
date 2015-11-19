@@ -36,8 +36,7 @@
         }
       }, function(error) {
         if (typeof errorCallback === 'function') {
-          commonErrorHandling(resource, '', request, error);
-          errorCallback(error);
+          commonErrorHandling(errorCallback, '', request, error);
         }
       });
     }
@@ -55,8 +54,7 @@
         if (typeof successCallback === 'function') successCallback(data);
       }, function(error) {
         if (typeof errorCallback === 'function') {
-          commonErrorHandling(resource, uuid, params, error);
-          errorCallback(error);
+          commonErrorHandling(errorCallback, uuid, params, error);
         }
       });
     }
@@ -72,8 +70,7 @@
         }
       }, function(error) {
         if (typeof errorCallback === 'function') {
-          commonErrorHandling(resource, uuid, request, error);
-          errorCallback(error);
+          commonErrorHandling(errorCallback, uuid, request, error);
         }
       });
     }
@@ -85,25 +82,25 @@
         if (typeof successCallback === 'function') successCallback(data);
       }, function(error) {
         if (typeof errorCallback === 'function') {
-          commonErrorHandling(resource, uuid, params, error);
-          errorCallback(error);
+          commonErrorHandling(errorCallback, uuid, params, error);
         }
       });
     }
 
     // Display error info on the console.
-    function commonErrorHandling(resource, uuid, parameters, error) {
-      console.log("ERROR:::Url - " + Restangular.getBaseUrl() + '/' + resource);
-
+    function commonErrorHandling(errorCallback, uuid, parameters, error) {
       if (angular.isDefined(uuid)) {
         console.log("ERROR:::uuid - " + uuid);
       }
-
       if (angular.isDefined(parameters)) {
         console.log("ERROR:::Parmaters - " + parameters);
       }
+      console.log("ERROR:::Status code - " + error.status);
+      console.log("ERROR:::Status Text - " + error.statusText);
+      console.log("ERROR:::Message - " + error.data.error.message);
+      console.log("ERROR:::Detail - " + error.data.error.detail);
 
-      console.log("ERROR:::Cause - " + error);
+      errorCallback(error.statusText);
     }
   }
 })();

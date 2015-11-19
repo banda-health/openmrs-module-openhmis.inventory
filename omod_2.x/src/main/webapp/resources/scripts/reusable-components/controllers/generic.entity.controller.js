@@ -43,8 +43,7 @@
       var params = {
         uuid: $scope.entity.uuid,
         name: $scope.entity.name,
-        description: $scope.entity.description,
-        resource: self.module_name
+        description: $scope.entity.description
       };
       params = self.appendBaseParams(params);
       EntityRestFactory.saveOrUpdateEntity(params, self.onChangeEntitySuccessful, self.onChangeEntityError);
