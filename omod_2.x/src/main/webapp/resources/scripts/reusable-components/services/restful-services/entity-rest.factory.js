@@ -26,26 +26,26 @@
       RestfulService.setBaseUrl(baseUrl);
     }
 
-    /* Required parameters: entity_name and uuid */
-    function loadEntity(requestParams, successCallback, errorCallback) {
+    /* Required parameters: rest_entity_name and uuid */
+    function loadEntity(baseParams, successCallback, errorCallback) {
       var rest_entity_name;
       var uuid;
 
-      if ("rest_entity_name" in requestParams) {
-        rest_entity_name = requestParams['rest_entity_name'];
+      if ("rest_entity_name" in baseParams) {
+        rest_entity_name = baseParams['rest_entity_name'];
       } else {
-        var msg = emr.message('openhmis.general.error.restName');
-        commonErrorHandler(errorCallback, emr.message(msg));
+        var msg = 'openhmis.general.error.restName';
+        commonErrorHandler(errorCallback, msg);
       }
 
-      if ("uuid" in requestParams) {
-        uuid = requestParams['uuid'];
+      if ("uuid" in baseParams) {
+        uuid = baseParams['uuid'];
       } else {
-        var msg = emr.message('openhmis.general.error.uuid');
-        commonErrorHandler(errorCallback, emr.message(msg));
+        var msg = 'openhmis.general.error.uuid';
+        commonErrorHandler(errorCallback, msg);
       }
 
-      RestfulService.one(rest_entity_name, uuid, '', successCallback, errorCallback);
+      RestfulService.one(rest_entity_name, uuid, successCallback, errorCallback);
     }
 
     /* Checks for duplicated names */
@@ -60,124 +60,120 @@
     }
 
     /*
-     * Either persist a new entity or update an existing one Required params:
-     * name, rest_entity_name, uuid
+     * Either persist a new entity or update an existing one
      */
-    function saveOrUpdateEntity(requestParams, successCallback, errorCallback) {
+    function saveOrUpdateEntity(baseParams, openmrsObject, successCallback, errorCallback) {
       var rest_entity_name;
-      var uuid;
-      var name;
+      var uuid = '';
 
-      if ("rest_entity_name" in requestParams) {
-        rest_entity_name = requestParams['rest_entity_name'];
+      if ("rest_entity_name" in baseParams) {
+        rest_entity_name = baseParams['rest_entity_name'];
       } else {
-        var msg = emr.message('openhmis.general.error.restName');
-        commonErrorHandler(errorCallback, emr.message(msg));
+        var msg = 'openhmis.general.error.restName';
+        commonErrorHandler(errorCallback, msg);
       }
 
-      if ("uuid" in requestParams) {
-        uuid = requestParams['uuid'];
+      if (angular.isDefined(openmrsObject.uuid) && openmrsObject.uuid !== '') {
+        uuid = openmrsObject.uuid;
       } else {
-        var msg = emr.message('openhmis.general.error.uuid');
-        commonErrorHandler(errorCallback, emr.message(msg));
+        // remove fields which are not required
+        delete openmrsObject.uuid;
+        if (angular.isDefined(openmrsObject.retireReason)) {
+          delete openmrsObject.retireReason;
+        }
       }
 
-      if ("name" in requestParams) {
-        name = requestParams['name'];
-      } else {
-        var msg = emr.message('openhmis.general.error.entityName');
-        commonErrorHandler(errorCallback, emr.message(msg));
+      // purge should not be sent along with the object
+      if (angular.isDefined(openmrsObject.purge)) {
+        delete openmrsObject.purge;
       }
 
-      delete requestParams['rest_entity_name'];
-      delete requestParams['uuid'];
-
-      if (!angular.isDefined(uuid) || uuid === "") {
-        checkExistingEntity(rest_entity_name, name, function(data) {
-          if (data.results.length > 0) {
-            var msg = emr.message("openhmis.general.error.duplicate");
-            commonErrorHandler(errorCallback, emr.message(msg));
-          } else {
-            RestfulService.saveOrUpdate(rest_entity_name, '', requestParams, successCallback, errorCallback);
-          }
-        }, function(error) {
-        });
-      } else {
-        RestfulService.saveOrUpdate(rest_entity_name, uuid, requestParams, successCallback, errorCallback);
-      }
+      RestfulService.saveOrUpdate(rest_entity_name, uuid, openmrsObject, successCallback, errorCallback);
     }
 
     /* Required attributes: entity_name, uuid, retired, retireReason */
-    function retireOrUnretireEntity(requestParams, successCallback, errorCallback) {
+    function retireOrUnretireEntity(baseParams, openmrsObject, successCallback, errorCallback) {
       var rest_entity_name;
       var retired;
       var uuid;
 
-      if ("rest_entity_name" in requestParams) {
-        rest_entity_name = requestParams['rest_entity_name'];
+      if ("rest_entity_name" in baseParams) {
+        rest_entity_name = baseParams['rest_entity_name'];
       } else {
         var msg = 'openhmis.general.error.restName'
-        errorCallback(emr.message(msg));
+        commonErrorHandler(errorCallback, msg);
       }
 
-      if ("uuid" in requestParams) {
-        uuid = requestParams['uuid'];
+      if (angular.isDefined(openmrsObject.uuid)) {
+        uuid = openmrsObject.uuid;
       } else {
-        var msg = emr.message('openhmis.general.error.uuid');
-        commonErrorHandler(errorCallback, emr.message(msg));
+        var msg = 'openhmis.general.error.uuid';
+        commonErrorHandler(errorCallback, msg);
       }
 
-      if ("retired" in requestParams) {
-        retired = requestParams['retired'];
+      if (angular.isDefined(openmrsObject.retired)) {
+        retired = openmrsObject.retired;
       } else {
-        var msg = emr.message('openhmis.general.error.retired');
-        commonErrorHandler(errorCallback, emr.message(msg));
+        var msg = 'openhmis.general.error.retired';
+        commonErrorHandler(errorCallback, msg);
       }
 
-      delete requestParams['rest_entity_name'];
-      delete requestParams['uuid'];
+      // purge should not be sent along with the openmrsobject
+      if (angular.isDefined(openmrsObject.purge)) {
+        delete openmrsObject.purge;
+      }
 
       if (!retired) {
-        delete requestParams['retired'];
-        RestfulService.remove(rest_entity_name, uuid, requestParams, successCallback, errorCallback);
+        openmrsObject.retired = true;
+        if (!angular.isDefined(openmrsObject.retireReason)) {
+          var msg = 'openhmis.general.error.retireReason';
+          commonErrorHandler(errorCallback, msg);
+        } else {
+          RestfulService.remove(rest_entity_name, uuid, {
+            "reason": openmrsObject.retireReason
+          }, successCallback, errorCallback);
+        }
       } else {
-        requestParams['retired'] = false;
-        RestfulService.saveOrUpdate(rest_entity_name, uuid, requestParams, successCallback, errorCallback);
+        openmrsObject.retired = false;
+        if (angular.isDefined(openmrsObject.retireReason)) {
+          delete openmrsObject.retireReason;
+        }
+        RestfulService.saveOrUpdate(rest_entity_name, uuid, openmrsObject, successCallback, errorCallback);
       }
     }
 
-    /* Delete an entity. Required params: entity_name, uuid, purge */
-    function purgeEntity(requestParams, successCallback, errorCallback) {
+    /* Delete an entity. Required params: rest_entity_name, uuid, purge */
+    function purgeEntity(baseParams, openmrsObject, successCallback, errorCallback) {
       var rest_entity_name;
       var uuid;
 
-      if ("rest_entity_name" in requestParams) {
-        rest_entity_name = requestParams['rest_entity_name'];
+      if ("rest_entity_name" in baseParams) {
+        rest_entity_name = baseParams['rest_entity_name'];
       } else {
-        var msg = 'openhmis.general.error.restName'
-        errorCallback(emr.message(msg));
+        var msg = 'openhmis.general.error.restName';
+        commonErrorHandler(errorCallback, msg);
       }
 
-      if ("uuid" in requestParams) {
-        uuid = requestParams['uuid'];
+      if (angular.isDefined(openmrsObject.uuid)) {
+        uuid = openmrsObject.uuid;
       } else {
-        var msg = emr.message('openhmis.general.error.uuid');
-        commonErrorHandler(errorCallback, emr.message(msg));
+        var msg = 'openhmis.general.error.uuid';
+        commonErrorHandler(errorCallback, msg);
       }
 
-      delete requestParams['rest_entity_name'];
-      delete requestParams['uuid'];
-
-      RestfulService.remove(rest_entity_name, uuid, requestParams, successCallback, errorCallback);
+      RestfulService.remove(rest_entity_name, uuid, openmrsObject, successCallback, errorCallback);
     }
 
+    /*
+     * load all entities.
+     */
     function loadEntities(requestParams, successCallback, errorCallback) {
       var rest_entity_name;
       if ("rest_entity_name" in requestParams) {
         rest_entity_name = requestParams['rest_entity_name'];
       } else {
         var msg = 'openhmis.general.error.restName'
-        errorCallback(emr.message(msg));
+        commonErrorHandler(errorCallback, msg);
       }
 
       delete requestParams['rest_entity_name'];
@@ -185,9 +181,13 @@
       RestfulService.all(rest_entity_name, requestParams, successCallback, errorCallback);
     }
 
+    /*
+     * error handler
+     */
     function commonErrorHandler(errorCallback, msg) {
-      console.log(msg);
-      errorCallback(emr.message(msg));
+      var error = emr.errorMessage(msg);
+      console.log('ERROR:::' + error);
+      errorCallback(msg);
     }
   }
 })();

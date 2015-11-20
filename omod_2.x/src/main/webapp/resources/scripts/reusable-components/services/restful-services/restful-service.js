@@ -44,13 +44,8 @@
     /*
      * Retrieve ONLY one result.
      */
-    function one(resource, uuid, request, successCallback, errorCallback) {
-      var params = '';
-      if (angular.isDefined(request)) {
-        params = JSON.stringify(request);
-      }
-
-      Restangular.one(resource, uuid).customGET('/', params).then(function(data) {
+    function one(resource, uuid, successCallback, errorCallback) {
+      Restangular.one(resource, uuid).customGET('/').then(function(data) {
         if (typeof successCallback === 'function') successCallback(data);
       }, function(error) {
         if (typeof errorCallback === 'function') {

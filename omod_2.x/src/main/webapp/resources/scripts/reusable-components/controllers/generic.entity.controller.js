@@ -40,32 +40,24 @@
     }
 
     self.saveOrUpdate = self.saveOrUpdate || function() {
-      var params = {
-        uuid: $scope.entity.uuid,
-        name: $scope.entity.name,
-        description: $scope.entity.description
-      };
+      var params = {};
       params = self.appendBaseParams(params);
-      EntityRestFactory.saveOrUpdateEntity(params, self.onChangeEntitySuccessful, self.onChangeEntityError);
+      EntityRestFactory.saveOrUpdateEntity(params, $scope.entity, self.onChangeEntitySuccessful, self.onChangeEntityError);
     }
 
-    self.retireOrUnretireCall = self.retireOrUnretireCall || function(retire) {
-      var params = {
-        uuid: $scope.entity.uuid,
-        retireReason: $scope.entity.retireReason,
-        retired: $scope.entity.retired
-      };
-      params = self.appendBaseParams(params);
-      EntityRestFactory.retireOrUnretireEntity(params, self.onChangeEntitySuccessful, self.onChangeEntityError);
-    }
+    self.retireOrUnretireCall = self.retireOrUnretireCall
+            || function(retire) {
+              var params = {};
+              params = self.appendBaseParams(params);
+              EntityRestFactory.retireOrUnretireEntity(params, $scope.entity, self.onChangeEntitySuccessful,
+                      self.onChangeEntityError);
+            }
 
     self.purge = self.purge || function() {
-      var params = {
-        uuid: $scope.entity.uuid,
-        purge: true
-      };
+      var params = {};
       params = self.appendBaseParams(params);
-      EntityRestFactory.purgeEntity(params, self.onPurgeEntitySuccessful, self.onChangeEntityError);
+      $scope.entity.purge = true;
+      EntityRestFactory.purgeEntity(params, $scope.entity, self.onPurgeEntitySuccessful, self.onChangeEntityError);
     }
 
     self.loadEntity = self.loadEntity || function(uuid) {
@@ -87,7 +79,6 @@
     }
 
     self.onChangeEntityError = self.onChangeEntityError || function(error) {
-      console.error(error);
       emr.errorMessage(error);
     }
 
@@ -105,7 +96,7 @@
       var entity = InstitutionModel.newModelInstance();
       self.bindEntityToScope($scope, entity);
       var msg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.error.notFound"), [self.entity_name]);
-      emr.errorMessage(msg + " - " + error);
+      emr.errorMessage(msg + ":::" + error);
     }
     /* #### END CALLBACK Methods #### */
 
