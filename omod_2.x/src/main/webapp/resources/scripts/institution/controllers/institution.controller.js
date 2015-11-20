@@ -4,7 +4,7 @@
   var base = angular.module('app.genericEntityController');
   base.controller("InstitutionController", InstitutionController);
   InstitutionController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-      'InstitutionModel', '$filter'];
+      'InstitutionModel'];
 
   function InstitutionController($stateParams, $injector, $scope, $filter, EntityRestFactory, InstitutionModel) {
 

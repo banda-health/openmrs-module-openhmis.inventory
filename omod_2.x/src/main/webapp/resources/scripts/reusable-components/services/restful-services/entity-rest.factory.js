@@ -34,14 +34,14 @@
       if ("rest_entity_name" in baseParams) {
         rest_entity_name = baseParams['rest_entity_name'];
       } else {
-        var msg = 'openhmis.general.error.restName';
+        var msg = 'openhmis.inventory.general.error.restName';
         commonErrorHandler(errorCallback, msg);
       }
 
       if ("uuid" in baseParams) {
         uuid = baseParams['uuid'];
       } else {
-        var msg = 'openhmis.general.error.uuid';
+        var msg = 'openhmis.inventory.general.error.uuid';
         commonErrorHandler(errorCallback, msg);
       }
 
@@ -69,7 +69,7 @@
       if ("rest_entity_name" in baseParams) {
         rest_entity_name = baseParams['rest_entity_name'];
       } else {
-        var msg = 'openhmis.general.error.restName';
+        var msg = 'openhmis.inventory.general.error.restName';
         commonErrorHandler(errorCallback, msg);
       }
 
@@ -100,21 +100,21 @@
       if ("rest_entity_name" in baseParams) {
         rest_entity_name = baseParams['rest_entity_name'];
       } else {
-        var msg = 'openhmis.general.error.restName'
+        var msg = 'openhmis.inventory.general.error.restName'
         commonErrorHandler(errorCallback, msg);
       }
 
       if (angular.isDefined(openmrsObject.uuid)) {
         uuid = openmrsObject.uuid;
       } else {
-        var msg = 'openhmis.general.error.uuid';
+        var msg = 'openhmis.inventory.general.error.uuid';
         commonErrorHandler(errorCallback, msg);
       }
 
       if (angular.isDefined(openmrsObject.retired)) {
         retired = openmrsObject.retired;
       } else {
-        var msg = 'openhmis.general.error.retired';
+        var msg = 'openhmis.inventory.general.error.retired';
         commonErrorHandler(errorCallback, msg);
       }
 
@@ -126,7 +126,7 @@
       if (!retired) {
         openmrsObject.retired = true;
         if (!angular.isDefined(openmrsObject.retireReason)) {
-          var msg = 'openhmis.general.error.retireReason';
+          var msg = 'openhmis.inventory.general.error.retireReason';
           commonErrorHandler(errorCallback, msg);
         } else {
           RestfulService.remove(rest_entity_name, uuid, {
@@ -150,14 +150,14 @@
       if ("rest_entity_name" in baseParams) {
         rest_entity_name = baseParams['rest_entity_name'];
       } else {
-        var msg = 'openhmis.general.error.restName';
+        var msg = 'openhmis.inventory.general.error.restName';
         commonErrorHandler(errorCallback, msg);
       }
 
       if (angular.isDefined(openmrsObject.uuid)) {
         uuid = openmrsObject.uuid;
       } else {
-        var msg = 'openhmis.general.error.uuid';
+        var msg = 'openhmis.inventory.general.error.uuid';
         commonErrorHandler(errorCallback, msg);
       }
 
@@ -172,7 +172,7 @@
       if ("rest_entity_name" in requestParams) {
         rest_entity_name = requestParams['rest_entity_name'];
       } else {
-        var msg = 'openhmis.general.error.restName'
+        var msg = 'openhmis.inventory.general.error.restName'
         commonErrorHandler(errorCallback, msg);
       }
 
@@ -186,8 +186,7 @@
      */
     function commonErrorHandler(errorCallback, msg) {
       var error = emr.errorMessage(msg);
-      console.log('ERROR:::' + error);
-      errorCallback(msg);
+      console.log('ERROR:::' + msg);
     }
   }
 })();

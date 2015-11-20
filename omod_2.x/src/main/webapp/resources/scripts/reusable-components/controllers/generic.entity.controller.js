@@ -93,7 +93,7 @@
     }
 
     self.onLoadEntityError = self.onLoadEntityError || function(error) {
-      var entity = InstitutionModel.newModelInstance();
+      var entity = GenericMetadataModel.newModelInstance();
       self.bindEntityToScope($scope, entity);
       var msg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.error.notFound"), [self.entity_name]);
       emr.errorMessage(msg + ":::" + error);
