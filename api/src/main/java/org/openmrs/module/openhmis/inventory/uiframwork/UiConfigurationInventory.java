@@ -47,7 +47,7 @@ public class UiConfigurationInventory implements BeanFactoryPostProcessor {
 					"openhmisInventoryStandardModuleUiConfiguration", builder.getBeanDefinition());
 		} catch (ClassNotFoundException ex) {
 			// StandardModuleUiConfiguration class not found!
-			log.error("ERROR registering openhmis.inventory module::::" + ex.getMessage());
+			log.info("Unable to register openhmis.inventory UI 2.x module");
 		}
 	}
 }
