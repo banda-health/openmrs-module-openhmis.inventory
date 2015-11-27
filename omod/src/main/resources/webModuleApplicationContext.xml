@@ -26,9 +26,7 @@
 	<!-- Annotation based controllers -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	
-	<bean class="org.openmrs.ui.framework.StandardModuleUiConfiguration">
-		<property name="moduleId" value="${project.parent.artifactId}" />
-	</bean>
+	<bean class="org.openmrs.module.openhmis.inventory.uiframwork.UiConfigurationInventory" />
 
 	<context:component-scan base-package="org.openmrs.module.openhmis.inventory.web" />
 </beans>
