@@ -50,3 +50,4 @@ pom.xml.releaseBackup
 *.swp
 *.out
 .java-version
+/bin/
