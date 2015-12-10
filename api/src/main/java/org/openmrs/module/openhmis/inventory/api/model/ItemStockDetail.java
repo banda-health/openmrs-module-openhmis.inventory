@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
@@ -27,11 +27,11 @@ public class ItemStockDetail extends ItemStockDetailBase {
 	/**
 	 * Creates a new empty {@link ItemStockDetail} object.
 	 */
-	public ItemStockDetail() { }
+	public ItemStockDetail() {}
 
 	/**
-	 * Create a new {@link ItemStockDetail} object from the specified {@link ItemStock} and
-	 * {@link StockOperationTransaction} objects.
+	 * Create a new {@link ItemStockDetail} object from the specified {@link ItemStock} and {@link StockOperationTransaction}
+	 * objects.
 	 * @param stock The item stock this stock detail is related to.
 	 * @param tx The operation transaction used to populate the detail properties.
 	 */
@@ -112,4 +112,3 @@ public class ItemStockDetail extends ItemStockDetailBase {
 		return (this.getBatchOperation() == null && this.getExpiration() == null && this.getQuantity() < 0) ? true : false;
 	}
 }
-

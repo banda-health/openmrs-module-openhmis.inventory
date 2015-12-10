@@ -1,3 +1,16 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import java.util.ArrayList;
@@ -44,9 +57,10 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
-public class StockOperationServiceImpl
-		extends BaseOpenmrsService
-		implements IStockOperationService {
+/**
+ * Provides {@link StockOperation} service implementations.
+ */
+public class StockOperationServiceImpl extends BaseOpenmrsService implements IStockOperationService {
 	// This is the object that will provide synchronization
 	private static final UUID OPERATION_LOCK = UUID.randomUUID();
 
@@ -54,14 +68,13 @@ public class StockOperationServiceImpl
 	private IItemStockDataService itemStockService;
 	private IStockOperationDataService operationService;
 
-	// These calendars are used so a temporary variables when sorting operations
+	// These calendars are used as temporary variables when sorting operations
 	private Calendar cal1 = Calendar.getInstance();
 	private Calendar cal2 = Calendar.getInstance();
 
 	@Autowired
-	public StockOperationServiceImpl(IStockOperationDataService operationService,
-									 IStockroomDataService stockroomService,
-									 IItemStockDataService itemStockService) {
+	public StockOperationServiceImpl(IStockOperationDataService operationService, IStockroomDataService stockroomService,
+	    IItemStockDataService itemStockService) {
 		this.operationService = operationService;
 		this.stockroomService = stockroomService;
 		this.itemStockService = itemStockService;
@@ -88,16 +101,16 @@ public class StockOperationServiceImpl
 
 		IStockOperationType type = operation.getInstanceType();
 		if (type.getHasSource() && operation.getSource() == null) {
-			throw new APIException("The operation type (" + type.getName() + ") requires a source stockroom " +
-					"but one has not been defined.");
+			throw new APIException("The operation type (" + type.getName() + ") requires a source stockroom "
+			        + "but one has not been defined.");
 		}
 		if (type.getHasDestination() && operation.getDestination() == null) {
-			throw new APIException("The operation type (" + type.getName() + ") requires a destination " +
-					"stockroom but one has not been defined.");
+			throw new APIException("The operation type (" + type.getName() + ") requires a destination "
+			        + "stockroom but one has not been defined.");
 		}
 		if (type.getRecipientRequired() && (operation.getPatient() == null && operation.getInstitution() == null)) {
-			throw new APIException("The operation type (" + type.getName() + ") requires a patient or institution " +
-					"but one has not been associated.");
+			throw new APIException("The operation type (" + type.getName() + ") requires a patient or institution "
+			        + "but one has not been associated.");
 		}
 	}
 
@@ -108,7 +121,7 @@ public class StockOperationServiceImpl
 
 		for (StockOperationItem item : operation.getItems()) {
 			boolean allowNegativeItemQuantities = operation.getInstanceType().isNegativeItemQuantityAllowed();
-			if(item.getQuantity() < 0 && !allowNegativeItemQuantities) {
+			if (item.getQuantity() < 0 && !allowNegativeItemQuantities) {
 				throw new APIException("This operation does not allow negative quantities for items.");
 			}
 		}
@@ -169,8 +182,8 @@ public class StockOperationServiceImpl
 			}
 
 			// Roll back any operations with an operation date after the specified operation
-			if (operation.getStatus() == StockOperationStatus.COMPLETED ||
-					operation.getStatus() == StockOperationStatus.CANCELLED) {
+			if (operation.getStatus() == StockOperationStatus.COMPLETED
+			        || operation.getStatus() == StockOperationStatus.CANCELLED) {
 				rollbackFollowingOperations(operation);
 			}
 
@@ -186,11 +199,13 @@ public class StockOperationServiceImpl
 				case COMPLETED:
 					operation.getInstanceType().onCompleted(operation);
 					break;
+				default:
+					break;
 			}
 
 			// Reapply any operations with an operation date after the specified operation
-			if (operation.getStatus() == StockOperationStatus.COMPLETED ||
-					operation.getStatus() == StockOperationStatus.CANCELLED) {
+			if (operation.getStatus() == StockOperationStatus.COMPLETED
+			        || operation.getStatus() == StockOperationStatus.CANCELLED) {
 				reapplyFollowingOperations(operation);
 			}
 
@@ -198,8 +213,8 @@ public class StockOperationServiceImpl
 			operation = operationService.save(operation);
 
 			// Check to see if we should autocomplete the operation
-			if (operation.getStatus() == StockOperationStatus.PENDING &&
-					ModuleSettings.loadSettings().getAutoCompleteOperations()) {
+			if (operation.getStatus() == StockOperationStatus.PENDING
+			        && ModuleSettings.loadSettings().getAutoCompleteOperations()) {
 				operation.setStatus(StockOperationStatus.COMPLETED);
 				operation = submitOperation(operation, false);
 			}
@@ -278,7 +293,6 @@ public class StockOperationServiceImpl
 				for (StockOperationTransaction tx : itemTxs) {
 					// Sum the total quantity for this specific item
 					totalQty += tx.getQuantity();
-
 
 					ItemStockDetail detail = null;
 					if (stock == null) {
@@ -367,11 +381,11 @@ public class StockOperationServiceImpl
 	}
 
 	/**
-	 * THIS SHOULD NOT BE CALLED FROM USER CODE - Code to the interface ({@link org.openmrs.module.openhmis.inventory.api.IStockroomDataService}) not this class.
-	 *
-	 * Calculates the reservation details for the specified {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. This includes calculating any
-	 * qualifiers and checking on the details of the source stockroom to create all required transactions to fulfill the
-	 * request.
+	 * THIS SHOULD NOT BE CALLED FROM USER CODE - Code to the interface (
+	 * {@link org.openmrs.module.openhmis.inventory.api.IStockroomDataService}) not this class. Calculates the reservation
+	 * details for the specified {@link org.openmrs.module.openhmis.inventory.api.model.StockOperation}. This includes
+	 * calculating any qualifiers and checking on the details of the source stockroom to create all required transactions to
+	 * fulfill the request.
 	 * @param operation The stock operation for this transaction
 	 * @should use closest expiration from the source stockroom
 	 * @should use oldest batch operation with the calculated expiration
@@ -539,11 +553,13 @@ public class StockOperationServiceImpl
 	}
 
 	private List<ReservedTransaction> findDuplicateReservedTransactions(StockOperation operation) {
-		Map<Triplet<Item, Date, StockOperation>, ReservedTransaction> map = new HashMap<Triplet<Item, Date, StockOperation>, ReservedTransaction>();
+		Map<Triplet<Item, Date, StockOperation>, ReservedTransaction> map =
+		        new HashMap<Triplet<Item, Date, StockOperation>, ReservedTransaction>();
 		List<ReservedTransaction> removeList = new ArrayList<ReservedTransaction>();
 
 		for (ReservedTransaction tx : operation.getReserved()) {
-			Triplet<Item, Date, StockOperation> key = Triplet.with(tx.getItem(), tx.getExpiration(), tx.getBatchOperation());
+			Triplet<Item, Date, StockOperation> key =
+			        Triplet.with(tx.getItem(), tx.getExpiration(), tx.getBatchOperation());
 			if (!map.containsKey(key)) {
 				map.put(key, tx);
 			} else {
@@ -598,7 +614,7 @@ public class StockOperationServiceImpl
 		Pair<Stockroom, Item> pair = Pair.with(stockroom, item);
 
 		ItemStock stock = workingMap.get(pair);
-		if(stock == null) {
+		if (stock == null) {
 			stock = stockroomService.getItem(stockroom, item);
 			if (stock != null) {
 				stock = new ItemStock(stock);
@@ -611,7 +627,7 @@ public class StockOperationServiceImpl
 	}
 
 	private void findAndUpdateSourceDetail(List<ReservedTransaction> newTransactions, StockOperation operation,
-			ItemStock stock, ReservedTransaction tx) {
+	        ItemStock stock, ReservedTransaction tx) {
 		ItemStockDetail detail = findSourceDetail(operation, stock, tx);
 
 		if (detail == null) {
@@ -644,14 +660,16 @@ public class StockOperationServiceImpl
 					//Math.abs is needed to handle negative adjustments correctly
 					tx.setQuantity(Math.abs(tx.getQuantity()) + detail.getQuantity());
 
-					//if adjustment make sure that the quantity is negaitve (this method is only dealing with negative adjustments)
+					//if adjustment make sure that the quantity is negaitve (this method is only dealing with
+					// negative adjustments)
 					if (operation.isAdjustmentType()) {
 						tx.setQuantity(tx.getQuantity() * -1);
 					}
 
 					// Create a new tx to handle the remaining stock request
 					ReservedTransaction newTx = new ReservedTransaction(tx);
-					Integer newTxQuantity = operation.isAdjustmentType() ? detail.getQuantity() : Math.abs(detail.getQuantity());
+					Integer newTxQuantity =
+					        operation.isAdjustmentType() ? detail.getQuantity() : Math.abs(detail.getQuantity());
 					newTx.setQuantity(newTxQuantity);
 
 					// Add the new tx to the list of transactions to add to the operations
@@ -739,8 +757,8 @@ public class StockOperationServiceImpl
 		// Loop through each detail record and find the first detail with the same expiration and batch operation, matching
 		// nulls with nulls
 		for (ItemStockDetail detail : stock.getDetails()) {
-			if (ObjectUtils.equals(detail.getExpiration(), tx.getExpiration()) &&
-				ObjectUtils.equals(detail.getBatchOperation(), tx.getBatchOperation())) {
+			if (ObjectUtils.equals(detail.getExpiration(), tx.getExpiration())
+			        && ObjectUtils.equals(detail.getBatchOperation(), tx.getBatchOperation())) {
 				return detail;
 			}
 		}
@@ -757,8 +775,8 @@ public class StockOperationServiceImpl
 		results.addAll(Collections2.filter(stock.getDetails(), new Predicate<ItemStockDetail>() {
 			@Override
 			public boolean apply(ItemStockDetail detail) {
-				return (detail.getExpiration() == null && date == null) ||
-						(detail.getExpiration() != null && date != null && detail.getExpiration().compareTo(date) == 0);
+				return (detail.getExpiration() == null && date == null)
+				        || (detail.getExpiration() != null && date != null && detail.getExpiration().compareTo(date) == 0);
 			}
 		}));
 
@@ -774,8 +792,8 @@ public class StockOperationServiceImpl
 		results.addAll(Collections2.filter(stock.getDetails(), new Predicate<ItemStockDetail>() {
 			@Override
 			public boolean apply(ItemStockDetail detail) {
-				return (detail.getBatchOperation() == null && batchOperation == null) ||
-						(detail.getBatchOperation() != null && detail.getBatchOperation() == batchOperation);
+				return (detail.getBatchOperation() == null && batchOperation == null)
+				        || (detail.getBatchOperation() != null && detail.getBatchOperation() == batchOperation);
 			}
 		}));
 
@@ -834,21 +852,23 @@ public class StockOperationServiceImpl
 		return Collections.min(details, new Comparator<ItemStockDetail>() {
 			@Override
 			public int compare(ItemStockDetail o1, ItemStockDetail o2) {
-				DateTime o1Time = o1.getBatchOperation() == null ?
-						operationTime :
-						new DateTime(o1.getBatchOperation().getOperationDate());
-				DateTime o2Time = o2.getBatchOperation() == null ?
-						operationTime :
-						new DateTime(o2.getBatchOperation().getOperationDate());
+				DateTime o1Time =
+				        o1.getBatchOperation() == null ? operationTime : new DateTime(o1.getBatchOperation()
+				                .getOperationDate());
+				DateTime o2Time =
+				        o2.getBatchOperation() == null ? operationTime : new DateTime(o2.getBatchOperation()
+				                .getOperationDate());
 
-				return ((Integer) Seconds.secondsBetween(operationTime, o1Time).getSeconds()).compareTo(
-						Seconds.secondsBetween(operationTime, o2Time).getSeconds());
+				return ((Integer)Seconds.secondsBetween(operationTime, o1Time).getSeconds()).compareTo(Seconds
+				        .secondsBetween(operationTime, o2Time).getSeconds());
 			}
 		});
 	}
 
-	private Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> createGroupedTransactions(StockOperationTransaction[] transactions) {
-		Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> grouped = new HashMap<Pair<Item, Stockroom>, List<StockOperationTransaction>>();
+	private Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> createGroupedTransactions(
+	        StockOperationTransaction[] transactions) {
+		Map<Pair<Item, Stockroom>, List<StockOperationTransaction>> grouped =
+		        new HashMap<Pair<Item, Stockroom>, List<StockOperationTransaction>>();
 		for (StockOperationTransaction tx : transactions) {
 			if (tx == null) {
 				continue;
@@ -915,7 +935,7 @@ public class StockOperationServiceImpl
 		cal2.setTime(o2.getOperationDate());
 		Utility.clearCalendarTime(cal2);
 
-		int result =  cal1.compareTo(cal2);
+		int result = cal1.compareTo(cal2);
 		if (result == 0) {
 			result = o1.getOperationOrder().compareTo(o2.getOperationOrder());
 		}
@@ -955,4 +975,3 @@ public class StockOperationServiceImpl
 		}
 	}
 }
-

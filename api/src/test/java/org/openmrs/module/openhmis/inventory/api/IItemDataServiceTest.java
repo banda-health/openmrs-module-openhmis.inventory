@@ -42,7 +42,6 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 	private IDepartmentDataService departmentService;
 
-
 	@Override
 	public void before() throws Exception {
 		super.before();
@@ -507,7 +506,6 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 		results = service.getItemsByDepartment(department, false, paging);
 		Assert.assertEquals(lastItem.getId(), Iterators.getOnlyElement(results.iterator()).getId());
 	}
-
 
 	/**
 	 * @verifies throw NullPointerException if item search is null

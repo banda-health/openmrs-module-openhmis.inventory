@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.webservices.rest.search;
 
@@ -36,20 +36,23 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link Item}s.
+ */
 @Component
 public class ItemSearchHandler
-		extends BaseSearchHandler
-		implements SearchHandler {
+        extends BaseSearchHandler
+        implements SearchHandler {
 	private final SearchConfig searchConfig =
-			new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("*"),
-					Arrays.asList(
-							new SearchQuery.Builder(
-									"Find an item by its name or code, optionally filtering by department")
-									.withRequiredParameters("q")
-									.withOptionalParameters("department_uuid", "has_physical_inventory")
-									.build()
-					)
-			);
+	        new SearchConfig("default", ModuleRestConstants.ITEM_RESOURCE, Arrays.asList("*"),
+	                Arrays.asList(
+	                        new SearchQuery.Builder(
+	                                "Find an item by its name or code, optionally filtering by department")
+	                                .withRequiredParameters("q")
+	                                .withOptionalParameters("department_uuid", "has_physical_inventory")
+	                                .build()
+	                        )
+	        );
 
 	private IItemDataService service;
 	private IDepartmentDataService departmentService;
@@ -97,10 +100,11 @@ public class ItemSearchHandler
 		}
 
 		return new AlreadyPagedWithLength<Item>(context, items, pagingInfo.hasMoreResults(),
-				pagingInfo.getTotalRecordCount());
+		        pagingInfo.getTotalRecordCount());
 	}
 
-	private ItemSearch createSearchTemplate(RequestContext context, String name, Department department, Boolean hasPhysicalInventory) {
+	private ItemSearch createSearchTemplate(RequestContext context, String name, Department department,
+	        Boolean hasPhysicalInventory) {
 		ItemSearch template = new ItemSearch();
 
 		if (!StringUtils.isEmpty(name)) {

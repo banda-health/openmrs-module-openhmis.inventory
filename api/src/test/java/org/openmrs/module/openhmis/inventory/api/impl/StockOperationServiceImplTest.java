@@ -89,7 +89,6 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		return results.size() == 0 ? null : results;
 	}
 
-
 	/**
 	 * @verifies use closest expiration from the source stockroom
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
@@ -393,7 +392,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void calculateReservations_shouldCreateAdditionalTransactionsWhenWhenMultipleDetailsAreNeedToFulfillRequest()
-			throws Exception {
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
 
@@ -477,9 +476,8 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
 	@Test
-	public void
-	calculateReservations_shouldCreateAdditionalNullQualifierTransactionWhenThereIsNotEnoughValidItemStockToFulfillRequest()
-			throws Exception {
+	public void calculateReservations_shouldCreateAdditionalNullQualifierTransactionWhenThereIsNotEnoughValidItemStockToFulfillRequest()
+	        throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);
 		Stockroom destRoom = stockroomDataService.getById(1);
 
@@ -624,7 +622,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void calculateReservations_shouldSetTheBatchOperationToTheSpecifiedOperationIfThereIsNoSourceStockroom()
-			throws Exception {
+	        throws Exception {
 		Stockroom destRoom = stockroomDataService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
@@ -1041,7 +1039,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Context.flushSession();
 
 		// Create a new operation to deduct more stock from the stockroom
-		StockOperation op =  operationTest.createEntity(true);
+		StockOperation op = operationTest.createEntity(true);
 		op.getReserved().clear();
 		op.setStatus(StockOperationStatus.NEW);
 		op.setInstanceType(WellKnownOperationTypes.getDistribution());
@@ -1104,7 +1102,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Context.flushSession();
 
 		// Create a new operation to add stock to the stockroom
-		StockOperation op =  operationTest.createEntity(true);
+		StockOperation op = operationTest.createEntity(true);
 		op.getReserved().clear();
 		op.setStatus(StockOperationStatus.NEW);
 		op.setInstanceType(WellKnownOperationTypes.getReceipt());
@@ -1145,7 +1143,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void calculateReservations_shouldSupportItemChangeToHaveExpirationAfterNonexpirableStockExists()
-			throws Exception {
+	        throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);
@@ -1206,7 +1204,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void calculateReservations_shouldSupportItemChangeToNotHaveExpirationAfterExpirableStockExists()
-			throws Exception {
+	        throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);

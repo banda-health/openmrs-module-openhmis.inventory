@@ -1,22 +1,26 @@
 /*
-
  * The contents of this file are subject to the OpenMRS Public License
  * Version 2.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
@@ -25,7 +29,6 @@ import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
-import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
@@ -36,15 +39,15 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
-import javax.annotation.Nullable;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 
+/**
+ * REST resource representing an {@link Item}.
+ */
 @Resource(name = ModuleRestConstants.ITEM_RESOURCE, supportedClass = Item.class,
-		supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
 public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Item, ItemAttribute> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -178,4 +181,3 @@ public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Ite
 		return false;
 	}
 }
-

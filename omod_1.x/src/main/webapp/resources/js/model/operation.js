@@ -34,8 +34,8 @@ define(
 
         openhmis.OperationType = openhmis.CustomizableInstanceTypeBase.extend({
 		    meta: {
-				name: __("Operation Type"),
-				namePlural: __("Operation Types"),
+				name: __(openhmis.getMessage('openhmis.inventory.operations.type.name')),
+				namePlural: __(openhmis.getMessage('openhmis.inventory.operations.type.namePlural')),
 				restUrl: openhmis.url.inventoryModelBase + 'stockOperationType'
 		    },
 
@@ -142,8 +142,8 @@ define(
 
 	    openhmis.ReservedTransaction = openhmis.TransactionBase.extend({
 		    meta: {
-			    name: __("Reservation Transaction"),
-			    namePlural: __("Reservation Transactions"),
+			    name: __(openhmis.getMessage('openhmis.inventory.operations.reservation.name')),
+			    namePlural: __(openhmis.getMessage('openhmis.inventory.operations.reservation.namePlural')),
 			    openmrsType: 'metadata',
 			    restUrl: openhmis.url.inventoryModelBase + 'reservationTransaction'
 		    },
@@ -155,8 +155,8 @@ define(
 
 	    openhmis.OperationTransaction = openhmis.TransactionBase.extend({
 		    meta: {
-			    name: __("Operation Transaction"),
-			    namePlural: __("Operation Transactions"),
+			    name: __(openhmis.getMessage('openhmis.inventory.operations.transaction.name')),
+			    namePlural: __(openhmis.getMessage('openhmis.inventory.operations.transaction.name')),
 			    openmrsType: 'metadata',
 			    restUrl: openhmis.url.inventoryModelBase + 'stockOperationTransaction'
 		    },
@@ -197,8 +197,8 @@ define(
 
         openhmis.NewOperation = openhmis.GenericModel.extend({
             meta: {
-                name: __("Operation"),
-                namePlural: __("Operations"),
+                name: __(openhmis.getMessage('openhmis.inventory.operations.name')),
+                namePlural: __(openhmis.getMessage('openhmis.inventory.operations.namePlural')),
                 openmrsType: 'metadata',
                 restUrl: openhmis.url.inventoryModelBase + 'stockOperation'
             },
@@ -309,7 +309,9 @@ define(
                     if (resp.department) {
                         resp.department = new openhmis.Department(resp.department);
                     }
-
+                    if (resp.creator) {
+                        resp.creator = new openhmis.User(resp.creator.person);
+                    }
                     if (resp.attributes) {
                         resp.attributes = new openhmis.GenericCollection(resp.attributes,
                             { model: openhmis.OperationAttribute }).models;
@@ -464,8 +466,8 @@ define(
 
         openhmis.OperationItem = openhmis.ItemStockDetailBase.extend({
             meta: {
-                name: __("Operation Item"),
-                namePlural: __("Operation Items"),
+                name: __(openhmis.getMessage('openhmis.inventory.operations.time.name')),
+                namePlural: __(openhmis.getMessage('openhmis.inventory.operations.time.namePlural')),
                 openmrsType: 'metadata',
                 restUrl: openhmis.url.inventoryModelBase + 'stockOperationItem'
             },

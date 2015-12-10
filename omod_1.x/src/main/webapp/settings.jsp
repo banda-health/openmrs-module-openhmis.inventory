@@ -38,11 +38,11 @@
 				<input id="autoGenerateOperationNumber" name="${status.expression}" type="checkbox"
 				       onClick="enableDisable()"
 					<c:if test="${settings.autoGenerateOperationNumber}">checked</c:if> />
-				<label for="autoGenerateOperationNumber">Auto Generate Operation Number</label>
+				<label for="autoGenerateOperationNumber"><spring:message code="openhmis.inventory.report.operation.number.label"/> </label>
 			</spring:bind>
 		</td></tr>
 		<tr><td>
-			<label for="operationNumberGeneratorSourceId">Select Identifier Source</label>
+			<label for="operationNumberGeneratorSourceId"><spring:message code="openhmis.inventory.report.identifier.source.label"/> </label>
 			<spring:bind path="operationNumberGeneratorSourceId">
 			<select id="operationNumberGeneratorSourceId" name="${status.expression}"
 			        <c:if test="${!settings.autoGenerateOperationNumber}">disabled</c:if>>
@@ -62,12 +62,12 @@
 			<spring:bind path="autoCompleteOperations">
 				<input id="autoCompleteOperations" name="${status.expression}" type="checkbox"
 				       <c:if test="${settings.autoCompleteOperations}">checked</c:if> />
-				<label for="autoCompleteOperations">Auto Complete Operations</label>
+				<label for="autoCompleteOperations"><spring:message code="openhmis.inventory.report.auto.complete.operation.label"/></label>
 			</spring:bind>
 		</td></tr>
 		<tr><td>
 			<br />
-			<label for="stockTakeReportId">Select Stock Take Report</label>
+			<label for="stockTakeReportId"><spring:message code="openhmis.inventory.report.select.stock.take.label"/> </label>
 			<spring:bind path="stockTakeReportId">
 				<select id="stockTakeReportId" name="${status.expression}">
 					<option value=""></option>
@@ -82,7 +82,7 @@
 		</td></tr>
 		<tr><td>
 			<br />
-			<label for="stockCardReportId">Select Stock Card Report</label>
+			<label for="stockCardReportId"><spring:message code="openhmis.inventory.report.select.stock.card.label"/></label>
 			<spring:bind path="stockCardReportId">
 				<select id="stockCardReportId" name="${status.expression}">
 					<option value=""></option>
@@ -97,7 +97,7 @@
 		</td></tr>
 		<tr><td>
 			<br />
-			<label for="stockOperationsByStockroomReportId">Select Stock Operations By Stockroom Report</label>
+			<label for="stockOperationsByStockroomReportId"><spring:message code="openhmis.inventory.report.select.stock.operation.label"/> </label>
 			<spring:bind path="stockOperationsByStockroomReportId">
 				<select id="stockOperationsByStockroomReportId" name="${status.expression}">
 					<option value=""></option>
@@ -112,7 +112,7 @@
 		</td></tr>
 		<tr><td>
 			<br />
-			<label for="stockroomReportId">Select Stockroom Report</label>
+			<label for="stockroomReportId"><spring:message code="openhmis.inventory.report.select.stockroom.label"/> </label>
 			<spring:bind path="stockroomReportId">
 				<select id="stockroomReportId" name="${status.expression}">
 					<option value=""></option>
@@ -127,7 +127,7 @@
 		</td></tr>
 		<tr><td>
 			<br />
-			<label for="expiringStockReportId">Select Expiring Stock Report</label>
+			<label for="expiringStockReportId"><spring:message code="openhmis.inventory.report.select.expiring.stock.label"/> </label>
 			<spring:bind path="expiringStockReportId">
 				<select id="expiringStockReportId" name="${status.expression}">
 					<option value=""></option>

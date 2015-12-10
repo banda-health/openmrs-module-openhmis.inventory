@@ -95,7 +95,6 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		    });
 	}
 
-
 	@Override
 	public void before() throws Exception {
 		super.before();
@@ -110,7 +109,6 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 		itemTest = new IItemDataServiceTest();
 	}
-
 
 	@Override
 	public StockOperation createEntity(boolean valid) {
@@ -149,12 +147,10 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		return op;
 	}
 
-
 	@Override
 	protected int getTestEntityCount() {
 		return 4;
 	}
-
 
 	@Override
 	protected void updateEntityFields(StockOperation op) {
@@ -185,7 +181,6 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		op.addReserved(item);
 
 	}
-
 
 	@Override
 	protected void assertEntity(StockOperation expected, StockOperation actual) {
@@ -341,7 +336,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperationByNumber(String)
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void getOperationByNumber_shouldThrowIllegalArgumentExceptionIsNumberIsLongerThan255Characters() throws Exception {
+	public void getOperationByNumber_shouldThrowIllegalArgumentExceptionIsNumberIsLongerThan255Characters()
+	        throws Exception {
 		service.getOperationByNumber(StringUtils.repeat("A", 256));
 	}
 
@@ -677,7 +673,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	/**
 	 * @verifies return operations filtered by stockroom
 	 * @see IStockOperationDataService#getOperations(org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch,
-	 * org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 *      org.openmrs.module.openhmis.commons.api.PagingInfo)
 	 */
 	@Test
 	public void getOperations_shouldReturnOperationsFilteredByStockroom() throws Exception {
@@ -767,7 +763,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 
-		results = service.getUserOperations(user, null,  WellKnownOperationTypes.getInitial(), null, null, null);
+		results = service.getUserOperations(user, null, WellKnownOperationTypes.getInitial(), null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
@@ -797,7 +793,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item = itemService.getById(0);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, null,  null, item,  null,null);
+		results = service.getUserOperations(user, null, null, item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(3, results.size());
@@ -808,7 +804,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		item = itemService.getById(6);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, null,  null, item,  null,null);
+		results = service.getUserOperations(user, null, null, item, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(3, (int)results.get(0).getId());
@@ -816,7 +812,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		item = itemService.getById(5);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, null,  null, item, null, null);
+		results = service.getUserOperations(user, null, null, item, null, null);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
 	}
@@ -826,7 +822,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
 	 */
 	@Test
-	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeForSpecifiedUser() throws Exception {
+	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeForSpecifiedUser()
+	        throws Exception {
 		User user = Context.getUserService().getUser(1);
 
 		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
@@ -834,7 +831,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertNotNull(results);
 		Assert.assertEquals(getTestEntityCount(), results.size());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  null, null, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
@@ -842,7 +839,9 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Assert.assertEquals(0, (int)results.get(0).getId());
 		Assert.assertEquals(1, (int)results.get(1).getId());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getTransfer(), null, null, null);
+		results =
+		        service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getTransfer(),
+		            null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -866,13 +865,13 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item = itemService.getById(1);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, StockOperationStatus.PENDING,  null, item, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.PENDING, null, item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (int)results.get(0).getId());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  null, item, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.COMPLETED, null, item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(2, results.size());
@@ -882,7 +881,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		item = itemService.getById(6);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, StockOperationStatus.ROLLBACK,  null, item, null, null);
+		results = service.getUserOperations(user, StockOperationStatus.ROLLBACK, null, item, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
@@ -895,7 +894,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
 	 */
 	@Test
-	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeAndItemForSpecifiedUser() throws Exception {
+	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeAndItemForSpecifiedUser()
+	        throws Exception {
 		User user = Context.getUserService().getUser(1);
 
 		List<StockOperation> results = service.getUserOperations(user, null, null, null, null, null);
@@ -906,13 +906,17 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Item item = itemService.getById(1);
 		Assert.assertNotNull(item);
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  WellKnownOperationTypes.getReceipt(), item, null, null);
+		results =
+		        service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getReceipt(), item,
+		            null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(0, (int)results.get(0).getId());
 
-		results = service.getUserOperations(user, StockOperationStatus.COMPLETED,  WellKnownOperationTypes.getInitial(), item, null, null);
+		results =
+		        service.getUserOperations(user, StockOperationStatus.COMPLETED, WellKnownOperationTypes.getInitial(), item,
+		            null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
@@ -1176,7 +1180,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		service.save(operation);
 		Context.flushSession();
 
-		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.REQUESTED, null, null, null, null);
+		List<StockOperation> results =
+		        service.getUserOperations(user, StockOperationStatus.REQUESTED, null, null, null, null);
 
 		Assert.assertNotNull(results);
 		Assert.assertEquals(0, results.size());
@@ -1196,7 +1201,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Context.flushSession();
 
 		PagingInfo paging = new PagingInfo(1, 1);
-		List<StockOperation> results = service.getUserOperations(user, StockOperationStatus.PENDING, null, null, null, paging);
+		List<StockOperation> results =
+		        service.getUserOperations(user, StockOperationStatus.PENDING, null, null, null, paging);
 		Assert.assertNotNull(results);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(2, (long)paging.getTotalRecordCount());
@@ -1360,7 +1366,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @verifies throw IllegalArgumentException if operationDate is null
 	 * @see IStockOperationDataService#getOperationsSince(java.util.Date, PagingInfo)
 	 */
-	@Test(expected =  IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void getOperationsSince_shouldThrowIllegalArgumentExceptionIfOperationDateIsNull() throws Exception {
 		service.getOperationsSince(null, new PagingInfo(1, 1));
 	}
@@ -1508,7 +1514,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void getLastOperationByDate_shouldReturnTheOperationWithTheLargestOperationOrderOnTheSpecifiedDate()
-			throws Exception {
+	        throws Exception {
 		Calendar cal = Calendar.getInstance();
 		Utility.clearCalendarTime(cal);
 		cal.add(Calendar.YEAR, 10);
@@ -1557,7 +1563,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void getLastOperationByDate_shouldReturnTheOperationWithTheLastCreationDateIfTheOperationOrderIsTheSame()
-			throws Exception {
+	        throws Exception {
 		Calendar cal = Calendar.getInstance();
 		Utility.clearCalendarTime(cal);
 
@@ -1615,7 +1621,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void getFirstOperationByDate_shouldReturnTheOperationWithTheLeastOperationOrderOnTheSpecifiedDate()
-			throws Exception {
+	        throws Exception {
 		Calendar cal = Calendar.getInstance();
 		Utility.clearCalendarTime(cal);
 
@@ -1670,7 +1676,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 */
 	@Test
 	public void getFirstOperationByDate_shouldReturnTheOperationWithTheFirstCreationDateIfTheOperationOrderIsTheSame()
-			throws Exception {
+	        throws Exception {
 		Calendar cal = Calendar.getInstance();
 		Utility.clearCalendarTime(cal);
 
@@ -2050,8 +2056,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 	 * @see IStockOperationDataService#getOperationsByDate(java.util.Date, PagingInfo)
 	 */
 	@Test
-	public void getOperationsByDate_shouldReturnOperationsThatOccurredOnTheSpecifiedDateRegardlessOfTime() throws
-			Exception {
+	public void getOperationsByDate_shouldReturnOperationsThatOccurredOnTheSpecifiedDateRegardlessOfTime() throws Exception {
 		Calendar cal = Calendar.getInstance();
 		Utility.clearCalendarTime(cal);
 

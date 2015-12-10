@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 
 package org.openmrs.module.webservices.rest.search;
@@ -32,38 +32,43 @@ import org.openmrs.module.webservices.rest.web.resource.api.SearchHandler;
 import org.openmrs.module.webservices.rest.web.resource.api.SearchQuery;
 import org.springframework.stereotype.Component;
 
+/**
+ * Search handler for {@link Department}s.
+ */
 @Component
 public class DepartmentSearchHandler implements SearchHandler {
 
-    private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.DEPARTMENT_RESOURCE,
-		    Arrays.asList("*"),
-            Arrays.asList(
-                    new SearchQuery.Builder("Find a department by its name")
-                            .withRequiredParameters("q")
-                            .build()
-            )
-    );
+	private final SearchConfig searchConfig = new SearchConfig("default", ModuleRestConstants.DEPARTMENT_RESOURCE,
+	        Arrays.asList("*"),
+	        Arrays.asList(
+	                new SearchQuery.Builder("Find a department by its name")
+	                        .withRequiredParameters("q")
+	                        .build()
+	                )
+	        );
 
-    @Override
-    public SearchConfig getSearchConfig() {
-        return searchConfig;
-    }
+	@Override
+	public SearchConfig getSearchConfig() {
+		return searchConfig;
+	}
 
-    @Override
-    public PageableResult search(RequestContext context) {
-        String query = context.getParameter("q");
-        IDepartmentDataService service = Context.getService(IDepartmentDataService.class);
-        PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+	@Override
+	public PageableResult search(RequestContext context) {
+		String query = context.getParameter("q");
+		IDepartmentDataService service = Context.getService(IDepartmentDataService.class);
+		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
-        List<Department> departments;
-        if (StringUtils.isBlank(query)) {
-            departments = service.getAll(context.getIncludeAll(), pagingInfo);
-        } else {
-            departments = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
-        }
+		List<Department> departments;
+		if (StringUtils.isBlank(query)) {
+			departments = service.getAll(context.getIncludeAll(), pagingInfo);
+		} else {
+			departments = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
+		}
 
-        AlreadyPagedWithLength<Department> results = new AlreadyPagedWithLength<Department>(context, departments, pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
-        return results;
-    }
+		AlreadyPagedWithLength<Department> results =
+		        new AlreadyPagedWithLength<Department>(context, departments, pagingInfo.hasMoreResults(),
+		                pagingInfo.getTotalRecordCount());
+		return results;
+	}
 
 }

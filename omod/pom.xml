@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>openhmis.inventory</artifactId>
-		<version>2.0.1</version>
+		<version>2.1.0</version>
 	</parent>
 
 	<artifactId>openhmis.inventory-omod</artifactId>
@@ -179,6 +179,30 @@
 
 		<plugins>
 			<plugin>
+				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+				<artifactId>maven-java-formatter-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.openmrs.maven.plugins</groupId>
 				<artifactId>maven-openmrs-plugin</artifactId>
 
@@ -266,6 +290,7 @@
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
 				<executions>
 					<execution>
 						<goals>

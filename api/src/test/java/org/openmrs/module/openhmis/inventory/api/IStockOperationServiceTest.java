@@ -1,7 +1,11 @@
 package org.openmrs.module.openhmis.inventory.api;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +25,8 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 
 public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	IStockOperationTypeDataService typeService;
@@ -254,9 +255,8 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	 * @see IStockOperationService#applyTransactions(java.util.Collection)
 	 */
 	@Test
-	public void
-		applyTransactions_shouldAddSourceStockroomItemStockWithNegativeQuantityWhenTransactionQuantityIsNegativeAndStockNotFound()
-	                throws Exception {
+	public void applyTransactions_shouldAddSourceStockroomItemStockWithNegativeQuantityWhenTransactionQuantityIsNegativeAndStockNotFound()
+	        throws Exception {
 		// Create a new item
 		Item item = itemTest.createEntity(true);
 		itemService.save(item);
@@ -1020,7 +1020,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test(expected = APIException.class)
 	public void submitOperation_shouldThrowAPIExceptionIfTheOperationTypeIsReceiptAndExpirationIsNotDefinedForExpirableItems()
-			throws Exception {
+	        throws Exception {
 		// Get the destination stockroom
 		Stockroom stockroom = stockroomService.getById(2);
 		stockroom.getItems();
@@ -2365,7 +2365,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Context.flushSession();
 
 		// Create a new operation to add stock to the stockroom
-		StockOperation op =  operationTest.createEntity(true);
+		StockOperation op = operationTest.createEntity(true);
 		op.getReserved().clear();
 		op.setStatus(StockOperationStatus.NEW);
 		op.setInstanceType(WellKnownOperationTypes.getReceipt());
@@ -2432,7 +2432,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Context.flushSession();
 
 		// Create a new operation to add stock to the stockroom
-		StockOperation op =  operationTest.createEntity(true);
+		StockOperation op = operationTest.createEntity(true);
 		op.getReserved().clear();
 		op.setStatus(StockOperationStatus.NEW);
 		op.setInstanceType(WellKnownOperationTypes.getReceipt());
@@ -2486,7 +2486,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Context.flushSession();
 
 		// Create a new operation to add stock to the stockroom
-		StockOperation op =  operationTest.createEntity(true);
+		StockOperation op = operationTest.createEntity(true);
 		op.getReserved().clear();
 		op.setStatus(StockOperationStatus.NEW);
 		op.setInstanceType(WellKnownOperationTypes.getReceipt());
@@ -2520,7 +2520,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test(expected = APIException.class)
 	public void submitOperation_shouldThrowAPIExceptionIfSourceStockroomIsNullAndTheExpirationIsNotSpecifiedForAnExpirableItem()
-			throws Exception {
+	        throws Exception {
 		Stockroom destRoom = stockroomService.getById(1);
 
 		Item newItem = itemTest.createEntity(true);
@@ -2547,7 +2547,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public void submitOperation_shouldAddStockIfCalculateExpirationIsFalseAndExpirationIsNullForAnExpirableItem()
-			throws Exception {
+	        throws Exception {
 		Settings settings = ModuleSettings.loadSettings();
 		settings.setAutoCompleteOperations(true);
 		ModuleSettings.saveSettings(settings);
@@ -2589,7 +2589,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public void submitOperation_shouldNotIncludeRollbackOperationsWhenRollingBackAndReapplyingSubsequentOperations()
-			throws Exception {
+	        throws Exception {
 		Stockroom source = stockroomService.getById(0);
 		Stockroom dest = stockroomService.getById(1);
 
@@ -2890,7 +2890,6 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		op2 = service.submitOperation(op2);
 		Context.flushSession();
 
-
 		stock = stockroomService.getItem(source, newItem);
 		Assert.assertNotNull(stock);
 		Assert.assertEquals(15, stock.getQuantity());
@@ -2910,7 +2909,8 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(10, (long)detail.getQuantity());
 	}
 
-	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions, final Item item) {
+	private StockOperationTransaction getTransactionForItem(Collection<StockOperationTransaction> transactions,
+	        final Item item) {
 		return Iterators.find(transactions.iterator(), new Predicate<StockOperationTransaction>() {
 			@Override
 			public boolean apply(StockOperationTransaction input) {

@@ -577,7 +577,7 @@ define(
                 // The parent view tracks the currently selected operation type so we'll use that here
                 var operationType = this.parentView.currentOperationType;
                 if (!operationType) {
-                    alert("Could not load operation type.");
+                    alert(openhmis.getMessage('openhmis.inventory.operations.type.load.error'));
                 }
 
                 return operationType;
