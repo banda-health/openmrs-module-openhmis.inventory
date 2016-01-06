@@ -7,7 +7,7 @@
 %>
 
 <script type="text/javascript" src="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/institution/configs/load.messages.require.js"></script>
-<script type="text/javascript" src="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/reusable-components/config.js"></script>
+<script type="text/javascript" src="/openmrs/moduleResources/openhmis/commons/scripts/config.js"></script>
 <script data-main="institution/configs/institutions.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <script type="text/javascript">
