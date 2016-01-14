@@ -59,7 +59,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Items",
-        "url": "module/openhmis/inventory/items.form",
+        "url": "openhmis.inventory/item/items.page",
         "icon": "icon-italic",
         "requiredPrivilege": "Task: Access Manage Items"
       },
@@ -89,7 +89,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Institutions",
-        "url": "openhmis.inventory/institutions.page",
+        "url": "openhmis.inventory/institution/institutions.page",
         "icon": "icon-building",
         "requiredPrivilege": "Task: Access Manage Institutions"
       },
