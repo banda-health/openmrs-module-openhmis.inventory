@@ -33,7 +33,7 @@ import java.io.IOException;
  */
 
 /**
- * Controller for the Inventory Settings 2x page.
+ * Controller for the Inventory Settings 2.x page.
  */
 @Controller(value = "invSettings2xController")
 @RequestMapping(ModuleWebConstants.SETTINGS2X_ROOT)

@@ -139,7 +139,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Inventory Settings",
-        "url": "module/openhmis/inventory/settings2x.form",
+        "url": "module/openhmis/inventory/settings2x.page",
         "icon": "icon-cog",
         "requiredPrivilege": "Task: Access Inventory Settings"
       }

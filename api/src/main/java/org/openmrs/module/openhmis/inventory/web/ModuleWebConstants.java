@@ -68,7 +68,7 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String SETTINGS_PAGE = SETTINGS_ROOT + ".form";
 
 	public static final String SETTINGS2X_ROOT = MODULE_ROOT + "settings2x";
-	public static final String SETTINGS2X_PAGE = SETTINGS2X_ROOT + ".form";
+	public static final String SETTINGS2X_PAGE = SETTINGS2X_ROOT + ".page";
 
 	public static final String JASPER_REPORT_PAGE = MODULE_ROOT + "jasperReport";
 
