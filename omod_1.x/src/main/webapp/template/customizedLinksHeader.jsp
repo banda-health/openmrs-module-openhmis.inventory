@@ -1,3 +1,6 @@
+<%-- The links section has been designed to be consistent with other 2.x header link sections.
+     As opposed to having all inventory related links, it includes breadcrumbs which link to previous pages.
+--%>
 <%@ page import="org.openmrs.module.openhmis.inventory.web.PrivilegeWebConstants" %>
 <%@ page import="org.openmrs.util.*" %>
 <%@ include file="/WEB-INF/template/include.jsp"%>

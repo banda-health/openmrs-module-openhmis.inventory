@@ -1,3 +1,6 @@
+<%-- The header section is slightly different from the origin 1.x header file.
+     It has been designed to be consistent with other 2.x header pages.
+--%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
