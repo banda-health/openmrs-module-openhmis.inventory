@@ -39,6 +39,7 @@ emr.loadMessages([
     "openhmis.backboneforms.required.field.name",
 
     "openhmis.inventory.itemAttributeType",
+    "openhmis.inventory.itemAttributeType_rest",
     "FormField.required",
     "PersonAttributeType.foreignKey",
     "PersonAttributeType.format",
