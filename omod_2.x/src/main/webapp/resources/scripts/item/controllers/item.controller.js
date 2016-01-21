@@ -61,12 +61,14 @@
                     ItemFunctions.removeItemCode(itemCode, $scope.entity.codes);
                 }
 
-                $scope.removeItemTemporaryIds = self.removeItemTemporaryIds;
-
                 // call functions..
                 ItemRestfulService.loadDepartments(departmentsLimit, self.onLoadDepartmentsSuccessful);
                 ItemRestfulService.loadItemStock($scope.uuid, $scope.itemStockLimit, self.onLoadItemStockSuccessful);
 
+            }
+
+        self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
+                self.removeItemTemporaryIds();
             }
 
         // call-back functions.
@@ -124,6 +126,10 @@
             );
         }
 
+        /**
+         * Removes the temporarily assigned unique ids before POSTing data
+         * @type {Function}
+         */
         self.removeItemTemporaryIds = self.removeItemTemporaryIds || function(){
                 ItemFunctions.removeItemTemporaryId($scope.entity.codes);
                 ItemFunctions.removeItemTemporaryId($scope.entity.prices);

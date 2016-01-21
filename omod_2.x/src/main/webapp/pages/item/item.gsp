@@ -1,4 +1,4 @@
-<form onsubmit="return removeIndexFromItems()">
+<form>
     <h1>{{messageLabels['h2SubString']}}</h1>
 
     <input type="hidden" ng-model="entity.uuid" />
@@ -170,7 +170,7 @@
         </li>
         <li>
             <span>
-                <input type="button" class="confirm right" value="{{messageLabels['general.save']}}"  ng-disabled="entity.name == '' || entity.name == undefined" ng-click="removeItemTemporaryIds(); saveOrUpdate()" />
+                <input type="button" class="confirm right" value="{{messageLabels['general.save']}}"  ng-disabled="entity.name == '' || entity.name == undefined" ng-click="saveOrUpdate()" />
             </span>
         </li>
     </ul>
