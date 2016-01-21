@@ -32,7 +32,7 @@ table.settings td{
     margin: 0 30px;
 }
 
-body {
+#body {
     font-family: "OpenSans", Arial, sans-serif;
     -webkit-font-smoothing: subpixel-antialiased;
     max-width: 1000px;
@@ -229,6 +229,7 @@ header #session-location li {
 #breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
     color: #555;
     text-decoration: underline;
+    font-family: "OpenSansBold";
 }
 #breadcrumbs a:hover, #breadcrumbs a:link:hover, #breadcrumbs a:visited:hover {
     color: #7b7b7b;

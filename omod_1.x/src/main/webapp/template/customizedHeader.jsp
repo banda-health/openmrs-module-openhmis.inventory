@@ -88,7 +88,7 @@
     </openmrs:extensionPoint>
 
 </head>
-<body>
+<body id="body">
 <div>
     <header>
         <div class="logo">

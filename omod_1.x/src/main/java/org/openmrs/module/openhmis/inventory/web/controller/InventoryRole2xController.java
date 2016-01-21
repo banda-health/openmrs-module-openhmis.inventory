@@ -31,105 +31,105 @@ import java.util.Set;
 @Controller
 @RequestMapping(ModuleWebConstants.ROLECREATION2X_ROOT)
 public class InventoryRole2xController {
-private static final Log LOG = LogFactory.getLog(InventoryRole2xController.class);
+	private static final Log LOG = LogFactory.getLog(InventoryRole2xController.class);
 
-private UserService userService;
+	private UserService userService;
 
-@Autowired
-public InventoryRole2xController(UserService userService) {
-	this.userService = userService;
-}
-
-@RequestMapping(method = RequestMethod.GET)
-public void render(ModelMap model) {
-	List<Role> roles = userService.getAllRoles();
-	model.addAttribute("roles", roles);
-}
-
-@RequestMapping(method = RequestMethod.POST)
-public void submit(HttpServletRequest request, RoleCreationViewModel viewModel, Errors errors, ModelMap model) {
-	HttpSession session = request.getSession();
-	String action = request.getParameter("action");
-
-	if (action.equals("add")) {
-		addPrivileges(viewModel.getAddToRole());
-
-		session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.roleCreation.page.feedback.add");
-	} else if (action.equals("remove")) {
-		removePrivileges(viewModel.getRemoveFromRole());
-
-		session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.roleCreation.page.feedback.remove");
-	} else if (action.equals("new") && validateNewRole(viewModel, errors)) {
-		createRole(viewModel, session);
+	@Autowired
+	public InventoryRole2xController(UserService userService) {
+		this.userService = userService;
 	}
 
-	render(model);
-}
-
-private void addPrivileges(String roleUuid) {
-	Role role = userService.getRoleByUuid(roleUuid);
-	if (role == null) {
-		throw new APIException("The role '" + roleUuid + "' could not be found.");
+	@RequestMapping(method = RequestMethod.GET)
+	public void render(ModelMap model) {
+		List<Role> roles = userService.getAllRoles();
+		model.addAttribute("roles", roles);
 	}
 
-	for (Privilege priv : PrivilegeConstants.getDefaultPrivileges()) {
-		if (!role.hasPrivilege(priv.getName())) {
-			role.addPrivilege(priv);
+	@RequestMapping(method = RequestMethod.POST)
+	public void submit(HttpServletRequest request, RoleCreationViewModel viewModel, Errors errors, ModelMap model) {
+		HttpSession session = request.getSession();
+		String action = request.getParameter("action");
+
+		if (action.equals("add")) {
+			addPrivileges(viewModel.getAddToRole());
+
+			session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.roleCreation.page.feedback.add");
+		} else if (action.equals("remove")) {
+			removePrivileges(viewModel.getRemoveFromRole());
+
+			session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.roleCreation.page.feedback.remove");
+		} else if (action.equals("new") && validateNewRole(viewModel, errors)) {
+			createRole(viewModel, session);
 		}
+
+		render(model);
 	}
 
-	userService.saveRole(role);
-}
-
-private void removePrivileges(String roleUuid) {
-	Role role = userService.getRoleByUuid(roleUuid);
-
-	if (role == null) {
-		throw new APIException("The role '" + roleUuid + "' could not be found.");
-	}
-
-	for (Privilege priv : PrivilegeConstants.getDefaultPrivileges()) {
-		if (role.hasPrivilege(priv.getName())) {
-			role.removePrivilege(priv);
+	private void addPrivileges(String roleUuid) {
+		Role role = userService.getRoleByUuid(roleUuid);
+		if (role == null) {
+			throw new APIException("The role '" + roleUuid + "' could not be found.");
 		}
-	}
 
-	userService.saveRole(role);
-}
-
-private void createRole(RoleCreationViewModel viewModel, HttpSession session) {
-	Role newRole = new Role();
-	newRole.setRole(viewModel.getNewRoleName());
-	newRole.setDescription("Users who create and manage inventory data.");
-	newRole.setPrivileges(PrivilegeConstants.getDefaultPrivileges());
-
-	// Get the provider role and add it to a set that will be passed as the inherited roles
-	Role providerRole = userService.getRole(RoleConstants.PROVIDER);
-	Set<Role> inheritedRoles = new HashSet<Role>();
-	inheritedRoles.add(providerRole);
-	newRole.setInheritedRoles(inheritedRoles);
-
-	userService.saveRole(newRole);
-
-	session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.roleCreation.page.feedback.new");
-}
-
-private boolean validateNewRole(RoleCreationViewModel viewModel, Errors errors) {
-	if (StringUtils.isEmpty(viewModel.getNewRoleName())) {
-		errors.rejectValue("role", "openhmis.inventory.roleCreation.page.feedback.error.blankRole");
-	} else if (checkForDuplicateRole(viewModel.getNewRoleName())) {
-		errors.rejectValue("role", "openhmis.inventory.roleCreation.page.feedback.error.existingRole");
-	}
-
-	return !errors.hasErrors();
-}
-
-private Boolean checkForDuplicateRole(String role) {
-	for (Role name : userService.getAllRoles()) {
-		if (name.getRole().equals(role)) {
-			return true;
+		for (Privilege priv : PrivilegeConstants.getDefaultPrivileges()) {
+			if (!role.hasPrivilege(priv.getName())) {
+				role.addPrivilege(priv);
+			}
 		}
+
+		userService.saveRole(role);
 	}
-	return false;
-}
+
+	private void removePrivileges(String roleUuid) {
+		Role role = userService.getRoleByUuid(roleUuid);
+
+		if (role == null) {
+			throw new APIException("The role '" + roleUuid + "' could not be found.");
+		}
+
+		for (Privilege priv : PrivilegeConstants.getDefaultPrivileges()) {
+			if (role.hasPrivilege(priv.getName())) {
+				role.removePrivilege(priv);
+			}
+		}
+
+		userService.saveRole(role);
+	}
+
+	private void createRole(RoleCreationViewModel viewModel, HttpSession session) {
+		Role newRole = new Role();
+		newRole.setRole(viewModel.getNewRoleName());
+		newRole.setDescription("Users who create and manage inventory data.");
+		newRole.setPrivileges(PrivilegeConstants.getDefaultPrivileges());
+
+		// Get the provider role and add it to a set that will be passed as the inherited roles
+		Role providerRole = userService.getRole(RoleConstants.PROVIDER);
+		Set<Role> inheritedRoles = new HashSet<Role>();
+		inheritedRoles.add(providerRole);
+		newRole.setInheritedRoles(inheritedRoles);
+
+		userService.saveRole(newRole);
+
+		session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.roleCreation.page.feedback.new");
+	}
+
+	private boolean validateNewRole(RoleCreationViewModel viewModel, Errors errors) {
+		if (StringUtils.isEmpty(viewModel.getNewRoleName())) {
+			errors.rejectValue("role", "openhmis.inventory.roleCreation.page.feedback.error.blankRole");
+		} else if (checkForDuplicateRole(viewModel.getNewRoleName())) {
+			errors.rejectValue("role", "openhmis.inventory.roleCreation.page.feedback.error.existingRole");
+		}
+
+		return !errors.hasErrors();
+	}
+
+	private Boolean checkForDuplicateRole(String role) {
+		for (Role name : userService.getAllRoles()) {
+			if (name.getRole().equals(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
