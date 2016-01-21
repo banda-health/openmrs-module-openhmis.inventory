@@ -69,7 +69,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Item Attribute Types",
-        "url": "module/openhmis/inventory/itemAttributeTypes.form",
+        "url": "openhmis.inventory/itemAttributes/itemAttributeTypes.page",
         "icon": "icon-edit",
         "requiredPrivilege": "Task: Access Manage Item Attribute Types"
       },
