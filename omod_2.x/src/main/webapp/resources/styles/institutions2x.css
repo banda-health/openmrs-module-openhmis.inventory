@@ -72,3 +72,28 @@ a.disabled {
 .successfulMessage {
 	color:green;
 }
+
+ul.table-layout{
+    text-align: left;
+    margin: 0 20px;
+    padding: 0;
+    font-size: 0.8em
+}
+
+ul.table-layout li{
+    margin: 0 10px;
+    text-align: left;
+    display: inline-block;
+    width: 250px;
+    padding: 5px;
+    vertical-align: text-top;
+}
+
+fieldset.format{
+    min-width: 80%;
+    margin: 0 20px;
+}
+
+.bbf-list button.bbf-remove { float: left; width: 1.9em; margin-top: -2px; padding: 0px 0px; }
+
+
