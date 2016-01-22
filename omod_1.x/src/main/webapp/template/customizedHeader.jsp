@@ -42,6 +42,8 @@
     <link rel="shortcut icon" type="image/ico" href="<openmrs:contextPath/><spring:theme code='favicon' />">
     <link rel="icon" type="image/png" href="<openmrs:contextPath/><spring:theme code='favicon.png' />">
 
+    <script type="text/javascript" src="/openmrs/ms/uiframework/resource/uicommons/scripts/knockout-2.1.0.js"></script>
+
     <c:choose>
         <c:when test="${!empty pageTitle}">
             <title>${pageTitle}</title>
@@ -50,7 +52,6 @@
             <title><openmrs:message code="openmrs.title"/></title>
         </c:otherwise>
     </c:choose>
-
 
     <script type="text/javascript">
         <c:if test="${empty DO_NOT_INCLUDE_JQUERY}">
@@ -87,6 +88,48 @@
         </c:forEach>
     </openmrs:extensionPoint>
 
+    <script type="text/javascript">
+        var sessionLocationModel = {
+            id: ko.observable(),
+            text: ko.observable()
+        };
+        jQuery(function () {
+            ko.applyBindings(sessionLocationModel, jQuery('.change-location').get(0));
+            sessionLocationModel.id(${ sessionLocationId });
+            sessionLocationModel.text("${ sessionLocationName }");
+
+            jQuery(".change-location a").click(function () {
+                jQuery('#session-location').show();
+                jQuery(this).addClass('focus');
+                jQuery(".change-location a i:nth-child(3)").removeClass("icon-caret-down");
+                jQuery(".change-location a i:nth-child(3)").addClass("icon-caret-up");
+            });
+            jQuery('#session-location').mouseleave(function () {
+                jQuery('#session-location').hide();
+                jQuery(".change-location a").removeClass('focus');
+                jQuery(".change-location a i:nth-child(3)").addClass("icon-caret-down");
+                jQuery(".change-location a i:nth-child(3)").removeClass("icon-caret-up");
+            });
+            jQuery("#session-location ul.select li").click(function (event) {
+                var element = jQuery(event.target);
+                var locationId = element.attr("locationId");
+                var locationName = element.attr("locationName");
+
+                jQuery.post("/openmrs/appui/session/setLocation.action?locationId="+locationId, function (data) {
+                    sessionLocationModel.id(locationId);
+                    sessionLocationModel.text(locationName);
+                    jQuery('#session-location li').removeClass('selected');
+                    element.addClass('selected');
+                    jQuery(document).trigger("sessionLocationChanged");
+                });
+
+                jQuery('#session-location').hide();
+                jQuery(".change-location a").removeClass('focus');
+                jQuery(".change-location a i:nth-child(3)").addClass("icon-caret-down");
+                jQuery(".change-location a i:nth-child(3)").removeClass("icon-caret-up");
+            });
+        });
+    </script>
 </head>
 <body>
 <div>
@@ -101,7 +144,15 @@
                 <ul class="user-options">
                     <i class="icon-user small"></i>
                     <li><span id="userLoggedInAs" class="firstChild">
-						<c:out value="${authenticatedUser.username}" />
+                        <c:choose>
+                            <c:when test="${authenticatedUser.username} == null">
+                                <c:out value="${authenticatedUser.systemId}" />
+                            </c:when>
+                            <c:otherwise>
+                                <c:out value="${authenticatedUser.username}" />
+                            </c:otherwise>
+                        </c:choose>
+
 					</span></li>
                     <li class="change-location">
                         <a href="javascript:void(0);">
@@ -117,7 +168,6 @@
 						<a href='${pageContext.request.contextPath}/logout'><openmrs:message code="header.logout" /></a>
 					</span></li>
                     <i class="icon-signout small"></i>
-
                 </ul>
             </c:if>
             <c:if test="${authenticatedUser == null}">
@@ -131,7 +181,23 @@
                 </ul>
             </c:if>
         </openmrs:authentication>
-
+        <div id="session-location">
+            <ul class="select">
+                <c:forEach var="location" items="${loginLocations}">
+                    <%!
+                        String selected = "";
+                    %>
+                    <c:if test="${location.id == sessionLocationId}">
+                        <%
+                            selected = "selected";
+                        %>
+                    </c:if>
+                    <li class="${selected}" locationId="${location.id}" locationName="${location.name}">
+                        ${location.name}
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
     </header>
 
    <%-- This is where the My Patients popup used to be. I'm leaving this placeholder here
@@ -140,19 +206,6 @@
     <div id="popupTray">
     </div>
     --%>
-
-    <div id="session-location">
-        <ul class="select">
-            <c:forEach var="location" items="${loginLocations}">
-                <%
-                    boolean selected = location.id == sessionLocationId ? "selected" : "";
-                %>
-                <li class="${selected}" locationId="${location.id}" locationName="${location.name}">
-                    ${location.name}
-                </li>
-            </c:forEach>
-        </ul>
-    </div>
 
     <div id="cont">
         <openmrs:forEachAlert>

@@ -14,8 +14,6 @@
 
 package org.openmrs.module.openhmis.inventory.web.controller;
 
-import org.openmrs.Location;
-import org.openmrs.LocationTag;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
@@ -33,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Controller for the Inventory Settings 2.x page.
@@ -53,20 +50,10 @@ public class Settings2xController {
 
 		JasperReportService reportService = Context.getService(JasperReportService.class);
 		model.addAttribute("reports", reportService.getJasperReports());
-
 		model.addAttribute("settings", ModuleSettings.loadSettings());
 
-		HttpSession session = request.getSession();
-		model.addAttribute("sessionLocationId", session.getAttribute("emrContext.sessionLocationId"));
+		HeaderController.render(model, request);
 
-		List<LocationTag> tags = Context.getLocationService().getAllLocationTags();
-
-		LocationTag locationTag = Context.getLocationService().getLocationTagByName("Login Location");
-
-		List<Location> loginLocations = Context.getLocationService().getLocationsByTag(locationTag);
-
-		model.addAttribute("loginLocations", loginLocations);
-		model.addAttribute("multipleLoginLocations", loginLocations.size() > 1);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
