@@ -14,6 +14,8 @@
 
 package org.openmrs.module.openhmis.inventory.web.controller;
 
+import org.openmrs.Location;
+import org.openmrs.LocationTag;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.JasperReportService;
 import org.openmrs.module.openhmis.commons.api.util.ModuleUtil;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Controller for the Inventory Settings 2.x page.
@@ -39,7 +42,7 @@ import java.io.IOException;
 @RequestMapping(ModuleWebConstants.SETTINGS2X_ROOT)
 public class Settings2xController {
 	@RequestMapping(method = RequestMethod.GET)
-	public void render(ModelMap model) throws IOException {
+	public void render(ModelMap model, HttpServletRequest request) throws IOException {
 		if (ModuleUtil.isLoaded(ModuleUtil.IDGEN_MODULE_ID)) {
 			model.addAttribute("hasIdgenModule", true);
 			model.addAttribute("sources", SafeIdgenUtil.getAllIdentifierSourceInfo());
@@ -52,6 +55,18 @@ public class Settings2xController {
 		model.addAttribute("reports", reportService.getJasperReports());
 
 		model.addAttribute("settings", ModuleSettings.loadSettings());
+
+		HttpSession session = request.getSession();
+		model.addAttribute("sessionLocationId", session.getAttribute("emrContext.sessionLocationId"));
+
+		List<LocationTag> tags = Context.getLocationService().getAllLocationTags();
+
+		LocationTag locationTag = Context.getLocationService().getLocationTagByName("Login Location");
+
+		List<Location> loginLocations = Context.getLocationService().getLocationsByTag(locationTag);
+
+		model.addAttribute("loginLocations", loginLocations);
+		model.addAttribute("multipleLoginLocations", loginLocations.size() > 1);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -61,6 +76,6 @@ public class Settings2xController {
 		HttpSession session = request.getSession();
 		session.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "openhmis.inventory.settings.saved");
 
-		render(model);
+		render(model, request);
 	}
 }

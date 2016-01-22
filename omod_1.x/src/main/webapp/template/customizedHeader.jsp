@@ -103,6 +103,16 @@
                     <li><span id="userLoggedInAs" class="firstChild">
 						<c:out value="${authenticatedUser.username}" />
 					</span></li>
+                    <li class="change-location">
+                        <a href="javascript:void(0);">
+                            <i class="icon-map-marker small"></i>
+                            <span data-bind="text: text"></span>
+                            <c:if test="${multipleLoginLocations}">
+                                <i class="icon-caret-down link"></i>
+                            </c:if>
+                        </a>
+                    </li>
+
 					<li><span id="userLogout">
 						<a href='${pageContext.request.contextPath}/logout'><openmrs:message code="header.logout" /></a>
 					</span></li>
@@ -130,6 +140,19 @@
     <div id="popupTray">
     </div>
     --%>
+
+    <div id="session-location">
+        <ul class="select">
+            <c:forEach var="location" items="${loginLocations}">
+                <%
+                    boolean selected = location.id == sessionLocationId ? "selected" : "";
+                %>
+                <li class="${selected}" locationId="${location.id}" locationName="${location.name}">
+                    ${location.name}
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
 
     <div id="cont">
         <openmrs:forEachAlert>
