@@ -39,13 +39,11 @@ table.settings td{
     margin: 10px auto;
     background: #eeeeee;
     color: #363463;
-    font-size: 16px;
 }
 
 #body-wrapper {
-    margin-top: 30px;
-    padding: 10px;
-    padding-left: 15px;
+    margin-top: 10px;
+    padding: 10px 10px 10px 15px;
     background-color: white;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -229,7 +227,6 @@ header #session-location li {
 #breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
     color: #555;
     text-decoration: underline;
-    font-family: "OpenSansBold";
 }
 #breadcrumbs a:hover, #breadcrumbs a:link:hover, #breadcrumbs a:visited:hover {
     color: #7b7b7b;
@@ -242,6 +239,7 @@ header #session-location li {
 }
 #breadcrumbs li:last-child {
     font-family: "OpenSansBold";
+    font-weight:bold;
 }
 
 ul.icons {
@@ -281,3 +279,30 @@ li [class^="sicon-"], li [class*=" icon-"], .nav li [class^="icon-"], .nav li [c
 
 .bbf-list button.bbf-remove { float: left; width: 1.9em; margin-top: -2px; padding: 0px 0px; }
 
+.button.confirm, button.confirm, input[type="submit"].confirm, input[type="button"].confirm, input[type="submit"].confirm, a.button.confirm {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #a1d030), color-stop(100%, #88af28));
+    background: -webkit-linear-gradient(top, #a1d030, #88af28);
+    background: -moz-linear-gradient(top, #a1d030, #88af28);
+    background: -o-linear-gradient(top, #a1d030, #88af28);
+    background: -ms-linear-gradient(top, #a1d030, #88af28);
+    background: linear-gradient(top, #a1d030, #88af28);
+    background-color: #88af28;
+    border: #88af28 1px solid;
+    padding: 8px 20px;
+    display: inline-block;
+    line-height: 1.2em;
+    color: white;
+    cursor: pointer;
+    min-width: 0;
+    max-width: 300px;
+    text-decoration: none;
+    max-width: 250px;
+    min-width: 0;
+    margin-right: 10px;
+}

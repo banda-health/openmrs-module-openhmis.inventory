@@ -99,14 +99,18 @@
         <openmrs:authentication>
             <c:if test="${authenticatedUser != null}">
                 <ul class="user-options">
-                    <i class="icon-user small"></i>
-                    <li><span id="userLoggedInAs" class="firstChild">
-						<c:out value="${authenticatedUser.username}" />
+                    <li>
+	                    <i class="icon-user small"></i>
+	                    <span id="userLoggedInAs" class="firstChild">
+						<c:out value="${authenticatedUser.systemId}" />
 					</span></li>
+	                <li class="change-location">
+
+	                </li>
 					<li><span id="userLogout">
 						<a href='${pageContext.request.contextPath}/logout'><openmrs:message code="header.logout" /></a>
-					</span></li>
-                    <i class="icon-signout small"></i>
+					</span>
+						<i class="icon-signout small"></i></li>
 
                 </ul>
             </c:if>

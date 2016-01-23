@@ -8,6 +8,7 @@
 
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>' />
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style2x.css" %>' />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/bootstrap.css" %>' />
 
 <%@	include file="template/customizedHeader.jsp" %>
 
@@ -52,6 +53,7 @@
 	<br />
 </spring:hasBindErrors>
 
+<div id="body-wrapper">
 <h2>
 	<spring:message code="openhmis.inventory.admin.role" />
 </h2>
@@ -61,14 +63,14 @@
 </p>
 
 <form method="post">
-	<table>
+	<table class="table table-striped table-bordered">
 		<tr>
 			<td>
-				<input id="addPriv" type="radio" value="add" name="action" onClick="enableDisable();" />
+				<input id="addPriv" type="radio" value="add" name="action" onClick="enableDisable();"/>
 				<label for="addPriv"><spring:message code="openhmis.inventory.roleCreation.page.label.add" /></label>
 			</td>
 			<td>
-				<select id="addToRole" name="addToRole">
+				<select id="addToRole" name="addToRole" class="dropdown form-control">
 					<c:forEach items="${roles}" var="role">
 						<option value="${role.uuid}">${role.name}</option>
 					</c:forEach>
@@ -81,7 +83,7 @@
 				<label for="removePriv"><spring:message code="openhmis.inventory.roleCreation.page.label.remove" /></label>
 			</td>
 			<td>
-				<select id="removeFromRole" name="removeFromRole">
+				<select id="removeFromRole" name="removeFromRole" class="dropdown form-control">
 					<c:forEach items="${roles}" var="role">
 						<option value="${role.uuid}">${role.name}</option>
 					</c:forEach>
@@ -94,12 +96,11 @@
 				<label for="newRole"><spring:message code="openhmis.inventory.roleCreation.page.label.new" /></label>
 			</td>
 			<td>
-				<input id="newRoleName" name="newRoleName" type="text" />
+				<input id="newRoleName" name="newRoleName" type="text" class="form-control" />
 			</td>
 		</tr>
 	</table>
 
-	<p><input type="submit" value="<openmrs:message code="Role.save"/>"></p>
+	<p><input class="submitButton confirm right" value="Save" type="submit" value="<openmrs:message code="Role.save"/>"></p>
 </form>
-
-<%@ include file="/WEB-INF/template/footer.jsp"%>
+</div>
