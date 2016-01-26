@@ -1,3 +1,4 @@
+
 <%@ page import="org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants" %>
 <%@ page import="org.openmrs.module.openhmis.inventory.web.ModuleWebConstants" %>
 <%--@elvariable id="roles" type="java.util.List<org.openmrs.Role>"--%>
@@ -7,13 +8,11 @@
                  redirect="<%= ModuleWebConstants.ROLE_CREATION_PAGE %>" />
 
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>' />
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style2x.css" %>' />
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/bootstrap.css" %>' />
-
-<%@	include file="template/customizedHeader.jsp" %>
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/bootstrap.css" %>' />
+<%@ include file="/WEB-INF/view/module/openhmis/commons/template/common/customizedHeader.jsp"%>
 
 <%@ include file="template/localHeader.jsp"%>
-
 <%@ include file="template/customizedLinksHeaderRoleCreation.jsp"%>
 
 <script type="text/javascript">

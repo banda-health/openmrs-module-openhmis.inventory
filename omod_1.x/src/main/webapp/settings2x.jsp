@@ -7,10 +7,9 @@
                  redirect="<%= ModuleWebConstants.SETTINGS_PAGE %>"/>
 
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>'/>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style2x.css" %>'/>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/bootstrap.css" %>' />
-
-<%@    include file="template/customizedHeader.jsp" %>
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/bootstrap.css" %>' />
+<%@ include file="/WEB-INF/view/module/openhmis/commons/template/common/customizedHeader.jsp"%>
 
 <%@ include file="template/localHeader.jsp" %>
 
