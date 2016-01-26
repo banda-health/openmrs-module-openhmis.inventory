@@ -66,7 +66,7 @@
 		<tr>
 			<td>
 				<input id="addPriv" type="radio" value="add" name="action" onClick="enableDisable();"/>
-				<label for="addPriv"><spring:message code="openhmis.inventory.roleCreation.page.label.add" /></label>
+				<label class="labelremovebold" for="addPriv"><spring:message code="openhmis.inventory.roleCreation.page.label.add" /></label>
 			</td>
 			<td>
 				<select id="addToRole" name="addToRole" class="dropdown form-control">
@@ -79,7 +79,7 @@
 		<tr>
 			<td>
 				<input id="removePriv" type="radio" value="remove" name="action" onClick="enableDisable();" />
-				<label for="removePriv"><spring:message code="openhmis.inventory.roleCreation.page.label.remove" /></label>
+				<label class="labelremovebold" for="removePriv"><spring:message code="openhmis.inventory.roleCreation.page.label.remove" /></label>
 			</td>
 			<td>
 				<select id="removeFromRole" name="removeFromRole" class="dropdown form-control">
@@ -92,7 +92,7 @@
 		<tr>
 			<td>
 				<input id="newRole" type="radio" value="new" name="action" checked onClick="enableDisable();" />
-				<label for="newRole"><spring:message code="openhmis.inventory.roleCreation.page.label.new" /></label>
+				<label class="labelremovebold" for="newRole"><spring:message code="openhmis.inventory.roleCreation.page.label.new" /></label>
 			</td>
 			<td>
 				<input id="newRoleName" name="newRoleName" type="text" class="form-control" />

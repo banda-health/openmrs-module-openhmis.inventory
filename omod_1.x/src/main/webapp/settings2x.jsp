@@ -44,7 +44,7 @@
 							       type="checkbox"
 							       onClick="enableDisable()"
 							       <c:if test="${settings.autoGenerateOperationNumber}">checked</c:if> />
-							<label for="autoGenerateOperationNumber"><spring:message
+							<label class="labelremovebold" for="autoGenerateOperationNumber"><spring:message
 									code="openhmis.inventory.report.operation.number.label"/> </label>
 						</spring:bind>
 					</td>
@@ -52,7 +52,7 @@
 				</tr>
 				<tr>
 					<td>
-						<label for="operationNumberGeneratorSourceId"><spring:message
+						<label class="labelremovebold" for="operationNumberGeneratorSourceId"><spring:message
 								code="openhmis.inventory.report.identifier.source.label"/> </label>
 					</td>
 					<td>
@@ -77,7 +77,7 @@
 					<spring:bind path="autoCompleteOperations">
 						<input id="autoCompleteOperations" name="${status.expression}" type="checkbox"
 						       <c:if test="${settings.autoCompleteOperations}">checked</c:if> />
-						<label for="autoCompleteOperations"><spring:message
+						<label class="labelremovebold"  for="autoCompleteOperations"><spring:message
 								code="openhmis.inventory.report.auto.complete.operation.label"/></label>
 					</spring:bind>
 				</td>
@@ -86,7 +86,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label for="stockTakeReportId"><spring:message
+					<label class="labelremovebold"  for="stockTakeReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.take.label"/> </label>
 				</td>
 				<td>
@@ -106,7 +106,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label for="stockCardReportId"><spring:message
+					<label  class="labelremovebold" for="stockCardReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.card.label"/></label>
 				</td>
 				<td>
@@ -126,7 +126,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label for="stockOperationsByStockroomReportId"><spring:message
+					<label  class="labelremovebold" for="stockOperationsByStockroomReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.operation.label"/> </label>
 				</td>
 				<td>
@@ -146,7 +146,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label for="stockroomReportId"><spring:message
+					<label  class="labelremovebold" for="stockroomReportId"><spring:message
 							code="openhmis.inventory.report.select.stockroom.label"/> </label>
 				</td>
 				<td>
@@ -166,7 +166,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label for="expiringStockReportId"><spring:message
+					<label  class="labelremovebold" for="expiringStockReportId"><spring:message
 							code="openhmis.inventory.report.select.expiring.stock.label"/> </label>
 				</td>
 				<td>
