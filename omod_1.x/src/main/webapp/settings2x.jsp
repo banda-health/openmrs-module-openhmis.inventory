@@ -35,7 +35,7 @@
 	</h2>
 
 	<form:form method="POST" modelAttribute="settings">
-		<table class="settings table table-bordered table-striped">
+		<table class="table table-bordered table-striped">
 			<c:if test="${hasIdgenModule == true}">
 				<tr>
 					<td>
