@@ -31,7 +31,7 @@
                         [self.entity_name]);
                 }
 
-                var departmentsLimit = 10;
+                var departmentsLimit;
                 var conceptsLimit = 10;
 
                 //bind variables..
@@ -61,6 +61,8 @@
                     ItemFunctions.removeItemCode(itemCode, $scope.entity.codes);
                 }
 
+                $scope.selectConcept = self.selectConcept;
+
                 // call functions..
                 ItemRestfulService.loadDepartments(departmentsLimit, self.onLoadDepartmentsSuccessful);
                 ItemRestfulService.loadItemStock($scope.uuid, $scope.itemStockLimit, self.onLoadItemStockSuccessful);
@@ -68,12 +70,44 @@
             }
 
         self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
+                // DO NOT send the department object. Instead retrieve and set the uuid.
+                var department = $scope.entity.department;
+                if(angular.isDefined(department)){
+                    $scope.entity.department = department.uuid;
+                }
+                // an empty buying price field should resolve to null and not an empty string
+                if(!angular.isDefined($scope.entity.buyingPrice) || $scope.entity.buyingPrice === ''){
+                    $scope.entity.buyingPrice = null;
+                }
+                // an empty minimum quantity should resolve to null and not an empty string
+                if(!angular.isDefined($scope.entity.minimumQuantity) || $scope.entity.minimumQuantity === ''){
+                    $scope.entity.minimumQuantity = null;
+                }
+                // an empty default expiration period should resolve to null and not an empty string
+                if(!angular.isDefined($scope.entity.defaultExpirationPeriod) || $scope.entity.defaultExpirationPeriod === ''){
+                    $scope.entity.defaultExpirationPeriod = null;
+                }
+                // empty codes should resolve as an empty array list
+                if(!angular.isDefined($scope.entity.codes) || $scope.entity.codes === ''){
+                    $scope.entity.codes = [];
+                }
+                // empty prices should resolve as an empty array list
+                if(!angular.isDefined($scope.entity.prices) || $scope.entity.prices === ''){
+                    $scope.entity.prices = [];
+                }
+                // retrieve and send the concept uuid.
+                var concept = $scope.entity.concept;
+                if(angular.isDefined(concept) && concept !== '' && concept !== undefined && concept !== null){
+                    $scope.entity.concept = concept.uuid;
+                }
+                // remove temporarily assigned ids from the prices and codes array lists.
                 self.removeItemTemporaryIds();
             }
 
         // call-back functions.
         self.onLoadDepartmentsSuccessful = self.onLoadDepartmentsSuccessful || function(data){
             $scope.departments = data.results;
+            $scope.entity.department = $scope.entity.department || $scope.departments[0];
         }
 
         self.onSearchConceptsSuccessful = self.onSearchConceptsSuccessful || function(data){
@@ -88,7 +122,6 @@
          * Displays a popup dialog box with an item code field. Saves the code on clicking the 'Ok' button
          */
         self.addItemCode = self.addItemCode || function(){
-            console.log('add item code');
             ngDialog.openConfirm({template: '/openmrs/openhmis.inventory/item/addItemCode.page',
                 scope: $scope
             }).then(
@@ -108,7 +141,6 @@
          * Displays a popup dialog box with price fields and saves the item price to a list.
          */
         self.addItemPrice = self.addItemPrice || function(){
-            console.log('add a price..');
             ngDialog.openConfirm({template: '/openmrs/openhmis.inventory/item/addItemPrice.page',
                 scope: $scope
             }).then(
@@ -116,9 +148,8 @@
                     $scope.entity.prices = $scope.entity.prices || [];
                     $scope.entity.prices.push($scope.itemPrice);
                     ItemFunctions.insertItemTemporaryId($scope.entity.prices, $scope.itemPrice);
-                    console.log('added..');
-                    console.log($scope.entity.prices);
                     $scope.itemPrice = [];
+                    $scope.entity.defaultPrice = $scope.entity.defaultPrice || $scope.entity.prices[0];
                 },
                 function(value){
                     console.log('cancel');
@@ -133,6 +164,13 @@
         self.removeItemTemporaryIds = self.removeItemTemporaryIds || function(){
                 ItemFunctions.removeItemTemporaryId($scope.entity.codes);
                 ItemFunctions.removeItemTemporaryId($scope.entity.prices);
+            }
+
+        /**
+         * binds the selected concept item to entity
+         * */
+        self.selectConcept = self.selectConcept || function(concept){
+                $scope.entity.concept = concept;
             }
 
         /* ENTRY POINT: Instantiate the base controller which loads the page */

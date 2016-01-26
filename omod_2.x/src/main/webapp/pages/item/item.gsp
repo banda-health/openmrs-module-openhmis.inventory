@@ -19,10 +19,8 @@
             <h3>${ui.message('openhmis.inventory.department.name')}</h3>
         </li>
         <li>
-            <select>
-                <option ng-repeat="department in departments track by department.uuid" ng-selected="entity.department.name == department.name">
-                    {{department.name}}
-                </option>
+            <select ng-model="entity.department"
+                    ng-options='department.name for department in departments track by department.uuid'>
             </select>
         </li>
     </ul>
@@ -50,9 +48,9 @@
             <input type="text" ng-change="searchConcepts()" ng-model="entity.concept"
                    placeholder="{{messageLabels['openhmis.inventory.item.enterConceptName']}}"
                    typeahead="concept.display for concept in concepts"
-                   typeahead-no-results="noResults" class="form-control"
-                   typeahead-loading="loadingConcepts"
-            />
+                   class="form-control"
+                   typeahead-on-select="selectConcept(\$item)"
+                   typeahead-loading="loadingConcepts"/>
             <i ng-show="loadingConcepts"></i>
             <div ng-show="noResults">
                 <i></i> No Results Found
@@ -80,7 +78,7 @@
             <h3>${ui.message('openhmis.inventory.item.buyingPrice')}</h3>
         </li>
         <li>
-            <input type="text" ng-model="entity.buyingPrice" />
+            <input type="number" ng-model="entity.buyingPrice" />
         </li>
     </ul>
     <ul class="table-layout">
@@ -128,8 +126,8 @@
             <h3>${ui.message('openhmis.inventory.item.defaultPrice')}</h3>
         </li>
         <li>
-            <select ng-model="entity.defaultPrice" ng-options='((itemPrice.price | number:2) + " (" + itemPrice.name + ")" ) for itemPrice in entity.prices track by (itemPrice.uuid || itemPrice.id)'>
-                <option></option>
+            <select ng-model="entity.defaultPrice"
+                    ng-options='((itemPrice.price | number:2) + " (" + itemPrice.name + ")" ) for itemPrice in entity.prices track by (itemPrice.uuid || itemPrice.id)'>
             </select>
         </li>
     </ul>
@@ -170,7 +168,7 @@
         </li>
         <li>
             <span>
-                <input type="button" class="confirm right" value="{{messageLabels['general.save']}}"  ng-disabled="entity.name == '' || entity.name == undefined" ng-click="saveOrUpdate()" />
+                <input type="button" class="confirm right" value="{{messageLabels['general.save']}}"  ng-disabled="entity.name == '' || entity.name == undefined || entity.prices.length == 0" ng-click="saveOrUpdate()" />
             </span>
         </li>
     </ul>
