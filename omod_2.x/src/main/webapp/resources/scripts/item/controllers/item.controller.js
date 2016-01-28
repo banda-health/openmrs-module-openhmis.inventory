@@ -4,9 +4,9 @@
     var base = angular.module('app.genericEntityController');
     base.controller("ItemController", ItemController);
     ItemController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-        'ItemModel', 'ngDialog', 'ItemFunctions', 'ItemRestfulService'];
+        'ItemModel', 'ngDialog', 'ItemFunctions', 'ItemRestfulService', '$sce'];
 
-    function ItemController($stateParams, $injector, $scope, $filter, EntityRestFactory, ItemModel, ngDialog, ItemFunctions, ItemRestfulService) {
+    function ItemController($stateParams, $injector, $scope, $filter, EntityRestFactory, ItemModel, ngDialog, ItemFunctions, ItemRestfulService, $sce) {
 
         var self = this;
 
@@ -14,6 +14,7 @@
         var entity_name = emr.message("openhmis.inventory.item.name");
         var cancel_page = 'items.page';
         var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
+        var itemAttributeTypes = [];
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
@@ -66,10 +67,22 @@
                 // call functions..
                 ItemRestfulService.loadDepartments(departmentsLimit, self.onLoadDepartmentsSuccessful);
                 ItemRestfulService.loadItemStock($scope.uuid, $scope.itemStockLimit, self.onLoadItemStockSuccessful);
+                ItemRestfulService.loadItemAttributeTypes(module_name, self.onLoadAttributeTypesSuccessful);
 
             }
 
+        self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function(data) {
+               // self.cancel();
+            }
+
         self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
+                console.log(itemAttributeTypes);
+                for(var i = 0; i < itemAttributeTypes.length; i++){
+                    var itemAttributeType = itemAttributeTypes[i];
+                    console.log(itemAttributeType);
+                    var uuid = $scope.itemAttributeType;
+                    console.log(uuid);
+                }
                 // DO NOT send the department object. Instead retrieve and set the uuid.
                 var department = $scope.entity.department;
                 if(angular.isDefined(department)){
@@ -116,6 +129,30 @@
 
         self.onLoadItemStockSuccessful = self.onLoadItemStockSuccessful || function(data){
             $scope.itemStock = data.results;
+        }
+
+        self.onLoadAttributeTypesSuccessful = self.onLoadAttributeTypesSuccessful || function(data){
+            var attributeTypes = data.results;
+            if(angular.isDefined(attributeTypes) && attributeTypes.length > 0){
+                var attributeFragmentItem="";
+                for(var i = 0; i < attributeTypes.length; i++){
+                    var attributeType = attributeTypes[i];
+                    attributeFragmentItem += "<ul class='table-layout'>";
+                    attributeFragmentItem += "<li><h3>" + attributeType.name + "</h3></li>";
+                    attributeFragmentItem += "<li><input type='text' ng-model='" + attributeType.uuid + "' ";
+                    if(attributeType.required){
+                        attributeFragmentItem += "required";
+                    }
+                    attributeFragmentItem += " /></li>"
+                    attributeFragmentItem += "</ul>";
+
+                    //store the attribute type
+                    itemAttributeTypes.push(attributeType.uuid);
+                }
+
+                $scope.attributeFragmentItem = $sce.trustAsHtml(attributeFragmentItem);
+            }
+
         }
 
         /**

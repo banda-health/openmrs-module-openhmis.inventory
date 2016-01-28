@@ -131,7 +131,9 @@
             </select>
         </li>
     </ul>
-        </fieldset>
+        <span ng-bind-html="attributeFragmentItem"></span>
+    </fieldset>
+
     <br />
     <fieldset ng-hide="itemStock == ''" class="format">
         <table style="margin-bottom:5px;">

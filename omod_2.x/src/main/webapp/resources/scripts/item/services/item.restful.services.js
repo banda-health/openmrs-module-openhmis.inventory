@@ -12,6 +12,7 @@
             loadDepartments: loadDepartments,
             searchConcepts: searchConcepts,
             loadItemStock: loadItemStock,
+            loadItemAttributeTypes: loadItemAttributeTypes,
         };
 
         return service;
@@ -27,9 +28,7 @@
             requestParams['limit'] = limit;
             EntityRestFactory.loadEntities(requestParams,
                 onLoadDepartmentsSuccessful,
-                function(error){
-                    console.log(error);
-                }
+                errorCallback
             );
         }
 
@@ -48,12 +47,19 @@
             EntityRestFactory.setBaseUrl('concept', 'v1');
             EntityRestFactory.loadEntities(requestParams,
                 onSearchConceptsSuccessful,
-                function(error){
-                    console.log(error);
-                }
+                errorCallback
             );
             //reset base url..
             EntityRestFactory.setBaseUrl(module_name);
+        }
+
+        function loadItemAttributeTypes(module_name, onLoadAttributeTypesSuccessful){
+            var requestParams = [];
+            requestParams['rest_entity_name'] = 'itemAttributeType';
+            EntityRestFactory.loadEntities(requestParams,
+                onLoadAttributeTypesSuccessful,
+                errorCallback
+            );
         }
 
         /**
@@ -70,11 +76,13 @@
                 requestParams['item_uuid'] = uuid;
                 EntityRestFactory.loadEntities(requestParams,
                     onLoadItemStockSuccessful,
-                    function(error){
-                        console.log(error);
-                    }
+                    errorCallback
                 );
             }
+        }
+
+        function errorCallback(error){
+            console.log(error);
         }
     }
 })();
