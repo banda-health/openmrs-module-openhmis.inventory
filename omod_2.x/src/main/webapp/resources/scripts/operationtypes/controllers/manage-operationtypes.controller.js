@@ -2,18 +2,18 @@
   'use strict';
 
   var base = angular.module('app.genericManageController');
-  base.controller("ManageInstitutionController", ManageInstitutionController);
-  ManageInstitutionController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory', 'CssStylesFactory',
-      'PaginationService', 'InstitutionModel', 'CookiesService'];
+  base.controller("ManageOperationTypesController", ManageOperationTypesController);
+  ManageOperationTypesController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory', 'CssStylesFactory',
+      'PaginationService', 'OperationTypesModel', 'CookiesService'];
 
-  function ManageInstitutionController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
-          InstitutionModel, CookiesService) {
+  function ManageOperationTypesController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
+          OperationTypesModel, CookiesService) {
 
     var self = this;
 
     var module_name = 'inventory';
-    var entity_name = emr.message("openhmis.inventory.institution.name");
-	var rest_entity_name = emr.message("openhmis.inventory.institution.name_rest");
+    var entity_name = emr.message("openhmis.inventory.operations.type.name");
+	var rest_entity_name = emr.message("openhmis.inventory.operations.type.name_rest");
 
     // @Override
     self.getModelAndEntityName = self.getModelAndEntityName || function() {
@@ -27,7 +27,7 @@
       EntityRestFactory: EntityRestFactory,
       PaginationService: PaginationService,
       CssStylesFactory: CssStylesFactory,
-      GenericMetadataModel: InstitutionModel,
+      GenericMetadataModel: OperationTypesModel,
       CookiesService: CookiesService
     });
   }

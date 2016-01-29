@@ -109,7 +109,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Operation Types",
-        "url": "module/openhmis/inventory/operationTypes.form",
+        "url": "openhmis.inventory/operationtypes/operationTypes.page",
         "icon": "icon-edit",
         "requiredPrivilege": "Task: Access Manage Operation Types"
       },
