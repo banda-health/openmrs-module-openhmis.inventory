@@ -28,8 +28,8 @@
 				url: '/:uuid',
 				views: {
 					'': {
-						templateUrl: 'operationTypes.page',
-						controller: 'ManageOperationTypesController'
+						templateUrl: 'operationType.page',
+						controller: 'OperationTypesController'
 					}
 				}
 			});

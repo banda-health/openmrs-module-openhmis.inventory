@@ -7,6 +7,14 @@
 	function OperationTypesModel(GenericMetadataModel) {
 
 		var extended = angular.extend(GenericMetadataModel, {});
+		var defaultFields = extended.getModelFields();
+
+		// @Override
+		extended.getModelFields = function() {
+			var fields = ["hasSource", "hasDestination", "hasRecipient", "recipientRequired", "availableWhenReserved",
+				"user", "role"];
+			return fields.concat(defaultFields);
+		};
 
 		return extended;
 	}

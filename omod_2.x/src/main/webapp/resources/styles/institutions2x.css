@@ -84,7 +84,7 @@ ul.table-layout li{
     margin: 0 10px;
     text-align: left;
     display: inline-block;
-    width: 250px;
+    width: 350px;
     padding: 5px;
     vertical-align: text-top;
 }
@@ -95,5 +95,6 @@ fieldset.format{
 }
 
 .bbf-list button.bbf-remove { float: left; width: 1.9em; margin-top: -2px; padding: 0px 0px; }
-
-
+form {
+    width: 100%;
+}

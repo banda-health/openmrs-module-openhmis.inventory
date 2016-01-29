@@ -1,0 +1,52 @@
+<ul class="table-layout">
+			<li>
+				<h3>${ui.message('openhmis.inventory.operations.type.userLabel')}</h3>
+			</li>
+			<li>
+				<select>
+					<option ng-repeat="user in users track by department.uuid" ng-selected="entity.department.name == department.name">
+						{{department.name}}
+					</option>
+				</select>
+			</li>
+		</ul>
+		<ul class="table-layout">
+			<li>
+				<h3>${ui.message('openhmis.inventory.item.code.namePlural')}</h3>
+			</li>
+			<li>
+				<div class="bbf-editor">
+					<div class="bbf-list" name="codes">
+						<ul>
+							<li ng-repeat="itemCode in entity.codes track by itemCode.uuid || itemCode.id">
+								<button ng-click="removeItemCode(itemCode)" type="button" data-action="remove" class="bbf-remove" title="Remove">×</button>
+								<div>{{itemCode.code}}</div>
+							</li>
+						</ul>
+						<div class="bbf-actions">
+							<button type="button" data-action="add" ng-click="addItemCode()">Add</button>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+		<ul class="table-layout">
+			<li>
+				<h3>${ui.message('openhmis.inventory.item.prices')}</h3>
+			</li>
+			<li>
+				<div class="bbf-editor">
+					<div class="bbf-list" name="prices">
+						<ul>
+							<li ng-repeat="itemPrice in entity.prices track by (itemPrice.uuid || itemPrice.id)">
+								<button ng-click="removeItemPrice(itemPrice)" type="button" data-action="remove" class="bbf-remove" title="Remove">×</button>
+								<div>{{itemPrice.price | number:2}} <span ng-if="itemPrice.name != ''">({{itemPrice.name}})</span></div>
+							</li>
+						</ul>
+						<div class="bbf-actions">
+							<button type="button" data-action="add" ng-click="addItemPrice()">Add</button>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
