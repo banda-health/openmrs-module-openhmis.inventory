@@ -13,7 +13,7 @@
 		var module_name = 'inventory';
 		var entity_name = emr.message("openhmis.inventory.operations.type.name");
 		var rest_entity_name = emr.message("openhmis.inventory.operations.type.name_rest");
-		var cancel_page = 'manageOperation.page';
+		var cancel_page = 'operationTypes.page';
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {

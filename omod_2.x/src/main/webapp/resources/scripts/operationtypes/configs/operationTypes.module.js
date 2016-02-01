@@ -9,9 +9,9 @@
 
 	function loadpage() {
 		'use strict';
-		var app = angular.module('operationTypesApp', ['ui.router', 'angularUtils.directives.dirPagination', 'app.css',
+		var app = angular.module('operationTypesApp', ['ui.bootstrap', 'ngDialog', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
 			'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
-			'app.genericEntityController', 'app.genericManageController']);
+			'app.operationsTypeFunctionsFactory', 'app.genericEntityController', 'app.genericManageController']);
 		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 			/*
 			 * Configure routes and urls. The default route is '/' which loads

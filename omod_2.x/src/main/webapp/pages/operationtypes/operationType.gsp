@@ -54,6 +54,18 @@
 				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled" />
 			</li>
 		</ul>
+		<ul class="table-layout">
+			<li>
+				<h3>${ui.message('openhmis.inventory.operations.type.userLabel')}</h3>
+			</li>
+			<li>
+				<select class="form">
+					<option ng-repeat="user in users track by user.uuid" ng-selected="entity.user.name == user.name">
+						{{user.name}}
+					</option>
+				</select>
+			</li>
+		</ul>
 	</fieldset>
 	<br />
 	<fieldset class="format">

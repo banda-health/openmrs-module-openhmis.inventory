@@ -5,7 +5,8 @@
 	app.service('OperationsTypeFunctions', OperationsTypeFunctions);
 
 	OperationsTypeFunctions.$inject = [];
-	function OperationsTypeFuntions() {
+
+	function OperationsTypeFunctions() {
 		var service;
 		service = {
 			removeAttributeTypes: removeAttributeTypes,
