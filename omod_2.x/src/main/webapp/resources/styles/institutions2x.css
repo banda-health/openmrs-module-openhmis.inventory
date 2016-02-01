@@ -73,11 +73,15 @@ a.disabled {
 	color:green;
 }
 
+.entity-form{
+    font-size: 1.1em;
+    line-height: 35px;
+}
+
 ul.table-layout{
     text-align: left;
     margin: 0 20px;
     padding: 0;
-    font-size: 0.8em
 }
 
 ul.table-layout li{
@@ -89,9 +93,59 @@ ul.table-layout li{
     vertical-align: text-top;
 }
 
+ul.autocomplete-table-layout li.ng-scope{
+    display: block;
+    width: 80%;
+    padding: 5px;
+    vertical-align: text-top;
+}
+
+ul.autocomplete-table-layout li.ng-scope a{
+    text-decoration: none;
+}
+
+ul.dialog-table-layout li{
+    width: 100px;
+}
+
+ul.table-layout li.required:before{
+    content:"*";
+    color:red;
+}
+ul.table-layout li.not-required:before{
+    content:"  ";
+    padding: 5px;
+}
+
+ul.table-layout li a{
+    text-decoration: underline;
+}
+
 fieldset.format{
     min-width: 80%;
-    margin: 0 20px;
+    margin: 0 80px;
+}
+
+fieldset.dialog-format{
+    min-width: 80%;
+    margin: 20px 20px 20px 20px;
+}
+
+div.dialog-format{
+    background: white;
+}
+
+div.dialog-format h2{
+    text-align: center;
+    margin: 10px;
+}
+
+.submitted .ng-invalid{
+    border:1px solid #f00;
+}
+
+.bbf-actions{
+    border-bottom:1px solid #eeeeee;
 }
 
 .bbf-list button.bbf-remove { float: left; width: 1.9em; margin-top: -2px; padding: 0px 0px; }
