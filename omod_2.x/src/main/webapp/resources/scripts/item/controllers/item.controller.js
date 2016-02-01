@@ -95,10 +95,6 @@
                 ItemRestfulService.loadItemAttributeTypes(self.onLoadItemAttributeTypesSuccessful);
             }
 
-        self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function(data) {
-               // self.cancel();
-            }
-
         /**
          * All post-submit validations are done here.
          * @return boolean
