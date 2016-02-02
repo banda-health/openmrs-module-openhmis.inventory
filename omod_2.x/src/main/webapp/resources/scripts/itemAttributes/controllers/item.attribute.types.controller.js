@@ -31,6 +31,9 @@
                         [self.entity_name]);
                 }
 
+                $scope.submitted = $scope.submitted || false;
+                $scope.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate;
+
                 // call functions..
                 ItemAttributeTypesRestfulService.loadFormatFields(module_name, self.onLoadFormatFieldsSuccessful);
 
@@ -40,10 +43,15 @@
                 if(!angular.isDefined($scope.entity.attributeOrder) || $scope.entity.attributeOrder === ''){
                     $scope.entity.attributeOrder = null;
                 }
-
                 if(!angular.isDefined($scope.entity.foreignKey) || $scope.entity.foreignKey === ''){
                     $scope.entity.foreignKey = null;
                 }
+                if(!$scope.itemAttributeForm.$valid){
+                    console.log($scope);
+                    $scope.submitted = true;
+                    return false;
+                }
+                return true;
             }
 
         // call-back functions.

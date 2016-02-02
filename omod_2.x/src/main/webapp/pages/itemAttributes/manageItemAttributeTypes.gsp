@@ -1,7 +1,16 @@
-<div id="institutions-body">
+<script type="text/javascript">
+    var breadcrumbs = [
+        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+        { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
+        { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
+        { label: "${ ui.message("openhmis.inventory.admin.item.attribute.types")}"}
+    ];
+    jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
+</script>
 
+<div id="entities-body">
     <br /><br /><br />
-    <div id="manage-institutions-header">
+    <div id="manage-entities-header">
         <span class="h1-substitue-left" style="float:left;">
             ${ ui.message('openhmis.inventory.admin.item.attribute.types') }
         </span>
@@ -14,7 +23,7 @@
     </div>
     <br /><br /><br />
     <div ng-controller="ManageItemAttributeTypesController">
-        <div id="institutions">
+        <div id="entities">
             <div class="btn-group">
                 <input type="text" ng-model="searchField" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.general.enterSearchPhrase') }" size="80" autofocus>
                 <span id="searchclear" class="searchclear icon-remove-circle"></span>
@@ -35,21 +44,28 @@
                 </tr>
                 </tbody>
             </table>
-            <div id="below-institutions-table">
+            <div ng-show="fetchedEntities.length == 0">
+                <br />
+                ${ ui.message('There are currently no attribute types') }
+                <br /><br />
+                <span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired" ng-change="updateContent()"></span>
+                <span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
+            </div>
+            <div id="below-entities-table" ng-hide="fetchedEntities.length==0">
                 <span style="float:left;">
-                    <div id="showing-institutions">
+                    <div id="showing-entities">
                         <span><b>${ ui.message('openhmis.inventory.general.showing') } {{pagingFrom(currentPage, limit)}} ${ ui.message('openhmis.inventory.general.to') } {{pagingTo(currentPage, limit, totalNumOfResults)}}</b></span>
                         <span><b>${ ui.message('openhmis.inventory.general.of') } {{totalNumOfResults}} ${ ui.message('openhmis.inventory.general.entries') }</b></span>
                     </div>
                 </span>
                 <span style="float:right;">
-                    <div class="institution-pagination">
+                    <div class="entities-pagination">
                         <dir-pagination-controls on-page-change="paginate(currentPage)"></dir-pagination-controls>
                     </div>
                 </span>
                 <br />
                 <span style="float:left;">
-                    <div id="includeVoided-institutions">
+                    <div id="includeVoided-entities">
                         ${ui.message('openhmis.inventory.general.show')}
                         <select id="pageSize" ng-model="limit" ng-change="updateContent()">
                             <option value="2">2</option>
