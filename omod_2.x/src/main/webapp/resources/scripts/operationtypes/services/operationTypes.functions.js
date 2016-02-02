@@ -9,8 +9,10 @@
 	function OperationsTypeFunctions() {
 		var service;
 		service = {
-			removeAttributeTypes: removeAttributeTypes,
-		}
-	};
+			//removeAttributeTypes: removeAttributeTypes,
+		};
+
+		return service;
+	}
 
 })();

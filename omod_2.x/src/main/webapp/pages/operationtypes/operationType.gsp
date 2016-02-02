@@ -59,9 +59,21 @@
 				<h3>${ui.message('openhmis.inventory.operations.type.userLabel')}</h3>
 			</li>
 			<li>
-				<select class="form">
-					<option ng-repeat="user in users track by user.uuid" ng-selected="entity.user.name == user.name">
-						{{user.name}}
+				<select class="form-control">
+					<option ng-repeat="user in users track by user.uuid" ng-selected="entity.user.display == user.display">
+						{{user.display}}
+					</option>
+				</select>
+			</li>
+		</ul>
+		<ul class="table-layout">
+			<li>
+				<h3>${ui.message('openhmis.inventory.operations.type.roleLabel')}</h3>
+			</li>
+			<li>
+				<select class="form-control">
+					<option ng-repeat="role in roles track by role.uuid" ng-selected="entity.role.display == role.display">
+						{{role.display}}
 					</option>
 				</select>
 			</li>
