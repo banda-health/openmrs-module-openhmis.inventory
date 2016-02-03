@@ -1,3 +1,16 @@
+<script type="text/javascript">
+	var breadcrumbs = [
+		{ icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+		{ label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
+		{ label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
+		{ label: "${ ui.message("openhmis.inventory.admin.institutions")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/institution/institutions.page'},
+		{ label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.institution.name")}"}
+	];
+
+	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
+
+</script>
+
 <form novalidate >
 	<h1>{{messageLabels['h2SubString']}}</h1>
 	
