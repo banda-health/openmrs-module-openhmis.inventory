@@ -18,7 +18,6 @@
             </li>
             <li>
                 <input type="text" ng-model="entity.name" style="min-width: 50%;" placeholder="{{messageLabels['general.name']}}" required />
-                <p class="checkRequired" ng-show="itemAttributeForm.">{{messageLabels['openhmis.inventory.general.name.required']}}</p>
             </li>
         </ul>
         <ul class="table-layout">
@@ -77,7 +76,7 @@
     <fieldset class="format">
         <span>
             <input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()" />
-            <input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="validateBeforeSaveOrUpdate()" />
+            <input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" />
         </span>
     </fieldset>
 

@@ -46,8 +46,7 @@
                 if(!angular.isDefined($scope.entity.foreignKey) || $scope.entity.foreignKey === ''){
                     $scope.entity.foreignKey = null;
                 }
-                if(!$scope.itemAttributeForm.$valid){
-                    console.log($scope);
+                if(!angular.isDefined($scope.entity.name) || $scope.entity.name === ''){
                     $scope.submitted = true;
                     return false;
                 }
