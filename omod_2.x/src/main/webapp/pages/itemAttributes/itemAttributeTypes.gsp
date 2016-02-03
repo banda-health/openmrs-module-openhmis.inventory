@@ -1,5 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.items") ])
+    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.item.attribute.types") ])
     ui.includeJavascript("uicommons", "angular.min.js")
     ui.includeJavascript("uicommons", "angular-ui/angular-ui-router.min.js")
 
