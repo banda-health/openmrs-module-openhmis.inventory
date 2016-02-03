@@ -41,6 +41,7 @@
             var requestParams = [];
             requestParams['rest_entity_name'] = '';
             requestParams['q'] = q;
+            requestParams['limit'] = 10;
             EntityRestFactory.setBaseUrl('concept', 'v1');
             EntityRestFactory.loadEntities(requestParams,
                 onSearchConceptsSuccessful,

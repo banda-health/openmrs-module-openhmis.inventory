@@ -4,9 +4,9 @@
     var base = angular.module('app.genericEntityController');
     base.controller("ItemController", ItemController);
     ItemController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-        'ItemModel', 'ngDialog', 'ItemFunctions', 'ItemRestfulService'];
+        'ItemModel', 'ItemFunctions', 'ItemRestfulService'];
 
-    function ItemController($stateParams, $injector, $scope, $filter, EntityRestFactory, ItemModel, ngDialog, ItemFunctions, ItemRestfulService) {
+    function ItemController($stateParams, $injector, $scope, $filter, EntityRestFactory, ItemModel, ItemFunctions, ItemRestfulService) {
 
         var self = this;
 
@@ -55,22 +55,22 @@
 
                 // open dialog box to add an item price
                 $scope.addItemPrice = function(){
-                    ItemFunctions.addItemPrice(ngDialog, $scope);
+                    ItemFunctions.addItemPrice($scope);
                 }
 
                 // open dialog box to add an item code
                 $scope.addItemCode = function(){
-                    ItemFunctions.addItemCode(ngDialog, $scope);
+                    ItemFunctions.addItemCode($scope);
                 }
 
                 // open dialog box to edit an item price
                 $scope.editItemPrice = function(itemPrice){
-                    ItemFunctions.editItemPrice(itemPrice, ngDialog, $scope);
+                    ItemFunctions.editItemPrice(itemPrice, $scope);
                 }
 
                 // open dialog box to edit an item code
                 $scope.editItemCode = function(itemCode){
-                    ItemFunctions.editItemCode(itemCode, ngDialog, $scope);
+                    ItemFunctions.editItemCode(itemCode, $scope);
                 }
 
                 // deletes an item price
@@ -101,6 +101,11 @@
          */
         // @Override
         self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
+                if(!angular.isDefined($scope.entity.name) || $scope.entity.name === '' || $scope.entity.prices.length === 0){
+                    $scope.submitted = true;
+                    return false;
+                }
+
                 if(angular.isDefined($scope.itemAttributeTypes)){
                     var requestItemAttributeTypes = [];
                     for(var i = 0; i < $scope.itemAttributeTypes.length; i++){
@@ -115,11 +120,6 @@
                     $scope.entity.attributes = requestItemAttributeTypes;
                 }
 
-                // DO NOT send the department object. Instead retrieve and set the uuid.
-                var department = $scope.entity.department;
-                if(angular.isDefined(department)){
-                    $scope.entity.department = department.uuid;
-                }
                 // an empty buying price field should resolve to null and not an empty string
                 if(!angular.isDefined($scope.entity.buyingPrice) || $scope.entity.buyingPrice === ''){
                     $scope.entity.buyingPrice = null;
@@ -148,9 +148,10 @@
                 // remove temporarily assigned ids from the prices and codes array lists.
                 self.removeItemTemporaryIds();
 
-                if(!$scope.itemForm.$valid){
-                    $scope.submitted = true;
-                    return false;
+                // DO NOT send the department object. Instead retrieve and set the uuid.
+                var department = $scope.entity.department;
+                if(angular.isDefined(department)){
+                    $scope.entity.department = department.uuid;
                 }
 
                 return true;

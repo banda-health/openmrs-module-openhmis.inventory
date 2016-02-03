@@ -101,48 +101,62 @@
 
         /**
          * Displays a popup dialog box with an item code field. Saves the code on clicking the 'Ok' button
-         * @param ngDialog
          * @param $scope
          */
-        function addItemCode(ngDialog, $scope){
-            ngDialog.openConfirm({template: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/item/addItemCode.page',
-                scope: $scope
-            }).then(
-                function(value){
-                    $scope.entity.codes = $scope.entity.codes || [];
-                    $scope.submitted = true;
-                    if(angular.isDefined($scope.itemCode) && $scope.itemCode.code !== ""){
-                        $scope.entity.codes.push($scope.itemCode);
-                        insertItemTemporaryId($scope.entity.codes, $scope.itemCode);
-                        $scope.itemCode = [];
+        function addItemCode($scope){
+            $scope.editItemCodeTitle = '';
+            $scope.addItemCodeTitle = $scope.messageLabels['openhmis.inventory.general.add'] + ' ' + $scope.messageLabels['openhmis.inventory.item.code.name'];
+            var dialog = emr.setupConfirmationDialog({
+                selector: '#item-code-dialog',
+                actions: {
+                    confirm: function() {
+                        $scope.entity.codes = $scope.entity.codes || [];
+                        $scope.submitted = true;
+                        if(angular.isDefined($scope.itemCode) && $scope.itemCode.code !== ""){
+                            $scope.entity.codes.push($scope.itemCode);
+                            insertItemTemporaryId($scope.entity.codes, $scope.itemCode);
+                            $scope.itemCode = {};
+                        }
+                        $scope.$apply();
+                        dialog.close();
+                    },
+                    cancel: function() {
+                        dialog.close();
                     }
-                },
-                function(value){
-                    console.log('cancel');
                 }
-            );
+            });
+
+            dialog.show();
         }
 
         /**
          * Displays a popup dialog box with price fields and saves the item price to a list.
-         * @param ngDialog
          * @param $scope
          */
-        function addItemPrice(ngDialog, $scope){
-            ngDialog.openConfirm({template: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/item/addItemPrice.page',
-                scope: $scope
-            }).then(
-                function(value){
-                    $scope.entity.prices = $scope.entity.prices || [];
-                    $scope.entity.prices.push($scope.itemPrice);
-                    insertItemTemporaryId($scope.entity.prices, $scope.itemPrice);
-                    $scope.itemPrice = [];
-                    $scope.entity.defaultPrice = $scope.entity.defaultPrice || $scope.entity.prices[0];
-                },
-                function(value){
-                    console.log('cancel');
+        function addItemPrice($scope) {
+            console.log('add item price');
+            $scope.editItemPriceTitle = '';
+            $scope.addItemPriceTitle = $scope.messageLabels['openhmis.inventory.general.add'] + ' ' + $scope.messageLabels['openhmis.inventory.item.price.name'];
+            var dialog = emr.setupConfirmationDialog({
+                selector: '#item-price-dialog',
+                actions: {
+                    confirm: function() {
+                        console.log($scope);
+                        $scope.entity.prices = $scope.entity.prices || [];
+                        $scope.entity.prices.push($scope.itemPrice);
+                        insertItemTemporaryId($scope.entity.prices, $scope.itemPrice);
+                        $scope.entity.defaultPrice = $scope.entity.defaultPrice || $scope.entity.prices[0];
+                        $scope.itemPrice = {};
+                        $scope.$apply();
+                        dialog.close();
+                    },
+                    cancel: function() {
+                        dialog.close();
+                    }
                 }
-            );
+            });
+
+            dialog.show();
         }
 
         /**
@@ -151,11 +165,26 @@
          * @param ngDialog
          * @param $scope
          */
-        function editItemPrice(itemPrice, ngDialog, $scope) {
+        function editItemPrice(itemPrice, $scope) {
             $scope.itemPrice = itemPrice;
-            ngDialog.openConfirm({template: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/item/addItemPrice.page',
-                scope: $scope
+            $scope.addItemPriceTitle = '';
+            $scope.editItemPriceTitle = $scope.messageLabels['openhmis.inventory.general.edit'] + ' ' + $scope.messageLabels['openhmis.inventory.item.price.name'];
+
+            var dialog = emr.setupConfirmationDialog({
+                selector: '#item-price-dialog',
+                actions: {
+                    confirm: function() {
+                        $scope.itemPrice = {};
+                        dialog.close();
+                    },
+                    cancel: function() {
+                        $scope.itemPrice = {};
+                        dialog.close();
+                    }
+                }
             });
+
+            dialog.show();
         }
 
         /**
@@ -164,12 +193,25 @@
          * @param ngDialog
          * @param $scope
          */
-        function editItemCode(itemCode, ngDialog, $scope){
+        function editItemCode(itemCode, $scope){
             $scope.itemCode = itemCode;
-            ngDialog.openConfirm({
-                template: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/item/addItemCode.page',
-                scope: $scope
+            $scope.editItemCodeTitle = $scope.messageLabels['openhmis.inventory.general.edit'] + ' ' + $scope.messageLabels['openhmis.inventory.item.code.name'];
+            $scope.addItemCodeTitle = '';
+            var dialog = emr.setupConfirmationDialog({
+                selector: '#item-code-dialog',
+                actions: {
+                    confirm: function() {
+                        $scope.itemCode = {};
+                        dialog.close();
+                    },
+                    cancel: function() {
+                        $scope.itemCode = {};
+                        dialog.close();
+                    }
+                }
             });
+
+            dialog.show();
         }
 
         /**
@@ -193,6 +235,8 @@
             messages['openhmis.inventory.item.defaultPrice'] = emr.message('openhmis.inventory.item.defaultPrice');
             messages['openhmis.inventory.stockroom.name'] = emr.message('openhmis.inventory.stockroom.name');
             messages['openhmis.inventory.item.quantity'] = emr.message('openhmis.inventory.item.quantity');
+            messages['openhmis.inventory.general.add'] = emr.message('openhmis.inventory.general.add');
+            messages['openhmis.inventory.general.edit'] = emr.message('openhmis.inventory.general.edit');
             return messages;
         }
     }
