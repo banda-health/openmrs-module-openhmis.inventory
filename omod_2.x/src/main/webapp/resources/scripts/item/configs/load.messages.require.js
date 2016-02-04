@@ -65,7 +65,4 @@ emr.loadMessages([
     "openhmis.inventory.stockroom.name",
     "openhmis.inventory.general.add",
     "openhmis.inventory.general.edit",
-
-
-
 ]);
