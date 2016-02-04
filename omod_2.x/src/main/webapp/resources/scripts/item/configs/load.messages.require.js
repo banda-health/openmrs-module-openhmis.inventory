@@ -61,7 +61,8 @@ emr.loadMessages([
     "openhmis.inventory.item.defaultPrice",
     "openhmis.inventory.item.defaultExpirationPeriod",
     "openhmis.inventory.item.enterConceptName",
-
-
-
+    "openhmis.inventory.item.rest_name",
+    "openhmis.inventory.stockroom.name",
+    "openhmis.inventory.general.add",
+    "openhmis.inventory.general.edit",
 ]);

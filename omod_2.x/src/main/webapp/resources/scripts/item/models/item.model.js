@@ -13,7 +13,7 @@
         // @Override
         extended.getModelFields = function() {
             var fields = ["buyingPrice", "codes", "concept", "defaultExpirationPeriod", "defaultPrice",
-            "department", "description", "hasExpiration", "hasPhysicalInventory", "minimumQuantity", "prices"];
+            "department", "description", "hasExpiration", "hasPhysicalInventory", "minimumQuantity", "prices", "attributes"];
             return fields.concat(defaultFields);
         };
 

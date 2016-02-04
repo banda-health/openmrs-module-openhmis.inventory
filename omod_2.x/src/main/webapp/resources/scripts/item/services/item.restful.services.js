@@ -12,24 +12,21 @@
             loadDepartments: loadDepartments,
             searchConcepts: searchConcepts,
             loadItemStock: loadItemStock,
+            loadItemAttributeTypes: loadItemAttributeTypes,
         };
 
         return service;
 
         /**
          * Temporary Function: It will ONLY be used until the Department module is done.
-         * @param limit
          * @param onLoadDepartmentsSuccessful
          */
-        function loadDepartments(limit, onLoadDepartmentsSuccessful) {
+        function loadDepartments(onLoadDepartmentsSuccessful) {
             var requestParams = [];
             requestParams['rest_entity_name'] = 'department';
-            requestParams['limit'] = limit;
             EntityRestFactory.loadEntities(requestParams,
                 onLoadDepartmentsSuccessful,
-                function(error){
-                    console.log(error);
-                }
+                errorCallback
             );
         }
 
@@ -40,41 +37,48 @@
          * @param limit
          * @param onSearchConceptsSuccessful
          */
-        function searchConcepts(module_name, q, limit, onSearchConceptsSuccessful){
+        function searchConcepts(module_name, q, onSearchConceptsSuccessful){
             var requestParams = [];
             requestParams['rest_entity_name'] = '';
             requestParams['q'] = q;
-            requestParams['limit'] = limit;
+            requestParams['limit'] = 10;
             EntityRestFactory.setBaseUrl('concept', 'v1');
             EntityRestFactory.loadEntities(requestParams,
                 onSearchConceptsSuccessful,
-                function(error){
-                    console.log(error);
-                }
+                errorCallback
             );
             //reset base url..
             EntityRestFactory.setBaseUrl(module_name);
         }
 
+        function loadItemAttributeTypes(onLoadAttributeTypesSuccessful){
+            var requestParams = [];
+            requestParams['rest_entity_name'] = 'itemAttributeType';
+            EntityRestFactory.loadEntities(requestParams,
+                onLoadAttributeTypesSuccessful,
+                errorCallback
+            );
+        }
+
         /**
          * Retrieve an item stock given a uuid.
          * @param uuid
-         * @param limit
          * @param onLoadItemStockSuccessful
          */
-        function loadItemStock(uuid, limit, onLoadItemStockSuccessful){
+        function loadItemStock(uuid, onLoadItemStockSuccessful){
             if(angular.isDefined(uuid)){
                 var requestParams = [];
                 requestParams['rest_entity_name'] = 'itemStock';
-                requestParams['limit'] = limit;
                 requestParams['item_uuid'] = uuid;
                 EntityRestFactory.loadEntities(requestParams,
                     onLoadItemStockSuccessful,
-                    function(error){
-                        console.log(error);
-                    }
+                    errorCallback
                 );
             }
+        }
+
+        function errorCallback(error){
+            console.log(error);
         }
     }
 })();
