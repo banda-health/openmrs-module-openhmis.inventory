@@ -28,4 +28,12 @@ emr.loadMessages([
 	"openhmis.inventory.general.error.uuid",
 	"openhmis.inventory.general.error.retired",
 	"openhmis.inventory.general.error.retireReason",
+	"openhmis.backboneforms.attribute.type.name",
+	"openhmis.inventory.general.add",
+	"openhmis.inventory.name",
+	"openhmis.inventory.format",
+	"openhmis.inventory.foreignKey",
+	"openhmis.inventory.regExp",
+	"openhmis.inventory.required",
+	"openhmis.inventory.attributeOrder"
 ]);

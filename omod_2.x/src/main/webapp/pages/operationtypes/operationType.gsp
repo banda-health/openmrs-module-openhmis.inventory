@@ -1,7 +1,7 @@
 <form onsubmit="return removeIndexFromItems()">
 	<h1>{{messageLabels['h2SubString']}}</h1>
 
-	<input type="hidden" ng-model="entity.uuid" />
+	<input type="hidden" ng-model="entity.uuid"/>
 
 	<fieldset class="format">
 
@@ -10,8 +10,11 @@
 				<h3>{{messageLabels['general.name']}}</h3>
 			</li>
 			<li>
-				<input class="form-control" type="text" ng-model="entity.name" style="min-width: 50%;" placeholder="{{messageLabels['general.name']}}" required />
-				<p class="checkRequired" ng-hide="nameIsRequiredMsg == '' || nameIsRequiredMsg == undefined">{{nameIsRequiredMsg}}</p>
+				<input class="form-control" type="text" ng-model="entity.name" style="min-width: 50%;"
+				       placeholder="{{messageLabels['general.name']}}" required/>
+
+				<p class="checkRequired"
+				   ng-hide="nameIsRequiredMsg == '' || nameIsRequiredMsg == undefined">{{nameIsRequiredMsg}}</p>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -19,7 +22,8 @@
 				<h3>{{messageLabels['general.description']}}</h3>
 			</li>
 			<li>
-				<textarea class="form-control" ng-model="entity.description" placeholder="{{messageLabels['general.description']}}"></textarea>
+				<textarea class="form-control" ng-model="entity.description"
+				          placeholder="{{messageLabels['general.description']}}"></textarea>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -51,7 +55,7 @@
 				<h3>${ui.message('openhmis.inventory.operations.type.availableWhenReservedLabel')}</h3>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled" />
+				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -78,18 +82,76 @@
 				</select>
 			</li>
 		</ul>
+		<br/>
+		<ul class="table-layout">
+			<li>
+				<h3>${ui.message('openhmis.backboneforms.attribute.type.namePlural')}</h3>
+			</li>
+			<li>
+				<div class="bbf-editor">
+					<div class="bbf-list" name="codes">
+						<ul>
+							<li ng-repeat="itemCode in entity.codes track by itemCode.uuid || itemCode.id">
+								<button ng-click="removeItemCode(itemCode)" type="button" data-action="remove"
+								        class="bbf-remove" title="Remove">×</button>
+
+								<div>{{itemCode.code}}</div>
+							</li>
+						</ul>
+
+						<div class="bbf-actions">
+							<button type="button" data-action="add" ng-click="addAttributeTypes()">Add</button>
+						</div>
+
+						<div id="attribute-types-dialog" class="dialog" style="display:none;">
+							<div class="dialog-header">
+								<span ng-show="addAttributeTypeTitle !=''">
+									<i class="icon-plus"></i>
+
+									<h3>{{messageLabels['addAttributeTypeTitle']}}</h3>
+								</span>
+								<span ng-show="editAttributeTypeTitle != ''">
+									<i class="glyphicon-edit"></i>
+
+									<h3>{{messageLabels['editAttributeTypeTitle']}}</h3>
+								</span>
+							</div>
+
+							<div class="dialog-content form">
+								<ul class="table-layout dialog-table-layout">
+									<li class="required">{{messageLabels['general.name']}}</li>
+									<li><input type="text" ng-model="itemPrice.name" /></li>
+								</ul>
+								<ul class="table-layout dialog-table-layout">
+									<li class="required">{{messageLabels['openhmis.inventory.item.price.name']}}</li>
+									<li><input type="number" ng-model="itemPrice.price" required /></li>
+								</ul>
+								<div class="ngdialog-buttons">
+									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
+									       ng-click="closeThisDialog('Cancel')"/>
+									<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
+									       ng-click="confirm('OK')"/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
 	</fieldset>
-	<br />
+	<br/>
 	<fieldset class="format">
 		<ul class="table-layout">
 			<li>
 				<span>
-					<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()" />
+					<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
 				</span>
 			</li>
 			<li>
 				<span>
-					<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"  ng-disabled="entity.name == '' || entity.name == undefined" ng-click="removeItemTemporaryIds(); saveOrUpdate()" />
+					<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
+					       ng-disabled="entity.name == '' || entity.name == undefined"
+					       ng-click="removeItemTemporaryIds(); saveOrUpdate()"/>
 				</span>
 			</li>
 		</ul>
@@ -97,11 +159,18 @@
 
 	<fieldset class="format">
 		<h3 ng-hide="entity.uuid == ''">{{retireOrUnretire}}</h3>
+
 		<p ng-hide="entity.uuid == ''">
-			<span ng-show="entity.retired">{{messageLabels['openhmis.inventory.general.retired.reason']}}<b>{{entity.retireReason}}</b><br /></span>
-			<span ng-hide="entity.retired"><input type="text" placeholder="{{messageLabels['general.retireReason']}}" style="min-width: 50%;" ng-model="entity.retireReason" ng-disabled="entity.retired" /></span>
-			<input type="button" ng-disabled="entity.uuid == '' || entity.retireReason == '' || entity.retireReason == null" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()" />
+			<span ng-show="entity.retired">{{messageLabels['openhmis.inventory.general.retired.reason']}}<b>{{entity.retireReason}}</b><br/>
+			</span>
+			<span ng-hide="entity.retired"><input type="text" placeholder="{{messageLabels['general.retireReason']}}"
+			                                      style="min-width: 50%;" ng-model="entity.retireReason"
+			                                      ng-disabled="entity.retired"/></span>
+			<input type="button" ng-disabled="entity.uuid == '' || entity.retireReason == '' || entity.retireReason == null"
+			       class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()"/>
 		</p>
-		<p class="checkRequired" ng-hide="entity.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
+
+		<p class="checkRequired"
+		   ng-hide="entity.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
 	</fieldset>
 </form>

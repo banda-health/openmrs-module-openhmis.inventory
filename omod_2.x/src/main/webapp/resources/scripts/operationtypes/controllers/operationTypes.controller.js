@@ -3,11 +3,13 @@
 
 	var base = angular.module('app.genericEntityController');
 	base.controller("OperationTypesController", OperationTypesController);
-	OperationTypesController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-		'OperationTypesModel', 'ngDialog', 'OperationsTypeFunctions', 'OperationTypesRestfulService'];
+	OperationTypesController.$inject = ['$stateParams', '$injector', '$scope',
+			'$filter', 'EntityRestFactory', 'OperationTypesModel', 'ngDialog',
+			'OperationsTypeFunctions', 'OperationTypesRestfulService'];
 
-	function OperationTypesController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationTypesModel,
-			ngDialog, OperationsTypeFunctions, OperationTypesRestfulService) {
+	function OperationTypesController($stateParams, $injector, $scope, $filter,
+			EntityRestFactory, OperationTypesModel, ngDialog,
+			OperationsTypeFunctions, OperationTypesRestfulService) {
 
 		var self = this;
 
@@ -17,43 +19,73 @@
 		var cancel_page = 'operationTypes.page';
 
 		// @Override
-		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-					self.bindBaseParameters(module_name, rest_entity_name, entity_name, cancel_page);
+		self.setRequiredInitParameters = self.setRequiredInitParameters
+				|| function() {
+					self.bindBaseParameters(module_name, rest_entity_name,
+							entity_name, cancel_page);
 				}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 				|| function(uuid) {
-					if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired)
+					if (angular.isDefined($scope.entity)
+							&& angular.isDefined($scope.entity.retired)
 							&& $scope.entity.retired === true) {
-						$scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.unretire"),
-								[self.entity_name]);
+						$scope.retireOrUnretire = $filter('EmrFormat')
+								(emr.message("openhmis.inventory.general.unretire"), [self.entity_name]);
 					} else {
-						$scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.retire"),
-								[self.entity_name]);
+						$scope.retireOrUnretire = $filter('EmrFormat')
+								(emr.message("openhmis.inventory.general.retire"), [self.entity_name]);
 					}
 
 					var usersLimit = null;
 					var rolesLimit = null;
-					OperationTypesRestfulService.loadUsers(module_name,usersLimit, self.onLoadUsersSuccessful);
-					OperationTypesRestfulService.loadRoles(module_name,rolesLimit, self.onLoadRolesSuccessful);
+					OperationTypesRestfulService.loadUsers(module_name,
+							usersLimit, self.onLoadUsersSuccessful);
+					OperationTypesRestfulService.loadRoles(module_name,
+							rolesLimit, self.onLoadRolesSuccessful);
+					$scope.addAttributeTypes = addAttributeTypes;
 
 				}
 
 		// call-back functions.
-		self.onLoadUsersSuccessful = self.onLoadUsersSuccessful || function(data){
+		self.onLoadUsersSuccessful = self.onLoadUsersSuccessful
+				|| function(data) {
 					$scope.users = data.results;
 				}
-		self.onLoadRolesSuccessful = self.onLoadRolesSuccessful || function(data){
+
+		self.onLoadRolesSuccessful = self.onLoadRolesSuccessful
+				|| function(data) {
 					$scope.roles = data.results;
 				}
 
+		// @Override
+		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels
+				|| function() {
+					return OperationsTypeFunctions.addMessageLabels();
+				}
+
+		function addAttributeTypes() {
+			var dialog = emr.setupConfirmationDialog({
+				selector : '#attribute-types-dialog',
+				actions : {
+					confirm : function() {
+						dialog.close();
+					},
+					cancel : function() {
+						dialog.close();
+					}
+				}
+			});
+
+			dialog.show();
+		}
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericEntityController, self, {
-			$scope: $scope,
-			$filter: $filter,
-			$stateParams: $stateParams,
-			EntityRestFactory: EntityRestFactory,
-			GenericMetadataModel: OperationTypesModel
+			$scope : $scope,
+			$filter : $filter,
+			$stateParams : $stateParams,
+			EntityRestFactory : EntityRestFactory,
+			GenericMetadataModel : OperationTypesModel
 		});
 	}
 })();
