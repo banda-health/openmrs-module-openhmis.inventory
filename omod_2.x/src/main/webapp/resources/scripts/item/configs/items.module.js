@@ -1,8 +1,8 @@
 /*
  * The module determines which page should be loaded depending on the url/route.
- * The manageInstitutions.page page loads all institutions. The instition.page
- * page either creates a new institution if NO uuid is given, else loads an
- * existing institution for editing.
+ * The manageitems.page page loads all items. The item.page
+ * page either creates a new item if NO uuid is given, else loads an
+ * existing item for editing.
  */
 (function() {
     define(['item/configs/modules.require'], loadpage);
@@ -45,7 +45,7 @@
             $provide.factory('$exceptionHandler', function($injector) {
                 return function(exception, cause) {
                     /*
-                     * There are times when the manage institution's page won't render on
+                     * There are times when the manage item's page won't render on
                      * initial page load -- which is brought about by inconsistencies in
                      * loading dependencies. As a work around we look out for such errors
                      * and reload the page. TODO: Find a better solution to ensure all
