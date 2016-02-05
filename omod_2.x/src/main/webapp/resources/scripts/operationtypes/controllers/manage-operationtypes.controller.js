@@ -4,7 +4,7 @@
   var base = angular.module('app.genericManageController');
   base.controller("ManageOperationTypesController", ManageOperationTypesController);
   ManageOperationTypesController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory', 'CssStylesFactory',
-      'PaginationService', 'OperationTypesModel','AttributeTypesModel', 'CookiesService'];
+      'PaginationService', 'OperationTypesModel', 'CookiesService'];
 
   function ManageOperationTypesController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
           OperationTypesModel, CookiesService) {
