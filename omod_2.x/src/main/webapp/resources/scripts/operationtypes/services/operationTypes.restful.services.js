@@ -9,7 +9,8 @@
 		var service;
 		service = {
 			loadUsers: loadUsers,
-			loadRoles: loadRoles
+			loadRoles: loadRoles,
+			loadFormatFields: loadFormatFields
 		};
 
 		return service;
@@ -41,6 +42,20 @@
 			EntityRestFactory.setBaseUrl('role', 'v1');
 			EntityRestFactory.loadEntities(requestParams,onLoadRolesSuccessful,
 					function(error) {
+						console.log(error);
+					}
+			);
+			//reset base url..
+			EntityRestFactory.setBaseUrl(module_name);
+		}
+
+		function loadFormatFields(module_name, onLoadFormatFieldsSuccessful) {
+			var requestParams = [];
+			requestParams['resource'] = 'fieldgenhandlers.json';
+			EntityRestFactory.setCustomBaseUrl('/openmrs/');
+			EntityRestFactory.loadResults(requestParams,
+					onLoadFormatFieldsSuccessful,
+					function(error){
 						console.log(error);
 					}
 			);

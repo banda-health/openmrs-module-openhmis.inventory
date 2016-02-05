@@ -44,7 +44,7 @@
 					OperationTypesRestfulService.loadRoles(module_name,
 							rolesLimit, self.onLoadRolesSuccessful);
 					$scope.addAttributeTypes = addAttributeTypes;
-
+					OperationTypesRestfulService.loadFormatFields(module_name, self.onLoadFormatFieldsSuccessful);
 				}
 
 		// call-back functions.
@@ -62,6 +62,11 @@
 		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels
 				|| function() {
 					return OperationsTypeFunctions.addMessageLabels();
+				}
+
+		// call-back functions.
+		self.onLoadFormatFieldsSuccessful = self.onLoadFormatFieldsSuccessful || function(data){
+					$scope.formatFields = data.results;
 				}
 
 		function addAttributeTypes() {

@@ -17,8 +17,8 @@
 
 		function addMessageLabels() {
 			var messages = {};
-			messages['editAttributeTypeTitle'] = '';
-			messages['openhmis.backboneforms.attribute.type.name'] = emr.message("openhmis.backboneforms.attribute.type.name");
+			messages['addAttributeTypeTitle'] = emr.message("openhmis.inventory.general.add") + " " +  emr.message("openhmis.backboneforms.attribute.type.name");
+			messages['editAttributeTypeTitle'] = emr.message("general.edit") + " " +  emr.message("openhmis.backboneforms.attribute.type.name");
 			return messages;
 		}
 	}

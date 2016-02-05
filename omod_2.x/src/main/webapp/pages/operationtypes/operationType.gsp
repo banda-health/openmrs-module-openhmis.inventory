@@ -89,7 +89,7 @@
 			</li>
 			<li>
 				<div class="bbf-editor">
-					<div class="bbf-list" name="codes">
+					<div class="bbf-list" name="attributeTypes">
 						<ul>
 							<li ng-repeat="itemCode in entity.codes track by itemCode.uuid || itemCode.id">
 								<button ng-click="removeItemCode(itemCode)" type="button" data-action="remove"
@@ -105,13 +105,13 @@
 
 						<div id="attribute-types-dialog" class="dialog" style="display:none;">
 							<div class="dialog-header">
-								<span ng-show="addAttributeTypeTitle !=''">
-									<i class="icon-plus"></i>
+								<span ng-show="addAttributeTypeTitle != ''">
+									<i class="icon-plus-sign"></i>
 
 									<h3>{{messageLabels['addAttributeTypeTitle']}}</h3>
 								</span>
 								<span ng-show="editAttributeTypeTitle != ''">
-									<i class="glyphicon-edit"></i>
+									<i class="icon-edit"></i>
 
 									<h3>{{messageLabels['editAttributeTypeTitle']}}</h3>
 								</span>
@@ -119,18 +119,74 @@
 
 							<div class="dialog-content form">
 								<ul class="table-layout dialog-table-layout">
-									<li class="required">{{messageLabels['general.name']}}</li>
-									<li><input type="text" ng-model="itemPrice.name" /></li>
+									<li class="required">
+										<span>{{messageLabels['general.name']}}</span>
+									</li>
+									<li>
+										<input type="text" ng-model="entity.name" style="min-width: 100%;"
+										       placeholder="{{messageLabels['general.name']}}" required/>
+									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
-									<li class="required">{{messageLabels['openhmis.inventory.item.price.name']}}</li>
-									<li><input type="number" ng-model="itemPrice.price" required /></li>
+									<li class="not-required">
+										<span>{{messageLabels['general.description']}}</span>
+									</li>
+									<li>
+										<input type="text" ng-model="entity.description" style="min-width: 50%;"
+										       placeholder="{{messageLabels['general.description']}}"/>
+									</li>
 								</ul>
+								<ul class="table-layout dialog-table-layout">
+									<li class="not-required">
+										<span>${ui.message('PersonAttributeType.format')}</span>
+									</li>
+									<li>
+										<select ng-model="entity.format"
+										        ng-options="field for field in formatFields track by field">
+											<option value="" ng-if="false"></option>
+											<option ng-selected="entity.format == field">
+											</option>
+										</select>
+									</li>
+								</ul>
+								<ul class="table-layout dialog-table-layout">
+									<li class="not-required">
+										<span>${ui.message('PersonAttributeType.foreignKey')}</span>
+									</li>
+									<li>
+										<input type="number" ng-model="entity.foreignKey"/>
+									</li>
+								</ul>
+								<ul class="table-layout dialog-table-layout">
+									<li class="not-required">
+										<span>${ui.message('PatientIdentifierType.format')}</span>
+									</li>
+									<li>
+										<input type="text" ng-model="entity.regExp"/>
+									</li>
+								</ul>
+								<ul class="table-layout dialog-table-layout">
+									<li class="not-required">
+										<span>${ui.message('FormField.required')}</span>
+									</li>
+									<li>
+										<input type="checkbox" ng-model="entity.required"/>
+									</li>
+								</ul>
+								<ul class="table-layout dialog-table-layout">
+									<li class="not-required">
+										<span>${ui.message('Field.attributeName')} ${ui.message('Obs.order')}</span>
+									</li>
+									<li>
+										<input type="number" ng-model="entity.attributeOrder"/>
+									</li>
+								</ul>
+
 								<div class="ngdialog-buttons">
 									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
-									       ng-click="closeThisDialog('Cancel')"/>
+									       ng-click="cancel()"/>
 									<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
-									       ng-click="confirm('OK')"/>
+									       ng-click="saveOrUpdate()"/>
 								</div>
 							</div>
 						</div>

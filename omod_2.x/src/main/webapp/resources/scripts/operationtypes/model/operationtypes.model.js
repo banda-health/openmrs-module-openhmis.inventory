@@ -12,7 +12,7 @@
 		// @Override
 		extended.getModelFields = function() {
 			var fields = ["hasSource", "hasDestination", "hasRecipient", "recipientRequired", "availableWhenReserved",
-				"user", "role"];
+				"user", "role","attributeOrder", "description", "foreignKey", "format", "regExp", "required"];
 			return fields.concat(defaultFields);
 		};
 
