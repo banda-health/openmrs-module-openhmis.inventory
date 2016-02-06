@@ -76,6 +76,11 @@
 		<description>true/false whether or not the cancel reason field should be used.</description>
 	</globalProperty>
 
+    <globalProperty>
+        <property>${project.parent.artifactId}.restrictNegativeInventoryStockCreation</property>
+        <description>true/false whether or not the system should restrict creation of stock with negative amounts</description>
+    </globalProperty>
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
