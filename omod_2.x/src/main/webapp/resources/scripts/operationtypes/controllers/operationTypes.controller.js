@@ -39,15 +39,29 @@
 
 					var usersLimit = null;
 					var rolesLimit = null;
+					$scope.attributeType = {};
 					OperationTypesRestfulService.loadUsers(module_name,
 							usersLimit, self.onLoadUsersSuccessful);
 					OperationTypesRestfulService.loadRoles(module_name,
 							rolesLimit, self.onLoadRolesSuccessful);
 					OperationTypesRestfulService.loadFormatFields(module_name, self.onLoadFormatFieldsSuccessful);
+
 					// open dialog box to add an item code
 					$scope.addAttributeType = function(){
 						OperationsTypeFunctions.addAttributeType($scope);
 					}
+
+					// deletes an item code
+					$scope.removeAttributeType = function(attributeType){
+						OperationsTypeFunctions.removeAttributeType(attributeType, $scope.entity.attributeTypes);
+					}
+
+					// open dialog box to edit an item code
+					$scope.editAttributeType = function(attributeType){
+						OperationsTypeFunctions.editAttributeType(attributeType, $scope);
+					}
+
+					$scope.delete = self.delete;
 				}
 
 		// call-back functions.
@@ -70,6 +84,15 @@
 		// call-back functions.
 		self.onLoadFormatFieldsSuccessful = self.onLoadFormatFieldsSuccessful || function(data){
 					$scope.formatFields = data.results;
+				}
+
+		/**
+		 * removes the 'attributes' parameter from the entity object before purging.
+		 * @type {Function}
+		 */
+		self.delete = self.delete || function(){
+					delete $scope.entity.attributeTypes;
+					$scope.purge();
 				}
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */

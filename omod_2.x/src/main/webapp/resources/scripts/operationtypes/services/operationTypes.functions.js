@@ -9,9 +9,12 @@
 	function OperationsTypeFunctions() {
 		var service;
 		service = {
-			//removeAttributeTypes: removeAttributeTypes,
 			addMessageLabels : addMessageLabels,
-			addAttributeType : addAttributeType
+			addAttributeType : addAttributeType,
+			insertOperationTypesTemporaryId : insertOperationTypesTemporaryId,
+			removeAttributeType : removeAttributeType,
+			removeFromList : removeFromList,
+			editAttributeType : editAttributeType,
 		};
 
 		return service;
@@ -23,19 +26,19 @@
 		function addAttributeType($scope){
 			$scope.editAttributeTypeTitle = '';
 			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.add'] + ' ' +  $scope.messageLabels['openhmis.backboneforms.attribute.type.name'];
-			console.log(addAttributeTypeTitle);
+			console.log($scope.addAttributeTypeTitle);
 			var dialog = emr.setupConfirmationDialog({
 				selector: '#attribute-types-dialog',
 				actions: {
 					confirm: function() {
-//						$scope.entity.codes = $scope.entity.codes || [];
-//						$scope.submitted = true;
-//						if(angular.isDefined($scope.itemCode) && $scope.itemCode.code !== ""){
-//							$scope.entity.codes.push($scope.itemCode);
-//							insertItemTemporaryId($scope.entity.codes, $scope.itemCode);
-//							$scope.itemCode = {};
-//						}
-//						$scope.$apply();
+						$scope.entity.attributeTypes = $scope.entity.attributeTypes || [];
+						$scope.submitted = true;
+						if(angular.isDefined($scope.attributeType) && $scope.attributeType.name !== ""){
+							$scope.entity.attributeTypes.push($scope.attributeType);
+							insertOperationTypesTemporaryId($scope.entity.attributeTypes, $scope.attributeType);
+							$scope.attributeType = {};
+						}
+						$scope.$apply();
 						dialog.close();
 					},
 					cancel: function() {
@@ -45,6 +48,72 @@
 			});
 
 			dialog.show();
+		}
+
+		/**
+		 * Opens a popup dialog box to edit an item code
+		 * @param attributeType
+		 * @param ngDialog
+		 * @param $scope
+		 */
+		function editAttributeType(attributeType, $scope){
+			$scope.attributeType = attributeType;
+			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.edit'] + ' ' + $scope.messageLabels['openhmis.backboneforms.attribute.type.name'];
+			$scope.addAttributeTypeTitle = '';
+			var dialog = emr.setupConfirmationDialog({
+				selector: '#attribute-types-dialog',
+				actions: {
+					confirm: function() {
+						$scope.itemCode = {};
+						dialog.close();
+					},
+					cancel: function() {
+						$scope.itemCode = {};
+						dialog.close();
+					}
+				}
+			});
+
+			dialog.show();
+		}
+
+
+		/**
+		 * ng-repeat requires that every item have a unique identifier.
+		 * This function sets a temporary unique id for all items in the list.
+		 * @param items (prices, codes)
+		 * @param item - optional
+		 */
+		function insertOperationTypesTemporaryId(attributeTypes, attributeType){
+			if(angular.isDefined(attributeType)){
+				var index = attributeTypes.indexOf(attributeType);
+				attributeType.id = index;
+			}
+			else{
+				for(var attribute in attributeTypes){
+					var index = attributeTypes.indexOf(attribute);
+					attribute.id = index;
+				}
+			}
+		}
+
+		/**
+		 * Removes an item code from the list
+		 * @param itemCode
+		 * @param itemCodes
+		 */
+		function removeAttributeType(attributeType, attributeTypes){
+			removeFromList(attribute, attributeTypes);
+		}
+
+		/**
+		 * Searches an item and removes it from the list
+		 * @param item
+		 * @param items
+		 */
+		function removeFromList(attributeType, attributeTypes){
+			var index = attributeTypes.indexOf(attributeType);
+			attributeTypes.splice(index, 1);
 		}
 
 		function addMessageLabels() {

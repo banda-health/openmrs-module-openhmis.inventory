@@ -1,3 +1,14 @@
+<script type="text/javascript">
+    var breadcrumbs = [
+        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
+        { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
+        { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
+        { label: "${ ui.message("openhmis.inventory.admin.operationTypes")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationtypes/operationTypes.page'},
+        { label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
+    ];
+    jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
+
+</script>
 <form onsubmit="return removeIndexFromItems()">
 	<h1>{{messageLabels['h2SubString']}}</h1>
 
@@ -90,12 +101,12 @@
 			<li>
 				<div class="bbf-editor">
 					<div class="bbf-list" name="attributeTypes">
-						<ul>
+						<ul class="attributes-layout">
 							<li ng-repeat="attributeType in entity.attributeTypes track by attributeType.uuid || attributeType.id">
-								<button ng-click="removeItemCode(itemCode)" type="button" data-action="remove"
-								        class="bbf-remove" title="Remove">×</button>
-
-								<div>{{attributeType.name}}</div>
+								<a href="" ng-click="removeAttributeType(attributeType)">
+									<i class="icon-remove"></i>
+								</a>
+								<a href="" ng-click="editAttributeType(attributeType)">{{attributeType.name}}</a>
 							</li>
 						</ul>
 
@@ -113,7 +124,7 @@
 								<span ng-show="editAttributeTypeTitle != ''">
 									<i class="icon-edit"></i>
 
-									<h3>{{messageLabels['editAttributeTypeTitle']}}</h3>
+									<h3>{{editAttributeTypeTitle}}</h3>
 								</span>
 							</div>
 
@@ -123,8 +134,8 @@
 										<span>{{messageLabels['general.name']}}</span>
 									</li>
 									<li>
-										<input type="text" ng-model="entity.name" style="min-width: 100%;"
-										       placeholder="{{messageLabels['general.name']}}" required/>
+										<input type="text" style="min-width: 100%;"
+										       placeholder="" required ng-model="entity.attributeTypes.name"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -132,8 +143,8 @@
 										<span>{{messageLabels['general.description']}}</span>
 									</li>
 									<li>
-										<input type="text" ng-model="entity.description" style="min-width: 50%;"
-										       placeholder="{{messageLabels['general.description']}}"/>
+										<input type="text" style="min-width: 50%;"
+										       placeholder="" ng-model="entity.attributeTypes.description"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -154,7 +165,7 @@
 										<span>${ui.message('PersonAttributeType.foreignKey')}</span>
 									</li>
 									<li>
-										<input type="number" ng-model="entity.foreignKey"/>
+										<input type="text" ng-model="entity.attributeTypes.foreignKey"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -162,7 +173,7 @@
 										<span>${ui.message('PatientIdentifierType.format')}</span>
 									</li>
 									<li>
-										<input type="text" ng-model="entity.regExp"/>
+										<input type="text" ng-model="entity.attributeTypes.regExp"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -170,7 +181,7 @@
 										<span>${ui.message('FormField.required')}</span>
 									</li>
 									<li>
-										<input type="checkbox" ng-model="entity.required"/>
+										<input type="checkbox" ng-model="entity.attributeTypes.required"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -178,7 +189,7 @@
 										<span>${ui.message('Field.attributeName')} ${ui.message('Obs.order')}</span>
 									</li>
 									<li>
-										<input type="number" ng-model="entity.attributeOrder"/>
+										<input type="number" ng-model="entity.attributeTypes.attributeOrder"/>
 									</li>
 								</ul>
 

@@ -17,15 +17,6 @@
 <script type="text/javascript" src="/openmrs/moduleResources/openhmis/commons/scripts/reusable-components/config.js"></script>
 <script data-main="operationtypes/configs/operationTypes.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
-<script type="text/javascript">
-	var breadcrumbs = [
-		{ icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
-		{ label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
-		{ label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
-		{ label: "${ ui.message("openhmis.inventory.admin.operationTypes")}"}
-	];
-</script>
-
 <div id="operationTypesApp">
 	<div ui-view></div>
 </div>
