@@ -10,6 +10,7 @@
 	ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
 	ui.includeCss("openhmis.commons", "bootstrap.css")
 	ui.includeCss("openhmis.commons", "entities2x.css")
+	ui.includeCss("openhmis.inventory", "operationTypes.css")
 %>
 
 <script type="text/javascript" src="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/operationtypes/configs/load.messages.require.js"></script>

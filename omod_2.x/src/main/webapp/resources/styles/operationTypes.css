@@ -1,0 +1,13 @@
+.entities-table th:first-child, td:first-child {
+    width: 25%;
+}
+#attribute-types-dialog {
+    width: 500px;
+}
+ul.dialog-table-layout li {
+    width: 150px;
+    margin: 0 0;
+}
+#dialog-bottom ul{
+    margin-bottom: 0;
+}

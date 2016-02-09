@@ -29,5 +29,6 @@ emr.loadMessages([
 	"openhmis.inventory.general.error.retired",
 	"openhmis.inventory.general.error.retireReason",
 	"openhmis.backboneforms.attribute.type.name",
-	"openhmis.inventory.general.add"
+	"openhmis.inventory.general.add",
+	"openhmis.inventory.general.edit"
 ]);

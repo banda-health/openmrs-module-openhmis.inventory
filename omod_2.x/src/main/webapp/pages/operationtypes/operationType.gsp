@@ -91,16 +91,16 @@
 				<div class="bbf-editor">
 					<div class="bbf-list" name="attributeTypes">
 						<ul>
-							<li ng-repeat="itemCode in entity.codes track by itemCode.uuid || itemCode.id">
+							<li ng-repeat="attributeType in entity.attributeTypes track by attributeType.uuid || attributeType.id">
 								<button ng-click="removeItemCode(itemCode)" type="button" data-action="remove"
 								        class="bbf-remove" title="Remove">×</button>
 
-								<div>{{itemCode.code}}</div>
+								<div>{{attributeType.name}}</div>
 							</li>
 						</ul>
 
 						<div class="bbf-actions">
-							<button type="button" data-action="add" ng-click="addAttributeTypes()">Add</button>
+							<button type="button" data-action="add" ng-click="addAttributeType()">Add</button>
 						</div>
 
 						<div id="attribute-types-dialog" class="dialog" style="display:none;">
@@ -108,7 +108,7 @@
 								<span ng-show="addAttributeTypeTitle != ''">
 									<i class="icon-plus-sign"></i>
 
-									<h3>{{messageLabels['addAttributeTypeTitle']}}</h3>
+									<h3>{{addAttributeTypeTitle}}</h3>
 								</span>
 								<span ng-show="editAttributeTypeTitle != ''">
 									<i class="icon-edit"></i>
@@ -117,7 +117,7 @@
 								</span>
 							</div>
 
-							<div class="dialog-content form">
+							<div class="dialog-content form" id="dialog-bottom">
 								<ul class="table-layout dialog-table-layout">
 									<li class="required">
 										<span>{{messageLabels['general.name']}}</span>

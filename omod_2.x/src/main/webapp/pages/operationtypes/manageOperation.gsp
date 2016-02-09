@@ -1,6 +1,5 @@
 <div id="operationTypes-body">
-	 
-	<br /><br /><br />
+	<br />
 	<div id="manage-operationTypes-header">
 		<span class="h1-substitue-left" style="float:left;">
 			${ ui.message('openhmis.inventory.admin.operationTypes') }

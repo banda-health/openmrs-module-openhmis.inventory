@@ -43,8 +43,11 @@
 							usersLimit, self.onLoadUsersSuccessful);
 					OperationTypesRestfulService.loadRoles(module_name,
 							rolesLimit, self.onLoadRolesSuccessful);
-					$scope.addAttributeTypes = addAttributeTypes;
 					OperationTypesRestfulService.loadFormatFields(module_name, self.onLoadFormatFieldsSuccessful);
+					// open dialog box to add an item code
+					$scope.addAttributeType = function(){
+						OperationsTypeFunctions.addAttributeType($scope);
+					}
 				}
 
 		// call-back functions.
@@ -69,21 +72,6 @@
 					$scope.formatFields = data.results;
 				}
 
-		function addAttributeTypes() {
-			var dialog = emr.setupConfirmationDialog({
-				selector : '#attribute-types-dialog',
-				actions : {
-					confirm : function() {
-						dialog.close();
-					},
-					cancel : function() {
-						dialog.close();
-					}
-				}
-			});
-
-			dialog.show();
-		}
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericEntityController, self, {
 			$scope : $scope,
