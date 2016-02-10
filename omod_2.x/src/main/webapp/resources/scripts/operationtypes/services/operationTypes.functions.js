@@ -26,7 +26,6 @@
 		function addAttributeType($scope){
 			$scope.editAttributeTypeTitle = '';
 			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.add'] + ' ' +  $scope.messageLabels['openhmis.backboneforms.attribute.type.name'];
-			console.log($scope.addAttributeTypeTitle);
 			var dialog = emr.setupConfirmationDialog({
 				selector: '#attribute-types-dialog',
 				actions: {
@@ -64,11 +63,11 @@
 				selector: '#attribute-types-dialog',
 				actions: {
 					confirm: function() {
-						$scope.itemCode = {};
+						$scope.attributeType = {};
 						dialog.close();
 					},
 					cancel: function() {
-						$scope.itemCode = {};
+						$scope.attributeType = {};
 						dialog.close();
 					}
 				}

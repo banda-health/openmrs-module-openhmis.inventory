@@ -133,18 +133,9 @@
 									<li class="required">
 										<span>{{messageLabels['general.name']}}</span>
 									</li>
-									<li>
+									<li >
 										<input type="text" style="min-width: 100%;"
-										       placeholder="" required ng-model="entity.attributeTypes.name"/>
-									</li>
-								</ul>
-								<ul class="table-layout dialog-table-layout">
-									<li class="not-required">
-										<span>{{messageLabels['general.description']}}</span>
-									</li>
-									<li>
-										<input type="text" style="min-width: 50%;"
-										       placeholder="" ng-model="entity.attributeTypes.description"/>
+										       placeholder="" required ng-model="attributeType.name"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -152,10 +143,10 @@
 										<span>${ui.message('PersonAttributeType.format')}</span>
 									</li>
 									<li>
-										<select ng-model="entity.format"
+										<select ng-model="entity.format" style="font-size:100%; "
 										        ng-options="field for field in formatFields track by field">
 											<option value="" ng-if="false"></option>
-											<option ng-selected="entity.format == field">
+											<option ng-selected="entity.format.formatFields == attributeType.format">
 											</option>
 										</select>
 									</li>
@@ -165,7 +156,7 @@
 										<span>${ui.message('PersonAttributeType.foreignKey')}</span>
 									</li>
 									<li>
-										<input type="text" ng-model="entity.attributeTypes.foreignKey"/>
+										<input type="text" ng-model="attributeType.foreignKey"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -173,7 +164,7 @@
 										<span>${ui.message('PatientIdentifierType.format')}</span>
 									</li>
 									<li>
-										<input type="text" ng-model="entity.attributeTypes.regExp"/>
+										<input type="text" ng-model="attributeType.regExp"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -181,7 +172,7 @@
 										<span>${ui.message('FormField.required')}</span>
 									</li>
 									<li>
-										<input type="checkbox" ng-model="entity.attributeTypes.required"/>
+										<input type="checkbox" ng-model="attributeType.required"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -189,7 +180,7 @@
 										<span>${ui.message('Field.attributeName')} ${ui.message('Obs.order')}</span>
 									</li>
 									<li>
-										<input type="number" ng-model="entity.attributeTypes.attributeOrder"/>
+										<input type="number" ng-model="attributeType.attributeOrder"/>
 									</li>
 								</ul>
 
