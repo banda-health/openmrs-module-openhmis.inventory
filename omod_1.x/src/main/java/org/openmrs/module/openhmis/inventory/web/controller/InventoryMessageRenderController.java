@@ -17,7 +17,6 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,10 +44,8 @@ public class InventoryMessageRenderController {
 		Locale locale = RequestContextUtils.getLocale(request);
 		ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", locale);
 
-		Set<String> cashierMessageKeys = resourceBundle.keySet();
-
 		// store inventory message keys in the vector object
-		keys.addAll(cashierMessageKeys);
+		keys.addAll(resourceBundle.keySet());
 
 		// retrieve backboneforms messages
 		BackboneMessageRenderController backboneController = new BackboneMessageRenderController();
@@ -58,7 +55,9 @@ public class InventoryMessageRenderController {
 		for (Map.Entry<String, Object> messageKeys : modelAndView.getModel().entrySet()) {
 			Enumeration<String> messageKey = (Enumeration<String>)messageKeys.getValue();
 			while (messageKey.hasMoreElements()) {
-				keys.add(messageKey.nextElement());
+				String key = messageKey.nextElement();
+				if (!keys.contains(key))
+					keys.add(key);
 			}
 		}
 
