@@ -78,6 +78,7 @@
 
     <globalProperty>
         <property>${project.parent.artifactId}.restrictNegativeInventoryStockCreation</property>
+        <defaultValue>false</defaultValue>
         <description>true/false whether or not the system should restrict creation of stock with negative amounts</description>
     </globalProperty>
 
