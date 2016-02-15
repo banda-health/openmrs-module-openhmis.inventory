@@ -146,7 +146,7 @@
 										<select ng-model="entity.format" style="font-size:100%; "
 										        ng-options="field for field in formatFields track by field">
 											<option value="" ng-if="false"></option>
-											<option ng-selected="entity.format.formatFields == attributeType.format">
+											<option ng-selected="entity.format == field">
 											</option>
 										</select>
 									</li>

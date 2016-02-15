@@ -40,16 +40,12 @@
 					var usersLimit = null;
 					var rolesLimit = null;
 					$scope.attributeType = {};
-					OperationTypesRestfulService.loadUsers(module_name,
-							usersLimit, self.onLoadUsersSuccessful);
-					OperationTypesRestfulService.loadRoles(module_name,
-							rolesLimit, self.onLoadRolesSuccessful);
+					OperationTypesRestfulService.loadUsers(module_name, usersLimit, self.onLoadUsersSuccessful);
+					OperationTypesRestfulService.loadRoles(module_name, rolesLimit, self.onLoadRolesSuccessful);
 					OperationTypesRestfulService.loadFormatFields(module_name, self.onLoadFormatFieldsSuccessful);
 
 					// open dialog box to add an item code
-					$scope.addAttributeType = function(){
-						OperationsTypeFunctions.addAttributeType($scope);
-					}
+					$scope.addAttributeType = function(){OperationsTypeFunctions.addAttributeType($scope);}
 
 					// deletes an item code
 					$scope.removeAttributeType = function(attributeType){
@@ -65,19 +61,16 @@
 				}
 
 		// call-back functions.
-		self.onLoadUsersSuccessful = self.onLoadUsersSuccessful
-				|| function(data) {
+		self.onLoadUsersSuccessful = self.onLoadUsersSuccessful || function(data) {
 					$scope.users = data.results;
 				}
 
-		self.onLoadRolesSuccessful = self.onLoadRolesSuccessful
-				|| function(data) {
+		self.onLoadRolesSuccessful = self.onLoadRolesSuccessful || function(data) {
 					$scope.roles = data.results;
 				}
 
 		// @Override
-		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels
-				|| function() {
+		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels || function() {
 					return OperationsTypeFunctions.addMessageLabels();
 				}
 
