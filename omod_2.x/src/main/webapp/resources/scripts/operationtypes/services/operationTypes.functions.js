@@ -97,12 +97,12 @@
 		}
 
 		/**
-		 * Removes an item code from the list
-		 * @param itemCode
-		 * @param itemCodes
+		 * Removes an attribute Type from the list
+		 * @param attribute Type
+		 * @param attribute Types
 		 */
 		function removeAttributeType(attributeType, attributeTypes){
-			removeFromList(attribute, attributeTypes);
+			removeFromList(attributeType, attributeTypes);
 		}
 
 		/**

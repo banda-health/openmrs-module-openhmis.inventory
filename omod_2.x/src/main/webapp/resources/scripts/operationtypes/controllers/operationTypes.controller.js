@@ -44,15 +44,15 @@
 					OperationTypesRestfulService.loadRoles(module_name, rolesLimit, self.onLoadRolesSuccessful);
 					OperationTypesRestfulService.loadFormatFields(module_name, self.onLoadFormatFieldsSuccessful);
 
-					// open dialog box to add an item code
+					// open dialog box to add an attribute type
 					$scope.addAttributeType = function(){OperationsTypeFunctions.addAttributeType($scope);}
 
-					// deletes an item code
+					// deletes an attribute type
 					$scope.removeAttributeType = function(attributeType){
 						OperationsTypeFunctions.removeAttributeType(attributeType, $scope.entity.attributeTypes);
 					}
 
-					// open dialog box to edit an item code
+					// open dialog box to edit an attribute type
 					$scope.editAttributeType = function(attributeType){
 						OperationsTypeFunctions.editAttributeType(attributeType, $scope);
 					}
