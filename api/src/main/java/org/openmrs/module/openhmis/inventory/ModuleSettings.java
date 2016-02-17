@@ -33,6 +33,8 @@ public class ModuleSettings {
 	public static final String EXPIRING_STOCK_REPORT_ID_PROPERTY = "openhmis.inventory.reports.expiringStock";
 	public static final String AUTO_COMPLETE_OPERATIONS_PROPERTY = "openhmis.inventory.autoCompleteOperations";
 	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
+	public static final String RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD =
+	        "openhmis.inventory.restrictNegativeInventoryStockCreation";
 	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
 	        "openhmis.inventory.reports.stockOperationsByStockroom";
 
@@ -54,6 +56,12 @@ public class ModuleSettings {
 	public static boolean showOperationCancelReasonField() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(SHOW_OPERATATION_CANCEL_REASEON_FIELD);
+		return Boolean.parseBoolean(property);
+	}
+
+	public static boolean isNegativeStockRestricted() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD);
 		return Boolean.parseBoolean(property);
 	}
 

@@ -632,6 +632,14 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 		if (detail == null) {
 			// No existing stock could be found to fulfill the request
+
+			if (ModuleSettings.isNegativeStockRestricted()) {
+				// Negative item stock is restricted
+				if (tx.getQuantity() > 0) {
+					throw new APIException("Resource stockroom does not have sufficient stock.");
+				}
+			}
+
 			tx.setSourceCalculatedExpiration(true);
 			tx.setSourceCalculatedBatch(true);
 			tx.setExpiration(null);
