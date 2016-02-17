@@ -12,6 +12,7 @@
 			addMessageLabels : addMessageLabels,
 			addAttributeType : addAttributeType,
 			insertOperationTypesTemporaryId : insertOperationTypesTemporaryId,
+			removeOperationTypesTemporaryId : removeOperationTypesTemporaryId,
 			removeAttributeType : removeAttributeType,
 			removeFromList : removeFromList,
 			editAttributeType : editAttributeType,
@@ -32,10 +33,11 @@
 					confirm: function() {
 						$scope.entity.attributeTypes = $scope.entity.attributeTypes || [];
 						$scope.submitted = true;
-						if(angular.isDefined($scope.attributeType) && $scope.attributeType.name !== "" && $scope.attributeType.format){
+						if(angular.isDefined($scope.attributeType) && $scope.attributeType.name !== ""){
 							$scope.entity.attributeTypes.push($scope.attributeType);
 							insertOperationTypesTemporaryId($scope.entity.attributeTypes, $scope.attributeType);
 							$scope.attributeType = {};
+							console.log($scope.attributeTypes);
 						}
 						$scope.$apply();
 						dialog.close();

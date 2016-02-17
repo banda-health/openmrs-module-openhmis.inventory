@@ -80,6 +80,23 @@
 				}
 
 		/**
+		 * All post-submit validations are done here.
+		 * @return boolean
+		 */
+			// @Override
+		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
+					if(!angular.isDefined($scope.entity.name) || $scope.entity.name === '' || $scope.entity.prices.length === 0){
+						$scope.submitted = true;
+						return false;
+					}
+
+
+					// remove temporarily assigned ids from the prices and codes array lists.
+					self.removeOperationTypesTemporaryIds();
+					return true;
+				}
+
+		/**
 		 * removes the 'attributes' parameter from the entity object before purging.
 		 * @type {Function}
 		 */
@@ -92,7 +109,7 @@
 		 * @type {Function}
 		 */
 		self.removeOperationTypesTemporaryIds = self.removeOperationTypesTemporaryIds || function(){
-					OperationsTypeFunctions.removeOperationTypesTemporaryIds($scope.entity.attributeTypes)
+					OperationsTypeFunctions.removeOperationTypesTemporaryId($scope.entity.attributeTypes);
 				}
 
 
