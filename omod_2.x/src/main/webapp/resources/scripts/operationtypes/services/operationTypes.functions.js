@@ -32,7 +32,7 @@
 					confirm: function() {
 						$scope.entity.attributeTypes = $scope.entity.attributeTypes || [];
 						$scope.submitted = true;
-						if(angular.isDefined($scope.attributeType) && $scope.attributeType.name !== ""){
+						if(angular.isDefined($scope.attributeType) && $scope.attributeType.name !== "" && $scope.attributeType.format){
 							$scope.entity.attributeTypes.push($scope.attributeType);
 							insertOperationTypesTemporaryId($scope.entity.attributeTypes, $scope.attributeType);
 							$scope.attributeType = {};
@@ -89,9 +89,9 @@
 				attributeType.id = index;
 			}
 			else{
-				for(var attribute in attributeTypes){
-					var index = attributeTypes.indexOf(attribute);
-					attribute.id = index;
+				for(var attributeType in attributeTypes){
+					var index = attributeTypes.indexOf(attributeType);
+					attributeType.id = index;
 				}
 			}
 		}
@@ -114,6 +114,18 @@
 			var index = attributeTypes.indexOf(attributeType);
 			attributeTypes.splice(index, 1);
 		}
+
+		/**
+		 * Remove the temporary unique id from all items (prices, codes) before submitting.
+		 * @param items
+		 */
+		function removeOperationTypesTemporaryId(attributeTypes){
+			for(var index in attributeTypes){
+				var attributeType = attributeTypes[index];
+				delete attributeType.id;
+			}
+		}
+
 
 		function addMessageLabels() {
 			var messages = {};

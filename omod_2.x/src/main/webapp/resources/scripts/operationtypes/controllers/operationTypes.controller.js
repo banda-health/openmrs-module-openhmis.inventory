@@ -84,9 +84,17 @@
 		 * @type {Function}
 		 */
 		self.delete = self.delete || function(){
-					delete $scope.entity.attributeTypes;
 					$scope.purge();
 				}
+
+		/**
+		 * Removes the temporarily assigned unique ids before POSTing data
+		 * @type {Function}
+		 */
+		self.removeOperationTypesTemporaryIds = self.removeOperationTypesTemporaryIds || function(){
+					OperationsTypeFunctions.removeOperationTypesTemporaryIds($scope.entity.attributeTypes)
+				}
+
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericEntityController, self, {

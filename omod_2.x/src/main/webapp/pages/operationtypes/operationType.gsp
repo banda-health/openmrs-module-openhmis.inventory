@@ -143,7 +143,7 @@
 										<span>${ui.message('PersonAttributeType.format')}</span>
 									</li>
 									<li>
-										<select ng-model="entity.format" style="font-size:90%; "
+										<select ng-model="entity.format" style="font-size: 10px; "
 										        ng-options="field for field in formatFields track by field">
 											<option value="" ng-if="false"></option>
 											<option ng-selected="entity.format == field">
@@ -209,7 +209,7 @@
 				<span>
 					<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
 					       ng-disabled="entity.name == '' || entity.name == undefined"
-					       ng-click="removeItemTemporaryIds(); saveOrUpdate()"/>
+					       ng-click="removeOperationTypesTemporaryIds(); saveOrUpdate()"/>
 				</span>
 			</li>
 		</ul>
