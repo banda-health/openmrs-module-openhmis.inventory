@@ -11,3 +11,7 @@ ul.dialog-table-layout li {
 #dialog-bottom ul{
     margin-bottom: 0;
 }
+.dialog-select {
+    font-size: 14px;
+    min-width: 115%
+}

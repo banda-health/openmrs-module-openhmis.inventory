@@ -18,7 +18,7 @@
 
 		<ul class="table-layout">
 			<li>
-				<h3>{{messageLabels['general.name']}}</h3>
+				<span>{{messageLabels['general.name']}}</span>
 			</li>
 			<li>
 				<input class="form-control" type="text" ng-model="entity.name" style="min-width: 50%;"
@@ -30,16 +30,16 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<h3>{{messageLabels['general.description']}}</h3>
+				<span>{{messageLabels['general.description']}}</span>
 			</li>
 			<li>
 				<textarea class="form-control" ng-model="entity.description"
-				          placeholder="{{messageLabels['general.description']}}"></textarea>
+				          placeholder="{{messageLabels['general.description']}}" rows="4"></textarea>
 			</li>
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<h3>${ui.message('openhmis.inventory.operations.type.sourceLabel')}</h3>
+				<span>${ui.message('openhmis.inventory.operations.type.sourceLabel')}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.hasSource" disabled="disabled"/>
@@ -47,7 +47,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<h3>${ui.message('openhmis.inventory.operations.type.destinationLabel')}</h3>
+				<span>${ui.message('openhmis.inventory.operations.type.destinationLabel')}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled"/>
@@ -55,7 +55,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<h3>${ui.message('openhmis.inventory.operations.type.recipientLabel')}</h3>
+				<span>${ui.message('openhmis.inventory.operations.type.recipientLabel')}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled"/>
@@ -63,7 +63,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<h3>${ui.message('openhmis.inventory.operations.type.availableWhenReservedLabel')}</h3>
+				<span>${ui.message('openhmis.inventory.operations.type.availableWhenReservedLabel')}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled"/>
@@ -71,7 +71,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<h3>${ui.message('openhmis.inventory.operations.type.userLabel')}</h3>
+				<span>${ui.message('openhmis.inventory.operations.type.userLabel')}</span>
 			</li>
 			<li>
 				<select class="form-control">
@@ -83,7 +83,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<h3>${ui.message('openhmis.inventory.operations.type.roleLabel')}</h3>
+				<span>${ui.message('openhmis.inventory.operations.type.roleLabel')}</span>
 			</li>
 			<li>
 				<select class="form-control">
@@ -96,7 +96,7 @@
 		<br/>
 		<ul class="table-layout">
 			<li>
-				<h3>${ui.message('openhmis.backboneforms.attribute.type.namePlural')}</h3>
+				<span>${ui.message('openhmis.backboneforms.attribute.type.namePlural')}</span>
 			</li>
 			<li>
 				<div class="bbf-editor">
@@ -143,7 +143,7 @@
 										<span>${ui.message('PersonAttributeType.format')}</span>
 									</li>
 									<li>
-										<select ng-model="attributeType.format" style="font-size: 12px; "
+										<select class="form-control dialog-select" ng-model="attributeType.format"
 										        ng-options="field for field in formatFields track by field">
 											<option value="0" >-- Please Select Format --</option>
 											<option ng-selected="attributeType.format == field">
@@ -187,8 +187,14 @@
 								<div class="ngdialog-buttons">
 									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
 									       ng-click="cancel()"/>
-									<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
-									       ng-click="saveOrUpdate()"/>
+									<span ng-show="addAttributeTypeTitle != ''">
+										<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
+										       ng-click="saveOrUpdate()"/>
+									</span>
+									<span ng-show="editAttributeTypeTitle != ''">
+										<input type="button" class="confirm right" value="{{editButton}}"
+										       ng-click="saveOrUpdate()"/>
+									</span>
 								</div>
 							</div>
 						</div>

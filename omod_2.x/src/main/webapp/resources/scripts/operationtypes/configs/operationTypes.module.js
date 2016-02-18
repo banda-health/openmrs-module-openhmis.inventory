@@ -22,7 +22,7 @@
 			$urlRouterProvider.otherwise('/');
 			$stateProvider.state('/', {
 				url: '/',
-				templateUrl: 'manageOperation.page',
+				templateUrl: 'manageOperationType.page',
 				controller: 'ManageOperationTypesController'
 			}).state('edit', {
 				url: '/:uuid',

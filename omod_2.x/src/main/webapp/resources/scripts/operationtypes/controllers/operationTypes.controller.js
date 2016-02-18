@@ -85,7 +85,7 @@
 		 */
 			// @Override
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
-					if(!angular.isDefined($scope.entity.name) || $scope.entity.name === '' || $scope.entity.prices.length === 0){
+					if(!angular.isDefined($scope.entity.name) || $scope.entity.name === ''){
 						$scope.submitted = true;
 						return false;
 					}
