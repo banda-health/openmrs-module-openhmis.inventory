@@ -34,7 +34,7 @@
             };
 
         /**
-         * Initializes and binds any required variable and/or function specific to item.page
+         * Initializes and binds any required variable and/or function specific to entity.page
          * @type {Function}
          */
         // @Override

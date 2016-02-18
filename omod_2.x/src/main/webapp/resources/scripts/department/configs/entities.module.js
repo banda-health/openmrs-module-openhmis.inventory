@@ -1,8 +1,8 @@
 /*
  * The module determines which page should be loaded depending on the url/route.
- * The manageEntities.page page loads all items. The item.page
- * page either creates a new item if NO uuid is given, else loads an
- * existing item for editing.
+ * The manageEntities.page page loads all items. The entity.page
+ * page either creates a new entity if NO uuid is given, else loads an
+ * existing entity for editing.
  */
 (function() {
     define(['department/configs/modules.require'], loadPage);
@@ -26,9 +26,9 @@
         app.config(function($stateProvider, $urlRouterProvider, $provide) {
             /*
              * Configure routes and urls. The default route is '/' which loads
-             * manageEntities.page. 'edit' route calls item.page -- it
-             * appends a 'uuid' to the url to edit an existing item. 'new'
-             * route is called to create a new item.
+             * manageEntities.page. 'edit' route calls entity.page -- it
+             * appends a 'uuid' to the url to edit an existing entity. 'new'
+             * route is called to create a new entity.
              */
             $urlRouterProvider.otherwise('/');
             $stateProvider.state('/', {
@@ -56,7 +56,7 @@
             $provide.factory('$exceptionHandler', function($injector) {
                 return function(exception, cause) {
                     /*
-                     * There are times when the manage item's page won't render on
+                     * There are times when the manageEntities.page won't render on
                      * initial page load -- which is brought about by inconsistencies in
                      * loading dependencies. As a work around we look out for such errors
                      * and reload the page. TODO: Find a better solution to ensure all
