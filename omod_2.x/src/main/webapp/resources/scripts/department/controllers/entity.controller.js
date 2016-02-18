@@ -51,11 +51,6 @@
 
                 /* bind variables.. */
                 $scope.uuid = uuid;
-
-                /* bind functions to scope */
-                $scope.selectConcept = self.selectConcept;
-                $scope.retireUnretire = self.retireUnretire;
-                $scope.delete = self.delete;
             };
 
         /**
