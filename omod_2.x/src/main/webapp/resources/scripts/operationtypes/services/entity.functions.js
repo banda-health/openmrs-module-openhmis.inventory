@@ -27,7 +27,7 @@
 		 */
 		function addAttributeType($scope){
 			$scope.editAttributeTypeTitle = '';
-			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.add'] + ' ' +  $scope.messageLabels['openhmis.backboneforms.attribute.type.name'];
+			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.add'] + ' ' +  $scope.messageLabels['openhmis.inventory.attribute.type.name'];
 			$scope.saveButton = $scope.messageLabels['general.save'];
 			var dialog = emr.setupConfirmationDialog({
 				selector: '#attribute-types-dialog',
@@ -61,7 +61,7 @@
 		 */
 		function editAttributeType(attributeType, $scope){
 			$scope.attributeType = attributeType;
-			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.edit'] + ' ' + $scope.messageLabels['openhmis.backboneforms.attribute.type.name'];
+			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.edit'] + ' ' + $scope.messageLabels['openhmis.inventory.attribute.type.name'];
 			$scope.editButton = $scope.messageLabels['general.update'];
 			$scope.addAttributeTypeTitle = '';
 			var dialog = emr.setupConfirmationDialog({
@@ -157,10 +157,23 @@
 		function addMessageLabels() {
 			var messages = {};
 			messages['openhmis.inventory.general.add'] = emr.message('openhmis.inventory.general.add');
-			messages['openhmis.backboneforms.attribute.type.name'] = emr.message('openhmis.backboneforms.attribute.type.name');
+			messages['openhmis.inventory.attribute.type.name'] = emr.message('openhmis.inventory.attribute.type.name');
 			messages['openhmis.inventory.general.edit'] = emr.message('openhmis.inventory.general.edit');
 			messages['openhmis.inventory.general.saveChanges'] = emr.message("openhmis.inventory.general.saveChanges");
 			messages['openhmis.inventory.general.confirm'] = emr.message("openhmis.inventory.general.confirm");
+			messages['openhmis.inventory.operations.type.sourceLabel'] = emr.message("openhmis.inventory.operations.type.sourceLabel");
+			messages['openhmis.inventory.operations.type.destinationLabel'] = emr.message("openhmis.inventory.operations.type.destinationLabel");
+			messages['openhmis.inventory.operations.type.recipientLabel'] = emr.message("openhmis.inventory.operations.type.recipientLabel");
+			messages['openhmis.inventory.operations.type.availableWhenReservedLabel'] = emr.message("openhmis.inventory.operations.type.availableWhenReservedLabel");
+			messages['openhmis.inventory.operations.type.userLabel'] = emr.message("openhmis.inventory.operations.type.userLabel");
+			messages['openhmis.inventory.operations.type.roleLabel'] = emr.message("openhmis.inventory.operations.type.roleLabel");
+			messages['openhmis.inventory.attribute.type.namePlural'] = emr.message("openhmis.inventory.attribute.type.namePlural");
+			messages['PersonAttributeType.format'] = emr.message("PersonAttributeType.format");
+			messages['PersonAttributeType.foreignKey'] = emr.message("PersonAttributeType.foreignKey");
+			messages['PatientIdentifierType.format'] = emr.message("PatientIdentifierType.format");
+			messages['FormField.required'] = emr.message("FormField.required");
+			messages['Field.attributeName'] = emr.message("Field.attributeName");
+			messages['Obs.order'] = emr.message("Obs.order");
 			return messages;
 		}
 

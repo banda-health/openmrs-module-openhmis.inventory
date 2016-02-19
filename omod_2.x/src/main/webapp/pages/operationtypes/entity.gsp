@@ -39,7 +39,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<span>${ui.message('openhmis.inventory.operations.type.sourceLabel')}</span>
+				<span>{{messageLabels['openhmis.inventory.operations.type.sourceLabel']}}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.hasSource" disabled="disabled"/>
@@ -47,7 +47,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<span>${ui.message('openhmis.inventory.operations.type.destinationLabel')}</span>
+				<span>{{messageLabels['openhmis.inventory.operations.type.destinationLabel']}}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled"/>
@@ -55,7 +55,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<span>${ui.message('openhmis.inventory.operations.type.recipientLabel')}</span>
+				<span>{{messageLabels['openhmis.inventory.operations.type.recipientLabel']}}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled"/>
@@ -63,7 +63,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<span>${ui.message('openhmis.inventory.operations.type.availableWhenReservedLabel')}</span>
+				<span>{{messageLabels['openhmis.inventory.operations.type.availableWhenReservedLabel']}}</span>
 			</li>
 			<li>
 				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled"/>
@@ -71,7 +71,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<span>${ui.message('openhmis.inventory.operations.type.userLabel')}</span>
+				<span>{{messageLabels['openhmis.inventory.operations.type.userLabel']}}</span>
 			</li>
 			<li>
 				<select class="form-control">
@@ -83,7 +83,7 @@
 		</ul>
 		<ul class="table-layout">
 			<li>
-				<span>${ui.message('openhmis.inventory.operations.type.roleLabel')}</span>
+				<span>{{messageLabels['openhmis.inventory.operations.type.roleLabel']}}</span>
 			</li>
 			<li>
 				<select class="form-control">
@@ -96,7 +96,7 @@
 		<br/>
 		<ul class="table-layout">
 			<li>
-				<span>${ui.message('openhmis.backboneforms.attribute.type.namePlural')}</span>
+				<span>{{messageLabels['openhmis.inventory.attribute.type.namePlural']}}</span>
 			</li>
 			<li>
 				<div class="bbf-editor">
@@ -140,7 +140,7 @@
 								</ul>
 								<ul class="table-layout dialog-table-layout">
 									<li class="not-required">
-										<span>${ui.message('PersonAttributeType.format')}</span>
+										<span>{{messageLabels['PersonAttributeType.format']}}</span>
 									</li>
 									<li>
 										<select class="form-control dialog-select" ng-model="attributeType.format"
@@ -153,7 +153,7 @@
 								</ul>
 								<ul class="table-layout dialog-table-layout">
 									<li class="not-required">
-										<span>${ui.message('PersonAttributeType.foreignKey')}</span>
+										<span>{{messageLabels['PersonAttributeType.foreignKey']}}</span>
 									</li>
 									<li>
 										<input type="text" ng-model="attributeType.foreignKey"/>
@@ -161,7 +161,7 @@
 								</ul>
 								<ul class="table-layout dialog-table-layout">
 									<li class="not-required">
-										<span>${ui.message('PatientIdentifierType.format')}</span>
+										<span>{{messageLabels['PatientIdentifierType.format']}}</span>
 									</li>
 									<li>
 										<input type="text" ng-model="attributeType.regExp"/>
@@ -169,18 +169,18 @@
 								</ul>
 								<ul class="table-layout dialog-table-layout">
 									<li class="not-required">
-										<span>${ui.message('FormField.required')}</span>
+										<span>{{messageLabels['FormField.required']}}</span>
 									</li>
 									<li>
 										<input type="checkbox" ng-model="attributeType.required"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
-									<li class="not-required">
-										<span>${ui.message('Field.attributeName')} ${ui.message('Obs.order')}</span>
+									<li class="required">
+										<span>{{messageLabels['Field.attributeName']}} {{messageLabels['Obs.order']}}</span>
 									</li>
 									<li>
-										<input type="number" ng-model="attributeType.attributeOrder"/>
+										<input type="text" required ng-model="attributeType.attributeOrder"/>
 									</li>
 								</ul>
 
@@ -188,11 +188,14 @@
 									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
 									       ng-click="cancel()"/>
 									<span ng-show="addAttributeTypeTitle != ''">
-										<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
+										<input type="button" class="confirm right"
+										       ng-disabled="attributeType.name == '' || attributeType.name == undefined" value="{{messageLabels['general.save']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>
 									<span ng-show="editAttributeTypeTitle != ''">
-										<input type="button" class="confirm right" value="{{messageLabels['openhmis.inventory.general.confirm']}}"
+										<input type="button" class="confirm right"
+										       ng-disabled="attributeType.name == '' || attributeType.name == undefined"
+										       value="{{messageLabels['openhmis.inventory.general.confirm']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>
 								</div>
