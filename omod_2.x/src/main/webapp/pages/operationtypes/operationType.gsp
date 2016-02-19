@@ -34,7 +34,7 @@
 			</li>
 			<li>
 				<textarea class="form-control" ng-model="entity.description"
-				          placeholder="{{messageLabels['general.description']}}" rows="4"></textarea>
+				          placeholder="{{messageLabels['general.description']}}" rows="3"></textarea>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -192,7 +192,7 @@
 										       ng-click="saveOrUpdate()"/>
 									</span>
 									<span ng-show="editAttributeTypeTitle != ''">
-										<input type="button" class="confirm right" value="{{editButton}}"
+										<input type="button" class="confirm right" value="{{messageLabels['openhmis.inventory.general.confirm']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>
 								</div>
@@ -213,7 +213,7 @@
 			</li>
 			<li>
 				<span>
-					<input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
+					<input type="button" class="confirm right" value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
 					       ng-disabled="entity.name == '' || entity.name == undefined"
 					       ng-click="removeOperationTypesTemporaryIds(); saveOrUpdate()"/>
 				</span>

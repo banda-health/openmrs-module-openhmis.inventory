@@ -77,6 +77,28 @@
 		// call-back functions.
 		self.onLoadFormatFieldsSuccessful = self.onLoadFormatFieldsSuccessful || function(data){
 					$scope.formatFields = data.results;
+					var formatFields = $scope.formatFields;
+					for (var format in formatFields) {
+						switch (formatFields[format]) {
+							// As per PersonAttributeTypeFormController.java, remove inapplicable formats
+							case "java.util.Date":
+							case "org.openmrs.Patient.exitReason":
+							case "org.openmrs.DrugOrder.discontinuedReason":
+								formatFields[format] = undefined;
+								break;
+						}
+					}
+					do {
+						var undefinedId = _.indexOf(formatFields, undefined);
+						if (undefinedId !== -1)
+							formatFields.splice(undefinedId, 1);
+					} while (undefinedId !== -1)
+					formatFields.unshift("java.lang.Character");
+					formatFields.unshift("java.lang.Integer");
+					formatFields.unshift("java.lang.Float");
+					formatFields.unshift("java.lang.Boolean");
+					return formatFields;
+
 				}
 
 		/**
@@ -89,9 +111,7 @@
 						$scope.submitted = true;
 						return false;
 					}
-
-
-					// remove temporarily assigned ids from the prices and codes array lists.
+					// remove temporarily assigned ids from the attribute type array lists.
 					self.removeOperationTypesTemporaryIds();
 					return true;
 				}

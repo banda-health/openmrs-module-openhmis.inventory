@@ -31,5 +31,6 @@ emr.loadMessages([
 	"openhmis.backboneforms.attribute.type.name",
 	"openhmis.inventory.general.add",
 	"openhmis.inventory.general.edit",
-	"general.update"
+	"openhmis.inventory.general.saveChanges",
+	"openhmis.inventory.general.confirm"
 ]);

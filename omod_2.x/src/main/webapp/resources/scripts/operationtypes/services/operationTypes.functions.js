@@ -136,7 +136,8 @@
 			messages['openhmis.inventory.general.add'] = emr.message('openhmis.inventory.general.add');
 			messages['openhmis.backboneforms.attribute.type.name'] = emr.message('openhmis.backboneforms.attribute.type.name');
 			messages['openhmis.inventory.general.edit'] = emr.message('openhmis.inventory.general.edit');
-			messages['general.update'] = emr.message("general.update");
+			messages['openhmis.inventory.general.saveChanges'] = emr.message("openhmis.inventory.general.saveChanges");
+			messages['openhmis.inventory.general.confirm'] = emr.message("openhmis.inventory.general.confirm");
 			return messages;
 		}
 
