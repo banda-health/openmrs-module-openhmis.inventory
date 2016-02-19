@@ -10,12 +10,12 @@
 	ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
 	ui.includeCss("openhmis.commons", "bootstrap.css")
 	ui.includeCss("openhmis.commons", "entities2x.css")
-	ui.includeCss("openhmis.inventory", "operationTypes.css")
+	ui.includeCss("openhmis.inventory", "entity.css")
 %>
 
 <script type="text/javascript" src="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/operationtypes/configs/load.messages.require.js"></script>
 <script type="text/javascript" src="/openmrs/moduleResources/openhmis/commons/scripts/reusable-components/config.js"></script>
-<script data-main="operationtypes/configs/operationTypes.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="operationtypes/configs/entities.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="entitiesApp">
 	<div ui-view></div>

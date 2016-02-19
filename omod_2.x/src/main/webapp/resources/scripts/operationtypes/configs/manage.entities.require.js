@@ -2,5 +2,5 @@
 define(
 		['reusable-components/controllers/generic.manage.controller.module',
 			'reusable-components/controllers/generic.manage.controller',
-			'operationtypes/controllers/manage-operationTypes.controller', ], function() {
+			'operationtypes/controllers/manage-entity.controller', ], function() {
 		});
