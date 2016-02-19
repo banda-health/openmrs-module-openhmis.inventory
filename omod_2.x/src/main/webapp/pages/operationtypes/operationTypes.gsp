@@ -17,6 +17,6 @@
 <script type="text/javascript" src="/openmrs/moduleResources/openhmis/commons/scripts/reusable-components/config.js"></script>
 <script data-main="operationtypes/configs/operationTypes.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
-<div id="operationTypesApp">
+<div id="entitiesApp">
 	<div ui-view></div>
 </div>

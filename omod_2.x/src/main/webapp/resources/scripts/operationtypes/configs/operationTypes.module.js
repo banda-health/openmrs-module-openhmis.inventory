@@ -9,13 +9,13 @@
 
 	function loadpage() {
 		'use strict';
-		var app = angular.module('operationTypesApp', ['ui.bootstrap', 'ngDialog', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
+		var app = angular.module('entitiesApp', ['ui.bootstrap', 'ngDialog', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
 			'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
 			'app.operationsTypeFunctionsFactory', 'app.genericEntityController', 'app.genericManageController']);
 		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 			/*
 			 * Configure routes and urls. The default route is '/' which loads
-			 * manageOperationTypes.page. 'edit' route calls operationTypes.page -- it
+			 * manageOperationType.page. 'edit' route calls operationTypes.page -- it
 			 * appends a 'uuid' to the url to edit an existing operation types. 'new'
 			 * route is called to create a new operation types.
 			 */

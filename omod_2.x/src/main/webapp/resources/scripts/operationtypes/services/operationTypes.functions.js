@@ -53,7 +53,7 @@
 		}
 
 		/**
-		 * Opens a popup dialog box to edit an item code
+		 * Opens a popup dialog box to edit an attribute Type
 		 * @param attributeType
 		 * @param ngDialog
 		 * @param $scope
@@ -83,9 +83,9 @@
 
 		/**
 		 * ng-repeat requires that every item have a unique identifier.
-		 * This function sets a temporary unique id for all items in the list.
-		 * @param items (prices, codes)
-		 * @param item - optional
+		 * This function sets a temporary unique id for all attribute types in the list.
+		 * @param operationTypes (attributeTypes)
+		 * @param operationType - optional
 		 */
 		function insertOperationTypesTemporaryId(attributeTypes, attributeType){
 			if(angular.isDefined(attributeType)){
@@ -110,9 +110,9 @@
 		}
 
 		/**
-		 * Searches an item and removes it from the list
-		 * @param item
-		 * @param items
+		 * Searches an attribute type and removes it from the list
+		 * @param attribute type
+		 * @param attribute Types
 		 */
 		function removeFromList(attributeType, attributeTypes){
 			var index = attributeTypes.indexOf(attributeType);
@@ -120,7 +120,7 @@
 		}
 
 		/**
-		 * Remove the temporary unique id from all items (prices, codes) before submitting.
+		 * Remove the temporary unique id from all operation types (attributetypes) before submitting.
 		 * @param items
 		 */
 		function removeOperationTypesTemporaryId(attributeTypes){

@@ -16,7 +16,7 @@
 		return service;
 
 		/**
-		 * Temporary Function: It will ONLY be used until the Department module is done.
+		 * Temporary Function: It will ONLY be used until the Operation Types module is done.
 		 * @param limit
 		 * @param onLoadUsersSuccessful
 		 */

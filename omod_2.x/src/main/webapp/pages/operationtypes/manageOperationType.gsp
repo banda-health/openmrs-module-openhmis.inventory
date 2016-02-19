@@ -8,16 +8,16 @@
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 </script>
 
-<div id="operationTypes-body">
+<div id="entities-body">
 	<br />
-	<div id="manage-operationTypes-header">
+	<div id="manage-entities-header">
 		<span class="h1-substitue-left" style="float:left;">
 			${ ui.message('openhmis.inventory.admin.operationTypes') }
 		</span>
 	</div>
 	<br /><br /><br />
 	<div ng-controller="ManageOperationTypesController">
-		<div id="operationTypes">
+		<div id="entities">
 			<div class="btn-group">
 				<input type="text" ng-model="searchField" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.general.enterSearchPhrase') }" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
@@ -45,21 +45,21 @@
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired" ng-change="updateContent()"></span>
 				<span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
 			</div>
-			<div id="below-institutions-table" ng-hide="fetchedEntities.length == 0">
+			<div id="below-entities-table" ng-hide="fetchedEntities.length == 0">
 				<span style="float:left;">
-					<div id="showing-operationTypes">
+					<div id="showing-entities">
 						<span><b>${ ui.message('openhmis.inventory.general.showing') } {{pagingFrom(currentPage, limit)}} ${ ui.message('openhmis.inventory.general.to') } {{pagingTo(currentPage, limit, totalNumOfResults)}}</b></span>
 						<span><b>${ ui.message('openhmis.inventory.general.of') } {{totalNumOfResults}} ${ ui.message('openhmis.inventory.general.entries') }</b></span>
 					</div>
 				</span>
 				<span style="float:right;">
-					<div class="operationTypes-pagination">
+					<div class="entities-pagination">
     					<dir-pagination-controls on-page-change="paginate(currentPage)"></dir-pagination-controls>	
 					</div>
 				</span>
 				<br />
 				<span style="float:left;">
-					<div id="includeVoided-operationTypes">
+					<div id="includeVoided-entities">
 						${ui.message('openhmis.inventory.general.show')} 
 						<select id="pageSize" ng-model="limit" ng-change="updateContent()">
 							<option value="2">2</option>
