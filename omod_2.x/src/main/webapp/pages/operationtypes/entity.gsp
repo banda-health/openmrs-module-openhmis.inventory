@@ -3,7 +3,7 @@
         { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
         { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
         { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
-        { label: "${ ui.message("openhmis.inventory.admin.operationTypes")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationtypes/operationTypes.page'},
+        { label: "${ ui.message("openhmis.inventory.admin.operationTypes")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationtypes/entities.page'},
         { label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
     ];
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
