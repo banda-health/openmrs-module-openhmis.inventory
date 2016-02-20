@@ -7,10 +7,13 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.mchange.util.AssertException;
 import org.apache.commons.lang.ObjectUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.GlobalProperty;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
@@ -39,12 +42,16 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
+import static org.openmrs.module.openhmis.inventory.ModuleSettings.RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD;
+import static org.openmrs.module.openhmis.inventory.ModuleSettings.isNegativeStockRestricted;
+
 public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTest {
 	IItemDataService itemDataService;
 	IStockroomDataService stockroomDataService;
 	IItemStockDataService itemStockDataService;
 	IStockOperationDataService operationDataService;
 	ITestableStockOperationService service;
+	AdministrationService adminService;
 
 	IItemDataServiceTest itemTest;
 	IStockOperationDataServiceTest operationTest;
@@ -62,6 +69,8 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		itemStockDataService = Context.getService(IItemStockDataService.class);
 		operationDataService = Context.getService(IStockOperationDataService.class);
 		service = Context.getService(ITestableStockOperationService.class);
+
+		adminService = Context.getAdministrationService();
 
 		itemTest = new IItemDataServiceTest();
 		operationTest = new IStockOperationDataServiceTest();
@@ -1069,6 +1078,87 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Assert.assertEquals(15, (long)tx.getQuantity());
 		Assert.assertNull(tx.getBatchOperation());
 		Assert.assertNull(tx.getExpiration());
+	}
+
+	@Test
+	public void calculateReservations_shouldThrowErrorWhenGlobalPropertyEnabledAndNetSourceStockWillBeNegativeAndRemoving()
+	        throws Exception {
+		//Enable Global Property
+		adminService.saveGlobalProperty(new GlobalProperty(RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD,
+		        "true"));
+
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemDataService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomDataService.getById(0);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item);
+		stock.setQuantity(10);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(10);
+
+		stock.addDetail(detail);
+		sr.addItem(stock);
+
+		stockroomDataService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to deduct more stock from the stockroom
+		StockOperation op = operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getDistribution());
+		op.setSource(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+		op.addItem(item, 55);
+
+		//Ensure that global property is properly set and readable
+		Assert.assertTrue(isNegativeStockRestricted());
+
+		try {
+
+			// Set up the reservation transactions (this is normally done in submitOperation)
+			for (StockOperationItem itemStock : op.getItems()) {
+				ReservedTransaction tx = new ReservedTransaction(itemStock);
+				tx.setCreator(Context.getAuthenticatedUser());
+				tx.setDateCreated(new Date());
+
+				op.addReserved(tx);
+			}
+
+			// Now calculate the actual reservations
+			service.calculateReservations(op);
+
+		} catch (Exception ex) {
+			//Catching the expected exception
+			Assert.assertNotNull(ex);
+			//Ensuring that the exception is the one we want
+			Assert.assertTrue(ex.getMessage().contains("Resource stockroom does not have sufficient stock."));
+		}
+
+		// Check the generated pending transactions
+		Set<ReservedTransaction> transactions = op.getReserved();
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+
+		//Disable Global Property just in case
+		adminService.saveGlobalProperty(new GlobalProperty(RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD,
+		        "false"));
+		//Ensure that global property is properly disabled
+		Assert.assertFalse(isNegativeStockRestricted());
 	}
 
 	@Test

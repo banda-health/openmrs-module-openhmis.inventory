@@ -22,7 +22,7 @@
 	</aware_of_modules>
 
 	<require_modules>
-		<require_module version="2.11">org.openmrs.module.webservices.rest</require_module>
+		<require_module version="2.9">org.openmrs.module.webservices.rest</require_module>
 		<require_module version="3.0">org.openmrs.module.openhmis.commons</require_module>
 		<require_module version="2.3">org.openmrs.module.openhmis.backboneforms</require_module>
 		<require_module version="1.5.6">org.openmrs.module.jasperreport</require_module>
@@ -75,6 +75,12 @@
 		<property>${project.parent.artifactId}.showOperationCancelReason</property>
 		<description>true/false whether or not the cancel reason field should be used.</description>
 	</globalProperty>
+
+    <globalProperty>
+        <property>${project.parent.artifactId}.restrictNegativeInventoryStockCreation</property>
+        <defaultValue>false</defaultValue>
+        <description>true/false whether or not the system should restrict creation of stock with negative amounts</description>
+    </globalProperty>
 
 	<!-- Adds link to admin page -->
 	<extension>
