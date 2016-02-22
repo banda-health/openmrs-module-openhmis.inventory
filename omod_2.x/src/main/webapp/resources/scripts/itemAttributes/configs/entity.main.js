@@ -34,15 +34,10 @@ emr.loadMessages([
     "openhmis.inventory.general.error.retireReason",
     "openhmis.backboneforms.attribute.type.name",
     "openhmis.backboneforms.attribute.type.namePlural",
-
     "openhmis.inventory.admin.item.attribute.types",
-
     "openhmis.inventory.item.delete.confirm.AttributeType",
-
     "openhmis.backboneforms.attribute.type.name",
-
     "openhmis.backboneforms.required.field.name",
-
     "openhmis.inventory.itemAttributeType",
     "openhmis.inventory.itemAttributeType_rest",
     "FormField.required",
