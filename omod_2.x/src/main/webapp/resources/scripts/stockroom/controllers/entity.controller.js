@@ -19,7 +19,7 @@
             }
 
         /**
-         * Initializes and binds any required variable and/or function specific to the stockroom page
+         * Initializes and binds any required variable and/or function specific to entity.page
          * @type {Function}
          */
             // @Override
