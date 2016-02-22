@@ -1,6 +1,6 @@
 /*
  * The module determines which page should be loaded depending on the url/route.
- * The managestockrooms.page page loads all items. The stockrooms.page
+ * The manage stockrooms page loads all stockrooms. The stockrooms.page
  * page either creates a new stockroom if NO uuid is given, else loads an
  * existing stockroom for editing.
  */
@@ -22,13 +22,13 @@
             $urlRouterProvider.otherwise('/');
             $stateProvider.state('/', {
                 url: '/',
-                templateUrl: 'manageStockrooms.page',
+                templateUrl: 'manageEntities.page',
                 controller: 'ManageStockroomsController'
             }).state('edit', {
                 url: '/:uuid',
                 views: {
                     '': {
-                        templateUrl: 'stockroom.page',
+                        templateUrl: 'entity.page',
                         controller: 'StockroomController'
                     }
                 }
@@ -36,7 +36,7 @@
                 url: '/',
                 views: {
                     '': {
-                        templateUrl: 'stockroom.page',
+                        templateUrl: 'entity.page',
                         controller: 'StockroomController'
                     }
                 }

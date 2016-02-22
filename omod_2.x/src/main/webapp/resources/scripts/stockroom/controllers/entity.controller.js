@@ -7,12 +7,10 @@
         'StockroomModel', 'StockroomRestfulService', 'PaginationService', 'StockroomsFunctions'];
 
     function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, StockroomsFunctions) {
-
         var self = this;
-
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
-        var cancel_page = 'stockrooms.page';
+        var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
 
         // @Override

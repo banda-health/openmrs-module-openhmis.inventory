@@ -3,7 +3,7 @@
         { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
         { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
         { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/manageModule.page' },
-        { label: "${ ui.message("openhmis.inventory.admin.stockrooms")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/stockrooms.page#/'},
+        { label: "${ ui.message("openhmis.inventory.admin.stockrooms")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/entities.page#/'},
         { label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.stockroom.name")}"}
     ];
 
