@@ -13,11 +13,7 @@
     var module_name = 'inventory';
     var entity_name = emr.message("openhmis.inventory.institution.name");
     var cancel_page = 'institutions.page';
-<<<<<<< HEAD
     var rest_entity_name = emr.message("openhmis.inventory.institution.name_rest");
-=======
-	var rest_entity_name = emr.message("openhmis.inventory.institution.name_rest")
->>>>>>> 083d37350209b67586ea7261028842109cc5b7f1
 
     // @Override
     self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
