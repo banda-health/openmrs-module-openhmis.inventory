@@ -12,7 +12,7 @@
 
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.itemAttributeType");
-        var cancel_page = 'itemAttributeTypes.page';
+        var cancel_page = 'entities.page';
         var rest_name = emr.message("openhmis.inventory.itemAttributeType_rest");
 
         // @Override

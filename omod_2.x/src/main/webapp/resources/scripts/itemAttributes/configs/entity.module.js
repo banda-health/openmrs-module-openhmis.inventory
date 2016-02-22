@@ -22,13 +22,13 @@
             $urlRouterProvider.otherwise('/');
             $stateProvider.state('/', {
                 url: '/',
-                templateUrl: 'manageItemAttributeTypes.page',
+                templateUrl: 'manageEntities.page',
                 controller: 'ManageItemAttributeTypesController'
             }).state('edit', {
                 url: '/:uuid',
                 views: {
                     '': {
-                        templateUrl: 'itemAttributeType.page',
+                        templateUrl: 'entity.page',
                         controller: 'ItemAttributeTypesController'
                     }
                 }
@@ -36,7 +36,7 @@
                 url: '/',
                 views: {
                     '': {
-                        templateUrl: 'itemAttributeType.page',
+                        templateUrl: 'entity.page',
                         controller: 'ItemAttributeTypesController'
                     }
                 }
