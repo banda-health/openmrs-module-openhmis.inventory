@@ -6,13 +6,23 @@
     ui.includeJavascript("uicommons", "angular-ui/ui-bootstrap-tpls-0.11.2.min.js")
     ui.includeJavascript("uicommons", "angular-common.js")
 
+    /* load re-usables/common modules */
+    ui.includeFragment("openhmis.commons", "load.reusable.modules")
+
+    /* load item attribute types modules */
+    ui.includeJavascript("openhmis.inventory", "itemAttributes/models/entity.model.js")
+    ui.includeJavascript("openhmis.inventory", "itemAttributes/services/entity.restful.services.js")
+    ui.includeJavascript("openhmis.inventory", "itemAttributes/controllers/entity.controller.js")
+    ui.includeJavascript("openhmis.inventory", "itemAttributes/controllers/manage-entity.controller.js")
+
+    /* load stylesheets */
+    ui.includeCss("openhmis.commons", "bootstrap.css")
+    ui.includeCss("openhmis.commons", "entities2x.css")
+
 %>
 
-<script type="text/javascript" src="/openmrs/ms/uiframework/resource/openhmis.inventory/scripts/itemAttributes/configs/load.messages.require.js"></script>
-<script type="text/javascript" src="/openmrs/moduleResources/openhmis/commons/scripts/reusable-components/config.js"></script>
-<script data-main="itemAttributes/configs/item.attribute.types.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
-<link rel="stylesheet" href="/openmrs/moduleResources/openhmis/commons/css/bootstrap.css" />
-<link rel="stylesheet" href="/openmrs/moduleResources/openhmis/commons/css/entities2x.css" />
+<script data-main="itemAttributes/configs/entity.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+
 <div id="itemAttributeTypesApp">
     <div ui-view></div>
 </div>

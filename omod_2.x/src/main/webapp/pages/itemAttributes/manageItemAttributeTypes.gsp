@@ -9,7 +9,7 @@
 </script>
 
 <div id="entities-body">
-    <br /><br /><br />
+    <br />
     <div id="manage-entities-header">
         <span class="h1-substitue-left" style="float:left;">
             ${ ui.message('openhmis.inventory.admin.item.attribute.types') }
