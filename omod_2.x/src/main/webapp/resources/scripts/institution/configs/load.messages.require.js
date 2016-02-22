@@ -1,6 +1,10 @@
 emr.loadMessages([
   "openhmis.inventory.institution.name",
+<<<<<<< HEAD
   "openhmis.inventory.institution.name_rest",
+=======
+	"openhmis.inventory.institution.name_rest",
+>>>>>>> 083d37350209b67586ea7261028842109cc5b7f1
   "openhmis.inventory.general.new",
   "openhmis.inventory.general.error.notFound",
   "openhmis.inventory.general.created.success",
