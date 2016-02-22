@@ -9,7 +9,7 @@
 
   function loadpage() {
     'use strict';
-    var app = angular.module('institutionsApp', ['ui.router', 'angularUtils.directives.dirPagination', 'app.css',
+    var app = angular.module('entitiesApp', ['ui.router', 'angularUtils.directives.dirPagination', 'app.css',
         'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
         'app.genericEntityController', 'app.genericManageController']);
     app.config(function($stateProvider, $urlRouterProvider, $provide) {
@@ -22,13 +22,13 @@
       $urlRouterProvider.otherwise('/');
       $stateProvider.state('/', {
         url: '/',
-        templateUrl: 'manageInstitutions.page',
+        templateUrl: 'manageEntities.page',
         controller: 'ManageInstitutionController'
       }).state('edit', {
         url: '/:uuid',
         views: {
           '': {
-            templateUrl: 'institution.page',
+            templateUrl: 'entity.page',
             controller: 'InstitutionController'
           }
         }
@@ -36,7 +36,7 @@
         url: '/',
         views: {
           '': {
-            templateUrl: 'institution.page',
+            templateUrl: 'entity.page',
             controller: 'InstitutionController'
           }
         }

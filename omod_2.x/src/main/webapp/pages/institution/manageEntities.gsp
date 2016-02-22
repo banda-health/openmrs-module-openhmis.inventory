@@ -10,9 +10,9 @@
 
 </script>
 
-<div id="institutions-body">
+<div id="entities-body">
 	<br />
-	<div id="manage-institutions-header">
+	<div id="manage-entities-header">
 		<span class="h1-substitue-left" style="float:left;">
 			${ ui.message('openhmis.inventory.admin.institutions') }
 		</span>
@@ -25,14 +25,14 @@
 	</div>
 	<br /><br /><br />
 	<div ng-controller="ManageInstitutionController">
-		<div id="institutions">
+		<div id="entities">
 			<div class="btn-group">
 				<input type="text" ng-model="searchField" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.general.enterSearchPhrase') }" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
 			</div>
 			
 			<br /><br />
-			<table style="margin-bottom:5px;">
+			<table style="margin-bottom:5px;" class="entities-table">
 				<thead>
 					<tr>
 						<th>${ ui.message('general.name') }</th>
@@ -46,21 +46,21 @@
 					</tr>
 				</tbody>
 			</table>
-			<div id="below-institutions-table">
+			<div id="below-entities-table">
 				<span style="float:left;">
-					<div id="showing-institutions">
+					<div id="showing-entities">
 						<span><b>${ ui.message('openhmis.inventory.general.showing') } {{pagingFrom(currentPage, limit)}} ${ ui.message('openhmis.inventory.general.to') } {{pagingTo(currentPage, limit, totalNumOfResults)}}</b></span>
 						<span><b>${ ui.message('openhmis.inventory.general.of') } {{totalNumOfResults}} ${ ui.message('openhmis.inventory.general.entries') }</b></span>
 					</div>
 				</span>
 				<span style="float:right;">
-					<div class="institution-pagination">
+					<div class="entities-pagination">
     					<dir-pagination-controls on-page-change="paginate(currentPage)"></dir-pagination-controls>	
 					</div>
 				</span>
 				<br />
 				<span style="float:left;">
-					<div id="includeVoided-institutions">
+					<div id="includeVoided-entities">
 						${ui.message('openhmis.inventory.general.show')} 
 						<select id="pageSize" ng-model="limit" ng-change="updateContent()">
 							<option value="2">2</option>
