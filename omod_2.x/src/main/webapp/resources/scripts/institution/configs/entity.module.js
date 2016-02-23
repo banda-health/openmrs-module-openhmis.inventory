@@ -56,7 +56,6 @@
 					// unknown provider..
 					var exc = String(exception);
 					if (exc.indexOf("unpr") !== -1) {
-						window.location.reload();
 					} else if (exc.indexOf("session") !== -1
 							|| exc.indexOf("timeout") !== -1) {
 						console.log(exc + " - " + cause);
