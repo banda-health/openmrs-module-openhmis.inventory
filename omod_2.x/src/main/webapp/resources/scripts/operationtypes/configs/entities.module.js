@@ -5,13 +5,16 @@
  * existing operation type for editing.
  */
 (function() {
-	define(['operationtypes/configs/modules.require'], loadpage);
+	define([], loadpage);
 
 	function loadpage() {
 		'use strict';
-		var app = angular.module('entitiesApp', ['ui.bootstrap', 'ngDialog', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
-			'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
-			'app.operationsTypeFunctionsFactory', 'app.genericEntityController', 'app.genericManageController']);
+		var app = angular.module('entitiesApp', ['ui.bootstrap', 'ngDialog',
+				'ui.router', 'angularUtils.directives.dirPagination',
+				'app.css', 'app.filters', 'app.pagination', 'app.cookies',
+				'app.genericMetadataModel', 'app.restfulServices',
+				'app.operationsTypeFunctionsFactory',
+				'app.genericEntityController', 'app.genericManageController']);
 		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 			/*
 			 * Configure routes and urls. The default route is '/' which loads
@@ -21,15 +24,15 @@
 			 */
 			$urlRouterProvider.otherwise('/');
 			$stateProvider.state('/', {
-				url: '/',
-				templateUrl: 'manageEntities.page',
-				controller: 'ManageOperationTypesController'
+				url : '/',
+				templateUrl : 'manageEntities.page',
+				controller : 'ManageOperationTypesController'
 			}).state('edit', {
-				url: '/:uuid',
-				views: {
-					'': {
-						templateUrl: 'entity.page',
-						controller: 'OperationTypesController'
+				url : '/:uuid',
+				views : {
+					'' : {
+						templateUrl : 'entity.page',
+						controller : 'OperationTypesController'
 					}
 				}
 			});
@@ -47,7 +50,8 @@
 					var exc = String(exception);
 					if (exc.indexOf("unpr") !== -1) {
 						window.location.reload();
-					} else if (exc.indexOf("session") !== -1 || exc.indexOf("timeout") !== -1) {
+					} else if (exc.indexOf("session") !== -1
+							|| exc.indexOf("timeout") !== -1) {
 						console.log(exc + " - " + cause);
 						emr.message("SESSION TIMEOUT");
 					} else {

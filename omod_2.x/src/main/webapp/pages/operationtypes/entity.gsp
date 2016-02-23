@@ -1,14 +1,24 @@
 <script type="text/javascript">
-    var breadcrumbs = [
-        { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
-        { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
-        { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
-        { label: "${ ui.message("openhmis.inventory.admin.operationTypes")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationtypes/entities.page'},
-        { label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
-    ];
-    jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
+	var breadcrumbs = [
+		{icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm'},
+		{
+			label: "${ ui.message("openhmis.inventory.page")}",
+			link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'
+		},
+		{
+			label: "${ ui.message("openhmis.inventory.manage.module")}",
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page'
+		},
+		{
+			label: "${ ui.message("openhmis.inventory.admin.operationTypes")}",
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationtypes/entities.page'
+		},
+		{label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
+	];
+	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 
 </script>
+
 <form onsubmit="return removeIndexFromItems()">
 	<h1>{{messageLabels['h2SubString']}}</h1>
 
@@ -133,7 +143,7 @@
 									<li class="required">
 										<span>{{messageLabels['general.name']}}</span>
 									</li>
-									<li >
+									<li>
 										<input type="text" style="min-width: 100%;"
 										       placeholder="" required ng-model="attributeType.name"/>
 									</li>
@@ -145,7 +155,7 @@
 									<li>
 										<select class="form-control dialog-select" ng-model="attributeType.format"
 										        ng-options="field for field in formatFields track by field">
-											<option value="0" >-- Please Select Format --</option>
+											<option value="0">-- Please Select Format --</option>
 											<option ng-selected="attributeType.format == field">
 											</option>
 										</select>
@@ -189,7 +199,8 @@
 									       ng-click="cancel()"/>
 									<span ng-show="addAttributeTypeTitle != ''">
 										<input type="button" class="confirm right"
-										       ng-disabled="attributeType.name == '' || attributeType.name == undefined" value="{{messageLabels['general.save']}}"
+										       ng-disabled="attributeType.name == '' || attributeType.name == undefined"
+										       value="{{messageLabels['general.save']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>
 									<span ng-show="editAttributeTypeTitle != ''">
@@ -216,7 +227,8 @@
 			</li>
 			<li>
 				<span>
-					<input type="button" class="confirm right" value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
+					<input type="button" class="confirm right"
+					       value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
 					       ng-disabled="entity.name == '' || entity.name == undefined"
 					       ng-click="removeOperationTypesTemporaryIds(); saveOrUpdate()"/>
 				</span>

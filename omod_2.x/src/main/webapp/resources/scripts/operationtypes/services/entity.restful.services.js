@@ -1,16 +1,17 @@
-(function (){
+(function() {
 	'use strict'
 
-	angular.module('app.restfulServices').service('OperationTypesRestfulService', OperationTypesRestfulService);
+	angular.module('app.restfulServices').service(
+			'OperationTypesRestfulService', OperationTypesRestfulService);
 
 	OperationTypesRestfulService.$inject = ['EntityRestFactory'];
 
 	function OperationTypesRestfulService(EntityRestFactory) {
 		var service;
 		service = {
-			loadUsers: loadUsers,
-			loadRoles: loadRoles,
-			loadFormatFields: loadFormatFields
+			loadUsers : loadUsers,
+			loadRoles : loadRoles,
+			loadFormatFields : loadFormatFields
 		};
 
 		return service;
@@ -20,31 +21,28 @@
 		 * @param limit
 		 * @param onLoadUsersSuccessful
 		 */
-		function loadUsers(module_name,limit, onLoadUsersSuccessful) {
+		function loadUsers(module_name, limit, onLoadUsersSuccessful) {
 			var requestParams = [];
 			requestParams['rest_entity_name'] = '';
 			requestParams['limit'] = limit;
 			EntityRestFactory.setBaseUrl('user', 'v1');
 			EntityRestFactory.loadEntities(requestParams,
-					onLoadUsersSuccessful,
-					function(error){
+					onLoadUsersSuccessful, function(error) {
 						console.log(error);
-					}
-			);
+					});
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
 
-		function loadRoles(module_name,limit, onLoadRolesSuccessful) {
+		function loadRoles(module_name, limit, onLoadRolesSuccessful) {
 			var requestParams = [];
 			requestParams['rest_entity_name'] = '';
 			requestParams['limit'] = limit;
 			EntityRestFactory.setBaseUrl('role', 'v1');
-			EntityRestFactory.loadEntities(requestParams,onLoadRolesSuccessful,
-					function(error) {
+			EntityRestFactory.loadEntities(requestParams,
+					onLoadRolesSuccessful, function(error) {
 						console.log(error);
-					}
-			);
+					});
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
@@ -54,11 +52,9 @@
 			requestParams['resource'] = 'fieldgenhandlers.json';
 			EntityRestFactory.setCustomBaseUrl('/openmrs/');
 			EntityRestFactory.loadResults(requestParams,
-					onLoadFormatFieldsSuccessful,
-					function(error){
+					onLoadFormatFieldsSuccessful, function(error) {
 						console.log(error);
-					}
-			);
+					});
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
