@@ -1,18 +1,18 @@
 (function() {
-  'use strict';
+	'use strict';
 
-  var baseModel = angular.module('app.genericMetadataModel');
+	var baseModel = angular.module('app.genericMetadataModel');
 
-  /* Define model fields */
-  function InstitutionModel(GenericMetadataModel) {
+	/* Define model fields */
+	function InstitutionModel(GenericMetadataModel) {
 
-    var extended = angular.extend(GenericMetadataModel, {});
+		var extended = angular.extend(GenericMetadataModel, {});
 
-    return extended;
-  }
+		return extended;
+	}
 
-  baseModel.factory("InstitutionModel", InstitutionModel);
+	baseModel.factory("InstitutionModel", InstitutionModel);
 
-  InstitutionModel.$inject = ['GenericMetadataModel'];
+	InstitutionModel.$inject = ['GenericMetadataModel'];
 
 })();
