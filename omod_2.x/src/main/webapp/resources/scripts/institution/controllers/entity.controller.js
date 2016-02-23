@@ -13,7 +13,7 @@
 
 		var module_name = 'inventory';
 		var entity_name = emr.message("openhmis.inventory.institution.name");
-		var cancel_page = 'institutions.page';
+		var cancel_page = 'entities.page';
 		var rest_entity_name = emr
 				.message("openhmis.inventory.institution.name_rest");
 
