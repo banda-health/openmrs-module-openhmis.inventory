@@ -59,7 +59,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Items",
-        "url": "openhmis.inventory/item/items.page",
+        "url": "openhmis.inventory/item/entities.page",
         "icon": "icon-italic",
         "requiredPrivilege": "Task: Access Manage Items"
       },
