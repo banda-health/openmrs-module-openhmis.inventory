@@ -37,7 +37,7 @@ import java.io.IOException;
  * Controller for the Inventory Settings 2.x page.
  */
 @Controller(value = "invSettings2xController")
-@RequestMapping(ModuleWebConstants.SETTINGS2X_ROOT)
+@RequestMapping(ModuleWebConstants.SETTINGS_2X_ROOT)
 public class Settings2xController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model, HttpServletRequest request) throws IOException {

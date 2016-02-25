@@ -31,7 +31,7 @@ import java.util.Set;
  * Created by dubdabasoduba on 21/01/2016.
  */
 @Controller
-@RequestMapping(ModuleWebConstants.ROLECREATION2X_ROOT)
+@RequestMapping(ModuleWebConstants.ROLE_CREATION_2X_ROOT)
 public class InventoryRole2xController {
 	private static final Log LOG = LogFactory.getLog(InventoryRole2xController.class);
 
