@@ -119,7 +119,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "View Stock Operation",
-        "url": "module/openhmis/inventory/operations.form",
+        "url": "openhmis.inventory/stockoperations/entities.page",
         "icon": "icon-list",
         "requiredPrivilege": "Task: Access View Stock Operations"
       },

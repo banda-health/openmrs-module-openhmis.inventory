@@ -1,0 +1,33 @@
+table.manage-entities-table th:first-child, td:first-child{
+    width: 80%;
+}
+
+table.search {
+    border-style: hidden;
+}
+
+table.search td{
+    border: 0px;
+}
+
+table.search input{
+    width: 200px;
+}
+
+table.search select{
+    width: 170px;
+}
+
+form.search{
+    width: 100%;
+    float:left;
+}
+
+form.search select{
+    min-width: 0px;
+}
+
+fieldset.search {
+    min-width: 0px;
+    width: 100%;
+}
