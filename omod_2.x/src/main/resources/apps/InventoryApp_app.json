@@ -99,7 +99,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Stockrooms",
-        "url": "module/openhmis/inventory/stockrooms.form",
+        "url": "openhmis.inventory/stockroom/entities.page",
         "icon": "icon-home",
         "requiredPrivilege": "Task: Access Manage Stockrooms"
       },

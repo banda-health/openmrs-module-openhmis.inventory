@@ -1,0 +1,29 @@
+ul.search-area{
+    text-align: left;
+}
+
+ul.search-area li{
+    display: inline-block;
+    vertical-align: top;
+    margin: 0px 2px;
+}
+
+.search-area{
+    height: 27px;
+}
+
+ul.search-area-input{
+    text-align: left;
+}
+table.manage-entities-table th:first-child, td:first-child {
+    width: 70%;
+}
+
+.not-found{
+    margin-left:300px;
+}
+
+#item-details-dialog{
+    max-width:none;
+    width: 500px;
+}
