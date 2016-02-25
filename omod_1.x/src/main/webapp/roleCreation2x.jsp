@@ -9,7 +9,7 @@
 
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>' />
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/bootstrap.css" %>' />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "styles/bootstrap.css" %>' />
 <%@ include file="/WEB-INF/view/module/openhmis/commons/template/common/customizedHeader.jsp"%>
 
 <%@ include file="template/localHeader.jsp"%>
@@ -62,11 +62,11 @@
 </p>
 
 <form method="post">
-	<table class="table table-striped table-bordered">
+	<table class="table table-striped table-bordered removeBold">
 		<tr>
 			<td>
 				<input id="addPriv" type="radio" value="add" name="action" onClick="enableDisable();"/>
-				<label class="labelremovebold" for="addPriv"><spring:message code="openhmis.inventory.roleCreation.page.label.add" /></label>
+				<label class="removeBold" for="addPriv"><spring:message code="openhmis.inventory.roleCreation.page.label.add" /></label>
 			</td>
 			<td>
 				<select id="addToRole" name="addToRole" class="dropdown form-control">
@@ -79,7 +79,7 @@
 		<tr>
 			<td>
 				<input id="removePriv" type="radio" value="remove" name="action" onClick="enableDisable();" />
-				<label class="labelremovebold" for="removePriv"><spring:message code="openhmis.inventory.roleCreation.page.label.remove" /></label>
+				<label class="removeBold" for="removePriv"><spring:message code="openhmis.inventory.roleCreation.page.label.remove" /></label>
 			</td>
 			<td>
 				<select id="removeFromRole" name="removeFromRole" class="dropdown form-control">
@@ -92,7 +92,7 @@
 		<tr>
 			<td>
 				<input id="newRole" type="radio" value="new" name="action" checked onClick="enableDisable();" />
-				<label class="labelremovebold" for="newRole"><spring:message code="openhmis.inventory.roleCreation.page.label.new" /></label>
+				<label class="removeBold" for="newRole"><spring:message code="openhmis.inventory.roleCreation.page.label.new" /></label>
 			</td>
 			<td>
 				<input id="newRoleName" name="newRoleName" type="text" class="form-control" />

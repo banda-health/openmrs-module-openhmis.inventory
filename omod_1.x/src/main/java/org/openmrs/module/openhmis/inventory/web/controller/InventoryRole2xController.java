@@ -8,6 +8,7 @@ import org.openmrs.Role;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.module.openhmis.commons.model.RoleCreationViewModel;
+import org.openmrs.module.openhmis.commons.web.controller.HeaderController;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.util.RoleConstants;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,13 +43,15 @@ public class InventoryRole2xController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public void render(ModelMap model) {
+	public void render(ModelMap model, HttpServletRequest request) throws IOException {
 		List<Role> roles = userService.getAllRoles();
 		model.addAttribute("roles", roles);
+		HeaderController.render(model, request);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public void submit(HttpServletRequest request, RoleCreationViewModel viewModel, Errors errors, ModelMap model) {
+	public void submit(HttpServletRequest request, RoleCreationViewModel viewModel, Errors errors, ModelMap model)
+	        throws IOException {
 		HttpSession session = request.getSession();
 		String action = request.getParameter("action");
 
@@ -63,7 +67,7 @@ public class InventoryRole2xController {
 			createRole(viewModel, session);
 		}
 
-		render(model);
+		render(model, request);
 	}
 
 	private void addPrivileges(String roleUuid) {

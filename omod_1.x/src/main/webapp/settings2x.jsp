@@ -8,7 +8,7 @@
 
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>'/>
 <openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/bootstrap.css" %>' />
+<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "styles/bootstrap.css" %>' />
 <%@ include file="/WEB-INF/view/module/openhmis/commons/template/common/customizedHeader.jsp"%>
 
 <%@ include file="template/localHeader.jsp" %>
@@ -35,7 +35,7 @@
 	</h2>
 
 	<form:form method="POST" modelAttribute="settings">
-		<table class="table table-bordered table-striped">
+		<table class="table table-bordered table-striped removeBold">
 			<c:if test="${hasIdgenModule == true}">
 				<tr>
 					<td>
@@ -44,7 +44,7 @@
 							       type="checkbox"
 							       onClick="enableDisable()"
 							       <c:if test="${settings.autoGenerateOperationNumber}">checked</c:if> />
-							<label class="labelremovebold" for="autoGenerateOperationNumber"><spring:message
+							<label class="removeBold" for="autoGenerateOperationNumber"><spring:message
 									code="openhmis.inventory.report.operation.number.label"/> </label>
 						</spring:bind>
 					</td>
@@ -52,7 +52,7 @@
 				</tr>
 				<tr>
 					<td>
-						<label class="labelremovebold" for="operationNumberGeneratorSourceId"><spring:message
+						<label class="removeBold" for="operationNumberGeneratorSourceId"><spring:message
 								code="openhmis.inventory.report.identifier.source.label"/> </label>
 					</td>
 					<td>
@@ -77,7 +77,7 @@
 					<spring:bind path="autoCompleteOperations">
 						<input id="autoCompleteOperations" name="${status.expression}" type="checkbox"
 						       <c:if test="${settings.autoCompleteOperations}">checked</c:if> />
-						<label class="labelremovebold"  for="autoCompleteOperations"><spring:message
+						<label class="removeBold"  for="autoCompleteOperations"><spring:message
 								code="openhmis.inventory.report.auto.complete.operation.label"/></label>
 					</spring:bind>
 				</td>
@@ -86,7 +86,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label class="labelremovebold"  for="stockTakeReportId"><spring:message
+					<label class="removeBold"  for="stockTakeReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.take.label"/> </label>
 				</td>
 				<td>
@@ -106,7 +106,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label  class="labelremovebold" for="stockCardReportId"><spring:message
+					<label  class="removeBold" for="stockCardReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.card.label"/></label>
 				</td>
 				<td>
@@ -126,7 +126,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label  class="labelremovebold" for="stockOperationsByStockroomReportId"><spring:message
+					<label  class="removeBold" for="stockOperationsByStockroomReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.operation.label"/> </label>
 				</td>
 				<td>
@@ -146,7 +146,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label  class="labelremovebold" for="stockroomReportId"><spring:message
+					<label  class="removeBold" for="stockroomReportId"><spring:message
 							code="openhmis.inventory.report.select.stockroom.label"/> </label>
 				</td>
 				<td>
@@ -166,7 +166,7 @@
 			<tr>
 				<td>
 					<br/>
-					<label  class="labelremovebold" for="expiringStockReportId"><spring:message
+					<label  class="removeBold" for="expiringStockReportId"><spring:message
 							code="openhmis.inventory.report.select.expiring.stock.label"/> </label>
 				</td>
 				<td>
