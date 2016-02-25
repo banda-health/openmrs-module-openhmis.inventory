@@ -93,6 +93,16 @@
                 <span></span>
             </li>
         </ul>
+        <ul class="table-layout" >
+            <li style="width:100%;">
+                <span ng-show="stockOperation.instanceType.role !== null || stockOperation.instanceType.user !== null">
+                    Can be processed
+                    <span ng-show="stockOperation.instanceType.role !== null">by users with the {{stockOperation.instanceType.role.display}} role</span>
+                    <span ng-show="stockOperation.instanceType.role !== null && stockOperation.instanceType.user !== null">or</span>
+                    <span ng-show="stockOperation.instanceType.user !== null">by the {{stockOperation.instanceType.user.display}} user.</span>
+                </span>
+            </li>
+        </ul>
         <br/>
         <p>
             <span><input type="button" class="cancel" value="{{messageLabels['openhmis.inventory.general.close']}}" ng-click="cancel()" /></span>
