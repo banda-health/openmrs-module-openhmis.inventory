@@ -49,7 +49,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Inventory Role Creation",
-        "url": "module/openhmis/inventory/roleCreation.form",
+        "url": "module/openhmis/inventory/roleCreation2x.page",
         "icon": "icon-user",
         "requiredPrivilege": "Task: Access Inventory Role Creation"
       },
