@@ -22,13 +22,13 @@
 
         return service
 
-        function searchStockOperationItems(q, onLoadSearchStockOperationItemsSuccessful){
+        function searchStockOperationItems(q, successCallback){
             var requestParams = {};
             requestParams['rest_entity_name'] = 'item';
             requestParams['has_physical_inventory'] = 'true';
             requestParams['q'] = q;
             requestParams['limit'] = 10;
-            EntityRestFactory.loadEntities(requestParams,onLoadSearchStockOperationItemsSuccessful, errorCallback);
+            EntityRestFactory.loadEntities(requestParams,successCallback, errorCallback);
         }
 
         /**
@@ -40,9 +40,9 @@
          * @param operation_status
          * @param operationType_uuid
          * @param stockroom_uuid
-         * @param onSearchStockOperationSuccessful
+         * @param successCallback
          */
-        function searchStockOperation(rest_entity_name, currentPage, limit, operationItem_uuid, operation_status, operationType_uuid, stockroom_uuid, onSearchStockOperationSuccessful){
+        function searchStockOperation(rest_entity_name, currentPage, limit, operationItem_uuid, operation_status, operationType_uuid, stockroom_uuid, successCallback){
             var requestParams = PaginationService.paginateParams(currentPage, limit, false, '');
             requestParams['rest_entity_name'] = rest_entity_name;
 
@@ -63,7 +63,7 @@
             }
 
             EntityRestFactory.loadEntities(requestParams,
-                onSearchStockOperationSuccessful,
+                successCallback,
                 errorCallback
             );
         }
@@ -71,23 +71,23 @@
         /**
          * load list of operation types
          * @param rest_entity_name
-         * @param onLoadStockOperationTypes
+         * @param successCallback
          */
-        function loadStockOperationTypes(rest_entity_name, onLoadStockOperationTypes){
+        function loadStockOperationTypes(rest_entity_name, successCallback){
             var requestParams = {};
             requestParams['rest_entity_name'] = rest_entity_name;
-            EntityRestFactory.loadEntities(requestParams,onLoadStockOperationTypes, errorCallback);
+            EntityRestFactory.loadEntities(requestParams,successCallback, errorCallback);
         }
 
         /**
          * load list of stockrooms
          * @param rest_entity_name
-         * @param onLoadStockrooms
+         * @param successCallback
          */
-        function loadStockRooms(rest_entity_name, onLoadStockrooms){
+        function loadStockRooms(rest_entity_name, successCallback){
             var requestParams = {};
             requestParams['rest_entity_name'] = rest_entity_name;
-            EntityRestFactory.loadEntities(requestParams, onLoadStockrooms, errorCallback);
+            EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
         }
 
         /**
@@ -96,25 +96,25 @@
          * @param currentPage
          * @param limit
          * @param q
-         * @param onLoadStockSuccessful
+         * @param successCallback
          */
-        function stockroom(operation_uuid, currentPage, limit, q, onLoadStockSuccessful){
-            ws_call('stockroom', operation_uuid, currentPage, limit, q, onLoadStockSuccessful);
+        function stockroom(operation_uuid, currentPage, limit, q, successCallback){
+            ws_call('stockroom', operation_uuid, currentPage, limit, q, successCallback);
         }
 
         /**
          * retrieve stock operations
          * @param operation_uuid
          * @param rest_entity_name
-         * @param onLoadStockOperationSuccessful
+         * @param successCallback
          */
-        function stockOperation(operation_uuid, rest_entity_name, onLoadStockOperationSuccessful){
+        function stockOperation(operation_uuid, rest_entity_name, successCallback){
             if(angular.isDefined(operation_uuid) && operation_uuid !== '' && operation_uuid !== undefined){
                 var requestParams = {};
                 requestParams['rest_entity_name'] = rest_entity_name + '/' + operation_uuid;
 
                 EntityRestFactory.loadEntities(requestParams,
-                    onLoadStockOperationSuccessful,
+                    successCallback,
                     errorCallback
                 );
             }
@@ -124,19 +124,19 @@
          * roll back an operation
          * @param operation_uuid
          * @param rest_entity_name
-         * @param onLoadRollbackOperationSuccessful
+         * @param successCallback
          */
-        function rollbackOperation(operation_uuid, rest_entity_name, onLoadRollbackOperationSuccessful) {
+        function rollbackOperation(operation_uuid, rest_entity_name, successCallback) {
             if (angular.isDefined(operation_uuid) && operation_uuid !== '' && operation_uuid !== undefined) {
                 var requestParams = {};
                 requestParams['status'] = "ROLLBACK";
 
                 EntityRestFactory.post(rest_entity_name, operation_uuid, requestParams,
-                    onLoadRollbackOperationSuccessful,
+                    successCallback,
                     errorCallback
                 );
 
-                onLoadRollbackOperationSuccessful(operation_uuid);
+                successCallback(operation_uuid);
             }
         }
 
@@ -145,10 +145,10 @@
          * @param operation_uuid
          * @param currentPage
          * @param limit
-         * @param onLoadItemStockOperationItemSuccessful
+         * @param successCallback
          */
-        function stockOperationItem(operation_uuid, currentPage, limit, onLoadItemStockOperationItemSuccessful){
-            ws_call('stockOperationItem', operation_uuid, currentPage, limit, onLoadItemStockOperationItemSuccessful);
+        function stockOperationItem(operation_uuid, currentPage, limit, successCallback){
+            ws_call('stockOperationItem', operation_uuid, currentPage, limit, successCallback);
         }
 
         /**
@@ -156,10 +156,10 @@
          * @param operation_uuid
          * @param currentPage
          * @param limit
-         * @param onLoadItemStockOperationTransactionSuccessful
+         * @param successCallback
          */
-        function stockOperationTransaction(operation_uuid, currentPage, limit, onLoadItemStockOperationTransactionSuccessful){
-            ws_call('stockOperationTransaction', operation_uuid, currentPage, limit, onLoadItemStockOperationTransactionSuccessful);
+        function stockOperationTransaction(operation_uuid, currentPage, limit, successCallback){
+            ws_call('stockOperationTransaction', operation_uuid, currentPage, limit, successCallback);
         }
 
         /**
@@ -170,14 +170,14 @@
          * @param limit
          * @param successfulCallback
          */
-        function ws_call(rest_entity_name, operation_uuid, currentPage, limit, successfulCallback){
+        function ws_call(rest_entity_name, operation_uuid, currentPage, limit, successCallback){
             if(angular.isDefined(operation_uuid) && operation_uuid !== '' && operation_uuid !== undefined){
                 var requestParams = PaginationService.paginateParams(currentPage, limit, false, '');
                 requestParams['rest_entity_name'] = rest_entity_name;
                 requestParams['operation_uuid'] = operation_uuid;
 
                 EntityRestFactory.loadEntities(requestParams,
-                    successfulCallback,
+                    successCallback,
                     errorCallback
                 );
             }

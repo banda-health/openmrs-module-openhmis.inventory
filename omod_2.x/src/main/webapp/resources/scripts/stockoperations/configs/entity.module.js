@@ -42,7 +42,7 @@
                 }
             });
 
-            $provide.factory('$excfeptionHandler', function($injector) {
+            $provide.factory('$exceptionHandler', function($injector) {
                 return function(exception, cause) {
                     /*
                      * Handle common exceptions
