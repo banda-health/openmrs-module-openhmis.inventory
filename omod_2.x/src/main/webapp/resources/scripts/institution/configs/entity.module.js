@@ -1,38 +1,45 @@
 /*
  * The module determines which page should be loaded depending on the url/route.
- * The manageOperationTypes.page page loads all operation types. The operationTypes.page
- * page either creates a new operation type if NO uuid is given, else loads an
- * existing operation type for editing.
+ * The manageInstitutions.page page loads all institutions. The instition.page
+ * page either creates a new institution if NO uuid is given, else loads an
+ * existing institution for editing.
  */
 (function() {
 	define([], loadpage);
 
 	function loadpage() {
 		'use strict';
-		var app = angular.module('entitiesApp', ['ui.bootstrap', 'ngDialog',
-				'ui.router', 'angularUtils.directives.dirPagination',
-				'app.css', 'app.filters', 'app.pagination', 'app.cookies',
+		var app = angular.module('entitiesApp', ['ui.router',
+				'angularUtils.directives.dirPagination', 'app.css',
+				'app.filters', 'app.pagination', 'app.cookies',
 				'app.genericMetadataModel', 'app.restfulServices',
-				'app.operationsTypeFunctionsFactory',
 				'app.genericEntityController', 'app.genericManageController']);
 		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 			/*
 			 * Configure routes and urls. The default route is '/' which loads
-			 * manageOperationType.page. 'edit' route calls operationTypes.page -- it
-			 * appends a 'uuid' to the url to edit an existing operation types. 'new'
-			 * route is called to create a new operation types.
+			 * manageInstitutions.page. 'edit' route calls institution.page -- it
+			 * appends a 'uuid' to the url to edit an existing institution. 'new'
+			 * route is called to create a new institution.
 			 */
 			$urlRouterProvider.otherwise('/');
 			$stateProvider.state('/', {
 				url : '/',
 				templateUrl : 'manageEntities.page',
-				controller : 'ManageOperationTypesController'
+				controller : 'ManageInstitutionController'
 			}).state('edit', {
 				url : '/:uuid',
 				views : {
 					'' : {
 						templateUrl : 'entity.page',
-						controller : 'OperationTypesController'
+						controller : 'InstitutionController'
+					}
+				}
+			}).state('new', {
+				url : '/',
+				views : {
+					'' : {
+						templateUrl : 'entity.page',
+						controller : 'InstitutionController'
 					}
 				}
 			});
@@ -40,7 +47,7 @@
 			$provide.factory('$exceptionHandler', function($injector) {
 				return function(exception, cause) {
 					/*
-					 * There are times when the manage operation types's page won't render on
+					 * There are times when the manage institution's page won't render on
 					 * initial page load -- which is brought about by inconsistencies in
 					 * loading dependencies. As a work around we look out for such errors
 					 * and reload the page. TODO: Find a better solution to ensure all

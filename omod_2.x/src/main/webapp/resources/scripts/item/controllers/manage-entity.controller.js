@@ -2,23 +2,20 @@
 	'use strict';
 
 	var base = angular.module('app.genericManageController');
-	base.controller("ManageOperationTypesController",
-			ManageOperationTypesController);
-	ManageOperationTypesController.$inject = ['$injector', '$scope', '$filter',
+	base.controller("ManageItemController", ManageItemController);
+	ManageItemController.$inject = ['$injector', '$scope', '$filter',
 			'EntityRestFactory', 'CssStylesFactory', 'PaginationService',
-			'OperationTypesModel', 'CookiesService'];
+			'ItemModel', 'CookiesService'];
 
-	function ManageOperationTypesController($injector, $scope, $filter,
-			EntityRestFactory, CssStylesFactory, PaginationService,
-			OperationTypesModel, CookiesService) {
+	function ManageItemController($injector, $scope, $filter,
+			EntityRestFactory, CssStylesFactory, PaginationService, ItemModel,
+			CookiesService) {
 
 		var self = this;
 
 		var module_name = 'inventory';
-		var entity_name = emr
-				.message("openhmis.inventory.operations.type.name");
-		var rest_entity_name = emr
-				.message("openhmis.inventory.operations.type.name_rest");
+		var entity_name = emr.message("openhmis.inventory.item.name");
+		var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
@@ -34,7 +31,7 @@
 			EntityRestFactory : EntityRestFactory,
 			PaginationService : PaginationService,
 			CssStylesFactory : CssStylesFactory,
-			GenericMetadataModel : OperationTypesModel,
+			GenericMetadataModel : ItemModel,
 			CookiesService : CookiesService
 		});
 	}

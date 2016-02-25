@@ -1,9 +1,11 @@
-requirejs(['operationtypes/configs/entities.module'], function() {
+/* initialize and bootstrap application */
+requirejs(['institution/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
-emr.loadMessages(["openhmis.inventory.operations.type.name",
-		"openhmis.inventory.operations.type.name_rest",
+/*Load UI messages for the istitutions */
+emr.loadMessages(["openhmis.inventory.institution.name",
+		"openhmis.inventory.institution.name_rest",
 		"openhmis.inventory.general.new",
 		"openhmis.inventory.general.error.notFound",
 		"openhmis.inventory.general.created.success",
@@ -24,18 +26,4 @@ emr.loadMessages(["openhmis.inventory.operations.type.name",
 		"openhmis.inventory.general.error.restName",
 		"openhmis.inventory.general.error.uuid",
 		"openhmis.inventory.general.error.retired",
-		"openhmis.inventory.general.error.retireReason",
-		"openhmis.inventory.attribute.type.name",
-		"openhmis.inventory.general.add", "openhmis.inventory.general.edit",
-		"openhmis.inventory.general.saveChanges",
-		"openhmis.inventory.general.confirm",
-		"openhmis.inventory.operations.type.sourceLabel",
-		"openhmis.inventory.operations.type.destinationLabel",
-		"openhmis.inventory.operations.type.recipientLabel",
-		"openhmis.inventory.operations.type.availableWhenReservedLabel",
-		"openhmis.inventory.operations.type.userLabel",
-		"openhmis.inventory.operations.type.roleLabel",
-		"openhmis.inventory.attribute.type.namePlural",
-		"PersonAttributeType.format", "PersonAttributeType.foreignKey",
-		"PatientIdentifierType.format", "FormField.required",
-		"Field.attributeName", "Obs.order", ]);
+		"openhmis.inventory.general.error.retireReason", ]);

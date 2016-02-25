@@ -9,9 +9,11 @@
 			label: "${ ui.message("openhmis.inventory.manage.module")}",
 			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page'
 		},
-		{label: "${ ui.message("openhmis.inventory.admin.operationTypes")}",}
+		{label: "${ ui.message("openhmis.inventory.admin.institutions")}",}
 	];
+
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
+
 </script>
 
 <div id="entities-body">
@@ -19,12 +21,18 @@
 
 	<div id="manage-entities-header">
 		<span class="h1-substitue-left" style="float:left;">
-			${ui.message('openhmis.inventory.admin.operationTypes')}
+			${ui.message('openhmis.inventory.admin.institutions')}
+		</span>
+		<span style="float:right;">
+			<a class="button confirm" ui-sref="new">
+				<i class="icon-plus"></i>
+				{{newEntityLabel}}
+			</a>
 		</span>
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageOperationTypesController">
+	<div ng-controller="ManageInstitutionController">
 		<div id="entities">
 			<div class="btn-group">
 				<input type="text" ng-model="searchField" ng-change="updateContent()"
@@ -34,7 +42,7 @@
 			</div>
 			
 			<br/><br/>
-			<table style="margin-bottom:5px;">
+			<table style="margin-bottom:5px;" class="entities-table">
 				<thead>
 				<tr>
 					<th>${ui.message('general.name')}</th>
@@ -50,17 +58,7 @@
 				</tbody>
 			</table>
 
-			<div ng-show="fetchedEntities.length == 0">
-				<br/>
-				${ui.message('Your search - <b>')} {{searchField}} ${ui.
-						message('</b> - did not match any Stock Operation Types')}
-				<br/><br/>
-				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
-				             ng-change="updateContent()"></span>
-				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
-			</div>
-
-			<div id="below-entities-table" ng-hide="fetchedEntities.length == 0">
+			<div id="below-entities-table">
 				<span style="float:left;">
 					<div id="showing-entities">
 						<span><b>${ui.
