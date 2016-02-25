@@ -1,4 +1,3 @@
-
 (function() {
 	'use strict';
 	
@@ -37,7 +36,6 @@
 			formatFields.unshift("java.lang.Boolean");
 			return formatFields;
 		}
-		
 	}
-	
+
 })();

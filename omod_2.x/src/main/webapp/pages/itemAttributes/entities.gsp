@@ -12,9 +12,9 @@
     /* load item attribute types modules */
     ui.includeJavascript("openhmis.inventory", "itemAttributes/models/entity.model.js")
     ui.includeJavascript("openhmis.inventory", "itemAttributes/services/entity.restful.services.js")
-    ui.includeJavascript("openhmis.inventory", "itemAttributes/services/entity.functions.js")
     ui.includeJavascript("openhmis.inventory", "itemAttributes/controllers/entity.controller.js")
     ui.includeJavascript("openhmis.inventory", "itemAttributes/controllers/manage-entity.controller.js")
+    ui.includeJavascript("openhmis.inventory", "itemAttributes/services/entity.functions.js")
 
     /* load stylesheets */
     ui.includeCss("openhmis.commons", "bootstrap.css")
