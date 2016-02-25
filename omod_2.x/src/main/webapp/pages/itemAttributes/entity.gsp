@@ -17,7 +17,7 @@
                 <span>{{messageLabels['general.name']}}</span>
             </li>
             <li>
-                <input type="text" ng-model="entity.name" style="min-width: 50%;" placeholder="{{messageLabels['general.name']}}" required />
+                <input class="form-control" type="text" ng-model="entity.name" style="min-width: 50%;" placeholder="{{messageLabels['general.name']}}" required />
             </li>
         </ul>
         <ul class="table-layout">
@@ -25,7 +25,7 @@
                 <span>{{messageLabels['general.description']}}</span>
             </li>
             <li>
-                <input type="text" ng-model="entity.description" style="min-width: 50%;" placeholder="{{messageLabels['general.description']}}" />
+                <input class="form-control" type="text" ng-model="entity.description" style="min-width: 50%;" placeholder="{{messageLabels['general.description']}}" />
             </li>
         </ul>
         <ul class="table-layout">
@@ -33,7 +33,7 @@
                 <span>${ui.message('PersonAttributeType.format')}</span>
             </li>
             <li>
-                <select class="form-control dialog-select" ng-model="entity.format" ng-options="field for field in formatFields track by field">
+                <select class="form-control" style="font-size: 14px" ng-model="entity.format" ng-options="field for field in formatFields track by field">
                     <option value="" ng-if="false"></option>
                     <option ng-selected="entity.format == field">
                     </option>
@@ -45,7 +45,7 @@
                 <span>${ui.message('PersonAttributeType.foreignKey')}</span>
             </li>
             <li>
-                <input type="number" ng-model="entity.foreignKey"  />
+                <input class="form-control" type="number" ng-model="entity.foreignKey"  />
             </li>
         </ul>
         <ul class="table-layout">
@@ -53,7 +53,7 @@
                 <span>${ui.message('PatientIdentifierType.format')}</span>
             </li>
             <li>
-                <input type="text" ng-model="entity.regExp" />
+                <input class="form-control" type="text" ng-model="entity.regExp" />
             </li>
         </ul>
         <ul class="table-layout">
@@ -69,7 +69,7 @@
                 <span>${ui.message('Field.attributeName')} ${ui.message('Obs.order')}</span>
             </li>
             <li>
-                <input type="number" ng-model="entity.attributeOrder" />
+                <input class="form-control" type="number" ng-model="entity.attributeOrder" />
             </li>
         </ul>
     </fieldset>
