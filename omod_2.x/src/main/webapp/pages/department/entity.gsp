@@ -11,8 +11,8 @@
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
-
 </script>
+
 <form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
     <h1>{{messageLabels['h2SubString']}}</h1>
 

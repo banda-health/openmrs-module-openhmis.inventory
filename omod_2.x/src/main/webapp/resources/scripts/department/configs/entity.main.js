@@ -1,3 +1,8 @@
+/* initialize and bootstrap application */
+requirejs(['department/configs/entity.module'], function() {
+    angular.bootstrap(document, ['entitiesApp']);
+});
+
 emr.loadMessages([
     "openhmis.inventory.general.new",
     "openhmis.inventory.general.error.notFound",
@@ -29,5 +34,5 @@ emr.loadMessages([
     "openhmis.inventory.department.name",
     "openhmis.inventory.department.namePlural",
     "openhmis.inventory.general.add",
-    "openhmis.inventory.general.edit",
+    "openhmis.inventory.general.edit"
 ]);

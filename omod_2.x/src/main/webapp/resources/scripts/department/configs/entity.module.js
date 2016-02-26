@@ -5,7 +5,7 @@
  * existing entity for editing.
  */
 (function() {
-    define(['department/configs/modules.require'], loadPage);
+    define([], loadPage);
 
     function loadPage() {
         'use strict';
@@ -66,7 +66,6 @@
                     var exc = String(exception);
                     if (exc.indexOf("unpr") !== -1) {
                         console.log(exc);
-                        window.location.reload();
                     } else if (exc.indexOf("session") !== -1 || exc.indexOf("timeout") !== -1) {
                         console.log(exc + " - " + cause);
                         emr.message("SESSION TIMEOUT");

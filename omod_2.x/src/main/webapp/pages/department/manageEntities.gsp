@@ -9,8 +9,8 @@
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
-
 </script>
+
 <div id="entities-body">
     <br />
     <div id="manage-entities-header">
