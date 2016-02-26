@@ -4,10 +4,10 @@
 	var base = angular.module('app.genericEntityController');
 	base.controller("ItemAttributeTypesController", ItemAttributeTypesController);
 	ItemAttributeTypesController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-		'ItemAttributeTypesModel', 'ItemAttributeTypesRestfulService', 'ItemAttributeTypeFunctions'];
+		'ItemAttributeTypesModel', 'ItemAttributeTypesRestfulService', 'EntityFunctions'];
 
 	function ItemAttributeTypesController($stateParams, $injector, $scope, $filter, EntityRestFactory,
-				ItemAttributeTypesModel, ItemAttributeTypesRestfulService, ItemAttributeTypeFunctions) {
+				ItemAttributeTypesModel, ItemAttributeTypesRestfulService, EntityFunctions) {
 
 		var self = this;
 
@@ -57,7 +57,7 @@
 		// call-back functions.
 		self.onLoadFormatFieldsSuccessful = self.onLoadFormatFieldsSuccessful || function (data) {
 				$scope.formatFields = data.results;
-				return ItemAttributeTypeFunctions.addExtraFormatListElements($scope.formatFields);
+				return EntityFunctions.addExtraFormatListElements($scope.formatFields);
 			}
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */

@@ -153,7 +153,7 @@
 										<span>{{messageLabels['PersonAttributeType.format']}}</span>
 									</li>
 									<li>
-										<select class="form-control dialog-select" ng-model="attributeType.format"
+										<select class="form-control" style="font-size: 14px" ng-model="attributeType.format"
 										        ng-options="field for field in formatFields track by field">
 											<option value="0">-- Please Select Format --</option>
 											<option ng-selected="attributeType.format == field">

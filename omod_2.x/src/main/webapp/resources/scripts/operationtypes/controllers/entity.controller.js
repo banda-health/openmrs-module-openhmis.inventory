@@ -5,11 +5,11 @@
 	base.controller("OperationTypesController", OperationTypesController);
 	OperationTypesController.$inject = ['$stateParams', '$injector', '$scope',
 			'$filter', 'EntityRestFactory', 'OperationTypesModel', 'ngDialog',
-			'OperationsTypeFunctions', 'OperationTypesRestfulService'];
+			'OperationsTypeFunctions', 'OperationTypesRestfulService','EntityFunctions'];
 
 	function OperationTypesController($stateParams, $injector, $scope, $filter,
 			EntityRestFactory, OperationTypesModel, ngDialog,
-			OperationsTypeFunctions, OperationTypesRestfulService) {
+			OperationsTypeFunctions, OperationTypesRestfulService,EntityFunctions) {
 
 		var self = this;
 
@@ -77,7 +77,7 @@
 		// call-back functions.
 		self.onLoadFormatFieldsSuccessful = self.onLoadFormatFieldsSuccessful || function(data){
 					$scope.formatFields = data.results;
-					return OperationsTypeFunctions.addExtraFormatListElements($scope.formatFields);
+					return EntityFunctions.addExtraFormatListElements($scope.formatFields);
 				}
 
 		/**
