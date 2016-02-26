@@ -5,7 +5,7 @@
  * existing entity for editing.
  */
 (function() {
-    define(['department/configs/modules.require'], loadPage);
+    define([], loadPage);
 
     function loadPage() {
         'use strict';
