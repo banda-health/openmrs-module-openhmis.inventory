@@ -15,3 +15,65 @@ ul.dialog-table-layout li {
     font-size: 14px;
     min-width: 115%
 }
+table.manage-stockOperations-table th:first-child, td:first-child{
+    width: 80%;
+}
+
+table.search {
+    border-style: hidden;
+}
+
+table.search td{
+    border: 0px;
+}
+
+table.search input{
+    width: 200px;
+}
+
+table.search select{
+    width: 170px;
+}
+
+form.search{
+    width: 100%;
+    float:left;
+}
+
+form.search select{
+    min-width: 0px;
+}
+
+fieldset.search {
+    min-width: 0px;
+    width: 100%;
+}
+ul.search-area{
+    text-align: left;
+}
+
+ul.search-area li{
+    display: inline-block;
+    vertical-align: top;
+    margin: 0px 2px;
+}
+
+.search-area{
+    height: 27px;
+}
+
+ul.search-area-input{
+    text-align: left;
+}
+table.manage-stockrooms-table th:first-child, td:first-child {
+    width: 70%;
+}
+
+.not-found{
+    margin-left:300px;
+}
+
+#item-details-dialog{
+    max-width:none;
+    width: 500px;
+}

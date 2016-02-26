@@ -5,7 +5,7 @@
     ui.includeCss("openhmis.commons", "bootstrap.css")
     ui.includeCss("openhmis.commons", "entities2x.css")
     ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
-    ui.includeCss("openhmis.inventory", "stockoperations.css")
+    ui.includeCss("openhmis.inventory", "entity.css")
 
     /* load angular libraries */
     ui.includeJavascript("uicommons", "angular.min.js")
@@ -18,14 +18,14 @@
     ui.includeFragment("openhmis.commons", "load.reusable.modules")
 
     /* load stockroom modules */
-    ui.includeJavascript("openhmis.inventory", "stockoperations/models/entity.model.js")
-    ui.includeJavascript("openhmis.inventory", "stockoperations/services/entity.restful.services.js")
-    ui.includeJavascript("openhmis.inventory", "stockoperations/controllers/entity.controller.js")
-    ui.includeJavascript("openhmis.inventory", "stockoperations/controllers/manage-entity.controller.js")
-    ui.includeJavascript("openhmis.inventory", "stockoperations/services/entity.functions.js")
+    ui.includeJavascript("openhmis.inventory", "stockOperations/models/entity.model.js")
+    ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.restful.services.js")
+    ui.includeJavascript("openhmis.inventory", "stockOperations/controllers/entity.controller.js")
+    ui.includeJavascript("openhmis.inventory", "stockOperations/controllers/manage-entity.controller.js")
+    ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.functions.js")
 %>
 
-<script data-main="stockoperations/configs/entity.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="stockOperations/configs/entity.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="stockOperationApp">
     <div ui-view></div>
