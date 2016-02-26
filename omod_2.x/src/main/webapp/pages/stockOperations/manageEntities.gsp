@@ -60,7 +60,7 @@
             </table></fieldset>
                 </form>
             <br /><br />
-            <table style="margin-bottom:5px;margin-top:5%;" class="manage-entities-table">
+            <table style="margin-bottom:5px;margin-top:5%;" class="manage-entities-table manage-stockOperations-table">
                 <thead>
                 <tr>
                     <th>${ ui.message('openhmis.inventory.operations.dateCreated')}</th>

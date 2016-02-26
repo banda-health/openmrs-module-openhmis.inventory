@@ -3,7 +3,7 @@
         { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
         { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
         { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
-        { label: "${ ui.message("openhmis.inventory.admin.operations")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockoperations/entities.page#/'},
+        { label: "${ ui.message("openhmis.inventory.admin.operations")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockOperations/entities.page#/'},
         { label: "${ui.message("openhmis.inventory.stock.operation.name")}"}
     ];
 
@@ -111,7 +111,7 @@
         <br/>
     </div>
     <div id="items" style="border: 0px;">
-        <table style="margin-bottom:5px; border:0px" class="manage-entities-table">
+        <table style="margin-bottom:5px; border:0px" class="manage-entities-table manage-stockOperations-table">
             <thead>
             <tr>
                 <th>{{messageLabels['openhmis.inventory.item.name']}}</th>
@@ -174,7 +174,7 @@
         </div>
     </div>
     <div id="transactions" style="border: 0px;">
-        <table style="margin-bottom:5px;" class="manage-entities-table">
+        <table style="margin-bottom:5px;" class="manage-entities-table manage-stockOperations-table">
             <thead>
             <tr>
                 <th>{{messageLabels['openhmis.inventory.stockroom.name']}}</th>

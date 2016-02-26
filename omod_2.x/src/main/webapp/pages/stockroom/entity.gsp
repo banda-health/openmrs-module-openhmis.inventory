@@ -81,7 +81,7 @@
             <span id="searchclear" class="searchclear icon-remove-circle"></span>
             <br />
         </div>
-        <table style="margin-bottom:5px;" class="manage-entities-table">
+        <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
                     <th>{{messageLabels['openhmis.inventory.item.name']}}</th>
@@ -176,7 +176,7 @@
             <span class="searchclear icon-remove-circle"></span>
             <br />
         </div>
-        <table style="margin-bottom:5px;" class="manage-entities-table">
+        <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
                     <th>{{messageLabels['openhmis.inventory.stockroom.dateCreated']}}</th>
@@ -246,7 +246,7 @@
             <span class="searchclear icon-remove-circle"></span>
             <br />
         </div>
-        <table style="margin-bottom:5px;" class="manage-entities-table">
+        <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
                     <th>{{messageLabels['openhmis.inventory.stockroom.dateCreated']}}</th>

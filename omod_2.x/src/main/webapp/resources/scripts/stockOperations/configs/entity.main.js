@@ -1,5 +1,5 @@
 /* initialize and bootstrap application */
-requirejs(['stockoperations/configs/entity.module'], function() {
+requirejs(['stockOperations/configs/entity.module'], function() {
     angular.bootstrap(document, ['stockOperationApp']);
 });
 
