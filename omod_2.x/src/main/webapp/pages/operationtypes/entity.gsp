@@ -11,7 +11,7 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.operationTypes")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationtypes/entities.page'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationTypes/entities.page'
 		},
 		{label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
 	];
@@ -230,7 +230,7 @@
 					<input type="button" class="confirm right"
 					       value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
 					       ng-disabled="entity.name == '' || entity.name == undefined"
-					       ng-click="removeOperationTypesTemporaryIds(); saveOrUpdate()"/>
+					       ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
 				</span>
 			</li>
 		</ul>

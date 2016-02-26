@@ -15,15 +15,15 @@
 	/* load re-usables/common modules */
 	ui.includeFragment("openhmis.commons", "load.reusable.modules")
 	
-	/* load operationtypes modules */
-	ui.includeJavascript("openhmis.inventory", "operationtypes/models/entity.model.js")
-	ui.includeJavascript("openhmis.inventory", "operationtypes/services/entity.restful.services.js")
-	ui.includeJavascript("openhmis.inventory", "operationtypes/controllers/entity.controller.js")
-	ui.includeJavascript("openhmis.inventory", "operationtypes/controllers/manage-entity.controller.js")
-	ui.includeJavascript("openhmis.inventory", "operationtypes/services/entity.functions.js")
+	/* load operationTypes modules */
+	ui.includeJavascript("openhmis.inventory", "operationTypes/models/entity.model.js")
+	ui.includeJavascript("openhmis.inventory", "operationTypes/services/entity.restful.services.js")
+	ui.includeJavascript("openhmis.inventory", "operationTypes/controllers/entity.controller.js")
+	ui.includeJavascript("openhmis.inventory", "operationTypes/controllers/manage-entity.controller.js")
+	ui.includeJavascript("openhmis.inventory", "operationTypes/services/entity.functions.js")
 %>
 
-<script data-main="operationtypes/configs/entities.main"
+<script data-main="operationTypes/configs/entities.main"
         src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="entitiesApp">
