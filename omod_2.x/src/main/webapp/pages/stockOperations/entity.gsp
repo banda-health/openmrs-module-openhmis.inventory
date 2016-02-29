@@ -255,8 +255,9 @@
 		</div>
 	</div>
 </div>
-<hr/><br/><br/>
+<hr/><br/>
 <div class="detail-section-border-top">
+	<br/>
 	<p>
 	<span><input type="button" class="cancel" value="{{messageLabels['openhmis.inventory.general.close']}}"
 	             ng-click="cancel()"/></span>
