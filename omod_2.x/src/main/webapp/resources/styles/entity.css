@@ -85,3 +85,16 @@ table.manage-stockrooms-table th:first-child, td:first-child {
 .detail-section-border-bottom{
     border-bottom: 1px solid #dddddd;
 }
+
+.show-cursor{
+    cursor: pointer;
+}
+
+table.header-title{
+    border-style:hidden;
+
+}
+
+table.header-title td{
+    border: 0px;
+}

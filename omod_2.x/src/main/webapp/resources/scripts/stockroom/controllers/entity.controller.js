@@ -4,9 +4,9 @@
     var base = angular.module('app.genericEntityController');
     base.controller("StockroomController", StockroomController);
     StockroomController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-        'StockroomModel', 'StockroomRestfulService', 'PaginationService', 'StockroomsFunctions'];
+        'StockroomModel', 'StockroomRestfulService', 'PaginationService', 'EntityFunctions', 'StockroomsFunctions'];
 
-    function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, StockroomsFunctions) {
+    function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, EntityFunctions, StockroomsFunctions) {
         var self = this;
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
@@ -42,6 +42,7 @@
                 $scope.itemPagingFrom = PaginationService.pagingFrom;
                 $scope.itemPagingTo = PaginationService.pagingTo;
                 $scope.showItemDetails = self.showItemDetails;
+                $scope.retireUnretireDeletePopup = self.retireUnretireDeletePopup;
 
                 // bind item stock operation variables/function
                 $scope.itemStockOperationLimit = $scope.itemStockOperationLimit  || 5;
@@ -62,6 +63,10 @@
                 self.searchItemStock(uuid);
                 self.searchItemStockOperation(uuid);
                 self.searchItemStockTransaction(uuid);
+            }
+
+        self.retireUnretireDeletePopup = self.retireUnretireDeletePopup || function(id){
+                EntityFunctions.retireUnretireDeletePopup(id);
             }
 
         /**
