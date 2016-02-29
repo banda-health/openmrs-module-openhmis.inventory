@@ -255,14 +255,14 @@
 		</div>
 	</div>
 </div>
-<br/>
-
+<hr/><br/><br/>
 <div class="detail-section-border-top">
-	<br/>
+	<p>
 	<span><input type="button" class="cancel" value="{{messageLabels['openhmis.inventory.general.close']}}"
 	             ng-click="cancel()"/></span>
 	<span><input type="button" class="confirm right" ng-hide="stockOperation.status === 'ROLLBACK'"
 	             value="{{messageLabels['openhmis.inventory.general.rollbackOperation']}}"
 	             ng-click="rollbackOperation(stockOperation.uuid)"/></span>
-	<br/>
+
+	</p>
 </div>
