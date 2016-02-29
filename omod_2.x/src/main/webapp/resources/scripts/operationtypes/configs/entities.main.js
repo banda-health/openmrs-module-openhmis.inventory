@@ -1,4 +1,4 @@
-requirejs(['operationtypes/configs/entities.module'], function() {
+requirejs(['operationTypes/configs/entities.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
