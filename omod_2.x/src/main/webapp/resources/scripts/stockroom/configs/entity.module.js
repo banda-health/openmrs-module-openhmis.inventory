@@ -26,7 +26,7 @@
         'use strict';
         var app = angular.module('stockroomsApp', ['ui.bootstrap', 'ngDialog', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
             'app.filters', 'app.stockroomsFunctionsFactory', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
-            'app.entityFunctionsFactory', 'app.genericEntityController', 'app.genericManageController']);
+            'app.genericEntityController', 'app.genericManageController']);
         app.config(function($stateProvider, $urlRouterProvider, $provide) {
             /*
              * Configure routes and urls. The default route is '/' which loads

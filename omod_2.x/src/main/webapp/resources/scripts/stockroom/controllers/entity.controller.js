@@ -57,7 +57,6 @@
                 $scope.itemPagingFrom = PaginationService.pagingFrom;
                 $scope.itemPagingTo = PaginationService.pagingTo;
                 $scope.showItemDetails = self.showItemDetails;
-                $scope.retireUnretireDeletePopup = self.retireUnretireDeletePopup;
 
                 // bind item stock operation variables/function
                 $scope.itemStockOperationLimit = $scope.itemStockOperationLimit  || 5;
@@ -78,10 +77,6 @@
                 self.searchItemStock(uuid);
                 self.searchItemStockOperation(uuid);
                 self.searchItemStockTransaction(uuid);
-            }
-
-        self.retireUnretireDeletePopup = self.retireUnretireDeletePopup || function(id){
-                EntityFunctions.retireUnretireDeletePopup(id);
             }
 
         /**
@@ -164,7 +159,8 @@
             $filter: $filter,
             $stateParams: $stateParams,
             EntityRestFactory: EntityRestFactory,
-            GenericMetadataModel: StockroomModel
+            GenericMetadataModel: StockroomModel,
+            EntityFunctions: EntityFunctions
         });
     }
 })();
