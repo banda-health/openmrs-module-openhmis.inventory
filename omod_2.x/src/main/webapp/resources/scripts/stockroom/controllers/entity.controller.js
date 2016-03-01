@@ -19,9 +19,9 @@
     var base = angular.module('app.genericEntityController');
     base.controller("StockroomController", StockroomController);
     StockroomController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-        'StockroomModel', 'StockroomRestfulService', 'PaginationService', 'StockroomsFunctions'];
+        'StockroomModel', 'StockroomRestfulService', 'PaginationService', 'EntityFunctions', 'StockroomsFunctions'];
 
-    function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, StockroomsFunctions) {
+    function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, EntityFunctions, StockroomsFunctions) {
         var self = this;
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
@@ -159,7 +159,8 @@
             $filter: $filter,
             $stateParams: $stateParams,
             EntityRestFactory: EntityRestFactory,
-            GenericMetadataModel: StockroomModel
+            GenericMetadataModel: StockroomModel,
+            EntityFunctions: EntityFunctions
         });
     }
 })();
