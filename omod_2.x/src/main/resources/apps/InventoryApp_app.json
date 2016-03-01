@@ -49,7 +49,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Inventory Role Creation",
-        "url": "module/openhmis/inventory/roleCreation.form",
+        "url": "module/openhmis/inventory/roleCreation2x.page",
         "icon": "icon-user",
         "requiredPrivilege": "Task: Access Inventory Role Creation"
       },
@@ -59,7 +59,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Items",
-        "url": "openhmis.inventory/item/items.page",
+        "url": "openhmis.inventory/item/entities.page",
         "icon": "icon-italic",
         "requiredPrivilege": "Task: Access Manage Items"
       },
@@ -69,7 +69,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Item Attribute Types",
-        "url": "module/openhmis/inventory/itemAttributeTypes.form",
+        "url": "openhmis.inventory/itemAttributes/entities.page",
         "icon": "icon-edit",
         "requiredPrivilege": "Task: Access Manage Item Attribute Types"
       },
@@ -79,7 +79,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Departments",
-        "url": "module/openhmis/inventory/departments.form",
+        "url": "openhmis.inventory/department/entities.page",
         "icon": "icon-briefcase",
         "requiredPrivilege": "Task: Access Manage Departments"
       },
@@ -89,7 +89,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Institutions",
-        "url": "openhmis.inventory/institution/institutions.page",
+        "url": "openhmis.inventory/institution/entities.page",
         "icon": "icon-building",
         "requiredPrivilege": "Task: Access Manage Institutions"
       },
@@ -99,7 +99,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Stockrooms",
-        "url": "module/openhmis/inventory/stockrooms.form",
+        "url": "openhmis.inventory/stockroom/entities.page",
         "icon": "icon-home",
         "requiredPrivilege": "Task: Access Manage Stockrooms"
       },
@@ -109,7 +109,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "Manage Operation Types",
-        "url": "module/openhmis/inventory/operationTypes.form",
+        "url": "openhmis.inventory/operationTypes/entities.page",
         "icon": "icon-edit",
         "requiredPrivilege": "Task: Access Manage Operation Types"
       },
@@ -119,7 +119,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
         "type": "link",
         "label": "View Stock Operation",
-        "url": "module/openhmis/inventory/operations.form",
+        "url": "openhmis.inventory/stockOperations/entities.page",
         "icon": "icon-list",
         "requiredPrivilege": "Task: Access View Stock Operations"
       },
