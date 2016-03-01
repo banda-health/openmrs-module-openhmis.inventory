@@ -26,7 +26,7 @@
         'use strict';
         var app = angular.module('itemAttributeTypesApp', ['ui.bootstrap', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
             'app.filters', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
-            'app.genericEntityController', 'app.genericManageController', 'app.entityFunctionsFactory']);
+            'app.genericEntityController', 'app.genericManageController']);
         app.config(function($stateProvider, $urlRouterProvider, $provide) {
             /*
              * Configure routes and urls. The default route is '/' which loads
