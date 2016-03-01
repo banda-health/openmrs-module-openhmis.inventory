@@ -9,7 +9,9 @@
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 </script>
 <form name="itemAttributeForm" class="entity-form" ng-class="{'submitted': submitted}">
-    <h1>{{messageLabels['h2SubString']}}</h1>
+
+    ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
+
     <input type="hidden" ng-model="entity.uuid" />
     <fieldset class="format">
         <ul class="table-layout">
@@ -80,21 +82,5 @@
         </span>
     </fieldset>
 
-    <fieldset ng-hide="entity.uuid == ''" class="format">
-        <h3>{{retireOrUnretire}}</h3>
-        <p>
-            <span ng-show="entity.retired">{{messageLabels['openhmis.inventory.general.retired.reason']}}<b>{{entity.retireReason}}</b><br /></span>
-            <span ng-hide="entity.retired"><input type="text" placeholder="{{messageLabels['general.retireReason']}}" style="min-width: 50%;" ng-model="entity.retireReason" ng-disabled="entity.retired" /></span>
-            <input type="button" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()" />
-        </p>
-        <p class="checkRequired">{{retireReasonIsRequiredMsg}}</p>
-    </fieldset>
-    <fieldset ng-hide="entity.uuid == ''" class="format">
-        <h3>
-            {{messageLabels['delete.forever']}}
-        </h3>
-        <p>
-            <input type="button" class="cancel" value="{{messageLabels['general.purge']}}" ng-click="purge()"/>
-        </p>
-    </fieldset>
+    ${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment") }
 </form>
