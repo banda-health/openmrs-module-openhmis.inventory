@@ -20,7 +20,8 @@
 </script>
 
 <form onsubmit="return removeIndexFromItems()">
-	<h1>{{messageLabels['h2SubString']}}</h1>
+
+	${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 
 	<input type="hidden" ng-model="entity.uuid"/>
 
@@ -236,20 +237,6 @@
 		</ul>
 	</fieldset>
 
-	<fieldset class="format">
-		<h3 ng-hide="entity.uuid == ''">{{retireOrUnretire}}</h3>
+	${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"]) }
 
-		<p ng-hide="entity.uuid == ''">
-			<span ng-show="entity.retired">{{messageLabels['openhmis.inventory.general.retired.reason']}}<b>{{entity.retireReason}}</b><br/>
-			</span>
-			<span ng-hide="entity.retired"><input type="text" placeholder="{{messageLabels['general.retireReason']}}"
-			                                      style="min-width: 50%;" ng-model="entity.retireReason"
-			                                      ng-disabled="entity.retired"/></span>
-			<input type="button" ng-disabled="entity.uuid == '' || entity.retireReason == '' || entity.retireReason == null"
-			       class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()"/>
-		</p>
-
-		<p class="checkRequired"
-		   ng-hide="entity.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
-	</fieldset>
 </form>
