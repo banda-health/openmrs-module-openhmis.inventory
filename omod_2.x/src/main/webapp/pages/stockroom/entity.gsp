@@ -13,67 +13,53 @@
 
 </script>
 
-<h1>{{messageLabels['h2SubString']}}</h1>
+${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 
 <input type="hidden" ng-model="entity.uuid" />
 
-<div class="tabs">
-   <ul>
-       <li>
-           <a href="#details">{{messageLabels['openhmis.inventory.stockroom.details']}}</a>
-       </li>
-       <li ng-hide="entity.uuid === ''">
-           <a href="#items">{{messageLabels['openhmis.inventory.item.namePlural']}}</a>
-       </li>
-       <li ng-hide="entity.uuid === ''">
-           <a href="#operations">{{messageLabels['openhmis.inventory.operations.namePlural']}}</a>
-       </li>
-       <li ng-hide="entity.uuid === ''">
-           <a href="#transactions">{{messageLabels['openhmis.inventory.stockroom.transactions']}}</a>
-       </li>
-   </ul>
-
-   <div id="details">
-       <form class="entity-form" ng-class="{'submitted': submitted}" >
-           <ul class="table-layout">
-               <li class="required">
-                   <span>{{messageLabels['general.name']}}</span>
-                </li>
-                <li>
-                    <input type="text" ng-model="entity.name" style="min-width: 50%;" placeholder="{{messageLabels['general.name']}}" required />
-                </li>
-            </ul>
-            <ul class="table-layout">
-                <li class="not-required">
-                    <span>{{messageLabels['openhmis.inventory.location.name']}}</span>
-                </li>
-                <li>
-                    <select ng-model="entity.location"
-                            ng-options='location.display for location in locations track by location.uuid'>
-                    </select>
-                </li>
-            </ul>
-            <br/>
+<div class="detail-section-border-bottom">
+    <form class="entity-form" ng-class="{'submitted': submitted}" >
+        <ul class="table-layout">
+            <li class="required">
+                <span>{{messageLabels['general.name']}}</span>
+            </li>
+            <li>
+                <input type="text" ng-model="entity.name" style="min-width: 50%;" placeholder="{{messageLabels['general.name']}}" required />
+            </li>
+        </ul>
+        <ul class="table-layout">
+            <li class="not-required">
+                <span>{{messageLabels['openhmis.inventory.location.name']}}</span>
+            </li>
+            <li>
+                <select ng-model="entity.location"
+                        ng-options='location.display for location in locations track by location.uuid'>
+                </select>
+            </li>
+        </ul>
+        <br/>
+        <div class="detail-section-border-top" ng-hide="entity.uuid !== ''">
+            <br />
             <p>
                 <span><input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()" /></span>
                 <span><input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" /></span>
             </p>
-            <br />
-            <h3 ng-hide="entity.uuid == ''">{{retireOrUnretire}}</h3>
-            <p ng-hide="entity.uuid == ''">
-                <span ng-show="entity.retired">{{messageLabels['openhmis.inventory.general.retired.reason']}}<b>{{entity.retireReason}}</b><br /></span>
-                <span ng-hide="entity.retired"><input type="text" placeholder="{{messageLabels['general.retireReason']}}" style="min-width: 50%;" ng-model="entity.retireReason" ng-disabled="entity.retired" /></span>
-                <input type="button" class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()" />
-            </p>
-            <p class="checkRequired" ng-hide="entity.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
-            <h3 ng-hide="entity.uuid == ''">
-                {{messageLabels['delete.forever']}}
-            </h3>
-            <p>
-                <input type="button" ng-hide="entity.uuid == ''" class="cancel" value="{{messageLabels['general.purge']}}" ng-click="purge()"/>
-            </p>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
+<br/><br />
+<div class="tabs" ng-hide="entity.uuid === ''">
+    <ul>
+        <li ng-hide="entity.uuid === ''">
+            <a href="#items">{{messageLabels['openhmis.inventory.item.namePlural']}}</a>
+        </li>
+        <li ng-hide="entity.uuid === ''">
+            <a href="#operations">{{messageLabels['openhmis.inventory.operations.namePlural']}}</a>
+        </li>
+        <li ng-hide="entity.uuid === ''">
+            <a href="#transactions">{{messageLabels['openhmis.inventory.stockroom.transactions']}}</a>
+        </li>
+    </ul>
 
     <div id="items" style="border: 0px;">
         <div class="btn-group">
@@ -81,7 +67,7 @@
             <span id="searchclear" class="searchclear icon-remove-circle"></span>
             <br />
         </div>
-        <table style="margin-bottom:5px;" class="manage-entities-table">
+        <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
                     <th>{{messageLabels['openhmis.inventory.item.name']}}</th>
@@ -150,11 +136,11 @@
             <div class="dialog-content form">
                 <table>
                     <thead>
-                        <tr>
-                            <th>{{messageLabels['openhmis.inventory.stockroom.batchOperation']}}</th>
-                            <th>{{messageLabels['openhmis.inventory.stockroom.expiration']}}</th>
-                            <th>{{messageLabels['openhmis.inventory.item.quantity']}}</th>
-                        </tr>
+                    <tr>
+                        <th>{{messageLabels['openhmis.inventory.stockroom.batchOperation']}}</th>
+                        <th>{{messageLabels['openhmis.inventory.stockroom.expiration']}}</th>
+                        <th>{{messageLabels['openhmis.inventory.item.quantity']}}</th>
+                    </tr>
                     </thead>
                     <tr ng-repeat="item in itemDetails">
                         <td>{{item.batchOperation.operationNumber}}</td>
@@ -176,7 +162,7 @@
             <span class="searchclear icon-remove-circle"></span>
             <br />
         </div>
-        <table style="margin-bottom:5px;" class="manage-entities-table">
+        <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
                     <th>{{messageLabels['openhmis.inventory.stockroom.dateCreated']}}</th>
@@ -238,15 +224,15 @@
                 </div>
             </div>
         </div>
-   </div>
+    </div>
 
-   <div id="transactions" style="border: 0px;">
+    <div id="transactions" style="border: 0px;">
         <div class="btn-group">
             <input type="text" ng-model="searchItemStockTransactionName" ng-change="searchItemStockTransaction(entity.uuid)" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('Search Item') }" size="80" autofocus>
             <span class="searchclear icon-remove-circle"></span>
             <br />
         </div>
-        <table style="margin-bottom:5px;" class="manage-entities-table">
+        <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
                     <th>{{messageLabels['openhmis.inventory.stockroom.dateCreated']}}</th>
@@ -268,12 +254,12 @@
                 </tr>
             </tbody>
         </table>
-       <div ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName != ''">
-           ${ ui.message('Your search - <b>') } {{searchItemStockTransactionName}} ${ ui.message('</b> - did not match any items')}
-       </div>
-       <div class="not-found" ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName == ''">
-           ${ ui.message('No Operation Transactions found') }
-       </div>
+        <div ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName != ''">
+            ${ ui.message('Your search - <b>') } {{searchItemStockTransactionName}} ${ ui.message('</b> - did not match any items')}
+        </div>
+        <div class="not-found" ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName == ''">
+            ${ ui.message('No Operation Transactions found') }
+        </div>
         <div ng-hide="itemStockTransactions.length == 0">
             <span style="float:right;">
                 <div class="entity-pagination">
@@ -314,3 +300,18 @@
         </div>
     </div>
 </div>
+<span ng-show="entity.uuid !== ''">
+    <br /><br /><br />
+    <form>
+        <div class="detail-section-border-top detail-section-border-bottom">
+            <br/>
+            <p>
+                <span><input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()" /></span>
+                <span><input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" /></span>
+            </p>
+        </div>
+        <br /><br />
+    </form>
+</span>
+
+${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment") }
