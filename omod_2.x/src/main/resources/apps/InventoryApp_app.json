@@ -41,7 +41,7 @@
         "label": "Manage Inventory Module",
         "url": "openhmis.inventory/inventory/manageModule.page",
         "icon": "icon-cogs",
-        "requiredPrivilege": "App: Access Manage Inventory Module"
+        "requiredPrivilege": "Task: Manage Inventory Module"
       },
 
       {

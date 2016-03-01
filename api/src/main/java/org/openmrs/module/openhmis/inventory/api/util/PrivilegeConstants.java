@@ -45,7 +45,7 @@ public class PrivilegeConstants {
 
 	public static final String APP_VIEW_INVENTORY_APP = "App: View Inventory App";
 	public static final String APP_ACCESS_INVENTORY_TASKS_PAGE = "App: Access Inventory Tasks";
-	public static final String APP_ACCESS_MANAGE_INVENTORY_MODULE_PAGE = "App: Access Manage Inventory Module";
+	public static final String APP_ACCESS_MANAGE_INVENTORY_MODULE_PAGE = "Task: Manage Inventory Module";
 	public static final String TASK_ACCESS_INVENTORY_TASK_PAGE = "Task: Access Inventory Task";
 	public static final String TASK_ACCESS_INVENTORY_ROLE_CREATION_PAGE = "Task: Access Inventory Role Creation";
 	public static final String TASK_ACCESS_MANAGE_ITEMS_PAGE = "Task: Access Manage Items";

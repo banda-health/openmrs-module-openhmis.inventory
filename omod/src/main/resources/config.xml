@@ -208,7 +208,7 @@
 	</privilege>
 
 	<privilege>
-		<name>App: Access Manage Inventory Module</name>
+		<name>Task: Manage Inventory Module</name>
 		<description>Able to access manage inventory module page</description>
 	</privilege>
 
