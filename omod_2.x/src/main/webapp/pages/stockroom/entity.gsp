@@ -69,6 +69,7 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
                 class: ["field-display ui-autocomplete-input form-control searchinput"],
                 placeholder: [ui.message("Search Item stock name")]
         ])}
+        <br /><br />
 
         <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
@@ -167,6 +168,7 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
                 class: ["field-display ui-autocomplete-input form-control searchinput"],
                 placeholder: [ui.message("Search Item")]
         ])}
+        <br /><br />
 
         <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
@@ -240,6 +242,7 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
                 class: ["field-display ui-autocomplete-input form-control searchinput"],
                 placeholder: [ui.message("Search Item")]
         ])}
+        <br /><br />
 
         <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>

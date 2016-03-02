@@ -33,6 +33,7 @@
                     class: ["field-display ui-autocomplete-input form-control searchinput"],
                     placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
             ])}
+            <br /><br />
 
             <table style="margin-bottom:5px;" class="manage-entities-table">
                 <thead>

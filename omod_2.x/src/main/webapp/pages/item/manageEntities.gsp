@@ -31,7 +31,7 @@
                     class: ["field-display ui-autocomplete-input form-control searchinput"],
                     placeholder: [ui.message("Enter Stockroom to search")]
             ])}
-            <br />
+            <br /><br />
             <table style="margin-bottom:5px;" class="manage-entities-table">
                 <thead>
                 <tr>
