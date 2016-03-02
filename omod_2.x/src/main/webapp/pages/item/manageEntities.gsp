@@ -25,12 +25,13 @@
     <br /><br /><br />
     <div ng-controller="ManageItemController">
         <div id="entities">
-            <div class="btn-group">
-                <input type="text" ng-model="searchField" ng-change="updateContent()" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('openhmis.inventory.general.enterSearchPhrase') }" size="80" autofocus>
-                <span id="searchclear" class="searchclear icon-remove-circle"></span>
-            </div>
-
-            <br /><br />
+            ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                    model: "searchField",
+                    onChangeEvent: "updateContent()",
+                    class: ["field-display ui-autocomplete-input form-control searchinput"],
+                    placeholder: [ui.message("Enter Stockroom to search")]
+            ])}
+            <br />
             <table style="margin-bottom:5px;" class="manage-entities-table">
                 <thead>
                 <tr>
