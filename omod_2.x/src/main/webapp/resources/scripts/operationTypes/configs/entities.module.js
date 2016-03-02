@@ -29,7 +29,7 @@
 				'app.css', 'app.filters', 'app.pagination', 'app.cookies',
 				'app.genericMetadataModel', 'app.restfulServices',
 				'app.operationsTypeFunctionsFactory',
-				'app.genericEntityController', 'app.genericManageController']);
+				'app.genericEntityController', 'app.genericManageController', 'app.entityFunctionsFactory']);
 		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 			/*
 			 * Configure routes and urls. The default route is '/' which loads
