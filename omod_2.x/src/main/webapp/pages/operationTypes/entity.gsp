@@ -217,24 +217,18 @@
 				</div>
 			</li>
 		</ul>
-	</fieldset>
-	<br/>
-	<fieldset class="format">
-		<ul class="table-layout">
-			<li>
-				<span>
-					<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
-				</span>
-			</li>
-			<li>
-				<span>
-					<input type="button" class="confirm right"
-					       value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
-					       ng-disabled="entity.name == '' || entity.name == undefined"
-					       ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
-				</span>
-			</li>
-		</ul>
+		<br/>
+		<p>
+			<span>
+				<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
+			</span>
+			<span>
+				<input type="button" class="confirm right"
+					   value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
+					   ng-disabled="entity.name == '' || entity.name == undefined"
+					   ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
+			</span>
+		</p>
 	</fieldset>
 
 	${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"]) }
