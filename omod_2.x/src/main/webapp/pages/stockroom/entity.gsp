@@ -88,44 +88,17 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
         <div class="not-found"  ng-show="items.length == 0 && searchItemStockName == ''">
             ${ ui.message('No items found') }
         </div>
-        <div id="below-entities-table" ng-hide="items.length == 0">
-            <span style="float:right;">
-                <div class="entity-pagination">
-                    <dir-pagination-controls pagination-id="__items" on-page-change="searchItemStock(entity.uuid, itemCurrentPage)"></dir-pagination-controls>
-                </div>
-            </span>
-            <br />
-            <div class="pagination-options" style="float:left;">
-                <div id="showing-entities">
-                    <span>
-                        <b>
-                            ${ ui.message('openhmis.inventory.general.showing') }
-                            {{itemPagingFrom(itemCurrentPage, itemLimit)}}
-                            ${ ui.message('openhmis.inventory.general.to') }
-                            {{itemPagingTo(itemCurrentPage, itemLimit, itemTotalNumberOfResults)}}
-                        </b>
-                    </span>
-                    <span>
-                        <b>
-                            ${ ui.message('openhmis.inventory.general.of') }
-                            {{itemTotalNumberOfResults}}
-                            ${ ui.message('openhmis.inventory.general.entries') }
-                        </b>
-                    </span>
-                </div>
-                <div id="includeVoided-entities">
-                    ${ui.message('openhmis.inventory.general.show')}
-                    <select id="pageSize" ng-model="itemLimit" ng-change="searchItemStock(entity.uuid)">
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    ${ui.message('openhmis.inventory.general.entries')}
-                </div>
-            </div>
-        </div>
+        ${ui.includeFragment("openhmis.commons", "tabsPaginationFragment",[
+                hide:"itemLength",
+		        paginationId:"__items",
+		        onPageChange:"searchItemStock(entity.uuid, itemCurrentPage)",
+		        model:"itemLimit",
+		        onChange:"searchItemStock(entity.uuid)",
+		        pagingFrom:"itemPagingFrom(itemCurrentPage, itemLimit)",
+		        pagingTo: "itemPagingTo(itemCurrentPage, itemLimit, itemTotalNumberOfResults)",
+		        totalNumberOfResults:"itemTotalNumberOfResults"
+        ])}
+
         <div id="item-details-dialog" class="dialog" style="display: none;">
             <div class="dialog-header">
                 <span>
