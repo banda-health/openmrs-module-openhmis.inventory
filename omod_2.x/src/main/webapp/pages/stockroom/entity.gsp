@@ -62,11 +62,15 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
     </ul>
 
     <div id="items" style="border: 0px;">
-        <div class="btn-group">
-            <input type="text" ng-model="searchItemStockName" ng-change="searchItemStock(entity.uuid)" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('Search Item stock name') }" size="80" autofocus>
-            <span id="searchclear" class="searchclear icon-remove-circle"></span>
-            <br />
-        </div>
+        <!-- search items -->
+        ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                model: "searchItemStockName",
+                onChangeEvent: "searchItemStock(entity.uuid)",
+                class: ["field-display ui-autocomplete-input form-control searchinput"],
+                placeholder: [ui.message("openhmis.inventory.item.stock.searchStockName")]
+        ])}
+        <br /><br />
+
         <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
@@ -157,11 +161,15 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
     </div>
 
     <div id="operations" style="border: 0px;">
-        <div class="btn-group">
-            <input type="text" ng-model="searchItemStockOperationName" ng-change="searchItemStockOperation(entity.uuid)" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('Search Item') }" size="80" autofocus>
-            <span class="searchclear icon-remove-circle"></span>
-            <br />
-        </div>
+        <!-- search item stock operations -->
+        ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                model: "searchItemStockOperationName",
+                onChangeEvent: "searchItemStockOperation(entity.uuid)",
+                class: ["field-display ui-autocomplete-input form-control searchinput"],
+                placeholder: [ui.message("openhmis.inventory.item.enterItemSearch")]
+        ])}
+        <br /><br />
+
         <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
@@ -184,7 +192,7 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
             ${ ui.message('Your search - <b>') } {{searchItemStockOperationName}} ${ ui.message('</b> - did not match any items')}
         </div>
         <div class="not-found"  ng-show="itemStockOperations.length == 0 && searchItemStockOperationName == ''">
-            ${ ui.message('No Operations found') }
+            ${ ui.message('openhmis.inventory.stockroom.operation.noOperationsFound') }
         </div>
         <div ng-hide="itemStockOperations.length == 0">
             <span style="float:right;">
@@ -227,11 +235,15 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
     </div>
 
     <div id="transactions" style="border: 0px;">
-        <div class="btn-group">
-            <input type="text" ng-model="searchItemStockTransactionName" ng-change="searchItemStockTransaction(entity.uuid)" class="field-display ui-autocomplete-input form-control searchinput" placeholder="${ ui.message('Search Item') }" size="80" autofocus>
-            <span class="searchclear icon-remove-circle"></span>
-            <br />
-        </div>
+        <!-- search item stock transactions -->
+        ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                model: "searchItemStockTransactionName",
+                onChangeEvent: "searchItemStockTransaction(entity.uuid)",
+                class: ["field-display ui-autocomplete-input form-control searchinput"],
+                placeholder: [ui.message("openhmis.inventory.item.enterItemSearch")]
+        ])}
+        <br /><br />
+
         <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
             <thead>
                 <tr>
@@ -258,7 +270,7 @@ ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
             ${ ui.message('Your search - <b>') } {{searchItemStockTransactionName}} ${ ui.message('</b> - did not match any items')}
         </div>
         <div class="not-found" ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName == ''">
-            ${ ui.message('No Operation Transactions found') }
+            ${ ui.message('openhmis.inventory.stockroom.transaction.noOperationTransactionsFound') }
         </div>
         <div ng-hide="itemStockTransactions.length == 0">
             <span style="float:right;">

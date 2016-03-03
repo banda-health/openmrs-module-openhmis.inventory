@@ -57,14 +57,15 @@
                 <span>{{messageLabels['Concept']}}</span>
             </li>
             <li>
-                <input type="text" ng-change="searchConcepts()" ng-model="entity.concept"
-                       placeholder="{{messageLabels['openhmis.inventory.item.enterConceptName']}}"
-                       typeahead="concept.display for concept in concepts"
-                       class="form-control"
-                       typeahead-on-select="selectConcept(\$item)"
-                       typeahead-editable="false"
-                       typeahead-loading="loadingConcepts"/>
-                <i ng-show="loadingConcepts"></i>
+                ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                        onChangeEvent: "searchConcepts()",
+                        typeahead: ["concept.display for concept in concepts"],
+                        model: "entity.concept",
+                        typeaheadOnSelect: "selectConcept(\$item)",
+                        typeaheadEditable: "false",
+                        class: ["form-control autocomplete-search"],
+                        placeholder: [ui.message('openhmis.inventory.item.enterConceptName')],
+                ])}
             </li>
         </ul>
         <ul class="table-layout">

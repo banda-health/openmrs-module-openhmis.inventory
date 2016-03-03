@@ -34,14 +34,15 @@
 
 	<div ng-controller="ManageInstitutionController">
 		<div id="entities">
-			<div class="btn-group">
-				<input type="text" ng-model="searchField" ng-change="updateContent()"
-				       class="field-display ui-autocomplete-input form-control searchinput"
-				       placeholder="${ui.message('openhmis.inventory.general.enterSearchPhrase')}" size="80" autofocus>
-				<span id="searchclear" class="searchclear icon-remove-circle"></span>
-			</div>
+
+			${ ui.includeFragment("openhmis.commons", "searchFragment", [
+					model: "searchField",
+					onChangeEvent: "updateContent()",
+					class: ["field-display ui-autocomplete-input form-control searchinput"],
+					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
+			])}
+			<br/><br />
 			
-			<br/><br/>
 			<table style="margin-bottom:5px;" class="entities-table">
 				<thead>
 				<tr>

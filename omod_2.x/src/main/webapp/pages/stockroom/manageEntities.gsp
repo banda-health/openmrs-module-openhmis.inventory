@@ -26,24 +26,25 @@
     <div ng-controller="ManageStockroomsController">
         <div id="entities">
             <div class="btn-group">
+                ${ ui.message('openhmis.inventory.location.name') }:
                 <ul class="search-area">
                     <li>
-                        ${ ui.message('openhmis.inventory.location.name') }:
-                        <select ng-model="location" ng-change="searchStockrooms()"
+
+                        <select ng-model="location" ng-change="searchStockrooms()" style="height:33px;"
                                 ng-options='location.display for location in locations track by location.uuid'>
                             <option value="" selected="selected">Any</option>
                         </select>
                     </li>
                     <li>
-                        <ul class="search-area-input">
-                            <li>
-                                <input type="text" ng-model="searchField" ng-change="searchStockrooms()" class="field-display ui-autocomplete-input form-control searchinput search-area" placeholder="${ ui.message('Enter Stockroom to search') }" size="80" autofocus>
-                            </li>
-                        </ul>
+                        ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                                model: "searchField",
+                                onChangeEvent: "searchStockrooms()",
+                                class: ["field-display ui-autocomplete-input form-control searchinput"],
+                                placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
+                        ])}
                     </li>
                 </ul>
             </div>
-
             <br /><br />
             <table style="margin-bottom:5px;" class="manage-stockrooms-table">
                 <thead>
