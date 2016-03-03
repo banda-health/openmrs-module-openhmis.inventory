@@ -70,4 +70,5 @@ emr.loadMessages([
     "openhmis.inventory.item.quantity",
     "openhmis.inventory.general.batchOperation",
     "openhmis.inventory.general.expiration",
+    "openhmis.inventory.item.enterItemSearch",
 ]);

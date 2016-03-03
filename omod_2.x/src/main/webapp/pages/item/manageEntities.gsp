@@ -29,7 +29,7 @@
                     model: "searchField",
                     onChangeEvent: "updateContent()",
                     class: ["field-display ui-autocomplete-input form-control searchinput"],
-                    placeholder: [ui.message("Enter Stockroom to search")]
+                    placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
             ])}
             <br /><br />
             <table style="margin-bottom:5px;" class="manage-entities-table">

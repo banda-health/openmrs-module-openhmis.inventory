@@ -40,7 +40,7 @@
                                 model: "searchField",
                                 onChangeEvent: "searchStockrooms()",
                                 class: ["field-display ui-autocomplete-input form-control searchinput"],
-                                placeholder: [ui.message("Enter Stockroom to search")]
+                                placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
                         ])}
                     </li>
                 </ul>

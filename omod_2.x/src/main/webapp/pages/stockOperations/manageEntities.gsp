@@ -52,7 +52,7 @@
                                 typeaheadOnSelect: "selectItem(\$item)",
                                 typeaheadEditable: "true",
                                 class: ["form-control"],
-                                placeholder: [ui.message('Enter Item to search')],
+                                placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
                         ])}
 
                     </td>
