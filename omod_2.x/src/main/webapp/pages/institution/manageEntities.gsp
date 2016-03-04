@@ -57,10 +57,17 @@
 				</tr>
 				</tbody>
 			</table>
-
-			<div id="below-entities-table">
-				${ui.includeFragment("openhmis.commons", "paginationFragment")}
+			<div ng-show="fetchedEntities.length == 0">
+				<br/>
+				${ui.message('Your search - <b>')} {{searchField}} ${ui.message('</b> - did not match any institutions')}
+				<br/><br/>
+				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
+				             ng-change="updateContent()"></span>
+				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
+			${ui.includeFragment("openhmis.commons", "paginationFragment", [
+					hide: ["fetchedEntities.length == 0"]
+			])}
 		</div>
 	</div>
 </div>

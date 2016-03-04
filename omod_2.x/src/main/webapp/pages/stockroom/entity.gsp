@@ -7,7 +7,7 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.manage.module")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/manageModule.page'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page'
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.stockrooms")}",
@@ -107,18 +107,16 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		<div class="not-found" ng-show="items.length == 0 && searchItemStockName == ''">
 			${ui.message('No items found')}
 		</div>
-		<div ng-hide="items.length == 0">
-			${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
-					paginationId        : "__items",
-					onPageChange        : ["searchItemStock(entity.uuid, itemCurrentPage)"],
-					model               : "itemLimit",
-					onChange            : "searchItemStock(entity.uuid)",
-					pagingFrom          : "itemPagingFrom(itemCurrentPage, itemLimit)",
-					pagingTo            : "itemPagingTo(itemCurrentPage, itemLimit, itemTotalNumberOfResults)",
-					totalNumberOfResults: "itemTotalNumberOfResults"
-			])}
-		</div>
-
+		${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
+				hide                : ["items.length == 0"],
+				paginationId        : "__items",
+				onPageChange        : ["searchItemStock(entity.uuid, itemCurrentPage)"],
+				model               : "itemLimit",
+				onChange            : "searchItemStock(entity.uuid)",
+				pagingFrom          : "itemPagingFrom(itemCurrentPage, itemLimit)",
+				pagingTo            : "itemPagingTo(itemCurrentPage, itemLimit, itemTotalNumberOfResults)",
+				totalNumberOfResults: "itemTotalNumberOfResults"
+		])}
 		<div id="item-details-dialog" class="dialog" style="display: none;">
 			<div class="dialog-header">
 				<span>
@@ -189,18 +187,16 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		<div class="not-found" ng-show="itemStockOperations.length == 0 && searchItemStockOperationName == ''">
 			${ui.message('No Operations found')}
 		</div>
-
-		<div ng-hide="itemStockOperations.length == 0">
-			${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
-					paginationId        : "__itemStockOperations",
-					onPageChange        : ["searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)"],
-					model               : "itemStockOperationLimit",
-					onChange            : "searchItemStockOperation(entity.uuid)",
-					pagingFrom          : "itemPagingFrom(itemStockOperationCurrentPage, itemStockOperationLimit)",
-					pagingTo            : "itemPagingTo(itemStockOperationCurrentPage, itemStockOperationLimit, itemStockOperationTotalNumberOfResults)",
-					totalNumberOfResults: "itemStockOperationTotalNumberOfResults"
-			])}
-		</div>
+		${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
+				hide                : ["itemStockOperations.length == 0"],
+				paginationId        : "__itemStockOperations",
+				onPageChange        : ["searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)"],
+				model               : "itemStockOperationLimit",
+				onChange            : "searchItemStockOperation(entity.uuid)",
+				pagingFrom          : "itemPagingFrom(itemStockOperationCurrentPage, itemStockOperationLimit)",
+				pagingTo            : "itemPagingTo(itemStockOperationCurrentPage, itemStockOperationLimit, itemStockOperationTotalNumberOfResults)",
+				totalNumberOfResults: "itemStockOperationTotalNumberOfResults"
+		])}
 	</div>
 
 	<div id="transactions" style="border: 0px;">
@@ -243,18 +239,16 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		<div class="not-found" ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName == ''">
 			${ui.message('No Operation Transactions found')}
 		</div>
-
-		<div ng-hide="itemStockTransactions.length == 0">
-			${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
-					paginationId        : "__itemStockTransactions",
-					onPageChange        : ["searchItemStockTransaction([entity.uuid, itemStockTransactionCurrentPage])"],
-					model               : "itemStockTransactionLimit",
-					onChange            : "searchItemStockTransaction(entity.uuid)",
-					pagingFrom          : "itemPagingFrom(itemStockTransactionCurrentPage, itemStockTransactionLimit)",
-					pagingTo            : "itemPagingTo(itemStockTransactionCurrentPage, itemStockTransactionLimit, itemStockTransactionTotalNumberOfResults)",
-					totalNumberOfResults: "itemStockTransactionTotalNumberOfResults"
-			])}
-		</div>
+		${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
+				hide                : ["itemStockTransactions.length == 0"],
+				paginationId        : "__itemStockTransactions",
+				onPageChange        : ["searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)"],
+				model               : "itemStockTransactionLimit",
+				onChange            : "searchItemStockTransaction(entity.uuid)",
+				pagingFrom          : "itemPagingFrom(itemStockTransactionCurrentPage, itemStockTransactionLimit)",
+				pagingTo            : "itemPagingTo(itemStockTransactionCurrentPage, itemStockTransactionLimit, itemStockTransactionTotalNumberOfResults)",
+				totalNumberOfResults: "itemStockTransactionTotalNumberOfResults"
+		])}
 	</div>
 </div>
 <span ng-show="entity.uuid !== ''">

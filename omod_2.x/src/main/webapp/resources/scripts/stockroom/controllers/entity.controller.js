@@ -27,7 +27,6 @@
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
         var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
-        var itemLength = 0;
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
@@ -137,12 +136,6 @@
         self.onLoadItemStockSuccessful = self.onLoadItemStockSuccessful || function(data){
                 $scope.items = data.results;
                 $scope.itemTotalNumberOfResults = data.length;
-                if ($scope.items.length == 0 ) {
-                    itemLength == 0;
-                } else {
-                    itemLength == 1;
-                }
-                $scope.itemLength = itemLength;
             }
 
         self.onLoadItemStockOperationSuccessful = self.onLoadItemStockOperationSuccessful || function(data){

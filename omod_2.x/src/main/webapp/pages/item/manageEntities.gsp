@@ -58,9 +58,9 @@
                 <span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired" ng-change="updateContent()"></span>
                 <span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
             </div>
-            <div id="below-entities-table" ng-hide="fetchedEntities.length == 0">
-                ${ui.includeFragment("openhmis.commons", "paginationFragment")}
-            </div>
+            ${ui.includeFragment("openhmis.commons", "paginationFragment", [
+                    hide: ["fetchedEntities.length == 0"]
+            ])}
         </div>
     </div>
 </div>
