@@ -20,11 +20,11 @@
 	base.controller("ManageItemController", ManageItemController);
 	ManageItemController.$inject = ['$injector', '$scope', '$filter',
 			'EntityRestFactory', 'CssStylesFactory', 'PaginationService',
-			'ItemModel', 'CookiesService'];
+			'ItemModel', 'CookiesService', 'ItemRestfulService'];
 
 	function ManageItemController($injector, $scope, $filter,
 			EntityRestFactory, CssStylesFactory, PaginationService, ItemModel,
-			CookiesService) {
+			CookiesService, ItemRestfulService) {
 
 		var self = this;
 
@@ -38,6 +38,34 @@
 					self.bindBaseParameters(module_name, rest_entity_name,
 							entity_name);
 				}
+
+		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
+				self.loadDepartments();
+				$scope.department = $scope.department || {};
+				$scope.searchItems = self.searchItems;
+			}
+
+		self.loadDepartments = self.loadDepartments || function(){
+				ItemRestfulService.loadDepartments(self.onLoadDepartmentsSuccessful);
+			}
+
+		self.searchItems = self.searchItems || function(){
+				var department_uuid;
+				if($scope.department !== null){
+					department_uuid = $scope.department.uuid;
+				}
+
+				ItemRestfulService.searchItems($scope.searchField, $scope.currentPage, $scope.limit, department_uuid, self.onLoadItemsSuccessful)
+			}
+
+		self.onLoadItemsSuccessful = self.onLoadItemsSuccessful || function(data){
+				$scope.fetchedEntities = data.results;
+				$scope.totalNumOfResults = data.length;
+			}
+
+		self.onLoadDepartmentsSuccessful = self.onLoadDepartmentsSuccessful || function(data){
+				$scope.departments = data.results;
+			}
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericManageController, self, {
