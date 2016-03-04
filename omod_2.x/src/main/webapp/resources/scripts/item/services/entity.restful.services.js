@@ -39,10 +39,16 @@
 			requestParams['rest_entity_name'] = 'item';
 			if(angular.isDefined(department_uuid)){
 				requestParams['department_uuid'] = department_uuid;
-				requestParams['q'] = q;
 			}
+
 			if(angular.isDefined(q) && q !== ''){
 				requestParams['q'] = q;
+			}
+			else{
+				// always pass 'q' when 'department_uuid' is set.
+				if(angular.isDefined('department_uuid')){
+					requestParams['q'] = q;
+				}
 			}
 
 			requestParams['startIndex'] = startIndex;
