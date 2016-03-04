@@ -25,12 +25,27 @@
     <br /><br /><br />
     <div ng-controller="ManageItemController">
         <div id="entities">
-            ${ ui.includeFragment("openhmis.commons", "searchFragment", [
-                    model: "searchField",
-                    onChangeEvent: "updateContent()",
-                    class: ["field-display ui-autocomplete-input form-control searchinput"],
-                    placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
-            ])}
+            <div class="btn-group">
+            ${ ui.message('openhmis.inventory.department.name') }:
+            <ul class="search-area">
+                <li>
+
+                    <select ng-model="department" ng-change="searchItems()" style="height:33px;"
+                            ng-options='department.name for department in departments track by department.uuid'>
+                        <option value="" selected="selected">Any</option>
+                    </select>
+                </li>
+                <li>
+                    ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                            model: "searchField",
+                            onChangeEvent: "searchItems()",
+                            class: ["field-display ui-autocomplete-input form-control searchinput"],
+                            placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
+                    ])}
+
+                </li>
+            </ul>
+                </div>
             <br /><br />
             <table style="margin-bottom:5px;" class="manage-entities-table">
                 <thead>
