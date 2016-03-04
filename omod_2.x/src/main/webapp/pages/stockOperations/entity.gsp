@@ -138,7 +138,7 @@
 		<div class="not-found" ng-show="stockOperationItems.length == 0">
 			${ui.message('No items found')}
 		</div>
-		${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
+		${ui.includeFragment("openhmis.commons", "paginationFragment", [
 				hide                : ["stockOperationItems.length == 0"],
 				paginationId        : "__items",
 				onPageChange        : ["stockOperationItem(entity.uuid, stockOperationItemCurrentPage)"],
@@ -146,7 +146,8 @@
 				onChange            : "stockOperationItem(entity.uuid)",
 				pagingFrom          : "stockOperationPagingFrom(stockOperationItemCurrentPage, stockOperationItemLimit)",
 				pagingTo            : "stockOperationPagingTo(stockOperationItemCurrentPage, stockOperationItemLimit, stockOperationItemTotalNumberOfResults)",
-				totalNumberOfResults: "stockOperationItemTotalNumberOfResults"
+				totalNumberOfResults: "stockOperationItemTotalNumberOfResults",
+				showRetiredSection  : "false"
 		])}
 	</div>
 
@@ -178,7 +179,7 @@
 		<div class="not-found" ng-show="stockOperationTransactions.length == 0">
 			${ui.message('No Transactions found')}
 		</div>
-		${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
+		${ui.includeFragment("openhmis.commons", "paginationFragment", [
 				hide                : ["stockOperationTransactions.length == 0"],
 				paginationId        : "__stockOperationTransactions",
 				onPageChange        : ["stockOperationTransaction(entity.uuid, stockOperationTransactionCurrentPage)"],
@@ -186,7 +187,8 @@
 				onChange            : "stockOperationTransaction(entity.uuid)",
 				pagingFrom          : "stockOperationPagingFrom(stockOperationTransactionCurrentPage, stockOperationTransactionLimit)",
 				pagingTo            : "stockOperationPagingTo(stockOperationTransactionCurrentPage, stockOperationTransactionLimit, stockOperationTransactionTotalNumberOfResults)",
-				totalNumberOfResults: "stockOperationTransactionTotalNumberOfResults"
+				totalNumberOfResults: "stockOperationTransactionTotalNumberOfResults",
+				showRetiredSection  : "false"
 		])}
 	</div>
 </div>

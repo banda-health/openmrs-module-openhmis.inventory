@@ -57,6 +57,7 @@
 				</tr>
 				</tbody>
 			</table>
+
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
 				${ui.message('Your search - <b>')} {{searchField}} ${ui.message('</b> - did not match any institutions')}
@@ -66,7 +67,14 @@
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
 			${ui.includeFragment("openhmis.commons", "paginationFragment", [
-					hide: ["fetchedEntities.length == 0"]
+					hide                : ["fetchedEntities.length == 0"],
+					onPageChange        : ["paginate(currentPage)"],
+					model               : "limit",
+					onChange            : "updateContent()",
+					pagingFrom          : "pagingFrom(currentPage, limit)",
+					pagingTo            : "pagingTo(currentPage, limit, totalNumOfResults)",
+					totalNumberOfResults: "totalNumOfResults",
+					showRetiredSection  : "true"
 			])}
 		</div>
 	</div>
