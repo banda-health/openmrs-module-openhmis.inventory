@@ -44,11 +44,8 @@
 			if(angular.isDefined(q) && q !== ''){
 				requestParams['q'] = q;
 			}
-			else{
-				// always pass 'q' when 'department_uuid' is set.
-				if(angular.isDefined('department_uuid')){
-					requestParams['q'] = q;
-				}
+			else if(angular.isDefined('department_uuid')){
+				requestParams['q'] = q;
 			}
 
 			requestParams['startIndex'] = startIndex;
