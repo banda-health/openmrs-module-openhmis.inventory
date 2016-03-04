@@ -191,45 +191,15 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		</div>
 
 		<div ng-hide="itemStockOperations.length == 0">
-			<span style="float:right;">
-				<div class="entity-pagination">
-					<dir-pagination-controls pagination-id="__itemStockOperations"
-					                         on-page-change="searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)"></dir-pagination-controls>
-				</div>
-			</span>
-			<br/>
-
-			<div class="pagination-options" style="float:left;">
-				<div>
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.showing')}
-							{{itemPagingFrom(itemStockOperationCurrentPage, itemStockOperationLimit)}}
-							${ui.message('openhmis.inventory.general.to')}
-							{{itemPagingTo(itemStockOperationCurrentPage, itemStockOperationLimit, itemStockOperationTotalNumberOfResults)}}
-						</b>
-					</span>
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.of')}
-							{{itemStockOperationTotalNumberOfResults}}
-							${ui.message('openhmis.inventory.general.entries')}
-						</b>
-					</span>
-				</div>
-
-				<div>
-					${ui.message('openhmis.inventory.general.show')}
-					<select ng-model="itemStockOperationLimit" ng-change="searchItemStockOperation(entity.uuid)">
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="25">25</option>
-						<option value="50">50</option>
-						<option value="100">100</option>
-					</select>
-					${ui.message('openhmis.inventory.general.entries')}
-				</div>
-			</div>
+			${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
+					paginationId        : "__itemStockOperations",
+					onPageChange        : ["searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)"],
+					model               : "itemStockOperationLimit",
+					onChange            : "searchItemStockOperation(entity.uuid)",
+					pagingFrom          : "itemPagingFrom(itemStockOperationCurrentPage, itemStockOperationLimit)",
+					pagingTo            : "itemPagingTo(itemStockOperationCurrentPage, itemStockOperationLimit, itemStockOperationTotalNumberOfResults)",
+					totalNumberOfResults: "itemStockOperationTotalNumberOfResults"
+			])}
 		</div>
 	</div>
 
@@ -275,45 +245,15 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		</div>
 
 		<div ng-hide="itemStockTransactions.length == 0">
-			<span style="float:right;">
-				<div class="entity-pagination">
-					<dir-pagination-controls pagination-id="__itemStockTransactions"
-					                         on-page-change="searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)"></dir-pagination-controls>
-				</div>
-			</span>
-			<br/>
-
-			<div class="pagination-options" style="float:left;">
-				<div>
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.showing')}
-							{{itemPagingFrom(itemStockTransactionCurrentPage, itemStockTransactionLimit)}}
-							${ui.message('openhmis.inventory.general.to')}
-							{{itemPagingTo(itemStockTransactionCurrentPage, itemStockTransactionLimit, itemStockTransactionTotalNumberOfResults)}}
-						</b>
-					</span>
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.of')}
-							{{itemStockTransactionTotalNumberOfResults}}
-							${ui.message('openhmis.inventory.general.entries')}
-						</b>
-					</span>
-				</div>
-
-				<div>
-					${ui.message('openhmis.inventory.general.show')}
-					<select ng-model="itemStockTransactionLimit" ng-change="searchItemStockTransaction(entity.uuid)">
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="25">25</option>
-						<option value="50">50</option>
-						<option value="100">100</option>
-					</select>
-					${ui.message('openhmis.inventory.general.entries')}
-				</div>
-			</div>
+			${ui.includeFragment("openhmis.commons", "tabsPaginationFragment", [
+					paginationId        : "__itemStockTransactions",
+					onPageChange        : ["searchItemStockTransaction([entity.uuid, itemStockTransactionCurrentPage])"],
+					model               : "itemStockTransactionLimit",
+					onChange            : "searchItemStockTransaction(entity.uuid)",
+					pagingFrom          : "itemPagingFrom(itemStockTransactionCurrentPage, itemStockTransactionLimit)",
+					pagingTo            : "itemPagingTo(itemStockTransactionCurrentPage, itemStockTransactionLimit, itemStockTransactionTotalNumberOfResults)",
+					totalNumberOfResults: "itemStockTransactionTotalNumberOfResults"
+			])}
 		</div>
 	</div>
 </div>
