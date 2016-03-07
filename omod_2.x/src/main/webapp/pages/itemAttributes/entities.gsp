@@ -22,7 +22,7 @@
 
 %>
 
-<script data-main="itemAttributes/configs/entity.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="itemAttributes/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="itemAttributeTypesApp">
     <div ui-view></div>
