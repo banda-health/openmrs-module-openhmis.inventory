@@ -24,7 +24,7 @@
 %>
 
 <script data-main="operationTypes/configs/entities.main"
-        src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+        src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="entitiesApp">
 	<div ui-view></div>

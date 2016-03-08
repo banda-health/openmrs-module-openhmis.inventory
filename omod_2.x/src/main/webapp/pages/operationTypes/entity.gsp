@@ -11,7 +11,7 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.operationTypes")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationTypes/entities.page'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationTypes/entities.page#/'
 		},
 		{label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
 	];
