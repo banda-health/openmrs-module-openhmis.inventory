@@ -81,7 +81,7 @@ ul.search-area-input{
     text-align: left;
 }
 table.manage-stockrooms-table th:first-child, td:first-child {
-    width: 70%;
+    width: 30%;
 }
 
 .not-found{
@@ -91,4 +91,8 @@ table.manage-stockrooms-table th:first-child, td:first-child {
 #item-details-dialog{
     max-width:none;
     width: 500px;
+}
+
+input.non-editable{
+    background-color:lightgrey
 }

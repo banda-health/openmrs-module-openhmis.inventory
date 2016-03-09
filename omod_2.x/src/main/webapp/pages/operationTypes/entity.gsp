@@ -53,7 +53,7 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.sourceLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasSource" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.hasSource" disabled="disabled" style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -61,7 +61,7 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.destinationLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled" style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -69,7 +69,7 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.recipientLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled" style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -77,7 +77,7 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.availableWhenReservedLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled" style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -150,7 +150,7 @@
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
-									<li class="not-required">
+									<li class="required">
 										<span>{{messageLabels['PersonAttributeType.format']}}</span>
 									</li>
 									<li>
@@ -218,13 +218,14 @@
 			</li>
 		</ul>
 		<br/>
+		<hr/>
 		<p>
 			<span>
 				<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
 			</span>
 			<span>
 				<input type="button" class="confirm right"
-					   value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
+					   value="{{messageLabels['general.save']}}"
 					   ng-disabled="entity.name == '' || entity.name == undefined"
 					   ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
 			</span>

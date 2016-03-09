@@ -25,13 +25,7 @@
 	<br/><br/><br/>
 
 	<div ng-controller="ManageOperationTypesController">
-		<div id="entities">
-			${ ui.includeFragment("openhmis.commons", "searchFragment", [
-					model: "searchField",
-					onChangeEvent: "updateContent()",
-					class: ["field-display ui-autocomplete-input form-control searchinput"],
-					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
-			])}
+		<div id="entities-table">
 			<br />
 
 			<table style="margin-bottom:5px;">
