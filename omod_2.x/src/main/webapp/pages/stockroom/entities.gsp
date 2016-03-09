@@ -25,7 +25,7 @@
     ui.includeJavascript("openhmis.inventory", "stockroom/services/entity.functions.js")
 %>
 
-<script data-main="stockroom/configs/entity.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="stockroom/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="stockroomsApp">
     <div ui-view></div>
