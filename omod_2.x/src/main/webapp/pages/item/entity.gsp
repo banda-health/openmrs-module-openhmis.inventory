@@ -62,7 +62,7 @@
                         typeahead: ["concept.display for concept in concepts"],
                         model: "entity.concept",
                         typeaheadOnSelect: "selectConcept(\$item)",
-                        typeaheadEditable: "false",
+                        typeaheadEditable: "true",
                         class: ["form-control autocomplete-search"],
                         placeholder: [ui.message('openhmis.inventory.item.enterConceptName')],
                 ])}
@@ -127,7 +127,7 @@
                                 <a href="" ng-click="removeItemPrice(itemPrice)">
                                     <i class="icon-remove"></i>
                                 </a>
-                                <a href="" ng-click="editItemPrice(itemPrice)">{{itemPrice.price | number:2}} ({{itemPrice.name}})</a>
+                                <a href="" ng-click="editItemPrice(itemPrice)">{{itemPrice.price | number:2}} <span ng-hide="itemPrice.name === ''">({{itemPrice.name}})</span></a>
                             </li>
                         </ul>
                         <div class="bbf-actions">
@@ -195,6 +195,7 @@
                 <h3>{{addItemPriceTitle}}</h3>
             </span>
             <span ng-show="editItemPriceTitle !=''">
+                <i class="icon-edit"></i>
                 <h3>{{editItemPriceTitle}}</h3>
             </span>
         </div>
@@ -207,7 +208,9 @@
                 <li class="required">{{messageLabels['openhmis.inventory.item.price.name']}}</li>
                 <li><input type="number" ng-model="itemPrice.price" required /></li>
             </ul>
-            <div class="ngdialog-buttons">
+            <br />
+            <div class="ngdialog-buttons detail-section-border-top">
+                <br />
                 <input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="closeThisDialog('Cancel')" />
                 <input type="button" class="confirm right" value="Confirm" ng-disabled="itemPrice.price == undefined"  ng-click="confirm('OK')" />
             </div>
@@ -221,6 +224,7 @@
                 <h3>{{addItemCodeTitle}}</h3>
             </span>
             <span ng-show="editItemCodeTitle != ''">
+                <i class="icon-edit"></i>
                 <h3>{{editItemCodeTitle}}</h3>
             </span>
         </div>
@@ -229,7 +233,9 @@
                 <li>{{messageLabels['openhmis.inventory.item.code.name']}}</li>
                 <li><input type="text" ng-model="itemCode.code" /></li>
             </ul>
-            <div class="ngdialog-buttons">
+            <br />
+            <div class="ngdialog-buttons detail-section-border-top">
+                <br />
                 <input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="closeThisDialog('Cancel')" />
                 <input type="button" class="confirm right" value="Confirm"  ng-click="confirm('OK')" />
             </div>
