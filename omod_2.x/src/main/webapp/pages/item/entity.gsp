@@ -198,6 +198,7 @@
                 <i class="icon-edit"></i>
                 <h3>{{editItemPriceTitle}}</h3>
             </span>
+            <i class="icon-remove cancel show-cursor"  style="float:right;" ng-click="closeThisDialog()"></i>
         </div>
         <div class="dialog-content form">
             <ul class="table-layout dialog-table-layout">
@@ -227,6 +228,7 @@
                 <i class="icon-edit"></i>
                 <h3>{{editItemCodeTitle}}</h3>
             </span>
+            <i class="icon-remove cancel show-cursor"  style="float:right;" ng-click="closeThisDialog()"></i>
         </div>
         <div class="dialog-content form">
             <ul class="table-layout dialog-table-layout">
