@@ -25,10 +25,23 @@
         var service;
 
         service = {
+            showOperationActionsDialog: showOperationActionsDialog,
             addMessageLabels: addMessageLabels,
         };
 
         return service;
+
+        function showOperationActionsDialog(selectorId){
+            var dialog = emr.setupConfirmationDialog({
+                selector: '#' + selectorId,
+                actions: {
+                    cancel: function(){
+                        dialog.close();
+                    }
+                }
+            });
+            dialog.show();
+        }
 
         /**
          * All message labels used in the UI are defined here
@@ -72,6 +85,8 @@
             messages['openhmis.inventory.operations.operationNumber'] = emr.message('openhmis.inventory.operations.operationNumber');
             messages['openhmis.inventory.operations.operationType'] = emr.message('openhmis.inventory.operations.operationType');
             messages['openhmis.inventory.general.close'] = emr.message('openhmis.inventory.general.close');
+            messages['openhmis.inventory.general.auto'] = emr.message('openhmis.inventory.general.auto');
+            messages['openhmis.inventory.general.cancelReason'] = emr.message('openhmis.inventory.general.cancelReason');
 
             return messages;
         }
