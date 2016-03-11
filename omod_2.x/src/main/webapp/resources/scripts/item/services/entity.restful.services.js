@@ -36,7 +36,6 @@
 
 		function searchItems(q, startIndex, limit, department_uuid, includeRetired, onLoadSuccessfulCallback){
 			var requestParams = [];
-			console.log('include retired == ' + includeRetired);
 			requestParams['rest_entity_name'] = 'item';
 			if(angular.isDefined(department_uuid)){
 				requestParams['department_uuid'] = department_uuid;
