@@ -139,9 +139,9 @@
 			${ui.message('No items found')}
 		</div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
-				hide                : ["stockOperationItems.length == 0"],
+				hide                : "stockOperationItems.length == 0",
 				paginationId        : "__items",
-				onPageChange        : ["stockOperationItem(entity.uuid, stockOperationItemCurrentPage)"],
+				onPageChange        : "stockOperationItem(entity.uuid, stockOperationItemCurrentPage)",
 				model               : "stockOperationItemLimit",
 				onChange            : "stockOperationItem(entity.uuid)",
 				pagingFrom          : "stockOperationPagingFrom(stockOperationItemCurrentPage, stockOperationItemLimit)",
@@ -180,9 +180,9 @@
 			${ui.message('No Transactions found')}
 		</div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
-				hide                : ["stockOperationTransactions.length == 0"],
+				hide                : "stockOperationTransactions.length == 0",
 				paginationId        : "__stockOperationTransactions",
-				onPageChange        : ["stockOperationTransaction(entity.uuid, stockOperationTransactionCurrentPage)"],
+				onPageChange        : "stockOperationTransaction(entity.uuid, stockOperationTransactionCurrentPage)",
 				model               : "stockOperationTransactionLimit",
 				onChange            : "stockOperationTransaction(entity.uuid)",
 				pagingFrom          : "stockOperationPagingFrom(stockOperationTransactionCurrentPage, stockOperationTransactionLimit)",
