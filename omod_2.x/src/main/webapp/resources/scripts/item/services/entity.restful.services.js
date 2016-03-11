@@ -36,12 +36,12 @@
 
 		function searchItems(q, startIndex, limit, department_uuid, includeRetired, onLoadSuccessfulCallback){
 			var requestParams = [];
+			console.log('include retired == ' + includeRetired);
 			requestParams['rest_entity_name'] = 'item';
 			if(angular.isDefined(department_uuid)){
 				requestParams['department_uuid'] = department_uuid;
 			}
 
-			console.log('q === ' + q);
 			if(angular.isDefined(q) && q !== '' && q !== null && q !== undefined){
 				requestParams['q'] = q;
 			}
@@ -52,8 +52,8 @@
 			requestParams['startIndex'] = startIndex;
 			requestParams['limit'] = limit;
 
-			if(includeRetired == "true"){
-				requestParams['includeRetired'] = true;
+			if(includeRetired){
+				requestParams['includeAll'] = "true";
 			}
 
 			EntityRestFactory.loadEntities(requestParams, onLoadSuccessfulCallback, errorCallback);
