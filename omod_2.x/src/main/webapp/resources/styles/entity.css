@@ -34,6 +34,22 @@ table.manage-stockOperations-table th:first-child, td:first-child{
     width: 80%;
 }
 
+table.manage-stockOperations-item-table th:first-child, td:first-child{
+    width: 160%;
+}
+
+table.manage-stockOperations-transactions-table th:first-child, td:first-child{
+    width: 50%;
+}
+
+table.manage-stockOperations-transactions-table th:nth-child(2), td:nth-child(1){
+    width: 130%;
+}
+
+table.manage-stockOperations-transactions-table th:nth-child(5), td:nth-child(5){
+    width: 40%;
+}
+
 table.search {
     border-style: hidden;
 }
@@ -106,3 +122,12 @@ table.manage-stockrooms-transactions-table th:last-child, td:last-child {
     max-width:none;
     width: 500px;
 }
+
+#item-price-dialog ul{
+    margin-bottom: 0px;
+}
+
+#item-code-dialog ul{
+    margin-bottom: 0px;
+}
+

@@ -51,10 +51,11 @@
                 $scope.stockOperationTransactionLimit = CookiesService.get(uuid + 'stockOperationTransactionLimit')  || 5;
                 $scope.stockOperationTransactionCurrentPage = CookiesService.get(uuid + 'stockOperationTransactionCurrentPage') || 1;
 
+
                 $scope.stockOperationItem = self.stockOperationItem;
                 $scope.stockOperationTransaction = self.stockOperationTransaction;
-
-                $scope.rollbackOperation = self.rollbackOperation;
+                $scope.invokeOperation = self.invokeOperation;
+                $scope.showOperationActionsDialog = StockOperationFunctions.showOperationActionsDialog;
 
                 self.stockOperation(uuid, rest_entity_name);
                 self.stockOperationItem(uuid, $scope.stockOperationItemCurrentPage);
@@ -62,8 +63,8 @@
 
             }
 
-        self.rollbackOperation = self.rollbackOperation || function(uuid){
-                StockOperationRestfulService.rollbackOperation(uuid, rest_entity_name, self.onLoadRollbackOperationSuccessful);
+        self.invokeOperation = self.invokeOperation || function(status, uuid){
+                StockOperationRestfulService.invokeOperation(status, uuid, rest_entity_name, self.onLoadInvokeOperationSuccessful);
             }
 
         /**
@@ -112,7 +113,7 @@
                 $scope.stockOperationTransactionTotalNumberOfResults = data.length;
             }
 
-        self.onLoadRollbackOperationSuccessful = self.onLoadRollbackOperationSuccessful || function(){
+        self.onLoadInvokeOperationSuccessful = self.onLoadInvokeOperationSuccessful || function(){
                 $scope.cancel();
             }
 

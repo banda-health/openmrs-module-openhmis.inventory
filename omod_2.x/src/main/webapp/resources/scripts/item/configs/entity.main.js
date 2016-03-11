@@ -74,4 +74,5 @@ emr.loadMessages(["openhmis.inventory.general.new",
 		"openhmis.inventory.item.rest_name",
 		"openhmis.inventory.stockroom.searchStockroom",
 		"openhmis.inventory.stockroom.name", "openhmis.inventory.general.add",
+		"openhmis.inventory.general.enterSearchPhrase",
 		"openhmis.inventory.general.edit", ]);

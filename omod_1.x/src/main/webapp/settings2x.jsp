@@ -57,7 +57,7 @@
 					</td>
 					<td>
 						<spring:bind path="operationNumberGeneratorSourceId">
-							<select class="form-control" id="operationNumberGeneratorSourceId" name="${status.expression}"
+							<select class="form-control" id="operationNumberGeneratorSourceId" name="${status.expression}" style="height:27px;padding:0px 0px;"
 							        <c:if test="${!settings.autoGenerateOperationNumber}">disabled</c:if>>
 								<option value=""></option>
 								<c:forEach items="${sources}" var="source">
@@ -73,7 +73,6 @@
 			</c:if>
 			<tr>
 				<td>
-					<br/>
 					<spring:bind path="autoCompleteOperations">
 						<input id="autoCompleteOperations" name="${status.expression}" type="checkbox"
 						       <c:if test="${settings.autoCompleteOperations}">checked</c:if> />
@@ -85,13 +84,12 @@
 			</tr>
 			<tr>
 				<td>
-					<br/>
 					<label class="removeBold"  for="stockTakeReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.take.label"/> </label>
 				</td>
 				<td>
 					<spring:bind path="stockTakeReportId">
-						<select class="form-control" id="stockTakeReportId" name="${status.expression}">
+						<select class="form-control" id="stockTakeReportId" name="${status.expression}" style="height:27px;padding:0px 0px;">
 							<option value=""></option>
 							<c:forEach items="${reports}" var="report">
 								<option value="${report.reportId}"
@@ -105,13 +103,12 @@
 			</tr>
 			<tr>
 				<td>
-					<br/>
 					<label  class="removeBold" for="stockCardReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.card.label"/></label>
 				</td>
 				<td>
 					<spring:bind path="stockCardReportId">
-						<select class="form-control" id="stockCardReportId" name="${status.expression}">
+						<select class="form-control" id="stockCardReportId" name="${status.expression}" style="height:27px;padding:0px 0px;">
 							<option value=""></option>
 							<c:forEach items="${reports}" var="report">
 								<option value="${report.reportId}"
@@ -125,13 +122,12 @@
 			</tr>
 			<tr>
 				<td>
-					<br/>
 					<label  class="removeBold" for="stockOperationsByStockroomReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.operation.label"/> </label>
 				</td>
 				<td>
 					<spring:bind path="stockOperationsByStockroomReportId">
-						<select class="form-control" id="stockOperationsByStockroomReportId" name="${status.expression}">
+						<select class="form-control" id="stockOperationsByStockroomReportId" name="${status.expression}" style="height:27px;padding:0px 0px;">
 							<option value=""></option>
 							<c:forEach items="${reports}" var="report">
 								<option value="${report.reportId}"
@@ -145,13 +141,12 @@
 			</tr>
 			<tr>
 				<td>
-					<br/>
 					<label  class="removeBold" for="stockroomReportId"><spring:message
 							code="openhmis.inventory.report.select.stockroom.label"/> </label>
 				</td>
 				<td>
 					<spring:bind path="stockroomReportId">
-						<select class="form-control" id="stockroomReportId" name="${status.expression}">
+						<select class="form-control" id="stockroomReportId" name="${status.expression}" style="height:27px;padding:0px 0px;">
 							<option value=""></option>
 							<c:forEach items="${reports}" var="report">
 								<option value="${report.reportId}"
@@ -165,13 +160,12 @@
 			</tr>
 			<tr>
 				<td>
-					<br/>
 					<label  class="removeBold" for="expiringStockReportId"><spring:message
 							code="openhmis.inventory.report.select.expiring.stock.label"/> </label>
 				</td>
 				<td>
 					<spring:bind path="expiringStockReportId">
-						<select class="form-control" id="expiringStockReportId" name="${status.expression}">
+						<select class="form-control" id="expiringStockReportId" name="${status.expression}" style="height:27px;padding:0px 0px;">
 							<option value=""></option>
 							<c:forEach items="${reports}" var="report">
 								<option value="${report.reportId}"

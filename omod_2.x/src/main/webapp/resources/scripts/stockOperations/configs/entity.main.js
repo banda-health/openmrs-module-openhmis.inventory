@@ -71,4 +71,10 @@ emr.loadMessages([
     "openhmis.inventory.general.batchOperation",
     "openhmis.inventory.general.expiration",
     "openhmis.inventory.item.enterItemSearch",
+    "openhmis.inventory.general.auto",
+    "openhmis.inventory.general.patient",
+    "openhmis.inventory.general.actions",
+    "openhmis.inventory.general.completeOperation",
+    "openhmis.inventory.general.cancelOperation",
+    "openhmis.inventory.general.cancelReason",
 ]);
