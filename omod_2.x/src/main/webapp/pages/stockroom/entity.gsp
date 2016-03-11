@@ -108,9 +108,9 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			${ui.message('No items found')}
 		</div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
-				hide                : ["items.length == 0"],
+				hide                : "items.length == 0",
 				paginationId        : "__items",
-				onPageChange        : ["searchItemStock(entity.uuid, itemCurrentPage)"],
+				onPageChange        : "searchItemStock(entity.uuid, itemCurrentPage)",
 				model               : "itemLimit",
 				onChange            : "searchItemStock(entity.uuid)",
 				pagingFrom          : "itemPagingFrom(itemCurrentPage, itemLimit)",
@@ -189,9 +189,9 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			${ui.message('No Operations found')}
 		</div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
-				hide                : ["itemStockOperations.length == 0"],
+				hide                : "itemStockOperations.length == 0",
 				paginationId        : "__itemStockOperations",
-				onPageChange        : ["searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)"],
+				onPageChange        : "searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)",
 				model               : "itemStockOperationLimit",
 				onChange            : "searchItemStockOperation(entity.uuid)",
 				pagingFrom          : "itemPagingFrom(itemStockOperationCurrentPage, itemStockOperationLimit)",
@@ -242,9 +242,9 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			${ui.message('No Operation Transactions found')}
 		</div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
-				hide                : ["itemStockTransactions.length == 0"],
+				hide                : "itemStockTransactions.length == 0",
 				paginationId        : "__itemStockTransactions",
-				onPageChange        : ["searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)"],
+				onPageChange        : "searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)",
 				model               : "itemStockTransactionLimit",
 				onChange            : "searchItemStockTransaction(entity.uuid)",
 				pagingFrom          : "itemPagingFrom(itemStockTransactionCurrentPage, itemStockTransactionLimit)",
