@@ -155,7 +155,7 @@
 									</li>
 									<li>
 										<select class="form-control" style="font-size: 14px" ng-model="attributeType.format"
-										        ng-options="field for field in formatFields track by field">
+										        ng-options="field for field in formatFields track by field" >
 											<option value="0">-- Please Select Format --</option>
 											<option ng-selected="attributeType.format == field">
 											</option>
@@ -194,8 +194,9 @@
 										<input type="text" required ng-model="attributeType.attributeOrder"/>
 									</li>
 								</ul>
-
-								<div class="ngdialog-buttons">
+								<br/>
+								<div class="ngdialog-buttons detail-section-border-top">
+									<br/>
 									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
 									       ng-click="cancel()"/>
 									<span ng-show="addAttributeTypeTitle != ''">
@@ -218,10 +219,10 @@
 			</li>
 		</ul>
 		<br/>
-		<hr/>
-		<p>
+		<p class="detail-section-border-top">
+			<br/>
 			<span>
-				<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
+				<input type="button" class="cancel left" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
 			</span>
 			<span>
 				<input type="button" class="confirm right"
