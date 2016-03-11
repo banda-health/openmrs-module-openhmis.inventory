@@ -46,7 +46,7 @@
                 </ul>
             </div>
             <br /><br />
-            <table style="margin-bottom:5px;" class="manage-stockrooms-table">
+            <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
                 <thead>
                 <tr>
                     <th>${ ui.message('general.name') }</th>
