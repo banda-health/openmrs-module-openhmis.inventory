@@ -108,3 +108,12 @@ table.manage-stockrooms-table th:first-child, td:first-child {
     max-width:none;
     width: 500px;
 }
+
+#item-price-dialog ul{
+    margin-bottom: 0px;
+}
+
+#item-code-dialog ul{
+    margin-bottom: 0px;
+}
+

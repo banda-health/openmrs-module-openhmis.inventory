@@ -40,7 +40,7 @@
                             model: "searchField",
                             onChangeEvent: "searchItems()",
                             class: ["field-display ui-autocomplete-input form-control searchinput"],
-                            placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
+                            placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
                     ])}
 
                 </li>
@@ -71,13 +71,13 @@
                 <br />
                 ${ ui.message('Your search - <b>') } {{searchField}} ${ ui.message('</b> - did not match any items')}
                 <br /><br />
-                <span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired" ng-change="updateContent()"></span>
+                <span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired" ng-change="searchItems()"></span>
                 <span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
             </div>
             <div id="below-entities-table" ng-hide="fetchedEntities.length == 0">
                 <span style="float:right;">
                     <div class="entity-pagination">
-                        <dir-pagination-controls on-page-change="paginate(currentPage)"></dir-pagination-controls>
+                        <dir-pagination-controls on-page-change="searchItems(currentPage)"></dir-pagination-controls>
                     </div>
                 </span>
                 <br />
@@ -88,7 +88,7 @@
                     </div>
                     <div id="includeVoided-entities">
                         ${ui.message('openhmis.inventory.general.show')}
-                        <select id="pageSize" ng-model="limit" ng-change="updateContent()">
+                        <select id="pageSize" ng-model="limit" ng-change="searchItems()">
                             <option value="2">2</option>
                             <option value="5">5</option>
                             <option value="10">10</option>
@@ -97,7 +97,7 @@
                             <option value="100">100</option>
                         </select>
                         ${ui.message('openhmis.inventory.general.entries')}
-                        <span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired" ng-change="updateContent()"></span>
+                        <span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired" ng-change="searchItems()"></span>
                         <span>${ ui.message('openhmis.inventory.general.includeRetired') }</span>
                     </div>
                 </div>
