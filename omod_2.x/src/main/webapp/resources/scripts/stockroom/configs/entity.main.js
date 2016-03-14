@@ -42,6 +42,8 @@ emr.loadMessages([
     "general.save",
     "general.retireReason",
     "general.purge",
+    "general.retire",
+    "general.unretire",
     "openhmis.inventory.general.error.entityName",
     "openhmis.inventory.general.error.restName",
     "openhmis.inventory.general.error.uuid",
@@ -67,4 +69,9 @@ emr.loadMessages([
     "openhmis.inventory.stockroom.dateCreated",
     "openhmis.inventory.stockroom.status",
     "openhmis.inventory.stockroom.transactions",
+    "openhmis.inventory.item.stock.searchStockName",
+    "openhmis.inventory.item.enterItemSearch",
+    "openhmis.inventory.stockroom.transaction.noOperationTransactionsFound",
+    "openhmis.inventory.stockroom.operation.noOperationsFound",
+    "openhmis.inventory.stockroom.searchStockroom",
 ]);

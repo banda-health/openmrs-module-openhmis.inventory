@@ -41,6 +41,8 @@ emr.loadMessages([
     "general.save",
     "general.retireReason",
     "general.purge",
+    "general.retire",
+    "general.unretire",
     "openhmis.inventory.general.error.entityName",
     "openhmis.inventory.general.error.restName",
     "openhmis.inventory.general.error.uuid",

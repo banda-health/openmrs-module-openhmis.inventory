@@ -29,9 +29,22 @@
             itemStock: itemStock,
             itemStockOperation: itemStockOperation,
             itemStockOperationTransaction: itemStockOperationTransaction,
+            searchItems: searchItems,
         };
 
         return service;
+
+        function searchItems(q, onLoadSuccessfulCallback){
+            var requestParams = [];
+            requestParams['rest_entity_name'] = 'item';
+            if(angular.isDefined(q) && q !== ''){
+                requestParams['q'] = q;
+            }
+            requestParams['startIndex'] = 1;
+            requestParams['limit'] = 10;
+
+            EntityRestFactory.loadEntities(requestParams, onLoadSuccessfulCallback, errorCallback);
+        }
 
         /**
          * Retrieve all locations
@@ -103,10 +116,24 @@
          * @param successfulCallback
          */
         function ws_call(rest_entity_name, stockroom_uuid, currentPage, limit, q, successfulCallback){
+            currentPage = currentPage || 1;
             if(angular.isDefined(stockroom_uuid) && stockroom_uuid !== '' && stockroom_uuid !== undefined){
                 var requestParams = PaginationService.paginateParams(currentPage, limit, false, q);
                 requestParams['rest_entity_name'] = rest_entity_name;
                 requestParams['stockroom_uuid'] = stockroom_uuid;
+
+                if(rest_entity_name === 'stockOperation'){
+                    if('q' in requestParams){
+                        delete requestParams['q'];
+                    }
+                    requestParams['operationItem_uuid'] = q;
+                }
+                else if(rest_entity_name === 'stockOperationTransaction'){
+                    if('q' in requestParams){
+                        delete requestParams['q'];
+                    }
+                    requestParams['transactionItem_uuid'] = q;
+                }
 
                 EntityRestFactory.loadEntities(requestParams,
                     successfulCallback,

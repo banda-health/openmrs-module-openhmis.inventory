@@ -29,7 +29,7 @@
             searchStockOperation: searchStockOperation,
             stockOperationItem: stockOperationItem,
             stockOperationTransaction: stockOperationTransaction,
-            rollbackOperation: rollbackOperation,
+            invokeOperation: invokeOperation,
             loadStockOperationTypes: loadStockOperationTypes,
             loadStockRooms: loadStockRooms,
             searchStockOperationItems: searchStockOperationItems,
@@ -136,15 +136,15 @@
         }
 
         /**
-         * roll back an operation
+         * invokeOperation a rollback, complete, cancel operation
          * @param operation_uuid
          * @param rest_entity_name
          * @param successCallback
          */
-        function rollbackOperation(operation_uuid, rest_entity_name, successCallback) {
+        function invokeOperation(status, operation_uuid, rest_entity_name, successCallback) {
             if (angular.isDefined(operation_uuid) && operation_uuid !== '' && operation_uuid !== undefined) {
                 var requestParams = {};
-                requestParams['status'] = "ROLLBACK";
+                requestParams['status'] = status;
 
                 EntityRestFactory.post(rest_entity_name, operation_uuid, requestParams,
                     successCallback,

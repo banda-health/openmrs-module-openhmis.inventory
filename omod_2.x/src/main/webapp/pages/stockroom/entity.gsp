@@ -126,7 +126,6 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 					<h3>{{showItemDetailsTitle}}</h3>
 				</span>
 			</div>
-
 			<div class="dialog-content form">
 				<table>
 					<thead>

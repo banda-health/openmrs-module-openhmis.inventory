@@ -19,12 +19,13 @@
 	angular.module('app.restfulServices').service('ItemRestfulService',
 			ItemRestfulService);
 
-	ItemRestfulService.$inject = ['EntityRestFactory'];
+	ItemRestfulService.$inject = ['EntityRestFactory', 'CookiesService'];
 
-	function ItemRestfulService(EntityRestFactory) {
+	function ItemRestfulService(EntityRestFactory, CookiesService) {
 		var service;
 
 		service = {
+			searchItems : searchItems,
 			loadDepartments : loadDepartments,
 			searchConcepts : searchConcepts,
 			loadItemStock : loadItemStock,
@@ -32,6 +33,30 @@
 		};
 
 		return service;
+
+		function searchItems(q, startIndex, limit, department_uuid, includeRetired, onLoadSuccessfulCallback){
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'item';
+			if(angular.isDefined(department_uuid)){
+				requestParams['department_uuid'] = department_uuid;
+			}
+
+			if(angular.isDefined(q) && q !== '' && q !== null && q !== undefined){
+				requestParams['q'] = q;
+			}
+			else if(angular.isDefined('department_uuid') && department_uuid !== undefined){
+				requestParams['q'] = q;
+			}
+
+			requestParams['startIndex'] = startIndex;
+			requestParams['limit'] = limit;
+
+			if(includeRetired){
+				requestParams['includeAll'] = "true";
+			}
+
+			EntityRestFactory.loadEntities(requestParams, onLoadSuccessfulCallback, errorCallback);
+		}
 
 		/**
 		 * Temporary Function: It will ONLY be used until the Department module is done.
