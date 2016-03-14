@@ -156,9 +156,11 @@
 									<li>
 										<select class="form-control" style="font-size: 14px" ng-model="attributeType.format"
 										        ng-options="field for field in formatFields track by field" >
+											<optgroup label="formatfeilds">
 											<option value="0">-- Please Select Format --</option>
 											<option ng-selected="attributeType.format == field">
 											</option>
+											</optgroup>
 										</select>
 									</li>
 								</ul>

@@ -109,6 +109,7 @@
 				}
 				if (!angular.isDefined($scope.entity.attributeTypes) ||
 					$scope.entity.attributeTypes.format === '' || $scope.entity.attributeTypes.format === null) {
+
 					$scope.submmited = true;
 					return false;
 				}
