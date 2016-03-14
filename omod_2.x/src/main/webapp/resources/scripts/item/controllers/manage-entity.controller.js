@@ -42,12 +42,11 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
 				self.loadDepartments();
 				$scope.searchItems = self.searchItems;
-
-				$scope.searchField = $scope.searchField || CookiesService.get('searchField');
-				$scope.startIndex = $scope.startIndex || CookiesService.get('startIndex');
-				$scope.limit = $scope.limit || CookiesService.get('limit');
-				$scope.includeRetired = $scope.includeRetired || CookiesService.get('includeRetired');
-				$scope.currentPage = $scope.currentPage || CookiesService.get('currentPage');
+				$scope.searchField = CookiesService.get('searchField') || $scope.searchField || '';
+				$scope.startIndex = CookiesService.get('startIndex') || $scope.startIndex;
+				$scope.limit = CookiesService.get('limit') || $scope.limit;
+				$scope.includeRetired = CookiesService.get('includeRetired') || $scope.includeRetired;
+				$scope.currentPage = CookiesService.get('currentPage') || $scope.currentPage;
 				$scope.department = CookiesService.get('department') || {};
 			}
 
