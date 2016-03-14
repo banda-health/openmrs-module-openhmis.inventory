@@ -144,6 +144,7 @@
 </div>
 <br/>
 <hr>
+
 <div class="tabs">
 	<ul>
 		<li ng-hide="entity.uuid === ''">
@@ -179,49 +180,17 @@
 		<div class="not-found" ng-show="stockOperationItems.length == 0">
 			${ui.message('No items found')}
 		</div>
-
-		<div id="below-entities-table" ng-hide="stockOperationItems.length == 0">
-			<span style="float:right;">
-				<div class="entity-pagination">
-					<dir-pagination-controls pagination-id="__items"
-					                         on-page-change="stockOperationItem(entity.uuid, stockOperationItemCurrentPage)"></dir-pagination-controls>
-				</div>
-			</span>
-			<br/>
-
-			<div class="pagination-options" style="float:left;">
-				<div id="showing-entities">
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.showing')}
-							{{stockOperationPagingFrom(stockOperationItemCurrentPage, stockOperationItemLimit)}}
-							${ui.message('openhmis.inventory.general.to')}
-							{{stockOperationPagingTo(stockOperationItemCurrentPage, stockOperationItemLimit, stockOperationItemTotalNumberOfResults)}}
-						</b>
-					</span>
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.of')}
-							{{stockOperationItemTotalNumberOfResults}}
-							${ui.message('openhmis.inventory.general.entries')}
-						</b>
-					</span>
-				</div>
-
-				<div id="includeVoided-entities">
-					${ui.message('openhmis.inventory.general.show')}
-					<select id="pageSize" ng-model="stockOperationItemLimit" ng-change="stockOperationItem(entity.uuid)">
-						<option value="2">2</option>
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="25">25</option>
-						<option value="50">50</option>
-						<option value="100">100</option>
-					</select>
-					${ui.message('openhmis.inventory.general.entries')}
-				</div>
-			</div>
-		</div>
+		${ui.includeFragment("openhmis.commons", "paginationFragment", [
+				hide                : "stockOperationItems.length == 0",
+				paginationId        : "__items",
+				onPageChange        : "stockOperationItem(entity.uuid, stockOperationItemCurrentPage)",
+				model               : "stockOperationItemLimit",
+				onChange            : "stockOperationItem(entity.uuid)",
+				pagingFrom          : "stockOperationPagingFrom(stockOperationItemCurrentPage, stockOperationItemLimit)",
+				pagingTo            : "stockOperationPagingTo(stockOperationItemCurrentPage, stockOperationItemLimit, stockOperationItemTotalNumberOfResults)",
+				totalNumberOfResults: "stockOperationItemTotalNumberOfResults",
+				showRetiredSection  : "false"
+		])}
 	</div>
 
 	<div id="transactions" style="border: 0px;">
@@ -252,54 +221,24 @@
 		<div class="not-found" ng-show="stockOperationTransactions.length == 0">
 			${ui.message('No Transactions found')}
 		</div>
-
-		<div ng-hide="stockOperationTransactions.length == 0">
-			<span style="float:right;">
-				<div class="entity-pagination">
-					<dir-pagination-controls pagination-id="__stockOperationTransactions"
-					                         on-page-change="stockOperationTransaction(entity.uuid, stockOperationTransactionCurrentPage)"></dir-pagination-controls>
-				</div>
-			</span>
-			<br/>
-
-			<div class="pagination-options" style="float:left;">
-				<div>
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.showing')}
-							{{stockOperationPagingFrom(stockOperationTransactionCurrentPage, stockOperationTransactionLimit)}}
-							${ui.message('openhmis.inventory.general.to')}
-							{{stockOperationPagingTo(stockOperationTransactionCurrentPage, stockOperationTransactionLimit, stockOperationTransactionTotalNumberOfResults)}}
-						</b>
-					</span>
-					<span>
-						<b>
-							${ui.message('openhmis.inventory.general.of')}
-							{{stockOperationTransactionTotalNumberOfResults}}
-							${ui.message('openhmis.inventory.general.entries')}
-						</b>
-					</span>
-				</div>
-
-				<div>
-					${ui.message('openhmis.inventory.general.show')}
-					<select ng-model="stockOperationTransactionLimit" ng-change="stockOperationTransaction(entity.uuid)">
-						<option value="2">2</option>
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="25">25</option>
-						<option value="50">50</option>
-						<option value="100">100</option>
-					</select>
-					${ui.message('openhmis.inventory.general.entries')}
-				</div>
-			</div>
-		</div>
+		${ui.includeFragment("openhmis.commons", "paginationFragment", [
+				hide                : "stockOperationTransactions.length == 0",
+				paginationId        : "__stockOperationTransactions",
+				onPageChange        : "stockOperationTransaction(entity.uuid, stockOperationTransactionCurrentPage)",
+				model               : "stockOperationTransactionLimit",
+				onChange            : "stockOperationTransaction(entity.uuid)",
+				pagingFrom          : "stockOperationPagingFrom(stockOperationTransactionCurrentPage, stockOperationTransactionLimit)",
+				pagingTo            : "stockOperationPagingTo(stockOperationTransactionCurrentPage, stockOperationTransactionLimit, stockOperationTransactionTotalNumberOfResults)",
+				totalNumberOfResults: "stockOperationTransactionTotalNumberOfResults",
+				showRetiredSection  : "false"
+		])}
 	</div>
 </div>
 <hr/><br/>
+
 <div class="detail-section-border-top">
 	<br/>
+
 	<p>
 		<span>
 			<input type="button" class="cancel" value="{{messageLabels['openhmis.inventory.general.close']}}" ng-click="cancel()"/>
