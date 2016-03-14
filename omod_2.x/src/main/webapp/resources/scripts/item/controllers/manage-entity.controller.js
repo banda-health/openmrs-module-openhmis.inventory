@@ -41,21 +41,36 @@
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
 				self.loadDepartments();
-				$scope.department = $scope.department || {};
 				$scope.searchItems = self.searchItems;
+				$scope.searchField = CookiesService.get('searchField') || $scope.searchField || '';
+				$scope.startIndex = CookiesService.get('startIndex') || $scope.startIndex;
+				$scope.limit = CookiesService.get('limit') || $scope.limit;
+				$scope.includeRetired = CookiesService.get('includeRetired') || $scope.includeRetired;
+				$scope.currentPage = CookiesService.get('currentPage') || $scope.currentPage;
+				$scope.department = CookiesService.get('department') || {};
 			}
 
 		self.loadDepartments = self.loadDepartments || function(){
 				ItemRestfulService.loadDepartments(self.onLoadDepartmentsSuccessful);
 			}
 
-		self.searchItems = self.searchItems || function(){
+		self.searchItems = self.searchItems || function(currentPage){
+				CookiesService.set('searchField', $scope.searchField);
+				CookiesService.set('startIndex', $scope.startIndex);
+				CookiesService.set('limit', $scope.limit);
+				CookiesService.set('includeRetired', $scope.includeRetired);
+				CookiesService.set('currentPage', currentPage);
+				CookiesService.set('department', $scope.department);
+
 				var department_uuid;
 				if($scope.department !== null){
 					department_uuid = $scope.department.uuid;
 				}
 
-				ItemRestfulService.searchItems($scope.searchField, $scope.currentPage, $scope.limit, department_uuid, self.onLoadItemsSuccessful)
+				currentPage = currentPage || $scope.currentPage;
+				var searchField = $scope.searchField || '';
+
+				ItemRestfulService.searchItems(searchField, currentPage, $scope.limit, department_uuid, $scope.includeRetired, self.onLoadItemsSuccessful)
 			}
 
 		self.onLoadItemsSuccessful = self.onLoadItemsSuccessful || function(data){

@@ -19,9 +19,9 @@
     var base = angular.module('app.genericEntityController');
     base.controller("StockOperationController", StockOperationController);
     StockOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-        'StockOperationModel', 'StockOperationRestfulService', 'PaginationService', 'StockOperationFunctions'];
+        'StockOperationModel', 'StockOperationRestfulService', 'PaginationService', 'StockOperationFunctions', 'CookiesService'];
 
-    function StockOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockOperationModel, StockOperationRestfulService, PaginationService, StockOperationFunctions) {
+    function StockOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockOperationModel, StockOperationRestfulService, PaginationService, StockOperationFunctions, CookiesService) {
         var self = this;
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stock.operation.name");
@@ -44,19 +44,18 @@
                 $scope.stockOperationPagingFrom = PaginationService.pagingFrom;
                 $scope.stockOperationPagingTo = PaginationService.pagingTo;
 
-                $scope.stockOperationItemLimit = $scope.stockOperationItemLimit || 5;
-                $scope.stockOperationItemCurrentPage = $scope.stockOperationItemCurrentPage || 1;
+                $scope.stockOperationItemLimit = CookiesService.get(uuid + 'stockOperationItemLimit') || 5;
+                $scope.stockOperationItemCurrentPage = CookiesService.get(uuid + 'stockOperationItemCurrentPage') || 1;
 
                 // bind transaction variables/function
-                $scope.stockOperationTransactionLimit = $scope.stockOperationTransactionLimit  || 5;
-                $scope.stockOperationTransactionCurrentPage = $scope.stockOperationTransactionCurrentPage || 1;
-
+                $scope.stockOperationTransactionLimit = CookiesService.get(uuid + 'stockOperationTransactionLimit')  || 5;
+                $scope.stockOperationTransactionCurrentPage = CookiesService.get(uuid + 'stockOperationTransactionCurrentPage') || 1;
 
 
                 $scope.stockOperationItem = self.stockOperationItem;
                 $scope.stockOperationTransaction = self.stockOperationTransaction;
-
-                $scope.rollbackOperation = self.rollbackOperation;
+                $scope.invokeOperation = self.invokeOperation;
+                $scope.showOperationActionsDialog = StockOperationFunctions.showOperationActionsDialog;
 
                 self.stockOperation(uuid, rest_entity_name);
                 self.stockOperationItem(uuid, $scope.stockOperationItemCurrentPage);
@@ -64,8 +63,8 @@
 
             }
 
-        self.rollbackOperation = self.rollbackOperation || function(uuid){
-                StockOperationRestfulService.rollbackOperation(uuid, rest_entity_name, self.onLoadRollbackOperationSuccessful);
+        self.invokeOperation = self.invokeOperation || function(status, uuid){
+                StockOperationRestfulService.invokeOperation(status, uuid, rest_entity_name, self.onLoadInvokeOperationSuccessful);
             }
 
         /**
@@ -76,11 +75,27 @@
             }
 
         self.stockOperationItem = self.stockOperationItem || function(uuid, stockOperationItemCurrentPage){
-                StockOperationRestfulService.stockOperationItem(uuid, stockOperationItemCurrentPage, $scope.stockOperationItemLimit, self.onLoadStockOperationItemSuccessful);
+                stockOperationItemCurrentPage = stockOperationItemCurrentPage || $scope.stockOperationItemCurrentPage;
+                CookiesService.set(uuid + 'stockOperationItemCurrentPage', stockOperationItemCurrentPage);
+                CookiesService.set(uuid + 'stockOperationItemLimit', $scope.stockOperationItemLimit);
+
+                StockOperationRestfulService.stockOperationItem(
+                    uuid, CookiesService.get(uuid + 'stockOperationItemCurrentPage'),
+                    CookiesService.get(uuid + 'stockOperationItemLimit'),
+                    self.onLoadStockOperationItemSuccessful
+                );
             }
 
         self.stockOperationTransaction = self.stockOperationTransaction || function(uuid, stockOperationTransactionCurrentPage){
-                StockOperationRestfulService.stockOperationTransaction(uuid, stockOperationTransactionCurrentPage, $scope.stockOperationTransactionLimit, self.onLoadStockOperationTransactionSuccessful);
+                stockOperationTransactionCurrentPage = stockOperationTransactionCurrentPage || $scope.stockOperationTransactionCurrentPage;
+                CookiesService.set(uuid + 'stockOperationTransactionCurrentPage', stockOperationTransactionCurrentPage);
+                CookiesService.set(uuid + 'stockOperationTransactionLimit', $scope.stockOperationTransactionLimit);
+
+                StockOperationRestfulService.stockOperationTransaction(
+                    uuid, CookiesService.get(uuid + 'stockOperationTransactionCurrentPage'),
+                    CookiesService.get(uuid + 'stockOperationTransactionLimit'),
+                    self.onLoadStockOperationTransactionSuccessful
+                );
             }
 
         // callbacks
@@ -98,7 +113,7 @@
                 $scope.stockOperationTransactionTotalNumberOfResults = data.length;
             }
 
-        self.onLoadRollbackOperationSuccessful = self.onLoadRollbackOperationSuccessful || function(){
+        self.onLoadInvokeOperationSuccessful = self.onLoadInvokeOperationSuccessful || function(){
                 $scope.cancel();
             }
 
