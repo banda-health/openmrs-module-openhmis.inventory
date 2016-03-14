@@ -21,7 +21,7 @@
 
 <form onsubmit="return removeIndexFromItems()">
 
-	${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
+	${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 
 	<input type="hidden" ng-model="entity.uuid"/>
 
@@ -61,7 +61,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.destinationLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled" style="background-color:lightgrey"/>
+				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled"
+				       style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -69,7 +70,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.recipientLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled" style="background-color:lightgrey"/>
+				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled"
+				       style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -77,7 +79,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.availableWhenReservedLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled" style="background-color:lightgrey"/>
+				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled"
+				       style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -125,7 +128,7 @@
 							<button type="button" data-action="add" ng-click="addAttributeType()">Add</button>
 						</div>
 
-						<div id="attribute-types-dialog" class="dialog" style="display:none;">
+						<div id="attribute-types-dialog" class="dialog" id="itemAttributeTypeDialog" style="display:none;">
 							<div class="dialog-header">
 								<span ng-show="addAttributeTypeTitle != ''">
 									<i class="icon-plus-sign"></i>
@@ -154,13 +157,10 @@
 										<span>{{messageLabels['PersonAttributeType.format']}}</span>
 									</li>
 									<li>
-										<select class="form-control" style="font-size: 14px" ng-model="attributeType.format"
-										        ng-options="field for field in formatFields track by field" >
-											<optgroup label="formatfeilds">
+										<select id="formatSelect" class="form-control" style="font-size: 14px" ng-model="attributeType.format"
+										        ng-options="field for field in formatFields track by field">
 											<option value="0">-- Please Select Format --</option>
-											<option ng-selected="attributeType.format == field">
-											</option>
-											</optgroup>
+											<option ng-selected="attributeType.format == field"></option>
 										</select>
 									</li>
 								</ul>
@@ -197,6 +197,7 @@
 									</li>
 								</ul>
 								<br/>
+
 								<div class="ngdialog-buttons detail-section-border-top">
 									<br/>
 									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
@@ -221,6 +222,7 @@
 			</li>
 		</ul>
 		<br/>
+
 		<p class="detail-section-border-top">
 			<br/>
 			<span>
@@ -228,13 +230,13 @@
 			</span>
 			<span>
 				<input type="button" class="confirm right"
-					   value="{{messageLabels['general.save']}}"
-					   ng-disabled="entity.name == '' || entity.name == undefined"
-					   ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
+				       value="{{messageLabels['general.save']}}"
+				       ng-disabled="entity.name == '' || entity.name == undefined"
+				       ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
 			</span>
 		</p>
 	</fieldset>
 
-	${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"]) }
+	${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"])}
 
 </form>
