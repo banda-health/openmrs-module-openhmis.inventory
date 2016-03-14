@@ -186,7 +186,7 @@
         </span>
     </fieldset>
 
-    ${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment") }
+    ${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [retireUnretireCall : "retireUnretire()"]) }
 
     <div id="item-price-dialog" class="dialog" style="display:none;">
         <div class="dialog-header">
