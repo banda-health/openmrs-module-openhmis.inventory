@@ -97,7 +97,7 @@ ul.search-area-input{
     text-align: left;
 }
 table.manage-stockrooms-table th:first-child, td:first-child {
-    width: 70%;
+    width: 30%;
 }
 
 table.manage-stockrooms-items-table th:first-child, td:first-child {
@@ -105,7 +105,7 @@ table.manage-stockrooms-items-table th:first-child, td:first-child {
 }
 
 table.manage-stockrooms-transactions-table th:nth-child(1), td:nth-child(1) {
-    width: 50%;
+    width: 20%;
 }
 table.manage-stockrooms-transactions-table th:nth-child(3), td:nth-child(3) {
     width: 120%;
@@ -123,6 +123,10 @@ table.manage-stockrooms-transactions-table th:last-child, td:last-child {
     width: 500px;
 }
 
+
+input.non-editable {
+    background-color: lightgrey
+}
 #item-price-dialog ul{
     margin-bottom: 0px;
 }
@@ -131,3 +135,6 @@ table.manage-stockrooms-transactions-table th:last-child, td:last-child {
     margin-bottom: 0px;
 }
 
+#attribute-types-dialog select option {
+    font-size:0.875em;
+}

@@ -65,7 +65,7 @@
 		function loadFormatFields(module_name, onLoadFormatFieldsSuccessful) {
 			var requestParams = [];
 			requestParams['resource'] = 'fieldgenhandlers.json';
-			EntityRestFactory.setCustomBaseUrl('/openmrs/');
+			EntityRestFactory.setCustomBaseUrl('/' + OPENMRS_CONTEXT_PATH + '/');
 			EntityRestFactory.loadResults(requestParams,
 					onLoadFormatFieldsSuccessful, function(error) {
 						console.log(error);
