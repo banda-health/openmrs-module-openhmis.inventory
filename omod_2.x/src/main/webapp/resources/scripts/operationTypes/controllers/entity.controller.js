@@ -107,21 +107,18 @@
 					$scope.submitted = true;
 					return false;
 				}
-				if (!angular.isDefined($scope.entity.attributeTypes) ||
-					$scope.entity.attributeTypes.format === '' || $scope.entity.attributeTypes.format === null) {
-
+				if (!angular.isDefined($scope.entity.attributeTypes)
+						|| $scope.entity.attributeTypes.format === '' || $scope.entity.attributeTypes.format === null) {
 					$scope.submmited = true;
 					return false;
 				}
-				if (!angular.isDefined($scope.entity.attributeTypes.attributeOrder) ||
-					$scope.entity.attributeTypes.attributeOrder === '') {
-
+				if (!angular.isDefined($scope.entity.attributeTypes.attributeOrder)
+						|| $scope.entity.attributeTypes.attributeOrder === '') {
 					$scope.entity.attributeTypes.attributeOrder = null;
 				}
 
-				if (!angular.isDefined($scope.entity.attributeTypes.foreignKey) ||
-					$scope.entity.attributeTypes.foreignKey === '') {
-
+				if (!angular.isDefined($scope.entity.attributeTypes.foreignKey)
+						|| $scope.entity.attributeTypes.foreignKey === '') {
 					$scope.entity.attributeTypes.foreignKey = null;
 				}
 				// remove temporarily assigned ids from the attribute type array lists.
