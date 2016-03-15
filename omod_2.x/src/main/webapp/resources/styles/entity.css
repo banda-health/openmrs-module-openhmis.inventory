@@ -34,6 +34,22 @@ table.manage-stockOperations-table th:first-child, td:first-child{
     width: 80%;
 }
 
+table.manage-stockOperations-item-table th:first-child, td:first-child{
+    width: 160%;
+}
+
+table.manage-stockOperations-transactions-table th:first-child, td:first-child{
+    width: 50%;
+}
+
+table.manage-stockOperations-transactions-table th:nth-child(2), td:nth-child(1){
+    width: 130%;
+}
+
+table.manage-stockOperations-transactions-table th:nth-child(5), td:nth-child(5){
+    width: 40%;
+}
+
 table.search {
     border-style: hidden;
 }
@@ -84,6 +100,20 @@ table.manage-stockrooms-table th:first-child, td:first-child {
     width: 70%;
 }
 
+table.manage-stockrooms-items-table th:first-child, td:first-child {
+    width: 120%;
+}
+
+table.manage-stockrooms-transactions-table th:nth-child(1), td:nth-child(1) {
+    width: 50%;
+}
+table.manage-stockrooms-transactions-table th:nth-child(3), td:nth-child(3) {
+    width: 120%;
+}
+table.manage-stockrooms-transactions-table th:last-child, td:last-child {
+    width: 40%;
+}
+
 .not-found{
     margin-left:300px;
 }
@@ -92,3 +122,12 @@ table.manage-stockrooms-table th:first-child, td:first-child {
     max-width:none;
     width: 500px;
 }
+
+#item-price-dialog ul{
+    margin-bottom: 0px;
+}
+
+#item-code-dialog ul{
+    margin-bottom: 0px;
+}
+
