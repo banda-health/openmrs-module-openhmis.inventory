@@ -135,6 +135,6 @@ input.non-editable {
     margin-bottom: 0px;
 }
 
-#itemAttributeTypeDialog select option {
+#attribute-types-dialog select option {
     font-size:0.875em;
 }

@@ -128,7 +128,7 @@
 							<button type="button" data-action="add" ng-click="addAttributeType()">Add</button>
 						</div>
 
-						<div id="attribute-types-dialog" class="dialog" id="itemAttributeTypeDialog" style="display:none;">
+						<div id="attribute-types-dialog" class="dialog" style="display:none;">
 							<div class="dialog-header">
 								<span ng-show="addAttributeTypeTitle != ''">
 									<i class="icon-plus-sign"></i>

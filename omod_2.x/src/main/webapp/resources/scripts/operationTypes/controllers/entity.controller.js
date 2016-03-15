@@ -113,6 +113,17 @@
 					$scope.submmited = true;
 					return false;
 				}
+				if (!angular.isDefined($scope.entity.attributeTypes.attributeOrder) ||
+					$scope.entity.attributeTypes.attributeOrder === '') {
+
+					$scope.entity.attributeTypes.attributeOrder = null;
+				}
+
+				if (!angular.isDefined($scope.entity.attributeTypes.foreignKey) ||
+					$scope.entity.attributeTypes.foreignKey === '') {
+
+					$scope.entity.attributeTypes.foreignKey = null;
+				}
 				// remove temporarily assigned ids from the attribute type array lists.
 				self.removeOperationTypesTemporaryIds();
 				return true;
