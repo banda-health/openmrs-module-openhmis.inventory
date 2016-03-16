@@ -34,6 +34,7 @@
 
 	<div ng-controller="ManageItemController">
 		<div id="entities">
+
 			${ ui.message('openhmis.inventory.department.name') }:
 			<ul class="search-area">
 				<li>
@@ -82,10 +83,10 @@
 				${ui.message('openhmis.inventory.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
-				             ng-change="updateContent()"></span>
+				             ng-change="searchItems(currentPage)"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment")}
+			${ui.includeFragment("openhmis.commons", "paginationFragment", [onPageChange: "searchItems(currentPage)"])}
 		</div>
 	</div>
 </div>
