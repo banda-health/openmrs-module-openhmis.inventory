@@ -77,13 +77,14 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 	</ul>
 
 	<div id="items" style="border: 0px;">
-		<div class="btn-group">
-			<input type="text" ng-model="searchItemStockName" ng-change="searchItemStock(entity.uuid)"
-			       class="field-display ui-autocomplete-input form-control searchinput"
-			       placeholder="${ui.message('Search Item stock name')}" size="80" autofocus>
-			<span id="searchclear" class="searchclear icon-remove-circle"></span>
-			<br/>
-		</div>
+		<!-- search items -->
+		${ ui.includeFragment("openhmis.commons", "searchFragment", [
+				model: "searchItemStockName",
+				onChangeEvent: "searchItemStock(entity.uuid)",
+				class: ["field-display ui-autocomplete-input form-control searchinput"],
+				placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
+		])}
+		<br /><br />
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
 			<thead>
 			<tr>
@@ -101,11 +102,11 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		</table>
 
 		<div ng-show="items.length == 0 && searchItemStockName != ''">
-			${ui.message('Your search - <b>')} {{searchItemStockName}} ${ui.message('</b> - did not match any items')}
+			${ui.message('openhmis.inventory.general.preSearchMessage')} {{searchItemStockName}} ${ui.message('openhmis.inventory.item.postSearchMessage')}
 		</div>
 
 		<div class="not-found" ng-show="items.length == 0 && searchItemStockName == ''">
-			${ui.message('No items found')}
+			${ui.message('openhmis.inventory.item.itemNotFound')}
 		</div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
 				hide                : "items.length == 0",
@@ -152,13 +153,24 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 	</div>
 
 	<div id="operations" style="border: 0px;">
-		<div class="btn-group">
-			<input type="text" ng-model="searchItemStockOperationName" ng-change="searchItemStockOperation(entity.uuid)"
-			       class="field-display ui-autocomplete-input form-control searchinput"
-			       placeholder="${ui.message('Search Item')}" size="80" autofocus>
-			<span class="searchclear icon-remove-circle"></span>
-			<br/>
+
+		<div style="width:500px;">
+			<!-- search item stock operations -->
+			${ ui.includeFragment("openhmis.commons", "searchFragment", [
+					model: "searchItemStockOperationName",
+					onChangeEvent: "searchOperationItems(searchItemStockOperationName)",
+					class: ["form-control autocomplete-search"],
+					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+					typeahead: ["item.name for item in autocompleteOperationItems"],
+					typeaheadEditable: "true",
+					typeaheadOnSelect: "selectOperationsItem(\$item)",
+			])}
+			<span>
+				<input type="button" class="confirm right" value="Search"
+				       ng-click="searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)" />
+			</span>
 		</div>
+		<br />
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
 			<thead>
 			<tr>
@@ -179,13 +191,8 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			</tr>
 			</tbody>
 		</table>
-
-		<div ng-show="itemStockOperations.length == 0 && searchItemStockOperationName != ''">
-			${ui.message('Your search - <b>')} {{searchItemStockOperationName}} ${ui.message('</b> - did not match any items')}
-		</div>
-
-		<div class="not-found" ng-show="itemStockOperations.length == 0 && searchItemStockOperationName == ''">
-			${ui.message('No Operations found')}
+		<div class="not-found"  ng-show="itemStockOperations.length == 0">
+			${ ui.message('openhmis.inventory.stockroom.operation.noOperationsFound') }
 		</div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
 				hide                : "itemStockOperations.length == 0",
@@ -200,46 +207,49 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		])}
 	</div>
 
-	<div id="transactions" style="border: 0px;">
-		<div class="btn-group">
-			<input type="text" ng-model="searchItemStockTransactionName" ng-change="searchItemStockTransaction(entity.uuid)"
-			       class="field-display ui-autocomplete-input form-control searchinput"
-			       placeholder="${ui.message('Search Item')}" size="80" autofocus>
-			<span class="searchclear icon-remove-circle"></span>
-			<br/>
-		</div>
-		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
-			<thead>
-			<tr>
-				<th>{{messageLabels['openhmis.inventory.stockroom.dateCreated']}}</th>
-				<th>{{messageLabels['openhmis.inventory.operations.type.name']}}</th>
-				<th>{{messageLabels['openhmis.inventory.item.name']}}</th>
-				<th>{{messageLabels['openhmis.inventory.stockroom.batchOperation']}}</th>
-				<th>{{messageLabels['openhmis.inventory.stockroom.expiration']}}</th>
-				<th>{{messageLabels['openhmis.inventory.item.quantity']}}</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr class="clickable-tr" pagination-id="__itemStockTransactions"
-			    dir-paginate="itemTransaction in itemStockTransactions | itemsPerPage: itemStockTransactionLimit"
-			    total-items="itemStockTransactionTotalNumberOfResults" current-page="itemStockTransactionCurrentPage">
-				<td>{{itemTransaction.dateCreated | date: 'dd-MM-yyyy, h:mma'}}</td>
-				<td>{{itemTransaction.operation.operationNumber}}</td>
-				<td>{{itemTransaction.item.name}}</td>
-				<td>{{itemTransaction.batchOperation.operationNumber}}</td>
-				<td>{{itemTransaction.expiration | date: 'dd-MM-yyyy'}}</td>
-				<td>{{itemTransaction.quantity}}</td>
-			</tr>
-			</tbody>
-		</table>
-
-		<div ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName != ''">
-			${ui.message('Your search - <b>')} {{searchItemStockTransactionName}} ${ui.message('</b> - did not match any items')}
-		</div>
-
-		<div class="not-found" ng-show="itemStockTransactions.length == 0 && searchItemStockTransactionName == ''">
-			${ui.message('No Operation Transactions found')}
-		</div>
+    <div id="transactions" style="border: 0px;">
+        <div style="width:500px;">
+            <!-- search item stock transactions -->
+            ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                    model: "searchItemStockTransactionName",
+                    onChangeEvent: "searchTransactionItems(searchItemStockTransactionName)",
+                    class: ["form-control autocomplete-search"],
+                    placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+                    typeahead: ["item.name for item in autocompleteTransactionItems"],
+                    typeaheadEditable: "true",
+                    typeaheadOnSelect: "selectTransactionsItem(\$item)",
+            ])}
+            <span>
+                <input type="button" class="confirm right" value="Search"
+                       ng-click="searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)" />
+            </span>
+        </div>
+        <br />
+	    <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-transactions-table">
+		    <thead>
+		    <tr>
+			    <th>{{messageLabels['openhmis.inventory.stockroom.dateCreated']}}</th>
+			    <th>{{messageLabels['openhmis.inventory.stockroom.operationNumber']}}</th>
+			    <th>{{messageLabels['openhmis.inventory.item.name']}}</th>
+			    <th>{{messageLabels['openhmis.inventory.stockroom.batchOperation']}}</th>
+			    <th>{{messageLabels['openhmis.inventory.stockroom.expiration']}}</th>
+			    <th>{{messageLabels['openhmis.inventory.item.quantity']}}</th>
+		    </tr>
+		    </thead>
+		    <tbody>
+		    <tr class="clickable-tr" pagination-id="__itemStockTransactions" dir-paginate="itemTransaction in itemStockTransactions | itemsPerPage: itemStockTransactionLimit" total-items="itemStockTransactionTotalNumberOfResults" current-page="itemStockTransactionCurrentPage">
+			    <td>{{itemTransaction.dateCreated | date: 'dd-MM-yyyy'}}</td>
+			    <td>{{itemTransaction.operation.operationNumber}}</td>
+			    <td>{{itemTransaction.item.name}}</td>
+			    <td>{{itemTransaction.batchOperation.operationNumber || 'None'}}</td>
+			    <td>{{(itemTransaction.expiration | date: 'dd-MM-yyyy') || 'None'}}</td>
+			    <td>{{itemTransaction.quantity}}</td>
+		    </tr>
+		    </tbody>
+	    </table>
+	    <div class="not-found" ng-show="itemStockTransactions.length == 0">
+		    ${ ui.message('openhmis.inventory.stockroom.transaction.noOperationTransactionsFound') }
+	    </div>
 		${ui.includeFragment("openhmis.commons", "paginationFragment", [
 				hide                : "itemStockTransactions.length == 0",
 				paginationId        : "__itemStockTransactions",
