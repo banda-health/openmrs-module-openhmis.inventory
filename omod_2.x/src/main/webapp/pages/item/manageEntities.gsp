@@ -35,7 +35,7 @@
 	<div ng-controller="ManageItemController">
 		<div id="entities">
 			<div class="btn-group">
-				<input type="text" ng-model="searchField" ng-change="updateContent()"
+				<input type="text" ng-model="searchField" ng-change="searchItems()"
 				       class="field-display ui-autocomplete-input form-control searchinput"
 				       placeholder="${ui.message('openhmis.inventory.general.enterSearchPhrase')}" size="80" autofocus>
 				<span id="searchclear" class="searchclear icon-remove-circle"></span>
@@ -70,10 +70,10 @@
 				${ui.message('Your search - <b>')} {{searchField}} ${ui.message('</b> - did not match any items')}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
-				             ng-change="updateContent()"></span>
+				             ng-change="searchItems(currentPage)"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment")}
+			${ui.includeFragment("openhmis.commons", "paginationFragment", [onPageChange: "searchItems(currentPage)"])}
 		</div>
 	</div>
 </div>

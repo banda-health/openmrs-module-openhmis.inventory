@@ -43,10 +43,10 @@
 				self.loadDepartments();
 				$scope.searchItems = self.searchItems;
 				$scope.searchField = CookiesService.get('searchField') || $scope.searchField || '';
-				$scope.startIndex = CookiesService.get('startIndex') || $scope.startIndex;
-				$scope.limit = CookiesService.get('limit') || $scope.limit;
-				$scope.includeRetired = CookiesService.get('includeRetired') || $scope.includeRetired;
-				$scope.currentPage = CookiesService.get('currentPage') || $scope.currentPage;
+				//$scope.startIndex = CookiesService.get('startIndex') || $scope.startIndex;
+				//$scope.limit = CookiesService.get('limit') || $scope.limit;
+				//$scope.includeRetired = CookiesService.get('includeRetired') || $scope.includeRetired;
+				//$scope.currentPage = CookiesService.get('currentPage') || $scope.currentPage;
 				$scope.department = CookiesService.get('department') || {};
 			}
 
