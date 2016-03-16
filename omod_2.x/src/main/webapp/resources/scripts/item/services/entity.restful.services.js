@@ -19,9 +19,9 @@
 	angular.module('app.restfulServices').service('ItemRestfulService',
 			ItemRestfulService);
 
-	ItemRestfulService.$inject = ['EntityRestFactory', 'CookiesService'];
+	ItemRestfulService.$inject = ['EntityRestFactory'];
 
-	function ItemRestfulService(EntityRestFactory, CookiesService) {
+	function ItemRestfulService(EntityRestFactory) {
 		var service;
 
 		service = {
@@ -74,18 +74,12 @@
 		 * @param module_name
 		 * @param q - search term
 		 * @param limit
-		 * @param onSearchConceptsSuccessful
 		 */
-		function searchConcepts(module_name, q, onSearchConceptsSuccessful) {
+		function searchConcepts(module_name, q) {
 			var requestParams = [];
-			requestParams['rest_entity_name'] = '';
 			requestParams['q'] = q;
 			requestParams['limit'] = 10;
-			EntityRestFactory.setBaseUrl('concept', 'v1');
-			EntityRestFactory.loadEntities(requestParams,
-					onSearchConceptsSuccessful, errorCallback);
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
+			return EntityRestFactory.autocompleteSearch(requestParams, 'concept', module_name, 'v1');
 		}
 
 		function loadItemAttributeTypes(onLoadAttributeTypesSuccessful) {
