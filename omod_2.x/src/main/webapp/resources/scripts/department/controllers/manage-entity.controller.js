@@ -36,6 +36,12 @@
                 self.bindBaseParameters(module_name, rest_entity_name, entity_name);
             };
 
+        // @Override
+        self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
+                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
+                    [self.entity_name]);
+            }
+
         /* ENTRY POINT: Instantiate the base controller which loads the page */
         $injector.invoke(base.GenericManageController, self, {
             $scope: $scope,

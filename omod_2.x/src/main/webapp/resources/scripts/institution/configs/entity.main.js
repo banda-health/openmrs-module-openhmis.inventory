@@ -43,4 +43,5 @@ emr.loadMessages(["openhmis.inventory.institution.name",
 		"openhmis.inventory.general.error.restName",
 		"openhmis.inventory.general.error.uuid",
 		"openhmis.inventory.general.error.retired",
-		"openhmis.inventory.general.error.retireReason", ]);
+		"openhmis.inventory.general.error.retireReason",
+		"openhmis.inventory.general.postSearchMessage" ]);

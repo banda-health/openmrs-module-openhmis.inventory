@@ -45,10 +45,7 @@
 			</table>
 
 			<div ng-show="fetchedEntities.length == 0">
-				<br/>
-				${ui.message('openhmis.inventory.general.preSearchMessage')} {{searchField}} ${ui.
-						message('openhmis.inventory.operations.type.postSearchMessage')}
-				<br/><br/>
+				<br/><br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
