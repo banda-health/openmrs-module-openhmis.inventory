@@ -121,6 +121,27 @@
                     return false;
                 }
 
+                // check if the default price has been set correctly.
+                var defaultPriceSet = false;
+                for(var i = 0; i < $scope.entity.prices.length; i++){
+                    var price = $scope.entity.prices[i];
+                    if("id" in price){
+                        if("id" in $scope.entity.defaultPrice && price.id === $scope.entity.defaultPrice.id){
+                            defaultPriceSet = true;
+                        }
+                    }
+                    else{
+                        if("uuid" in $scope.entity.defaultPrice && price.uuid === $scope.entity.defaultPrice.uuid){
+                            defaultPriceSet = true;
+                        }
+                    }
+                }
+
+                if(!defaultPriceSet){
+                    $scope.submitted = true;
+                    return false;
+                }
+
                 if(angular.isDefined($scope.itemAttributeTypes)){
                     var requestItemAttributeTypes = [];
                     for(var i = 0; i < $scope.itemAttributeTypes.length; i++){
