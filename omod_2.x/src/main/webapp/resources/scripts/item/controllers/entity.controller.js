@@ -136,6 +136,7 @@
                         }
                     }
                 }
+
                 if(!defaultPriceSet){
                     $scope.submitted = true;
                     return false;
@@ -153,7 +154,6 @@
                     }
 
                     $scope.entity.attributes = requestItemAttributeTypes;
-                    return false;
                 }
 
                 // an empty buying price field should resolve to null and not an empty string
