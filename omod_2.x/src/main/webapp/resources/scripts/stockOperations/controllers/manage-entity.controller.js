@@ -43,7 +43,6 @@
                 $scope.stockroom = $scope.stockroom || {};
                 $scope.operationItem = $scope.operationItem || {};
                 $scope.searchOperationItem = $scope.searchOperationItem || '';
-                $scope.stockOperationItems = $scope.stockOperationItems || {};
 
                 $scope.searchItems = self.searchItems;
                 $scope.selectItem = self.selectItem;
@@ -77,12 +76,9 @@
                 );
             }
 
-        self.searchItems = self.searchItems || function(){
+        self.searchItems = self.searchItems || function(search){
                 $scope.operationItem = {};
-                console.log('search items..' + $scope.searchOperationItem);
-                if($scope.searchOperationItem !== null && angular.isDefined($scope.searchOperationItem)){
-                    StockOperationRestfulService.searchStockOperationItems($scope.searchOperationItem, self.onLoadSearchStockOperationItemsSuccessful);
-                }
+                return StockOperationRestfulService.searchStockOperationItems(module_name, search);
             }
 
         self.selectItem = self.selectItem || function(item){
@@ -97,9 +93,6 @@
                 StockOperationRestfulService.loadStockRooms("stockroom", self.onLoadStockRoomSuccessful);
             }
 
-        self.onLoadSearchStockOperationItemsSuccessful = self.onLoadSearchStockOperationItemsSuccessful || function(data){
-                $scope.stockOperationItems = data.results;
-            }
 
         self.onLoadSearchStockOperationSuccessful = self.onLoadSearchStockOperationSuccessful || function(data){
                 $scope.fetchedEntities = data.results;

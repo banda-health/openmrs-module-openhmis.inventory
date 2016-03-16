@@ -37,13 +37,14 @@
 
         return service
 
-        function searchStockOperationItems(q, successCallback){
+        function searchStockOperationItems(module_name, q){
             var requestParams = {};
-            requestParams['rest_entity_name'] = 'item';
             requestParams['has_physical_inventory'] = 'true';
             requestParams['q'] = q;
             requestParams['limit'] = 10;
-            EntityRestFactory.loadEntities(requestParams,successCallback, errorCallback);
+            requestParams['startIndex'] = 1;
+
+            return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
         }
 
         /**

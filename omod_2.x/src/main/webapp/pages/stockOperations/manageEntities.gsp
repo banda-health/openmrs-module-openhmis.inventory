@@ -56,8 +56,7 @@
 							<td>
 								${ui.message('openhmis.inventory.item.name')}:
 								${ ui.includeFragment("openhmis.commons", "searchFragment", [
-										onChangeEvent: "searchItems()",
-										typeahead: ["stockOperationItem.name for stockOperationItem in stockOperationItems"],
+										typeahead: ["stockOperationItem.name for stockOperationItem in searchItems(\$viewValue)"],
 										model: "searchOperationItem",
 										typeaheadOnSelect: "selectItem(\$item)",
 										typeaheadEditable: "true",
