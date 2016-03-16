@@ -204,13 +204,17 @@
 									       ng-click="cancel()"/>
 									<span ng-show="addAttributeTypeTitle != ''">
 										<input type="button" class="confirm right"
-										       ng-disabled="attributeType.name == '' || attributeType.name == undefined"
+										       ng-disabled="attributeType.name == '' || attributeType.name == undefined
+										       || attributeType.attributeOrder == '' || attributeType.attributeOrder == undefined
+										       || attributeType.format == undefined || attributeType.format == ''"
 										       value="{{messageLabels['general.save']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>
 									<span ng-show="editAttributeTypeTitle != ''">
 										<input type="button" class="confirm right"
-										       ng-disabled="attributeType.name == '' || attributeType.name == undefined"
+										       ng-disabled="attributeType.name == '' || attributeType.name == undefined
+										       || attributeType.attributeOrder == '' || attributeType.attributeOrder == undefined
+										       || attributeType.format == undefined || attributeType.format == ''"
 										       value="{{messageLabels['openhmis.inventory.general.confirm']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>

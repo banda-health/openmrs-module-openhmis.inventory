@@ -28,7 +28,7 @@
 		<div id="entities-table">
 			<br />
 
-			<table style="margin-bottom:5px;">
+			<table style="margin-bottom:5px;" id="operationTypesTable">
 				<thead>
 				<tr>
 					<th>${ui.message('general.name')}</th>
@@ -46,8 +46,8 @@
 
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				${ui.message('Your search - <b>')} {{searchField}} ${ui.
-						message('</b> - did not match any Stock Operation Types')}
+				${ui.message('openhmis.inventory.general.preSearchMessage')} {{searchField}} ${ui.
+						message('openhmis.inventory.operations.type.postSearchMessage')}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>

@@ -79,7 +79,7 @@
 
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				${ui.message('Your search - <b>')} {{searchField}} ${ui.message('</b> - did not match any items')}
+				${ui.message('openhmis.inventory.general.preSearchMessage')} {{searchField}} ${ui.message('openhmis.inventory.item.postSearchMessage')}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>

@@ -50,7 +50,7 @@
 
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				${ui.message('There are currently no attribute types')}
+				${ui.message('openhmis.inventory.itemAttributeType.itemAttributeTypeNotFound')}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>
