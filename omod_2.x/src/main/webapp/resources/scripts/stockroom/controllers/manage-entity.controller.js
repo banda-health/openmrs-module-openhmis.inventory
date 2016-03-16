@@ -37,6 +37,9 @@
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
                 self.loadLocations();
                 $scope.searchStockrooms = self.searchStockrooms;
+
+              $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
+                    [self.entity_name]);
             }
 
         self.loadLocations = self.loadLocations || function(){

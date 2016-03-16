@@ -74,4 +74,5 @@ emr.loadMessages([
     "openhmis.inventory.stockroom.transaction.noOperationTransactionsFound",
     "openhmis.inventory.stockroom.operation.noOperationsFound",
     "openhmis.inventory.stockroom.searchStockroom",
+    "openhmis.inventory.general.postSearchMessage"
 ]);

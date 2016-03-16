@@ -34,13 +34,26 @@
 
 	<div ng-controller="ManageItemController">
 		<div id="entities">
-			<div class="btn-group">
-				<input type="text" ng-model="searchField" ng-change="searchItems()"
-				       class="field-display ui-autocomplete-input form-control searchinput"
-				       placeholder="${ui.message('openhmis.inventory.general.enterSearchPhrase')}" size="80" autofocus>
-				<span id="searchclear" class="searchclear icon-remove-circle"></span>
-			</div>
 
+			${ ui.message('openhmis.inventory.department.name') }:
+			<ul class="search-area">
+				<li>
+
+					<select ng-model="department" ng-change="searchItems()" style="height:33px;"
+					        ng-options='department.name for department in departments track by department.uuid'>
+						<option value="" selected="selected">Any</option>
+					</select>
+				</li>
+				<li>
+					${ ui.includeFragment("openhmis.commons", "searchFragment", [
+							model: "searchField",
+							onChangeEvent: "searchItems()",
+							class: ["field-display ui-autocomplete-input form-control searchinput"],
+							placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
+					])}
+
+				</li>
+			</ul>
 			<br/><br/>
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
@@ -67,7 +80,7 @@
 
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				${ui.message('Your search - <b>')} {{searchField}} ${ui.message('</b> - did not match any items')}
+				${ui.message('openhmis.inventory.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="searchItems(currentPage)"></span>

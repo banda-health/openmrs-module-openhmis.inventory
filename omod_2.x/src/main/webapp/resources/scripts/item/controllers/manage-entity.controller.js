@@ -48,6 +48,9 @@
 				//$scope.includeRetired = CookiesService.get('includeRetired') || $scope.includeRetired;
 				//$scope.currentPage = CookiesService.get('currentPage') || $scope.currentPage;
 				$scope.department = CookiesService.get('department') || {};
+
+				$scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
+					[self.entity_name]);
 			}
 
 		self.loadDepartments = self.loadDepartments || function(){
