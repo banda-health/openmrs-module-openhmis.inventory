@@ -125,7 +125,15 @@
                     var requestItemAttributeTypes = [];
                     for(var i = 0; i < $scope.itemAttributeTypes.length; i++){
                         var itemAttributeType = $scope.itemAttributeTypes[i];
+                        var required = itemAttributeType.required;
                         var requestItemAttributeType = {};
+                        requestItemAttributeType['attributeType'] = itemAttributeType.uuid;
+                        var value = $scope.attributes[itemAttributeType.uuid] || "";
+                        if(required && value === ""){
+                            $scope.submitted = true;
+                            return false;
+                        }
+
                         requestItemAttributeType['attributeType'] = itemAttributeType.uuid;
                         var value = $scope.attributes[itemAttributeType.uuid] || "";
                         requestItemAttributeType['value'] = value;
