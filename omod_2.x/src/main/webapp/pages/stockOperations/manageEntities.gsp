@@ -55,14 +55,15 @@
 							</td>
 							<td>
 								${ui.message('openhmis.inventory.item.name')}:
-								<input
-										type="text" class="form-control"
-										ng-change="searchItems()"
-										ng-model="searchOperationItem"
-										placeholder="${ui.message('Enter Item to search')}"
-										typeahead="stockOperationItem.name for stockOperationItem in stockOperationItems"
-										typeahead-on-select="selectItem(\$item)"
-										typeahead-editable="true"/>
+								${ ui.includeFragment("openhmis.commons", "searchFragment", [
+										onChangeEvent: "searchItems()",
+										typeahead: ["stockOperationItem.name for stockOperationItem in stockOperationItems"],
+										model: "searchOperationItem",
+										typeaheadOnSelect: "selectItem(\$item)",
+										typeaheadEditable: "true",
+										class: ["form-control"],
+										placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
+								])}
 							</td>
 							<td>
 								<input type="button" class="confirm right" value="Search"

@@ -44,13 +44,12 @@
 						</select>
 					</li>
 					<li>
-						<ul class="search-area-input">
-							<li>
-								<input type="text" ng-model="searchField" ng-change="searchStockrooms()"
-								       class="field-display ui-autocomplete-input form-control searchinput search-area"
-								       placeholder="${ui.message('Enter Stockroom to search')}" size="80" autofocus>
-							</li>
-						</ul>
+						${ ui.includeFragment("openhmis.commons", "searchFragment", [
+								model: "searchField",
+								onChangeEvent: "searchStockrooms()",
+								class: ["field-display ui-autocomplete-input form-control searchinput"],
+								placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
+						])}
 					</li>
 				</ul>
 			</div>

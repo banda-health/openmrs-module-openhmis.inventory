@@ -77,13 +77,14 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 	</ul>
 
 	<div id="items" style="border: 0px;">
-		<div class="btn-group">
-			<input type="text" ng-model="searchItemStockName" ng-change="searchItemStock(entity.uuid)"
-			       class="field-display ui-autocomplete-input form-control searchinput"
-			       placeholder="${ui.message('Search Item stock name')}" size="80" autofocus>
-			<span id="searchclear" class="searchclear icon-remove-circle"></span>
-			<br/>
-		</div>
+		<!-- search items -->
+		${ ui.includeFragment("openhmis.commons", "searchFragment", [
+				model: "searchItemStockName",
+				onChangeEvent: "searchItemStock(entity.uuid)",
+				class: ["field-display ui-autocomplete-input form-control searchinput"],
+				placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
+		])}
+		<br /><br />
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
 			<thead>
 			<tr>
@@ -152,12 +153,22 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 	</div>
 
 	<div id="operations" style="border: 0px;">
-		<div class="btn-group">
-			<input type="text" ng-model="searchItemStockOperationName" ng-change="searchItemStockOperation(entity.uuid)"
-			       class="field-display ui-autocomplete-input form-control searchinput"
-			       placeholder="${ui.message('Search Item')}" size="80" autofocus>
-			<span class="searchclear icon-remove-circle"></span>
-			<br/>
+
+		<div style="width:500px;">
+			<!-- search item stock operations -->
+			${ ui.includeFragment("openhmis.commons", "searchFragment", [
+					model: "searchItemStockOperationName",
+					onChangeEvent: "searchOperationItems(searchItemStockOperationName)",
+					class: ["form-control autocomplete-search"],
+					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+					typeahead: ["item.name for item in autocompleteOperationItems"],
+					typeaheadEditable: "true",
+					typeaheadOnSelect: "selectOperationsItem(\$item)",
+			])}
+			<span>
+				<input type="button" class="confirm right" value="Search"
+				       ng-click="searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)" />
+			</span>
 		</div>
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
 			<thead>
@@ -201,13 +212,24 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 	</div>
 
 	<div id="transactions" style="border: 0px;">
-		<div class="btn-group">
-			<input type="text" ng-model="searchItemStockTransactionName" ng-change="searchItemStockTransaction(entity.uuid)"
-			       class="field-display ui-autocomplete-input form-control searchinput"
-			       placeholder="${ui.message('Search Item')}" size="80" autofocus>
-			<span class="searchclear icon-remove-circle"></span>
-			<br/>
+		<div style="width:500px;">
+			<!-- search item stock transactions -->
+			${ ui.includeFragment("openhmis.commons", "searchFragment", [
+					model: "searchItemStockTransactionName",
+					onChangeEvent: "searchTransactionItems(searchItemStockTransactionName)",
+					class: ["form-control autocomplete-search"],
+					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+					typeahead: ["item.name for item in autocompleteTransactionItems"],
+					typeaheadEditable: "true",
+					typeaheadOnSelect: "selectTransactionsItem(\$item)",
+			])}
+			<span>
+				<input type="button" class="confirm right" value="Search"
+				       ng-click="searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)" />
+			</span>
 		</div>
+		<br />
+
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
 			<thead>
 			<tr>
