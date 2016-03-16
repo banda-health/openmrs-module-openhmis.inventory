@@ -32,14 +32,6 @@
 
 	<div ng-controller="ManageItemAttributeTypesController">
 		<div id="entities">
-			<div class="btn-group">
-				<input type="text" ng-model="searchField" ng-change="updateContent()"
-				       class="field-display ui-autocomplete-input form-control searchinput"
-				       placeholder="${ui.message('openhmis.inventory.general.enterSearchPhrase')}" size="80" autofocus>
-				<span id="searchclear" class="searchclear icon-remove-circle"></span>
-			</div>
-
-			<br/><br/>
 			<table style="margin-bottom:5px;">
 				<thead>
 				<tr>
@@ -58,15 +50,13 @@
 
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				${ui.message('There are currently no attribute types')}
+				${ui.message('openhmis.inventory.itemAttributeType.itemAttributeTypeNotFound')}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment", [
-					showRetiredSection  : "true"
-			])}
+			${ui.includeFragment("openhmis.commons", "paginationFragment")}
 		</div>
 	</div>
 </div>

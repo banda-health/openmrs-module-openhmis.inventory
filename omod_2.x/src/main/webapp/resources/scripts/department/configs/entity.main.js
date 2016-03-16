@@ -51,5 +51,6 @@ emr.loadMessages([
     "openhmis.inventory.department.name",
     "openhmis.inventory.department.namePlural",
     "openhmis.inventory.general.add",
-    "openhmis.inventory.general.edit"
+    "openhmis.inventory.general.edit",
+    "openhmis.inventory.general.postSearchMessage"
 ]);
