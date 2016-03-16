@@ -87,11 +87,11 @@
             }
 
         self.searchOperationItems = self.searchOperationItems || function(search){
-                StockroomRestfulService.searchItems(search, self.onLoadAutocompleteOperationsItemsSuccessful);
+                return StockroomRestfulService.searchItems(module_name, search);
             }
 
         self.searchTransactionItems = self.searchTransactionItems || function(search){
-                StockroomRestfulService.searchItems(search, self.onLoadAutocompleteTransactionsItemsSuccessful);
+                return StockroomRestfulService.searchItems(module_name, search);
             }
 
         self.selectOperationsItem = self.selectOperationsItem || function(item){
@@ -206,14 +206,6 @@
         self.onLoadItemStockTransactionSuccessful = self.onLoadItemStockTransactionSuccessful || function(data){
                 $scope.itemStockTransactions = data.results;
                 $scope.itemStockTransactionTotalNumberOfResults = data.length;
-            }
-
-        self.onLoadAutocompleteOperationsItemsSuccessful = self.onLoadAutocompleteOperationsItemsSuccessful || function(data){
-                $scope.autocompleteOperationItems = data.results;
-            }
-
-        self.onLoadAutocompleteTransactionsItemsSuccessful = self.onLoadAutocompleteTransactionsItemsSuccessful || function(data){
-                $scope.autocompleteTransactionItems = data.results;
             }
 
         // @Override
