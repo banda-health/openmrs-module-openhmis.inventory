@@ -24,13 +24,13 @@
     function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, EntityFunctions, StockroomsFunctions, CookiesService) {
         var self = this;
         var module_name = 'inventory';
-        var entity_name = emr.message("openhmis.inventory.stockroom.name");
+        var entity_name_message_key = "openhmis.inventory.stockroom.name";
         var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name, cancel_page);
+                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
             }
 
         /**
@@ -40,15 +40,6 @@
             // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
             || function(uuid) {
-                if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired)
-                    && $scope.entity.retired === true) {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.unretire"),
-                        [self.entity_name]);
-                } else {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.retire"),
-                        [self.entity_name]);
-                }
-
                 // bind item stock variables/functions
                 $scope.itemLimit = CookiesService.get(uuid + 'itemLimit') || 5;
                 $scope.itemCurrentPage = CookiesService.get(uuid + 'itemCurrentPage') || 1;

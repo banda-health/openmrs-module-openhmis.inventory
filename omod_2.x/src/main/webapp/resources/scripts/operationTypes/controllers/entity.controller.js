@@ -29,7 +29,7 @@
 		var self = this;
 
 		var module_name = 'inventory';
-		var entity_name = emr.message("openhmis.inventory.operations.type.name");
+		var entity_name_message_key = "openhmis.inventory.operations.type.name";
 		var rest_entity_name = emr.message("openhmis.inventory.operations.type.name_rest");
 		var cancel_page = 'entities.page';
 
@@ -37,21 +37,11 @@
 		self.setRequiredInitParameters = self.setRequiredInitParameters
 			|| function () {
 				self.bindBaseParameters(module_name, rest_entity_name,
-					entity_name, cancel_page);
+					entity_name_message_key, cancel_page);
 			}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
-				if (angular.isDefined($scope.entity)
-					&& angular.isDefined($scope.entity.retired)
-					&& $scope.entity.retired === true) {
-					$scope.retireOrUnretire = $filter('EmrFormat')
-					(emr.message("openhmis.inventory.general.unretire"), [self.entity_name]);
-				} else {
-					$scope.retireOrUnretire = $filter('EmrFormat')
-					(emr.message("openhmis.inventory.general.retire"), [self.entity_name]);
-				}
-
 				var usersLimit = null;
 				var rolesLimit = null;
 				$scope.attributeType = {};
