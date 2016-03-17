@@ -158,10 +158,9 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			<!-- search item stock operations -->
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [
 					model: "searchItemStockOperationName",
-					onChangeEvent: "searchOperationItems(searchItemStockOperationName)",
 					class: ["form-control autocomplete-search"],
 					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
-					typeahead: ["item.name for item in autocompleteOperationItems"],
+					typeahead: ["item.name for item in searchOperationItems(\$viewValue)"],
 					typeaheadEditable: "true",
 					typeaheadOnSelect: "selectOperationsItem(\$item)",
 			])}
@@ -184,7 +183,7 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			<tr class="clickable-tr" pagination-id="__itemStockOperations"
 			    dir-paginate="itemOperation in itemStockOperations | itemsPerPage: itemStockOperationLimit"
 			    total-items="itemStockOperationTotalNumberOfResults" current-page="itemStockOperationCurrentPage">
-				<td>{{itemOperation.dateCreated | date: 'dd-MM-yyyy, h:mma'}}</td>
+				<td>{{itemOperation.dateCreated | date: 'dd-MM-yyyy'}}</td>
 				<td>{{itemOperation.instanceType.name}}</td>
 				<td>{{itemOperation.operationNumber}}</td>
 				<td>{{itemOperation.status}}</td>
@@ -212,10 +211,9 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
             <!-- search item stock transactions -->
             ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                     model: "searchItemStockTransactionName",
-                    onChangeEvent: "searchTransactionItems(searchItemStockTransactionName)",
                     class: ["form-control autocomplete-search"],
                     placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
-                    typeahead: ["item.name for item in autocompleteTransactionItems"],
+                    typeahead: ["item.name for item in searchTransactionItems(\$viewValue)"],
                     typeaheadEditable: "true",
                     typeaheadOnSelect: "selectTransactionsItem(\$item)",
             ])}

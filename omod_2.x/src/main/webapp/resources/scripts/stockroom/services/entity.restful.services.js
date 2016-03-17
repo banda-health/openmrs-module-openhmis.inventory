@@ -34,16 +34,15 @@
 
         return service;
 
-        function searchItems(q, onLoadSuccessfulCallback){
+        function searchItems(module_name, q){
             var requestParams = [];
-            requestParams['rest_entity_name'] = 'item';
             if(angular.isDefined(q) && q !== ''){
                 requestParams['q'] = q;
             }
             requestParams['startIndex'] = 1;
             requestParams['limit'] = 10;
 
-            EntityRestFactory.loadEntities(requestParams, onLoadSuccessfulCallback, errorCallback);
+            return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
         }
 
         /**
