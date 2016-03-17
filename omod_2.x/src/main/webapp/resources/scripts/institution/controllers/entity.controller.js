@@ -27,7 +27,7 @@
 		var self = this;
 
 		var module_name = 'inventory';
-		var entity_name = emr.message("openhmis.inventory.institution.name");
+		var entity_name = "openhmis.inventory.institution.name";
 		var cancel_page = 'entities.page';
 		var rest_entity_name = emr
 				.message("openhmis.inventory.institution.name_rest");

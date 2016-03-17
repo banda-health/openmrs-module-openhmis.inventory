@@ -26,7 +26,7 @@
         var self = this;
 
         var module_name = 'inventory';
-        var entity_name = emr.message("openhmis.inventory.item.name");
+        var entity_name = "openhmis.inventory.item.name";
         var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
 
@@ -42,15 +42,6 @@
         // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
             || function(uuid) {
-                if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired)
-                    && $scope.entity.retired === true) {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.unretire"),
-                        [self.entity_name]);
-                } else {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.retire"),
-                        [self.entity_name]);
-                }
-
                 /* bind variables.. */
                 $scope.itemPrice = {};
                 $scope.itemCode = {};
