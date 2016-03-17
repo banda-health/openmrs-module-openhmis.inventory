@@ -24,13 +24,13 @@
     function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, EntityFunctions, StockroomsFunctions, CookiesService) {
         var self = this;
         var module_name = 'inventory';
-        var entity_name = "openhmis.inventory.stockroom.name";
+        var entity_name_message_key = "openhmis.inventory.stockroom.name";
         var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name, cancel_page);
+                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
             }
 
         /**

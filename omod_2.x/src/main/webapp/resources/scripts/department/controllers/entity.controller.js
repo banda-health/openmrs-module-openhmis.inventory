@@ -25,13 +25,13 @@
         var self = this;
 
         var module_name = 'inventory';
-        var entity_name = "openhmis.inventory." + ENTITY_NAME + ".name";
+        var entity_name_message_key = "openhmis.inventory." + ENTITY_NAME + ".name";
         var cancel_page = 'entities.page';
         var rest_entity_name = ENTITY_NAME;
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name, cancel_page);
+                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
             };
 
         /**
