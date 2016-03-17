@@ -54,7 +54,7 @@
 										|| [];
 								$scope.submitted = true;
 								if (angular.isDefined($scope.attributeType)
-										&& $scope.attributeType.name !== "" && $scope.attributeType.format !== null ) {
+										&& $scope.attributeType.name !== "" && $scope.attributeType.format !== "" ) {
 									$scope.entity.attributeTypes
 											.push($scope.attributeType);
 									insertOperationTypesTemporaryId(
