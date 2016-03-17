@@ -59,9 +59,9 @@
 
                 /* bind functions.. */
                 // auto-complete search concept function
-                $scope.searchConcepts = function(){
-                    ItemRestfulService.searchConcepts(module_name, $scope.entity.concept, self.onSearchConceptsSuccessful);
-                }
+                $scope.searchConcepts = function(search){
+                   return ItemRestfulService.searchConcepts(module_name, search);
+                };
 
                 // retrieve stocks (if any) associated to the item
                 $scope.loadItemStock = function(){
@@ -213,11 +213,6 @@
                 $scope.departments = data.results;
                 $scope.entity.department = $scope.entity.department || $scope.departments[0];
             }
-        }
-
-        // handle returned concepts
-        self.onSearchConceptsSuccessful = self.onSearchConceptsSuccessful || function(data){
-            $scope.concepts = data.results;
         }
 
         // handle returned stocks
