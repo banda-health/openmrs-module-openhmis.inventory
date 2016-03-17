@@ -108,18 +108,13 @@
 					return false;
 				}
 				if (!angular.isDefined($scope.entity.attributeTypes)
-						|| $scope.entity.attributeTypes.format === '' || $scope.entity.attributeTypes.format === null) {
+						|| $scope.entity.attributeTypes.format === '') {
 					$scope.submmited = true;
 					return false;
 				}
 				if (!angular.isDefined($scope.entity.attributeTypes.attributeOrder)
 						|| $scope.entity.attributeTypes.attributeOrder === '') {
-					$scope.entity.attributeTypes.attributeOrder = null;
-				}
-
-				if (!angular.isDefined($scope.entity.attributeTypes.foreignKey)
-						|| $scope.entity.attributeTypes.foreignKey === '') {
-					$scope.entity.attributeTypes.foreignKey = null;
+					$scope.entity.attributeTypes.attributeOrder === null;
 				}
 				// remove temporarily assigned ids from the attribute type array lists.
 				self.removeOperationTypesTemporaryIds();

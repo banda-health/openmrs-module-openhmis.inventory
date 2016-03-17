@@ -193,7 +193,7 @@
 										<span>{{messageLabels['Field.attributeName']}} {{messageLabels['Obs.order']}}</span>
 									</li>
 									<li>
-										<input type="text" required ng-model="attributeType.attributeOrder"/>
+										<input type="number" required ng-model="attributeType.attributeOrder"/>
 									</li>
 								</ul>
 								<br/>
