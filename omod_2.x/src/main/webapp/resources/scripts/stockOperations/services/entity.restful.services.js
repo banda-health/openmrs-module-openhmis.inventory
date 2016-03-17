@@ -1,3 +1,18 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
+
 (function() {
     'use strict';
 
@@ -14,7 +29,7 @@
             searchStockOperation: searchStockOperation,
             stockOperationItem: stockOperationItem,
             stockOperationTransaction: stockOperationTransaction,
-            rollbackOperation: rollbackOperation,
+            invokeOperation: invokeOperation,
             loadStockOperationTypes: loadStockOperationTypes,
             loadStockRooms: loadStockRooms,
             searchStockOperationItems: searchStockOperationItems,
@@ -22,13 +37,14 @@
 
         return service
 
-        function searchStockOperationItems(q, successCallback){
+        function searchStockOperationItems(module_name, q){
             var requestParams = {};
-            requestParams['rest_entity_name'] = 'item';
             requestParams['has_physical_inventory'] = 'true';
             requestParams['q'] = q;
             requestParams['limit'] = 10;
-            EntityRestFactory.loadEntities(requestParams,successCallback, errorCallback);
+            requestParams['startIndex'] = 1;
+
+            return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
         }
 
         /**
@@ -121,15 +137,15 @@
         }
 
         /**
-         * roll back an operation
+         * invokeOperation a rollback, complete, cancel operation
          * @param operation_uuid
          * @param rest_entity_name
          * @param successCallback
          */
-        function rollbackOperation(operation_uuid, rest_entity_name, successCallback) {
+        function invokeOperation(status, operation_uuid, rest_entity_name, successCallback) {
             if (angular.isDefined(operation_uuid) && operation_uuid !== '' && operation_uuid !== undefined) {
                 var requestParams = {};
-                requestParams['status'] = "ROLLBACK";
+                requestParams['status'] = status;
 
                 EntityRestFactory.post(rest_entity_name, operation_uuid, requestParams,
                     successCallback,

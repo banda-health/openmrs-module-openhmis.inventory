@@ -22,7 +22,7 @@
     ui.includeJavascript("openhmis.inventory", "department/controllers/manage-entity.controller.js")
 %>
 
-<script data-main="department/configs/entity.main" src="/openmrs/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="department/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="entitiesApp">
     <div ui-view></div>

@@ -11,7 +11,7 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.operationTypes")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationTypes/entities.page'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationTypes/entities.page#/'
 		},
 		{label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
 	];
@@ -20,7 +20,8 @@
 </script>
 
 <form onsubmit="return removeIndexFromItems()">
-	<h1>{{messageLabels['h2SubString']}}</h1>
+
+	${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 
 	<input type="hidden" ng-model="entity.uuid"/>
 
@@ -52,7 +53,7 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.sourceLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasSource" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.hasSource" disabled="disabled" style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -60,7 +61,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.destinationLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.hasDestination" disabled="disabled"
+				       style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -68,7 +70,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.recipientLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.hasRecipient" disabled="disabled"
+				       style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -76,7 +79,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.availableWhenReservedLabel']}}</span>
 			</li>
 			<li>
-				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled"/>
+				<input type="checkbox" ng-model="entity.availableWhenReserved" disabled="disabled"
+				       style="background-color:lightgrey"/>
 			</li>
 		</ul>
 		<ul class="table-layout">
@@ -149,15 +153,14 @@
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
-									<li class="not-required">
+									<li class="required">
 										<span>{{messageLabels['PersonAttributeType.format']}}</span>
 									</li>
 									<li>
-										<select class="form-control dialog-select" ng-model="attributeType.format"
+										<select id="formatSelect" class="form-control" style="font-size: 14px" ng-model="attributeType.format"
 										        ng-options="field for field in formatFields track by field">
 											<option value="0">-- Please Select Format --</option>
-											<option ng-selected="attributeType.format == field">
-											</option>
+											<option ng-selected="attributeType.format == field"></option>
 										</select>
 									</li>
 								</ul>
@@ -190,22 +193,28 @@
 										<span>{{messageLabels['Field.attributeName']}} {{messageLabels['Obs.order']}}</span>
 									</li>
 									<li>
-										<input type="text" required ng-model="attributeType.attributeOrder"/>
+										<input type="number" required ng-model="attributeType.attributeOrder"/>
 									</li>
 								</ul>
+								<br/>
 
-								<div class="ngdialog-buttons">
+								<div class="ngdialog-buttons detail-section-border-top">
+									<br/>
 									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
 									       ng-click="cancel()"/>
 									<span ng-show="addAttributeTypeTitle != ''">
 										<input type="button" class="confirm right"
-										       ng-disabled="attributeType.name == '' || attributeType.name == undefined"
+										       ng-disabled="attributeType.name == '' || attributeType.name == undefined
+										       || attributeType.attributeOrder == '' || attributeType.attributeOrder == undefined
+										       || attributeType.format == undefined || attributeType.format == ''"
 										       value="{{messageLabels['general.save']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>
 									<span ng-show="editAttributeTypeTitle != ''">
 										<input type="button" class="confirm right"
-										       ng-disabled="attributeType.name == '' || attributeType.name == undefined"
+										       ng-disabled="attributeType.name == '' || attributeType.name == undefined
+										       || attributeType.attributeOrder == '' || attributeType.attributeOrder == undefined
+										       || attributeType.format == undefined || attributeType.format == ''"
 										       value="{{messageLabels['openhmis.inventory.general.confirm']}}"
 										       ng-click="saveOrUpdate()"/>
 									</span>
@@ -216,40 +225,22 @@
 				</div>
 			</li>
 		</ul>
-	</fieldset>
-	<br/>
-	<fieldset class="format">
-		<ul class="table-layout">
-			<li>
-				<span>
-					<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
-				</span>
-			</li>
-			<li>
-				<span>
-					<input type="button" class="confirm right"
-					       value="{{messageLabels['openhmis.inventory.general.saveChanges']}}"
-					       ng-disabled="entity.name == '' || entity.name == undefined"
-					       ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
-				</span>
-			</li>
-		</ul>
-	</fieldset>
+		<br/>
 
-	<fieldset class="format">
-		<h3 ng-hide="entity.uuid == ''">{{retireOrUnretire}}</h3>
-
-		<p ng-hide="entity.uuid == ''">
-			<span ng-show="entity.retired">{{messageLabels['openhmis.inventory.general.retired.reason']}}<b>{{entity.retireReason}}</b><br/>
+		<p class="detail-section-border-top">
+			<br/>
+			<span>
+				<input type="button" class="cancel left" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
 			</span>
-			<span ng-hide="entity.retired"><input type="text" placeholder="{{messageLabels['general.retireReason']}}"
-			                                      style="min-width: 50%;" ng-model="entity.retireReason"
-			                                      ng-disabled="entity.retired"/></span>
-			<input type="button" ng-disabled="entity.uuid == '' || entity.retireReason == '' || entity.retireReason == null"
-			       class="cancel" value="{{retireOrUnretire}}" ng-click="retireOrUnretireCall()"/>
+			<span>
+				<input type="button" class="confirm right"
+				       value="{{messageLabels['general.save']}}"
+				       ng-disabled="entity.name == '' || entity.name == undefined"
+				       ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
+			</span>
 		</p>
-
-		<p class="checkRequired"
-		   ng-hide="entity.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
 	</fieldset>
+
+	${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"])}
+
 </form>

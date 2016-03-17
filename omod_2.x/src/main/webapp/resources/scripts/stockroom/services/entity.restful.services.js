@@ -1,3 +1,18 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
+
 (function() {
     'use strict';
 
@@ -14,9 +29,21 @@
             itemStock: itemStock,
             itemStockOperation: itemStockOperation,
             itemStockOperationTransaction: itemStockOperationTransaction,
+            searchItems: searchItems,
         };
 
         return service;
+
+        function searchItems(module_name, q){
+            var requestParams = [];
+            if(angular.isDefined(q) && q !== ''){
+                requestParams['q'] = q;
+            }
+            requestParams['startIndex'] = 1;
+            requestParams['limit'] = 10;
+
+            return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
+        }
 
         /**
          * Retrieve all locations
@@ -88,10 +115,24 @@
          * @param successfulCallback
          */
         function ws_call(rest_entity_name, stockroom_uuid, currentPage, limit, q, successfulCallback){
+            currentPage = currentPage || 1;
             if(angular.isDefined(stockroom_uuid) && stockroom_uuid !== '' && stockroom_uuid !== undefined){
                 var requestParams = PaginationService.paginateParams(currentPage, limit, false, q);
                 requestParams['rest_entity_name'] = rest_entity_name;
                 requestParams['stockroom_uuid'] = stockroom_uuid;
+
+                if(rest_entity_name === 'stockOperation'){
+                    if('q' in requestParams){
+                        delete requestParams['q'];
+                    }
+                    requestParams['operationItem_uuid'] = q;
+                }
+                else if(rest_entity_name === 'stockOperationTransaction'){
+                    if('q' in requestParams){
+                        delete requestParams['q'];
+                    }
+                    requestParams['transactionItem_uuid'] = q;
+                }
 
                 EntityRestFactory.loadEntities(requestParams,
                     successfulCallback,

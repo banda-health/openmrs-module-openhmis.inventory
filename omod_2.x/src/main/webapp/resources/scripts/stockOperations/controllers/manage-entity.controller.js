@@ -1,3 +1,18 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
+
 (function() {
     'use strict';
 
@@ -28,10 +43,12 @@
                 $scope.stockroom = $scope.stockroom || {};
                 $scope.operationItem = $scope.operationItem || {};
                 $scope.searchOperationItem = $scope.searchOperationItem || '';
-                $scope.stockOperationItems = $scope.stockOperationItems || {};
 
                 $scope.searchItems = self.searchItems;
                 $scope.selectItem = self.selectItem;
+
+                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
+                    [self.entity_name]);
             }
 
         self.searchStockOperation = self.searchStockOperation || function(){
@@ -59,12 +76,9 @@
                 );
             }
 
-        self.searchItems = self.searchItems || function(){
+        self.searchItems = self.searchItems || function(search){
                 $scope.operationItem = {};
-                console.log('search items..' + $scope.searchOperationItem);
-                if($scope.searchOperationItem !== null && angular.isDefined($scope.searchOperationItem)){
-                    StockOperationRestfulService.searchStockOperationItems($scope.searchOperationItem, self.onLoadSearchStockOperationItemsSuccessful);
-                }
+                return StockOperationRestfulService.searchStockOperationItems(module_name, search);
             }
 
         self.selectItem = self.selectItem || function(item){
@@ -79,9 +93,6 @@
                 StockOperationRestfulService.loadStockRooms("stockroom", self.onLoadStockRoomSuccessful);
             }
 
-        self.onLoadSearchStockOperationItemsSuccessful = self.onLoadSearchStockOperationItemsSuccessful || function(data){
-                $scope.stockOperationItems = data.results;
-            }
 
         self.onLoadSearchStockOperationSuccessful = self.onLoadSearchStockOperationSuccessful || function(data){
                 $scope.fetchedEntities = data.results;

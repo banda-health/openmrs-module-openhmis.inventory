@@ -1,3 +1,18 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
+
 .entities-table th:first-child, td:first-child {
     width: 30%;
 }
@@ -17,6 +32,22 @@ ul.dialog-table-layout li {
 }
 table.manage-stockOperations-table th:first-child, td:first-child{
     width: 80%;
+}
+
+table.manage-stockOperations-item-table th:first-child, td:first-child{
+    width: 160%;
+}
+
+table.manage-stockOperations-transactions-table th:first-child, td:first-child{
+    width: 50%;
+}
+
+table.manage-stockOperations-transactions-table th:nth-child(2), td:nth-child(1){
+    width: 130%;
+}
+
+table.manage-stockOperations-transactions-table th:nth-child(5), td:nth-child(5){
+    width: 40%;
 }
 
 table.search {
@@ -66,7 +97,21 @@ ul.search-area-input{
     text-align: left;
 }
 table.manage-stockrooms-table th:first-child, td:first-child {
-    width: 70%;
+    width: 30%;
+}
+
+table.manage-stockrooms-items-table th:first-child, td:first-child {
+    width: 120%;
+}
+
+table.manage-stockrooms-transactions-table th:nth-child(1), td:nth-child(1) {
+    width: 50%;
+}
+table.manage-stockrooms-transactions-table th:nth-child(3), td:nth-child(3) {
+    width: 120%;
+}
+table.manage-stockrooms-transactions-table th:last-child, td:last-child {
+    width: 40%;
 }
 
 .not-found{
@@ -76,4 +121,23 @@ table.manage-stockrooms-table th:first-child, td:first-child {
 #item-details-dialog{
     max-width:none;
     width: 500px;
+}
+
+
+input.non-editable {
+    background-color: lightgrey
+}
+#item-price-dialog ul{
+    margin-bottom: 0px;
+}
+
+#item-code-dialog ul{
+    margin-bottom: 0px;
+}
+
+#attribute-types-dialog select option {
+    font-size:0.875em;
+}
+#operationTypesTable th:first-child, td:first-child {
+    width: 20%;
 }

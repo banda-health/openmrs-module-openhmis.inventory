@@ -208,7 +208,7 @@
 	</privilege>
 
 	<privilege>
-		<name>App: Access Manage Inventory Module</name>
+		<name>Task: Manage Inventory Module</name>
 		<description>Able to access manage inventory module page</description>
 	</privilege>
 
@@ -265,10 +265,5 @@
 	<privilege>
 		<name>Task: Access Inventory Settings</name>
 		<description>Able to access item mappings page</description>
-	</privilege>
-
-	<privilege>
-		<name>App: Edit Visit</name>
-		<description>Able to access old patient search page to edit visit</description>
 	</privilege>
 </module>

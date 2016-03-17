@@ -1,3 +1,18 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
+
 (function() {
     'use strict';
 
@@ -11,13 +26,13 @@
         var self = this;
 
         var module_name = 'inventory';
-        var entity_name = emr.message("openhmis.inventory.item.name");
+        var entity_name_message_key = "openhmis.inventory.item.name";
         var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name, cancel_page);
+                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
             }
 
         /**
@@ -27,15 +42,6 @@
         // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
             || function(uuid) {
-                if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired)
-                    && $scope.entity.retired === true) {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.unretire"),
-                        [self.entity_name]);
-                } else {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.retire"),
-                        [self.entity_name]);
-                }
-
                 /* bind variables.. */
                 $scope.itemPrice = {};
                 $scope.itemCode = {};
@@ -44,9 +50,9 @@
 
                 /* bind functions.. */
                 // auto-complete search concept function
-                $scope.searchConcepts = function(){
-                    ItemRestfulService.searchConcepts(module_name, $scope.entity.concept, self.onSearchConceptsSuccessful);
-                }
+                $scope.searchConcepts = function(search){
+                   return ItemRestfulService.searchConcepts(module_name, search);
+                };
 
                 // retrieve stocks (if any) associated to the item
                 $scope.loadItemStock = function(){
@@ -106,11 +112,40 @@
                     return false;
                 }
 
+                // check if the default price has been set correctly.
+                var defaultPriceSet = false;
+                for(var i = 0; i < $scope.entity.prices.length; i++){
+                    var price = $scope.entity.prices[i];
+                    if("id" in price){
+                        if("id" in $scope.entity.defaultPrice && price.id === $scope.entity.defaultPrice.id){
+                            defaultPriceSet = true;
+                        }
+                    }
+                    else{
+                        if("uuid" in $scope.entity.defaultPrice && price.uuid === $scope.entity.defaultPrice.uuid){
+                            defaultPriceSet = true;
+                        }
+                    }
+                }
+
+                if(!defaultPriceSet){
+                    $scope.submitted = true;
+                    return false;
+                }
+
                 if(angular.isDefined($scope.itemAttributeTypes)){
                     var requestItemAttributeTypes = [];
                     for(var i = 0; i < $scope.itemAttributeTypes.length; i++){
                         var itemAttributeType = $scope.itemAttributeTypes[i];
+                        var required = itemAttributeType.required;
                         var requestItemAttributeType = {};
+                        requestItemAttributeType['attributeType'] = itemAttributeType.uuid;
+                        var value = $scope.attributes[itemAttributeType.uuid] || "";
+                        if(required && value === ""){
+                            $scope.submitted = true;
+                            return false;
+                        }
+
                         requestItemAttributeType['attributeType'] = itemAttributeType.uuid;
                         var value = $scope.attributes[itemAttributeType.uuid] || "";
                         requestItemAttributeType['value'] = value;
@@ -169,11 +204,6 @@
                 $scope.departments = data.results;
                 $scope.entity.department = $scope.entity.department || $scope.departments[0];
             }
-        }
-
-        // handle returned concepts
-        self.onSearchConceptsSuccessful = self.onSearchConceptsSuccessful || function(data){
-            $scope.concepts = data.results;
         }
 
         // handle returned stocks

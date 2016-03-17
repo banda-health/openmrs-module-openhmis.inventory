@@ -1,21 +1,36 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
+
 (function() {
     'use strict';
 
     var base = angular.module('app.genericEntityController');
     base.controller("StockroomController", StockroomController);
     StockroomController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
-        'StockroomModel', 'StockroomRestfulService', 'PaginationService', 'StockroomsFunctions'];
+        'StockroomModel', 'StockroomRestfulService', 'PaginationService', 'EntityFunctions', 'StockroomsFunctions', 'CookiesService'];
 
-    function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, StockroomsFunctions) {
+    function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, EntityFunctions, StockroomsFunctions, CookiesService) {
         var self = this;
         var module_name = 'inventory';
-        var entity_name = emr.message("openhmis.inventory.stockroom.name");
+        var entity_name_message_key = "openhmis.inventory.stockroom.name";
         var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name, cancel_page);
+                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
             }
 
         /**
@@ -25,35 +40,33 @@
             // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
             || function(uuid) {
-                if (angular.isDefined($scope.entity) && angular.isDefined($scope.entity.retired)
-                    && $scope.entity.retired === true) {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.unretire"),
-                        [self.entity_name]);
-                } else {
-                    $scope.retireOrUnretire = $filter('EmrFormat')(emr.message("openhmis.inventory.general.retire"),
-                        [self.entity_name]);
-                }
-
                 // bind item stock variables/functions
-                $scope.itemLimit = $scope.itemLimit || 5;
-                $scope.itemCurrentPage = $scope.itemCurrentPage || 1;
+                $scope.itemLimit = CookiesService.get(uuid + 'itemLimit') || 5;
+                $scope.itemCurrentPage = CookiesService.get(uuid + 'itemCurrentPage') || 1;
+
                 $scope.searchItemStockName = $scope.searchItemStockName || '';
+                $scope.operationsItem = $scope.operationsItem || {};
                 $scope.searchItemStock = self.searchItemStock;
                 $scope.itemPagingFrom = PaginationService.pagingFrom;
                 $scope.itemPagingTo = PaginationService.pagingTo;
                 $scope.showItemDetails = self.showItemDetails;
 
-                // bind item stock operation variables/function
-                $scope.itemStockOperationLimit = $scope.itemStockOperationLimit  || 5;
-                $scope.itemStockOperationCurrentPage = $scope.itemStockOperationCurrentPage || 1;
-                $scope.searchItemStockOperationName = $scope.searchItemStockOperationName || '';
-                $scope.searchItemStockOperation = self.searchItemStockOperation;
+                // bind item stock operation variables
+                $scope.itemStockOperationLimit = CookiesService.get(uuid + 'itemStockOperationLimit')  || 5;
+                $scope.itemStockOperationCurrentPage = CookiesService.get(uuid + 'itemStockOperationCurrentPage') || 1;
+                $scope.searchItemStockOperationName = CookiesService.get(uuid + 'searchItemStockOperationName') || '';
 
-                // bind item stock transaction variables/function
-                $scope.itemStockTransactionLimit = $scope.itemStockTransactionLimit  || 5;
-                $scope.itemStockTransactionCurrentPage = $scope.itemStockTransactionCurrentPage || 1;
-                $scope.searchItemStockTransactionName = $scope.searchItemStockTransactionName || '';
+                // bind item stock transaction variables
+                $scope.itemStockTransactionLimit = CookiesService.get(uuid + 'itemStockTransactionLimit')  || 5;
+                $scope.itemStockTransactionCurrentPage = CookiesService.get(uuid + 'itemStockTransactionCurrentPage') || 1;
+                $scope.searchItemStockTransactionName = CookiesService.get(uuid + 'searchItemStockTransactionName') || '';
+
+                $scope.searchItemStockOperation = self.searchItemStockOperation;
                 $scope.searchItemStockTransaction = self.searchItemStockTransaction;
+                $scope.searchOperationItems = self.searchOperationItems;
+                $scope.searchTransactionItems = self.searchTransactionItems;
+                $scope.selectOperationsItem = self.selectOperationsItem;
+                $scope.selectTransactionsItem = self.selectTransactionsItem;
 
                 // load list of locations
                 StockroomRestfulService.loadLocations(module_name ,self.onLoadLocationsSuccessful);
@@ -62,6 +75,22 @@
                 self.searchItemStock(uuid);
                 self.searchItemStockOperation(uuid);
                 self.searchItemStockTransaction(uuid);
+            }
+
+        self.searchOperationItems = self.searchOperationItems || function(search){
+                return StockroomRestfulService.searchItems(module_name, search);
+            }
+
+        self.searchTransactionItems = self.searchTransactionItems || function(search){
+                return StockroomRestfulService.searchItems(module_name, search);
+            }
+
+        self.selectOperationsItem = self.selectOperationsItem || function(item){
+                $scope.operationsItem = item;
+            }
+
+        self.selectTransactionsItem = self.selectTransactionsItem || function(item){
+                $scope.transactionsItem = item;
             }
 
         /**
@@ -81,7 +110,16 @@
          * @type {Function}
          */
         self.searchItemStock = self.searchItemStock || function(uuid, itemCurrentPage){
-                StockroomRestfulService.itemStock(uuid, itemCurrentPage, $scope.itemLimit, $scope.searchItemStockName, self.onLoadItemStockSuccessful);
+                itemCurrentPage = itemCurrentPage || $scope.itemCurrentPage;
+
+                CookiesService.set(uuid + 'itemCurrentPage', itemCurrentPage);
+                CookiesService.set(uuid + 'itemLimit', $scope.itemLimit);
+
+                StockroomRestfulService.itemStock(
+                    uuid, CookiesService.get(uuid + 'itemCurrentPage'),
+                    CookiesService.get(uuid + 'itemLimit'),
+                    $scope.searchItemStockName, self.onLoadItemStockSuccessful
+                );
             }
 
         /**
@@ -89,7 +127,21 @@
          * @type {Function}
          */
         self.searchItemStockOperation = self.searchItemStockOperation || function(uuid, itemStockOperationCurrentPage){
-                StockroomRestfulService.itemStockOperation(uuid, itemStockOperationCurrentPage, $scope.itemStockOperationLimit, $scope.searchItemStockOperationName, self.onLoadItemStockOperationSuccessful);
+                var item_uuid;
+                if($scope.searchItemStockOperationName !== '' && $scope.operationsItem !== undefined){
+                    item_uuid = $scope.operationsItem.uuid;
+                }
+
+                itemStockOperationCurrentPage = itemStockOperationCurrentPage || $scope.itemStockOperationCurrentPage;
+
+                CookiesService.set(uuid + 'itemStockOperationCurrentPage', itemStockOperationCurrentPage);
+                CookiesService.set(uuid + 'itemStockOperationLimit', $scope.itemStockOperationLimit);
+
+                StockroomRestfulService.itemStockOperation(
+                    uuid, CookiesService.get(uuid + 'itemStockOperationCurrentPage'),
+                    CookiesService.get(uuid + 'itemStockOperationLimit'),
+                    item_uuid, self.onLoadItemStockOperationSuccessful
+                );
             }
 
         /**
@@ -97,7 +149,21 @@
          * @type {Function}
          */
         self.searchItemStockTransaction = self.searchItemStockTransaction || function(uuid, itemStockTransactionCurrentPage){
-                StockroomRestfulService.itemStockOperationTransaction(uuid, itemStockTransactionCurrentPage, $scope.itemStockTransactionLimit, $scope.searchItemStockTransactionName, self.onLoadItemStockTransactionSuccessful);
+                var item_uuid;
+                if($scope.searchItemStockTransactionName !== '' && $scope.transactionsItem !== undefined){
+                    item_uuid = $scope.transactionsItem.uuid;
+                }
+
+                itemStockTransactionCurrentPage = itemStockTransactionCurrentPage || $scope.itemStockTransactionCurrentPage;
+
+                CookiesService.set(uuid + 'itemStockTransactionCurrentPage', itemStockTransactionCurrentPage);
+                CookiesService.set(uuid + 'itemStockTransactionLimit', $scope.itemStockTransactionLimit);
+
+                StockroomRestfulService.itemStockOperationTransaction(
+                    uuid, CookiesService.get(uuid + 'itemStockTransactionCurrentPage'),
+                    CookiesService.get(uuid + 'itemStockTransactionLimit'),
+                    item_uuid, self.onLoadItemStockTransactionSuccessful
+                );
             }
 
         /**
@@ -144,7 +210,8 @@
             $filter: $filter,
             $stateParams: $stateParams,
             EntityRestFactory: EntityRestFactory,
-            GenericMetadataModel: StockroomModel
+            GenericMetadataModel: StockroomModel,
+            EntityFunctions: EntityFunctions
         });
     }
 })();

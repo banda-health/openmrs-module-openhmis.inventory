@@ -34,14 +34,15 @@
 
 	<div ng-controller="ManageInstitutionController">
 		<div id="entities">
-			<div class="btn-group">
-				<input type="text" ng-model="searchField" ng-change="updateContent()"
-				       class="field-display ui-autocomplete-input form-control searchinput"
-				       placeholder="${ui.message('openhmis.inventory.general.enterSearchPhrase')}" size="80" autofocus>
-				<span id="searchclear" class="searchclear icon-remove-circle"></span>
-			</div>
+
+			${ ui.includeFragment("openhmis.commons", "searchFragment", [
+					model: "searchField",
+					onChangeEvent: "updateContent()",
+					class: ["field-display ui-autocomplete-input form-control searchinput"],
+					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
+			])}
+			<br/><br />
 			
-			<br/><br/>
 			<table style="margin-bottom:5px;" class="entities-table">
 				<thead>
 				<tr>
@@ -58,43 +59,15 @@
 				</tbody>
 			</table>
 
-			<div id="below-entities-table">
-				<span style="float:left;">
-					<div id="showing-entities">
-						<span><b>${ui.
-								message('openhmis.inventory.general.showing')} {{pagingFrom(currentPage, limit)}} ${ui.
-								message(
-										'openhmis.inventory.general.to')} {{pagingTo(currentPage, limit, totalNumOfResults)}}</b>
-						</span>
-						<span><b>${ui.message('openhmis.inventory.general.of')} {{totalNumOfResults}} ${ui.
-								message('openhmis.inventory.general.entries')}</b></span>
-					</div>
-				</span>
-				<span style="float:right;">
-					<div class="entities-pagination">
-						<dir-pagination-controls on-page-change="paginate(currentPage)"></dir-pagination-controls>
-					</div>
-				</span>
+			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				<span style="float:left;">
-					<div id="includeVoided-entities">
-						${ui.message('openhmis.inventory.general.show')}
-						<select id="pageSize" ng-model="limit" ng-change="updateContent()">
-							<option value="2">2</option>
-							<option value="5">5</option>
-							<option value="10">10</option>
-							<option value="25">25</option>
-							<option value="50">50</option>
-							<option value="100">100</option>
-						</select>
-						${ui.message('openhmis.inventory.general.entries')}
-						<span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <input type="checkbox" ng-checked="includeRetired"
-						                                                      ng-model="includeRetired"
-						                                                      ng-change="updateContent()"></span>
-						<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
-					</div>
-				</span>
+				${ui.message('openhmis.inventory.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
+				<br/><br/>
+				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
+				             ng-change="updateContent()"></span>
+				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
+			${ui.includeFragment("openhmis.commons", "paginationFragment")}
 		</div>
 	</div>
 </div>

@@ -1,3 +1,18 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
+
 /* initialize and bootstrap application */
 requirejs(['item/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
@@ -19,6 +34,8 @@ emr.loadMessages(["openhmis.inventory.general.new",
 		"openhmis.inventory.general.retired.reason", "general.edit",
 		"general.new", "general.name", "general.description", "general.cancel",
 		"general.save", "general.retireReason", "general.purge",
+		"general.retire",
+		"general.unretire",
 		"openhmis.inventory.general.error.entityName",
 		"openhmis.inventory.general.error.restName",
 		"openhmis.inventory.general.error.uuid",
@@ -57,5 +74,8 @@ emr.loadMessages(["openhmis.inventory.general.new",
 		"openhmis.inventory.item.defaultExpirationPeriod",
 		"openhmis.inventory.item.enterConceptName",
 		"openhmis.inventory.item.rest_name",
+		"openhmis.inventory.stockroom.searchStockroom",
 		"openhmis.inventory.stockroom.name", "openhmis.inventory.general.add",
-		"openhmis.inventory.general.edit", ]);
+		"openhmis.inventory.general.enterSearchPhrase",
+		"openhmis.inventory.general.edit",
+		"openhmis.inventory.general.postSearchMessage" ]);

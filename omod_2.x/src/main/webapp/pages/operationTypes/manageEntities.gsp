@@ -9,7 +9,7 @@
 			label: "${ ui.message("openhmis.inventory.manage.module")}",
 			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page'
 		},
-		{label: "${ ui.message("openhmis.inventory.admin.item.attribute.types")}"}
+		{label: "${ ui.message("openhmis.inventory.admin.operationTypes")}",}
 	];
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 </script>
@@ -19,20 +19,16 @@
 
 	<div id="manage-entities-header">
 		<span class="h1-substitue-left" style="float:left;">
-			${ui.message('openhmis.inventory.admin.item.attribute.types')}
-		</span>
-		<span style="float:right;">
-			<a class="button confirm" ui-sref="new">
-				<i class="icon-plus"></i>
-				{{newEntityLabel}}
-			</a>
+			${ui.message('openhmis.inventory.admin.operationTypes')}
 		</span>
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageItemAttributeTypesController">
-		<div id="entities">
-			<table style="margin-bottom:5px;">
+	<div ng-controller="ManageOperationTypesController">
+		<div id="entities-table">
+			<br />
+
+			<table style="margin-bottom:5px;" id="operationTypesTable">
 				<thead>
 				<tr>
 					<th>${ui.message('general.name')}</th>
@@ -49,9 +45,7 @@
 			</table>
 
 			<div ng-show="fetchedEntities.length == 0">
-				<br/>
-				${ui.message('openhmis.inventory.itemAttributeType.itemAttributeTypeNotFound')}
-				<br/><br/>
+				<br/><br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>

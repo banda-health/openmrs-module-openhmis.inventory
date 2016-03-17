@@ -11,7 +11,7 @@
 
 </script>
 <form name="itemForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
-    <h1>{{messageLabels['h2SubString']}}</h1>
+    ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 
     <input type="hidden" ng-model="entity.uuid" />
 
@@ -57,14 +57,14 @@
                 <span>{{messageLabels['Concept']}}</span>
             </li>
             <li>
-                <input type="text" ng-change="searchConcepts()" ng-model="entity.concept"
-                       placeholder="{{messageLabels['openhmis.inventory.item.enterConceptName']}}"
-                       typeahead="concept.display for concept in concepts"
-                       class="form-control"
-                       typeahead-on-select="selectConcept(\$item)"
-                       typeahead-editable="false"
-                       typeahead-loading="loadingConcepts"/>
-                <i ng-show="loadingConcepts"></i>
+                ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                        typeahead: ["concept.display for concept in searchConcepts(\$viewValue)"],
+                        model: "entity.concept",
+                        typeaheadOnSelect: "selectConcept(\$item)",
+                        typeaheadEditable: "true",
+                        class: ["form-control autocomplete-search"],
+                        placeholder: [ui.message('openhmis.inventory.item.enterConceptName')],
+                ])}
             </li>
         </ul>
         <ul class="table-layout">
@@ -126,7 +126,7 @@
                                 <a href="" ng-click="removeItemPrice(itemPrice)">
                                     <i class="icon-remove"></i>
                                 </a>
-                                <a href="" ng-click="editItemPrice(itemPrice)">{{itemPrice.price | number:2}} ({{itemPrice.name}})</a>
+                                <a href="" ng-click="editItemPrice(itemPrice)">{{itemPrice.price | number:2}} <span ng-hide="itemPrice.name === ''">({{itemPrice.name}})</span></a>
                             </li>
                         </ul>
                         <div class="bbf-actions">
@@ -184,23 +184,9 @@
             <input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" />
         </span>
     </fieldset>
-    <fieldset class="format" ng-hide="entity.uuid == ''">
-        <h3>{{retireOrUnretire}}</h3>
-        <p>
-            <span ng-show="entity.retired">{{messageLabels['openhmis.inventory.general.retired.reason']}}<b>{{entity.retireReason}}</b><br /></span>
-            <span ng-hide="entity.retired"><input type="text" placeholder="{{messageLabels['general.retireReason']}}" style="min-width: 50%;" ng-model="entity.retireReason" ng-disabled="entity.retired" /></span>
-            <input type="button" class="cancel" value="{{retireOrUnretire}}" ng-click="retireUnretire()" />
-        </p>
-        <p class="checkRequired" ng-hide="entity.retireReason != '' || retireReasonIsRequiredMsg == '' || retireReasonIsRequiredMsg == undefined">{{retireReasonIsRequiredMsg}}</p>
-    </fieldset>
-    <fieldset class="format" ng-hide="entity.uuid == ''">
-        <h3>
-            {{messageLabels['delete.forever']}}
-        </h3>
-        <p>
-            <input type="button" ng-hide="entity.uuid == ''" class="cancel" value="{{messageLabels['general.purge']}}" ng-click="delete()"/>
-        </p>
-    </fieldset>
+
+    ${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [retireUnretireCall : "retireUnretire()"]) }
+
     <div id="item-price-dialog" class="dialog" style="display:none;">
         <div class="dialog-header">
             <span ng-show="addItemPriceTitle !=''">
@@ -208,8 +194,10 @@
                 <h3>{{addItemPriceTitle}}</h3>
             </span>
             <span ng-show="editItemPriceTitle !=''">
+                <i class="icon-edit"></i>
                 <h3>{{editItemPriceTitle}}</h3>
             </span>
+            <i class="icon-remove cancel show-cursor"  style="float:right;" ng-click="closeThisDialog()"></i>
         </div>
         <div class="dialog-content form">
             <ul class="table-layout dialog-table-layout">
@@ -220,7 +208,9 @@
                 <li class="required">{{messageLabels['openhmis.inventory.item.price.name']}}</li>
                 <li><input type="number" ng-model="itemPrice.price" required /></li>
             </ul>
-            <div class="ngdialog-buttons">
+            <br />
+            <div class="ngdialog-buttons detail-section-border-top">
+                <br />
                 <input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="closeThisDialog('Cancel')" />
                 <input type="button" class="confirm right" value="Confirm" ng-disabled="itemPrice.price == undefined"  ng-click="confirm('OK')" />
             </div>
@@ -234,15 +224,19 @@
                 <h3>{{addItemCodeTitle}}</h3>
             </span>
             <span ng-show="editItemCodeTitle != ''">
+                <i class="icon-edit"></i>
                 <h3>{{editItemCodeTitle}}</h3>
             </span>
+            <i class="icon-remove cancel show-cursor"  style="float:right;" ng-click="closeThisDialog()"></i>
         </div>
         <div class="dialog-content form">
             <ul class="table-layout dialog-table-layout">
                 <li>{{messageLabels['openhmis.inventory.item.code.name']}}</li>
                 <li><input type="text" ng-model="itemCode.code" /></li>
             </ul>
-            <div class="ngdialog-buttons">
+            <br />
+            <div class="ngdialog-buttons detail-section-border-top">
+                <br />
                 <input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="closeThisDialog('Cancel')" />
                 <input type="button" class="confirm right" value="Confirm"  ng-click="confirm('OK')" />
             </div>
