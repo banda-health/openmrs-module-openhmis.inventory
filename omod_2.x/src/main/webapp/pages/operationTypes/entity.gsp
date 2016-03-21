@@ -88,10 +88,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.userLabel']}}</span>
 			</li>
 			<li>
-				<select class="form-control">
-					<option ng-repeat="user in users track by user.uuid" ng-selected="entity.user.display == user.display">
-						{{user.display}}
-					</option>
+				<select class="form-control" ng-model="entity.user"
+				        ng-options='user.display for user in users track by user.uuid'>
 				</select>
 			</li>
 		</ul>
@@ -100,10 +98,8 @@
 				<span>{{messageLabels['openhmis.inventory.operations.type.roleLabel']}}</span>
 			</li>
 			<li>
-				<select class="form-control">
-					<option ng-repeat="role in roles track by role.uuid" ng-selected="entity.role.display == role.display">
-						{{role.display}}
-					</option>
+				<select class="form-control" ng-model="entity.role"
+				        ng-options='role.display for role in roles track by role.uuid'>
 				</select>
 			</li>
 		</ul>
