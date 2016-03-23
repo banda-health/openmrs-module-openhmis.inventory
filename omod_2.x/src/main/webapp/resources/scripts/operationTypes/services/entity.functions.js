@@ -36,7 +36,7 @@
 		return service;
 
 		/**
-		 * Displays a popup dialog box with the attribute types . Saves the code on clicking the 'Ok' button
+		 * Displays a popup dialog box with the attribute types . Saves the attributeType on clicking the 'Ok' button
 		 * @param $scope
 		 */
 		function addAttributeType($scope) {
@@ -60,6 +60,7 @@
 									insertOperationTypesTemporaryId(
 											$scope.entity.attributeTypes,
 											$scope.attributeType);
+									insertAttributeTypesAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
 									$scope.attributeType = {};
 									console.log($scope.attributeTypes);
 								}
@@ -92,6 +93,7 @@
 				selector : '#attribute-types-dialog',
 				actions : {
 					confirm : function() {
+						insertAttributeTypesAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
 						$scope.attributeType = {};
 						dialog.close();
 					},
@@ -123,6 +125,19 @@
 			}
 		}
 
+		/*We check the index of the attribute type in the attributeTypes array. The Attribute Type
+		* attributeOrder is always the index of the attribute type then */
+		function insertAttributeTypesAttributeOrder (attributeTypes, attributeType) {
+			if (angular.isDefined(attributeType)) {
+				var index = attributeTypes.indexOf(attributeType);
+				if (attributeType.attributeOrder = index){
+					attributeType.attributeOrder = attributeType.attributeOrder;
+				}else {
+					attributeType.attributeOrder = index;
+				}
+			}
+		}
+
 		/**
 		 * Removes an attribute Type from the list
 		 * @param attribute Type
@@ -140,6 +155,7 @@
 		function removeFromList(attributeType, attributeTypes) {
 			var index = attributeTypes.indexOf(attributeType);
 			attributeTypes.splice(index, 1);
+			insertAttributeTypesAttributeOrder(attributeType,attributeTypes);
 		}
 
 		/**
