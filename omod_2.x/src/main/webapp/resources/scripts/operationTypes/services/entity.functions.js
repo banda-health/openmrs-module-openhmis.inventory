@@ -126,7 +126,8 @@
 		}
 
 		/*We check the index of the attribute type in the attributeTypes array. The Attribute Type
-		* attributeOrder is always the index of the attribute type then */
+		* attributeOrder is always the same as index of the attribute type then compare an assign the
+		 * attributeOrder */
 		function insertAttributeTypesAttributeOrder (attributeTypes, attributeType) {
 			if (angular.isDefined(attributeType)) {
 				var index = attributeTypes.indexOf(attributeType);
