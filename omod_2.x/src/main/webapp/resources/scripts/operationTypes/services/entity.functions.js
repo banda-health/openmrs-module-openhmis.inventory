@@ -13,7 +13,7 @@
  *
  */
 
-(function() {
+(function () {
 	'use strict';
 
 	var app = angular.module('app.operationsTypeFunctionsFactory', []);
@@ -24,53 +24,54 @@
 	function OperationsTypeFunctions() {
 		var service;
 		service = {
-			addMessageLabels : addMessageLabels,
-			addAttributeType : addAttributeType,
-			insertOperationTypesTemporaryId : insertOperationTypesTemporaryId,
-			removeOperationTypesTemporaryId : removeOperationTypesTemporaryId,
-			removeAttributeType : removeAttributeType,
-			removeFromList : removeFromList,
-			editAttributeType : editAttributeType
+			addMessageLabels: addMessageLabels,
+			addAttributeType: addAttributeType,
+			insertOperationTypesTemporaryId: insertOperationTypesTemporaryId,
+			removeOperationTypesTemporaryId: removeOperationTypesTemporaryId,
+			removeAttributeType: removeAttributeType,
+			removeFromList: removeFromList,
+			editAttributeType: editAttributeType
 		};
 
 		return service;
 
 		/**
-		 * Displays a popup dialog box with the attribute types . Saves the code on clicking the 'Ok' button
+		 * Displays a popup dialog box with the attribute types . Saves the attributeType on clicking the 'Ok' button
 		 * @param $scope
 		 */
 		function addAttributeType($scope) {
 			$scope.editAttributeTypeTitle = '';
 			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.add']
-					+ ' '
-					+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
+				+ ' '
+				+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
 			$scope.saveButton = $scope.messageLabels['general.save'];
 			var dialog = emr
-					.setupConfirmationDialog({
-						selector : '#attribute-types-dialog',
-						actions : {
-							confirm : function() {
-								$scope.entity.attributeTypes = $scope.entity.attributeTypes
-										|| [];
-								$scope.submitted = true;
-								if (angular.isDefined($scope.attributeType)
-										&& $scope.attributeType.name !== "" && $scope.attributeType.format !== "" ) {
-									$scope.entity.attributeTypes
-											.push($scope.attributeType);
-									insertOperationTypesTemporaryId(
-											$scope.entity.attributeTypes,
-											$scope.attributeType);
-									$scope.attributeType = {};
-									console.log($scope.attributeTypes);
-								}
-								$scope.$apply();
-								dialog.close();
-							},
-							cancel : function() {
-								dialog.close();
+				.setupConfirmationDialog({
+					selector: '#attribute-types-dialog',
+					actions: {
+						confirm: function () {
+							$scope.entity.attributeTypes = $scope.entity.attributeTypes
+								|| [];
+							$scope.submitted = true;
+							if (angular.isDefined($scope.attributeType)
+								&& $scope.attributeType.name !== "" && $scope.attributeType.format !== "") {
+								$scope.entity.attributeTypes
+									.push($scope.attributeType);
+								insertOperationTypesTemporaryId(
+									$scope.entity.attributeTypes,
+									$scope.attributeType);
+								updateAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
+								$scope.attributeType = {};
+								console.log($scope.attributeTypes);
 							}
+							$scope.$apply();
+							dialog.close();
+						},
+						cancel: function () {
+							dialog.close();
 						}
-					});
+					}
+				});
 
 			dialog.show();
 		}
@@ -84,18 +85,19 @@
 		function editAttributeType(attributeType, $scope) {
 			$scope.attributeType = attributeType;
 			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.edit']
-					+ ' '
-					+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
+				+ ' '
+				+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
 			$scope.editButton = $scope.messageLabels['general.update'];
 			$scope.addAttributeTypeTitle = '';
 			var dialog = emr.setupConfirmationDialog({
-				selector : '#attribute-types-dialog',
-				actions : {
-					confirm : function() {
+				selector: '#attribute-types-dialog',
+				actions: {
+					confirm: function () {
+						updateAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
 						$scope.attributeType = {};
 						dialog.close();
 					},
-					cancel : function() {
+					cancel: function () {
 						$scope.attributeType = {};
 						dialog.close();
 					}
@@ -116,9 +118,21 @@
 				var index = attributeTypes.indexOf(attributeType);
 				attributeType.id = index;
 			} else {
-				for ( var attributeType in attributeTypes) {
+				for (var attributeType in attributeTypes) {
 					var index = attributeTypes.indexOf(attributeType);
 					attributeType.id = index;
+				}
+			}
+		}
+
+		/*We check the index of the attribute type in the attributeTypes array. The Attribute Type
+		 * attributeOrder is always the same as index of the attribute type then compare an assign the
+		 * attributeOrder */
+		function updateAttributeOrder(attributeTypes, attributeType) {
+			if (angular.isDefined(attributeType)) {
+				var index = attributeTypes.indexOf(attributeType);
+				if (attributeType.attributeOrder != index) {
+					attributeType.attributeOrder = index;
 				}
 			}
 		}
@@ -139,7 +153,9 @@
 		 */
 		function removeFromList(attributeType, attributeTypes) {
 			var index = attributeTypes.indexOf(attributeType);
-			attributeTypes.splice(index, 1);
+			if (index != -1) {
+				attributeTypes.splice(index, 1);
+			}
 		}
 
 		/**
@@ -147,7 +163,7 @@
 		 * @param items
 		 */
 		function removeOperationTypesTemporaryId(attributeTypes) {
-			for ( var index in attributeTypes) {
+			for (var index in attributeTypes) {
 				var attributeType = attributeTypes[index];
 				delete attributeType.id;
 			}
@@ -156,38 +172,38 @@
 		function addMessageLabels() {
 			var messages = {};
 			messages['openhmis.inventory.general.add'] = emr
-					.message('openhmis.inventory.general.add');
+				.message('openhmis.inventory.general.add');
 			messages['openhmis.inventory.attribute.type.name'] = emr
-					.message('openhmis.inventory.attribute.type.name');
+				.message('openhmis.inventory.attribute.type.name');
 			messages['openhmis.inventory.general.edit'] = emr
-					.message('openhmis.inventory.general.edit');
+				.message('openhmis.inventory.general.edit');
 			messages['openhmis.inventory.general.saveChanges'] = emr
-					.message("openhmis.inventory.general.saveChanges");
+				.message("openhmis.inventory.general.saveChanges");
 			messages['openhmis.inventory.general.confirm'] = emr
-					.message("openhmis.inventory.general.confirm");
+				.message("openhmis.inventory.general.confirm");
 			messages['openhmis.inventory.operations.type.sourceLabel'] = emr
-					.message("openhmis.inventory.operations.type.sourceLabel");
+				.message("openhmis.inventory.operations.type.sourceLabel");
 			messages['openhmis.inventory.operations.type.destinationLabel'] = emr
-					.message("openhmis.inventory.operations.type.destinationLabel");
+				.message("openhmis.inventory.operations.type.destinationLabel");
 			messages['openhmis.inventory.operations.type.recipientLabel'] = emr
-					.message("openhmis.inventory.operations.type.recipientLabel");
+				.message("openhmis.inventory.operations.type.recipientLabel");
 			messages['openhmis.inventory.operations.type.availableWhenReservedLabel'] = emr
-					.message("openhmis.inventory.operations.type.availableWhenReservedLabel");
+				.message("openhmis.inventory.operations.type.availableWhenReservedLabel");
 			messages['openhmis.inventory.operations.type.userLabel'] = emr
-					.message("openhmis.inventory.operations.type.userLabel");
+				.message("openhmis.inventory.operations.type.userLabel");
 			messages['openhmis.inventory.operations.type.roleLabel'] = emr
-					.message("openhmis.inventory.operations.type.roleLabel");
+				.message("openhmis.inventory.operations.type.roleLabel");
 			messages['openhmis.inventory.attribute.type.namePlural'] = emr
-					.message("openhmis.inventory.attribute.type.namePlural");
+				.message("openhmis.inventory.attribute.type.namePlural");
 			messages['PersonAttributeType.format'] = emr
-					.message("PersonAttributeType.format");
+				.message("PersonAttributeType.format");
 			messages['PersonAttributeType.foreignKey'] = emr
-					.message("PersonAttributeType.foreignKey");
+				.message("PersonAttributeType.foreignKey");
 			messages['PatientIdentifierType.format'] = emr
-					.message("PatientIdentifierType.format");
+				.message("PatientIdentifierType.format");
 			messages['FormField.required'] = emr.message("FormField.required");
 			messages['Field.attributeName'] = emr
-					.message("Field.attributeName");
+				.message("Field.attributeName");
 			messages['Obs.order'] = emr.message("Obs.order");
 			return messages;
 		}
