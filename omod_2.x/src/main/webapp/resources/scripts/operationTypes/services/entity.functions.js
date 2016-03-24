@@ -153,7 +153,7 @@
 		 */
 		function removeFromList(attributeType, attributeTypes) {
 			var index = attributeTypes.indexOf(attributeType);
-			if(index != undefined || index != null) {
+			if (index != -1) {
 				attributeTypes.splice(index, 1);
 			}
 		}
