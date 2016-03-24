@@ -177,7 +177,7 @@
 				}
 				/*Set the default price name to empty if the use didn't add it. This is to avoid it being saved as null
 				 which causes the empty parantheses when you view the items*/
-				if (!angular.isDefined($scope.entity.defaultPrice.name) || $scope.entity.defaultPrice.name) {
+				if (!angular.isDefined($scope.entity.defaultPrice.name) || $scope.entity.defaultPrice.name === '') {
 					$scope.entity.defaultPrice.name = '';
 				}
 				// retrieve and send the concept uuid.
