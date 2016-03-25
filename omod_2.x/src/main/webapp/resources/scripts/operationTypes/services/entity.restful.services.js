@@ -42,9 +42,7 @@
 			requestParams['limit'] = limit;
 			EntityRestFactory.setBaseUrl('user', 'v1');
 			EntityRestFactory.loadEntities(requestParams,
-					onLoadUsersSuccessful, function(error) {
-						console.log(error);
-					});
+					onLoadUsersSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
@@ -55,9 +53,7 @@
 			requestParams['limit'] = limit;
 			EntityRestFactory.setBaseUrl('role', 'v1');
 			EntityRestFactory.loadEntities(requestParams,
-					onLoadRolesSuccessful, function(error) {
-						console.log(error);
-					});
+					onLoadRolesSuccessful,errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
@@ -67,11 +63,13 @@
 			requestParams['resource'] = 'fieldgenhandlers.json';
 			EntityRestFactory.setCustomBaseUrl('/' + OPENMRS_CONTEXT_PATH + '/');
 			EntityRestFactory.loadResults(requestParams,
-					onLoadFormatFieldsSuccessful, function(error) {
-						console.log(error);
-					});
+					onLoadFormatFieldsSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
+		}
+
+		function errorCallback(error) {
+			console.log(error);
 		}
 	}
 
