@@ -99,6 +99,10 @@
                 ItemRestfulService.loadDepartments(self.onLoadDepartmentsSuccessful);
                 ItemRestfulService.loadItemStock($scope.uuid, self.onLoadItemStockSuccessful);
                 ItemRestfulService.loadItemAttributeTypes(self.onLoadItemAttributeTypesSuccessful);
+
+                if($scope.entity !== undefined && "department" in $scope.entity){
+                    $scope.department = $scope.entity.department;
+                }
             }
 
         /**
@@ -183,8 +187,8 @@
                 // remove temporarily assigned ids from the prices and codes array lists.
                 self.removeItemTemporaryIds();
 
-                // DO NOT send the department object. Instead retrieve and set the uuid.
-                var department = $scope.entity.department;
+                // bind department uuid
+                var department = $scope.department;
                 if(angular.isDefined(department)){
                     $scope.entity.department = department.uuid;
                 }
@@ -202,7 +206,7 @@
         self.onLoadDepartmentsSuccessful = self.onLoadDepartmentsSuccessful || function(data){
             if(angular.isDefined($scope.entity)){
                 $scope.departments = data.results;
-                $scope.entity.department = $scope.entity.department || $scope.departments[0];
+                $scope.department = $scope.department || $scope.departments[0];
             }
         }
 
