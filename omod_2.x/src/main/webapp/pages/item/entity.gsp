@@ -31,7 +31,7 @@
                 <span>{{messageLabels['openhmis.inventory.department.name']}}</span>
             </li>
             <li>
-                <select ng-model="entity.department"
+                <select ng-model="department"
                         ng-options='department.name for department in departments track by department.uuid'>
                 </select>
             </li>
@@ -59,7 +59,7 @@
             <li>
                 ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                         typeahead: ["concept.display for concept in searchConcepts(\$viewValue)"],
-                        model: "entity.concept",
+                        model: "concept",
                         typeaheadOnSelect: "selectConcept(\$item)",
                         typeaheadEditable: "true",
                         class: ["form-control autocomplete-search"],

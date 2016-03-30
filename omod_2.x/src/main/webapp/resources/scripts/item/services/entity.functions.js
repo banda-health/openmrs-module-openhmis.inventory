@@ -153,7 +153,6 @@
 		 * @param $scope
 		 */
 		function addItemPrice($scope) {
-			console.log('add item price');
 			$scope.editItemPriceTitle = '';
 			$scope.addItemPriceTitle = $scope.messageLabels['openhmis.inventory.general.add']
 					+ ' '
@@ -162,7 +161,6 @@
 				selector : '#item-price-dialog',
 				actions : {
 					confirm : function() {
-						console.log($scope);
 						$scope.entity.prices = $scope.entity.prices || [];
 						$scope.entity.prices.push($scope.itemPrice);
 						insertItemTemporaryId($scope.entity.prices,
