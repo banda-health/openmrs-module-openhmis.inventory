@@ -31,7 +31,7 @@
                 <span>{{messageLabels['openhmis.inventory.department.name']}}</span>
             </li>
             <li>
-                <select ng-model="entity.department"
+                <select ng-model="department"
                         ng-options='department.name for department in departments track by department.uuid'>
                 </select>
             </li>
