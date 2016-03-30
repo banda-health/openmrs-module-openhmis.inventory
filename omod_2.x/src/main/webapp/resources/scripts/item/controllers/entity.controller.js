@@ -85,7 +85,7 @@
                     if("id" in itemPrice && "id" in $scope.entity.defaultPrice && itemPrice.id === $scope.entity.defaultPrice.id){
                         removeDefaultPrice = true;
                     }
-                    if("uuid" in itemPrice && "uuid" in $scope.entity.defaultPrice && itemPrice.uuid === $scope.entity.defaultPrice.uuid){
+                    else if("uuid" in itemPrice && "uuid" in $scope.entity.defaultPrice && itemPrice.uuid === $scope.entity.defaultPrice.uuid){
                         removeDefaultPrice = true;
                     }
 
