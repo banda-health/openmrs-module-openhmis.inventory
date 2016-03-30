@@ -59,7 +59,7 @@
             <li>
                 ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                         typeahead: ["concept.display for concept in searchConcepts(\$viewValue)"],
-                        model: "entity.concept",
+                        model: "concept",
                         typeaheadOnSelect: "selectConcept(\$item)",
                         typeaheadEditable: "true",
                         class: ["form-control autocomplete-search"],

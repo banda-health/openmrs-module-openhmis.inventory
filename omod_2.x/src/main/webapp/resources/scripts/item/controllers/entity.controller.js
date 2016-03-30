@@ -117,6 +117,10 @@
                 ItemRestfulService.loadDepartments(self.onLoadDepartmentsSuccessful);
                 ItemRestfulService.loadItemStock($scope.uuid, self.onLoadItemStockSuccessful);
                 ItemRestfulService.loadItemAttributeTypes(self.onLoadItemAttributeTypesSuccessful);
+
+                if($scope.entity !== undefined && "concept" in $scope.entity){
+                    $scope.concept = $scope.entity.concept;
+                }
             }
 
         /**
@@ -194,7 +198,7 @@
                     $scope.entity.prices = [];
                 }
                 // retrieve and send the concept uuid.
-                var concept = $scope.entity.concept;
+                var concept = $scope.concept;
                 if(angular.isDefined(concept) && concept !== '' && concept !== undefined && concept !== null){
                     $scope.entity.concept = concept.uuid;
                 }
@@ -258,7 +262,7 @@
          * @parameter concept
          */
         self.selectConcept = self.selectConcept || function(concept){
-            $scope.entity.concept = concept;
+            $scope.concept = concept;
         }
 
         /**
