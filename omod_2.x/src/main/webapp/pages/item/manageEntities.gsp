@@ -69,7 +69,7 @@
 					<td ng-style="strikeThrough(entity.retired)">{{entity.name}}</td>
 					<td ng-style="strikeThrough(entity.retired)">{{entity.department.name}}</td>
 					<td ng-style="strikeThrough(entity.retired)">
-						<span ng-repeat="code in entity.codes">{{code.code}}</span>
+						<span ng-repeat="code in entity.codes" >{{code.code}}{{\$last ? '' : ', '}} </span>
 					</td>
 					<td ng-style="strikeThrough(entity.retired)">{{entity.defaultPrice.price | number:2}} <span
 							ng-if="entity.defaultPrice.name != ''">({{entity.defaultPrice.name}})</span></td>
