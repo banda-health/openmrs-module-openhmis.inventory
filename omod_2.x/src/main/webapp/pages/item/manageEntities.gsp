@@ -38,7 +38,7 @@
 			${ ui.message('openhmis.inventory.department.name') }:
 			<ul class="search-area">
 				<li>
-					<select ng-model="department" ng-change="searchItems()" style="height:33px;"
+					<select ng-model="department" ng-change="searchItems(currentPage)" style="height:33px;"
 					        ng-options='department.name for department in departments track by department.uuid'>
 						<option value="" selected="selected">Any</option>
 					</select>
@@ -46,7 +46,7 @@
 				<li>
 					${ ui.includeFragment("openhmis.commons", "searchFragment", [
 							model: "searchField",
-							onChangeEvent: "searchItems()",
+							onChangeEvent: "searchItemsByName(currentPage)",
 							class: ["field-display ui-autocomplete-input form-control searchinput"],
 							placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
 					])}
@@ -85,7 +85,7 @@
 				             ng-change="searchItems(currentPage)"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment")}
+			${ui.includeFragment("openhmis.commons", "paginationFragment", [onPageChange: "searchItems(currentPage)"])}
 		</div>
 	</div>
 </div>
