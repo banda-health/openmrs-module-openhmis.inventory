@@ -81,7 +81,25 @@
 
                 // deletes an item price
                 $scope.removeItemPrice = function(itemPrice){
+                    var removeDefaultPrice = false;
+                    if("id" in itemPrice && "id" in $scope.entity.defaultPrice && itemPrice.id === $scope.entity.defaultPrice.id){
+                        removeDefaultPrice = true;
+                    }
+                    if("uuid" in itemPrice && "uuid" in $scope.entity.defaultPrice && itemPrice.uuid === $scope.entity.defaultPrice.uuid){
+                        removeDefaultPrice = true;
+                    }
+
                     ItemFunctions.removeItemPrice(itemPrice, $scope.entity.prices);
+
+                    if($scope.entity.prices.length === 0){
+                        $scope.entity.defaultPrice = null;
+                    }
+
+                    //default price removed. set the first item on the list as the new default price.
+                    if((removeDefaultPrice && $scope.entity.prices.length > 0) || $scope.entity.defaultPrice === null){
+                        $scope.entity.defaultPrice = $scope.entity.prices[0];
+                    }
+
                 }
 
                 // deletes an item code
