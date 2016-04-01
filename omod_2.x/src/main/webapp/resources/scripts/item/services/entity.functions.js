@@ -25,11 +25,11 @@
 		var service;
 
 		service = {
+			formatItemPrice : formatItemPrice,
 			removeItemPrice : removeItemPrice,
 			removeItemCode : removeItemCode,
 			insertItemTemporaryId : insertItemTemporaryId,
 			removeItemTemporaryId : removeItemTemporaryId,
-			itemPriceNameFormatter : itemPriceNameFormatter,
 			addItemCode : addItemCode,
 			addItemPrice : addItemPrice,
 			editItemPrice : editItemPrice,
@@ -38,6 +38,27 @@
 		};
 
 		return service;
+
+		/**
+		 * @param itemPrice
+         * @returns {*}
+         */
+		function formatItemPrice(itemPrice){
+			var price = itemPrice.price;
+			if(price !== undefined){
+				price = (Math.round(price * 100)/ 100).toFixed(2);
+			}
+			else{
+				price = '';
+			}
+
+			if(itemPrice.name === undefined || itemPrice.name === '' || itemPrice.name === null){
+				return price;
+			}
+			else{
+				return price + ' (' + itemPrice.name + ')';
+			}
+		}
 
 		/**
 		 * Removes an item price from the list
@@ -74,13 +95,14 @@
 		 * @param item - optional
 		 */
 		function insertItemTemporaryId(items, item) {
+			var rand = Math.floor((Math.random() * 99) + 1);
 			if (angular.isDefined(item)) {
 				var index = items.indexOf(item);
-				item.id = index;
+				item.id = index * rand;
 			} else {
 				for ( var item in items) {
 					var index = items.indexOf(item);
-					item.id = index;
+					item.id = index * rand;
 				}
 			}
 		}
@@ -94,24 +116,6 @@
 				var item = items[index];
 				delete item.id;
 			}
-		}
-
-		/**
-		 * Format the item price name
-		 * @param itemPrice
-		 * @returns {string}
-		 */
-		function itemPriceNameFormatter(itemPrice) {
-			var priceName;
-			if (angular.isDefined(itemPrice.name) && itemPrice.name != ''
-					&& itemPrice.name != undefined) {
-				priceName = itemPrice.price.toFixed(2) + " (" + itemPrice.name
-						+ ")";
-			} else {
-				priceName = itemPrice.price.toFixed(2);
-			}
-
-			return priceName;
 		}
 
 		/**
@@ -153,6 +157,7 @@
 		 * @param $scope
 		 */
 		function addItemPrice($scope) {
+			$scope.itemPrice = {};
 			$scope.editItemPriceTitle = '';
 			$scope.addItemPriceTitle = $scope.messageLabels['openhmis.inventory.general.add']
 					+ ' '
@@ -187,7 +192,14 @@
 		 * @param $scope
 		 */
 		function editItemPrice(itemPrice, $scope) {
-			$scope.itemPrice = itemPrice;
+			var tmpItemPrice = itemPrice;
+
+			var editItemPrice = {
+				name : itemPrice.name,
+				price : itemPrice.price,
+			}
+
+			$scope.itemPrice = editItemPrice;
 			$scope.addItemPriceTitle = '';
 			$scope.editItemPriceTitle = $scope.messageLabels['openhmis.inventory.general.edit']
 					+ ' '
@@ -197,6 +209,11 @@
 				selector : '#item-price-dialog',
 				actions : {
 					confirm : function() {
+						tmpItemPrice.name = $scope.itemPrice.name;
+						tmpItemPrice.price = $scope.itemPrice.price;
+
+						$scope.$apply();
+
 						$scope.itemPrice = {};
 						dialog.close();
 					},
@@ -217,7 +234,13 @@
 		 * @param $scope
 		 */
 		function editItemCode(itemCode, $scope) {
-			$scope.itemCode = itemCode;
+			var tmpItemCode = itemCode;
+
+			var editItemCode = {
+				code : itemCode.code
+			};
+
+			$scope.itemCode = editItemCode;
 			$scope.editItemCodeTitle = $scope.messageLabels['openhmis.inventory.general.edit']
 					+ ' '
 					+ $scope.messageLabels['openhmis.inventory.item.code.name'];
@@ -226,6 +249,10 @@
 				selector : '#item-code-dialog',
 				actions : {
 					confirm : function() {
+						tmpItemCode.code = $scope.itemCode.code;
+
+						$scope.$apply();
+
 						$scope.itemCode = {};
 						dialog.close();
 					},
