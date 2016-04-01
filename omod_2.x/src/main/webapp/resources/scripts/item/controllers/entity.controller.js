@@ -1,3 +1,17 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
+ */
 (function() {
     'use strict';
 
@@ -220,6 +234,11 @@
                 // empty prices should resolve as an empty array list
                 if(!angular.isDefined($scope.entity.prices) || $scope.entity.prices === ''){
                     $scope.entity.prices = [];
+                }
+                /*Set the default price name to empty if the use didn't add it. This is to avoid it being saved as null
+                 which causes the empty parantheses when you view the items*/
+                if (!angular.isDefined($scope.entity.defaultPrice.name)) {
+                    $scope.entity.defaultPrice.name = '';
                 }
                 // retrieve and send the concept uuid.
                 var concept = $scope.concept;
