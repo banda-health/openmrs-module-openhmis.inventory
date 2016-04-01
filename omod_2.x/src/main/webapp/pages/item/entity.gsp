@@ -184,9 +184,6 @@
             <input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" />
         </span>
     </fieldset>
-
-    ${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [retireUnretireCall : "retireUnretire()"]) }
-
     <div id="item-price-dialog" class="dialog" style="display:none;">
         <div class="dialog-header">
             <span ng-show="addItemPriceTitle !=''">
@@ -206,7 +203,7 @@
             </ul>
             <ul class="table-layout dialog-table-layout">
                 <li class="required">{{messageLabels['openhmis.inventory.item.price.name']}}</li>
-                <li><input type="number" ng-model="itemPrice.price" required /></li>
+                <li><input type="number" ng-model="itemPrice.price" min="0" required /></li>
             </ul>
             <br />
             <div class="ngdialog-buttons detail-section-border-top">
@@ -243,3 +240,4 @@
         </div>
     </div>
 </form>
+${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [retireUnretireCall : "retireUnretire()"]) }

@@ -12,7 +12,6 @@
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  *
  */
-
 (function() {
     'use strict';
 

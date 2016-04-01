@@ -41,7 +41,5 @@
 		             ng-disabled="entity.name == '' || entity.name == undefined" ng-click="saveOrUpdate()"/></span>
 	</p>
 	<br/>
-
-	${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment") }
-
 </form>
+${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment") }
