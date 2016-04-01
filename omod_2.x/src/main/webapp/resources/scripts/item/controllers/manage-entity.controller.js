@@ -42,6 +42,7 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
 				self.loadDepartments();
 				$scope.searchItems = self.searchItems;
+				$scope.searchItemsByName = self.searchItemsByName;
 				$scope.searchField = CookiesService.get('searchField') || $scope.searchField || '';
 				$scope.department = CookiesService.get('department') || {};
 
@@ -51,6 +52,15 @@
 
 		self.loadDepartments = self.loadDepartments || function(){
 				ItemRestfulService.loadDepartments(self.onLoadDepartmentsSuccessful);
+			}
+
+		self.searchItemsByName = self.searchItemsByName || function(currentPage){
+				// reset current page when the search field is cleared
+				if($scope.searhField === undefined || $scope.searchField === ''){
+					currentPage = 1;
+					$scope.currentPage = currentPage;
+				}
+				self.searchItems(currentPage);
 			}
 
 		self.searchItems = self.searchItems || function(currentPage){
@@ -66,7 +76,6 @@
 					department_uuid = $scope.department.uuid;
 				}
 
-				currentPage = currentPage || $scope.currentPage;
 				var searchField = $scope.searchField || '';
 
 				ItemRestfulService.searchItems(searchField, currentPage, $scope.limit, department_uuid, $scope.includeRetired, self.onLoadItemsSuccessful)

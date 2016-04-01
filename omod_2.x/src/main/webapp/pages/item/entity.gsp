@@ -31,7 +31,7 @@
                 <span>{{messageLabels['openhmis.inventory.department.name']}}</span>
             </li>
             <li>
-                <select ng-model="entity.department"
+                <select ng-model="department"
                         ng-options='department.name for department in departments track by department.uuid'>
                 </select>
             </li>
@@ -59,7 +59,7 @@
             <li>
                 ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                         typeahead: ["concept.display for concept in searchConcepts(\$viewValue)"],
-                        model: "entity.concept",
+                        model: "concept",
                         typeaheadOnSelect: "selectConcept(\$item)",
                         typeaheadEditable: "true",
                         class: ["form-control autocomplete-search"],
@@ -126,7 +126,7 @@
                                 <a href="" ng-click="removeItemPrice(itemPrice)">
                                     <i class="icon-remove"></i>
                                 </a>
-                                <a href="" ng-click="editItemPrice(itemPrice)">{{itemPrice.price | number:2}} <span ng-hide="itemPrice.name === ''">({{itemPrice.name}})</span></a>
+                                <a href="" ng-click="editItemPrice(itemPrice)">{{formatItemPrice(itemPrice)}}</a>
                             </li>
                         </ul>
                         <div class="bbf-actions">
@@ -142,7 +142,7 @@
             </li>
             <li>
                 <select required ng-model="entity.defaultPrice"
-                        ng-options='((itemPrice.price | number:2) + " (" + itemPrice.name + ")" ) for itemPrice in entity.prices track by (itemPrice.uuid || itemPrice.id)'>
+                        ng-options="formatItemPrice(itemPrice) for itemPrice in entity.prices track by (itemPrice.uuid || itemPrice.id)">
                 </select>
             </li>
         </ul>
