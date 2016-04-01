@@ -81,6 +81,5 @@
             <input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" />
         </span>
     </fieldset>
-
-    ${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment") }
 </form>
+${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment") }

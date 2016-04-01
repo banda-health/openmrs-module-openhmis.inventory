@@ -235,7 +235,5 @@
 			</span>
 		</p>
 	</fieldset>
-
-	${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"])}
-
 </form>
+${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"])}

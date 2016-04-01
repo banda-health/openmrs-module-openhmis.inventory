@@ -278,5 +278,4 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		<br/><br/>
 	</form>
 </span>
-
 ${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment")}
