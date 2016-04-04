@@ -51,7 +51,7 @@
                 if($scope.location !== "" && $scope.location !== null){
                     location_uuid = $scope.location.uuid;
                 }
-                StockroomRestfulService.searchStockrooms(rest_entity_name, location_uuid, $scope.currentPage, $scope.limit, $scope.searchField, self.onSearchStockRoomsSuccessful);
+                StockroomRestfulService.searchStockrooms(rest_entity_name, location_uuid, $scope.currentPage, $scope.limit, $scope.includeRetired, $scope.searchField, self.onSearchStockRoomsSuccessful);
             }
 
         // call back

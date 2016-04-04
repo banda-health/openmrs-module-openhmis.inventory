@@ -111,10 +111,9 @@
 						tmpAttributeType.name = $scope.attributeType.name;
 						tmpAttributeType.regExp = $scope.attributeType.regExp;
 						tmpAttributeType.required = $scope.attributeType.required;
-
 						$scope.$apply();
 
-						updateAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
+						updateAttributeOrder($scope.entity.attributeTypes, tmpAttributeType);
 						$scope.attributeType = {};
 						dialog.close();
 					},
