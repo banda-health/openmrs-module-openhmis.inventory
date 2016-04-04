@@ -88,7 +88,7 @@
                 <span>{{messageLabels['openhmis.inventory.item.buyingPrice']}}</span>
             </li>
             <li>
-                <input type="number" ng-model="entity.buyingPrice" class="minimized"/>
+                <input type="number" ng-model="entity.buyingPrice" class="minimized" min="0"/>
             </li>
         </ul>
         <ul class="table-layout">
