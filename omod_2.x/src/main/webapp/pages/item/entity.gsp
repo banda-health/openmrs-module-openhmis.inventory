@@ -235,7 +235,7 @@
             <div class="ngdialog-buttons detail-section-border-top">
                 <br />
                 <input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="closeThisDialog('Cancel')" />
-                <input type="button" class="confirm right" value="Confirm"  ng-click="confirm('OK')" />
+                <input type="button" class="confirm right" value="Confirm"  ng-disabled="itemCode.code == undefined" ng-click="confirm('OK')" />
             </div>
         </div>
     </div>

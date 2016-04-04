@@ -72,7 +72,7 @@
 						<span ng-repeat="code in entity.codes" >{{code.code}}{{\$last ? '' : ', '}} </span>
 					</td>
 					<td ng-style="strikeThrough(entity.retired)">{{entity.defaultPrice.price | number:2}} <span
-							ng-if="entity.defaultPrice.name != ''">({{entity.defaultPrice.name}})</span></td>
+							ng-if="entity.defaultPrice.name != ''  && entity.defaultPrice.name != null">({{entity.defaultPrice.name}})</span></td>
 				</tr>
 				</tbody>
 			</table>
@@ -85,7 +85,7 @@
 				             ng-change="searchItems(currentPage)"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment", [onPageChange: "searchItems(currentPage)"])}
+			${ui.includeFragment("openhmis.commons", "paginationFragment", [onPageChange: "searchItems(currentPage)", onChange: "searchItems(currentPage)"])}
 		</div>
 	</div>
 </div>
