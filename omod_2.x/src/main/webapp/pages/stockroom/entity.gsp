@@ -44,6 +44,7 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			<li>
 				<select ng-model="entity.location"
 				        ng-options='location.display for location in locations track by location.uuid'>
+					<option value="" selected="selected"></option>
 				</select>
 			</li>
 		</ul>
