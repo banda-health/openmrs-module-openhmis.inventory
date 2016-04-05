@@ -39,6 +39,20 @@
 						entity_name_message_key, cancel_page);
 				}
 
+		/**
+		 * All post-submit validations are done here.
+		 * @return boolean
+		 */
+		// @Override
+		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function() {
+				if (!angular.isDefined($scope.entity.name) || $scope.entity.name === '') {
+					$scope.submitted = true;
+					return false;
+				}
+
+				return true;
+			};
+
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericEntityController, self, {
 			$scope : $scope,
