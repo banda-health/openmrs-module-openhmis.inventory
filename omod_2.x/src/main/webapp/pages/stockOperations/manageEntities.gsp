@@ -106,7 +106,8 @@
 				             ng-change="updateContent()"></span>
 				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment")}
+			${ui.includeFragment("openhmis.commons", "paginationFragment", [
+					showRetiredSection  : "false"])}
 		</div>
 	</div>
 </div>
