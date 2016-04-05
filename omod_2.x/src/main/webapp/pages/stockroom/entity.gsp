@@ -122,7 +122,7 @@
 				</span>
 			</div>
 			<div class="dialog-content form">
-				<table>
+				<table id="item-details">
 					<thead>
 					<tr>
 						<th>{{messageLabels['openhmis.inventory.stockroom.batchOperation']}}</th>
@@ -139,7 +139,7 @@
 				<br/>
 
 				<div class="ngdialog-buttons">
-					<input style="float:right;" type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
+					<input style="float:right;" type="button" class="cancel" value="{{messageLabels['general.close']}}"
 					       ng-click="closeThisDialog('Cancel')"/>
 				</div>
 			</div>
