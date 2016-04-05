@@ -23,8 +23,14 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MODULE_ROOT = WebConstants.MODULE_BASE + ModuleConstants.MODULE_NAME + "/";
 	public static final String MODULE_RESOURCE_ROOT = WebConstants.MODULE_RESOURCE_BASE + ModuleConstants.MODULE_NAME + "/";
 
+	public static final String MODULE_COMMONS_RESOURCE_ROOT = "/openmrs/moduleResources/openhmis/commons/";
+	public static final String MODULE_COMMON_TEMPLATE_URL = "/WEB-INF/view/module/openhmis/commons/template/common/";
+
 	public static final String ROLE_CREATION_ROOT = MODULE_ROOT + "roleCreation";
 	public static final String ROLE_CREATION_PAGE = ROLE_CREATION_ROOT + ".form";
+
+	public static final String ROLE_CREATION_2X_ROOT = MODULE_ROOT + "roleCreation2x";
+	public static final String ROLE_CREATION_2X_PAGE = ROLE_CREATION_2X_ROOT + ".page";
 
 	public static final String ITEMS_ROOT = MODULE_ROOT + "items";
 	public static final String ITEMS_PAGE = ITEMS_ROOT + ".form";
@@ -66,6 +72,9 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String SETTINGS_ROOT = MODULE_ROOT + "settings";
 	public static final String SETTINGS_PAGE = SETTINGS_ROOT + ".form";
+
+	public static final String SETTINGS_2X_ROOT = MODULE_ROOT + "settings2x";
+	public static final String SETTINGS_2X_PAGE = SETTINGS_2X_ROOT + ".page";
 
 	public static final String JASPER_REPORT_PAGE = MODULE_ROOT + "jasperReport";
 

@@ -18,11 +18,11 @@
 		<aware_of_module version="3.3.1">org.openmrs.module.uiframework</aware_of_module>
 		<aware_of_module version="2.3">org.openmrs.module.appframework</aware_of_module>
 		<aware_of_module version="2.2">org.openmrs.module.providermanagement</aware_of_module>
-		<aware_of_module version="1.6">org.openmrs.module.uicommons</aware_of_module>
+		<aware_of_module version="1.7">org.openmrs.module.uicommons</aware_of_module>
 	</aware_of_modules>
 
 	<require_modules>
-		<require_module version="2.11">org.openmrs.module.webservices.rest</require_module>
+		<require_module version="2.9">org.openmrs.module.webservices.rest</require_module>
 		<require_module version="3.0">org.openmrs.module.openhmis.commons</require_module>
 		<require_module version="2.3">org.openmrs.module.openhmis.backboneforms</require_module>
 		<require_module version="1.5.6">org.openmrs.module.jasperreport</require_module>
@@ -75,6 +75,12 @@
 		<property>${project.parent.artifactId}.showOperationCancelReason</property>
 		<description>true/false whether or not the cancel reason field should be used.</description>
 	</globalProperty>
+
+    <globalProperty>
+        <property>${project.parent.artifactId}.restrictNegativeInventoryStockCreation</property>
+        <defaultValue>false</defaultValue>
+        <description>true/false whether or not the system should restrict creation of stock with negative amounts</description>
+    </globalProperty>
 
 	<!-- Adds link to admin page -->
 	<extension>
@@ -202,7 +208,7 @@
 	</privilege>
 
 	<privilege>
-		<name>App: Access Manage Inventory Module</name>
+		<name>Task: Manage Inventory Module</name>
 		<description>Able to access manage inventory module page</description>
 	</privilege>
 
@@ -259,10 +265,5 @@
 	<privilege>
 		<name>Task: Access Inventory Settings</name>
 		<description>Able to access item mappings page</description>
-	</privilege>
-
-	<privilege>
-		<name>App: Edit Visit</name>
-		<description>Able to access old patient search page to edit visit</description>
 	</privilege>
 </module>

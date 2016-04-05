@@ -10,6 +10,7 @@
  * limitations under the License.
  *
  * Copyright (C) OpenHMIS.  All Rights Reserved.
+ *
  */
 package org.openmrs.module.openhmis.inventory.page.controller.inventory;
 
