@@ -33,6 +33,7 @@
             <li>
                 <select ng-model="department"
                         ng-options='department.name for department in departments track by department.uuid'>
+                    <option value="" selected="selected"></option>
                 </select>
             </li>
         </ul>
@@ -59,7 +60,7 @@
             <li>
                 ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                         typeahead: ["concept.display for concept in searchConcepts(\$viewValue)"],
-                        model: "concept",
+                        model: "entity.concept",
                         typeaheadOnSelect: "selectConcept(\$item)",
                         typeaheadEditable: "true",
                         class: ["form-control autocomplete-search"],
