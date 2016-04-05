@@ -40,6 +40,7 @@ emr.loadMessages([
     "general.description",
     "general.cancel",
     "general.save",
+    "general.close",
     "general.retireReason",
     "general.purge",
     "general.retire",
