@@ -153,7 +153,7 @@
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [
 					model: "searchItemStockOperationName",
 					class: ["form-control autocomplete-search"],
-					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+					placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
 					typeahead: ["item.name for item in searchOperationItems(\$viewValue)"],
 					typeaheadEditable: "true",
 					typeaheadOnSelect: "selectOperationsItem(\$item)",
@@ -206,7 +206,7 @@
             ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                     model: "searchItemStockTransactionName",
                     class: ["form-control autocomplete-search"],
-                    placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+                    placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
                     typeahead: ["item.name for item in searchTransactionItems(\$viewValue)"],
                     typeaheadEditable: "true",
                     typeaheadOnSelect: "selectTransactionsItem(\$item)",
