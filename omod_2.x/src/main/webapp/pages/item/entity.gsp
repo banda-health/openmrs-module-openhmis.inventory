@@ -33,6 +33,7 @@
             <li>
                 <select ng-model="department"
                         ng-options='department.name for department in departments track by department.uuid'>
+                    <option value="" selected="selected"></option>
                 </select>
             </li>
         </ul>

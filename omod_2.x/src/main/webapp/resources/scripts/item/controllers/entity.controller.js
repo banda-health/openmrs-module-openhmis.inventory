@@ -306,6 +306,7 @@
          */
         self.selectConcept = self.selectConcept || function(concept){
             $scope.concept = concept;
+            $scope.entity.concept = $scope.concept;    
         }
 
         /**
