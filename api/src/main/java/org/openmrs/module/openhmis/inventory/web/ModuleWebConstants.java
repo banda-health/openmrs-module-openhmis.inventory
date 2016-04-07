@@ -23,7 +23,7 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MODULE_ROOT = WebConstants.MODULE_BASE + ModuleConstants.MODULE_NAME + "/";
 	public static final String MODULE_RESOURCE_ROOT = WebConstants.MODULE_RESOURCE_BASE + ModuleConstants.MODULE_NAME + "/";
 
-	public static final String MODULE_COMMONS_RESOURCE_ROOT = "/openmrs/moduleResources/openhmis/commons/";
+	public static final String MODULE_COMMONS_RESOURCE_ROOT = "/moduleResources/openhmis/commons/";
 	public static final String MODULE_COMMON_TEMPLATE_URL = "/WEB-INF/view/module/openhmis/commons/template/common/";
 
 	public static final String ROLE_CREATION_ROOT = MODULE_ROOT + "roleCreation";
