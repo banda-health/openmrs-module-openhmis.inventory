@@ -20,19 +20,19 @@
   --%>
 <ul id="breadcrumbs">
     <li>
-        <a href="/openmrs/index.htm">
+        <a href="<% request.getContextPath();%>/index.htm">
             <i class="icon-home small"></i>
         </a>
     </li>
     <li>
         <i class="icon-chevron-right link"></i>
-        <a href="/openmrs/openhmis.inventory/inventoryLanding.page">
+        <a href="<% request.getContextPath();%>/openhmis.inventory/inventoryLanding.page">
             <openmrs:message code="openhmis.inventory.page"/>
         </a>
     </li>
     <li>
         <i class="icon-chevron-right link"></i>
-        <a href="/openmrs/openhmis.inventory/inventory/manageModule.page">
+        <a href="<% request.getContextPath();%>/openmrs/openhmis.inventory/inventory/manageModule.page">
             <openmrs:message code="openhmis.inventory.manage.module" />
         </a>
     </li>
