@@ -12,7 +12,6 @@
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  *
  */
-
 (function() {
     'use strict';
 
@@ -44,48 +43,67 @@
             || function(uuid) {
                 /* bind variables.. */
                 $scope.itemPrice = {};
+                $scope.tmpItemPrice = {};
                 $scope.itemCode = {};
+
                 $scope.uuid = uuid;
                 $scope.itemStock = '';
 
                 /* bind functions.. */
                 // auto-complete search concept function
-                $scope.searchConcepts = function(search){
-                   return ItemRestfulService.searchConcepts(module_name, search);
+                $scope.searchConcepts = function (search) {
+                    return ItemRestfulService.searchConcepts(module_name, search);
                 };
 
                 // retrieve stocks (if any) associated to the item
-                $scope.loadItemStock = function(){
+                $scope.loadItemStock = function () {
                     ItemRestfulService.loadItemStock($scope.uuid, self.onLoadItemStockSuccessful);
                 }
 
                 // open dialog box to add an item price
-                $scope.addItemPrice = function(){
+                $scope.addItemPrice = function () {
                     ItemFunctions.addItemPrice($scope);
                 }
 
                 // open dialog box to add an item code
-                $scope.addItemCode = function(){
+                $scope.addItemCode = function () {
                     ItemFunctions.addItemCode($scope);
                 }
 
                 // open dialog box to edit an item price
-                $scope.editItemPrice = function(itemPrice){
+                $scope.editItemPrice = function (itemPrice) {
                     ItemFunctions.editItemPrice(itemPrice, $scope);
                 }
 
                 // open dialog box to edit an item code
-                $scope.editItemCode = function(itemCode){
+                $scope.editItemCode = function (itemCode) {
                     ItemFunctions.editItemCode(itemCode, $scope);
                 }
 
                 // deletes an item price
-                $scope.removeItemPrice = function(itemPrice){
+                $scope.removeItemPrice = function (itemPrice) {
+                    var removeDefaultPrice = false;
+                    if ("id" in itemPrice && "id" in $scope.entity.defaultPrice && itemPrice.id === $scope.entity.defaultPrice.id) {
+                        removeDefaultPrice = true;
+                    }
+                    else if ("uuid" in itemPrice && "uuid" in $scope.entity.defaultPrice && itemPrice.uuid === $scope.entity.defaultPrice.uuid) {
+                        removeDefaultPrice = true;
+                    }
+
                     ItemFunctions.removeItemPrice(itemPrice, $scope.entity.prices);
+
+                    if ($scope.entity.prices.length === 0) {
+                        $scope.entity.defaultPrice = null;
+                    }
+
+                    //default price removed. set the first item on the list as the new default price.
+                    if ((removeDefaultPrice && $scope.entity.prices.length > 0) || $scope.entity.defaultPrice === null) {
+                        $scope.entity.defaultPrice = $scope.entity.prices[0];
+                    }
                 }
 
                 // deletes an item code
-                $scope.removeItemCode = function(itemCode){
+                $scope.removeItemCode = function (itemCode) {
                     ItemFunctions.removeItemCode(itemCode, $scope.entity.codes);
                 }
 
@@ -94,11 +112,22 @@
                 $scope.retireUnretire = self.retireUnretire;
                 $scope.delete = self.delete;
                 $scope.itemPriceNameFormatter = ItemFunctions.itemPriceNameFormatter;
+                $scope.formatItemPrice = ItemFunctions.formatItemPrice;
 
                 // call functions..
                 ItemRestfulService.loadDepartments(self.onLoadDepartmentsSuccessful);
                 ItemRestfulService.loadItemStock($scope.uuid, self.onLoadItemStockSuccessful);
                 ItemRestfulService.loadItemAttributeTypes(self.onLoadItemAttributeTypesSuccessful);
+
+                if ($scope.entity !== undefined) {
+                    if ("department" in $scope.entity) {
+                        $scope.department = $scope.entity.department;
+                    }
+
+                    if ("concept" in $scope.entity) {
+                        $scope.concept = $scope.entity.concept;
+                    }
+                }
             }
 
         /**
@@ -107,34 +136,53 @@
          */
         // @Override
         self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
-                if(!angular.isDefined($scope.entity.name) || $scope.entity.name === '' || $scope.entity.prices.length === 0){
+                $scope.submitted = false;
+                // validate name.
+                if(!angular.isDefined($scope.entity.name) || $scope.entity.name === ''){
                     $scope.submitted = true;
-                    return false;
+                    emr.errorAlert(emr.message("openhmis.inventory.general.name.required"));
                 }
 
-                // check if the default price has been set correctly.
-                var defaultPriceSet = false;
-                for(var i = 0; i < $scope.entity.prices.length; i++){
-                    var price = $scope.entity.prices[i];
-                    if("id" in price){
-                        if("id" in $scope.entity.defaultPrice && price.id === $scope.entity.defaultPrice.id){
-                            defaultPriceSet = true;
+                // validate prices.
+                if($scope.entity.prices.length === 0){
+                    $scope.submitted = true;
+                    emr.errorAlert(emr.message("openhmis.inventory.general.required.prices"));
+                }
+                else {
+                    var defaultPriceSet = false;
+                    for (var i = 0; i < $scope.entity.prices.length; i++) {
+                        var price = $scope.entity.prices[i];
+
+                        // checks for invalid prices.
+                        if(price['price'] === undefined){
+                            $scope.submitted = true;
+                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.required.priceValue"), [price['name']]);
+                            emr.errorAlert(errorMsg);
+                        }
+
+                        // check if the default price has been set correctly.
+                        if ("id" in price) {
+                            if ("id" in $scope.entity.defaultPrice && price.id === $scope.entity.defaultPrice.id) {
+                                defaultPriceSet = true;
+                            }
+                        }
+                        else {
+                            if ("uuid" in $scope.entity.defaultPrice && price.uuid === $scope.entity.defaultPrice.uuid) {
+                                defaultPriceSet = true;
+                            }
                         }
                     }
-                    else{
-                        if("uuid" in $scope.entity.defaultPrice && price.uuid === $scope.entity.defaultPrice.uuid){
-                            defaultPriceSet = true;
-                        }
+
+                    if(!defaultPriceSet ){
+                        $scope.submitted = true;
+                        emr.errorAlert(emr.message("openhmis.inventory.general.required.defaultPrice"));
                     }
                 }
 
-                if(!defaultPriceSet){
-                    $scope.submitted = true;
-                    return false;
-                }
-
+                // validate item attribute types.
                 if(angular.isDefined($scope.itemAttributeTypes)){
                     var requestItemAttributeTypes = [];
+                    var failItemAttributeTypeValidation = false;
                     for(var i = 0; i < $scope.itemAttributeTypes.length; i++){
                         var itemAttributeType = $scope.itemAttributeTypes[i];
                         var required = itemAttributeType.required;
@@ -143,16 +191,28 @@
                         var value = $scope.attributes[itemAttributeType.uuid] || "";
                         if(required && value === ""){
                             $scope.submitted = true;
-                            return false;
+                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.required.itemAttribute"), [itemAttributeType.name]);
+                            emr.errorAlert(errorMsg);
+                            failItemAttributeTypeValidation = true;
                         }
-
-                        requestItemAttributeType['attributeType'] = itemAttributeType.uuid;
-                        var value = $scope.attributes[itemAttributeType.uuid] || "";
-                        requestItemAttributeType['value'] = value;
-                        requestItemAttributeTypes.push(requestItemAttributeType);
+                        else{
+                            requestItemAttributeType['attributeType'] = itemAttributeType.uuid;
+                            var value = $scope.attributes[itemAttributeType.uuid] || "";
+                            requestItemAttributeType['value'] = value;
+                            requestItemAttributeTypes.push(requestItemAttributeType);
+                        }
                     }
 
-                    $scope.entity.attributes = requestItemAttributeTypes;
+                    if(failItemAttributeTypeValidation){
+                        $scope.submitted = true;
+                    }
+                    else{
+                        $scope.entity.attributes = requestItemAttributeTypes;
+                    }
+                }
+
+                if($scope.submitted){
+                    return false;
                 }
 
                 // an empty buying price field should resolve to null and not an empty string
@@ -175,16 +235,21 @@
                 if(!angular.isDefined($scope.entity.prices) || $scope.entity.prices === ''){
                     $scope.entity.prices = [];
                 }
+                /*Set the default price name to empty if the use didn't add it. This is to avoid it being saved as null
+                 which causes the empty parantheses when you view the items*/
+                if (!angular.isDefined($scope.entity.defaultPrice.name)) {
+                    $scope.entity.defaultPrice.name = '';
+                }
                 // retrieve and send the concept uuid.
-                var concept = $scope.entity.concept;
+                var concept = $scope.concept;
                 if(angular.isDefined(concept) && concept !== '' && concept !== undefined && concept !== null){
                     $scope.entity.concept = concept.uuid;
                 }
                 // remove temporarily assigned ids from the prices and codes array lists.
                 self.removeItemTemporaryIds();
 
-                // DO NOT send the department object. Instead retrieve and set the uuid.
-                var department = $scope.entity.department;
+                // bind department uuid
+                var department = $scope.department;
                 if(angular.isDefined(department)){
                     $scope.entity.department = department.uuid;
                 }
@@ -202,7 +267,7 @@
         self.onLoadDepartmentsSuccessful = self.onLoadDepartmentsSuccessful || function(data){
             if(angular.isDefined($scope.entity)){
                 $scope.departments = data.results;
-                $scope.entity.department = $scope.entity.department || $scope.departments[0];
+                $scope.department = $scope.department || $scope.departments[0];
             }
         }
 
@@ -240,7 +305,8 @@
          * @parameter concept
          */
         self.selectConcept = self.selectConcept || function(concept){
-            $scope.entity.concept = concept;
+            $scope.concept = concept;
+            $scope.entity.concept = $scope.concept;    
         }
 
         /**

@@ -31,8 +31,9 @@
                 <span>{{messageLabels['openhmis.inventory.department.name']}}</span>
             </li>
             <li>
-                <select ng-model="entity.department"
+                <select ng-model="department"
                         ng-options='department.name for department in departments track by department.uuid'>
+                    <option value="" selected="selected"></option>
                 </select>
             </li>
         </ul>
@@ -59,7 +60,7 @@
             <li>
                 ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                         typeahead: ["concept.display for concept in searchConcepts(\$viewValue)"],
-                        model: "entity.concept",
+                        model: "concept",
                         typeaheadOnSelect: "selectConcept(\$item)",
                         typeaheadEditable: "true",
                         class: ["form-control autocomplete-search"],
@@ -88,7 +89,7 @@
                 <span>{{messageLabels['openhmis.inventory.item.buyingPrice']}}</span>
             </li>
             <li>
-                <input type="number" ng-model="entity.buyingPrice" class="minimized"/>
+                <input type="number" ng-model="entity.buyingPrice" class="minimized" min="0"/>
             </li>
         </ul>
         <ul class="table-layout">
@@ -126,7 +127,7 @@
                                 <a href="" ng-click="removeItemPrice(itemPrice)">
                                     <i class="icon-remove"></i>
                                 </a>
-                                <a href="" ng-click="editItemPrice(itemPrice)">{{itemPrice.price | number:2}} <span ng-hide="itemPrice.name === ''">({{itemPrice.name}})</span></a>
+                                <a href="" ng-click="editItemPrice(itemPrice)">{{formatItemPrice(itemPrice)}}</a>
                             </li>
                         </ul>
                         <div class="bbf-actions">
@@ -142,7 +143,7 @@
             </li>
             <li>
                 <select required ng-model="entity.defaultPrice"
-                        ng-options='((itemPrice.price | number:2) + " (" + itemPrice.name + ")" ) for itemPrice in entity.prices track by (itemPrice.uuid || itemPrice.id)'>
+                        ng-options="formatItemPrice(itemPrice) for itemPrice in entity.prices track by (itemPrice.uuid || itemPrice.id)">
                 </select>
             </li>
         </ul>
@@ -184,9 +185,6 @@
             <input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" />
         </span>
     </fieldset>
-
-    ${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [retireUnretireCall : "retireUnretire()"]) }
-
     <div id="item-price-dialog" class="dialog" style="display:none;">
         <div class="dialog-header">
             <span ng-show="addItemPriceTitle !=''">
@@ -206,7 +204,7 @@
             </ul>
             <ul class="table-layout dialog-table-layout">
                 <li class="required">{{messageLabels['openhmis.inventory.item.price.name']}}</li>
-                <li><input type="number" ng-model="itemPrice.price" required /></li>
+                <li><input type="number" ng-model="itemPrice.price" min="0" required /></li>
             </ul>
             <br />
             <div class="ngdialog-buttons detail-section-border-top">
@@ -238,8 +236,9 @@
             <div class="ngdialog-buttons detail-section-border-top">
                 <br />
                 <input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="closeThisDialog('Cancel')" />
-                <input type="button" class="confirm right" value="Confirm"  ng-click="confirm('OK')" />
+                <input type="button" class="confirm right" value="Confirm"  ng-disabled="itemCode.code == undefined" ng-click="confirm('OK')" />
             </div>
         </div>
     </div>
 </form>
+${ ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [retireUnretireCall : "retireUnretire()"]) }

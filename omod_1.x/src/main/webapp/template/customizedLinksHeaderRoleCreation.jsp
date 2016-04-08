@@ -20,24 +20,24 @@
   --%>
 <ul id="breadcrumbs">
     <li>
-        <a href="/openmrs/index.htm">
-            <i class="icon-home small"></i>
+        <a href="${pageContext.request.contextPath}/index.htm">
+            <i class="glyphicon glyphicon-home small"></i>
         </a>
     </li>
     <li>
-        <i class="icon-chevron-right link"></i>
-        <a href="/openmrs/openhmis.inventory/inventoryLanding.page">
+        <i class="glyphicon glyphicon-menu-right link"></i>
+        <a href="${pageContext.request.contextPath}/openhmis.inventory/inventoryLanding.page">
             <openmrs:message code="openhmis.inventory.page"/>
         </a>
     </li>
     <li>
-        <i class="icon-chevron-right link"></i>
-        <a href="/openmrs/openhmis.inventory/inventory/manageModule.page">
+        <i class="glyphicon glyphicon-menu-right link"></i>
+        <a href="${pageContext.request.contextPath}/openhmis.inventory/inventory/manageModule.page">
             <openmrs:message code="openhmis.inventory.manage.module" />
         </a>
     </li>
     <li>
-        <i class="icon-chevron-right link"></i>
+        <i class="glyphicon glyphicon-menu-right link"></i>
             <openmrs:message code="openhmis.inventory.admin.role" />
     </li>
 </ul>

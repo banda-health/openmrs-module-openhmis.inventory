@@ -83,7 +83,19 @@
 		 * @param $scope
 		 */
 		function editAttributeType(attributeType, $scope) {
-			$scope.attributeType = attributeType;
+			var tmpAttributeType = attributeType;
+
+			var editAttributeType = {
+				attributeOrder : attributeType.attributeOrder,
+				foreignKey : attributeType.foreignKey,
+				format : attributeType.format,
+				name : attributeType.name,
+				regExp : attributeType.regExp,
+				required : attributeType.required,
+			}
+
+			$scope.attributeType = editAttributeType;
+
 			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.edit']
 				+ ' '
 				+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
@@ -93,7 +105,15 @@
 				selector: '#attribute-types-dialog',
 				actions: {
 					confirm: function () {
-						updateAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
+						tmpAttributeType.attributeOrder = $scope.attributeType.attributeOrder;
+						tmpAttributeType.foreignKey = $scope.attributeType.foreignKey;
+						tmpAttributeType.format = $scope.attributeType.format;
+						tmpAttributeType.name = $scope.attributeType.name;
+						tmpAttributeType.regExp = $scope.attributeType.regExp;
+						tmpAttributeType.required = $scope.attributeType.required;
+						$scope.$apply();
+
+						updateAttributeOrder($scope.entity.attributeTypes, tmpAttributeType);
 						$scope.attributeType = {};
 						dialog.close();
 					},

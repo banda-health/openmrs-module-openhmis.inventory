@@ -120,9 +120,20 @@ table.manage-stockrooms-transactions-table th:last-child, td:last-child {
 
 #item-details-dialog{
     max-width:none;
-    width: 500px;
+    width: 600px;
 }
 
+#item-details th:first-child {
+    width: 60%;
+}
+
+#item-details th:nth-child(2) {
+    width: 20%;
+}
+
+#item-details th:nth-child(3) {
+    width: 20%;
+}
 
 input.non-editable {
     background-color: lightgrey

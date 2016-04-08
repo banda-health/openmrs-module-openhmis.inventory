@@ -72,8 +72,8 @@
          * @param q
          * @param onSearchStockRoomsSuccessful
          */
-        function searchStockrooms(rest_entity_name, location_uuid, currentPage, limit, q, onSearchStockRoomsSuccessful){
-            var requestParams = PaginationService.paginateParams(currentPage, limit, false, q);
+        function searchStockrooms(rest_entity_name, location_uuid, currentPage, limit, includeRetired, q, onSearchStockRoomsSuccessful){
+            var requestParams = PaginationService.paginateParams(currentPage, limit, includeRetired, q);
             requestParams['rest_entity_name'] = rest_entity_name;
             if(angular.isDefined(location_uuid) && location_uuid !== undefined && location_uuid !== ''){
                 requestParams['location_uuid'] = location_uuid;

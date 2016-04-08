@@ -21,46 +21,40 @@
 	jQuery(".tabs").tabs();
 
 </script>
+	<form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
+		${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 
-${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
-
-<input type="hidden" ng-model="entity.uuid"/>
-
-<div class="detail-section-border-bottom">
-	<form class="entity-form" ng-class="{'submitted': submitted}">
-		<ul class="table-layout">
-			<li class="required">
-				<span>{{messageLabels['general.name']}}</span>
-			</li>
-			<li>
-				<input type="text" ng-model="entity.name" style="min-width: 50%;"
-				       placeholder="{{messageLabels['general.name']}}" required/>
-			</li>
-		</ul>
-		<ul class="table-layout">
-			<li class="not-required">
-				<span>{{messageLabels['openhmis.inventory.location.name']}}</span>
-			</li>
-			<li>
-				<select ng-model="entity.location"
-				        ng-options='location.display for location in locations track by location.uuid'>
-				</select>
-			</li>
-		</ul>
-		<br/>
-
-		<div class="detail-section-border-top" ng-hide="entity.uuid !== ''">
+		<input type="hidden" ng-model="entity.uuid" />
+		<fieldset class="format">
+			<ul class="table-layout">
+				<li class="required">
+					<span>{{messageLabels['general.name']}}</span>
+				</li>
+				<li>
+					<input class="form-control" type="text" ng-model="entity.name" style="min-width: 50%;"
+					       placeholder="{{messageLabels['general.name']}}" required/>
+				</li>
+			</ul>
+			<ul class="table-layout">
+				<li class="not-required">
+					<span>{{messageLabels['openhmis.inventory.location.name']}}</span>
+				</li>
+				<li>
+					<select class="form-control" ng-model="entity.location"
+					        ng-options='location.display for location in locations track by location.uuid'>
+						<option value="" selected="selected"></option>
+					</select>
+				</li>
+			</ul>
 			<br/>
-
-			<p>
-				<span><input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
-				</span>
-				<span><input type="button" class="confirm right" value="{{messageLabels['general.save']}}"
-				             ng-click="saveOrUpdate()"/></span>
-			</p>
-		</div>
+		</fieldset>
+		<fieldset class="format" ng-hide="entity.uuid !== ''">
+			<span>
+				<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()" />
+				<input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()" />
+			</span>
+		</fieldset>
 	</form>
-</div>
 <br/><br/>
 
 <div class="tabs" ng-hide="entity.uuid === ''">
@@ -128,7 +122,7 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 				</span>
 			</div>
 			<div class="dialog-content form">
-				<table>
+				<table id="item-details">
 					<thead>
 					<tr>
 						<th>{{messageLabels['openhmis.inventory.stockroom.batchOperation']}}</th>
@@ -145,7 +139,7 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 				<br/>
 
 				<div class="ngdialog-buttons">
-					<input style="float:right;" type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
+					<input style="float:right;" type="button" class="cancel" value="{{messageLabels['general.close']}}"
 					       ng-click="closeThisDialog('Cancel')"/>
 				</div>
 			</div>
@@ -159,7 +153,7 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [
 					model: "searchItemStockOperationName",
 					class: ["form-control autocomplete-search"],
-					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+					placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
 					typeahead: ["item.name for item in searchOperationItems(\$viewValue)"],
 					typeaheadEditable: "true",
 					typeaheadOnSelect: "selectOperationsItem(\$item)",
@@ -212,7 +206,7 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
             ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                     model: "searchItemStockTransactionName",
                     class: ["form-control autocomplete-search"],
-                    placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")],
+                    placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
                     typeahead: ["item.name for item in searchTransactionItems(\$viewValue)"],
                     typeaheadEditable: "true",
                     typeaheadOnSelect: "selectTransactionsItem(\$item)",
@@ -278,5 +272,4 @@ ${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 		<br/><br/>
 	</form>
 </span>
-
 ${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment")}

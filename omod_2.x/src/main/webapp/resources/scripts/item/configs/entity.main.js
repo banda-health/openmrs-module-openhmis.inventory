@@ -26,6 +26,7 @@ emr.loadMessages(["openhmis.inventory.general.new",
 		"openhmis.inventory.general.unretired.success",
 		"openhmis.inventory.general.confirm.delete",
 		"openhmis.inventory.general.deleted.success",
+
 		"openhmis.inventory.general.name.required",
 		"openhmis.inventory.general.retireReason.required",
 		"openhmis.inventory.general.unretire",
@@ -78,4 +79,9 @@ emr.loadMessages(["openhmis.inventory.general.new",
 		"openhmis.inventory.stockroom.name", "openhmis.inventory.general.add",
 		"openhmis.inventory.general.enterSearchPhrase",
 		"openhmis.inventory.general.edit",
-		"openhmis.inventory.general.postSearchMessage" ]);
+		"openhmis.inventory.general.postSearchMessage",
+		"openhmis.inventory.general.required.defaultPrice",
+		"openhmis.inventory.general.required.itemAttribute",
+		"openhmis.inventory.general.required.priceValue",
+		"openhmis.inventory.general.required.prices"
+]);

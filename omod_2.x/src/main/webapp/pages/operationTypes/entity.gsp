@@ -165,7 +165,7 @@
 										<span>{{messageLabels['PersonAttributeType.foreignKey']}}</span>
 									</li>
 									<li>
-										<input type="text" ng-model="attributeType.foreignKey"/>
+										<input type="number" ng-model="attributeType.foreignKey"/>
 									</li>
 								</ul>
 								<ul class="table-layout dialog-table-layout">
@@ -235,7 +235,5 @@
 			</span>
 		</p>
 	</fieldset>
-
-	${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"])}
-
 </form>
+${ui.includeFragment("openhmis.commons", "retireUnretireDeleteFragment", [showDeleteSection: "false"])}
