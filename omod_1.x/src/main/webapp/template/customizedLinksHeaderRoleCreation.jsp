@@ -38,6 +38,6 @@
     </li>
     <li>
         <i class="glyphicon glyphicon-menu-right link"></i>
-            <openmrs:message code="openhmis.inventory.admin.settings" />
+            <openmrs:message code="openhmis.inventory.admin.role" />
     </li>
 </ul>
