@@ -56,7 +56,7 @@
 
 		self.searchItemsByName = self.searchItemsByName || function(currentPage){
 				// reset current page when the search field is cleared
-				if($scope.searhField === undefined || $scope.searchField === ''){
+				if($scope.searchField === undefined || $scope.searchField === ''){
 					currentPage = 1;
 					$scope.currentPage = currentPage;
 				}
