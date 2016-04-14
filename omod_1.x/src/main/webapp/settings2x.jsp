@@ -177,7 +177,7 @@
 			</tr>
 		</table>
 		<br/>
-		<p><input class="submitButton confirm right" value="Save" type="submit" value="<openmrs:message code="Role.save"/>">
+		<p><input class="submitButton confirm right" type="submit" value="<openmrs:message code="openhmis.inventory.settings.page.settings.save"/>">
 		</p>
 	</form:form>
 </div>
