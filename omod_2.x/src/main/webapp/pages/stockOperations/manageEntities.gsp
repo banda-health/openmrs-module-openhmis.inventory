@@ -62,11 +62,8 @@
 										typeaheadEditable: "true",
 										class: ["form-control"],
 										placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
+										ngEnterEvent: "searchStockOperation()"
 								])}
-							</td>
-							<td>
-								<input type="button" class="confirm right" value="Search"
-								       style="width:100px;margin-top:20px;" ng-click="searchStockOperation()"/>
 							</td>
 						</tr>
 					</table></fieldset>
