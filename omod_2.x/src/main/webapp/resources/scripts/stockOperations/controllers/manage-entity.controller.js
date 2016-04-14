@@ -64,7 +64,7 @@
                     stockroom_uuid = $scope.stockroom.uuid;
                 }
 
-                if($scope.operationItem != null){
+                if($scope.searchOperationItem !== '' && $scope.operationItem != null){
                     operationItem_uuid = $scope.operationItem.uuid;
                 }
 

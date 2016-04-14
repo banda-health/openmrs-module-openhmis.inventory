@@ -152,16 +152,13 @@
 			<!-- search item stock operations -->
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [
 					model: "searchItemStockOperationName",
-					class: ["form-control autocomplete-search"],
+					class: ["field-display ui-autocomplete-input form-control searchinput"],
 					placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
 					typeahead: ["item.name for item in searchOperationItems(\$viewValue)"],
 					typeaheadEditable: "true",
 					typeaheadOnSelect: "selectOperationsItem(\$item)",
+					ngEnterEvent: "searchItemStockOperation(entity.uuid,itemStockOperationCurrentPage)"
 			])}
-			<span>
-				<input type="button" class="confirm right" value="Search"
-				       ng-click="searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)" />
-			</span>
 		</div>
 		<br />
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
@@ -205,16 +202,13 @@
             <!-- search item stock transactions -->
             ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                     model: "searchItemStockTransactionName",
-                    class: ["form-control autocomplete-search"],
+					class: ["field-display ui-autocomplete-input form-control searchinput"],
                     placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
                     typeahead: ["item.name for item in searchTransactionItems(\$viewValue)"],
                     typeaheadEditable: "true",
                     typeaheadOnSelect: "selectTransactionsItem(\$item)",
+					ngEnterEvent: "searchItemStockTransaction(entity.uuid,itemStockTransactionCurrentPage)"
             ])}
-            <span>
-                <input type="button" class="confirm right" value="Search"
-                       ng-click="searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)" />
-            </span>
         </div>
         <br />
 	    <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-transactions-table">
