@@ -27,13 +27,12 @@
             </li>
         </ul>
         <ul class="table-layout">
-            <li class="not-required">
+            <li class="required">
                 <span>{{messageLabels['openhmis.inventory.department.name']}}</span>
             </li>
             <li>
-                <select ng-model="department"
+                <select ng-model="department" required
                         ng-options='department.name for department in departments track by department.uuid'>
-                    <option value="" selected="selected"></option>
                 </select>
             </li>
         </ul>
