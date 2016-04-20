@@ -440,6 +440,12 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		boolean isAdjustment = operation.isAdjustmentType();
 
 		for (ReservedTransaction tx : transactions) {
+			if (ModuleSettings.isNegativeStockRestricted()) {
+				// Negative item stock is restricted
+				if (tx.getQuantity() > 0) {
+					throw new APIException("Resource stockroom does not have sufficient stock.");
+				}
+			}
 			if (hasSource && (!isAdjustment || (isAdjustment && tx.getQuantity() < 0))) {
 				// Clone the item stock and find the detail record
 				ItemStock stock = findAndCloneStock(stockMap, operation.getSource(), tx.getItem());
@@ -632,14 +638,6 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 		if (detail == null) {
 			// No existing stock could be found to fulfill the request
-
-			if (ModuleSettings.isNegativeStockRestricted()) {
-				// Negative item stock is restricted
-				if (tx.getQuantity() > 0) {
-					throw new APIException("Resource stockroom does not have sufficient stock.");
-				}
-			}
-
 			tx.setSourceCalculatedExpiration(true);
 			tx.setSourceCalculatedBatch(true);
 			tx.setExpiration(null);

@@ -1127,7 +1127,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 
 		//Ensure that global property is properly set and readable
 		Assert.assertTrue(isNegativeStockRestricted());
-
+		int exceptionThrownCount = 0;
 		try {
 
 			// Set up the reservation transactions (this is normally done in submitOperation)
@@ -1143,11 +1143,93 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			service.calculateReservations(op);
 
 		} catch (Exception ex) {
+			exceptionThrownCount += 1;
 			//Catching the expected exception
 			Assert.assertNotNull(ex);
 			//Ensuring that the exception is the one we want
 			Assert.assertTrue(ex.getMessage().contains("Resource stockroom does not have sufficient stock."));
 		}
+
+		//Ensuring that exception was thrown
+		Assert.assertEquals(1, exceptionThrownCount);
+
+		// Check the generated pending transactions
+		Set<ReservedTransaction> transactions = op.getReserved();
+		Assert.assertNotNull(transactions);
+		Assert.assertEquals(1, transactions.size());
+
+		//Disable Global Property just in case
+		adminService.saveGlobalProperty(new GlobalProperty(RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD,
+		        "false"));
+		//Ensure that global property is properly disabled
+		Assert.assertFalse(isNegativeStockRestricted());
+	}
+
+	@Test
+	public void calculateReservations_shouldThrowErrorWhenGlobalPropertyEnabledAndNetSourceStockWillBeNegativeAndRemovingViaAdjustment()
+	        throws Exception {
+		//Enable Global Property
+		adminService.saveGlobalProperty(new GlobalProperty(RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD,
+		        "true"));
+
+		// Create a new expirable item
+		Item item = itemTest.createEntity(true);
+		item.setHasExpiration(true);
+		itemDataService.save(item);
+		Context.flushSession();
+
+		// Create a negative item stock (and detail) for the item in a stockroom
+		Stockroom sr = stockroomDataService.getById(0);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setStockroom(sr);
+		detail.setItem(item);
+		detail.setBatchOperation(null);
+		detail.setCalculatedBatch(true);
+		detail.setCalculatedExpiration(true);
+		detail.setExpiration(null);
+		detail.setQuantity(10);
+
+		stockroomDataService.save(sr);
+		Context.flushSession();
+
+		// Create a new operation to create negative stock in the stockroom
+		StockOperation op = operationTest.createEntity(true);
+		op.getReserved().clear();
+		op.setStatus(StockOperationStatus.NEW);
+		op.setInstanceType(WellKnownOperationTypes.getAdjustment());
+		op.setSource(sr);
+		op.setOperationDate(new Date());
+		op.setDepartment(item.getDepartment());
+		op.addItem(item, 55);
+
+		//Ensure that global property is properly set and readable
+		Assert.assertTrue(isNegativeStockRestricted());
+		int exceptionThrownCount = 0;
+		try {
+
+			// Set up the reservation transactions (this is normally done in submitOperation)
+			for (StockOperationItem itemStock : op.getItems()) {
+				ReservedTransaction tx = new ReservedTransaction(itemStock);
+				tx.setCreator(Context.getAuthenticatedUser());
+				tx.setDateCreated(new Date());
+
+				op.addReserved(tx);
+			}
+
+			// Now calculate the actual reservations
+			service.calculateReservations(op);
+
+		} catch (Exception ex) {
+			exceptionThrownCount += 1;
+			//Catching the expected exception
+			Assert.assertNotNull(ex);
+			//Ensuring that the exception is the one we want
+			Assert.assertTrue(ex.getMessage().contains("Resource stockroom does not have sufficient stock."));
+		}
+
+		//Ensuring that exception was thrown
+		Assert.assertEquals(1, exceptionThrownCount);
 
 		// Check the generated pending transactions
 		Set<ReservedTransaction> transactions = op.getReserved();
