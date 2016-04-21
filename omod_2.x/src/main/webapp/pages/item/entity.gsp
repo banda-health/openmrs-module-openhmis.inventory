@@ -4,7 +4,7 @@
         { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
         { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
         { label: "${ ui.message("openhmis.inventory.admin.items")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/item/entities.page#/'},
-        { label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.item.name")}"}
+        { label: "${ ui.message("openhmis.commons.general.edit")} ${ui.message("openhmis.inventory.item.name")}"}
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
@@ -108,7 +108,7 @@
                             </li>
                         </ul>
                         <div class="bbf-actions">
-                            <button type="button" data-action="add" ng-click="addItemCode()">{{messageLabels['openhmis.inventory.general.add']}}</button>
+                            <button type="button" data-action="add" ng-click="addItemCode()">{{messageLabels['openhmis.commons.general.add']}}</button>
                         </div>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                             </li>
                         </ul>
                         <div class="bbf-actions">
-                            <button type="button" data-action="add" ng-click="addItemPrice()">{{messageLabels['openhmis.inventory.general.add']}}</button>
+                            <button type="button" data-action="add" ng-click="addItemPrice()">{{messageLabels['openhmis.commons.general.add']}}</button>
                         </div>
                     </div>
                 </div>
