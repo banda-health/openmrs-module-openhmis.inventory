@@ -41,7 +41,7 @@
 		 */
 		function addAttributeType($scope) {
 			$scope.editAttributeTypeTitle = '';
-			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.add']
+			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.commons.general.add']
 				+ ' '
 				+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
 			$scope.saveButton = $scope.messageLabels['general.save'];
@@ -96,7 +96,7 @@
 
 			$scope.attributeType = editAttributeType;
 
-			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.edit']
+			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.commons.general.edit']
 				+ ' '
 				+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
 			$scope.editButton = $scope.messageLabels['general.update'];
@@ -191,16 +191,16 @@
 
 		function addMessageLabels() {
 			var messages = {};
-			messages['openhmis.inventory.general.add'] = emr
-				.message('openhmis.inventory.general.add');
+			messages['openhmis.commons.general.add'] = emr
+				.message('openhmis.commons.general.add');
 			messages['openhmis.inventory.attribute.type.name'] = emr
 				.message('openhmis.inventory.attribute.type.name');
-			messages['openhmis.inventory.general.edit'] = emr
-				.message('openhmis.inventory.general.edit');
-			messages['openhmis.inventory.general.saveChanges'] = emr
-				.message("openhmis.inventory.general.saveChanges");
-			messages['openhmis.inventory.general.confirm'] = emr
-				.message("openhmis.inventory.general.confirm");
+			messages['openhmis.commons.general.edit'] = emr
+				.message('openhmis.commons.general.edit');
+			messages['openhmis.commons.general.saveChanges'] = emr
+				.message("openhmis.commons.general.saveChanges");
+			messages['openhmis.commons.general.confirm'] = emr
+				.message("openhmis.commons.general.confirm");
 			messages['openhmis.inventory.operations.type.sourceLabel'] = emr
 				.message("openhmis.inventory.operations.type.sourceLabel");
 			messages['openhmis.inventory.operations.type.destinationLabel'] = emr
