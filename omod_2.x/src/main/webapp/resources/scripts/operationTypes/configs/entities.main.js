@@ -56,5 +56,5 @@ emr.loadMessages([
 	"openhmis.inventory.attribute.type.namePlural",
 	"PersonAttributeType.format", "PersonAttributeType.foreignKey",
 	"PatientIdentifierType.format", "FormField.required",
-	"Field.attributeName", "Obs.order",
+	"Field.attributeName", "Obs.order","openhmis.inventory.general.attributeTypeInUse.error",
 ]);
