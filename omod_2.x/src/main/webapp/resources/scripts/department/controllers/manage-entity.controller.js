@@ -38,7 +38,7 @@
 
         // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
-                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
+                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.commons.general.postSearchMessage"),
                     [self.entity_name]);
             }
 

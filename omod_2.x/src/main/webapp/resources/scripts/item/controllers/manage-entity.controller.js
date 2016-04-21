@@ -45,9 +45,6 @@
 				$scope.searchItemsByName = self.searchItemsByName;
 				$scope.searchField = CookiesService.get('searchField') || $scope.searchField || '';
 				$scope.department = CookiesService.get('department') || {};
-
-				$scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
-					[self.entity_name]);
 			}
 
 		self.loadDepartments = self.loadDepartments || function(){

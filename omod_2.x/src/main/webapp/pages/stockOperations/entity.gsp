@@ -85,7 +85,7 @@
 	</ul>
 	<ul class="table-layout" ng-show="stockOperation.status === 'CANCELLED'">
 		<li>
-			<span>{{messageLabels['openhmis.inventory.general.cancelReason']}}</span>
+			<span>{{messageLabels['openhmis.commons.general.cancelReason']}}</span>
 		</li>
 		<li>
 			<span>{{stockOperation.cancelReason || 'null'}}</span>
@@ -109,7 +109,7 @@
 	</ul>
 	<ul class="table-layout" ng-hide="stockOperation.patient === null">
 		<li>
-			<span>${ui.message('openhmis.inventory.general.patient')}</span>
+			<span>${ui.message('openhmis.commons.general.patient')}</span>
 		</li>
 		<li>
 			<span>{{stockOperation.patient.display}}</span>
@@ -161,8 +161,8 @@
 			<tr>
 				<th>{{messageLabels['openhmis.inventory.item.name']}}</th>
 				<th>{{messageLabels['openhmis.inventory.item.quantity']}}</th>
-				<th>{{messageLabels['openhmis.inventory.general.batchOperation']}}</th>
-				<th>{{messageLabels['openhmis.inventory.general.expiration']}}</th>
+				<th>{{messageLabels['openhmis.commons.general.batchOperation']}}</th>
+				<th>{{messageLabels['openhmis.commons.general.expiration']}}</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -171,8 +171,8 @@
 			    total-items="stockOperationItemTotalNumberOfResults" current-page="stockOperationItemCurrentPage">
 				<td>{{item.item.name}}</td>
 				<td>{{item.quantity}}</td>
-				<td>{{item.batchOperation.operationNumber || "(" + messageLabels['openhmis.inventory.general.auto'] + ")"}}</td>
-				<td>{{(item.expiration | date: 'dd-MM-yyyy') || "(" + messageLabels['openhmis.inventory.general.auto'] + ")"}}</td>
+				<td>{{item.batchOperation.operationNumber || "(" + messageLabels['openhmis.commons.general.auto'] + ")"}}</td>
+				<td>{{(item.expiration | date: 'dd-MM-yyyy') || "(" + messageLabels['openhmis.commons.general.auto'] + ")"}}</td>
 			</tr>
 			</tbody>
 		</table>
@@ -199,8 +199,8 @@
 			<tr>
 				<th>{{messageLabels['openhmis.inventory.stockroom.name']}}</th>
 				<th>{{messageLabels['openhmis.inventory.item.name']}}</th>
-				<th>{{messageLabels['openhmis.inventory.general.batchOperation']}}</th>
-				<th>{{messageLabels['openhmis.inventory.general.expiration']}}</th>
+				<th>{{messageLabels['openhmis.commons.general.batchOperation']}}</th>
+				<th>{{messageLabels['openhmis.commons.general.expiration']}}</th>
 				<th>{{messageLabels['openhmis.inventory.item.quantity']}}</th>
 			</tr>
 			</thead>
@@ -241,7 +241,7 @@
 
 	<p>
 		<span>
-			<input type="button" class="cancel" value="{{messageLabels['openhmis.inventory.general.close']}}" ng-click="cancel()"/>
+			<input type="button" class="cancel" value="{{messageLabels['openhmis.commons.general.close']}}" ng-click="cancel()"/>
 		</span>
 	</p>
 </div>
@@ -249,7 +249,7 @@
 	<div class="dialog-header">
 		<span>
 			<i class="icon-edit" ></i>
-			<h3>${ui.message('openhmis.inventory.general.actions')}</h3>
+			<h3>${ui.message('openhmis.commons.general.actions')}</h3>
 		</span>
 		<i class="icon-remove cancel show-cursor"  style="float:right;" ng-click="closeThisDialog()"></i>
 	</div>
@@ -257,14 +257,14 @@
 		<div ng-show="stockOperation.status === 'COMPLETED'">
 			<button
 					ng-click="invokeOperation('ROLLBACK', stockOperation.uuid)">
-				{{messageLabels['openhmis.inventory.general.rollbackOperation']}}
+				{{messageLabels['openhmis.commons.general.rollbackOperation']}}
 			</button>
 			<br />
 		</div>
 		<div ng-show="stockOperation.status === 'PENDING'">
 			<div>
 				<button
-					ng-click="invokeOperation('COMPLETED', stockOperation.uuid)">${ui.message('openhmis.inventory.general.completeOperation')}
+					ng-click="invokeOperation('COMPLETED', stockOperation.uuid)">${ui.message('openhmis.commons.general.completeOperation')}
 				</button>
 			</div>
 			<br />
@@ -272,7 +272,7 @@
 				<br />
 				<button
 						ng-click="invokeOperation('CANCELLED', stockOperation.uuid)">
-					${ui.message('openhmis.inventory.general.cancelOperation')}
+					${ui.message('openhmis.commons.general.cancelOperation')}
 				</button>
 			</div>
 
@@ -281,7 +281,7 @@
 
 		<div class="detail-section-border-top">
 			<br />
-			<input type="button" class="cancel" value="{{messageLabels['openhmis.inventory.general.close']}}" ng-click="closeThisDialog('Cancel')" />
+			<input type="button" class="cancel" value="{{messageLabels['openhmis.commons.general.close']}}" ng-click="closeThisDialog('Cancel')" />
 		</div>
 	</div>
 </div>

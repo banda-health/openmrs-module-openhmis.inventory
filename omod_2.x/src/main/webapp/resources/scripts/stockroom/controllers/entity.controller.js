@@ -67,6 +67,7 @@
                 $scope.searchTransactionItems = self.searchTransactionItems;
                 $scope.selectOperationsItem = self.selectOperationsItem;
                 $scope.selectTransactionsItem = self.selectTransactionsItem;
+                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.commons.general.postSearchMessage"), ['Item']);
 
                 // load list of locations
                 StockroomRestfulService.loadLocations(module_name ,self.onLoadLocationsSuccessful);
@@ -174,6 +175,7 @@
         self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
                 if(!angular.isDefined($scope.entity.name) || $scope.entity.name === ''){
                     $scope.submitted = true;
+                    emr.errorAlert(emr.message("openhmis.commons.general.name.required"));
                     return false;
                 }
                 return true;
