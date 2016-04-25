@@ -66,7 +66,17 @@
 
 				$scope.delete = self.delete;
 			}
-
+		
+		// @Override
+		self.onChangeEntityError = self.onChangeEntityError || function (error) {
+				if(error.indexOf("inv_stock_operation_attribute_type") != -1){
+					emr.errorAlert("openhmis.inventory.general.attributeTypeInUse.error");
+				}
+				else{
+					emr.errorAlert(error);
+				}
+			}
+		
 		// call-back functions.
 		self.onLoadUsersSuccessful = self.onLoadUsersSuccessful || function (data) {
 				$scope.users = data.results;
