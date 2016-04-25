@@ -11,9 +11,9 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.stockrooms")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/entities.page#/'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/entities.page##/'
 		},
-		{label: "${ ui.message("openhmis.commons.general.edit")} ${ui.message("openhmis.inventory.stockroom.name")}"}
+		{label: "${ui.message("openhmis.inventory.stockroom.name")}"}
 	];
 
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
