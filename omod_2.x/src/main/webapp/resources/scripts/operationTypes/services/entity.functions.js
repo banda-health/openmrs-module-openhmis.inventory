@@ -156,6 +156,18 @@
 				}
 			}
 		}
+		
+		function updateAttributeTypesOrder(attributeTypes){
+			for(var i = 0; i < attributeTypes.length; i++){
+				var attributeType = attributeTypes[i];
+				if(attributeType != null) {
+					var index = attributeTypes.indexOf(attributeType);
+					if (attributeType.attributeOrder != index) {
+						attributeType.attributeOrder = index;
+					}
+				}
+			}
+		}
 
 		/**
 		 * Removes an attribute Type from the list
@@ -164,6 +176,7 @@
 		 */
 		function removeAttributeType(attributeType, attributeTypes) {
 			removeFromList(attributeType, attributeTypes);
+			updateAttributeTypesOrder(attributeTypes);
 		}
 
 		/**
