@@ -11,7 +11,7 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.operations")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockOperations/entities.page#/'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockOperations/entities.page##/'
 		},
 		{label: "${ui.message("openhmis.inventory.stock.operation.name")}"}
 	];
