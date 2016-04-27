@@ -60,7 +60,7 @@
 								insertOperationTypesTemporaryId(
 									$scope.entity.attributeTypes,
 									$scope.attributeType);
-								updateAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
+								updateAttributeTypesOrder($scope.entity.attributeTypes);
 								$scope.attributeType = {};
 								console.log($scope.attributeTypes);
 							}
@@ -113,7 +113,7 @@
 						tmpAttributeType.required = $scope.attributeType.required;
 						$scope.$apply();
 
-						updateAttributeOrder($scope.entity.attributeTypes, tmpAttributeType);
+						updateAttributeTypesOrder($scope.entity.attributeTypes);
 						$scope.attributeType = {};
 						dialog.close();
 					},
@@ -148,22 +148,12 @@
 		/*We check the index of the attribute type in the attributeTypes array. The Attribute Type
 		 * attributeOrder is always the same as index of the attribute type then compare an assign the
 		 * attributeOrder */
-		function updateAttributeOrder(attributeTypes, attributeType) {
-			if (angular.isDefined(attributeType)) {
-				var index = attributeTypes.indexOf(attributeType);
-				if (attributeType.attributeOrder != index) {
-					attributeType.attributeOrder = index;
-				}
-			}
-		}
-		
 		function updateAttributeTypesOrder(attributeTypes){
 			for(var i = 0; i < attributeTypes.length; i++){
 				var attributeType = attributeTypes[i];
 				if(attributeType != null) {
-					var index = attributeTypes.indexOf(attributeType);
-					if (attributeType.attributeOrder != index) {
-						attributeType.attributeOrder = index;
+					if (attributeType.attributeOrder != i) {
+						attributeType.attributeOrder = i;
 					}
 				}
 			}
