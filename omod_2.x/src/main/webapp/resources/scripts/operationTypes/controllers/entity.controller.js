@@ -118,6 +118,11 @@
 				}
 				// remove temporarily assigned ids from the attribute type array lists.
 				self.removeOperationTypesTemporaryIds();
+				
+				// validate attribute types.
+				if($scope.entity.attributeTypes === ''){
+					$scope.entity.attributeTypes = null;
+				}
 				return true;
 			}
 
