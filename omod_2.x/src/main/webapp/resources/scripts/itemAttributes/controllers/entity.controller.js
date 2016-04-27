@@ -60,7 +60,6 @@
 				if (!angular.isDefined($scope.entity.foreignKey) || $scope.entity.foreignKey === '') {
 					$scope.entity.foreignKey = null;
 				}
-				vzx
 				return true;
 			}
 
