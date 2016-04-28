@@ -32,7 +32,7 @@
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageInstitutionController">
+	<div>
 		<div id="entities">
 
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [

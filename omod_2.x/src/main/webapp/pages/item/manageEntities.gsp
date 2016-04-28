@@ -32,7 +32,7 @@
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageItemController">
+	<div>
 		<div id="entities">
 
 			${ ui.message('openhmis.inventory.department.name') }:

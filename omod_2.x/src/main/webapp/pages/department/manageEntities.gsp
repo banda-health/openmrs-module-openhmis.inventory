@@ -31,7 +31,7 @@
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageEntityController">
+	<div>
 		<div id="entities">
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [
 					model: "searchField",
