@@ -24,7 +24,7 @@
 	</div>
 	<br/><br/>
 
-	<div ng-controller="ManageStockOperationsController">
+	<div>
 		<div id="entities">
 			<form style="" class="search">
 				<fieldset class="search">

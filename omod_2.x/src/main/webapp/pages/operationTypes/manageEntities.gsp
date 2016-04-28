@@ -24,7 +24,7 @@
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageOperationTypesController">
+	<div>
 		<div id="entities-table">
 			<br />
 

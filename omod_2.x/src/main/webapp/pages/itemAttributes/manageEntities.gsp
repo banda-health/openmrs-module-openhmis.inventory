@@ -30,7 +30,7 @@
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageItemAttributeTypesController">
+	<div>
 		<div id="entities">
 			<table style="margin-bottom:5px;">
 				<thead>
