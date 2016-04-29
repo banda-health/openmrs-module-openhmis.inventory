@@ -51,17 +51,25 @@
 
 				// open dialog box to add an attribute type
 				$scope.addAttributeType = function () {
-					OperationsTypeFunctions.addAttributeType($scope);
+					$scope.editAttributeTypeTitle = '';
+					$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.commons.general.add']
+						+ ' '
+						+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
+					EntityFunctions.addAttributeType($scope)
 				}
 
 				// deletes an attribute type
 				$scope.removeAttributeType = function (attributeType) {
-					OperationsTypeFunctions.removeAttributeType(attributeType, $scope.entity.attributeTypes);
+					EntityFunctions.removeAttributeType(attributeType, $scope.entity.attributeTypes);
 				}
 
 				// open dialog box to edit an attribute type
 				$scope.editAttributeType = function (attributeType) {
-					OperationsTypeFunctions.editAttributeType(attributeType, $scope);
+					$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.commons.general.edit']
+						+ ' '
+						+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
+					$scope.addAttributeTypeTitle = '';
+					EntityFunctions.editAttributeType(attributeType, $scope)
 				}
 
 				$scope.delete = self.delete;
@@ -117,7 +125,7 @@
 					$scope.entity.attributeTypes.attributeOrder === null;
 				}
 				// remove temporarily assigned ids from the attribute type array lists.
-				self.removeOperationTypesTemporaryIds();
+				self.removeTemporaryIds();
 				
 				// validate attribute types.
 				if($scope.entity.attributeTypes === ''){
@@ -138,8 +146,8 @@
 		 * Removes the temporarily assigned unique ids before POSTing data
 		 * @type {Function}
 		 */
-		self.removeOperationTypesTemporaryIds = self.removeOperationTypesTemporaryIds || function () {
-				OperationsTypeFunctions.removeOperationTypesTemporaryId($scope.entity.attributeTypes);
+		self.removeTemporaryIds = self.removeTemporaryIds || function () {
+				EntityFunctions.removeTemporaryId($scope.entity.attributeTypes);
 			}
 
 

@@ -231,7 +231,7 @@
 				<input type="button" class="confirm right"
 				       value="{{messageLabels['general.save']}}"
 				       ng-disabled="entity.name == '' || entity.name == undefined"
-				       ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
+				       ng-click="saveOrUpdate()"/>
 			</span>
 		</p>
 	</fieldset>
