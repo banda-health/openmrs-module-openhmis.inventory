@@ -105,7 +105,7 @@
 		</ul>
 		<br/>
 		<ul class="table-layout">
-			<li>
+			<li class="valign">
 				<span>{{messageLabels['openhmis.inventory.attribute.type.namePlural']}}</span>
 			</li>
 			<li>
