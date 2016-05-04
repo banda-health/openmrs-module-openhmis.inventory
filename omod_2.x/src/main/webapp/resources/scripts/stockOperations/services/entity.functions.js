@@ -19,9 +19,9 @@
     var app = angular.module('app.stockOperationFunctionsFactory', []);
     app.service('StockOperationFunctions', StockOperationFunctions);
 
-    StockOperationFunctions.$inject = [];
+    StockOperationFunctions.$inject = ['EntityFunctions'];
 
-    function StockOperationFunctions() {
+    function StockOperationFunctions(EntityFunctions) {
         var service;
 
         service = {
@@ -40,7 +40,10 @@
                     }
                 }
             });
+
             dialog.show();
+
+            EntityFunctions.disableBackground();
         }
 
         /**

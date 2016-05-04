@@ -55,7 +55,8 @@
 					$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.commons.general.add']
 						+ ' '
 						+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
-					EntityFunctions.addAttributeType($scope)
+					EntityFunctions.addAttributeType($scope);
+					EntityFunctions.disableBackground();
 				}
 
 				// deletes an attribute type
@@ -69,7 +70,8 @@
 						+ ' '
 						+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
 					$scope.addAttributeTypeTitle = '';
-					EntityFunctions.editAttributeType(attributeType, $scope)
+					EntityFunctions.editAttributeType(attributeType, $scope);
+					EntityFunctions.disableBackground();
 				}
 
 				$scope.delete = self.delete;

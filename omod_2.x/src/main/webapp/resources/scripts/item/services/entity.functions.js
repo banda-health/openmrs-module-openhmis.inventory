@@ -19,9 +19,9 @@
 	var app = angular.module('app.itemFunctionsFactory', []);
 	app.service('ItemFunctions', ItemFunctions);
 
-	ItemFunctions.$inject = [];
+	ItemFunctions.$inject = ['EntityFunctions'];
 
-	function ItemFunctions() {
+	function ItemFunctions(EntityFunctions) {
 		var service;
 
 		service = {
@@ -150,6 +150,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
@@ -183,6 +185,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
@@ -225,6 +229,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
@@ -264,6 +270,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
