@@ -123,9 +123,7 @@
 						<div class="bbf-actions">
 							<button type="button" data-action="add" ng-click="addAttributeType()">Add</button>
 						</div>
-						${ui.includeFragment("openhmis.commons", "attributeTypesFragment", [
-								module: "inventory"
-						])}
+						${ui.includeFragment("openhmis.commons", "attributeTypesFragment")}
 					</div>
 				</div>
 			</li>
