@@ -48,7 +48,18 @@
                 $scope.selectItem = self.selectItem;
             }
 
-        self.searchStockOperation = self.searchStockOperation || function(){
+        self.searchStockOperation = self.searchStockOperation || function(currentPage){
+                if(currentPage === undefined){
+                    currentPage = $scope.currentPage;
+                }
+                else{
+                    $scope.currentPage = currentPage;
+                }
+
+                CookiesService.set('startIndex', $scope.startIndex);
+                CookiesService.set('limit', $scope.limit);
+                CookiesService.set('currentPage', currentPage);
+
                 var operationType_uuid;
                 var stockroom_uuid;
                 var operationItem_uuid;
@@ -66,7 +77,7 @@
                 }
 
                 StockOperationRestfulService.searchStockOperation(
-                    rest_entity_name, $scope.currentPage, $scope.limit,
+                    rest_entity_name, currentPage, $scope.limit,
                     operationItem_uuid, $scope.operation_status,
                     operationType_uuid, stockroom_uuid,
                     self.onLoadSearchStockOperationSuccessful

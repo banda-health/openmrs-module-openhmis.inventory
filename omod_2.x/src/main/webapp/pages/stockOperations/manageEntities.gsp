@@ -31,8 +31,8 @@
 					<table class="search">
 						<tr>
 							<td>${ui.message('openhmis.inventory.general.status')}:
-								<select ng-model="operation_status" ng-change="searchStockOperation()">
-									<option value="" selected="selected">Any</option>
+								<select ng-model="operation_status" ng-change="searchStockOperation(currentPage)">
+									<option value="" selected="selected">${ui.message('openhmis.commons.general.any')}</option>
 									<option value="Pending">Pending</option>
 									<option value="Completed">Completed</option>
 									<option value="Cancelled">Cancelled</option>
@@ -41,16 +41,16 @@
 							</td>
 							<td>
 								${ui.message('openhmis.inventory.operations.type.name')}:
-								<select ng-change="searchStockOperation()" ng-model="operationType"
+								<select ng-change="searchStockOperation(currentPage)" ng-model="operationType"
 								        ng-options="operationType.name for operationType in stockOperationTypes">
-									<option value="" selected="selected">Any</option>
+									<option value="" selected="selected">${ui.message('openhmis.commons.general.any')}</option>
 								</select>
 							</td>
 							<td>
 								${ui.message('openhmis.inventory.stockroom.name')}:
 								<select ng-model="stockroom" ng-options="stockroom.name for stockroom in stockrooms"
-								        ng-change="searchStockOperation()">
-									<option value="" selected="selected">Any</option>
+								        ng-change="searchStockOperation(currentPage)">
+									<option value="" selected="selected">${ui.message('openhmis.commons.general.any')}</option>
 								</select>
 							</td>
 							<td>
@@ -62,7 +62,7 @@
 										typeaheadEditable: "true",
 										class: ["form-control"],
 										placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
-										ngEnterEvent: "searchStockOperation()"
+										ngEnterEvent: "searchStockOperation(1)"
 								])}
 							</td>
 						</tr>
@@ -100,11 +100,14 @@
 				${ui.message('openhmis.commons.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
-				             ng-change="updateContent()"></span>
+				             ng-change="searchStockOperation(currentPage)"></span>
 				<span>${ui.message('openhmis.commons.general.includeRetired')}</span>
 			</div>
 			${ui.includeFragment("openhmis.commons", "paginationFragment", [
-					showRetiredSection  : "false"])}
+					showRetiredSection  : "false",
+					onPageChange : "searchStockOperation(currentPage)",
+					onChange : "searchStockOperation(currentPage)"
+			])}
 		</div>
 	</div>
 </div>
