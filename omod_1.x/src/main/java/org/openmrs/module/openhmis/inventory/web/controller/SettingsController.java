@@ -22,4 +22,4 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller(value = "invSettingsController")
 @RequestMapping(ModuleWebConstants.SETTINGS_ROOT)
-public class SettingsController {}
+public class SettingsController extends SettingsControllerBase {}
