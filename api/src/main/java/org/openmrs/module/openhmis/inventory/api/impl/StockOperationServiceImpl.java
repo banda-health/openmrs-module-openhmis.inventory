@@ -720,8 +720,9 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 		List<ItemStockDetail> results = null;
 		if (Boolean.TRUE.equals(tx.isCalculatedExpiration()) && Boolean.TRUE.equals(tx.isCalculatedBatch())) {
-			// Find the detail that will expire the soonest (could be multiple, each with a different batch op)
-			results = findDetailByClosestExpiration(stock.getDetails(), new DateTime(operation.getOperationDate()));
+			// Find the detail that will expire the soonest/ furthest (could be multiple, each with a different batch op)
+			results = findDetailByExpiration(ModuleSettings.autoSelectItemStockWithClosestExpirationDate(),
+			    stock.getDetails(), new DateTime(operation.getOperationDate()));
 
 			if (results == null || results.size() == 0) {
 				detail = null;
@@ -733,7 +734,8 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		} else if (Boolean.TRUE.equals(tx.isCalculatedExpiration())) {
 			// Find the detail with the specific batch and pick the best expiration if there are multiple
 			results = findDetailByBatch(stock, tx.getBatchOperation());
-			results = findDetailByClosestExpiration(results, new DateTime(operation.getOperationDate()));
+			results = findDetailByExpiration(ModuleSettings.autoSelectItemStockWithClosestExpirationDate(),
+			    results, new DateTime(operation.getOperationDate()));
 
 			detail = results.size() == 0 ? null : results.get(0);
 		} else if (Boolean.TRUE.equals(tx.isCalculatedBatch())) {
@@ -808,7 +810,8 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		return results;
 	}
 
-	private List<ItemStockDetail> findDetailByClosestExpiration(Collection<ItemStockDetail> details, DateTime date) {
+	private List<ItemStockDetail> findDetailByExpiration(
+	        boolean closestExpirationDate, Collection<ItemStockDetail> details, DateTime date) {
 		if (details == null || details.size() == 0) {
 			return null;
 		}
@@ -819,8 +822,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 			// If there is only a single detail record then we can just use that
 			results.addAll(details);
 		} else {
-			// Find the detail(s) with the closest expiration to the specified date
-			long closest = 0;
+			long range = 0;
 			for (ItemStockDetail detail : details) {
 				long temp;
 				if (detail.getExpiration() == null) {
@@ -831,15 +833,15 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 				if (results.size() == 0) {
 					results.add(detail);
-					closest = temp;
+					range = temp;
 				} else {
-					if (temp == closest) {
+					if (temp == range) {
 						results.add(detail);
-					} else if (temp < closest) {
+					} else if ((temp < range && closestExpirationDate) || (temp > range && !closestExpirationDate)) {
 						results.clear();
 						results.add(detail);
 
-						closest = temp;
+						range = temp;
 					}
 				}
 			}

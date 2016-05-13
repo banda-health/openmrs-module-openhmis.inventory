@@ -175,6 +175,18 @@
 					</spring:bind>
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<spring:bind path="autoSelectItemStockClosestExpirationDate">
+						<input id="autoSelectItemStockClosestExpirationDate" name="${status.expression}" type="checkbox"
+							   <c:if test="${settings.autoSelectItemStockClosestExpirationDate}">checked</c:if> />
+						<label class="removeBold" for="autoSelectItemStockClosestExpirationDate">
+							<spring:message code="openhmis.inventory.settings.autoSelectItemStockClosestExpirationDate"/>
+						</label>
+					</spring:bind>
+				</td>
+				<td></td>
+			</tr>
 		</table>
 		<br/>
 		<p><input class="submitButton confirm right" type="submit" value="<openmrs:message code="openhmis.inventory.settings.page.settings.save"/>">
