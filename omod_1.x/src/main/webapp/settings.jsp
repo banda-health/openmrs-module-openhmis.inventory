@@ -31,6 +31,9 @@
 </h2>
 
 <form:form method="POST" modelAttribute="settings">
+	<b class="boxHeader"><spring:message code="openhmis.inventory.admin.settings" /></b>
+
+	<div class="box">
 	<table>
 		<c:if test="${hasIdgenModule == true}">
 		<tr><td>
@@ -153,6 +156,7 @@
 	</table>
 	<br />
 	<input type="submit" value="Save" >
+	</div>
 </form:form>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>
