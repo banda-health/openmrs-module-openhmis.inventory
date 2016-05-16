@@ -82,6 +82,14 @@
         <description>true/false whether or not the system should restrict creation of stock with negative amounts</description>
     </globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.autoSelectItemStockWithFurthestExpiration</property>
+		<defaultValue>false</defaultValue>
+		<description>Whether to select an item stock with the furthest expiration date, when AUTO expiration date field is selected while doing an adjustment.
+		Selecting true will AUTO select an item stock with the furthest expiration date.
+		</description>
+	</globalProperty>
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
@@ -266,4 +274,24 @@
 		<name>Task: Access Inventory Settings</name>
 		<description>Able to access item mappings page</description>
 	</privilege>
+
+	<privilege>
+		<name>Task: Access My Operations</name>
+        <description>Able to access the Pending Operations page</description>
+	</privilege>
+
+    <privilege>
+        <name>Task: Access Create Operation</name>
+        <description>Able to access the create inventory operations page</description>
+    </privilege>
+
+    <privilege>
+        <name>Task: Access Stock Take</name>
+        <description>Able to access the stock take page</description>
+    </privilege>
+
+    <privilege>
+        <name>Task: Access Inventory Reports</name>
+        <description>Able to access the inventory reports page</description>
+    </privilege>
 </module>
