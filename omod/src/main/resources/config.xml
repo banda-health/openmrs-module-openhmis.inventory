@@ -82,6 +82,14 @@
         <description>true/false whether or not the system should restrict creation of stock with negative amounts</description>
     </globalProperty>
 
+	<globalProperty>
+		<property>${project.parent.artifactId}.autoSelectItemStockWithFurthestExpiration</property>
+		<defaultValue>false</defaultValue>
+		<description>Whether to select an item stock with the furthest expiration date, when AUTO expiration date field is selected while doing an adjustment.
+		Selecting true will AUTO select an item stock with the furthest expiration date.
+		</description>
+	</globalProperty>
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
