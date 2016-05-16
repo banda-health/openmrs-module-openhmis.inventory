@@ -150,7 +150,7 @@
 		    "label": "My Operations",
 		    "url": "module/openhmis/inventory/inventory.form",
 		    "icon": "icon-suitcase",
-		    "requiredPrivilege": "Task: Access Pending Operations"
+		    "requiredPrivilege": "Task: Access My Operations"
 	    },
 	    {
 		    "id": "openhmis.inventory.createInventoryOperations",
