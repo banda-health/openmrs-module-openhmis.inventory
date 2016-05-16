@@ -24,7 +24,7 @@
 
     function loadpage() {
         'use strict';
-        var app = angular.module('pendingOperationApp', ['ui.bootstrap', 'ngDialog', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
+        var app = angular.module('myOperationsApp', ['ui.bootstrap', 'ngDialog', 'ui.router', 'angularUtils.directives.dirPagination', 'app.css',
             'app.filters', 'app.stockOperationFunctionsFactory', 'app.pagination', 'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
             'app.genericEntityController', 'app.genericManageController']);
         app.config(function($stateProvider, $urlRouterProvider, $provide) {
@@ -38,7 +38,7 @@
             $stateProvider.state('/', {
                 url: '/',
                 templateUrl: 'viewEntities.page',
-                controller: 'ManageStockOperationsController'
+                controller: 'MyOperationsController'
             }).state('edit', {
                 url: '/:uuid',
                 views: {

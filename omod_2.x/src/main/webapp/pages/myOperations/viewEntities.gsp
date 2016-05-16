@@ -15,5 +15,5 @@
 </script>
 
 ${ui.includeFragment("openhmis.inventory", "stockOperations/entities", [
-        pageTitle : [ui.message('openhmis.inventory.admin.pending')]
+        pageTitle : [ui.message('openhmis.inventory.admin.myOperations')]
 ])}

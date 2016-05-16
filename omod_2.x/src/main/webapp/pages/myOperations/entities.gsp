@@ -21,12 +21,12 @@
     ui.includeJavascript("openhmis.inventory", "stockOperations/models/entity.model.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.restful.services.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/controllers/entity.controller.js")
-    ui.includeJavascript("openhmis.inventory", "stockOperations/controllers/manage-entity.controller.js")
+    ui.includeJavascript("openhmis.inventory", "myOperations/controllers/view-entity.controller.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.functions.js")
 %>
 
-<script data-main="pendingOperations/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="myOperations/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
 
-<div id="pendingOperationApp">
+<div id="myOperationsApp">
     <div ui-view></div>
 </div>

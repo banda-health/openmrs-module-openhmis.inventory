@@ -14,8 +14,8 @@
  */
 
 /* initialize and bootstrap application */
-requirejs(['pendingOperations/configs/entity.module'], function() {
-    angular.bootstrap(document, ['pendingOperationApp']);
+requirejs(['myOperations/configs/entity.module'], function() {
+    angular.bootstrap(document, ['myOperationsApp']);
 });
 
 /* load UI messages */
