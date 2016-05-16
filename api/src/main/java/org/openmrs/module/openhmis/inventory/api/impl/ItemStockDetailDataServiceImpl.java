@@ -124,8 +124,7 @@ public class ItemStockDetailDataServiceImpl
 				// skip record if the sum of item stock quantities == 0
 				if (quantity != 0) {
 					summary.setQuantity(quantity);
-				}
-				else {
+				} else {
 					continue;
 				}
 			} else {
@@ -133,8 +132,7 @@ public class ItemStockDetailDataServiceImpl
 				Integer quantity = Ints.checkedCast((Long)row[2]);
 				if (quantity != 0) {
 					summary.setQuantity(quantity);
-				}
-				else {
+				} else {
 					continue;
 				}
 			}
