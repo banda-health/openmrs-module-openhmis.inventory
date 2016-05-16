@@ -29,7 +29,7 @@
         "extensionPointId": "org.openmrs.module.openhmis.inventory.landing",
         "type": "link",
         "label": "Inventory Tasks",
-        "url": "module/openhmis/inventory/inventory.form",
+        "url": "openhmis.inventory/inventory/inventoryTasksDashboard.page",
         "icon": "icon-book",
         "requiredPrivilege": "App: Access Inventory Tasks"
       },
@@ -142,7 +142,43 @@
         "url": "module/openhmis/inventory/settings2x.page",
         "icon": "icon-cog",
         "requiredPrivilege": "Task: Access Inventory Settings"
-      }
+      },
+	    {
+		    "id": "openhmis.inventory.inventoryPendingOperations",
+		    "extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
+		    "type": "link",
+		    "label": "My Operations",
+		    "url": "module/openhmis/inventory/inventory.form",
+		    "icon": "icon-suitcase",
+		    "requiredPrivilege": "Task: Access Pending Operations"
+	    },
+	    {
+		    "id": "openhmis.inventory.createInventoryOperations",
+		    "extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
+		    "type": "link",
+		    "label": "Create Operation",
+		    "url": "module/openhmis/inventory/inventory.form",
+		    "icon": "icon-folder-open",
+		    "requiredPrivilege": "Task: Access Create Operation"
+	    },
+	    {
+		    "id": "openhmis.inventory.stockTake",
+		    "extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
+		    "type": "link",
+		    "label": "Stock Take",
+		    "url": "module/openhmis/inventory/inventory.form",
+		    "icon": "icon-list-alt",
+		    "requiredPrivilege": "Task: Access Stock Take"
+	    },
+	    {
+		    "id": "openhmis.inventory.inventoryReports",
+		    "extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
+		    "type": "link",
+		    "label": "Inventory Reports",
+		    "url": "module/openhmis/inventory/inventory.form",
+		    "icon": "icon-file-alt",
+		    "requiredPrivilege": "Task: Access Inventory Reports"
+	    }
     ]
   }
 ]
