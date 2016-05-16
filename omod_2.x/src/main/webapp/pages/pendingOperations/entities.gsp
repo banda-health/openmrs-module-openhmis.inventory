@@ -25,8 +25,8 @@
     ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.functions.js")
 %>
 
-<script data-main="stockOperations/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
+<script data-main="pendingOperations/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
 
-<div id="stockOperationApp">
+<div id="pendingOperationApp">
     <div ui-view></div>
 </div>
