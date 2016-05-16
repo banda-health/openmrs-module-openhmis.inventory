@@ -35,8 +35,8 @@ public class ModuleSettings {
 	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
 	public static final String RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD =
 	        "openhmis.inventory.restrictNegativeInventoryStockCreation";
-	public static final String AUTO_SELECT_ITEM_STOCK_CLOSEST_EXPIRATION_DATE =
-	        "openhmis.inventory.autoSelectItemStockWithClosestExpiration";
+	public static final String AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE =
+	        "openhmis.inventory.autoSelectItemStockWithFurthestExpiration";
 	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
 	        "openhmis.inventory.reports.stockOperationsByStockroom";
 
@@ -67,9 +67,9 @@ public class ModuleSettings {
 		return Boolean.parseBoolean(property);
 	}
 
-	public static boolean autoSelectItemStockWithClosestExpirationDate() {
+	public static boolean autoSelectItemStockWithFurthestExpirationDate() {
 		AdministrationService adminService = Context.getAdministrationService();
-		String property = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_CLOSEST_EXPIRATION_DATE);
+		String property = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE);
 		return Boolean.parseBoolean(property);
 	}
 
@@ -122,11 +122,11 @@ public class ModuleSettings {
 			settings.setAutoCompleteOperations(false);
 		}
 
-		prop = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_CLOSEST_EXPIRATION_DATE);
+		prop = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE);
 		if (!StringUtils.isEmpty(prop)) {
-			settings.setAutoSelectItemStockClosestExpirationDate(Boolean.parseBoolean(prop));
+			settings.setAutoSelectItemStockFurthestExpirationDate(Boolean.parseBoolean(prop));
 		} else {
-			settings.setAutoSelectItemStockClosestExpirationDate(false);
+			settings.setAutoSelectItemStockFurthestExpirationDate(false);
 		}
 
 		return settings;
@@ -194,11 +194,11 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY, Boolean.FALSE.toString());
 		}
 
-		Boolean autoSelectItemStockClosestExpirationDate = settings.getAutoSelectItemStockClosestExpirationDate();
-		if (Boolean.TRUE.equals(autoSelectItemStockClosestExpirationDate)) {
-			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_CLOSEST_EXPIRATION_DATE, Boolean.TRUE.toString());
+		Boolean autoSelectItemStockFurthestExpirationDate = settings.getAutoSelectItemStockFurthestExpirationDate();
+		if (Boolean.TRUE.equals(autoSelectItemStockFurthestExpirationDate)) {
+			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE, Boolean.TRUE.toString());
 		} else {
-			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_CLOSEST_EXPIRATION_DATE, Boolean.FALSE.toString());
+			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE, Boolean.FALSE.toString());
 		}
 	}
 

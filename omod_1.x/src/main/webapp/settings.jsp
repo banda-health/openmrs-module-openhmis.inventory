@@ -145,11 +145,11 @@
 		</td></tr>
 		<tr><td>
 			<br />
-			<spring:bind path="autoSelectItemStockClosestExpirationDate">
-				<input id="autoSelectItemStockClosestExpirationDate" name="${status.expression}" type="checkbox"
-					   <c:if test="${settings.autoSelectItemStockClosestExpirationDate}">checked</c:if> />
-				<label for="autoSelectItemStockClosestExpirationDate">
-					<spring:message code="openhmis.inventory.settings.autoSelectItemStockClosestExpirationDate"/>
+			<spring:bind path="autoSelectItemStockFurthestExpirationDate">
+				<input id="autoSelectItemStockFurthestExpirationDate" name="${status.expression}" type="checkbox"
+					   <c:if test="${settings.autoSelectItemStockFurthestExpirationDate}">checked</c:if> />
+				<label for="autoSelectItemStockFurthestExpirationDate">
+					<spring:message code="openhmis.inventory.settings.autoSelectItemStockFurthestExpirationDate"/>
 				</label>
 			</spring:bind>
 		</td></tr>

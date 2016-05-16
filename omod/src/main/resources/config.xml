@@ -83,10 +83,10 @@
     </globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.autoSelectItemStockWithClosestExpiration</property>
-		<defaultValue>true</defaultValue>
-		<description>Whether to select an item stock with the closest expiration date, when AUTO expiration date field is selected while doing an adjustment.
-		Selecting false will AUTO select an item stock with the furthest expiration date.
+		<property>${project.parent.artifactId}.autoSelectItemStockWithFurthestExpiration</property>
+		<defaultValue>false</defaultValue>
+		<description>Whether to select an item stock with the furthest expiration date, when AUTO expiration date field is selected while doing an adjustment.
+		Selecting true will AUTO select an item stock with the furthest expiration date.
 		</description>
 	</globalProperty>
 

@@ -721,7 +721,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		List<ItemStockDetail> results = null;
 		if (Boolean.TRUE.equals(tx.isCalculatedExpiration()) && Boolean.TRUE.equals(tx.isCalculatedBatch())) {
 			// Find the detail that will expire the soonest/ furthest (could be multiple, each with a different batch op)
-			results = findDetailByExpiration(ModuleSettings.autoSelectItemStockWithClosestExpirationDate(),
+			results = findDetailByExpiration(ModuleSettings.autoSelectItemStockWithFurthestExpirationDate(),
 			    stock.getDetails(), new DateTime(operation.getOperationDate()));
 
 			if (results == null || results.size() == 0) {
@@ -734,7 +734,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		} else if (Boolean.TRUE.equals(tx.isCalculatedExpiration())) {
 			// Find the detail with the specific batch and pick the best expiration if there are multiple
 			results = findDetailByBatch(stock, tx.getBatchOperation());
-			results = findDetailByExpiration(ModuleSettings.autoSelectItemStockWithClosestExpirationDate(),
+			results = findDetailByExpiration(ModuleSettings.autoSelectItemStockWithFurthestExpirationDate(),
 			    results, new DateTime(operation.getOperationDate()));
 
 			detail = results.size() == 0 ? null : results.get(0);
@@ -811,7 +811,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 	}
 
 	private List<ItemStockDetail> findDetailByExpiration(
-	        boolean closestExpirationDate, Collection<ItemStockDetail> details, DateTime date) {
+	        boolean furthestExpirationDate, Collection<ItemStockDetail> details, DateTime date) {
 		if (details == null || details.size() == 0) {
 			return null;
 		}
@@ -837,7 +837,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 				} else {
 					if (temp == range) {
 						results.add(detail);
-					} else if ((temp < range && closestExpirationDate) || (temp > range && !closestExpirationDate)) {
+					} else if ((temp < range && !furthestExpirationDate) || (temp > range && furthestExpirationDate)) {
 						results.clear();
 						results.add(detail);
 

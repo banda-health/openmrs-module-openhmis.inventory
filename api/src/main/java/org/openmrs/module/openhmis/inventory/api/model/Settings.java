@@ -27,7 +27,7 @@ public class Settings {
 	private Integer stockOperationsByStockroomReportId;
 	private Integer stockroomReportId;
 	private Integer expiringStockReportId;
-	private Boolean autoSelectItemStockClosestExpirationDate;
+	private Boolean autoSelectItemStockFurthestExpirationDate;
 
 	public Boolean getAutoGenerateOperationNumber() {
 		return autoGenerateOperationNumber;
@@ -93,11 +93,11 @@ public class Settings {
 		this.expiringStockReportId = expiringStockReportId;
 	}
 
-	public Boolean getAutoSelectItemStockClosestExpirationDate() {
-		return autoSelectItemStockClosestExpirationDate;
+	public Boolean getAutoSelectItemStockFurthestExpirationDate() {
+		return autoSelectItemStockFurthestExpirationDate;
 	}
 
-	public void setAutoSelectItemStockClosestExpirationDate(Boolean autoSelectItemStockClosestExpirationDate) {
-		this.autoSelectItemStockClosestExpirationDate = autoSelectItemStockClosestExpirationDate;
+	public void setAutoSelectItemStockFurthestExpirationDate(Boolean autoSelectItemStockFurthestExpirationDate) {
+		this.autoSelectItemStockFurthestExpirationDate = autoSelectItemStockFurthestExpirationDate;
 	}
 }
