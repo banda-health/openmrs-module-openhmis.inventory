@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
@@ -109,7 +110,13 @@ public class ItemSearchHandler
 
 		if (!StringUtils.isEmpty(name)) {
 			template.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
-			template.getTemplate().setName(name + "%");
+			if (ModuleSettings.useWildcardSearch()) {
+				template.getTemplate().setName("%" + name + "%");
+			}
+			else {
+				template.getTemplate().setName(name + "%");
+			}
+
 		}
 
 		template.getTemplate().setDepartment(department);
