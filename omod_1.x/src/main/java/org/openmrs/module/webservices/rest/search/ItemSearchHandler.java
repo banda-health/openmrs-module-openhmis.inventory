@@ -71,7 +71,7 @@ public class ItemSearchHandler
 
 		String hasPhysicalInventoryString = context.getParameter("has_physical_inventory");
 		Boolean hasPhysicalInventory = null;
-		if (!StringUtils.isEmpty(hasPhysicalInventoryString)) {
+		if (StringUtils.isNotEmpty(hasPhysicalInventoryString)) {
 			hasPhysicalInventory = Boolean.parseBoolean(hasPhysicalInventoryString);
 		}
 
@@ -108,12 +108,11 @@ public class ItemSearchHandler
 	        Boolean hasPhysicalInventory) {
 		ItemSearch template = new ItemSearch();
 
-		if (!StringUtils.isEmpty(name)) {
+		if (StringUtils.isNotEmpty(name)) {
 			template.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
-			if (ModuleSettings.useWildcardSearch()) {
+			if (ModuleSettings.useWildcardItemSearch()) {
 				template.getTemplate().setName("%" + name + "%");
-			}
-			else {
+			} else {
 				template.getTemplate().setName(name + "%");
 			}
 

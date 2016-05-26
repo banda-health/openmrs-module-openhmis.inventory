@@ -72,7 +72,7 @@
 	</globalProperty>
 
 	<globalProperty>
-		<property>${project.parent.artifactId}.useWildcardSearch</property>
+		<property>${project.parent.artifactId}.useWildcardItemSearch</property>
 		<description>Whether or not a search string matches only the start of an item (false) or anywhere in the item (true).</description>
 	</globalProperty>
 

@@ -33,7 +33,7 @@ public class ModuleSettings {
 	public static final String EXPIRING_STOCK_REPORT_ID_PROPERTY = "openhmis.inventory.reports.expiringStock";
 	public static final String AUTO_COMPLETE_OPERATIONS_PROPERTY = "openhmis.inventory.autoCompleteOperations";
 	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
-	public static final String USE_WILDCARD_SEARCH = "openhmis.inventory.useWildcardSearch";
+	public static final String USE_WILDCARD_ITEM_SEARCH_PROPERTY = "openhmis.inventory.useWildcardItemSearch";
 	public static final String RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD =
 	        "openhmis.inventory.restrictNegativeInventoryStockCreation";
 	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
@@ -66,9 +66,9 @@ public class ModuleSettings {
 		return Boolean.parseBoolean(property);
 	}
 
-	public static boolean useWildcardSearch() {
+	public static boolean useWildcardItemSearch() {
 		AdministrationService adminService = Context.getAdministrationService();
-		String property = adminService.getGlobalProperty(USE_WILDCARD_SEARCH);
+		String property = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
 		return Boolean.parseBoolean(property);
 	}
 
@@ -85,47 +85,47 @@ public class ModuleSettings {
 		}
 
 		String prop = adminService.getGlobalProperty(STOCK_TAKE_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockTakeReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockCardReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockroomReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setExpiringStockReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setAutoCompleteOperations(Boolean.parseBoolean(prop));
 		} else {
 			settings.setAutoCompleteOperations(false);
 		}
 
-		prop = adminService.getGlobalProperty(USE_WILDCARD_SEARCH);
-		if (!StringUtils.isEmpty(prop)) {
-			settings.setWildcardSearch(Boolean.parseBoolean(prop));
+		prop = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
+		if (StringUtils.isNotEmpty(prop)) {
+			settings.setWildcardItemSearch(Boolean.parseBoolean(prop));
 		} else {
-			settings.setWildcardSearch(false);
+			settings.setWildcardItemSearch(false);
 		}
 
 		return settings;
@@ -193,11 +193,11 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY, Boolean.FALSE.toString());
 		}
 
-		Boolean wildcardSearch = settings.getWildcardSearch();
-		if (Boolean.TRUE.equals(wildcardSearch)) {
-			adminService.setGlobalProperty(USE_WILDCARD_SEARCH, Boolean.TRUE.toString());
+		Boolean wildcardItemSearch = settings.getWildcardItemSearch();
+		if (Boolean.TRUE.equals(wildcardItemSearch)) {
+			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.TRUE.toString());
 		} else {
-			adminService.setGlobalProperty(USE_WILDCARD_SEARCH, Boolean.FALSE.toString());
+			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.FALSE.toString());
 		}
 	}
 
