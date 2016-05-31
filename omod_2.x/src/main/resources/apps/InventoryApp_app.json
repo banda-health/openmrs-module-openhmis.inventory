@@ -157,7 +157,7 @@
 		    "extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 		    "type": "link",
 		    "label": "Create Operation",
-		    "url": "module/openhmis/inventory/inventory.form",
+		    "url": "openhmis.inventory/createOperation/entities.page",
 		    "icon": "icon-folder-open",
 		    "requiredPrivilege": "Task: Access Create Operation"
 	    },

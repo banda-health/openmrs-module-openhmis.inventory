@@ -24,9 +24,9 @@
 
     function loadpage() {
         'use strict';
-        var app = angular.module('stockOperationApp', ['ui.bootstrap', 'ngDialog', 'ui.router',
-            'angularUtils.directives.dirPagination', 'app.css', 'app.filters', 'app.pagination',
-            'app.cookies', 'app.genericMetadataModel', 'app.restfulServices',
+        var app = angular.module('createOperationApp', ['ui.bootstrap', 'ngDialog', 'ui.router',
+            'angularUtils.directives.dirPagination', 'app.stockOperationFunctionsFactory', 'app.css', 'app.filters', 'app.pagination',
+            'app.cookies', 'app.genericMetadataModel', 'app.lineItemModel', 'app.restfulServices',
             'app.genericEntityController', 'app.genericManageController']);
         app.config(function($stateProvider, $urlRouterProvider, $provide) {
             /*
@@ -39,7 +39,7 @@
             $stateProvider.state('/', {
                 url: '/',
                 templateUrl: 'entity.page',
-                controller: 'CreateStockOperationController'
+                controller: 'CreateOperationController'
             });
 
             $provide.factory('$exceptionHandler', function($injector) {

@@ -56,5 +56,13 @@ emr.loadMessages([
     "openhmis.commons.general.expiration",
     "openhmis.inventory.item.enterItemSearch",
     "openhmis.commons.general.actions",
-    "openhmis.commons.general.postSearchMessage"
+    "openhmis.commons.general.postSearchMessage",
+    "openhmis.inventory.operations.confirm.title.operationTypeChange",
+    "openhmis.inventory.operations.confirm.title.sourceStockroomChange",
+    "openhmis.inventory.operations.confirm.operationTypeChange",
+    "openhmis.inventory.operations.confirm.sourceStockroomChange",
+    "openhmis.inventory.operations.required.patient",
+    "openhmis.inventory.operations.error.number",
+    "openhmis.inventory.operations.error.itemError",
+    "openhmis.inventory.operations.error.expiryDate"
 ]);
