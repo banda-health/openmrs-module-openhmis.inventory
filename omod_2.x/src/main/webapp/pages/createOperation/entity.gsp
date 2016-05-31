@@ -289,9 +289,9 @@
                                 class: ["form-control autocomplete-search"],
                                 placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
                         ])}
-                        <!--<span ng-show="lineItem.selected" class="existing-quantity">
+                        <span ng-show="lineItem.selected" class="existing-quantity">
                             ${ui.message('openhmis.inventory.operations.existingQuantity')}:  {{lineItem.existingQuantity}}
-                        </span> -->
+                        </span>
                     </td>
                     <td>
                         <input type="number" ng-model="lineItem.itemStockQuantity"
