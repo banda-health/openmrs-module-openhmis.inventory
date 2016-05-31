@@ -120,10 +120,21 @@ public class ItemStockDetailDataServiceImpl
 			// If the expiration column is null it does not appear to be included in the row array
 			if (row.length == 2) {
 				summary.setExpiration(null);
-				summary.setQuantity(Ints.checkedCast((Long)row[1]));
+				Integer quantity = Ints.checkedCast((Long)row[1]);
+				// skip record if the sum of item stock quantities == 0
+				if (quantity != 0) {
+					summary.setQuantity(quantity);
+				} else {
+					continue;
+				}
 			} else {
 				summary.setExpiration((Date)row[1]);
-				summary.setQuantity(Ints.checkedCast((Long)row[2]));
+				Integer quantity = Ints.checkedCast((Long)row[2]);
+				if (quantity != 0) {
+					summary.setQuantity(quantity);
+				} else {
+					continue;
+				}
 			}
 
 			results.add(summary);
