@@ -169,6 +169,7 @@
 						var expiration = detail.expiration;
 						if (expiration !== null) {
 							expiration = expiration.split("T")[0];
+							expiration = formatDate(expiration);
 						} else {
 							nullExpiration = true;
 							continue;
