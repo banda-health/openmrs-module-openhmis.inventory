@@ -13,7 +13,7 @@
  *
  */
 
-(function() {
+(function () {
 	'use strict';
 
 	var baseModel = angular.module('app.lineItemModel', []);
@@ -36,81 +36,82 @@
 
 		LineItemModel.prototype = {
 
-			getItemStockDepartment : function() {
+			getItemStockDepartment: function () {
 				return this.itemStockDepartment;
 			},
 
-			setItemStockDepartment : function(itemStockDepartment){
+			setItemStockDepartment: function (itemStockDepartment) {
 				this.itemStockDepartment = itemStockDepartment;
 			},
 
-			getItemStock: function() {
+			getItemStock: function () {
 				return this.itemStock;
 			},
 
-			setItemStock: function(itemStock) {
+			setItemStock: function (itemStock) {
 				this.itemStock = itemStock;
 			},
 
-			getItemStockQuantity: function() {
+			getItemStockQuantity: function () {
 				return this.itemStockQuantity;
 			},
 
-			setItemStockQuantity: function(itemStockQuantity) {
+			setItemStockQuantity: function (itemStockQuantity) {
 				this.itemStockQuantity = itemStockQuantity;
 			},
 
-			getItemStockExpirationDate: function() {
+			getItemStockExpirationDate: function () {
 				return this.itemStockExpirationDate;
 			},
 
-			setItemStockExpirationDate: function(itemStockExpirationDate) {
+			setItemStockExpirationDate: function (itemStockExpirationDate) {
 				this.itemStockExpirationDate = itemStockExpirationDate;
 			},
 
-			getItemStockHasExpiration: function() {
+			getItemStockHasExpiration: function () {
 				return this.itemStockHasExpiration;
 			},
 
-			setItemStockHasExpiration: function(itemStockHasExpiration) {
+			setItemStockHasExpiration: function (itemStockHasExpiration) {
 				this.itemStockHasExpiration = itemStockHasExpiration;
 			},
 
-			setExpirationDates : function(expirationDates){
+			setExpirationDates: function (expirationDates) {
 				this.expirationDates = expirationDates;
 			},
 
-			getExpirationDates : function(){
+			getExpirationDates: function () {
 				return this.expirationDates;
 			},
 
-			setExistingQuantity : function(existingQuantity){
+			setExistingQuantity: function (existingQuantity) {
 				this.existingQuantity = existingQuantity;
 			},
 
-			getExistingQuantity : function(){
+			getExistingQuantity: function () {
 				return this.existingQuantity;
 			},
 
-			setSelected : function(selected){
+			setSelected: function (selected) {
 				this.selected = selected;
 			},
 
-			isSelected : function(){
+			isSelected: function () {
 				return this.selected;
 			},
 
-			setExpirationHasDatePicker : function(expirationHasDatePicker){
+			setExpirationHasDatePicker: function (expirationHasDatePicker) {
 				this.expirationHasDatePicker = expirationHasDatePicker;
 			},
 
-			isExpirationHasDatePicker : function(){
+			isExpirationHasDatePicker: function () {
 				return this.expirationHasDatePicker;
 			}
 		};
 
 		return LineItemModel;
 	}
+
 	baseModel.factory("LineItemModel", LineItemModel);
 	LineItemModel.$inject = [];
 })();

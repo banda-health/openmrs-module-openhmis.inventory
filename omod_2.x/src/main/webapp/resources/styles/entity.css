@@ -150,7 +150,7 @@ input.non-editable {
     font-size:0.875em;
 }
 #operationTypesTable th:first-child, td:first-child {
-    width: 2%;
+    width: 30%;
 }
 fieldset.operation{
     min-width: 90%;

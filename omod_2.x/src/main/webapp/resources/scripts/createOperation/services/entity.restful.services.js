@@ -13,7 +13,7 @@
  *
  */
 
-(function() {
+(function () {
 	'use strict';
 
 	angular.module('app.restfulServices').service('CreateOperationRestfulService', CreateOperationRestfulService);
@@ -26,21 +26,21 @@
 		service = {
 			loadStockOperationTypes: loadStockOperationTypes,
 			loadStockrooms: loadStockrooms,
-			loadInstitutions : loadInstitutions,
-			loadDepartments : loadDepartments,
-			loadOperationTypeAttributes : loadOperationTypeAttributes,
-			loadStockOperations : loadStockOperations,
+			loadInstitutions: loadInstitutions,
+			loadDepartments: loadDepartments,
+			loadOperationTypeAttributes: loadOperationTypeAttributes,
+			loadStockOperations: loadStockOperations,
 			searchStockOperationItems: searchStockOperationItems,
-			searchPatients : searchPatients,
-			loadVisit : loadVisit,
-			endVisit : endVisit,
-			searchItemStock : searchItemStock,
-			isOperationNumberGenerated : isOperationNumberGenerated,
+			searchPatients: searchPatients,
+			loadVisit: loadVisit,
+			endVisit: endVisit,
+			searchItemStock: searchItemStock,
+			isOperationNumberGenerated: isOperationNumberGenerated,
 		};
 
 		return service
 
-		function searchStockOperationItems(module_name, q){
+		function searchStockOperationItems(module_name, q) {
 			var requestParams = {};
 			requestParams['has_physical_inventory'] = 'true';
 			requestParams['q'] = q;
@@ -55,11 +55,11 @@
 		 * @param rest_entity_name
 		 * @param successCallback
 		 */
-		function loadStockOperationTypes(successCallback){
+		function loadStockOperationTypes(successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'stockOperationType';
 			requestParams['limit'] = 100;
-			EntityRestFactory.loadEntities(requestParams,successCallback, errorCallback);
+			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
 		}
 
 		/**
@@ -67,21 +67,21 @@
 		 * @param rest_entity_name
 		 * @param successCallback
 		 */
-		function loadStockrooms(successCallback){
+		function loadStockrooms(successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'stockroom';
 			requestParams['limit'] = 100;
 			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
 		}
 
-		function loadInstitutions(successCallback){
+		function loadInstitutions(successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'institution';
 			requestParams['limit'] = 100;
 			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
 		}
 
-		function loadDepartments(successCallback){
+		function loadDepartments(successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'department';
 			requestParams['limit'] = 100;
@@ -89,7 +89,7 @@
 		}
 
 		function loadOperationTypeAttributes(uuid, onLoadAttributeTypesSuccessful) {
-			if(uuid !== undefined){
+			if (uuid !== undefined) {
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'stockOperationType/' + uuid;
 				EntityRestFactory.loadEntities(requestParams,
@@ -97,8 +97,8 @@
 			}
 		}
 
-		function loadStockOperations(operation_date, onLoadStockOperationSuccessful){
-			if(operation_date !== undefined){
+		function loadStockOperations(operation_date, onLoadStockOperationSuccessful) {
+			if (operation_date !== undefined) {
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'stockOperation';
 				requestParams['operation_date'] = operation_date;
@@ -116,7 +116,7 @@
 		 * @param limit
 		 * @param onLoadPatientsSuccessful
 		 */
-		function searchPatients(module_name, q, currentPage, limit, onLoadPatientsSuccessful){
+		function searchPatients(module_name, q, currentPage, limit, onLoadPatientsSuccessful) {
 			var requestParams = []; // PaginationService.paginateParams(currentPage, limit, false, '');
 			requestParams['q'] = q;
 			requestParams['rest_entity_name'] = '';
@@ -129,7 +129,7 @@
 			EntityRestFactory.setBaseUrl(module_name);
 		}
 
-		function loadVisit(module_name, patient_uuid, onLoadVisitSuccessful){
+		function loadVisit(module_name, patient_uuid, onLoadVisitSuccessful) {
 			var requestParams = [];
 			requestParams['rest_entity_name'] = '';
 			requestParams['patient'] = patient_uuid;
@@ -140,7 +140,7 @@
 			EntityRestFactory.setBaseUrl(module_name);
 		}
 
-		function isOperationNumberGenerated(module_name, onLoadOpNumGenSuccessful){
+		function isOperationNumberGenerated(module_name, onLoadOpNumGenSuccessful) {
 			var requestParams = [];
 			requestParams['resource'] = 'module/openhmis/inventory/moduleSettings.page';
 			requestParams['setting'] = 'isOperationNumberGenerated';
@@ -152,9 +152,9 @@
 			EntityRestFactory.setBaseUrl(module_name);
 		}
 
-		function endVisit(module_name, visit_uuid, stopDatetime, onLoadEndVisitSuccessful){
+		function endVisit(module_name, visit_uuid, stopDatetime, onLoadEndVisitSuccessful) {
 			var requestParams = {};
-			requestParams['stopDatetime']  = stopDatetime.toString();
+			requestParams['stopDatetime'] = stopDatetime.toString();
 			EntityRestFactory.setBaseUrl('', 'v1');
 			EntityRestFactory.post('visit', visit_uuid, requestParams,
 				onLoadEndVisitSuccessful,
@@ -175,7 +175,7 @@
 			}
 		}
 
-		function errorCallback(error){
+		function errorCallback(error) {
 			console.log(error);
 		}
 	}

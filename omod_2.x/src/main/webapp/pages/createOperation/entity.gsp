@@ -96,7 +96,7 @@
                 </span>
             </li>
         </ul>
-        <ul class="table-layout" ng-show="sourceEnabled">
+        <ul class="table-layout" ng-show="operationType.hasSource">
             <li class="required">
                 <span>${ui.message('openhmis.inventory.operations.sourceStockroom')}</span>
             </li>
@@ -107,40 +107,38 @@
                 </select>
             </li>
         </ul>
-        <ul class="table-layout" ng-show="distributionTypeEnabled">
+        <ul class="table-layout" ng-show="operationType.name === 'Distribution'">
             <li class="not-required">
                 <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
             </li>
             <li>
                 <select ng-model="distributionType"
-                        ng-change="changeDistributionType()"
                         ng-options="distributionType for distributionType in distributionTypes">
                 </select>
             </li>
         </ul>
-        <ul class="table-layout" ng-show="returnOperationTypeEnabled">
+        <ul class="table-layout" ng-show="operationType.name === 'Return'">
             <li class="not-required">
                 <span>${ui.message('openhmis.inventory.operations.returnTo')}</span>
             </li>
             <li>
                 <select ng-model="returnOperationType"
-                        ng-change="changeReturnOperationType()"
                         ng-options="returnOperationType for returnOperationType in returnOperationTypes">
                 </select>
             </li>
         </ul>
-        <ul class="table-layout" ng-show="destinationEnabled">
+        <ul class="table-layout" ng-show="operationType.hasDestination">
             <li class="required">
                 <span>${ui.message('openhmis.inventory.operations.destinationStockroom')}</span>
             </li>
             <li>
                 <select ng-model="destinationStockroom" required
-                        ng-change="changeDestinationStockroom()"
                         ng-options='destinationStockroom.name for destinationStockroom in destinationStockrooms track by destinationStockroom.uuid'>
                 </select>
             </li>
         </ul>
-        <ul class="table-layout" ng-show="institutionEnabled">
+        <ul class="table-layout"
+            ng-show="((operationType.name === 'Distribution' && distributionType === 'Institution') || (operationType.name === 'Return' && returnOperationType === 'Institution'))">
             <li class="required">
                 <span>${ui.message('openhmis.inventory.institution.name')}</span>
             </li>
@@ -150,7 +148,8 @@
                 </select>
             </li>
         </ul>
-        <ul class="table-layout" ng-show="departmentEnabled">
+        <ul class="table-layout"
+            ng-show="((operationType.name === 'Distribution' && distributionType === 'Department') || (operationType.name === 'Return' && returnOperationType === 'Department'))">
             <li class="required">
                 <span>${ui.message('openhmis.inventory.department.name')}</span>
             </li>
@@ -176,8 +175,9 @@
                 </span>
             </li>
         </ul>
-
-        <fieldset class="nested patient-details" ng-show="patientFindEnabled && selectedPatient !== ''">
+        <fieldset class="nested patient-details"
+                  ng-show="operationType.hasRecipient && selectedPatient !== '' &&
+                  ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient'))">
             <legend>${ui.message('openhmis.inventory.operations.patientDetails')}</legend>
             <span>
                 <b>${ui.message('general.name')}:</b>
@@ -200,7 +200,8 @@
             </span>
         </fieldset>
 
-        <fieldset class="nested" ng-show="patientFindEnabled && selectedPatient === ''">
+        <fieldset class="nested" ng-show="operationType.hasRecipient && selectedPatient === '' &&
+                  ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient'))">
             <legend>${ui.message('openhmis.inventory.operations.findPatient')}</legend>
             <div ng-show="selectedPatient === ''">
                 <ul class="table-layout">
@@ -261,7 +262,8 @@
         </fieldset>
 
         <fieldset class="nested"
-                  ng-show="(!patientFindEnabled && (sourceEnabled || destinationEnabled) || (patientFindEnabled && (sourceEnabled && !destinationEnabled)))">
+                  ng-show="(!operationType.hasRecipient && (operationType.hasSource || operationType.hasDestination) ||
+                  (operationType.hasRecipient && (operationType.hasSource && !operationType.hasDestination)))">
             <legend>${ui.message('openhmis.inventory.operations.time.namePlural')}</legend>
             <span class="desc" ng-show="!showOperationItemsSection()">
                 ${ui.message('openhmis.inventory.operations.selectStockroom')}
