@@ -188,11 +188,11 @@
 
 		function showOperationItemsSection($scope) {
 			var operationType = $scope.operationType;
-			if(operationType === undefined){
+			if (operationType === undefined) {
 				return false;
 			} else if (operationType.hasRecipient && !operationType.hasSource && !operationType.hasDestination) {
 				return true;
-			} else if (operationType.hasSource  && operationType.hasDestination) {
+			} else if (operationType.hasSource && operationType.hasDestination) {
 				if ($scope.sourceStockroom.name !== ' - Not Defined - ' && $scope.destinationStockroom.name !== ' - Not Defined - ') {
 					return true;
 				}
@@ -221,7 +221,7 @@
 		function validateAttributeTypes($scope) {
 			// validate attribute types
 			var requestAttributeTypes = [];
-			if(EntityFunctions.validateAttributeTypes($scope.attributeTypeAttributes, $scope.attributes, requestAttributeTypes)){
+			if (EntityFunctions.validateAttributeTypes($scope.attributeTypeAttributes, $scope.attributes, requestAttributeTypes)) {
 				$scope.entity.attributes = requestAttributeTypes;
 				return true;
 			}
@@ -232,7 +232,7 @@
 
 		function validateLineItems($scope) {
 			var validatedItems = [];
-			if(EntityFunctions.validateLineItems($scope.lineItems, validatedItems)){
+			if (EntityFunctions.validateLineItems($scope.lineItems, validatedItems)) {
 				$scope.entity.items = validatedItems;
 				return true;
 			}

@@ -143,7 +143,7 @@
 				if ($scope.institutionStockroom !== undefined &&
 					(($scope.operationType.name === 'Distribution' && $scope.distributionType === 'Institution') ||
 					$scope.operationType.name === 'Return' && $scope.returnOperationType === 'Institution')) {
-					if($scope.institutionStockroom.name !== ' - Not Defined - '){
+					if ($scope.institutionStockroom.name !== ' - Not Defined - ') {
 						$scope.entity.institution = $scope.institutionStockroom.uuid;
 					} else {
 						emr.errorAlert("openhmis.inventory.operations.required.institution");
@@ -155,7 +155,7 @@
 				if ($scope.department !== undefined &&
 					(($scope.operationType.name === 'Distribution' && $scope.distributionType === 'Department') ||
 					$scope.operationType.name === 'Return' && $scope.returnOperationType === 'Department')) {
-					if($scope.department.name !== ' - Not Defined - '){
+					if ($scope.department.name !== ' - Not Defined - ') {
 						$scope.entity.department = $scope.department.uuid;
 					} else {
 						emr.errorAlert("openhmis.inventory.operations.required.department");
