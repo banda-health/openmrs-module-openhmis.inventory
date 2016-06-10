@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.HashSet;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.javatuples.Pair;
@@ -290,6 +291,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 				// For each item transaction
 				int totalQty = 0;
+
 				for (StockOperationTransaction tx : itemTxs) {
 					// Sum the total quantity for this specific item
 					totalQty += tx.getQuantity();
@@ -651,41 +653,98 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 			tx.setExpiration(detail.getExpiration());
 			tx.setBatchOperation(detail.getBatchOperation());
 
-			if (detail.getQuantity() < 0) {
-				// The detail quantity is already negative so just subtract more
-				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
+			int cumulativeQuantity = computeCumulativeItemStockDetailQuantities(stock, detail);
+			int remainingQuantity = 0;
+
+			if (cumulativeQuantity == 0) {
+				removeUnusedItemStockDetailRecords(stock, detail);
+				// Find other details to fulfill this tx
+				findAndUpdateSourceDetail(newTransactions, operation, stock, tx);
 			} else {
-				// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
-				detail.setQuantity(detail.getQuantity() - Math.abs(tx.getQuantity()));
-
-				if (detail.getQuantity() == 0) {
-					// If the quantity is exactly zero than we can simply remove the detail record
-					stock.getDetails().remove(detail);
-				} else if (detail.getQuantity() < 0) {
-					stock.getDetails().remove(detail);
-
-					// Set the tx quantity to the number actually deduced from the detail
-					//Math.abs is needed to handle negative adjustments correctly
-					tx.setQuantity(Math.abs(tx.getQuantity()) + detail.getQuantity());
-
-					//if adjustment make sure that the quantity is negaitve (this method is only dealing with
-					// negative adjustments)
-					if (operation.isAdjustmentType()) {
-						tx.setQuantity(tx.getQuantity() * -1);
+				if ((cumulativeQuantity + tx.getQuantity()) < 0) {
+					if (cumulativeQuantity > 0) {
+						int newTxQuantity = cumulativeQuantity;
+						newTxQuantity *= -1;
+						remainingQuantity = cumulativeQuantity + tx.getQuantity();
+						tx.setQuantity(newTxQuantity);
 					}
-
-					// Create a new tx to handle the remaining stock request
-					ReservedTransaction newTx = new ReservedTransaction(tx);
-					Integer newTxQuantity =
-					        operation.isAdjustmentType() ? detail.getQuantity() : Math.abs(detail.getQuantity());
-					newTx.setQuantity(newTxQuantity);
-
-					// Add the new tx to the list of transactions to add to the operations
-					newTransactions.add(newTx);
-
-					// Find the details to fulfill this new tx
-					findAndUpdateSourceDetail(newTransactions, operation, stock, newTx);
 				}
+
+				if (detail.getQuantity() < 0) {
+					// The detail quantity is already negative so just subtract more
+					detail.setQuantity(detail.getQuantity() - tx.getQuantity());
+				} else {
+					// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
+					detail.setQuantity(detail.getQuantity() - Math.abs(tx.getQuantity()));
+
+					if (detail.getQuantity() == 0) {
+						// If the quantity is exactly zero than we can simply remove the detail record
+						stock.getDetails().remove(detail);
+					} else if (detail.getQuantity() < 0) {
+						stock.getDetails().remove(detail);
+
+						// Set the tx quantity to the number actually deduced from the detail
+						//Math.abs is needed to handle negative adjustments correctly
+						tx.setQuantity(Math.abs(tx.getQuantity()) + detail.getQuantity());
+
+						//if adjustment make sure that the quantity is negative (this method is only dealing with
+						// negative adjustments)
+						if (operation.isAdjustmentType()) {
+							tx.setQuantity(tx.getQuantity() * -1);
+						}
+
+						remainingQuantity +=
+						        operation.isAdjustmentType() ? detail.getQuantity() : Math.abs(detail.getQuantity());
+					}
+				}
+			}
+
+			// Create a new tx to handle the remaining stock request
+			if (remainingQuantity < 0) {
+				ReservedTransaction newTx = new ReservedTransaction(tx);
+				newTx.setQuantity(remainingQuantity);
+
+				// Add the new tx to the list of transactions to add to the operations
+				newTransactions.add(newTx);
+
+				// Find the details to fulfill this new tx
+				findAndUpdateSourceDetail(newTransactions, operation, stock, newTx);
+			}
+		}
+	}
+
+	private int computeCumulativeItemStockDetailQuantities(ItemStock stock, ItemStockDetail detail) {
+		int cumulativeQuantity = 0;
+		for (ItemStockDetail stockDetail : stock.getDetails()) {
+			Date stockDetailExp = stockDetail.getExpiration();
+			Date detailExp = detail.getExpiration();
+			if (stockDetailExp == null && detailExp == null) {
+				cumulativeQuantity += stockDetail.getQuantity();
+			} else if (stockDetailExp != null && detailExp != null) {
+				if (stockDetailExp.getTime() == detail.getExpiration().getTime()) {
+					cumulativeQuantity += stockDetail.getQuantity();
+				}
+			}
+		}
+		return cumulativeQuantity;
+	}
+
+	private void removeUnusedItemStockDetailRecords(ItemStock stock, ItemStockDetail detail) {
+		Set<ItemStockDetail> removeStockDetails = new HashSet<ItemStockDetail>();
+		for (ItemStockDetail stockDetail : stock.getDetails()) {
+			Date stockDetailExp = stockDetail.getExpiration();
+			Date detailExp = detail.getExpiration();
+			if (stockDetailExp == null && detailExp == null) {
+				removeStockDetails.add(stockDetail);
+			} else if (stockDetailExp != null && detailExp != null) {
+				if (stockDetailExp.getTime() == detail.getExpiration().getTime()) {
+					removeStockDetails.add(stockDetail);
+				}
+			}
+		}
+		if (removeStockDetails.size() > 0) {
+			for (ItemStockDetail removeDetail : removeStockDetails) {
+				stock.getDetails().remove(removeDetail);
 			}
 		}
 	}
