@@ -700,7 +700,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 			}
 
 			// Create a new tx to handle the remaining stock request
-			if (remainingQuantity < 0) {
+			if (remainingQuantity != 0) {
 				ReservedTransaction newTx = new ReservedTransaction(tx);
 				newTx.setQuantity(remainingQuantity);
 
