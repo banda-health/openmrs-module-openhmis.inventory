@@ -32,6 +32,7 @@
 			this.existingQuantity = existingQuantity;
 			this.selected = false;
 			this.expirationHasDatePicker = false;
+			this.newQuantity = '';
 		}
 
 		LineItemModel.prototype = {
@@ -106,7 +107,15 @@
 
 			isExpirationHasDatePicker: function () {
 				return this.expirationHasDatePicker;
-			}
+			},
+
+			setNewQuantity: function (newQuantity) {
+				this.newQuantity = newQuantity;
+			},
+
+			getNewQuantity: function () {
+				return this.newQuantity;
+			},
 		};
 
 		return LineItemModel;

@@ -250,11 +250,21 @@ fieldset.operation .nested select{
     padding: 0px 0px;
     display:inline-block;
 }
+table.item-stock th{
+    font-size: 12px;
+}
+
 table.item-stock td:first-child{
     width: 5%;
 }
 table.item-stock td:nth-child(2){
-    width: 60%;
+    width: 20%;
+}
+table.item-stock td:nth-child(3){
+    width: 20%;
+}
+table.item-stock td:nth-child(4){
+    width: 32%;
 }
 table.item-stock td input[type="image"]{
     min-width:0;
@@ -262,7 +272,7 @@ table.item-stock td input[type="image"]{
     background-color: transparent;
 }
 table.item-stock .autocomplete-search{
-    /*width: 450px; */
+    width: 250px;
 }
 table.item-stock .date input{
     margin-top: 27px;
@@ -274,10 +284,6 @@ table.item-stock .add-on{
 }
 table.item-stock td .details{
     font-size : 0.8em;
-}
-table.item-stock td .existing-quantity{
-    font-size: 0.8em;
-    float: right;
 }
 ul.table-layout .gray-button{
     background: #666666;
@@ -298,4 +304,8 @@ table.operation-date td select option{
 }
 table.operation-date tr:nth-child(even){
     background:none;
+}
+.negative-quantity{
+    background: red;
+    border-color: red;
 }

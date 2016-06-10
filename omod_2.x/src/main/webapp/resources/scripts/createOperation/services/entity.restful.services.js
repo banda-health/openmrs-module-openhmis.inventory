@@ -36,6 +36,7 @@
 			endVisit: endVisit,
 			searchItemStock: searchItemStock,
 			isOperationNumberGenerated: isOperationNumberGenerated,
+			getSessionLocation: getSessionLocation,
 		};
 
 		return service
@@ -160,6 +161,16 @@
 				onLoadEndVisitSuccessful,
 				errorCallback
 			);
+			//reset base url..
+			EntityRestFactory.setBaseUrl(module_name);
+		}
+
+		function getSessionLocation(module_name, onLoadSessionLocationSuccessful) {
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'session';
+			EntityRestFactory.setBaseUrl('appui', 'v1');
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadSessionLocationSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}

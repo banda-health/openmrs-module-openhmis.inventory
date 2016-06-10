@@ -20,11 +20,11 @@
 	base.controller("CreateOperationController", CreateOperationController);
 	CreateOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
-		'CookiesService', 'LineItemModel'];
+		'CookiesService', 'LineItemModel', 'EntityFunctions'];
 
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
-	                                   CookiesService, LineItemModel) {
+	                                   CookiesService, LineItemModel, EntityFunctions) {
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
@@ -44,6 +44,11 @@
 			// @Override
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
+				$scope.loading = true;
+				if (self.sessionLocation === undefined) {
+					CreateOperationRestfulService.getSessionLocation(module_name, self.onLoadSessionLocationSuccessful);
+				}
+
 				$scope.isOperationNumberGenerated = false;
 				CreateOperationRestfulService.isOperationNumberGenerated(module_name, self.onLoadOpNumGenSuccessful);
 				$scope.totalNumOfResults = 0;
@@ -110,6 +115,7 @@
 				CreateOperationFunctions.onChangeDatePicker(
 					self.onOperationDateSuccessfulCallback,
 					'operationDateId-display');
+				$scope.loading = false;
 			}
 
 		/**
@@ -177,6 +183,9 @@
 				if (!CreateOperationFunctions.validateLineItems($scope)) {
 					return false;
 				}
+
+				$scope.loading = true;
+
 				return true;
 			};
 
@@ -192,10 +201,20 @@
 				CreateOperationFunctions.changeOperationDate($scope);
 			}
 
-		self.changeItemQuantity = self.changeItemQuantity || function (quantity) {
-				if (quantity == 0) {
+		self.changeItemQuantity = self.changeItemQuantity || function (lineItem) {
+				var quantity = lineItem.itemStockQuantity;
+				if (quantity == 0 || ($scope.operationType.name !== 'Adjustment' && quantity <= 0)) {
 					emr.errorAlert("openhmis.inventory.operations.error.itemError");
-					$scope.lineItem.itemStockQuantity = 1;
+					lineItem.itemStockQuantity = 1;
+				} else {
+					var newQuantity;
+					if ($scope.operationType.name === 'Adjustment' || $scope.operationType.name === 'Receipt') {
+						newQuantity = lineItem.existingQuantity + quantity;
+					} else {
+						newQuantity = lineItem.existingQuantity - quantity;
+					}
+
+					lineItem.setNewQuantity(newQuantity);
 				}
 			}
 
@@ -271,6 +290,8 @@
 		self.selectStockOperationItem = self.selectStockOperationItem || function (stockOperationItem, lineItem) {
 				$scope.lineItem = {};
 				lineItem.setExistingQuantity(0);
+				lineItem.setNewQuantity('');
+				lineItem.setItemStockQuantity(1);
 				if (stockOperationItem !== undefined) {
 					lineItem.setItemStock(stockOperationItem);
 					lineItem.setItemStockDepartment(stockOperationItem.department);
@@ -279,10 +300,10 @@
 					self.checkDatePickerExpirationSection(lineItem);
 					$scope.lineItem = lineItem;
 
+					self.searchItemStock(stockOperationItem);
+
 					if (lineItem.expirationHasDatePicker) {
 						CreateOperationFunctions.onChangeDatePicker(self.onLineItemExpDateSuccessfulCallback);
-					} else if (stockOperationItem.hasExpiration) {
-						self.searchItemStock(stockOperationItem);
 					}
 
 					// load next line item
@@ -330,6 +351,19 @@
 				$scope.destinationStockroom = $scope.destinationStockroom || $scope.destinationStockrooms[0]
 
 				$scope.sourceStockrooms = stockrooms;
+				if (self.sessionLocation !== undefined && $scope.sourceStockroom === undefined) {
+					for (var i = 0; i < $scope.sourceStockrooms.length; i++) {
+						var stockroom = $scope.sourceStockrooms[i];
+						if (stockroom !== undefined && stockroom.name === self.sessionLocation) {
+							$scope.sourceStockroom = stockroom;
+						}
+					}
+				}
+
+				if ($scope.sourceStockroom !== undefined) {
+					self.warningDialog();
+				}
+
 				$scope.sourceStockroom = $scope.sourceStockroom || $scope.sourceStockrooms[0]
 			}
 
@@ -399,6 +433,7 @@
 				$scope.lineItem.setExpirationDates(itemStockExpirationDates);
 				if (itemStocks[0] !== null) {
 					$scope.lineItem.setExistingQuantity(itemStocks[0].quantity);
+					self.changeItemQuantity($scope.lineItem);
 				}
 			}
 
@@ -415,6 +450,10 @@
 
 		self.onLineItemExpDateSuccessfulCallback = self.onLineItemExpDateSuccessfulCallback || function (date) {
 				$scope.lineItem.itemStockExpirationDate = CreateOperationFunctions.formatDate(new Date(date));
+			}
+
+		self.onLoadSessionLocationSuccessful = self.onLoadSessionLocationSuccessful || function (data) {
+				self.sessionLocation = data.sessionLocation.display;
 			}
 
 		// @Override
