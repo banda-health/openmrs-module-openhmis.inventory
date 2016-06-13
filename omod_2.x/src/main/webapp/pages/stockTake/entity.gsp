@@ -37,13 +37,13 @@
 
 			<div class="col-md-6">
 				<select class="form-control" ng-model="entity.stockroom"
-				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'>
+				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid' ng-change="loadStockDetails()">
 					<option value="" selected="selected">Any</option>
 				</select>
 			</div>
 
 			<div class="col-md-3">
-				<input type="button" value="Search" class="confirm form-control">
+				<input type="button" value="Search" class="confirm form-control" ng-click="loadStockDetails()">
 			</div>
 		</div>
 		<br/>

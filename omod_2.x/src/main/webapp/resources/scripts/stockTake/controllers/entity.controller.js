@@ -44,15 +44,26 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
 				self.loadStockrooms();
+				$scope.loadStockDetails = function () {
+					self.loadStockDetails($scope.entity.stockroom.uuid);
+				}
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {
 				StockTakeRestfulService.loadStockrooms(module_name, self.onLoadStockroomsSuccessful);
 			}
+
+		self.loadStockDetails = self.loadStockDetails || function(stockroomUuid) {
+				StockTakeRestfulService.loadStockDetails(module_name, self.onLoadStockDetailsSuccessful, stockroomUuid)
+			}
 		
 		//callback
 		self.onLoadStockroomsSuccessful = self.onLoadStockroomsSuccessful || function (data) {
 				$scope.stockrooms = data.results;
+			}
+
+		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful|| function (data) {
+				$scope.StockDetails = data.results;
 			}
 
 		/**

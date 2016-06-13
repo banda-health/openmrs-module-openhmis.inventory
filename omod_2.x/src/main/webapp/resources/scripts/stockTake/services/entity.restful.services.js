@@ -24,7 +24,8 @@
 		var service;
 		
 		service = {
-			loadStockrooms: loadStockrooms
+			loadStockrooms: loadStockrooms,
+			loadStockDetails:loadStockDetails
 		};
 		
 		return service;
@@ -38,6 +39,20 @@
 			requestParams['rest_entity_name'] = 'stockroom';
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadStockroomsSuccessful,
+				errorCallback
+			);
+		}
+
+		/**
+		 * Retrieve all the stock in the selected stockroom
+		 * @param stockroom-uuid
+		 * */
+		function loadStockDetails(module_name, onLoadStockDetailsSuccessful, stockroomUuid) {
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'inventoryStockTakeSummary';
+			requestParams['stockroom_uuid'] = stockroomUuid;
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadStockDetailsSuccessful,
 				errorCallback
 			);
 		}
