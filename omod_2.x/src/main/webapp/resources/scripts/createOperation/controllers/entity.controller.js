@@ -20,11 +20,11 @@
 	base.controller("CreateOperationController", CreateOperationController);
 	CreateOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
-		'CookiesService', 'LineItemModel', 'EntityFunctions'];
+		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions'];
 
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
-	                                   CookiesService, LineItemModel, EntityFunctions) {
+	                                   CookiesService, LineItemModel, CommonsRestfulFunctions) {
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
@@ -46,7 +46,7 @@
 			|| function (uuid) {
 				$scope.loading = true;
 				if (self.sessionLocation === undefined) {
-					CreateOperationRestfulService.getSessionLocation(module_name, self.onLoadSessionLocationSuccessful);
+					CommonsRestfulFunctions.getSessionLocation(module_name, self.onLoadSessionLocationSuccessful);
 				}
 
 				$scope.isOperationNumberGenerated = false;
@@ -262,7 +262,7 @@
 		self.searchPatients = self.searchPatients || function (currentPage) {
 				if ($scope.patient !== undefined) {
 					$scope.currentPage = $scope.currentPage || currentPage;
-					$scope.patients = CreateOperationRestfulService.searchPatients(
+					$scope.patients = CommonsRestfulFunctions.searchPatients(
 						module_name, $scope.patient, $scope.currentPage,
 						$scope.limit, self.onLoadPatientsSuccessful);
 				}
@@ -270,7 +270,7 @@
 
 		self.selectPatient = self.selectPatient || function (patient) {
 				$scope.selectedPatient = patient;
-				CreateOperationRestfulService.loadVisit(module_name, patient.uuid,
+				CommonsRestfulFunctions.loadVisit(module_name, patient.uuid,
 					self.onLoadVisitSuccessful);
 			}
 
@@ -280,11 +280,11 @@
 
 		self.endVisit = self.endVisit || function () {
 				var stopDatetime = $filter('date')(new Date(), 'yyyy-MM-ddThh:mm:ss.sss');
-				CreateOperationRestfulService.endVisit(module_name, $scope.visit.uuid, stopDatetime, self.onLoadEndVisitSuccessful);
+				CommonsRestfulFunctions.endVisit(module_name, $scope.visit.uuid, stopDatetime, self.onLoadEndVisitSuccessful);
 			}
 
 		self.searchStockOperationItems = self.searchStockOperationItems || function (search) {
-				return CreateOperationRestfulService.searchStockOperationItems(module_name, search);
+				return CommonsRestfulFunctions.searchStockOperationItems(module_name, search);
 			}
 
 		self.selectStockOperationItem = self.selectStockOperationItem || function (stockOperationItem, lineItem) {

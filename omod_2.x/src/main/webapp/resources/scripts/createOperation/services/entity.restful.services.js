@@ -18,9 +18,9 @@
 
 	angular.module('app.restfulServices').service('CreateOperationRestfulService', CreateOperationRestfulService);
 
-	CreateOperationRestfulService.$inject = ['EntityRestFactory', 'PaginationService'];
+	CreateOperationRestfulService.$inject = ['EntityRestFactory'];
 
-	function CreateOperationRestfulService(EntityRestFactory, PaginationService) {
+	function CreateOperationRestfulService(EntityRestFactory) {
 		var service;
 
 		service = {
@@ -30,26 +30,11 @@
 			loadDepartments: loadDepartments,
 			loadOperationTypeAttributes: loadOperationTypeAttributes,
 			loadStockOperations: loadStockOperations,
-			searchStockOperationItems: searchStockOperationItems,
-			searchPatients: searchPatients,
-			loadVisit: loadVisit,
-			endVisit: endVisit,
 			searchItemStock: searchItemStock,
 			isOperationNumberGenerated: isOperationNumberGenerated,
-			getSessionLocation: getSessionLocation,
 		};
 
 		return service
-
-		function searchStockOperationItems(module_name, q) {
-			var requestParams = {};
-			requestParams['has_physical_inventory'] = 'true';
-			requestParams['q'] = q;
-			requestParams['limit'] = 10;
-			requestParams['startIndex'] = 1;
-
-			return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
-		}
 
 		/**
 		 * load list of operation types
@@ -108,39 +93,6 @@
 			}
 		}
 
-		/**
-		 * The Patient search webservice doesn't work right with pagination -- needs to be fixed.
-		 * @link https://talk.openmrs.org/t/patient-search-webservice-pagination-doesnt-work/6328
-		 * @param module_name
-		 * @param q
-		 * @param currentPage
-		 * @param limit
-		 * @param onLoadPatientsSuccessful
-		 */
-		function searchPatients(module_name, q, currentPage, limit, onLoadPatientsSuccessful) {
-			var requestParams = []; // PaginationService.paginateParams(currentPage, limit, false, '');
-			requestParams['q'] = q;
-			requestParams['rest_entity_name'] = '';
-			requestParams['v'] = "custom:(uuid,patientIdentifier:(uuid,identifier)," +
-				"person:(gender,age,birthdate,birthdateEstimated,personName))";
-			EntityRestFactory.setBaseUrl('patient', 'v1');
-			EntityRestFactory.loadEntities(requestParams,
-				onLoadPatientsSuccessful, errorCallback);
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
-		}
-
-		function loadVisit(module_name, patient_uuid, onLoadVisitSuccessful) {
-			var requestParams = [];
-			requestParams['rest_entity_name'] = '';
-			requestParams['patient'] = patient_uuid;
-			EntityRestFactory.setBaseUrl('visit', 'v1');
-			EntityRestFactory.loadEntities(requestParams,
-				onLoadVisitSuccessful, errorCallback);
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
-		}
-
 		function isOperationNumberGenerated(module_name, onLoadOpNumGenSuccessful) {
 			var requestParams = [];
 			requestParams['resource'] = 'module/openhmis/inventory/moduleSettings.page';
@@ -149,28 +101,6 @@
 			EntityRestFactory.loadResults(requestParams,
 				onLoadOpNumGenSuccessful, errorCallback);
 
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
-		}
-
-		function endVisit(module_name, visit_uuid, stopDatetime, onLoadEndVisitSuccessful) {
-			var requestParams = {};
-			requestParams['stopDatetime'] = stopDatetime.toString();
-			EntityRestFactory.setBaseUrl('', 'v1');
-			EntityRestFactory.post('visit', visit_uuid, requestParams,
-				onLoadEndVisitSuccessful,
-				errorCallback
-			);
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
-		}
-
-		function getSessionLocation(module_name, onLoadSessionLocationSuccessful) {
-			var requestParams = [];
-			requestParams['rest_entity_name'] = 'session';
-			EntityRestFactory.setBaseUrl('appui', 'v1');
-			EntityRestFactory.loadEntities(requestParams,
-				onLoadSessionLocationSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
