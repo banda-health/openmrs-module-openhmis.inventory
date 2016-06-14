@@ -45,7 +45,9 @@
 			|| function (uuid) {
 				self.loadStockrooms();
 				$scope.loadStockDetails = function () {
-					self.loadStockDetails($scope.entity.stockroom.uuid);
+					if ($scope.entity.stockroom.uuid != null) {
+						self.loadStockDetails($scope.entity.stockroom.uuid);
+					}
 				}
 			}
 		
@@ -63,7 +65,8 @@
 			}
 
 		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful|| function (data) {
-				$scope.StockDetails = data.results;
+				$scope.fetchedEntities = data.results;
+				$scope.totalNumOfResults = data.length;
 			}
 
 		/**
