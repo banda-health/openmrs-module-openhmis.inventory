@@ -14,7 +14,7 @@
  */
 
 /* initialize and bootstrap application */
-requirejs(['item/configs/entity.module'], function() {
+requirejs(['reports/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
