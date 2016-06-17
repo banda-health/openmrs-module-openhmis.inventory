@@ -264,14 +264,13 @@
 					$scope.currentPage = $scope.currentPage || currentPage;
 					$scope.patients = CommonsRestfulFunctions.searchPatients(
 						module_name, $scope.patient, $scope.currentPage,
-						$scope.limit, self.onLoadPatientsSuccessful);
+						$scope.limit, $scope);
 				}
 			}
 
 		self.selectPatient = self.selectPatient || function (patient) {
 				$scope.selectedPatient = patient;
-				CommonsRestfulFunctions.loadVisit(module_name, patient.uuid,
-					self.onLoadVisitSuccessful);
+				CommonsRestfulFunctions.loadVisit(module_name, patient.uuid, $scope);
 			}
 
 		self.changePatient = self.changePatient || function () {
@@ -279,12 +278,11 @@
 			}
 
 		self.endVisit = self.endVisit || function () {
-				var stopDatetime = $filter('date')(new Date(), 'yyyy-MM-ddThh:mm:ss.sss');
-				CommonsRestfulFunctions.endVisit(module_name, $scope.visit.uuid, stopDatetime, self.onLoadEndVisitSuccessful);
+				CommonsRestfulFunctions.endVisit(module_name, $scope.visit.uuid, $scope);
 			}
 
 		self.searchStockOperationItems = self.searchStockOperationItems || function (search) {
-				return CommonsRestfulFunctions.searchStockOperationItems(module_name, search);
+				return CommonsRestfulFunctions.searchStockOperationItems(search);
 			}
 
 		self.selectStockOperationItem = self.selectStockOperationItem || function (stockOperationItem, lineItem) {
@@ -401,29 +399,6 @@
 		self.onLoadStockOperationItemSuccessful = self.onLoadStockOperationItemSuccessful || function (data) {
 				$scope.stockOperationItems = data.results;
 				$scope.stockOperationItemTotalNumberOfResults = data.length;
-			}
-
-		self.onLoadPatientsSuccessful = self.onLoadPatientsSuccessful || function (data) {
-				$scope.patients = data.results;
-				$scope.totalNumOfResults = $scope.patients.length;
-				if ($scope.currentPage > 1) {
-					var index = ($scope.currentPage - 1) * $scope.limit;
-					$scope.patients.splice(0, index);
-				}
-			}
-
-		self.onLoadVisitSuccessful = self.onLoadVisitSuccessful || function (data) {
-				if (data.results) {
-					$scope.visit = data.results[0];
-				} else {
-					$scope.visit = '';
-				}
-			}
-
-		self.onLoadEndVisitSuccessful = self.onLoadEndVisitSuccessful || function (data) {
-				if (data.stopDatetime !== undefined) {
-					$scope.visit = undefined;
-				}
 			}
 
 		self.onLoadItemStockSuccessful = self.onLoadItemStockSuccessful || function (data) {

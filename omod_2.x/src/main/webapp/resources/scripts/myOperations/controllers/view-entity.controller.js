@@ -18,11 +18,14 @@
 
     var base = angular.module('app.genericManageController');
     base.controller("MyOperationsController", MyOperationsController);
-    MyOperationsController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory', 'CssStylesFactory',
-        'PaginationService', 'StockOperationModel', 'CookiesService', 'StockOperationRestfulService'];
+    MyOperationsController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory',
+        'CssStylesFactory', 'PaginationService', 'StockOperationModel',
+        'CookiesService', 'StockOperationRestfulService'];
 
-    function MyOperationsController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
-                                             StockOperationModel, CookiesService, StockOperationRestfulService) {
+    function MyOperationsController($injector, $scope, $filter, EntityRestFactory,
+                                    CssStylesFactory, PaginationService,
+                                    StockOperationModel, CookiesService,
+                                    StockOperationRestfulService) {
         var self = this;
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stock.operation.name");
