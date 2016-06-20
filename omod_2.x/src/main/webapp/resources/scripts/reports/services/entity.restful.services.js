@@ -36,7 +36,7 @@
 		function loadStockRooms(rest_entity_name, successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = rest_entity_name;
-			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
+			EntityRestFactory.loadEntities(requestParams, successCallback, function(error){console.log(error);});
 		}
 
 	}
