@@ -653,20 +653,26 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 			tx.setExpiration(detail.getExpiration());
 			tx.setBatchOperation(detail.getBatchOperation());
 
-			int cumulativeQuantity = computeCumulativeItemStockDetailQuantities(stock, detail);
+			// get the cumulative total quantity for item stocks with the same expiration date.
+			int cumulativeQuantity = calculateTotalItemStockQuantity(stock, detail);
 			int remainingQuantity = 0;
 
 			if (cumulativeQuantity == 0) {
-				removeUnusedItemStockDetailRecords(stock, detail);
+				// DO NOT use this item stock or any other with the same expiration date.
+				deleteItemStockDetailRecords(stock, detail);
 				// Find other details to fulfill this tx
 				findAndUpdateSourceDetail(newTransactions, operation, stock, tx);
 			} else {
 				if ((cumulativeQuantity + tx.getQuantity()) < 0) {
 					if (cumulativeQuantity > 0) {
-						int newTxQuantity = cumulativeQuantity;
-						newTxQuantity *= -1;
+						// UPDATE the current transaction quantity with the cumulative quantity
+						// and create another transaction (after processing the current transaction)
+						// with the remainingQuantity.
+						// FOR INSTANCE: if the cumulativeQuantity = 5, transaction quantity = -6,
+						// set transaction quantity to -5,
+						// and create another transaction with quantity = -1
 						remainingQuantity = cumulativeQuantity + tx.getQuantity();
-						tx.setQuantity(newTxQuantity);
+						tx.setQuantity(cumulativeQuantity * -1);
 					}
 				}
 
@@ -713,7 +719,13 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		}
 	}
 
-	private int computeCumulativeItemStockDetailQuantities(ItemStock stock, ItemStockDetail detail) {
+	/**
+	 * Calculates the total quantities for item stocks with the same expiration date.
+	 * @param stock
+	 * @param detail
+	 * @return
+	 */
+	private int calculateTotalItemStockQuantity(ItemStock stock, ItemStockDetail detail) {
 		int cumulativeQuantity = 0;
 		for (ItemStockDetail stockDetail : stock.getDetails()) {
 			Date stockDetailExp = stockDetail.getExpiration();
@@ -729,22 +741,28 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		return cumulativeQuantity;
 	}
 
-	private void removeUnusedItemStockDetailRecords(ItemStock stock, ItemStockDetail detail) {
-		Set<ItemStockDetail> removeStockDetails = new HashSet<ItemStockDetail>();
+	/**
+	 * Deletes item stocks with given expiration date.
+	 * @param stock
+	 * @param detail
+	 */
+	private void deleteItemStockDetailRecords(ItemStock stock, ItemStockDetail detail) {
+		Set<ItemStockDetail> deleteStockDetails = new HashSet<ItemStockDetail>();
 		for (ItemStockDetail stockDetail : stock.getDetails()) {
 			Date stockDetailExp = stockDetail.getExpiration();
 			Date detailExp = detail.getExpiration();
 			if (stockDetailExp == null && detailExp == null) {
-				removeStockDetails.add(stockDetail);
+				deleteStockDetails.add(stockDetail);
 			} else if (stockDetailExp != null && detailExp != null) {
 				if (stockDetailExp.getTime() == detail.getExpiration().getTime()) {
-					removeStockDetails.add(stockDetail);
+					deleteStockDetails.add(stockDetail);
 				}
 			}
 		}
-		if (removeStockDetails.size() > 0) {
-			for (ItemStockDetail removeDetail : removeStockDetails) {
-				stock.getDetails().remove(removeDetail);
+
+		if (deleteStockDetails.size() > 0) {
+			for (ItemStockDetail deleteDetail : deleteStockDetails) {
+				stock.getDetails().remove(deleteDetail);
 			}
 		}
 	}
