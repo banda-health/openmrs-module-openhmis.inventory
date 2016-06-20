@@ -99,6 +99,95 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 	}
 
 	/**
+	 * @verifies use furthest expiration from the source stockroom
+	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
+	 */
+	@Test
+	public void calculateReservations_shouldUseFurthestExpirationFromTheSourceStockroom() throws Exception {
+		Settings settings = ModuleSettings.loadSettings();
+		settings.setAutoSelectItemStockFurthestExpirationDate(true);
+		ModuleSettings.saveSettings(settings);
+
+		Stockroom sourceRoom = stockroomDataService.getById(0);
+		Stockroom destRoom = stockroomDataService.getById(1);
+
+		Item item0 = itemDataService.getById(0);
+		Item item2 = itemDataService.getById(2);
+
+		// Add some item stock with different qualifiers to the source room
+		ItemStockDetail detail1 = new ItemStockDetail();
+		detail1.setItem(item2);
+		detail1.setStockroom(sourceRoom);
+		detail1.setQuantity(10);
+		detail1.setCalculatedBatch(false);
+		detail1.setCalculatedExpiration(false);
+		detail1.setBatchOperation(operationDataService.getById(2));
+		Calendar calendar1 = Calendar.getInstance();
+		calendar1.add(Calendar.YEAR, 15);
+		detail1.setExpiration(calendar1.getTime());
+
+		ItemStockDetail detail2 = new ItemStockDetail();
+		detail2.setItem(item2);
+		detail2.setStockroom(sourceRoom);
+		detail2.setQuantity(20);
+		detail2.setCalculatedBatch(false);
+		detail2.setCalculatedExpiration(false);
+		detail2.setBatchOperation(operationDataService.getById(1));
+		Calendar calendar2 = Calendar.getInstance();
+		calendar2.add(Calendar.YEAR, 1);
+		detail2.setExpiration(calendar2.getTime());
+
+		ItemStock stock2 = stockroomDataService.getItem(sourceRoom, item2);
+		stock2.addDetail(detail1);
+		stock2.addDetail(detail2);
+
+		itemStockDataService.save(stock2);
+		Context.flushSession();
+
+		// Create the stock operation
+		StockOperation operation = new StockOperation();
+		operation.setInstanceType(WellKnownOperationTypes.getTransfer());
+		operation.setStatus(StockOperationStatus.PENDING);
+		operation.setSource(sourceRoom);
+		operation.setDestination(destRoom);
+		operation.setOperationNumber("A123");
+		operation.setOperationDate(new Date());
+		final ReservedTransaction tx = operation.addReserved(item0, 3);
+		tx.setCalculatedBatch(true);
+		tx.setCalculatedExpiration(true);
+		final ReservedTransaction tx2 = operation.addReserved(item2, 5);
+		tx2.setCalculatedBatch(true);
+		tx2.setCalculatedExpiration(true);
+
+		// Calculate the reservations
+		service.calculateReservations(operation);
+
+		// Ensure that no new transactions were created
+		Assert.assertEquals(2, operation.getReserved().size());
+
+		// Ensure that no expiration was set as the item is not expirable
+		ReservedTransaction testTx =
+		        Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			        @Override
+			        public boolean apply(@Nullable ReservedTransaction input) {
+				        return input == tx;
+			        }
+		        });
+		Assert.assertEquals(item0, testTx.getItem());
+		Assert.assertNull(testTx.getExpiration());
+
+		// Ensure that the furthest expiration stock was selected
+		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
+			@Override
+			public boolean apply(@Nullable ReservedTransaction input) {
+				return input == tx2;
+			}
+		});
+		Assert.assertEquals(item2, testTx.getItem());
+		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+	}
+
+	/**
 	 * @verifies use closest expiration from the source stockroom
 	 * @see StockOperationServiceImpl#calculateReservations(org.openmrs.module.openhmis.inventory.api.model.StockOperation)
 	 */
