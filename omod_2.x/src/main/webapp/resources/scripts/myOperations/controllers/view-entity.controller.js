@@ -17,11 +17,11 @@
     'use strict';
 
     var base = angular.module('app.genericManageController');
-    base.controller("ManageStockOperationsController", ManageStockOperationsController);
-    ManageStockOperationsController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory', 'CssStylesFactory',
+    base.controller("MyOperationsController", MyOperationsController);
+    MyOperationsController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory', 'CssStylesFactory',
         'PaginationService', 'StockOperationModel', 'CookiesService', 'StockOperationRestfulService'];
 
-    function ManageStockOperationsController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
+    function MyOperationsController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
                                              StockOperationModel, CookiesService, StockOperationRestfulService) {
         var self = this;
         var module_name = 'inventory';
@@ -46,6 +46,15 @@
 
                 $scope.searchItems = self.searchItems;
                 $scope.selectItem = self.selectItem;
+
+                $scope.operation_status = 'Completed';
+
+                self.searchStockOperation(1);
+            }
+
+        // @Override
+        self.paginate = self.paginate || function(page){
+                //do nothing..
             }
 
         self.searchStockOperation = self.searchStockOperation || function(currentPage){
@@ -80,7 +89,7 @@
                     rest_entity_name, currentPage, $scope.limit,
                     operationItem_uuid, $scope.operation_status,
                     operationType_uuid, stockroom_uuid,
-                    self.onLoadSearchStockOperationSuccessful
+                    self.onLoadSearchStockOperationSuccessful, 'myOperation'
                 );
             }
 
@@ -100,7 +109,6 @@
         self.loadStockRooms = self.loadStockRooms || function(){
                 StockOperationRestfulService.loadStockRooms("stockroom", self.onLoadStockRoomSuccessful);
             }
-
 
         self.onLoadSearchStockOperationSuccessful = self.onLoadSearchStockOperationSuccessful || function(data){
                 $scope.fetchedEntities = data.results;

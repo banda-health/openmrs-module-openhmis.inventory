@@ -13,15 +13,15 @@
  */
 package org.openmrs.module.openhmis.inventory.api.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.openmrs.Privilege;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.web.PrivilegeConstantsCompatibility;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Constants class for module privilege constants.
@@ -57,6 +57,10 @@ public class PrivilegeConstants {
 	public static final String TASK_ACCESS_VIEW_STOCK_OPERATIONS_PAGE = "Task: Access View Stock Operations";
 	public static final String TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE = "Task: Access Generate Item Mappings";
 	public static final String TASK_ACCESS_INVENTORY_SETTINGS_PAGE = "Task: Access Inventory Settings";
+	public static final String TASK_ACCESS_MY_OPERATIONS_PAGE = "Task: Access My Operations";
+	public static final String TASK_ACCESS_CREATE_OPERATION_PAGE = "Task:Access Create Operation";
+	public static final String TASK_ACCESS_INVENTORY_REPORTS_PAGE = "Task: Access Inventory Reports";
+	public static final String TASK_ACCESS_STOCK_TAKE_PAGE = "Task: Access Stock Take";
 
 	public static final String[] PRIVILEGE_NAMES = new String[] { MANAGE_ITEMS, VIEW_ITEMS, PURGE_ITEMS, MANAGE_STOCKROOMS,
 	        VIEW_STOCKROOMS, PURGE_STOCKROOMS, MANAGE_OPERATIONS, VIEW_OPERATIONS, MANAGE_METADATA, VIEW_METADATA,
@@ -66,7 +70,8 @@ public class PrivilegeConstants {
 	        TASK_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE, TASK_ACCESS_MANAGE_DEPARTMENTS_PAGE,
 	        TASK_ACCESS_MANAGE_INSTITUTIONS_PAGE, TASK_ACCESS_MANAGE_STOCKROOMS_PAGE,
 	        TASK_ACCESS_MANAGE_OPERATION_TYPES_PAGE, TASK_ACCESS_VIEW_STOCK_OPERATIONS_PAGE,
-	        TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE, TASK_ACCESS_INVENTORY_SETTINGS_PAGE };
+	        TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE, TASK_ACCESS_INVENTORY_SETTINGS_PAGE, TASK_ACCESS_MY_OPERATIONS_PAGE,
+	        TASK_ACCESS_CREATE_OPERATION_PAGE, TASK_ACCESS_INVENTORY_REPORTS_PAGE, TASK_ACCESS_STOCK_TAKE_PAGE };
 
 	protected PrivilegeConstants() {}
 

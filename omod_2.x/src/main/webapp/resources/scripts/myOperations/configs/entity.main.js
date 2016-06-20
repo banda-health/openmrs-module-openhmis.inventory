@@ -14,13 +14,12 @@
  */
 
 /* initialize and bootstrap application */
-requirejs(['stockroom/configs/entity.module'], function() {
-    angular.bootstrap(document, ['stockroomsApp']);
+requirejs(['myOperations/configs/entity.module'], function() {
+    angular.bootstrap(document, ['myOperationsApp']);
 });
 
 /* load UI messages */
 emr.loadMessages([
-    "openhmis.commons.general.new",
     "openhmis.commons.general.error.notFound",
     "openhmis.commons.general.created.success",
     "openhmis.commons.general.updated.success",
@@ -40,7 +39,6 @@ emr.loadMessages([
     "general.description",
     "general.cancel",
     "general.save",
-    "general.close",
     "general.retireReason",
     "general.purge",
     "general.retire",
@@ -52,28 +50,33 @@ emr.loadMessages([
     "openhmis.commons.general.error.retireReason",
     "openhmis.commons.general.add",
     "openhmis.commons.general.edit",
-    "openhmis.inventory.stockroom.name",
-    "openhmis.inventory.stockroom.rest_name",
-    "openhmis.inventory.stockroom.namePlural",
-    "openhmis.inventory.location.name",
-    "openhmis.inventory.operations.namePlural",
-    "openhmis.inventory.item.namePlural",
-    "openhmis.inventory.item.name",
-    "openhmis.inventory.item.quantity",
-    "openhmis.inventory.stockroom.batchOperation",
-    "openhmis.inventory.stockroom.expiration",
-    "openhmis.inventory.stockroom.dateCreated",
+    "openhmis.inventory.stock.operation.name",
+    "openhmis.inventory.stock.operation.rest_name",
+    "openhmis.commons.general.status",
     "openhmis.inventory.operations.type.name",
-    "openhmis.inventory.stockroom.operationNumber",
-    "openhmis.inventory.stockroom.status",
-    "openhmis.inventory.stockroom.details",
-    "openhmis.inventory.stockroom.dateCreated",
-    "openhmis.inventory.stockroom.status",
-    "openhmis.inventory.stockroom.transactions",
-    "openhmis.inventory.item.stock.searchStockName",
+    "openhmis.inventory.stockroom.name",
+    "openhmis.inventory.item.name",
+    "openhmis.inventory.operations.dateCreated",
+    "openhmis.inventory.operations.operationDate",
+    "openhmis.inventory.operations.operationType",
+    "openhmis.inventory.operations.operationNumber",
+    "openhmis.commons.general.details",
+    "openhmis.inventory.item.namePlural",
+    "openhmis.inventory.stockroom.transaction.name",
+    "openhmis.inventory.operations.operationCreators",
+    "openhmis.inventory.operations.sourceStockroom",
+    "openhmis.inventory.operations.destinationStockroom",
+    "openhmis.commons.general.rollbackOperation",
+    "openhmis.commons.general.close",
+    "openhmis.inventory.item.quantity",
+    "openhmis.commons.general.batchOperation",
+    "openhmis.commons.general.expiration",
     "openhmis.inventory.item.enterItemSearch",
-    "openhmis.inventory.stockroom.transaction.noOperationTransactionsFound",
-    "openhmis.inventory.stockroom.operation.noOperationsFound",
-    "openhmis.inventory.stockroom.searchStockroom",
+    "openhmis.commons.general.auto",
+    "openhmis.commons.general.patient",
+    "openhmis.commons.general.actions",
+    "openhmis.commons.general.completeOperation",
+    "openhmis.commons.general.cancelOperation",
+    "openhmis.commons.general.cancelReason",
     "openhmis.commons.general.postSearchMessage"
 ]);

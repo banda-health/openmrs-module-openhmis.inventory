@@ -47,15 +47,18 @@
 			}
 
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function () {
+				if (!angular.isDefined($scope.entity.name) || $scope.entity.name === '') {
+					$scope.submitted = true;
+					emr.errorAlert(emr.message("openhmis.commons.general.name.required"));
+					return false;
+				}
+
 				if (!angular.isDefined($scope.entity.attributeOrder) || $scope.entity.attributeOrder === '') {
 					$scope.entity.attributeOrder = null;
 				}
+
 				if (!angular.isDefined($scope.entity.foreignKey) || $scope.entity.foreignKey === '') {
 					$scope.entity.foreignKey = null;
-				}
-				if (!angular.isDefined($scope.entity.name) || $scope.entity.name === '') {
-					$scope.submitted = true;
-					return false;
 				}
 				return true;
 			}

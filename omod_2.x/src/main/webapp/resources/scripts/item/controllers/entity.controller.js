@@ -140,13 +140,13 @@
                 // validate name.
                 if(!angular.isDefined($scope.entity.name) || $scope.entity.name === ''){
                     $scope.submitted = true;
-                    emr.errorAlert(emr.message("openhmis.inventory.general.name.required"));
+                    emr.errorAlert(emr.message("openhmis.commons.general.name.required"));
                 }
 
                 // validate prices.
                 if($scope.entity.prices.length === 0){
                     $scope.submitted = true;
-                    emr.errorAlert(emr.message("openhmis.inventory.general.required.prices"));
+                    emr.errorAlert(emr.message("openhmis.commons.general.required.prices"));
                 }
                 else {
                     var defaultPriceSet = false;
@@ -156,7 +156,7 @@
                         // checks for invalid prices.
                         if(price['price'] === undefined){
                             $scope.submitted = true;
-                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.required.priceValue"), [price['name']]);
+                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.commons.general.required.priceValue"), [price['name']]);
                             emr.errorAlert(errorMsg);
                         }
 
@@ -175,7 +175,7 @@
 
                     if(!defaultPriceSet ){
                         $scope.submitted = true;
-                        emr.errorAlert(emr.message("openhmis.inventory.general.required.defaultPrice"));
+                        emr.errorAlert(emr.message("openhmis.commons.general.required.defaultPrice"));
                     }
                 }
 
@@ -191,7 +191,7 @@
                         var value = $scope.attributes[itemAttributeType.uuid] || "";
                         if(required && value === ""){
                             $scope.submitted = true;
-                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.required.itemAttribute"), [itemAttributeType.name]);
+                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.commons.general.required.itemAttribute"), [itemAttributeType.name]);
                             emr.errorAlert(errorMsg);
                             failItemAttributeTypeValidation = true;
                         }

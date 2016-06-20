@@ -36,22 +36,38 @@
         // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
                 self.loadLocations();
+                $scope.searchStockroomsByName = self.searchStockroomsByName;
                 $scope.searchStockrooms = self.searchStockrooms;
-
-              $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
-                    [self.entity_name]);
             }
 
         self.loadLocations = self.loadLocations || function(){
                 StockroomRestfulService.loadLocations(module_name, self.onLoadLocationsSuccessful);
             }
 
-        self.searchStockrooms = self.searchStockrooms || function(){
+        self.searchStockroomsByName = self.searchStockroomsByName || function(currentPage){
+                if($scope.searchField === undefined || $scope.searchField === ''){
+                    currentPage = 1;
+                    $scope.currentPage = currentPage;
+                }
+
+                self.searchStockrooms(currentPage);
+            }
+
+        self.searchStockrooms = self.searchStockrooms || function(currentPage){
+                CookiesService.set('searchField', $scope.searchField);
+                CookiesService.set('startIndex', $scope.startIndex);
+                CookiesService.set('limit', $scope.limit);
+                CookiesService.set('includeRetired', $scope.includeRetired);
+                CookiesService.set('currentPage', currentPage);
+
                 var location_uuid;
                 if($scope.location !== "" && $scope.location !== null){
                     location_uuid = $scope.location.uuid;
                 }
-                StockroomRestfulService.searchStockrooms(rest_entity_name, location_uuid, $scope.currentPage, $scope.limit, $scope.includeRetired, $scope.searchField, self.onSearchStockRoomsSuccessful);
+
+                CookiesService.set('location_uuid', location_uuid);
+
+                StockroomRestfulService.searchStockrooms(rest_entity_name, location_uuid, currentPage, $scope.limit, $scope.includeRetired, $scope.searchField, self.onSearchStockRoomsSuccessful);
             }
 
         // call back

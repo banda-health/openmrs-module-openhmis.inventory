@@ -19,9 +19,9 @@
     var app = angular.module('app.stockOperationFunctionsFactory', []);
     app.service('StockOperationFunctions', StockOperationFunctions);
 
-    StockOperationFunctions.$inject = [];
+    StockOperationFunctions.$inject = ['EntityFunctions'];
 
-    function StockOperationFunctions() {
+    function StockOperationFunctions(EntityFunctions) {
         var service;
 
         service = {
@@ -40,7 +40,10 @@
                     }
                 }
             });
+
             dialog.show();
+
+            EntityFunctions.disableBackground();
         }
 
         /**
@@ -71,22 +74,22 @@
             messages['openhmis.inventory.stockroom.dateCreated'] = emr.message('openhmis.inventory.stockroom.dateCreated');
             messages['openhmis.inventory.stockroom.status'] = emr.message('openhmis.inventory.stockroom.status');
             messages['openhmis.inventory.stockroom.transactions'] = emr.message('openhmis.inventory.stockroom.transactions');
-            messages['openhmis.inventory.general.status'] = emr.message('openhmis.inventory.general.status');
-            messages['openhmis.inventory.general.details'] = emr.message('openhmis.inventory.general.details');
+            messages['openhmis.commons.general.status'] = emr.message('openhmis.commons.general.status');
+            messages['openhmis.commons.general.details'] = emr.message('openhmis.commons.general.details');
             messages['openhmis.inventory.stockroom.transaction.name'] = emr.message('openhmis.inventory.stockroom.transaction.name');
             messages['openhmis.inventory.operations.operationCreators'] = emr.message('openhmis.inventory.operations.operationCreators');
             messages['openhmis.inventory.operations.sourceStockroom'] = emr.message('openhmis.inventory.operations.sourceStockroom');
             messages['openhmis.inventory.operations.destinationStockroom'] = emr.message('openhmis.inventory.operations.destinationStockroom');
-            messages['openhmis.inventory.general.rollbackOperation'] = emr.message('openhmis.inventory.general.rollbackOperation');
-            messages['openhmis.inventory.general.batchOperation'] = emr.message('openhmis.inventory.general.batchOperation');
-            messages['openhmis.inventory.general.expiration'] = emr.message('openhmis.inventory.general.expiration');
+            messages['openhmis.commons.general.rollbackOperation'] = emr.message('openhmis.commons.general.rollbackOperation');
+            messages['openhmis.commons.general.batchOperation'] = emr.message('openhmis.commons.general.batchOperation');
+            messages['openhmis.commons.general.expiration'] = emr.message('openhmis.commons.general.expiration');
             messages['openhmis.inventory.stockroom.name'] = emr.message('openhmis.inventory.stockroom.name');
             messages['openhmis.inventory.operations.operationDate'] = emr.message('openhmis.inventory.operations.operationDate');
             messages['openhmis.inventory.operations.operationNumber'] = emr.message('openhmis.inventory.operations.operationNumber');
             messages['openhmis.inventory.operations.operationType'] = emr.message('openhmis.inventory.operations.operationType');
-            messages['openhmis.inventory.general.close'] = emr.message('openhmis.inventory.general.close');
-            messages['openhmis.inventory.general.auto'] = emr.message('openhmis.inventory.general.auto');
-            messages['openhmis.inventory.general.cancelReason'] = emr.message('openhmis.inventory.general.cancelReason');
+            messages['openhmis.commons.general.close'] = emr.message('openhmis.commons.general.close');
+            messages['openhmis.commons.general.auto'] = emr.message('openhmis.commons.general.auto');
+            messages['openhmis.commons.general.cancelReason'] = emr.message('openhmis.commons.general.cancelReason');
 
             return messages;
         }
