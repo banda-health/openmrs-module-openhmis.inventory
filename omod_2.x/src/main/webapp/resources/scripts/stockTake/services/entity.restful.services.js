@@ -25,7 +25,7 @@
 		
 		service = {
 			loadStockrooms: loadStockrooms,
-			loadStockDetails:loadStockDetails
+			loadStockDetails: loadStockDetails
 		};
 		
 		return service;
@@ -42,7 +42,7 @@
 				errorCallback
 			);
 		}
-
+		
 		/**
 		 * Retrieve all the stock in the selected stockroom
 		 * @param stockroom-uuid

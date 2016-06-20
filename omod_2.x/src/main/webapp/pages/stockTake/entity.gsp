@@ -19,7 +19,7 @@
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 </script>
 
-<form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
+<div style="font-size:inherit">
 	<table class="header-title">
 		<span class="h1-substitue-left" style="float:left;">
 			${ui.message('openhmis.inventory.admin.stockTake')}
@@ -37,7 +37,8 @@
 
 			<div class="col-md-6">
 				<select class="form-control" ng-model="entity.stockroom"
-				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid' ng-change="loadStockDetails()">
+				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
+				        ng-change="loadStockDetails()">
 					<option value="" selected="selected">Any</option>
 				</select>
 			</div>
@@ -48,9 +49,12 @@
 		</div>
 		<br/>
 	</table>
-	<form class="detail-section-border-top" ng-show="totalNumOfResults != 0">
+</div>
+
+<div id="entities" ng-show="showStockDetails == true" class="detail-section-border-top">
+	<form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}">
 		<br/>
-		<table style="margin-bottom:5px;" class="manage-entities-table table-condensed">
+		<table class="manage-entities-table" id="stockTakeTable">
 			<thead>
 			<tr>
 				<th>${ui.message('openhmis.inventory.item.name')}</th>
@@ -62,22 +66,15 @@
 			</thead>
 			<tbody>
 			<tr class="clickable-tr" dir-paginate="entity in fetchedEntities | itemsPerPage: limit"
-			    total-items="totalNumOfResults">
-				<td >{{entity.item.name}}</td>
-				<td >{{entity.item.department.name}}</td>
-				<td >{{entity.expiration | date: "yyyy-MM-dd"}}</td>
-				<td >{{entity.quantity}}</td>
-				<td ><input type="number" class="form-control"></td>
+			    total-items="totalNumOfResults" current-page="currentPage">
+				<td>{{entity.item.name}}</td>
+				<td>{{entity.item.department.name}}</td>
+				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
+				<td>{{entity.quantity}}</td>
+				<td><input name="actualQuantity" id="actualQuantity" type="number" class="form-control"></td>
 			</tr>
 			</tbody>
 		</table>
-		<br/>
-		<div class="detail-section-border-top">
-			<br/>
-			<span>
-				<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()" />
-				<input type="button" class="confirm right" value="{{messageLabels['general.save']}} ${ui.message('openhmis.inventory.admin.stockTake')}" ng-click="saveOrUpdate()" />
-			</span>
-		</div>
 	</form>
-</form>
+	${ui.includeFragment("openhmis.commons", "paginationFragment", [showRetiredSection: "false"])}
+</div>

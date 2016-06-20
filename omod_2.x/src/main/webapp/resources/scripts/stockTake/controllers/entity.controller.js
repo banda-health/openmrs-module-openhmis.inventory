@@ -44,6 +44,7 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
 				self.loadStockrooms();
+				self.showStockDetails = false;
 				$scope.loadStockDetails = function () {
 					if ($scope.entity.stockroom.uuid != null) {
 						self.loadStockDetails($scope.entity.stockroom.uuid);
@@ -54,8 +55,8 @@
 		self.loadStockrooms = self.loadStockrooms || function () {
 				StockTakeRestfulService.loadStockrooms(module_name, self.onLoadStockroomsSuccessful);
 			}
-
-		self.loadStockDetails = self.loadStockDetails || function(stockroomUuid) {
+		
+		self.loadStockDetails = self.loadStockDetails || function (stockroomUuid) {
 				StockTakeRestfulService.loadStockDetails(module_name, self.onLoadStockDetailsSuccessful, stockroomUuid)
 			}
 		
@@ -63,12 +64,17 @@
 		self.onLoadStockroomsSuccessful = self.onLoadStockroomsSuccessful || function (data) {
 				$scope.stockrooms = data.results;
 			}
-
-		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful|| function (data) {
+		
+		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful || function (data) {
 				$scope.fetchedEntities = data.results;
-				$scope.totalNumOfResults = data.length;
+				$scope.totalNumOfResults = data.results.length;
+				if (data.results.length) {
+					$scope.showStockDetails = true
+				} else {
+					$scope.showStockDetails = false;
+				}
 			}
-
+		
 		/**
 		 * All post-submit validations are done here.
 		 * @return boolean
@@ -77,9 +83,10 @@
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function () {
 				return true;
 			}
-
+		
 		// @Override
 		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels || function () {
+				
 				return StockTakeFunctions.addMessageLabels();
 			}
 		
@@ -89,6 +96,7 @@
 			$filter: $filter,
 			$stateParams: $stateParams,
 			EntityRestFactory: EntityRestFactory,
+			PaginationService: PaginationService,
 			GenericMetadataModel: StockTakeModel,
 			EntityFunctions: EntityFunctions
 		});

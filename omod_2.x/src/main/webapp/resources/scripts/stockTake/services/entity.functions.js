@@ -25,7 +25,7 @@
 		var service;
 		
 		service = {
-			addMessageLabels:addMessageLabels
+			addMessageLabels: addMessageLabels
 		};
 		
 		return service;
