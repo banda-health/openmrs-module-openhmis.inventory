@@ -747,18 +747,9 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 	 * @param detail
 	 */
 	private void deleteItemStockDetailRecords(ItemStock stock, ItemStockDetail detail) {
-		Set<ItemStockDetail> deleteStockDetails = new HashSet<ItemStockDetail>();
-		for (ItemStockDetail stockDetail : stock.getDetails()) {
-			Date stockDetailExp = stockDetail.getExpiration();
-			Date detailExp = detail.getExpiration();
-			if (stockDetailExp == null && detailExp == null) {
-				deleteStockDetails.add(stockDetail);
-			} else if (stockDetailExp != null && detailExp != null) {
-				if (stockDetailExp.getTime() == detail.getExpiration().getTime()) {
-					deleteStockDetails.add(stockDetail);
-				}
-			}
-		}
+		List<ItemStockDetail> deleteStockDetails = findDetailByExpiration(
+		    ModuleSettings.autoSelectItemStockWithFurthestExpirationDate(),
+		    stock.getDetails(), new DateTime(detail.getExpiration()));
 
 		if (deleteStockDetails.size() > 0) {
 			for (ItemStockDetail deleteDetail : deleteStockDetails) {
