@@ -31,7 +31,7 @@
 	<br/>
 	<table>
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<span>${ui.message('openhmis.inventory.stockroom.name')}</span>
 			</div>
 
@@ -43,12 +43,19 @@
 				</select>
 			</div>
 
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<input type="button" value="Search" class="confirm form-control" ng-click="loadStockDetails()">
 			</div>
 		</div>
 		<br/>
 	</table>
+</div>
+<div ng-show="showStockDetails == false" class="detail-section-border-top">
+	<br/>
+	<span>
+		${ui.message('openhmis.inventory.stocktake.no.items')}
+	</span>
+	<br/>
 </div>
 
 <div id="entities" ng-show="showStockDetails == true" class="detail-section-border-top">
@@ -71,10 +78,24 @@
 				<td>{{entity.item.department.name}}</td>
 				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
 				<td>{{entity.quantity}}</td>
-				<td><input name="actualQuantity" id="actualQuantity" type="number" class="form-control"></td>
+				<td><input name="actualQuantity" id="actualQuantity" type="number" class="form-control input-sm"></td>
 			</tr>
 			</tbody>
 		</table>
 	</form>
 	${ui.includeFragment("openhmis.commons", "paginationFragment", [showRetiredSection: "false"])}
+	<br/>
+	<br/>
+	<br/>
+</div>
+
+<div ng-show="showStockChangeDetails == true" class="detail-section-border-top">
+	<br/>
+</div>
+
+<div ng-show="showStockDetails == true" class="detail-section-border-top">
+	<br/>
+	<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
+	<input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()"/>
+	<br/>
 </div>

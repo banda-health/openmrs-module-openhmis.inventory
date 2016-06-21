@@ -44,7 +44,8 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
 				self.loadStockrooms();
-				self.showStockDetails = false;
+				$scope.showStockDetails = false;
+				$scope.showStockChangeDetails = false;
 				$scope.loadStockDetails = function () {
 					if ($scope.entity.stockroom.uuid != null) {
 						self.loadStockDetails($scope.entity.stockroom.uuid);
