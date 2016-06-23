@@ -35,10 +35,10 @@
 				<span>${ui.message('openhmis.inventory.stockroom.name')}</span>
 			</div>
 
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<select class="form-control" ng-model="entity.stockroom"
 				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
-				        ng-change="loadStockDetails()">
+				        ng-change="loadStockDetails(stockTakeCurrentPage)">
 					<option value="" selected="selected">Any</option>
 				</select>
 			</div>
@@ -50,6 +50,7 @@
 		<br/>
 	</table>
 </div>
+
 <div ng-show="showStockDetails == false" class="detail-section-border-top">
 	<br/>
 	<span>
@@ -72,8 +73,9 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr class="clickable-tr" dir-paginate="entity in fetchedEntities | itemsPerPage: limit"
-			    total-items="totalNumOfResults" current-page="currentPage">
+			<tr class="clickable-tr" pagination-id="__stockTake"
+			    dir-paginate="entity in fetchedEntities | itemsPerPage: stockTakeLimit"
+			    total-items="totalNumOfResults" current-page="stockTakeCurrentPage">
 				<td>{{entity.item.name}}</td>
 				<td>{{entity.item.department.name}}</td>
 				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
@@ -83,7 +85,15 @@
 			</tbody>
 		</table>
 	</form>
-	${ui.includeFragment("openhmis.commons", "paginationFragment", [showRetiredSection: "false"])}
+	${ui.includeFragment("openhmis.commons", "paginationFragment", [
+			paginationId      : "__stockTake",
+			onPageChange      : "loadStockDetails(stockTakeCurrentPage)",
+			onChange          : "loadStockDetails()",
+			model             : "stockTakeLimit",
+			pagingFrom        : "stockTakePagingFrom(stockTakeCurrentPage, stockTakeLimit)",
+			pagingTo          : "stockTakePagingTo(stockTakeCurrentPage, stockTakeLimit, totalNumOfResults)",
+			showRetiredSection: "false"
+	])}
 	<br/>
 	<br/>
 	<br/>

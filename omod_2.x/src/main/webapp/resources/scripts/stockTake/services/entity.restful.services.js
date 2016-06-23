@@ -33,6 +33,7 @@
 		/**
 		 * Retrieve all Stockrooms
 		 * @param onLoadStockroomsSuccessful
+		 * @param module_name
 		 */
 		function loadStockrooms(module_name, onLoadStockroomsSuccessful) {
 			var requestParams = [];
@@ -45,16 +46,24 @@
 		
 		/**
 		 * Retrieve all the stock in the selected stockroom
-		 * @param stockroom-uuid
+		 * @param stockroomUuid
+		 * @param rest_entity_name
+		 * @param currentPage
+		 * @param limit
+		 * @param onLoadStockDetailsSuccessful
 		 * */
-		function loadStockDetails(module_name, onLoadStockDetailsSuccessful, stockroomUuid) {
-			var requestParams = [];
-			requestParams['rest_entity_name'] = 'inventoryStockTakeSummary';
-			requestParams['stockroom_uuid'] = stockroomUuid;
-			EntityRestFactory.loadEntities(requestParams,
-				onLoadStockDetailsSuccessful,
-				errorCallback
-			);
+		function loadStockDetails(rest_entity_name, stockroomUuid, currentPage, limit, onLoadStockDetailsSuccessful) {
+			currentPage = currentPage || 1;
+			if (angular.isDefined(stockroomUuid) && stockroomUuid !== '' && stockroomUuid !== undefined) {
+				var requestParams = PaginationService.paginateParams(currentPage, limit, false);
+				console.log(requestParams);
+				requestParams['rest_entity_name'] = rest_entity_name;
+				requestParams['stockroom_uuid'] = stockroomUuid;
+				EntityRestFactory.loadEntities(requestParams,
+					onLoadStockDetailsSuccessful,
+					errorCallback
+				);
+			}
 		}
 		
 		function errorCallback(error) {

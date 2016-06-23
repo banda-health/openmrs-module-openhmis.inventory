@@ -43,12 +43,21 @@
 		// @Override
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
+				var stockroom_uuid = '';
 				self.loadStockrooms();
 				$scope.showStockDetails = false;
 				$scope.showStockChangeDetails = false;
-				$scope.loadStockDetails = function () {
+				
+				$scope.loadStockDetails = function (stockTakeCurrentPage) {
+					stockroom_uuid = $scope.entity.stockroom.uuid;
+					
 					if ($scope.entity.stockroom.uuid != null) {
-						self.loadStockDetails($scope.entity.stockroom.uuid);
+						self.loadStockDetails(stockroom_uuid, stockTakeCurrentPage);
+						
+						$scope.stockTakeLimit = CookiesService.get(stockroom_uuid + 'stockTakeLimit') || 5;
+						$scope.stockTakeCurrentPage = CookiesService.get(stockroom_uuid + 'stockTakeCurrentPage') || 1;
+						$scope.stockTakePagingFrom = PaginationService.pagingFrom;
+						$scope.stockTakePagingTo = PaginationService.pagingTo;
 					}
 				}
 			}
@@ -57,8 +66,15 @@
 				StockTakeRestfulService.loadStockrooms(module_name, self.onLoadStockroomsSuccessful);
 			}
 		
-		self.loadStockDetails = self.loadStockDetails || function (stockroomUuid) {
-				StockTakeRestfulService.loadStockDetails(module_name, self.onLoadStockDetailsSuccessful, stockroomUuid)
+		self.loadStockDetails = self.loadStockDetails || function (stockroomUuid, stockTakeCurrentPage) {
+				stockTakeCurrentPage = stockTakeCurrentPage || $scope.stockTakeCurrentPage;
+				CookiesService.set(stockroomUuid + 'stockTakeCurrentPage', stockTakeCurrentPage);
+				CookiesService.set(stockroomUuid + 'stockTakeLimit', $scope.stockTakeLimit);
+				
+				StockTakeRestfulService.loadStockDetails(
+					rest_entity_name, stockroomUuid, CookiesService.get(stockroomUuid + 'stockTakeCurrentPage'),
+					CookiesService.get(stockroomUuid + 'stockTakeLimit'),
+					self.onLoadStockDetailsSuccessful);
 			}
 		
 		//callback
@@ -68,7 +84,7 @@
 		
 		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful || function (data) {
 				$scope.fetchedEntities = data.results;
-				$scope.totalNumOfResults = data.results.length;
+				$scope.totalNumOfResults = data.length;
 				if (data.results.length) {
 					$scope.showStockDetails = true
 				} else {
