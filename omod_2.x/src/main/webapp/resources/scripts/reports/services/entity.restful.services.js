@@ -24,7 +24,7 @@
 	function ReportRestfulService(EntityRestFactory) {
 		var service;
 		service = {
-			loadStockRooms: loadStockRooms,
+			loadStockRooms: loadStockRooms
 		};
 		return service;
 
@@ -38,7 +38,5 @@
 			requestParams['rest_entity_name'] = rest_entity_name;
 			EntityRestFactory.loadEntities(requestParams, successCallback, function(error){console.log(error);});
 		}
-
 	}
-
 })();
