@@ -17,12 +17,10 @@
     /* load re-usables/common modules */
     ui.includeFragment("openhmis.commons", "load.reusable.modules")
 
-    /* load stockroom modules */
+    /* load reports modules */
     ui.includeJavascript("openhmis.inventory", "reports/models/entity.model.js")
     ui.includeJavascript("openhmis.inventory", "reports/services/entity.restful.services.js")
     ui.includeJavascript("openhmis.inventory", "reports/controllers/entity.controller.js")
-    ui.includeJavascript("openhmis.inventory", "reports/controllers/manage-entity.controller.js")
-    ui.includeJavascript("openhmis.inventory", "reports/services/entity.functions.js")
 %>
 
 <script data-main="reports/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
