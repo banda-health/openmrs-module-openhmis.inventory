@@ -57,6 +57,7 @@
 		${ui.message('openhmis.inventory.stocktake.no.items')}
 	</span>
 	<br/>
+	<br/>
 </div>
 
 <div id="entities" ng-show="showStockDetails == true" class="detail-section-border-top">
@@ -66,7 +67,6 @@
 			<thead>
 			<tr>
 				<th>${ui.message('openhmis.inventory.item.name')}</th>
-				<th>${ui.message('openhmis.inventory.department.name')}</th>
 				<th>${ui.message('openhmis.inventory.stockroom.expiration')}</th>
 				<th>${ui.message('openhmis.inventory.item.quantity')}</th>
 				<th>${ui.message('openhmis.inventory.item.actual.quantity')}</th>
@@ -77,7 +77,6 @@
 			    dir-paginate="entity in fetchedEntities | itemsPerPage: stockTakeLimit"
 			    total-items="totalNumOfResults" current-page="stockTakeCurrentPage">
 				<td>{{entity.item.name}}</td>
-				<td>{{entity.item.department.name}}</td>
 				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
 				<td>{{entity.quantity}}</td>
 				<td><input name="actualQuantity" id="actualQuantity" type="number" class="form-control input-sm"></td>
@@ -101,6 +100,34 @@
 
 <div ng-show="showStockChangeDetails == true" class="detail-section-border-top">
 	<br/>
+	<a ng-show="showStockDetailsTable == false" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
+	   ng-click="showTableDetails()">
+		{{stockTakeChangeCounter}} ${ui.message('openhmis.inventory.stocktake.change.showDetails')}
+	</a>
+	<a ng-show="showStockDetailsTable == true" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
+	   ng-click="hideTableDetails()">
+		{{stockTakeChangeCounter}} ${ui.message('openhmis.inventory.stocktake.change.hideDetails')}
+	</a>
+	<br/>
+	<br/>
+
+	<div id="showStockDetailsTable" ng-show="showStockDetailsTable == true" class="detail-section-border-top">
+		<br/>
+		<table class="manage-entities-table" id="stockTakeChangeDetailsTable">
+			<thead>
+			<tr>
+				<th>${ui.message('openhmis.inventory.item.name')}</th>
+				<th>${ui.message('openhmis.inventory.stockroom.expiration')}</th>
+				<th>${ui.message('openhmis.inventory.item.quantity')}</th>
+				<th>${ui.message('openhmis.inventory.item.actual.quantity')}</th>
+			</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+		<br/>
+	</div>
 </div>
 
 <div ng-show="showStockDetails == true" class="detail-section-border-top">

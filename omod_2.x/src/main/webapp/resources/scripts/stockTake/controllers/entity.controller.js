@@ -46,7 +46,9 @@
 				var stockroom_uuid = '';
 				self.loadStockrooms();
 				$scope.showStockDetails = false;
-				$scope.showStockChangeDetails = false;
+				$scope.showStockChangeDetails = true;
+				$scope.showStockDetailsTable = false;
+				$scope.stockTakeChangeCounter = 0;
 				
 				$scope.loadStockDetails = function (stockTakeCurrentPage) {
 					stockroom_uuid = $scope.entity.stockroom.uuid;
@@ -60,6 +62,15 @@
 						$scope.stockTakePagingTo = PaginationService.pagingTo;
 					}
 				}
+				
+				$scope.showTableDetails = function (){
+					$scope.showStockDetailsTable = true;
+				}
+
+				$scope.hideTableDetails = function() {
+					$scope.showStockDetailsTable = false;
+				}
+				
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {
@@ -103,7 +114,6 @@
 		
 		// @Override
 		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels || function () {
-				
 				return StockTakeFunctions.addMessageLabels();
 			}
 		
