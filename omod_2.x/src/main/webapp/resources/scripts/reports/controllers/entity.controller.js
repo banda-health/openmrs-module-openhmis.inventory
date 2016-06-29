@@ -41,12 +41,33 @@
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function(uuid) {
                 /* bind variables.. */
                 self.loadStockRooms();
-
-                /* bind functions.. */
-                $scope.loadStockRooms = function (search) {
-                    return ReportRestfulService.loadStockRooms(module_name, search);
+                $scope.searchReportItems = self.searchReportItems;
+                $scope.stockTakeReport = {
+                    name: "Stock Take",
+                    description: "The current inventory for a specific stockroom",
+                    reportId: 5
                 };
-                
+                $scope.stockCardReport = {
+                    name: "Stock Card for an Item (all stockrooms)",
+                    description: "All transactions for a specific item, over a time period, across all stockrooms",
+                    reportId: 3
+                };
+                $scope.stockOperationsByStockroomReport = {
+                    name: "Stock Card for an Item (one stockroom)",
+                    description: "All transactions for a specific item, over a time period, for a specific stockroom",
+                    reportId: 4
+                };
+                $scope.stockroomReport = {
+                    name: "Stockroom Usage Report",
+                    description: "All items used by a specific stockroom, over a time period",
+                    reportId: 6
+                };
+                $scope.expiringStockReport = {
+                    name: "Expiring Stock",
+                    description: "All items that expire by a specified date",
+                    reportId: 1
+                };
+
             }
 
         self.loadStockRooms = self.loadStockRooms || function(){
@@ -55,6 +76,11 @@
         
         self.onLoadStockRoomSuccessful = self.onLoadStockRoomSuccessful || function(data){
                 $scope.stockrooms = data.results;
+            }
+
+        self.searchReportItems = self.searchReportItems || function(search){
+                $scope.operationItem = {};
+                return ReportRestfulService.searchReportItems(module_name, search);
             }
 
 

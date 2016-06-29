@@ -29,7 +29,7 @@
 			$urlRouterProvider.otherwise('/');
 			$stateProvider.state('/', {
 				url : '/',
-				templateUrl : 'entities.page',
+				templateUrl : 'entity.page',
 				controller : 'ReportController'
 			});
 

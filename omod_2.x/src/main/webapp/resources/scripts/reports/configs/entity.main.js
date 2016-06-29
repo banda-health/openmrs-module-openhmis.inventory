@@ -18,8 +18,9 @@ requirejs(['reports/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
-//I don't know of any messages I need to add. Will these messages be the ones from messages.properties?
-//Do I need to load them into emr to be able to access them on my pages?
-// -AlanFiles
 emr.loadMessages([
+	"openhmis.inventory.report.rest_name",
+	"openhmis.inventory.item.enterItemSearch",
+	"openhmis.inventory.item.name",
+	"openhmis.inventory.admin.reports"
 ]);

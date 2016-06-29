@@ -1,157 +1,272 @@
-<script type="text/javascript">
+<script type="text/javascript" xmlns="http://www.w3.org/1999/html">
     var breadcrumbs = [
         { icon: "icon-home", link: '/' + OPENMRS_CONTEXT_PATH + '/index.htm' },
-        { label: "${ ui.message("openhmis.inventory.page")}" , link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'},
-        { label: "${ ui.message("openhmis.inventory.manage.module")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
-        { label: "${ ui.message("openhmis.inventory.admin.reports")}", link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/reports/entities.page#/'},
+        {
+            label: "${ ui.message("openhmis.inventory.page")}" ,
+            link: '${ui.pageLink("openhmis.inventory", "inventoryLanding")}'
+        },
+        {
+            label: "${ ui.message("openhmis.inventory.admin.task.dashboard")}",
+            link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page'
+        },
+        {
+            label: "${ ui.message("openhmis.inventory.admin.reports")}",
+            link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/reports/entities.page#/'
+        }
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 
 </script>
+<style>
+    .report{
+        max-width:700px;
+    }
+    .report legend{
+        width:inherit;
+        margin-bottom: 0px;
+    }
 
+    .report input[type="date"]{
+        display: inline-block;
+    }
+</style>
 
-<input id="reportUrl" type="hidden" value="${ ui.message("openhmis.inventory.admin.reports")}" />
+<input id="reportUrl" type="hidden" value="{{ ui.message('openhmis.inventory.admin.reports')}}" />
 
-<h2>${ ui.message("openhmis.inventory.admin.reports")}" /></h2>
+<h2>{{ ui.message("openhmis.inventory.admin.reports")}}</h2>
 
-<table style="width: 99%">
-    <tr>
-        <td style="vertical-align: top; width: 250px;">
-            <br />
-            <b>
-                ${ ui.message("openhmis.inventory.admin.reports")}
-            </b>
-        </td>
-        <td>
+<div class="report">
+    <fieldset>
+        <legend>
+            <i class="icon-list-alt"></i>
+            {{stockTakeReport.name}}
+        </legend>
+        <small>{{stockTakeReport.description}}</small>
 
-            <h3>${stockTakeReport.name}</h3>
-            <div style="color: grey">${stockTakeReport.description}</div>
-            <br />
-            <div>
-                <form id="stockTakeReport" onsubmit="return false;">
-                    <label for="stockroomId">Stockroom: </label>
-                    <select id="stockroomId">
-                        <option value=""></option>
-                        %{--<c:forEach var="stockroom" items="${stockrooms}">--}%
-                            %{--<option value="${stockroom.id}">${stockroom.name}</option>--}%
-                        %{--</c:forEach>--}%
+        <form id="stockTakeReport" onsubmit="return false;">
+            <ul class="table-layout">
+                <li><label>Stockroom </label></li>
+                <li>
+                    <select ng-model="stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                        <option value="" selected="selected">Select Stockroom</option>
                     </select>
-                    <input id="stockTakeReportId" type="hidden" value="${stockTakeReport.reportId}" />
-                    <br /><br />
-                    <input id="generateTakeReport" type="submit" value="Generate Report"/>
-                </form>
-            </div>
-            <br />
-            <hr>
+                </li>
+            </ul>
+            <ul class="table-layout">
+                <li></li>
+                <li><input id="generateTakeReport" type="submit" value="Generate Report" /></li>
+            </ul>
 
-            <h3>${stockCardReport.name}</h3>
-            <div style="color: grey">${stockCardReport.description}</div>
-            <br />
-            <div>
-                <form id="stockCardReport" onsubmit="return false;">
-                    <label for="itemSearch">Item: </label>
-                    <input id="itemSearch" style="width: 350px" type="text" placeholder="Item Name" />
-                    <input id="item-uuid" type="hidden" />
-                    <br />
-                    <br />
-                    <label for="beginDate">Begin Date</label>
-                    <input id="beginDate" class="date" type="text" />
+            <input id="stockTakeReportId" type="hidden" value="{{stockTakeReport.reportId}}" />
+        </form>
+    </fieldset>
+</div>
+<hr>
 
-                    <label for="endDate">End Date</label>
-                    <input id="endDate" class="date" type="text" />
+<div class="report">
+    <fieldset>
+        <legend>
+            <i class="icon-list-alt"></i>
+            {{stockCardReport.name}}
+        </legend>
+        <small>{{stockCardReport.description}}</small>
+        <form id="stockCardReport" onsubmit="return false;">
+            <ul class="table-layout">
+                <li><label>Item</label></li>
+                <li>
+                    ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                            typeahead: ["reportItem.name for reportItem in searchReportItems(\$viewValue)"],
+                            model: "searchItemAllStockrooms",
+                            typeaheadOnSelect: "console.log(\$item)",
+                            typeaheadEditable: "true",
+                            class: ["form-control"],
+                            placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
+                            ngEnterEvent: "console.log(\$item)"
+                    ])}
+                </li>
+            </ul>
+            <ul class="table-layout">
+                <li><label for="beginDate">Begin Date</label></li>
+                <li>
+                    <span id="beginDatespan" class="date">
+                        <input type="date" id="beginDate" value="">
+                        <span class="add-on"><i class="icon-calendar small"></i></span>
+                    </span>
+                </li>
+            </ul>
+            <ul class="table-layout">
+                <li><label for="endDate">End Date</label></li>
+                <li>
+                    <span id="endDatespan" class="date">
+                        <input type="date" id="endDate" value="">
+                        <span class="add-on"><i class="icon-calendar small"></i></span>
+                    </span>
+                </li>
+            </ul>
+            <ul class="table-layout">
+                <li></li>
+                <li><input id="generateCardReport" type="submit" value="Generate Report" /></li>
+            </ul>
 
-                    <input id="stockCardReportId" type="hidden" value="${stockCardReport.reportId}" />
-                    <br /><br />
-                    <input id="generateCardReport" type="submit" value="Generate Report" />
-                </form>
-            </div>
-            <hr>
+            <input type="hidden" id="item-uuid" />
+            <input type="hidden" id="datetime-field" name="date picker" value="">
+            <input type="hidden" id="stockCardReportId" value="{{stockCardReport.reportId}}" />
 
-            <h3>${stockOperationsByStockroomReport.name}</h3>
-            <div style="color: grey">${stockOperationsByStockroomReport.description}</div>
-            <br />
-            <div>
-                <form id="stockOperationsByStockroomReport" onsubmit="return false;">
-                    <label for="stockroomIdOperationsByStockroom">Stockroom: </label>
-                    <select id="stockroomIdOperationsByStockroom">
-                        <option value=""></option>
-                        %{--<c:forEach var="stockroom" items="${stockrooms}">--}%
-                            %{--<option value="${stockroom.id}">${stockroom.name}</option>--}%
-                        %{--</c:forEach>--}%
+        </form>
+    </fieldset>
+</div>
+<hr>
+
+
+<div class="report">
+    <fieldset>
+        <legend>
+            <i class="icon-list-alt"></i>
+            {{stockOperationsByStockroomReport.name}}
+        </legend>
+        <small>{{stockOperationsByStockroomReport.description}}</small>
+        <form id="stockOperationsByStockroomReport" onsubmit="return false;">
+            <ul class="table-layout">
+                <li><label>Stockroom </label></li>
+                <li>
+                    <select id="stockroomOperationsByStockroom" ng-model="stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                        <option value="" selected="selected">Select Stockroom</option>
                     </select>
-                    <br/>
-                    <br/>
-                    <label for="itemSearchOperationsByStockroom">Item: </label>
-                    <input id="itemSearchOperationsByStockroom" style="width: 350px" type="text" placeholder="Item Name" />
-                    <input id="item-uuid-searchOperationsByStockroom" type="hidden" />
-                    <br />
-                    <br />
-                    <label for="beginDate-operationsByStockroom">Begin Date</label>
-                    <input id="beginDate-operationsByStockroom" class="date" type="text" />
+                </li>
+            </ul>
 
-                    <label for="endDate-operationsByStockroom">End Date</label>
-                    <input id="endDate-operationsByStockroom" class="date" type="text" />
+            <ul class="table-layout">
+                <li><label>Item</label></li>
+                <li>
+                    ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                            typeahead: ["reportItem.name for reportItem in searchReportItems(\$viewValue)"],
+                            model: "searchItemByStockroom",
+                            typeaheadOnSelect: "console.log(\$item)",
+                            typeaheadEditable: "true",
+                            class: ["form-control"],
+                            placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')]
+                    ])}
+                </li>
+            </ul>
 
-                    <input id="stockOperationsByStockroomReportId" type="hidden" value="${stockOperationsByStockroomReport.reportId}" />
-                    <br /><br />
-                    <input id="generateOperationsByStockroomReport" type="submit" value="Generate Report" />
-                </form>
-            </div>
-            <hr>
+            <ul class="table-layout">
+                <li><label for="beginDate-operationsByStockroom">Begin Date</label></li>
+                <li>
+                    <span class="date">
+                        <input type="date" id="beginDate-operationsByStockroom" value="">
+                        <span class="add-on"><i class="icon-calendar small"></i></span>
+                    </span>
+                </li>
+            </ul>
 
-            <h3>${stockroomReport.name}</h3>
-            <div style="color: grey">${stockroomReport.description}</div>
-            <br />
-            <div>
-                <form id="stockroomReport" onsubmit="return false;">
-                    <label for="stockroomReport-StockroomId">Stockroom: </label>
-                    <select id="stockroomReport-StockroomId">
-                        <option value=""></option>
-                        %{--<c:forEach var="stockroom" items="${stockrooms}">--}%
-                            %{--<option value="${stockroom.id}">${stockroom.name}</option>--}%
-                        %{--</c:forEach>--}%
+            <ul class="table-layout">
+                <li><label for="endDate-operationsByStockroom">End Date</label></li>
+                <li>
+                    <span class="date">
+                        <input type="date" id="endDate-operationsByStockroom" value="">
+                        <span class="add-on"><i class="icon-calendar small"></i></span>
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="table-layout">
+                <li></li>
+                <li><input id="generateOperationsByStockroomReport" type="submit" value="Generate Report" /></li>
+            </ul>
+
+            <input type="hidden" id="item-uuid-searchOperationsByStockroom" />
+            <input type="hidden" id="stockOperationsByStockroomReportId"  value="{{stockOperationsByStockroomReport.reportId}}" />
+        </form>
+    </fieldset>
+</div>
+<hr>
+
+<div class="report">
+    <fieldset>
+        <legend>
+            <i class="icon-list-alt"></i>
+            {{stockroomReport.name}}
+        </legend>
+        <small>{{stockroomReport.description}}</small>
+        <form id="stockroomReport" onsubmit="return false;">
+            <ul class="table-layout">
+                <li><label>Stockroom </label></li>
+                <li>
+                    <select id="stockroomReport-stockroom" ng-model="stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                        <option value="" selected="selected">Select Stockroom</option>
                     </select>
-                    <br />
-                    <br />
+                </li>
+            </ul>
 
-                    <label for="stockroomReport-beginDate">Begin Date</label>
-                    <input id="stockroomReport-beginDate" class="date" type="text" />
+            <ul class="table-layout">
+                <li><label for="stockroomReport-beginDate">Begin Date</label></li>
+                <li>
+                    <span class="date">
+                        <input type="date" id="stockroomReport-beginDate" value="">
+                        <span class="add-on"><i class="icon-calendar small"></i></span>
+                    </span>
+                </li>
+            </ul>
 
-                    <label for="stockroomReport-endDate">End Date</label>
-                    <input id="stockroomReport-endDate" class="date" type="text" />
+            <ul class="table-layout">
+                <li><label for="stockroomReport-endDate">End Date</label></li>
+                <li>
+                    <span class="date">
+                        <input type="date" id="stockroomReport-endDate" value="" >
+                        <span class="add-on"><i class="icon-calendar small"></i></span>
+                    </span>
+                </li>
+            </ul>
 
-                    <input id="stockroomReportId" type="hidden" value="${stockroomReport.reportId}" />
-                    <br /><br />
-                    <input id="generateStockroomReport" type="submit" value="Generate Report"/>
-                </form>
-            </div>
-            <br />
-            <hr>
+            <ul class="table-layout">
+                <li></li>
+                <li><input id="generateStockroomReport" type="submit" value="Generate Report" /></li>
+            </ul>
 
-            <h3>${expiringStockReport.name}</h3>
-            <div style="color: grey">${expiringStockReport.description}</div>
-            <br />
-            <div>
-                <form id="expiringStockReport" onsubmit="return false;">
+            <input type="hidden" id="stockroomReportId" value="{{stockroomReport.reportId}}" />
 
-                    <label for="expiringStockReport-StockroomId">Stockroom: </label>
-                    <select id="expiringStockReport-StockroomId">
-                        <option value="">Any</option>
-                        %{--<c:forEach var="stockroom" items="${stockrooms}">--}%
-                            %{--<option value="${stockroom.id}">${stockroom.name}</option>--}%
-                        %{--</c:forEach>--}%
+        </form>
+    </fieldset>
+</div>
+<hr>
+
+
+<div class="report">
+    <fieldset>
+        <legend>
+            <i class="icon-list-alt"></i>
+            {{expiringStockReport.name}}
+        </legend>
+        <small>{{expiringStockReport.description}}</small>
+        <form id="expiringStockReport" onsubmit="return false;">
+
+            <ul class="table-layout">
+                <li><label>Stockroom </label></li>
+                <li>
+                    <select id="expiringStock-stockroom" ng-model="stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                        <option value="" selected="selected">All</option>
                     </select>
-                    <br />
-                    <br />
-                    <label for="expiresBy">Expires by</label>
-                    <input id="expiresBy" class="date" type="text" />
-                    <input id="expiringStockReportId" type="hidden" value="${expiringStockReport.reportId}" />
-                    <br /><br />
-                    <input id="generateExpiringStockReport" type="submit" value="Generate Report" />
-                </form>
-            </div>
-            <hr>
-        </td>
-    </tr>
-</table>
+                </li>
+            </ul>
+
+            <ul class="table-layout">
+                <li><label for="expiresBy">Expires by</label></li>
+                <li>
+                    <span class="date">
+                        <input type="date" id="expiresBy" value="" >
+                        <span class="add-on"><i class="icon-calendar small"></i></span>
+                    </span>
+                </li>
+            </ul>
+
+            <ul class="table-layout">
+                <li></li>
+                <li><input id="generateExpiringStockReport" type="submit" value="Generate Report" /></li>
+            </ul>
+
+            <input type="hidden" id="expiringStockReportId" value="{{expiringStockReport.reportId}}" />
+
+        </form>
+    </fieldset>
+</div>
