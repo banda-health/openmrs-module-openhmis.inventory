@@ -41,7 +41,6 @@
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function(uuid) {
                 /* bind variables.. */
                 self.loadStockRooms();
-                $scope.reportURL = "/module/openhmis/inventory/jasperReport";
 
                 $scope.searchReportItems = self.searchReportItems;
                 $scope.stockTakeReport = {
@@ -52,7 +51,8 @@
                 $scope.stockCardReport = {
                     name: "Stock Card for an Item ",
                     description: "All transactions for a specific item, over a time period, for a specific stockroom or all stockrooms",
-                    reportId: [3,4]
+                    reportId_AllStockrooms: 3,
+                    reportId_OneStockroom: 4
                 };
                 $scope.stockroomUsageReport = {
                     name: "Stockroom Usage Report",
@@ -81,33 +81,18 @@
             }
 
         function printReport(reportId, parameters) {
-            var reportUrl = $scope.reportURL;
-            var url = OPENMRS_CONTEXT_PATH + reportUrl + ".form?";
-            url += "reportId=" + reportId  + "&" + parameters;
 
-            console.log("url:", url);
+            var url = "/" + OPENMRS_CONTEXT_PATH + "/module/openhmis/inventory/jasperReport" + ".form?";
+            url += "reportId=" + reportId  + "&" + parameters;
             window.open(url, "pdfDownload");
 
             return false;
-
-            //Not really sure how to setup and use the entityRestFactory stuff.
-            // the above code almost works, but just grabs a wrong base url.
-            //-af
-            EntityRestFactory.setCustomBaseUrl('/'+ OPENMRS_CONTEXT_PATH + '/');
-            EntityRestFactory.loadResults(parameters);
         }
 
         $scope.generateReport_StockTakeReport = function(){
-            var reportId = $scope.stockTakeReport.reportId;
             var stockroom = $scope.StockTakeReport_stockroom;
-            var parameters = "";
-
-            console.log("report", reportId, "stockroom", stockroomId);
-            if (!stockroomId) {
-                alert(openhmis.getMessage('openhmis.inventory.report.error.stockroomRequired'));
-                return false;
-            }
-            parameters = "stockroomId=" + stockroom.uuid;
+            var reportId = $scope.stockTakeReport.reportId;
+            var parameters = "stockroomId=" + stockroom.id;
 
             return printReport(reportId, parameters);
         }
@@ -119,27 +104,42 @@
             var endDate = $scope.stockCardReport_endDate;
     
             var reportId;
-            var parameters = "";
-            
-            console.log("stockroom:", stockroom);
-            console.log("item:", item);
-            console.log("beginDate:", beginDate);
-            console.log("endDate:", endDate);
-            
-            //Two reports are being combined here, one for if no stockroom is selected (report No. 3)
-            //and one if a specific stockroom is selected (report No. 4)
-            // if no stockroom is selected, it runs the report for all stockrooms
-            //-af
+            var parameters = "itemUuid=" + item.uuid
+                + "&beginDate=" + formatDate(beginDate)
+                + "&endDate=" + formatDate(endDate);
+
             if(stockroom == null){
-                reportId = $scope.stockCardReport.reportId[0];
-                parameters = "itemUuid=" + item.uuid + "&beginDate=" + beginDate + "&endDate=" + endDate;
+                reportId = $scope.stockCardReport.reportId_AllStockrooms;
             } else{
-                reportId =  $scope.stockCardReport.reportId[1];
-                parameters = "itemUuid=" + item.uuid + "&beginDate=" + beginDate + "&endDate=" + endDate + "&stockroomId=" +stockroom.uuid;
+                reportId =  $scope.stockCardReport.reportId_OneStockroom;
+                parameters += "&stockroomId=" +stockroom.id;
             }
             
             return printReport(reportId, parameters);
             
+        }
+
+        function formatDate(initialDate){
+            var date = new Date(initialDate);
+
+            var day = date.getDate();
+            var month = date.getMonth() +1; //month is 0 indexed;
+            var year = date.getFullYear();
+
+            //in format dd-mm-yyyy
+            var dateString = padDate(day)
+                + "-" + padDate(month)
+                + "-" + year;
+
+            return dateString;
+
+            function padDate(number){
+                if(number < 10){
+                    return "0"+number;
+                } else{
+                    return number;
+                }
+            }
         }
 
         //This is a helper I made, so that the item dropdown can set a scope variable when it's selected
@@ -147,19 +147,20 @@
         //-af
         $scope.setStockCardReportItem = function(item){
             $scope.stockCardReportItem = item;
-            console.log(item);
         }
 
-        //the last 2 reports aren't done, just kinda stubbed out.
-        //I still need validation and formatting for these
-        //stuff like finding the stockroomId instead of the UUID
-        //and formating the dates in the way they need to be (dd-mm-yyyy) i think
-        //-af
         $scope.generateReport_StockroomUsage = function() {
             
             var stockroom = $scope.stockroomUsage_stockroom;
             var beginDate = $scope.stockroomUsage_beginDate;
             var endDate = $scope.stockroomUsage_endDate;
+
+            var reportId = $scope.stockroomUsageReport.reportId;
+            var parameters = "stockroomId=" + stockroom.id
+                + "&beginDate=" + formatDate(beginDate)
+                + "&endDate=" + formatDate(endDate);
+
+            return printReport(reportId, parameters);
             
         }
 
@@ -167,6 +168,14 @@
             var stockroom = $scope.expiringStock_stockroom;
             var expiresByDate = $scope.expiringStock_expiresByDate;
 
+            var reportId = $scope.expiringStockReport.reportId;
+            var parameters = "expiresBy=" + formatDate(expiresByDate);
+
+            if(stockroom != null){
+                parameters += "&stockroomId=" + stockroom.id;
+            }
+
+            return printReport(reportId, parameters);
         }
 
         /* ENTRY POINT: Instantiate the base controller which loads the page */
