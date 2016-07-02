@@ -56,7 +56,6 @@
 			currentPage = currentPage || 1;
 			if (angular.isDefined(stockroomUuid) && stockroomUuid !== '' && stockroomUuid !== undefined) {
 				var requestParams = PaginationService.paginateParams(currentPage, limit, false);
-				console.log(requestParams);
 				requestParams['rest_entity_name'] = rest_entity_name;
 				requestParams['stockroom_uuid'] = stockroomUuid;
 				EntityRestFactory.loadEntities(requestParams,

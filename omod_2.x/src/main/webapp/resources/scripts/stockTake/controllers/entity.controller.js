@@ -46,9 +46,10 @@
 				var stockroom_uuid = '';
 				self.loadStockrooms();
 				$scope.showStockDetails = false;
-				$scope.showStockChangeDetails = true;
+				$scope.showStockChangeDetails = false;
 				$scope.showStockDetailsTable = false;
 				$scope.stockTakeChangeCounter = 0;
+				$scope.stockTakeDetails = [];
 				
 				$scope.loadStockDetails = function (stockTakeCurrentPage) {
 					stockroom_uuid = $scope.entity.stockroom.uuid;
@@ -63,14 +64,42 @@
 					}
 				}
 				
-				$scope.showTableDetails = function (){
+				$scope.showTableDetails = function () {
 					$scope.showStockDetailsTable = true;
 				}
-
-				$scope.hideTableDetails = function() {
+				
+				$scope.hideTableDetails = function () {
 					$scope.showStockDetailsTable = false;
 				}
-				
+
+				$scope.getActualQuantity = function (entity) {
+					if (entity.actualQuantity != entity.quantity && entity.actualQuantity != null) {
+						$scope.newStock = StockTakeFunctions.addStock(entity);
+						self.getNewStock($scope.newStock);
+					}
+				}
+
+			}
+
+		self.getNewStock = self.getNewStock || function (newStock) {
+				var temp = $scope.stockTakeDetails.length;
+				if ($scope.stockTakeDetails.length != 0) {
+					for (var i = 0; i < temp; i++) {
+						if ($scope.stockTakeDetails[i].item == newStock.item && $scope.stockTakeDetails[i].expiration == newStock.expiration) {
+							$scope.stockTakeDetails[i] = newStock;
+							console.log($scope.stockTakeDetails);
+						} else {
+							$scope.stockTakeDetails.push(newStock);
+							break;
+						}
+					}
+				} else {
+					$scope.stockTakeDetails.push(newStock);
+				}
+				$scope.stockTakeChangeCounter = $scope.stockTakeDetails.length;
+				if ($scope.stockTakeChangeCounter > 0) {
+					$scope.showStockChangeDetails = true;
+				}
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {
@@ -96,11 +125,12 @@
 		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful || function (data) {
 				$scope.fetchedEntities = data.results;
 				$scope.totalNumOfResults = data.length;
-				if (data.results.length) {
+				if (data.results.length != 0) {
 					$scope.showStockDetails = true
 				} else {
 					$scope.showStockDetails = false;
 				}
+				
 			}
 		
 		/**
