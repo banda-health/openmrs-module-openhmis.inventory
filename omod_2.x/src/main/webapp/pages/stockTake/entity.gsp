@@ -79,7 +79,10 @@
 				<td>{{entity.item.name}}</td>
 				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
 				<td>{{entity.quantity}}</td>
-				<td><input name="actualQuantity" id="actualQuantity" type="number" class="form-control input-sm"></td>
+				<td><input name="actualQuantity"
+				           id="{{'actualQuantity-'+entity.item.uuid+'_'}}{{entity.expiration | date: 'yyyy-MM-dd'}}"
+				           type="number" class="form-control input-sm" ng-model="entity.actualQuantity"
+				           ng-blur="getActualQuantity(entity)"></td>
 			</tr>
 			</tbody>
 		</table>
@@ -122,8 +125,13 @@
 				<th>${ui.message('openhmis.inventory.item.actual.quantity')}</th>
 			</tr>
 			</thead>
-			<tbody>
-
+			<tbody><tr class="clickable-tr" pagination-id="__stockTakeReview"
+			           dir-paginate="entity in stockTakeDetails | itemsPerPage: stockTakeLimitReview">
+				<td>{{entity.item.name}}</td>
+				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
+				<td>{{entity.quantity}}</td>
+				<td>{{entity.actualQuantity}}</td>
+			</tr>
 			</tbody>
 		</table>
 		<br/>

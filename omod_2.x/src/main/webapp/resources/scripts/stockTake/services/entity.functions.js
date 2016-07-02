@@ -25,10 +25,24 @@
 		var service;
 		
 		service = {
-			addMessageLabels: addMessageLabels
+			addMessageLabels: addMessageLabels,
+			addStock: addStock
 		};
 		
 		return service;
+		
+		function addStock(entity) {
+			var newStock = {}, cart = [];
+			newStock.item = entity.item;
+			newStock.expiration = entity.expiration;
+			newStock.actualQuantity = entity.actualQuantity;
+			newStock.quantity = entity.quantity;
+			cart.push(newStock);
+
+			return newStock;
+
+		}
+		
 		
 		/**
 		 * All message labels used in the UI are defined here
