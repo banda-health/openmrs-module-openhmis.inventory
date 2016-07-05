@@ -1,6 +1,9 @@
 package org.openmrs.module.openhmis.inventory.web.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.helper.IdgenHelper;
@@ -22,10 +25,9 @@ public class ModuleSettingsController {
 	public SimpleObject get(@RequestParam("setting") String setting) {
 		SimpleObject results = new SimpleObject();
 		if (StringUtils.isNotEmpty(setting)) {
-			if (StringUtils.equalsIgnoreCase(setting, "isOperationNumberGenerated")) {
-				results.put("results", IdgenHelper.isOperationNumberGenerated());
-			}
-			// TODO: check other settings
+			AdministrationService adminService = Context.getAdministrationService();
+			String property = adminService.getGlobalProperty(setting);
+			results.put("results", property);
 		}
 		return results;
 	}

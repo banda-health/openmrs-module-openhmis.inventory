@@ -32,6 +32,7 @@
 			loadStockOperations: loadStockOperations,
 			searchItemStock: searchItemStock,
 			isOperationNumberGenerated: isOperationNumberGenerated,
+			isNegativeStockRestricted: isNegativeStockRestricted,
 		};
 
 		return service
@@ -96,10 +97,22 @@
 		function isOperationNumberGenerated(module_name, onLoadOpNumGenSuccessful) {
 			var requestParams = [];
 			requestParams['resource'] = 'module/openhmis/inventory/moduleSettings.page';
-			requestParams['setting'] = 'isOperationNumberGenerated';
+			requestParams['setting'] = 'openhmis.inventory.autoGenerateOperationNumber';
 			EntityRestFactory.setCustomBaseUrl('/' + OPENMRS_CONTEXT_PATH + '/');
 			EntityRestFactory.loadResults(requestParams,
 				onLoadOpNumGenSuccessful, errorCallback);
+
+			//reset base url..
+			EntityRestFactory.setBaseUrl(module_name);
+		}
+
+		function isNegativeStockRestricted(module_name, onLoadNegativeStockSuccessful){
+			var requestParams = [];
+			requestParams['resource'] = 'module/openhmis/inventory/moduleSettings.page';
+			requestParams['setting'] = 'openhmis.inventory.restrictNegativeInventoryStockCreation';
+			EntityRestFactory.setCustomBaseUrl('/' + OPENMRS_CONTEXT_PATH + '/');
+			EntityRestFactory.loadResults(requestParams,
+				onLoadNegativeStockSuccessful, errorCallback);
 
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);

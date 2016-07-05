@@ -33,6 +33,7 @@
 			this.selected = false;
 			this.expirationHasDatePicker = false;
 			this.newQuantity = '';
+			this.itemStockDetails = [];
 		}
 
 		LineItemModel.prototype = {
@@ -115,6 +116,14 @@
 
 			getNewQuantity: function () {
 				return this.newQuantity;
+			},
+
+			setItemStockDetails: function(itemStockDetails){
+				this.itemStockDetails = itemStockDetails;
+			},
+
+			getItemStockDetails: function(){
+				return this.itemStockDetails;
 			},
 		};
 

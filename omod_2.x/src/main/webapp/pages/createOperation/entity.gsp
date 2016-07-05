@@ -33,8 +33,12 @@
 
 </script>
 
-<div ng-show="loading" style="margin:400px;">
-    <img src="${ ui.resourceLink("uicommons", "images/spinner.gif") }"/>
+<div ng-show="loading" style="margin:200px;">
+    <span>${ui.message("openhmis.inventory.admin.create.processing")}</span>
+    <br />
+    <span style="margin:150px;">
+        <img src="${ ui.resourceLink("uicommons", "images/spinner.gif") }"/>
+    </span>
 </div>
 
 <div ng-hide="loading">
@@ -73,7 +77,7 @@
                 <li>
                     <span>
                         <input ng-model="entity.operationNumber" ng-show="!isOperationNumberGenerated" required/>
-                        <input ng-model="entity.operationNumber" ng-show="isOperationNumberGenerated" ng-disabled="true" />
+                        <span ng-show="isOperationNumberGenerated">{{entity.operationNumber}}</span>
                     </span>
                 </li>
             </ul>
@@ -111,7 +115,7 @@
                     </select>
                 </li>
             </ul>
-            <ul class="table-layout" ng-show="operationType.name === 'Distribution'">
+            <ul class="table-layout" ng-show="operationType.name === 'Distribution' && distributionType !== 'Patient'">
                 <li class="not-required">
                     <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
                 </li>
@@ -179,6 +183,16 @@
                     </span>
                 </li>
             </ul>
+            <ul class="table-layout" ng-show="operationType.name === 'Distribution' && distributionType === 'Patient'">
+                <li class="not-required">
+                    <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
+                </li>
+                <li>
+                    <select ng-model="distributionType"
+                            ng-options="distributionType for distributionType in distributionTypes">
+                    </select>
+                </li>
+            </ul>
             ${ui.includeFragment("openhmis.commons", "patientSearchFragment", [
                     showPatientDetails: "operationType.hasRecipient && selectedPatient !== '' && ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient'))",
                     showPatientSearchBox: "operationType.hasRecipient && selectedPatient === '' && ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient'))"
@@ -196,59 +210,79 @@
                     <tr>
                         <th></th>
                         <th>${ui.message('openhmis.inventory.item.name')}</th>
-                        <th>${ui.message('openhmis.inventory.item.quantity')}</th>
-                        <th>${ui.message('openhmis.inventory.operations.existingQuantity')}</th>
-                        <th>${ui.message('openhmis.inventory.operations.newQuantity')}</th>
-                        <th>${ui.message('openhmis.inventory.stockroom.expiration')}</th>
                     </tr>
-                    <tr ng-repeat="lineItem in lineItems">
-                        <td class="item-actions">
-                            <input type="image" src="/openmrs/images/trash.gif"
-                                   title="${ui.message('openhmis.inventory.operations.removeItemStock')}"
-                                   class="remove" ng-click="removeLineItem(lineItem)">
+                    <tr ng-repeat="lineItem in lineItems" >
+                        <td class="item-actions" ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                            <table class="icons">
+                                <tr>
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        <input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
+                                               title="${ui.message('openhmis.inventory.operations.removeItemStock')}"
+                                               ng-show="lineItem.selected"
+                                               class="remove,{{lineItem.selected ? 'row_selected' : ''}}" ng-click="removeLineItem(lineItem)">
+                                    </td>
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        <i ng-show="lineItem.newQuantity < 0" class="icon-info-sign" title="Out of Stock"></i>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
-                        <td>
-                            ${ ui.includeFragment("openhmis.commons", "searchFragment", [
-                                    typeahead: ["stockOperationItem.name for stockOperationItem in searchStockOperationItems(\$viewValue)"],
-                                    model: "lineItem.itemStock",
-                                    typeaheadOnSelect: "selectStockOperationItem(\$item, lineItem)",
-                                    typeaheadEditable: "true",
-                                    class: ["form-control autocomplete-search"],
-                                    placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
-                            ])}
+                        <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
 
-                        </td>
-                        <td>
-                            <input type="number" ng-model="lineItem.itemStockQuantity"
-                                   style="width:50px" ng-change="changeItemQuantity(lineItem)" />
-                        </td>
-                        <td class="existing-quantity">
-                            <input style="width:20px;" ng-disabled="lineItem.selected"
-                                   ng-show="lineItem.selected" value="{{lineItem.existingQuantity}}" />
-                        </td>
-                        <td ng-show="lineItem.newQuantity < 0" class="negative-quantity">
-                            <input style="width:20px;" ng-disabled="lineItem.selected" class="negative-quantity"
-                                   ng-show="lineItem.selected" value="{{lineItem.newQuantity}}" />
-                        </td>
-                        <td ng-show="lineItem.newQuantity >= 0">
-                            <input style="width:20px;" ng-disabled="lineItem.selected"
-                                   ng-show="lineItem.selected" value="{{lineItem.newQuantity}}" />
-                        </td>
-                        <td>
-                            <select ng-model="lineItem.itemStockExpirationDate"
-                                    ng-show="!lineItem.expirationHasDatePicker"
-                                    ng-options="itemStockExpirationDate for itemStockExpirationDate in lineItem.expirationDates"
-                                    style="width:100px">
-                            </select>
+                            <table class="item-details" ng-shdow="lineItem.selected">
+                                <tr>
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                                            typeahead: ["stockOperationItem.name for stockOperationItem in searchStockOperationItems(\$viewValue)"],
+                                            model: "lineItem.itemStock",
+                                            typeaheadOnSelect: "selectStockOperationItem(\$item, lineItem)",
+                                            typeaheadEditable: "true",
+                                            class: ["form-control autocomplete-search"],
+                                            showRemoveIcon: "false",
+                                            ngEnterEvent: "addLineItem()",
+                                            placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
+                                    ])}</td>
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        <b>${ui.message("openhmis.inventory.item.quantity")}:</b>
+                                    </td>
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        <input type="number" ng-model="lineItem.itemStockQuantity"
+                                               ng-enter="changeItemQuantity(lineItem)" style="width:60px;"
+                                               ng-change="changeItemQuantity(lineItem)" />
+                                    </td>
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        <b>${ui.message("openhmis.inventory.stockroom.expiration")}:</b>
+                                    </td>
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        <select ng-model="lineItem.itemStockExpirationDate"
+                                                ng-change="changeExpiration(lineItem)"
+                                                ng-show="!lineItem.expirationHasDatePicker"
+                                                class="right-justify"
+                                                ng-options="itemStockExpirationDate for itemStockExpirationDate in lineItem.expirationDates"
+                                                style="width:100px;">
+                                        </select>
+                                        <span ng-show="lineItem.expirationHasDatePicker">
+                                            ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                                                    formFieldName: "lineItemExpDate",
+                                                    label: "",
+                                                    useTime: false,
+                                                    startDate : new Date(),
+                                            ])}
+                                        </span>
+                                    </td>
 
-                            <span ng-show="lineItem.expirationHasDatePicker">
-                                ${ ui.includeFragment("uicommons", "field/datetimepicker", [
-                                        formFieldName: "lineItemExpDate",
-                                        label: "",
-                                        useTime: false,
-                                        startDate : new Date(),
-                                ])}
-                            </span>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td colspan="3" style="font-size:11px;" ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                        <b>${ui.message("openhmis.inventory.operations.existingQuantity")}:</b>
+                                        <span ng-show="lineItem.selected">
+                                            {{lineItem.existingQuantity}}
+                                        </span>
+                                        <span ng-show="!lineItem.selected">-</span>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>
@@ -296,19 +330,19 @@
                         <td>
                             <select ng-model="operationOccurDate"
                                     ng-options="occur.name for occur in operationOccurs"
-                                    style="width:inherit">
+                                    style="width:235px">
                             </select>
                         </td>
                     </tr>
                 </table>
-                <br />
                 <div class="ngdialog-buttons detail-section-border-top">
                     <br />
                     <input type="button" class="cancel"
                            value="${ui.message('general.cancel')}"
                            ng-click="closeThisDialog('Cancel')" />
-                    <input type="button" class="confirm right"
+                    <input type="button" class="confirm right btn gray-button"
                            value="${ui.message('openhmis.inventory.operations.changeDate')}"
+                           ng-disabled="operationOccurDate === undefined"
                            ng-click="confirm('OK')" />
                 </div>
             </div>

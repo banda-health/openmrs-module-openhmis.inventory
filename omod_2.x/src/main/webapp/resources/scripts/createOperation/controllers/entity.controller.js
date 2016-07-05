@@ -43,14 +43,16 @@
 		 */
 			// @Override
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
-			|| function (uuid) {
+			|| function () {
 				$scope.loading = true;
 				if (self.sessionLocation === undefined) {
 					CommonsRestfulFunctions.getSessionLocation(module_name, self.onLoadSessionLocationSuccessful);
 				}
 
 				$scope.isOperationNumberGenerated = false;
+				$scope.isNegativeStockRestricted = false;
 				CreateOperationRestfulService.isOperationNumberGenerated(module_name, self.onLoadOpNumGenSuccessful);
+				CreateOperationRestfulService.isNegativeStockRestricted(module_name, self.onLoadNegativeStockRestrictedSuccessful);
 				$scope.totalNumOfResults = 0;
 
 				$scope.limit = CookiesService.get('limit') || 5;
@@ -111,6 +113,7 @@
 				$scope.returnOperationType = $scope.returnOperationTypes[0];
 				$scope.showOperationItemsSection = self.showOperationItemsSection;
 				$scope.changeItemQuantity = self.changeItemQuantity;
+				$scope.changeExpiration = self.changeExpiration;
 
 				CreateOperationFunctions.onChangeDatePicker(
 					self.onOperationDateSuccessfulCallback,
@@ -125,6 +128,7 @@
 			// @Override
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function () {
 				$scope.submitted = false;
+				$scope.loading = false;
 				// validate operation number
 				if (!CreateOperationFunctions.validateOperationNumber($scope)) {
 					return false;
@@ -185,7 +189,6 @@
 				}
 
 				$scope.loading = true;
-
 				return true;
 			};
 
@@ -223,6 +226,7 @@
 			}
 
 		self.warningDialog = self.warningDialog || function (newVal, oldVal, source) {
+				self.loadOperationTypeAttributes();
 				if ($scope.lineItems.length > 0) {
 					var lineItem = $scope.lineItems[0];
 					if (lineItem.itemStock !== "") {
@@ -249,13 +253,15 @@
 			}
 
 		self.removeLineItem = self.removeLineItem || function (lineItem) {
-				var index = $scope.lineItems.indexOf(lineItem);
-				if (index !== -1) {
-					$scope.lineItems.splice(index, 1);
-				}
+				if(lineItem.selected){
+					var index = $scope.lineItems.indexOf(lineItem);
+					if (index !== -1) {
+						$scope.lineItems.splice(index, 1);
+					}
 
-				if ($scope.lineItems.length == 0) {
-					self.addLineItem();
+					if ($scope.lineItems.length == 0) {
+						self.addLineItem();
+					}
 				}
 			}
 
@@ -318,6 +324,32 @@
 				}
 			}
 
+		self.changeExpiration = self.changeExpiration || function(lineItem){
+				if(lineItem.itemStockExpirationDate !== 'Auto'){
+					var selectedExpiration = lineItem.itemStockExpirationDate;
+					var existingQuantity = 0;
+					if(selectedExpiration === 'None'){
+						selectedExpiration = null;
+					}
+					for (var i = 0; i < lineItem.itemStockDetails.details.length; i++) {
+						var detail = lineItem.itemStockDetails.details[i];
+						var expiration = detail.expiration;
+						if (expiration !== null) {
+							expiration = expiration.split("T")[0];
+							expiration = CreateOperationFunctions.formatDate(expiration);
+						}
+
+						if(expiration === selectedExpiration){
+							existingQuantity += detail.quantity;
+						}
+					}
+
+					lineItem.existingQuantity = existingQuantity;
+				} else {
+					lineItem.existingQuantity = lineItem.itemStockDetails.quantity;
+				}
+			}
+
 		self.loadOperationTypeAttributes = self.loadOperationTypeAttributes || function () {
 				if ($scope.operationType !== undefined) {
 					CreateOperationRestfulService.loadOperationTypeAttributes($scope.operationType.uuid,
@@ -328,9 +360,16 @@
 		// callbacks..
 		self.onLoadOpNumGenSuccessful = self.onLoadOpNumGenSuccessful || function (data) {
 				$scope.isOperationNumberGenerated = false;
-				if (data.results && data.results === true) {
+				if (data.results && data.results === "true") {
 					$scope.isOperationNumberGenerated = true;
 					$scope.entity.operationNumber = "WILL BE GENERATED";
+				}
+			}
+
+		self.onLoadNegativeStockRestrictedSuccessful = self.onLoadNegativeStockRestrictedSuccessful || function(data){
+				$scope.isNegativeStockRestricted = false;
+				if(data.results && data.results === "true"){
+					$scope.isNegativeStockRestricted = true;
 				}
 			}
 
@@ -407,6 +446,7 @@
 				$scope.lineItem.setItemStockExpirationDate(itemStockExpirationDates[0]);
 				$scope.lineItem.setExpirationDates(itemStockExpirationDates);
 				if (itemStocks[0] !== null) {
+					$scope.lineItem.setItemStockDetails(itemStocks[0]);
 					$scope.lineItem.setExistingQuantity(itemStocks[0].quantity);
 					self.changeItemQuantity($scope.lineItem);
 				}
@@ -417,6 +457,7 @@
 			}
 
 		self.onOperationDateSuccessfulCallback = self.onOperationDateSuccessfulCallback || function (date) {
+				$scope.operationOccurDate = undefined;
 				if (date !== undefined) {
 					var operationDate = CreateOperationFunctions.formatDate(new Date(date));
 					self.loadStockOperations(operationDate);
@@ -429,6 +470,11 @@
 
 		self.onLoadSessionLocationSuccessful = self.onLoadSessionLocationSuccessful || function (data) {
 				self.sessionLocation = data.sessionLocation.display;
+			}
+
+		self.onChangeEntityError = self.onChangeEntityError || function (error) {
+				emr.errorAlert(error);
+				$scope.loading = false;
 			}
 
 		// @Override

@@ -162,6 +162,9 @@ table.operation-date{
     height:200px;
     border-style: hidden;
 }
+table.operation-date tr{
+    border: 0px;
+}
 table.operation-date td{
     vertical-align: baseline;
     border: 0px;
@@ -173,6 +176,90 @@ table.operation-date tr:nth-child(even){
     background:none;
 }
 .negative-quantity{
-    background: red;
-    border-color: red;
+    /*background: #FEFE22;*/
+    background: lightyellow;
 }
+
+fieldset.nested{
+    width:100%;
+}
+
+table.item-stock tr:first-child{
+    width: 1%;
+}
+
+table.item-stock tr:nth-child(even){
+    background: none;
+}
+
+table.item-details{
+    width: 100%;
+    margin: 5px 0px;
+}
+
+table.item-details td{
+    line-height: 1px;
+    font-size: 0.7em;
+    border: 0px;
+    /*background: whitesmoke;*/
+}
+
+table.item-details tr{
+    border: 0px;
+}
+
+table.item-details td input{
+    min-width: 0px;
+}
+
+table.item-stock .autocomplete-search{
+    width: 290px;
+}
+table.icons{
+    width:50px;
+    background-color:inherit;
+}
+table.icons td:first-child{
+    width:5px;
+}
+table.icons tr{
+    border: 0px;
+}
+table.icons td{
+    border: 0px;
+    padding: 0px 4px;
+    vertical-align: middle;
+}
+table.icons td input{
+    padding: 0px 0px;
+    margin-top: 0px;
+}
+table.icons td:first-child{
+    width: 1%;
+}
+
+table.item-details td:first-child{
+    width: 1%;
+}
+table.item-details td:nth-child(2){
+    width: 1%;
+}
+table.item-details td:nth-child(3){
+    width: 5%;
+}
+table.item-details td:nth-child(4){
+}
+table.item-details td:nth-child(5){
+}
+table.item-details td input[type="image"]{
+    min-width:0;
+    border: 1px solid transparent;
+    background-color: transparent;
+}
+.recent-lozenge {
+    vertical-align: text-top;
+    padding: 1px 2px;
+    border-radius: 4px;
+}
+
+
