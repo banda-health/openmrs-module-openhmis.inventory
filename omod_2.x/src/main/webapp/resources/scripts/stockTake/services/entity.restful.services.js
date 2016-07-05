@@ -52,11 +52,11 @@
 		 * @param limit
 		 * @param onLoadStockDetailsSuccessful
 		 * */
-		function loadStockDetails(rest_entity_name, stockroomUuid, currentPage, limit, onLoadStockDetailsSuccessful) {
+		function loadStockDetails(stockroomUuid, currentPage, limit, onLoadStockDetailsSuccessful) {
 			currentPage = currentPage || 1;
 			if (angular.isDefined(stockroomUuid) && stockroomUuid !== '' && stockroomUuid !== undefined) {
 				var requestParams = PaginationService.paginateParams(currentPage, limit, false);
-				requestParams['rest_entity_name'] = rest_entity_name;
+				requestParams['rest_entity_name'] = 'inventoryStockTakeSummary';
 				requestParams['stockroom_uuid'] = stockroomUuid;
 				EntityRestFactory.loadEntities(requestParams,
 					onLoadStockDetailsSuccessful,

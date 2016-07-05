@@ -28,7 +28,7 @@
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.admin.stockTake");
-		var cancel_page = 'entity.page';
+		var cancel_page = '/'+ OPENMRS_CONTEXT_PATH +'/openhmis.inventory/myOperations/entities.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
 		
 		// @Override
@@ -71,27 +71,29 @@
 				$scope.hideTableDetails = function () {
 					$scope.showStockDetailsTable = false;
 				}
-
+				
 				$scope.getActualQuantity = function (entity) {
-					if (entity.actualQuantity != entity.quantity && entity.actualQuantity != null) {
-						$scope.newStock = StockTakeFunctions.addStock(entity);
-						self.getNewStock($scope.newStock);
+					if (entity.actualQuantity != entity.quantity && entity.actualQuantity != null && entity.actualQuantity >= 0) {
+						entity.id = entity.item.uuid + "_" + entity.expiration;
+						if (entity.expiration != null) {
+							entity.expiration = StockTakeFunctions.formatDate(entity.expiration);
+						}
+						
+						self.getNewStock(entity);
 					}
 				}
-
+				
 			}
-
+		
 		self.getNewStock = self.getNewStock || function (newStock) {
-				var temp = $scope.stockTakeDetails.length;
+				var index = StockTakeFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", newStock.id);
 				if ($scope.stockTakeDetails.length != 0) {
-					for (var i = 0; i < temp; i++) {
-						if ($scope.stockTakeDetails[i].item == newStock.item && $scope.stockTakeDetails[i].expiration == newStock.expiration) {
-							$scope.stockTakeDetails[i] = newStock;
-							console.log($scope.stockTakeDetails);
-						} else {
-							$scope.stockTakeDetails.push(newStock);
-							break;
-						}
+					if (index == null) {
+						$scope.stockTakeDetails.push(newStock);
+					}
+					else {
+						$scope.stockTakeDetails.splice(index, 1);
+						$scope.stockTakeDetails.push(newStock);
 					}
 				} else {
 					$scope.stockTakeDetails.push(newStock);
@@ -111,8 +113,7 @@
 				CookiesService.set(stockroomUuid + 'stockTakeCurrentPage', stockTakeCurrentPage);
 				CookiesService.set(stockroomUuid + 'stockTakeLimit', $scope.stockTakeLimit);
 				
-				StockTakeRestfulService.loadStockDetails(
-					rest_entity_name, stockroomUuid, CookiesService.get(stockroomUuid + 'stockTakeCurrentPage'),
+				StockTakeRestfulService.loadStockDetails(stockroomUuid, CookiesService.get(stockroomUuid + 'stockTakeCurrentPage'),
 					CookiesService.get(stockroomUuid + 'stockTakeLimit'),
 					self.onLoadStockDetailsSuccessful);
 			}
@@ -139,7 +140,26 @@
 		 */
 		// @Override
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function () {
+				var stockObject = $scope.stockTakeDetails;
+				for (var i = 0; i < stockObject.length; i++) {
+					delete stockObject[i]['$$hashKey'];
+					delete stockObject[i]['id'];
+					console.log(stockObject);
+				}
+				$scope.entity = {
+					'itemStockSummaryList': stockObject,
+					"operationNumber": "",
+					"stockroom": $scope.entity.stockroom.uuid
+				};
 				return true;
+			}
+		
+		/**
+		 * Removes the temporarily assigned unique ids before POSTing data
+		 * @type {Function}
+		 */
+		self.removeHashKey = self.removeHashkey || function () {
+				StockTakeFunctions.removeHashKey($scope.stockTakeDetails);
 			}
 		
 		// @Override

@@ -79,8 +79,8 @@
 				<td>{{entity.item.name}}</td>
 				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
 				<td>{{entity.quantity}}</td>
-				<td><input name="actualQuantity"
-				           id="{{'actualQuantity-'+entity.item.uuid+'_'}}{{entity.expiration | date: 'yyyy-MM-dd'}}"
+				<td><input name="actualQuantity" min="0"
+				           id="{{'actualQuantity-'+entity.item.uuid+'_'+entity.expiration}}{{entity.expiration | date: 'yyyy-MM-dd'}}"
 				           type="number" class="form-control input-sm" ng-model="entity.actualQuantity"
 				           ng-blur="getActualQuantity(entity)"></td>
 			</tr>
@@ -141,6 +141,6 @@
 <div ng-show="showStockDetails == true" class="detail-section-border-top">
 	<br/>
 	<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
-	<input type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()"/>
+	<input ng-disabled="stockTakeChangeCounter < 0" type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()"/>
 	<br/>
 </div>

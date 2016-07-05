@@ -19,28 +19,35 @@
 	var app = angular.module('app.stockTakeFunctionsFactory', []);
 	app.service('StockTakeFunctions', StockTakeFunctions);
 	
-	StockTakeFunctions.$inject = [];
+	StockTakeFunctions.$inject = ['$filter'];
 	
-	function StockTakeFunctions() {
+	function StockTakeFunctions($filter) {
 		var service;
 		
 		service = {
 			addMessageLabels: addMessageLabels,
-			addStock: addStock
+			findIndexByKeyValue:findIndexByKeyValue,
+			formatDate:formatDate
 		};
 		
 		return service;
 		
-		function addStock(entity) {
-			var newStock = {}, cart = [];
-			newStock.item = entity.item;
-			newStock.expiration = entity.expiration;
-			newStock.actualQuantity = entity.actualQuantity;
-			newStock.quantity = entity.quantity;
-			cart.push(newStock);
-
-			return newStock;
-
+		/**
+		 * Formats the date to allow proper updating of the stocks
+		 * @params date
+		 * */
+		function formatDate(date) {
+			var formattedDate = ($filter('date')(new Date(date), 'dd-MM-yyyy'));
+			return formattedDate;
+		}
+		
+		function findIndexByKeyValue(arraytosearch, key, valuetosearch) {
+			for (var i = 0; i < arraytosearch.length; i++) {
+				if (arraytosearch[i][key] == valuetosearch) {
+					return i;
+				}
+			}
+			return null;
 		}
 		
 		
