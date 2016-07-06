@@ -38,13 +38,14 @@
 			<div class="col-md-4">
 				<select class="form-control" ng-model="entity.stockroom"
 				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
-				        ng-change="loadStockDetails(stockTakeCurrentPage)">
+				        ng-change="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
 					<option value="" selected="selected">Any</option>
 				</select>
 			</div>
 
 			<div class="col-md-2">
-				<input type="button" value="Search" class="confirm form-control" ng-click="loadStockDetails()">
+				<input type="button" value="Search" class="confirm form-control"
+				       ng-click="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
 			</div>
 		</div>
 		<br/>
@@ -79,7 +80,7 @@
 				<td>{{entity.item.name}}</td>
 				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
 				<td>{{entity.quantity}}</td>
-				<td><input name="actualQuantity" min="0"
+				<td><input name="actualQuantity" min="0" value="4"
 				           id="{{'actualQuantity-'+entity.item.uuid+'_'+entity.expiration}}{{entity.expiration | date: 'yyyy-MM-dd'}}"
 				           type="number" class="form-control input-sm" ng-model="entity.actualQuantity"
 				           ng-blur="getActualQuantity(entity)"></td>
@@ -101,7 +102,7 @@
 	<br/>
 </div>
 
-<div ng-show="showStockChangeDetails == true" class="detail-section-border-top">
+<div ng-show="stockTakeChangeCounter != 0" class="detail-section-border-top">
 	<br/>
 	<a ng-show="showStockDetailsTable == false" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
 	   ng-click="showTableDetails()">
@@ -113,34 +114,62 @@
 	</a>
 	<br/>
 	<br/>
+</div>
 
-	<div id="showStockDetailsTable" ng-show="showStockDetailsTable == true" class="detail-section-border-top">
-		<br/>
-		<table class="manage-entities-table" id="stockTakeChangeDetailsTable">
-			<thead>
-			<tr>
-				<th>${ui.message('openhmis.inventory.item.name')}</th>
-				<th>${ui.message('openhmis.inventory.stockroom.expiration')}</th>
-				<th>${ui.message('openhmis.inventory.item.quantity')}</th>
-				<th>${ui.message('openhmis.inventory.item.actual.quantity')}</th>
-			</tr>
-			</thead>
-			<tbody><tr class="clickable-tr" pagination-id="__stockTakeReview"
-			           dir-paginate="entity in stockTakeDetails | itemsPerPage: stockTakeLimitReview">
-				<td>{{entity.item.name}}</td>
-				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
-				<td>{{entity.quantity}}</td>
-				<td>{{entity.actualQuantity}}</td>
-			</tr>
-			</tbody>
-		</table>
-		<br/>
-	</div>
+<div id="showStockDetailsTable" ng-show="showStockDetailsTable == true" class="detail-section-border-top">
+	<br/>
+	<table class="manage-entities-table" id="stockTakeChangeDetailsTable">
+		<thead>
+		<tr>
+			<th>${ui.message('openhmis.inventory.item.name')}</th>
+			<th>${ui.message('openhmis.inventory.stockroom.expiration')}</th>
+			<th>${ui.message('openhmis.inventory.item.quantity')}</th>
+			<th>${ui.message('openhmis.inventory.item.actual.quantity')}</th>
+		</tr>
+		</thead>
+		<tbody><tr class="clickable-tr" pagination-id="__stockTakeChangeReview"
+		           total-items="stockTakeChangeCounter"
+		           dir-paginate="entity in stockTakeDetails | itemsPerPage: stockTakeLimitReview">
+			<td>{{entity.item.name}}</td>
+			<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
+			<td>{{entity.quantity}}</td>
+			<td>{{entity.actualQuantity}}</td>
+		</tr>
+		</tbody>
+	</table>
+	<br/>
+</div>
 </div>
 
 <div ng-show="showStockDetails == true" class="detail-section-border-top">
 	<br/>
 	<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
-	<input ng-disabled="stockTakeChangeCounter < 0" type="button" class="confirm right" value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()"/>
+	<input ng-disabled="stockTakeChangeCounter < 0" type="button" class="confirm right"
+	       value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()"/>
 	<br/>
+</div>
+
+<div id="stockroomChange" class="dialog" style="display:none;">
+	<div class="dialog-header">
+		<span>
+			<i class="icon-info-sign"></i>
+
+			<h3>${ui.message('openhmis.inventory.stocktake.stockroom.change.prompt.header')}</h3>
+		</span>
+		<i class="icon-remove cancel" style="float:right; cursor: pointer;" ng-click="closeThisDialog()"></i>
+	</div>
+
+	<div class="dialog-content form">
+		<div>
+			<p>${ui.message('openhmis.inventory.stocktake.stockroom.change.prompt.message')}</p>
+		</div>
+
+		<div class="row ngdialog-buttons detail-section-border-top">
+			<br/>
+			<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
+			       ng-click="closeThisDialog('Cancel')"/>
+			<input type="submit" class="confirm right"
+			       value="${ui.message('openhmis.inventory.stocktake.ok')}"/>
+		</div>
+	</div>
 </div>

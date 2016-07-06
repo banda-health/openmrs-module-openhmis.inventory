@@ -28,7 +28,7 @@
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.admin.stockTake");
-		var cancel_page = '/'+ OPENMRS_CONTEXT_PATH +'/openhmis.inventory/myOperations/entities.page';
+		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
 		
 		// @Override
@@ -51,6 +51,25 @@
 				$scope.stockTakeChangeCounter = 0;
 				$scope.stockTakeDetails = [];
 				
+				$scope.stockroomDialog = function (stockroomChange, stockTakeCurrentPage) {
+					if ($scope.stockTakeChangeCounter != 0) {
+						$scope.stockTakeDetails.length = 0;
+						$scope.stockTakeChangeCounter = 0;
+						self.stockroomChangeDialog(stockroomChange);
+					} else {
+						stockroom_uuid = $scope.entity.stockroom.uuid;
+						
+						if ($scope.entity.stockroom.uuid != null) {
+							self.loadStockDetails(stockroom_uuid, stockTakeCurrentPage);
+							
+							$scope.stockTakeLimit = CookiesService.get(stockroom_uuid + 'stockTakeLimit') || 5;
+							$scope.stockTakeCurrentPage = CookiesService.get(stockroom_uuid + 'stockTakeCurrentPage') || 1;
+							$scope.stockTakePagingFrom = PaginationService.pagingFrom;
+							$scope.stockTakePagingTo = PaginationService.pagingTo;
+						}
+					}
+				}
+				
 				$scope.loadStockDetails = function (stockTakeCurrentPage) {
 					stockroom_uuid = $scope.entity.stockroom.uuid;
 					
@@ -62,6 +81,7 @@
 						$scope.stockTakePagingFrom = PaginationService.pagingFrom;
 						$scope.stockTakePagingTo = PaginationService.pagingTo;
 					}
+					
 				}
 				
 				$scope.showTableDetails = function () {
@@ -73,6 +93,7 @@
 				}
 				
 				$scope.getActualQuantity = function (entity) {
+					
 					if (entity.actualQuantity != entity.quantity && entity.actualQuantity != null && entity.actualQuantity >= 0) {
 						entity.id = entity.item.uuid + "_" + entity.expiration;
 						if (entity.expiration != null) {
@@ -83,6 +104,10 @@
 					}
 				}
 				
+			}
+		
+		self.stockroomChangeDialog = self.stockroomChangeDialog || function (id) {
+				StockTakeFunctions.stockroomChangeDialog(id, $scope);
 			}
 		
 		self.getNewStock = self.getNewStock || function (newStock) {
@@ -130,8 +155,10 @@
 					$scope.showStockDetails = true
 				} else {
 					$scope.showStockDetails = false;
+					$scope.stockTakeChangeCounter = 0;
+					$scope.showStockChangeDetails = false;
+					$scope.stockTakeDetails = [];
 				}
-				
 			}
 		
 		/**

@@ -26,8 +26,9 @@
 		
 		service = {
 			addMessageLabels: addMessageLabels,
-			findIndexByKeyValue:findIndexByKeyValue,
-			formatDate:formatDate
+			findIndexByKeyValue: findIndexByKeyValue,
+			formatDate: formatDate,
+			stockroomChangeDialog: stockroomChangeDialog
 		};
 		
 		return service;
@@ -58,6 +59,36 @@
 		function addMessageLabels() {
 			var messages = {};
 			return messages;
+		}
+		
+		/**
+		 * Disable and gray-out background when a dialog box opens up.
+		 */
+		function disableBackground() {
+			var backgroundElement = angular.element('.simplemodal-overlay');
+			backgroundElement.addClass('disable-background');
+		}
+		
+		/**
+		 * Show the generate report popup
+		 * @param selectorId - div id
+		 */
+		function stockroomChangeDialog(selectorId, $scope) {
+			var dialog = emr.setupConfirmationDialog({
+				selector: '#' + selectorId,
+				actions: {
+					cancel: function () {
+						dialog.close();
+					},
+					confirm: function () {
+						$scope.loadStockDetails($scope.stockTakeCurrentPage);
+						dialog.close();
+					}
+				}
+			});
+			
+			dialog.show();
+			disableBackground();
 		}
 	}
 })();
