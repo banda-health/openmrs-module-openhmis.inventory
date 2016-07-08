@@ -89,9 +89,6 @@
 					
 					if (entity.actualQuantity != entity.quantity && entity.actualQuantity != null && entity.actualQuantity >= 0) {
 						entity.id = entity.item.uuid + "_" + entity.expiration;
-						if (entity.expiration != null) {
-							entity.expiration = StockTakeFunctions.formatDate(entity.expiration);
-						}
 						
 						self.getNewStock(entity);
 					}
@@ -110,9 +107,15 @@
 						$scope.stockTakeDetails.push(newStock);
 					}
 					else {
-						$scope.stockTakeDetails.splice(index, 1);
-						$scope.stockTakeDetails.push(newStock);
+						$scope.stockTakeDetails[index] = newStock;
 					}
+					/*for (var i = 0; i < $scope.stockTakeDetails.length; i++) {
+						var quantity = $scope.stockTakeDetails[i].actualQuantity;
+						var actualQuantity = $scope.stockTakeDetails[i].quantity
+						if (quantity === actualQuantity) {
+							$scope.stockTakeDetails.splice(i, 1);
+						}
+					}*/
 				} else {
 					$scope.stockTakeDetails.push(newStock);
 				}
@@ -182,6 +185,10 @@
 				for (var i = 0; i < stockObject.length; i++) {
 					delete stockObject[i]['$$hashKey'];
 					delete stockObject[i]['id'];
+					if (stockObject[i].expiration != null) {
+						console.log(stockObject[i].expiration);
+						//stockObject[i].expiration = StockTakeFunctions.formatDate(stockObject[i].expiration);
+					}
 				}
 
 				$scope.entity = {

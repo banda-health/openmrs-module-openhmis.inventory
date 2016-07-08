@@ -138,11 +138,11 @@
 		</thead>
 		<tbody><tr class="clickable-tr" pagination-id="__stockTakeChangeReview"
 		           total-items="stockTakeChangeCounter"
-		           dir-paginate="entity in stockTakeDetails | itemsPerPage: stockTakeLimitReview">
-			<td>{{entity.item.name}}</td>
-			<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
-			<td>{{entity.quantity}}</td>
-			<td>{{entity.actualQuantity}}</td>
+		           dir-paginate="stock in stockTakeDetails | itemsPerPage: stockTakeLimitReview">
+			<td>{{stock.item.name}}</td>
+			<td>{{stock.expiration | date: "yyyy-MM-dd"}}</td>
+			<td>{{stock.quantity}}</td>
+			<td>{{stock.actualQuantity}}</td>
 		</tr>
 		</tbody>
 	</table>
