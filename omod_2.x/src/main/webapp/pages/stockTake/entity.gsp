@@ -29,30 +29,35 @@
 		</span>
 	</table>
 	<br/>
-	<table>
-		<div class="row">
-			<div class="col-md-2">
-				<span>${ui.message('openhmis.inventory.stockroom.name')}</span>
-			</div>
-
-			<div class="col-md-4">
-				<select class="form-control" ng-model="entity.stockroom"
-				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
-				        ng-change="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
-					<option value="" selected="selected">Any</option>
-				</select>
-			</div>
-
-			<div class="col-md-2">
-				<input type="button" value="Search" class="confirm form-control"
-				       ng-click="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
-			</div>
-		</div>
-		<br/>
-	</table>
+	<ul class="table-layout">
+		<li class="required">
+			<span>${ui.message('openhmis.inventory.stockroom.name')} :</span>
+		</li>
+		<li>
+			<select class="form-control" ng-model="entity.stockroom"
+			        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
+			        ng-change="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
+				<option value="" selected="selected">Any</option>
+			</select>
+		</li>
+		<li>
+			<input type="button" value="Search" class="confirm"
+			       ng-click="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
+		</li>
+	</ul>
+	<br/>
 </div>
 
-<div ng-show="showStockDetails == false" class="detail-section-border-top">
+<div ng-show="showNoStockroomSelected == true" class="detail-section-border-top">
+	<br/>
+	<span>
+		${ui.message('openhmis.inventory.stocktake.no.stockroom.selected')}
+	</span>
+	<br/>
+	<br/>
+</div>
+
+<div ng-show="showNoStockSummaries == true" class="detail-section-border-top">
 	<br/>
 	<span>
 		${ui.message('openhmis.inventory.stocktake.no.items')}
@@ -104,19 +109,27 @@
 
 <div ng-show="stockTakeChangeCounter != 0" class="detail-section-border-top">
 	<br/>
-	<a ng-show="showStockDetailsTable == false" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
-	   ng-click="showTableDetails()">
-		{{stockTakeChangeCounter}} ${ui.message('openhmis.inventory.stocktake.change.showDetails')}
-	</a>
-	<a ng-show="showStockDetailsTable == true" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
-	   ng-click="hideTableDetails()">
-		{{stockTakeChangeCounter}} ${ui.message('openhmis.inventory.stocktake.change.hideDetails')}
-	</a>
+
+	<p ng-show="showStockDetailsTable == false">
+		${ui.message('openhmis.inventory.stocktake.change.counter.label')} ({{stockTakeChangeCounter}})&nbsp;
+		<a id="stockTakehchange" class="btn btn-grey" ui-sref="new"
+		   ng-click="showTableDetails()">
+			${ui.message('openhmis.inventory.stocktake.change.showDetails')}
+		</a>
+	</p>
+
+	<p ng-show="showStockDetailsTable == true">
+		${ui.message('openhmis.inventory.stocktake.change.counter.label')} ({{stockTakeChangeCounter}})&nbsp;
+		<a id="stockTakehchange" class="btn btn-grey" ui-sref="new"
+		   ng-click="hideTableDetails()">
+			${ui.message('openhmis.inventory.stocktake.change.hideDetails')}
+		</a>
+	</p>
 	<br/>
 	<br/>
 </div>
 
-<div id="showStockDetailsTable" ng-show="showStockDetailsTable == true" class="detail-section-border-top">
+<div id="showStockDetailsTable" ng-show="showStockDetailsTable == true">
 	<br/>
 	<table class="manage-entities-table" id="stockTakeChangeDetailsTable">
 		<thead>

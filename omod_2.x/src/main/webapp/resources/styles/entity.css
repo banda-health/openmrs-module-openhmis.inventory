@@ -16,37 +16,42 @@
 .entities-table th:first-child, td:first-child {
     width: 30%;
 }
+
 #attribute-types-dialog {
     width: 500px;
 }
+
 ul.dialog-table-layout li {
     width: 150px;
     margin: 0 0;
 }
-#dialog-bottom ul{
+
+#dialog-bottom ul {
     margin-bottom: 0;
 }
+
 .dialog-select {
     font-size: 14px;
     min-width: 115%
 }
-table.manage-stockOperations-table th:first-child, td:first-child{
+
+table.manage-stockOperations-table th:first-child, td:first-child {
     width: 80%;
 }
 
-table.manage-stockOperations-item-table th:first-child, td:first-child{
+table.manage-stockOperations-item-table th:first-child, td:first-child {
     width: 160%;
 }
 
-table.manage-stockOperations-transactions-table th:first-child, td:first-child{
+table.manage-stockOperations-transactions-table th:first-child, td:first-child {
     width: 50%;
 }
 
-table.manage-stockOperations-transactions-table th:nth-child(2), td:nth-child(1){
+table.manage-stockOperations-transactions-table th:nth-child(2), td:nth-child(1) {
     width: 130%;
 }
 
-table.manage-stockOperations-transactions-table th:nth-child(5), td:nth-child(5){
+table.manage-stockOperations-transactions-table th:nth-child(5), td:nth-child(5) {
     width: 40%;
 }
 
@@ -54,24 +59,24 @@ table.search {
     border-style: hidden;
 }
 
-table.search td{
+table.search td {
     border: 0px;
 }
 
-table.search input{
+table.search input {
     width: 330px;
 }
 
-table.search select{
+table.search select {
     width: 170px;
 }
 
-form.search{
+form.search {
     width: 100%;
-    float:left;
+    float: left;
 }
 
-form.search select{
+form.search select {
     min-width: 0px;
 }
 
@@ -79,23 +84,25 @@ fieldset.search {
     min-width: 0px;
     width: 100%;
 }
-ul.search-area{
+
+ul.search-area {
     text-align: left;
 }
 
-ul.search-area li{
+ul.search-area li {
     display: inline-block;
     vertical-align: top;
     margin: 0px 2px;
 }
 
-.search-area{
+.search-area {
     height: 27px;
 }
 
-ul.search-area-input{
+ul.search-area-input {
     text-align: left;
 }
+
 table.manage-stockrooms-table th:first-child, td:first-child {
     width: 30%;
 }
@@ -107,19 +114,21 @@ table.manage-stockrooms-items-table th:first-child, td:first-child {
 table.manage-stockrooms-transactions-table th:nth-child(1), td:nth-child(1) {
     width: 50%;
 }
+
 table.manage-stockrooms-transactions-table th:nth-child(3), td:nth-child(3) {
     width: 120%;
 }
+
 table.manage-stockrooms-transactions-table th:last-child, td:last-child {
     width: 40%;
 }
 
-.not-found{
-    margin-left:300px;
+.not-found {
+    margin-left: 300px;
 }
 
-#item-details-dialog{
-    max-width:none;
+#item-details-dialog {
+    max-width: none;
     width: 600px;
 }
 
@@ -138,23 +147,27 @@ table.manage-stockrooms-transactions-table th:last-child, td:last-child {
 input.non-editable {
     background-color: lightgrey
 }
-#item-price-dialog ul{
+
+#item-price-dialog ul {
     margin-bottom: 0px;
 }
 
-#item-code-dialog ul{
+#item-code-dialog ul {
     margin-bottom: 0px;
 }
 
 #attribute-types-dialog select option {
-    font-size:0.875em;
+    font-size: 0.875em;
 }
+
 #operationTypesTable th:first-child, td:first-child {
     width: 20%;
 }
-#stockTakeTable {
+
+#stockTakeTable table td {
     font-size: 0.85em;
 }
+
 .btn {
     display: inline-block;
     padding: 6px 12px;
@@ -181,6 +194,7 @@ input.non-editable {
     background-color: #666666;
     color: white;
 }
+
 .btn-grey:hover {
     background-color: #666666;
     color: white;

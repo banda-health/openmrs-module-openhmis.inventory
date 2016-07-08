@@ -45,6 +45,8 @@
 			|| function (uuid) {
 				var stockroom_uuid = '';
 				self.loadStockrooms();
+				$scope.showNoStockroomSelected = true;
+				$scope.showNoStockSummaries = false;
 				$scope.showStockDetails = false;
 				$scope.showStockChangeDetails = false;
 				$scope.showStockDetailsTable = false;
@@ -57,16 +59,7 @@
 						$scope.stockTakeChangeCounter = 0;
 						self.stockroomChangeDialog(stockroomChange);
 					} else {
-						stockroom_uuid = $scope.entity.stockroom.uuid;
-						
-						if ($scope.entity.stockroom.uuid != null) {
-							self.loadStockDetails(stockroom_uuid, stockTakeCurrentPage);
-							
-							$scope.stockTakeLimit = CookiesService.get(stockroom_uuid + 'stockTakeLimit') || 5;
-							$scope.stockTakeCurrentPage = CookiesService.get(stockroom_uuid + 'stockTakeCurrentPage') || 1;
-							$scope.stockTakePagingFrom = PaginationService.pagingFrom;
-							$scope.stockTakePagingTo = PaginationService.pagingTo;
-						}
+						$scope.loadStockDetails(stockTakeCurrentPage);
 					}
 				}
 				
@@ -150,15 +143,29 @@
 		
 		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful || function (data) {
 				$scope.fetchedEntities = data.results;
+				for (var i = 0; i < $scope.fetchedEntities.length; i++) {
+					$scope.fetchedEntities[i].id = $scope.fetchedEntities[i].item.uuid + "_" + $scope.fetchedEntities[i].expiration;
+					var index = StockTakeFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", $scope.fetchedEntities[i].id);
+					if (index != null) {
+						$scope.fetchedEntities[i].actualQuantity = $scope.stockTakeDetails[index].actualQuantity;
+					}
+				}
+				
 				$scope.totalNumOfResults = data.length;
 				if (data.results.length != 0) {
-					$scope.showStockDetails = true
+					$scope.showStockDetails = true;
+					$scope.showNoStockroomSelected = false;
+					$scope.showNoStockSummaries = false;
 				} else {
 					$scope.showStockDetails = false;
 					$scope.stockTakeChangeCounter = 0;
 					$scope.showStockChangeDetails = false;
 					$scope.stockTakeDetails = [];
+					$scope.showNoStockroomSelected = false;
+					$scope.showNoStockSummaries = true;
 				}
+				
+				
 			}
 		
 		/**
@@ -171,7 +178,6 @@
 				for (var i = 0; i < stockObject.length; i++) {
 					delete stockObject[i]['$$hashKey'];
 					delete stockObject[i]['id'];
-					console.log(stockObject);
 				}
 				$scope.entity = {
 					'itemStockSummaryList': stockObject,
