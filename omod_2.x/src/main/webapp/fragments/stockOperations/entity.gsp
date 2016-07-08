@@ -37,7 +37,7 @@
     </ul>
     <ul class="table-layout">
         <li>
-            <span>{{messageLabels['openhmis.inventory.general.status']}}</span>
+            <span>{{messageLabels['openhmis.commons.general.status']}}</span>
         </li>
         <li>
             <span>{{stockOperation.status}}</span>

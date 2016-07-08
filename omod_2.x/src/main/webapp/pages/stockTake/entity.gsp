@@ -30,7 +30,7 @@
 	</table>
 	<br/>
 	<ul class="table-layout">
-		<li class="required">
+		<li>
 			<span>${ui.message('openhmis.inventory.stockroom.name')} :</span>
 		</li>
 		<li>
@@ -110,17 +110,13 @@
 <div ng-show="stockTakeChangeCounter != 0" class="detail-section-border-top">
 	<br/>
 
-	<p ng-show="showStockDetailsTable == false">
+	<p >
 		${ui.message('openhmis.inventory.stocktake.change.counter.label')} ({{stockTakeChangeCounter}})&nbsp;
-		<a id="stockTakehchange" class="btn btn-grey" ui-sref="new"
+		<a ng-show="showStockDetailsTable == false" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
 		   ng-click="showTableDetails()">
 			${ui.message('openhmis.inventory.stocktake.change.showDetails')}
 		</a>
-	</p>
-
-	<p ng-show="showStockDetailsTable == true">
-		${ui.message('openhmis.inventory.stocktake.change.counter.label')} ({{stockTakeChangeCounter}})&nbsp;
-		<a id="stockTakehchange" class="btn btn-grey" ui-sref="new"
+		<a ng-show="showStockDetailsTable == true" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
 		   ng-click="hideTableDetails()">
 			${ui.message('openhmis.inventory.stocktake.change.hideDetails')}
 		</a>

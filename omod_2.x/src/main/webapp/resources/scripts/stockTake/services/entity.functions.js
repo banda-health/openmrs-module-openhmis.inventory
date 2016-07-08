@@ -36,21 +36,28 @@
 		/**
 		 * Formats the date to allow proper updating of the stocks
 		 * @params date
+		 * @returns formattedDate
 		 * */
 		function formatDate(date) {
 			var formattedDate = ($filter('date')(new Date(date), 'dd-MM-yyyy'));
 			return formattedDate;
 		}
 		
-		function findIndexByKeyValue(arraytosearch, key, valuetosearch) {
-			for (var i = 0; i < arraytosearch.length; i++) {
-				if (arraytosearch[i][key] == valuetosearch) {
+		/**
+		 * Gets the Index of a given element in an array
+		 * @params arrayToSearch
+		 * @params key
+		 * @params valueToSearch
+		 * @returns index || null
+		 * */
+		function findIndexByKeyValue(arrayToSearch, key, valueToSearch) {
+			for (var i = 0; i < arrayToSearch.length; i++) {
+				if (arrayToSearch[i][key] == valueToSearch) {
 					return i;
 				}
 			}
 			return null;
 		}
-		
 		
 		/**
 		 * All message labels used in the UI are defined here
