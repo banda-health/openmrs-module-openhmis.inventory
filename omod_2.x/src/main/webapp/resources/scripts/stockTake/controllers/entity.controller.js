@@ -89,7 +89,7 @@
 					
 					if (entity.actualQuantity != entity.quantity && entity.actualQuantity != null && entity.actualQuantity >= 0) {
 						entity.id = entity.item.uuid + "_" + entity.expiration;
-						
+
 						self.getNewStock(entity);
 					}
 				}
@@ -186,8 +186,7 @@
 					delete stockObject[i]['$$hashKey'];
 					delete stockObject[i]['id'];
 					if (stockObject[i].expiration != null) {
-						console.log(stockObject[i].expiration);
-						//stockObject[i].expiration = StockTakeFunctions.formatDate(stockObject[i].expiration);
+						stockObject[i].expiration = StockTakeFunctions.formatDate(stockObject[i].expiration);
 					}
 				}
 
