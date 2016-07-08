@@ -187,14 +187,6 @@
 				return true;
 			}
 		
-		/**
-		 * Removes the temporarily assigned unique ids before POSTing data
-		 * @type {Function}
-		 */
-		self.removeHashKey = self.removeHashkey || function () {
-				StockTakeFunctions.removeHashKey($scope.stockTakeDetails);
-			}
-		
 		// @Override
 		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels || function () {
 				return StockTakeFunctions.addMessageLabels();
