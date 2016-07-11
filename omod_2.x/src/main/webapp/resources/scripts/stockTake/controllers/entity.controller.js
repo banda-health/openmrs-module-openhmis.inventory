@@ -28,7 +28,7 @@
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.admin.stockTake");
-		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
+		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
 		
 		// @Override
@@ -43,7 +43,6 @@
 		// @Override
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
-				var stockroom_uuid = '';
 				self.loadStockrooms();
 				$scope.showNoStockroomSelected = true;
 				$scope.showNoStockSummaries = false;
@@ -64,15 +63,18 @@
 				}
 				
 				$scope.loadStockDetails = function (stockTakeCurrentPage) {
-					stockroom_uuid = $scope.entity.stockroom.uuid;
-					
-					if ($scope.entity.stockroom.uuid != null) {
+					if ($scope.entity.stockroom != null) {
+						var stockroom_uuid = $scope.entity.stockroom.uuid;
 						self.loadStockDetails(stockroom_uuid, stockTakeCurrentPage);
 						
 						$scope.stockTakeLimit = CookiesService.get(stockroom_uuid + 'stockTakeLimit') || 5;
 						$scope.stockTakeCurrentPage = CookiesService.get(stockroom_uuid + 'stockTakeCurrentPage') || 1;
 						$scope.stockTakePagingFrom = PaginationService.pagingFrom;
 						$scope.stockTakePagingTo = PaginationService.pagingTo;
+					} else {
+						$scope.showNoStockroomSelected = true;
+						$scope.showNoStockSummaries = false;
+						$scope.showStockDetails = false;
 					}
 					
 				}
@@ -87,9 +89,8 @@
 				
 				$scope.getActualQuantity = function (entity) {
 					
-					if (entity.actualQuantity != entity.quantity && entity.actualQuantity != null && entity.actualQuantity >= 0) {
+					if (entity.actualQuantity != null && entity.actualQuantity >= 0) {
 						entity.id = entity.item.uuid + "_" + entity.expiration;
-
 						self.getNewStock(entity);
 					}
 				}
@@ -109,22 +110,24 @@
 					else {
 						$scope.stockTakeDetails[index] = newStock;
 					}
-					/*for (var i = 0; i < $scope.stockTakeDetails.length; i++) {
-						var quantity = $scope.stockTakeDetails[i].actualQuantity;
-						var actualQuantity = $scope.stockTakeDetails[i].quantity
-						if (quantity === actualQuantity) {
-							$scope.stockTakeDetails.splice(i, 1);
-						}
-					}*/
 				} else {
 					$scope.stockTakeDetails.push(newStock);
+				}
+
+				for (var i = 0; i < $scope.stockTakeDetails.length; i++) {
+					if ($scope.stockTakeDetails[i].actualQuantity == $scope.stockTakeDetails[i].quantity) {
+						$scope.stockTakeDetails.splice(i, 1);
+					}
 				}
 
 				$scope.stockTakeChangeCounter = $scope.stockTakeDetails.length;
 
 				if ($scope.stockTakeChangeCounter > 0) {
 					$scope.showStockChangeDetails = true;
+				} else {
+					$scope.showStockDetailsTable = false;
 				}
+				
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {

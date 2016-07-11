@@ -29,22 +29,27 @@
 		</span>
 	</table>
 	<br/>
-	<ul class="table-layout">
-		<li>
-			<span>${ui.message('openhmis.inventory.stockroom.name')} :</span>
-		</li>
-		<li>
+
+	<div class="row">
+		<div class="col-xs-2">
+			<strong>
+				${ui.message('openhmis.inventory.stockroom.name')}:
+			</strong>
+		</div>
+
+		<div class="col-xs-3">
 			<select class="form-control" ng-model="entity.stockroom"
 			        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
 			        ng-change="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
 				<option value="" selected="selected">Any</option>
 			</select>
-		</li>
-		<li>
+		</div>
+
+		<div class="col-xs-2">
 			<input type="button" value="Search" class="confirm"
 			       ng-click="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
-		</li>
-	</ul>
+		</div>
+	</div>
 	<br/>
 </div>
 
@@ -67,32 +72,30 @@
 </div>
 
 <div id="entities" ng-show="showStockDetails == true" class="detail-section-border-top">
-	<form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}">
-		<br/>
-		<table class="manage-entities-table" id="stockTakeTable">
-			<thead>
-			<tr>
-				<th>${ui.message('openhmis.inventory.item.name')}</th>
-				<th>${ui.message('openhmis.inventory.stockroom.expiration')}</th>
-				<th>${ui.message('openhmis.inventory.item.quantity')}</th>
-				<th>${ui.message('openhmis.inventory.item.actual.quantity')}</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr class="clickable-tr" pagination-id="__stockTake"
-			    dir-paginate="entity in fetchedEntities | itemsPerPage: stockTakeLimit"
-			    total-items="totalNumOfResults" current-page="stockTakeCurrentPage">
-				<td>{{entity.item.name}}</td>
-				<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
-				<td>{{entity.quantity}}</td>
-				<td><input name="actualQuantity" min="0" value="4"
-				           id="{{'actualQuantity-'+entity.item.uuid+'_'+entity.expiration}}{{entity.expiration | date: 'yyyy-MM-dd'}}"
-				           type="number" class="form-control input-sm" ng-model="entity.actualQuantity"
-				           ng-blur="getActualQuantity(entity)"></td>
-			</tr>
-			</tbody>
-		</table>
-	</form>
+	<br/>
+	<table class="manage-entities-table" id="stockTakeTable">
+		<thead>
+		<tr>
+			<th>${ui.message('openhmis.inventory.item.name')}</th>
+			<th>${ui.message('openhmis.inventory.stockroom.expiration')}</th>
+			<th>${ui.message('openhmis.inventory.item.quantity')}</th>
+			<th>${ui.message('openhmis.inventory.item.actual.quantity')}</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr class="clickable-tr" pagination-id="__stockTake"
+		    dir-paginate="entity in fetchedEntities | itemsPerPage: stockTakeLimit"
+		    total-items="totalNumOfResults" current-page="stockTakeCurrentPage">
+			<td>{{entity.item.name}}</td>
+			<td>{{entity.expiration | date: "yyyy-MM-dd"}}</td>
+			<td>{{entity.quantity}}</td>
+			<td><input name="actualQuantity" min="0" value="4"
+			           id="{{'actualQuantity-'+entity.item.uuid+'_'+entity.expiration}}{{entity.expiration | date: 'yyyy-MM-dd'}}"
+			           type="number" class="form-control input-sm" ng-model="entity.actualQuantity"
+			           ng-blur="getActualQuantity(entity)"></td>
+		</tr>
+		</tbody>
+	</table>
 	${ui.includeFragment("openhmis.commons", "paginationFragment", [
 			paginationId      : "__stockTake",
 			onPageChange      : "loadStockDetails(stockTakeCurrentPage)",
@@ -110,8 +113,7 @@
 <div ng-show="stockTakeChangeCounter != 0" class="detail-section-border-top">
 	<br/>
 
-	<p >
-		${ui.message('openhmis.inventory.stocktake.change.counter.label')} ({{stockTakeChangeCounter}})&nbsp;
+	<p>
 		<a ng-show="showStockDetailsTable == false" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
 		   ng-click="showTableDetails()">
 			${ui.message('openhmis.inventory.stocktake.change.showDetails')}
@@ -120,13 +122,13 @@
 		   ng-click="hideTableDetails()">
 			${ui.message('openhmis.inventory.stocktake.change.hideDetails')}
 		</a>
+		&nbsp;${ui.message('openhmis.inventory.stocktake.change.counter.label')} {{stockTakeChangeCounter}}
 	</p>
 	<br/>
 	<br/>
 </div>
 
 <div id="showStockDetailsTable" ng-show="showStockDetailsTable == true">
-	<br/>
 	<table class="manage-entities-table" id="stockTakeChangeDetailsTable">
 		<thead>
 		<tr>
@@ -147,7 +149,6 @@
 		</tbody>
 	</table>
 	<br/>
-</div>
 </div>
 
 <div ng-show="showStockDetails == true" class="detail-section-border-top">

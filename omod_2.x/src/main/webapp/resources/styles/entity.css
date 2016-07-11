@@ -199,3 +199,11 @@ input.non-editable {
     background-color: #666666;
     color: white;
 }
+
+#stockTakeStockroomDropdown {
+    width: 200px;
+}
+
+/*#searchTable tr:first-child, td:first-child{
+    width: 10%;
+}*/
