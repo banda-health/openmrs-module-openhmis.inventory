@@ -81,8 +81,7 @@
             }
 
         function printReport(reportId, parameters) {
-
-            var url = "/" + OPENMRS_CONTEXT_PATH + "/module/openhmis/inventory/jasperReport" + ".form?";
+            var url = "/" + OPENMRS_CONTEXT_PATH + "/module/openhmis/inventory/jasperReport.form?";
             url += "reportId=" + reportId  + "&" + parameters;
             window.open(url, "pdfDownload");
 
@@ -116,7 +115,6 @@
             }
             
             return printReport(reportId, parameters);
-            
         }
 
         function formatDate(initialDate){
@@ -142,15 +140,11 @@
             }
         }
 
-        //This is a helper I made, so that the item dropdown can set a scope variable when it's selected
-        // otherwise, I was just getting the item name when I tried to grab the model's value.
-        //-af
         $scope.setStockCardReportItem = function(item){
             $scope.stockCardReportItem = item;
         }
 
         $scope.generateReport_StockroomUsage = function() {
-            
             var stockroom = $scope.stockroomUsage_stockroom;
             var beginDate = $scope.stockroomUsage_beginDate;
             var endDate = $scope.stockroomUsage_endDate;
@@ -161,7 +155,6 @@
                 + "&endDate=" + formatDate(endDate);
 
             return printReport(reportId, parameters);
-            
         }
 
         $scope.generateReport_ExpiringStock = function() {

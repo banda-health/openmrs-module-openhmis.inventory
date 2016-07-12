@@ -1,6 +1,4 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.reports") ])
-
     /* load stylesheets */
     ui.includeCss("openhmis.commons", "bootstrap.css")
     ui.includeCss("openhmis.commons", "entities2x.css")
