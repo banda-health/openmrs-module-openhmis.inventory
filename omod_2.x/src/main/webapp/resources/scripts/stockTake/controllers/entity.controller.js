@@ -51,6 +51,7 @@
 				$scope.showStockDetailsTable = false;
 				$scope.stockTakeChangeCounter = 0;
 				$scope.stockTakeDetails = [];
+				$scope.loading = false;
 				
 				$scope.stockroomDialog = function (stockroomChange, stockTakeCurrentPage) {
 					if ($scope.stockTakeChangeCounter != 0) {
@@ -127,7 +128,7 @@
 				} else {
 					$scope.showStockDetailsTable = false;
 				}
-				
+				$scope.stockTakeDetails = $filter('orderBy')($scope.stockTakeDetails, 'item.name');
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {
@@ -174,8 +175,7 @@
 					$scope.showNoStockroomSelected = false;
 					$scope.showNoStockSummaries = true;
 				}
-				
-				
+
 			}
 		
 		/**
@@ -198,7 +198,7 @@
 					"operationNumber": "",
 					"stockroom": $scope.entity.stockroom.uuid
 				};
-
+				$scope.loading = true;
 				return true;
 			}
 		

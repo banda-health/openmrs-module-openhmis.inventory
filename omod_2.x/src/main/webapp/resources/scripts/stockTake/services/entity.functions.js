@@ -28,7 +28,8 @@
 			addMessageLabels: addMessageLabels,
 			findIndexByKeyValue: findIndexByKeyValue,
 			formatDate: formatDate,
-			stockroomChangeDialog: stockroomChangeDialog
+			stockroomChangeDialog: stockroomChangeDialog,
+			compare: compare
 		};
 		
 		return service;
@@ -66,6 +67,16 @@
 		function addMessageLabels() {
 			var messages = {};
 			return messages;
+		}
+		
+		function compare(a,b) {
+			if (a.item.name < b.item.name) {
+				return -1;
+			}
+			if (a.item.name > b.item.name) {
+				return 1;
+			}
+			return 0;
 		}
 		
 		/**
