@@ -204,6 +204,9 @@ input.non-editable {
     width: 200px;
 }
 
-/*#searchTable tr:first-child, td:first-child{
-    width: 10%;
-}*/
+ul.stocktakeSearch {
+    font-size: 10pt;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}

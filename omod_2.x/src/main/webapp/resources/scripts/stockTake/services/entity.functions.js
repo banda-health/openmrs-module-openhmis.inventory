@@ -28,8 +28,7 @@
 			addMessageLabels: addMessageLabels,
 			findIndexByKeyValue: findIndexByKeyValue,
 			formatDate: formatDate,
-			stockroomChangeDialog: stockroomChangeDialog,
-			compare: compare
+			stockroomChangeDialog: stockroomChangeDialog
 		};
 		
 		return service;
@@ -69,15 +68,6 @@
 			return messages;
 		}
 		
-		function compare(a,b) {
-			if (a.item.name < b.item.name) {
-				return -1;
-			}
-			if (a.item.name > b.item.name) {
-				return 1;
-			}
-			return 0;
-		}
 		
 		/**
 		 * Disable and gray-out background when a dialog box opens up.
@@ -100,6 +90,7 @@
 					},
 					confirm: function () {
 						$scope.loadStockDetails($scope.stockTakeCurrentPage);
+						$scope.$apply();
 						dialog.close();
 					}
 				}

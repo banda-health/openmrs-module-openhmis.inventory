@@ -67,7 +67,7 @@
 					if ($scope.entity.stockroom != null) {
 						var stockroom_uuid = $scope.entity.stockroom.uuid;
 						self.loadStockDetails(stockroom_uuid, stockTakeCurrentPage);
-						
+
 						$scope.stockTakeLimit = CookiesService.get(stockroom_uuid + 'stockTakeLimit') || 5;
 						$scope.stockTakeCurrentPage = CookiesService.get(stockroom_uuid + 'stockTakeCurrentPage') || 1;
 						$scope.stockTakePagingFrom = PaginationService.pagingFrom;
@@ -75,9 +75,12 @@
 					} else {
 						$scope.showNoStockroomSelected = true;
 						$scope.showNoStockSummaries = false;
+						$scope.stockTakeChangeCounter = 0;
+						$scope.showStockChangeDetails = false;
+						$scope.stockTakeDetails = [];
 						$scope.showStockDetails = false;
+						$scope.showStockDetailsTable = false;
 					}
-					
 				}
 				
 				$scope.showTableDetails = function () {
@@ -97,7 +100,7 @@
 				}
 				
 			}
-		
+
 		self.stockroomChangeDialog = self.stockroomChangeDialog || function (id) {
 				StockTakeFunctions.stockroomChangeDialog(id, $scope);
 			}
@@ -175,7 +178,11 @@
 					$scope.showNoStockroomSelected = false;
 					$scope.showNoStockSummaries = true;
 				}
+			}
 
+		self.onChangeEntityError = self.onChangeEntityError || function (error) {
+				emr.errorAlert(error);
+				$scope.loading = false;
 			}
 		
 		/**
@@ -192,16 +199,22 @@
 						stockObject[i].expiration = StockTakeFunctions.formatDate(stockObject[i].expiration);
 					}
 				}
+				
+				if ($scope.stockTakeDetails.length != 0) {
+					$scope.entity = {
+						'itemStockSummaryList': stockObject,
+						"operationNumber": "",
+						"stockroom": $scope.entity.stockroom.uuid
+					};
+					$scope.loading = true;
+				} else {
+					emr.errorAlert("openhmis.inventory.stocktake.adjustment.empty.error");
+					return false;
+				}
 
-				$scope.entity = {
-					'itemStockSummaryList': stockObject,
-					"operationNumber": "",
-					"stockroom": $scope.entity.stockroom.uuid
-				};
-				$scope.loading = true;
 				return true;
 			}
-		
+
 		// @Override
 		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels || function () {
 				return StockTakeFunctions.addMessageLabels();

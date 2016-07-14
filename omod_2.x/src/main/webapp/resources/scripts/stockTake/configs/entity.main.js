@@ -54,5 +54,6 @@ emr.loadMessages([
 	"openhmis.commons.general.edit",
 	"openhmis.commons.general.postSearchMessage",
 	"openhmis.inventory.admin.stockTake",
-	"openhmis.inventory.stocktake.rest_name"
+	"openhmis.inventory.stocktake.rest_name",
+	"openhmis.inventory.stocktake.adjustment.empty.error"
 ]);

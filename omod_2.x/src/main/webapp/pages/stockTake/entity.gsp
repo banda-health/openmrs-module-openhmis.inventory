@@ -42,24 +42,27 @@
 		<br/>
 
 		<div class="row">
-			<div class="col-xs-2">
-				<strong>
-					${ui.message('openhmis.inventory.stockroom.name')}:
-				</strong>
+			<div class="col-xs-9">
+				<div class="col-xs-2">
+					<strong>
+						${ui.message('openhmis.inventory.stockroom.name')}:
+					</strong>
+				</div>
+
+				<div class="col-xs-6">
+					<select class="form-control" ng-model="entity.stockroom"
+					        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
+					        ng-change="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
+						<option value="" selected="selected">Any</option>
+					</select>
+				</div>
+
+				<div class="col-xs-2">
+					<input type="button" value="Search" class="confirm"
+					       ng-click="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
+				</div>
 			</div>
 
-			<div class="col-xs-3">
-				<select class="form-control" ng-model="entity.stockroom"
-				        ng-options='stockroom.name for stockroom in stockrooms track by stockroom.uuid'
-				        ng-change="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
-					<option value="" selected="selected">Any</option>
-				</select>
-			</div>
-
-			<div class="col-xs-2">
-				<input type="button" value="Search" class="confirm"
-				       ng-click="stockroomDialog('stockroomChange',stockTakeCurrentPage)">
-			</div>
 		</div>
 		<br/>
 	</div>
