@@ -17,6 +17,8 @@
 	'use strict';
 
 	var base = angular.module('app.genericEntityController');
+
+
 	base.controller("CreateOperationController", CreateOperationController);
 	CreateOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
@@ -28,7 +30,7 @@
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
-		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
+		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
 		var notDefined = {name: ' - Not Defined - '};
 
@@ -348,6 +350,8 @@
 				} else {
 					lineItem.existingQuantity = lineItem.itemStockDetails.quantity;
 				}
+
+				self.changeItemQuantity(lineItem);
 			}
 
 		self.loadOperationTypeAttributes = self.loadOperationTypeAttributes || function () {
@@ -375,7 +379,16 @@
 
 		self.onLoadOperationTypesSuccessful = self.onLoadOperationTypesSuccessful || function (data) {
 				$scope.operationTypes = data.results;
-				$scope.operationType = $scope.operationType || $scope.operationTypes[0];
+				//$scope.operationType = $scope.operationType || $scope.operationTypes[0];
+				if($scope.operationType === undefined){
+					for(var i = 0; $scope.operationTypes.length; i++){
+						var operationType = $scope.operationTypes[i];
+						if(operationType.canProcess){
+							$scope.operationType = operationType;
+							break;
+						}
+					}
+				}
 
 				// load operation type attributes first time the page loads.
 				self.loadOperationTypeAttributes();

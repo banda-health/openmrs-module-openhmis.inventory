@@ -45,6 +45,7 @@
 		function loadStockOperationTypes(successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'stockOperationType';
+			requestParams['v'] = 'full';
 			requestParams['limit'] = 100;
 			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
 		}

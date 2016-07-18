@@ -70,4 +70,5 @@ emr.loadMessages([
 	"openhmis.inventory.operations.before",
 	"openhmis.inventory.operations.afterLastOperation",
 	"openhmis.commons.general.required.itemAttribute",
+	"openhmis.inventory.operations.error.invalidItem",
 ]);

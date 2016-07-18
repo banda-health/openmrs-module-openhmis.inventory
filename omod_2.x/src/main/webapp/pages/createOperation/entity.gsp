@@ -44,11 +44,7 @@
 <div ng-hide="loading">
     <h1>${ui.message('openhmis.inventory.admin.create')}</h1>
     <form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
-
-        <input type="hidden" ng-model="entity.uuid" />
-
-        <fieldset class="operation">
-
+        <fieldset class="operation createOperation">
             <div class="action-container" ng-show="operationType.name === 'Adjustment' && sourceStockroom.name !== ' - Not Defined - '">
                 <ul>
                     <h3>${ui.message('openhmis.inventory.operations.itemStockActions')}</h3>
@@ -76,7 +72,7 @@
                 </li>
                 <li>
                     <span>
-                        <input ng-model="entity.operationNumber" ng-show="!isOperationNumberGenerated" required/>
+                        <input class="form-control" ng-model="entity.operationNumber" ng-show="!isOperationNumberGenerated" required/>
                         <span ng-show="isOperationNumberGenerated">{{entity.operationNumber}}</span>
                     </span>
                 </li>
@@ -86,7 +82,8 @@
                     <span>${ui.message('openhmis.inventory.operations.operationType')}</span>
                 </li>
                 <li>
-                    <select ng-model="operationType" required
+                    <select ng-model="operationType" required class="form-control"
+                            options-disabled="!operationType.canProcess for operationType in operationTypes"
                             ng-change="warningDialog(operationType, '{{operationType}}', 'operationType')"
                             ng-options='operationType.name for operationType in operationTypes track by operationType.uuid'>
                     </select>
@@ -98,7 +95,7 @@
                 </li>
                 <li class="change-operation-date">
                     <span>
-                        {{operationDate}}
+                        {{operationDate}} &nbsp;&nbsp;&nbsp;
                         <input class="gray-button" type="button" value="${ui.message('openhmis.inventory.operations.changeDate')}"
                                ng-click="changeOperationDate()" />
                     </span>
@@ -109,7 +106,7 @@
                     <span>${ui.message('openhmis.inventory.operations.sourceStockroom')}</span>
                 </li>
                 <li>
-                    <select ng-model="sourceStockroom" required
+                    <select ng-model="sourceStockroom" required class="form-control"
                             ng-change="warningDialog(sourceStockroom, '{{sourceStockroom}}', 'stockroom')"
                             ng-options='sourceStockroom.name for sourceStockroom in sourceStockrooms track by sourceStockroom.uuid'>
                     </select>
@@ -120,7 +117,7 @@
                     <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
                 </li>
                 <li>
-                    <select ng-model="distributionType"
+                    <select ng-model="distributionType" class="form-control"
                             ng-options="distributionType for distributionType in distributionTypes">
                     </select>
                 </li>
@@ -130,7 +127,7 @@
                     <span>${ui.message('openhmis.inventory.operations.returnTo')}</span>
                 </li>
                 <li>
-                    <select ng-model="returnOperationType"
+                    <select ng-model="returnOperationType" class="form-control"
                             ng-options="returnOperationType for returnOperationType in returnOperationTypes">
                     </select>
                 </li>
@@ -140,7 +137,7 @@
                     <span>${ui.message('openhmis.inventory.operations.destinationStockroom')}</span>
                 </li>
                 <li>
-                    <select ng-model="destinationStockroom" required
+                    <select ng-model="destinationStockroom" required class="form-control"
                             ng-options='destinationStockroom.name for destinationStockroom in destinationStockrooms track by destinationStockroom.uuid'>
                     </select>
                 </li>
@@ -151,7 +148,7 @@
                     <span>${ui.message('openhmis.inventory.institution.name')}</span>
                 </li>
                 <li>
-                    <select ng-model="institutionStockroom" required
+                    <select ng-model="institutionStockroom" required class="form-control"
                             ng-options='institution.name for institution in institutions track by institution.uuid'>
                     </select>
                 </li>
@@ -162,7 +159,7 @@
                     <span>${ui.message('openhmis.inventory.department.name')}</span>
                 </li>
                 <li>
-                    <select ng-model="department" required
+                    <select ng-model="department" required class="form-control"
                             ng-options='department.name for department in departments track by department.uuid'>
                     </select>
                 </li>
@@ -176,9 +173,9 @@
                 </li>
                 <li>
                     <span>
-                        <input ng-if="attributeTypeAttribute.required" required
+                        <input ng-if="attributeTypeAttribute.required" required class="form-control"
                                ng-model="attributes[attributeTypeAttribute.uuid].value" />
-                        <input ng-if="!attributeTypeAttribute.required"
+                        <input ng-if="!attributeTypeAttribute.required" class="form-control"
                                ng-model="attributes[attributeTypeAttribute.uuid].value" />
                     </span>
                 </li>
@@ -188,7 +185,7 @@
                     <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
                 </li>
                 <li>
-                    <select ng-model="distributionType"
+                    <select ng-model="distributionType" class="form-control"
                             ng-options="distributionType for distributionType in distributionTypes">
                     </select>
                 </li>
@@ -207,10 +204,12 @@
                 </span>
                 <table class="item-stock"
                        ng-show="showOperationItemsSection()">
-                    <tr>
-                        <th></th>
-                        <th>${ui.message('openhmis.inventory.item.name')}</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>${ui.message('openhmis.inventory.item.name')}</th>
+                        </tr>
+                    </thead>
                     <tr ng-repeat="lineItem in lineItems" >
                         <td class="item-actions" ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
                             <table class="icons">
@@ -246,7 +245,7 @@
                                         <b>${ui.message("openhmis.inventory.item.quantity")}:</b>
                                     </td>
                                     <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
-                                        <input type="number" ng-model="lineItem.itemStockQuantity"
+                                        <input type="number" ng-model="lineItem.itemStockQuantity" class="form-control"
                                                ng-enter="changeItemQuantity(lineItem)" style="width:60px;"
                                                ng-change="changeItemQuantity(lineItem)" />
                                     </td>
@@ -257,7 +256,7 @@
                                         <select ng-model="lineItem.itemStockExpirationDate"
                                                 ng-change="changeExpiration(lineItem)"
                                                 ng-show="!lineItem.expirationHasDatePicker"
-                                                class="right-justify"
+                                                class="right-justify form-control"
                                                 ng-options="itemStockExpirationDate for itemStockExpirationDate in lineItem.expirationDates"
                                                 style="width:100px;">
                                         </select>
@@ -288,16 +287,13 @@
                 </table>
             </fieldset>
         </fieldset>
-
-        <fieldset class="operation">
-            <span>
-                <input type="button" class="cancel" value="${ui.message('general.cancel')}"
+        <br/>
+        <div>
+            <input type="button" class="cancel" value="${ui.message('general.cancel')}"
                        ng-click="cancel()" />
-                <input type="button" class="confirm right" value="${ui.message('general.save')}"
+            <input type="button" class="confirm right" value="${ui.message('general.save')}"
                        ng-click="saveOrUpdate()" />
-            </span>
-        </fieldset>
-
+        </div>
         <div id="change-operation-date-dialog" class="dialog" style="display:none">
             <div class="dialog-header">
                 <span>
@@ -328,7 +324,7 @@
                     <tr>
                         <td>${ui.message('openhmis.inventory.operation.occurs')}</td>
                         <td>
-                            <select ng-model="operationOccurDate"
+                            <select ng-model="operationOccurDate" class="form-control"
                                     ng-options="occur.name for occur in operationOccurs"
                                     style="width:235px">
                             </select>

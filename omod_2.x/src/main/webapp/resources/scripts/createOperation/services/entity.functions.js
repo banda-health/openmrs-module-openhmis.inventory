@@ -51,7 +51,7 @@
 		}
 
 		function formatTime(time) {
-			var format = 'HH:mm:ss';
+			var format = 'HH:mm';
 			return ($filter('date')(new Date(time), format));
 		}
 
@@ -231,9 +231,70 @@
 			return false;
 		}
 
+		function validateOperationLineItems(lineItems, validatedItems) {
+			if (lineItems !== undefined) {
+				var failed = false;
+				for (var i = 0; i < lineItems.length; i++) {
+					var lineItem = lineItems[i];
+					if (lineItem.selected) {
+						if(lineItem.itemStock.name === undefined){
+							var errorMessage = emr.message("openhmis.inventory.operations.error.invalidItem") + " - " + lineItem.itemStock.toString();
+							emr.errorAlert(errorMessage);
+							failed = true;
+							continue;
+						}
+
+						var calculatedExpiration;
+						var dateNotRequired = true;
+						var expiration = lineItem.itemStockExpirationDate;
+						if (lineItem.itemStockHasExpiration) {
+							if (expiration === undefined || expiration === "") {
+								dateNotRequired = false;
+							} else if (expiration === 'None') {
+								calculatedExpiration = false;
+								expiration = undefined;
+							} else if (expiration === 'Auto') {
+								calculatedExpiration = true;
+								expiration = undefined;
+							} else {
+								calculatedExpiration = true;
+							}
+						} else {
+							calculatedExpiration = false;
+							expiration = undefined;
+						}
+
+						if (dateNotRequired) {
+							var item = {
+								calculatedExpiration: calculatedExpiration,
+								item: lineItem.itemStock.uuid,
+								quantity: lineItem.itemStockQuantity,
+							};
+
+							if (expiration !== undefined) {
+								item['expiration'] = expiration;
+							}
+
+							validatedItems.push(item);
+						} else {
+							emr.errorAlert("openhmis.inventory.operations.error.expiryDate");
+							failed = true;
+							continue;
+						}
+					}
+				}
+			}
+
+			if (validatedItems.length > 0 && !failed) {
+				return true;
+			}
+
+			return false;
+		}
+
 		function validateLineItems($scope) {
 			var validatedItems = [];
-			if (EntityFunctions.validateLineItems($scope.lineItems, validatedItems)) {
+			if (validateOperationLineItems($scope.lineItems, validatedItems)) {
 				$scope.entity.items = validatedItems;
 				return true;
 			}
