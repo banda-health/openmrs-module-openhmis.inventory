@@ -92,8 +92,7 @@
 				}
 				
 				$scope.getActualQuantity = function (entity) {
-					
-					if (entity.actualQuantity != null && entity.actualQuantity >= 0) {
+					if (entity.actualQuantity >= 0) {
 						entity.id = entity.item.uuid + "_" + entity.expiration;
 						self.getNewStock(entity);
 					}
@@ -119,7 +118,7 @@
 				}
 
 				for (var i = 0; i < $scope.stockTakeDetails.length; i++) {
-					if ($scope.stockTakeDetails[i].actualQuantity == $scope.stockTakeDetails[i].quantity) {
+					if ($scope.stockTakeDetails[i].actualQuantity == $scope.stockTakeDetails[i].quantity || $scope.stockTakeDetails[i].actualQuantity == null) {
 						$scope.stockTakeDetails.splice(i, 1);
 					}
 				}
@@ -131,7 +130,7 @@
 				} else {
 					$scope.showStockDetailsTable = false;
 				}
-				$scope.stockTakeDetails = $filter('orderBy')($scope.stockTakeDetails, 'item.name');
+				$scope.stockTakeDetails = $filter('orderBy')($scope.stockTakeDetails, ['item.name','expiration']);
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {

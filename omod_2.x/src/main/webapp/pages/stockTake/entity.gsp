@@ -126,7 +126,6 @@
 
 	<div ng-show="stockTakeChangeCounter != 0" class="detail-section-border-top">
 		<br/>
-
 		<p>
 			<a ng-show="showStockDetailsTable == false" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
 			   ng-click="showTableDetails()">
@@ -138,7 +137,6 @@
 			</a>
 			&nbsp;${ui.message('openhmis.inventory.stocktake.change.counter.label')} {{stockTakeChangeCounter}}
 		</p>
-		<br/>
 		<br/>
 	</div>
 
@@ -162,6 +160,7 @@
 			</tr>
 			</tbody>
 		</table>
+		<br/>
 		<br/>
 	</div>
 
