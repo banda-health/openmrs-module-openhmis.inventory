@@ -237,7 +237,7 @@
 				for (var i = 0; i < lineItems.length; i++) {
 					var lineItem = lineItems[i];
 					if (lineItem.selected) {
-						if(lineItem.itemStock.name === undefined){
+						if (lineItem.itemStock.name === undefined) {
 							var errorMessage = emr.message("openhmis.inventory.operations.error.invalidItem") + " - " + lineItem.itemStock.toString();
 							emr.errorAlert(errorMessage);
 							failed = true;

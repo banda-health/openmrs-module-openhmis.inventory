@@ -255,7 +255,7 @@
 			}
 
 		self.removeLineItem = self.removeLineItem || function (lineItem) {
-				if(lineItem.selected){
+				if (lineItem.selected) {
 					var index = $scope.lineItems.indexOf(lineItem);
 					if (index !== -1) {
 						$scope.lineItems.splice(index, 1);
@@ -326,11 +326,11 @@
 				}
 			}
 
-		self.changeExpiration = self.changeExpiration || function(lineItem){
-				if(lineItem.itemStockExpirationDate !== 'Auto'){
+		self.changeExpiration = self.changeExpiration || function (lineItem) {
+				if (lineItem.itemStockExpirationDate !== 'Auto') {
 					var selectedExpiration = lineItem.itemStockExpirationDate;
 					var existingQuantity = 0;
-					if(selectedExpiration === 'None'){
+					if (selectedExpiration === 'None') {
 						selectedExpiration = null;
 					}
 					for (var i = 0; i < lineItem.itemStockDetails.details.length; i++) {
@@ -341,7 +341,7 @@
 							expiration = CreateOperationFunctions.formatDate(expiration);
 						}
 
-						if(expiration === selectedExpiration){
+						if (expiration === selectedExpiration) {
 							existingQuantity += detail.quantity;
 						}
 					}
@@ -370,9 +370,9 @@
 				}
 			}
 
-		self.onLoadNegativeStockRestrictedSuccessful = self.onLoadNegativeStockRestrictedSuccessful || function(data){
+		self.onLoadNegativeStockRestrictedSuccessful = self.onLoadNegativeStockRestrictedSuccessful || function (data) {
 				$scope.isNegativeStockRestricted = false;
-				if(data.results && data.results === "true"){
+				if (data.results && data.results === "true") {
 					$scope.isNegativeStockRestricted = true;
 				}
 			}
@@ -380,10 +380,10 @@
 		self.onLoadOperationTypesSuccessful = self.onLoadOperationTypesSuccessful || function (data) {
 				$scope.operationTypes = data.results;
 				//$scope.operationType = $scope.operationType || $scope.operationTypes[0];
-				if($scope.operationType === undefined){
-					for(var i = 0; $scope.operationTypes.length; i++){
+				if ($scope.operationType === undefined) {
+					for (var i = 0; $scope.operationTypes.length; i++) {
 						var operationType = $scope.operationTypes[i];
-						if(operationType.canProcess){
+						if (operationType.canProcess) {
 							$scope.operationType = operationType;
 							break;
 						}
@@ -488,6 +488,10 @@
 		self.onChangeEntityError = self.onChangeEntityError || function (error) {
 				emr.errorAlert(error);
 				$scope.loading = false;
+			}
+
+		self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function () {
+				window.location = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
 			}
 
 		// @Override

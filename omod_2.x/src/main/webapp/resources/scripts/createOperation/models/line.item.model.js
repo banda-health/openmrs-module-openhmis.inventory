@@ -118,11 +118,11 @@
 				return this.newQuantity;
 			},
 
-			setItemStockDetails: function(itemStockDetails){
+			setItemStockDetails: function (itemStockDetails) {
 				this.itemStockDetails = itemStockDetails;
 			},
 
-			getItemStockDetails: function(){
+			getItemStockDetails: function () {
 				return this.itemStockDetails;
 			},
 		};

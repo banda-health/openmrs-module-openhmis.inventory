@@ -107,7 +107,7 @@
 			EntityRestFactory.setBaseUrl(module_name);
 		}
 
-		function isNegativeStockRestricted(module_name, onLoadNegativeStockSuccessful){
+		function isNegativeStockRestricted(module_name, onLoadNegativeStockSuccessful) {
 			var requestParams = [];
 			requestParams['resource'] = 'module/openhmis/inventory/moduleSettings.page';
 			requestParams['setting'] = 'openhmis.inventory.restrictNegativeInventoryStockCreation';
