@@ -295,6 +295,7 @@
 
 		self.selectStockOperationItem = self.selectStockOperationItem || function (stockOperationItem, lineItem) {
 				$scope.lineItem = {};
+				lineItem.setInvalidEntry(false);
 				lineItem.setExistingQuantity(0);
 				lineItem.setNewQuantity('');
 				lineItem.setItemStockQuantity(1);

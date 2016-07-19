@@ -230,7 +230,7 @@
 
                             <table class="item-details" ng-shdow="lineItem.selected">
                                 <tr>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0, 'not-valid': lineItem.invalidEntry === true}">
                                         ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                                             typeahead: ["stockOperationItem.name for stockOperationItem in searchStockOperationItems(\$viewValue)"],
                                             model: "lineItem.itemStock",

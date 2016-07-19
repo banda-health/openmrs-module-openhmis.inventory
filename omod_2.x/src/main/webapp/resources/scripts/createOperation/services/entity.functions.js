@@ -238,9 +238,11 @@
 					var lineItem = lineItems[i];
 					if (lineItem.selected) {
 						if (lineItem.itemStock.name === undefined) {
-							var errorMessage = emr.message("openhmis.inventory.operations.error.invalidItem") + " - " + lineItem.itemStock.toString();
+							var errorMessage =
+								emr.message("openhmis.inventory.operations.error.invalidItem") + " - " + lineItem.itemStock.toString();
 							emr.errorAlert(errorMessage);
 							failed = true;
+							lineItem.invalidEntry = true;
 							continue;
 						}
 
@@ -281,11 +283,19 @@
 							failed = true;
 							continue;
 						}
+					} else if (lineItem.itemStock !== "") {
+						var errorMessage =
+							emr.message("openhmis.inventory.operations.error.invalidItem") + " - " + lineItem.itemStock.toString();
+						emr.errorAlert(errorMessage);
+						lineItem.invalidEntry = true;
+						failed = true;
 					}
 				}
 			}
 
-			if (validatedItems.length > 0 && !failed) {
+			if (validatedItems.length == 0 && !failed) {
+				emr.errorAlert("openhmis.inventory.operations.error.itemQuantity");
+			} else if (validatedItems.length > 0 && !failed) {
 				return true;
 			}
 

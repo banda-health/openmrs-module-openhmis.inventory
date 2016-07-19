@@ -34,6 +34,7 @@
 			this.expirationHasDatePicker = false;
 			this.newQuantity = '';
 			this.itemStockDetails = [];
+			this.invalidEntry = false;
 		}
 
 		LineItemModel.prototype = {
@@ -124,6 +125,14 @@
 
 			getItemStockDetails: function () {
 				return this.itemStockDetails;
+			},
+
+			isInvalidEntry: function(){
+				return this.invalidEntry;
+			},
+
+			setInvalidEntry: function(invalidEntry){
+				this.invalidEntry = invalidEntry;
 			},
 		};
 
