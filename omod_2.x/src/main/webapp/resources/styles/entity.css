@@ -153,6 +153,11 @@ input.non-editable {
     width: 20%;
 }
 
+#reportPage{
+    margin: 0 auto;
+    width: 80%;
+}
+
 #reportPage .report{
     max-width:700px;report-item
 }
