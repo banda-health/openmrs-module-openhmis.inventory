@@ -17,21 +17,10 @@
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 
+
 </script>
-<style>
-    .report{
-        max-width:700px;
-    }
-    .report legend{
-        width:inherit;
-        margin-bottom: 0px;
-    }
 
-    .report input[type="date"]{
-        display: inline-block;
-    }
-</style>
-
+<div id="reportPage">
 <input id="reportUrl" type="hidden" value="{{ ui.message('openhmis.inventory.admin.reports')}}" />
 
 <h2>{{ ui.message("openhmis.inventory.admin.reports")}}</h2>
@@ -47,14 +36,14 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select ng-model="StockTakeReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select class="form-control" ng-model="StockTakeReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">Select Stockroom</option>
                 </select>
             </li>
         </ul>
         <ul class="table-layout">
             <li></li>
-            <li><input ng-click="generateReport_StockTakeReport()" type="button" value="Generate Report" /></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockTakeReport()">Generate Report</a></li>
         </ul>
     </fieldset>
 </div>
@@ -70,7 +59,7 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select ng-model="stockCardReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select  class="form-control" ng-model="stockCardReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" ng-selected="selected">All Stockrooms</option>
                 </select>
             </li>
@@ -84,7 +73,7 @@
                         model: "stockCardReport_item",
                         typeaheadOnSelect: "setStockCardReportItem(\$item)",
                         typeaheadEditable: "true",
-                        class: ["form-control"],
+                        class: ["form-control report-item"],
                         placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')]
                 ])}
             </li>
@@ -94,8 +83,12 @@
             <li><label>Begin Date</label></li>
             <li>
                 <span class="date">
-                    <input type="date" ng-model="stockCardReport_beginDate">
-                    <span class="add-on"><i class="icon-calendar small"></i></span>
+                    ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                            formFieldName: "stockCardReport_beginDate",
+                            id: "stockCardReport_beginDate",
+                            label: "",
+                            useTime: false
+                    ])}
                 </span>
             </li>
         </ul>
@@ -104,15 +97,19 @@
             <li><label>End Date</label></li>
             <li>
                 <span class="date">
-                    <input type="date" ng-model="stockCardReport_endDate">
-                    <span class="add-on"><i class="icon-calendar small"></i></span>
+                    ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                            formFieldName: "stockCardReport_endDate",
+                            id: "stockCardReport_endDate",
+                            label: "",
+                            useTime: false
+                    ])}
                 </span>
             </li>
         </ul>
 
         <ul class="table-layout">
             <li></li>
-            <li><input ng-click="generateReport_StockCardReport()" type="button"  value="Generate Report" /></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockCardReport()">Generate Report</a></li>
         </ul>
     </fieldset>
 </div>
@@ -128,7 +125,7 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select ng-model="stockroomUsage_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select class="form-control" ng-model="stockroomUsage_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">Select Stockroom</option>
                 </select>
             </li>
@@ -137,26 +134,30 @@
         <ul class="table-layout">
             <li><label>Begin Date</label></li>
             <li>
-                <span class="date">
-                    <input type="date" ng-model="stockroomUsage_beginDate">
-                    <span class="add-on"><i class="icon-calendar small"></i></span>
-                </span>
+                ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                        formFieldName: "stockroomUsage_beginDate",
+                        id: "stockroomUsage_beginDate",
+                        label: "",
+                        useTime: false
+                ])}
             </li>
         </ul>
 
         <ul class="table-layout">
             <li><label>End Date</label></li>
             <li>
-                <span class="date">
-                    <input type="date" ng-model="stockroomUsage_endDate">
-                    <span class="add-on"><i class="icon-calendar small"></i></span>
-                </span>
+                ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                        formFieldName: "stockroomUsage_endDate",
+                        id: "stockroomUsage_endDate",
+                        label: "",
+                        useTime: false
+                ])}
             </li>
         </ul>
 
         <ul class="table-layout">
             <li></li>
-            <li><input ng-click="generateReport_StockroomUsage()" type="button" value="Generate Report" /></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockroomUsage()">Generate Report</a></li>
         </ul>
     </fieldset>
 </div>
@@ -173,7 +174,7 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select id="expiringStock-stockroom" ng-model="expiringStock_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select  class="form-control" id="expiringStock-stockroom" ng-model="expiringStock_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">All Stockrooms</option>
                 </select>
             </li>
@@ -182,16 +183,19 @@
         <ul class="table-layout">
             <li><label>Expires by</label></li>
             <li>
-                <span class="date">
-                    <input type="date" ng-model="expiringStock_expiresByDate">
-                    <span class="add-on"><i class="icon-calendar small"></i></span>
-                </span>
+                ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                        formFieldName: "expiringStock_expiresByDate",
+                        id: "expiringStock_expiresByDate",
+                        label: "",
+                        useTime: false
+                ])}
             </li>
         </ul>
 
         <ul class="table-layout">
             <li></li>
-            <li><input ng-click="generateReport_ExpiringStock()" type="button" value="Generate Report" /></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_ExpiringStock()">Generate Report</a></li>
         </ul>
     </fieldset>
+</div>
 </div>

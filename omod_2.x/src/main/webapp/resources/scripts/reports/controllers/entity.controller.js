@@ -17,9 +17,9 @@
 
     var base = angular.module('app.genericEntityController');
     base.controller("ReportController", ReportController);
-    ReportController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'ReportModel', 'ReportRestfulService', 'EntityRestFactory'];
+    ReportController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'ReportModel', 'ReportRestfulService', 'ReportsFunctions', 'EntityRestFactory'];
 
-    function ReportController($stateParams, $injector, $scope, $filter, ReportModel, ReportRestfulService, EntityRestFactory) {
+    function ReportController($stateParams, $injector, $scope, $filter, ReportModel, ReportRestfulService, ReportsFunctions, EntityRestFactory) {
 
         var self = this;
 
@@ -65,6 +65,35 @@
                     reportId: 1
                 };
 
+                ReportsFunctions.onChangeDatePicker('stockCardReport_beginDate-display',
+                    function(value){
+                        $scope.stockCardReport_beginDate = value;
+                    }
+                );
+
+                ReportsFunctions.onChangeDatePicker('stockCardReport_endDate-display',
+                    function(value){
+                        $scope.stockCardReport_endDate = value;
+                    }
+                );
+
+                ReportsFunctions.onChangeDatePicker('stockroomUsage_beginDate-display',
+                    function(value){
+                        $scope.stockroomUsage_beginDate = value;
+                    }
+                );
+
+                ReportsFunctions.onChangeDatePicker('stockroomUsage_endDate-display',
+                    function(value){
+                        $scope.stockroomUsage_endDate = value;
+                    }
+                );
+
+                ReportsFunctions.onChangeDatePicker('expiringStock_expiresByDate-display',
+                    function(value){
+                        $scope.expiringStock_expiresByDate = value;
+                    }
+                );
             }
 
         self.loadStockRooms = self.loadStockRooms || function(){
@@ -104,8 +133,8 @@
     
             var reportId;
             var parameters = "itemUuid=" + item.uuid
-                + "&beginDate=" + formatDate(beginDate)
-                + "&endDate=" + formatDate(endDate);
+                + "&beginDate=" + ReportsFunctions.formatDate(beginDate)
+                + "&endDate=" + ReportsFunctions.formatDate(endDate);
 
             if(stockroom == null){
                 reportId = $scope.stockCardReport.reportId_AllStockrooms;
@@ -117,32 +146,13 @@
             return printReport(reportId, parameters);
         }
 
-        function formatDate(initialDate){
-            var date = new Date(initialDate);
 
-            var day = date.getDate();
-            var month = date.getMonth() +1; //month is 0 indexed;
-            var year = date.getFullYear();
 
-            //in format dd-mm-yyyy
-            var dateString = padDate(day)
-                + "-" + padDate(month)
-                + "-" + year;
-
-            return dateString;
-
-            function padDate(number){
-                if(number < 10){
-                    return "0"+number;
-                } else{
-                    return number;
-                }
-            }
-        }
 
         $scope.setStockCardReportItem = function(item){
             $scope.stockCardReportItem = item;
         }
+
 
         $scope.generateReport_StockroomUsage = function() {
             var stockroom = $scope.stockroomUsage_stockroom;
@@ -151,8 +161,8 @@
 
             var reportId = $scope.stockroomUsageReport.reportId;
             var parameters = "stockroomId=" + stockroom.id
-                + "&beginDate=" + formatDate(beginDate)
-                + "&endDate=" + formatDate(endDate);
+                + "&beginDate=" + ReportsFunctions.formatDate(beginDate)
+                + "&endDate=" + ReportsFunctions.formatDate(endDate);
 
             return printReport(reportId, parameters);
         }
@@ -162,7 +172,7 @@
             var expiresByDate = $scope.expiringStock_expiresByDate;
 
             var reportId = $scope.expiringStockReport.reportId;
-            var parameters = "expiresBy=" + formatDate(expiresByDate);
+            var parameters = "expiresBy=" + ReportsFunctions.formatDate(expiresByDate);
 
             if(stockroom != null){
                 parameters += "&stockroomId=" + stockroom.id;
