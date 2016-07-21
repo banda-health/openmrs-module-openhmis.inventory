@@ -25,7 +25,7 @@
 
         var module_name = 'inventory';
         var entity_name_message_key = "openhmis.inventory.report.name";
-        var cancel_page = 'reports.page';
+        var cancel_page = 'entity.page';
         var rest_entity_name = emr.message("openhmis.inventory.report.rest_name");
 
         // @Override
