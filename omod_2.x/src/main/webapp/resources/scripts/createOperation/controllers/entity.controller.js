@@ -33,6 +33,8 @@
 		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
 		var notDefined = {name: ' - Not Defined - '};
+		self.MY_OPERATIONS_URL  = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
+		self.GENERATE_OPERATION_NUMBER = "WILL BE GENERATED";
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
@@ -290,7 +292,7 @@
 			}
 
 		self.searchStockOperationItems = self.searchStockOperationItems || function (search) {
-				return CommonsRestfulFunctions.searchStockOperationItems(search);
+				return CreateOperationRestfulService.searchStockOperationItems(search);
 			}
 
 		self.selectStockOperationItem = self.selectStockOperationItem || function (stockOperationItem, lineItem) {
@@ -367,7 +369,7 @@
 				$scope.isOperationNumberGenerated = false;
 				if (data.results && data.results === "true") {
 					$scope.isOperationNumberGenerated = true;
-					$scope.entity.operationNumber = "WILL BE GENERATED";
+					$scope.entity.operationNumber = self.GENERATE_OPERATION_NUMBER;
 				}
 			}
 
@@ -492,7 +494,7 @@
 			}
 
 		self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function () {
-				window.location = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
+				window.location = self.MY_OPERATIONS_URL;
 			}
 
 		// @Override

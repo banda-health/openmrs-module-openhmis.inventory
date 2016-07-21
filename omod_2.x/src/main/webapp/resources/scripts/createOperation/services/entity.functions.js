@@ -21,6 +21,8 @@
 
 	CreateOperationFunctions.$inject = ['EntityFunctions', '$filter'];
 
+	var NOT_DEFINED = ' - Not Defined - ';
+
 	function CreateOperationFunctions(EntityFunctions, $filter) {
 		var service;
 
@@ -194,16 +196,16 @@
 			} else if (operationType.hasRecipient && !operationType.hasSource && !operationType.hasDestination) {
 				return true;
 			} else if (operationType.hasSource && operationType.hasDestination) {
-				if ($scope.sourceStockroom.name !== ' - Not Defined - ' && $scope.destinationStockroom.name !== ' - Not Defined - ') {
+				if ($scope.sourceStockroom.name !== NOT_DEFINED && $scope.destinationStockroom.name !== NOT_DEFINED) {
 					return true;
 				}
 			} else if (operationType.hasSource || operationType.hasDestination) {
 				if (operationType.hasSource) {
-					if ($scope.sourceStockroom !== undefined && $scope.sourceStockroom.name !== ' - Not Defined - ') {
+					if ($scope.sourceStockroom !== undefined && $scope.sourceStockroom.name !== NOT_DEFINED) {
 						return true;
 					}
 				} else {
-					if ((operationType.hasDestination && $scope.destinationStockroom.name !== ' - Not Defined - ')) {
+					if ((operationType.hasDestination && $scope.destinationStockroom.name !== NOT_DEFINED)) {
 						return true;
 					}
 				}

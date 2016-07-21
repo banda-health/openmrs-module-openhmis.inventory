@@ -20,6 +20,9 @@
 
 	CreateOperationRestfulService.$inject = ['EntityRestFactory'];
 
+	var ROOT_URL = '/' + OPENMRS_CONTEXT_PATH + '/';
+	var MODULE_SETTINGS_URL = 'module/openhmis/inventory/moduleSettings.page';
+
 	function CreateOperationRestfulService(EntityRestFactory) {
 		var service;
 
@@ -33,6 +36,7 @@
 			searchItemStock: searchItemStock,
 			isOperationNumberGenerated: isOperationNumberGenerated,
 			isNegativeStockRestricted: isNegativeStockRestricted,
+			searchStockOperationItems: searchStockOperationItems,
 		};
 
 		return service
@@ -97,9 +101,9 @@
 
 		function isOperationNumberGenerated(module_name, onLoadOpNumGenSuccessful) {
 			var requestParams = [];
-			requestParams['resource'] = 'module/openhmis/inventory/moduleSettings.page';
+			requestParams['resource'] = MODULE_SETTINGS_URL;
 			requestParams['setting'] = 'openhmis.inventory.autoGenerateOperationNumber';
-			EntityRestFactory.setCustomBaseUrl('/' + OPENMRS_CONTEXT_PATH + '/');
+			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
 			EntityRestFactory.loadResults(requestParams,
 				onLoadOpNumGenSuccessful, errorCallback);
 
@@ -109,9 +113,9 @@
 
 		function isNegativeStockRestricted(module_name, onLoadNegativeStockSuccessful) {
 			var requestParams = [];
-			requestParams['resource'] = 'module/openhmis/inventory/moduleSettings.page';
+			requestParams['resource'] = MODULE_SETTINGS_URL;
 			requestParams['setting'] = 'openhmis.inventory.restrictNegativeInventoryStockCreation';
-			EntityRestFactory.setCustomBaseUrl('/' + OPENMRS_CONTEXT_PATH + '/');
+			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
 			EntityRestFactory.loadResults(requestParams,
 				onLoadNegativeStockSuccessful, errorCallback);
 
@@ -128,6 +132,16 @@
 				EntityRestFactory.loadEntities(requestParams,
 					onLoadItemStockSuccessful, errorCallback);
 			}
+		}
+
+		function searchStockOperationItems(q) {
+			var requestParams = {};
+			requestParams['has_physical_inventory'] = 'true';
+			requestParams['q'] = q;
+			requestParams['limit'] = 10;
+			requestParams['startIndex'] = 1;
+
+			return EntityRestFactory.autocompleteSearch(requestParams, 'item', 'inventory');
 		}
 
 		function errorCallback(error) {
