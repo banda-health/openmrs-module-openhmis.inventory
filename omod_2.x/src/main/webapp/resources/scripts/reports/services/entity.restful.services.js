@@ -21,11 +21,15 @@
 
 	ReportRestfulService.$inject = ['EntityRestFactory'];
 
+	var MODULE_SETTINGS_URL = 'module/openhmis/inventory/moduleSettings.page';
+	var ROOT_URL = '/' + OPENMRS_CONTEXT_PATH + '/';
+
 	function ReportRestfulService(EntityRestFactory) {
 		var service;
 		service = {
 			loadStockRooms: loadStockRooms,
-			searchReportItems: searchReportItems
+			searchReportItems: searchReportItems,
+			getReports: getReports
 		};
 		return service;
 
@@ -48,6 +52,15 @@
 			requestParams['startIndex'] = 1;
 
 			return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
+		}
+
+		function getReports(reportIdProperty, successCallback){
+			var requestParams = [];
+			requestParams['resource'] = MODULE_SETTINGS_URL;
+			requestParams['report'] = reportIdProperty;
+
+			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
+			EntityRestFactory.loadResults(requestParams, successCallback, function(error){console.log(error)});
 		}
 	}
 })();

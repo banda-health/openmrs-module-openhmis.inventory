@@ -43,6 +43,24 @@
                 self.loadStockRooms();
 
                 $scope.searchReportItems = self.searchReportItems;
+
+                //chec moduleSettings (ctrl-n) for the names of the reports
+                ReportRestfulService.getReports("openhmis.inventory.reports.stockTake", function(data){
+                    $scope.stockTakeReport = data;
+                });
+                ReportRestfulService.getReports("openhmis.inventory.reports.stockCard", function(data){
+                    $scope.stockCardReport = data;
+                });
+                ReportRestfulService.getReports("openhmis.inventory.reports.stockroom", function(data){
+                    $scope.stockTakeReport = data;
+                });
+                ReportRestfulService.getReports("openhmis.inventory.reports.stockTake", function(data){
+                    $scope.stockTakeReport = data;
+                });
+                ReportRestfulService.getReports("openhmis.inventory.reports.stockTake", function(data){
+                    $scope.stockTakeReport = data;
+                });
+
                 $scope.stockTakeReport = {
                     name: "Stock Take",
                     description: "The current inventory for a specific stockroom",

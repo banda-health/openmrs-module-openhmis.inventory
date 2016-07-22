@@ -88,5 +88,7 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MESSAGE_PAGE = MODULE_ROOT + "inventoryMessageProperties";
 	public static final String MESSAGE_PROPERTIES_JS = "/ws/module/openhmis/inventory/inventoryMessageProperties.js";
 
+	public static final String MODULE_SETTINGS_ROOT = MODULE_ROOT + "moduleSettings";
+
 	protected ModuleWebConstants() {}
 }
