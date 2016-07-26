@@ -13,7 +13,7 @@
  *
  */
 
-(function () {
+(function() {
 	'use strict';
 
 	var baseModel = angular.module('app.genericMetadataModel');
@@ -24,7 +24,7 @@
 		var extended = angular.extend(GenericMetadataModel, {});
 
 		// @Override
-		extended.getModelFields = function () {
+		extended.getModelFields = function() {
 			var fields = ["operationNumber", "instanceType",
 				"operationDate", "source", "destination", "institution",
 				"department", "items", "status", "patient"];

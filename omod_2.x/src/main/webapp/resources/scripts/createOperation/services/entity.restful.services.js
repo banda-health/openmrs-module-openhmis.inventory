@@ -13,7 +13,7 @@
  *
  */
 
-(function () {
+(function() {
 	'use strict';
 
 	angular.module('app.restfulServices').service('CreateOperationRestfulService', CreateOperationRestfulService);
@@ -46,7 +46,8 @@
 		 * @param rest_entity_name
 		 * @param successCallback
 		 */
-		function loadStockOperationTypes(successCallback) {
+		function loadStockOperationTypes(module_name, successCallback) {
+			setBaseUrl(module_name);
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'stockOperationType';
 			requestParams['v'] = 'full';
@@ -59,29 +60,33 @@
 		 * @param rest_entity_name
 		 * @param successCallback
 		 */
-		function loadStockrooms(successCallback) {
+		function loadStockrooms(module_name, successCallback) {
+			setBaseUrl(module_name);
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'stockroom';
 			requestParams['limit'] = 100;
 			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
 		}
 
-		function loadInstitutions(successCallback) {
+		function loadInstitutions(module_name, successCallback) {
+			setBaseUrl(module_name);
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'institution';
 			requestParams['limit'] = 100;
 			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
 		}
 
-		function loadDepartments(successCallback) {
+		function loadDepartments(module_name, successCallback) {
+			setBaseUrl(module_name);
 			var requestParams = {};
 			requestParams['rest_entity_name'] = 'department';
 			requestParams['limit'] = 100;
 			EntityRestFactory.loadEntities(requestParams, successCallback, errorCallback);
 		}
 
-		function loadOperationTypeAttributes(uuid, onLoadAttributeTypesSuccessful) {
-			if (uuid !== undefined) {
+		function loadOperationTypeAttributes(module_name, uuid, onLoadAttributeTypesSuccessful) {
+			if(uuid !== undefined) {
+				setBaseUrl(module_name);
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'stockOperationType/' + uuid;
 				EntityRestFactory.loadEntities(requestParams,
@@ -89,8 +94,9 @@
 			}
 		}
 
-		function loadStockOperations(operation_date, onLoadStockOperationSuccessful) {
-			if (operation_date !== undefined) {
+		function loadStockOperations(module_name, operation_date, onLoadStockOperationSuccessful) {
+			if(operation_date !== undefined) {
+				setBaseUrl(module_name);
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'stockOperation';
 				requestParams['operation_date'] = operation_date;
@@ -99,32 +105,27 @@
 			}
 		}
 
-		function isOperationNumberGenerated(module_name, onLoadOpNumGenSuccessful) {
+		function isOperationNumberGenerated(onLoadOpNumGenSuccessful) {
 			var requestParams = [];
 			requestParams['resource'] = MODULE_SETTINGS_URL;
 			requestParams['setting'] = 'openhmis.inventory.autoGenerateOperationNumber';
 			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
 			EntityRestFactory.loadResults(requestParams,
 				onLoadOpNumGenSuccessful, errorCallback);
-
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
 		}
 
-		function isNegativeStockRestricted(module_name, onLoadNegativeStockSuccessful) {
+		function isNegativeStockRestricted(onLoadNegativeStockSuccessful) {
 			var requestParams = [];
 			requestParams['resource'] = MODULE_SETTINGS_URL;
 			requestParams['setting'] = 'openhmis.inventory.restrictNegativeInventoryStockCreation';
 			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
 			EntityRestFactory.loadResults(requestParams,
 				onLoadNegativeStockSuccessful, errorCallback);
-
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
 		}
 
-		function searchItemStock(item_uuid, stockroom_uuid, onLoadItemStockSuccessful) {
-			if (angular.isDefined(item_uuid) && angular.isDefined(stockroom_uuid)) {
+		function searchItemStock(module_name, item_uuid, stockroom_uuid, onLoadItemStockSuccessful) {
+			if(angular.isDefined(item_uuid) && angular.isDefined(stockroom_uuid)) {
+				setBaseUrl(module_name);
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'itemStock';
 				requestParams['item_uuid'] = item_uuid;
@@ -134,14 +135,19 @@
 			}
 		}
 
-		function searchStockOperationItems(q) {
+		function searchStockOperationItems(module_name, q) {
+			setBaseUrl(module_name);
 			var requestParams = {};
 			requestParams['has_physical_inventory'] = 'true';
 			requestParams['q'] = q;
 			requestParams['limit'] = 10;
 			requestParams['startIndex'] = 1;
 
-			return EntityRestFactory.autocompleteSearch(requestParams, 'item', 'inventory');
+			return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
+		}
+
+		function setBaseUrl(module_name) {
+			EntityRestFactory.setBaseUrl(module_name);
 		}
 
 		function errorCallback(error) {

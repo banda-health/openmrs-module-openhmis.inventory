@@ -104,7 +104,8 @@
             <span>{{attribute.attributeType.name}}</span>
         </li>
         <li>
-            <span>{{attribute.value}}</span>
+            <span ng-show="attribute.value.display !== undefined">{{attribute.value.display}}</span>
+            <span ng-hide="attribute.value.display !== undefined">{{attribute.value}}</span>
         </li>
     </ul>
     <ul class="table-layout">

@@ -193,11 +193,11 @@ fieldset.nested{
     width:100%;
 }
 
-table.item-stock tr:first-child{
+table.line-item tr:first-child{
     width: 1%;
 }
 
-table.item-stock tr:nth-child(even){
+table.line-item tr:nth-child(even){
     background: none;
 }
 
@@ -210,7 +210,6 @@ table.item-details td{
     line-height: 1px;
     font-size: 0.9em;
     border: 0px;
-    /*background: whitesmoke;*/
 }
 
 table.item-details tr{
@@ -221,7 +220,7 @@ table.item-details td input{
     min-width: 0px;
 }
 
-table.item-stock .autocomplete-search{
+table.line-item .autocomplete-search{
     width: 380px;
 }
 table.icons{

@@ -14,7 +14,7 @@
  */
 
 /* initialize and bootstrap application */
-requirejs(['createOperation/configs/entity.module'], function () {
+requirejs(['createOperation/configs/entity.module'], function() {
 	angular.bootstrap(document, ['createOperationApp']);
 });
 
@@ -61,7 +61,7 @@ emr.loadMessages([
 	"openhmis.inventory.operations.confirm.title.sourceStockroomChange",
 	"openhmis.inventory.operations.confirm.operationTypeChange",
 	"openhmis.inventory.operations.confirm.sourceStockroomChange",
-	"openhmis.inventory.operations.required.patient",
+	"openhmis.commons.general.requirePatient",
 	"openhmis.inventory.operations.required.institution",
 	"openhmis.inventory.operations.required.department",
 	"openhmis.inventory.operations.error.number",

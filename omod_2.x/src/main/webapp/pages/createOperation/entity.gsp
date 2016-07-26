@@ -44,7 +44,7 @@
 <div ng-hide="loading">
     <h1>${ui.message('openhmis.inventory.admin.create')}</h1>
     <form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
-        <fieldset class="operation createOperation">
+        <fieldset class="content createOperation">
             <div class="action-container" ng-show="operationType.name === 'Adjustment' && sourceStockroom.name !== ' - Not Defined - '">
                 <ul>
                     <h3>${ui.message('openhmis.inventory.operations.itemStockActions')}</h3>
@@ -164,22 +164,9 @@
                     </select>
                 </li>
             </ul>
-            <ul class="table-layout" ng-repeat="attributeTypeAttribute in attributeTypeAttributes">
-                <li class="required" ng-if="attributeTypeAttribute.required">
-                    <span>{{attributeTypeAttribute.name}}</span>
-                </li>
-                <li class="not-required" ng-if="!attributeTypeAttribute.required">
-                    <span>{{attributeTypeAttribute.name}}</span>
-                </li>
-                <li>
-                    <span>
-                        <input ng-if="attributeTypeAttribute.required" required class="form-control"
-                               ng-model="attributes[attributeTypeAttribute.uuid].value" />
-                        <input ng-if="!attributeTypeAttribute.required" class="form-control"
-                               ng-model="attributes[attributeTypeAttribute.uuid].value" />
-                    </span>
-                </li>
-            </ul>
+
+            ${ui.includeFragment("openhmis.commons", "fieldTypesFragment")}
+
             <ul class="table-layout" ng-show="operationType.name === 'Distribution' && distributionType === 'Patient'">
                 <li class="not-required">
                     <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
@@ -202,7 +189,7 @@
                 <span class="desc" ng-show="!showOperationItemsSection()">
                     ${ui.message('openhmis.inventory.operations.selectStockroom')}
                 </span>
-                <table class="item-stock"
+                <table class="line-item"
                        ng-show="showOperationItemsSection()">
                     <thead>
                         <tr>
