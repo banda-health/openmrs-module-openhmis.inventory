@@ -317,7 +317,6 @@
 
 		// validate patient
 		function validatePatient($scope) {
-			console.log($scope.operationType);
 			if($scope.operationType.hasRecipient) {
 				if($scope.selectedPatient !== '') {
 					$scope.entity.patient = $scope.selectedPatient.uuid;
