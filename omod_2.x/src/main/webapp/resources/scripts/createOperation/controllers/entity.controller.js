@@ -36,7 +36,6 @@
 		var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
 		var notDefined = {name: ' - Not Defined - '};
 
-
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
 				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
@@ -59,33 +58,23 @@
 				CreateOperationRestfulService.isOperationNumberGenerated(self.onLoadOpNumGenSuccessful);
 				CreateOperationRestfulService.isNegativeStockRestricted(self.onLoadNegativeStockRestrictedSuccessful);
 				$scope.totalNumOfResults = 0;
-
 				$scope.limit = CookiesService.get('limit') || 5;
 				$scope.currentPage = CookiesService.get('currentPage') || 1;
-
 				$scope.pagingFrom = PaginationService.pagingFrom;
 				$scope.pagingTo = PaginationService.pagingTo;
-
 				$scope.operationDate = CreateOperationFunctions.formatDate(new Date(), true);
 				$scope.changeOperationDate = self.changeOperationDate;
-
 				$scope.expirationDate = '';
-
 				$scope.operationTypes = [];
 				CreateOperationRestfulService.loadStockOperationTypes(module_name, self.onLoadOperationTypesSuccessful);
-
 				$scope.sourceStockrooms = [];
 				$scope.destinationStockrooms = [];
 				CreateOperationRestfulService.loadStockrooms(module_name, self.onLoadStockroomsSuccessful);
-
 				$scope.institutions = [];
 				CreateOperationRestfulService.loadInstitutions(module_name, self.onLoadInstitutionsSuccessful);
-
 				$scope.departments = [];
 				CreateOperationRestfulService.loadDepartments(module_name, self.onLoadDepartmentsSuccessful);
-
 				$scope.loadOperationTypeAttributes = self.loadOperationTypeAttributes;
-
 				$scope.patient;
 				$scope.patients = [];
 				$scope.searchPatients = self.searchPatients;
@@ -93,35 +82,25 @@
 				$scope.searchFieldAttributePatients = self.searchFieldAttributePatients;
 				$scope.selectPatient = self.selectPatient;
 				$scope.changePatient = self.changePatient;
-
 				$scope.selectedPatient = '';
 				$scope.visit = '';
 				$scope.endVisit = self.endVisit;
-
 				$scope.postSearchMessage =
 					$filter('EmrFormat')(emr.message("openhmis.commons.general.postSearchMessage"), ['patient']);
-
 				$scope.searchStockOperationItems = self.searchStockOperationItems;
 				$scope.selectStockOperationItem = self.selectStockOperationItem;
-
 				$scope.searchItemStock = self.searchItemStock;
-
 				$scope.lineItems = [];
-
 				$scope.addLineItem = self.addLineItem;
 				$scope.removeLineItem = self.removeLineItem;
-
 				$scope.warningDialog = self.warningDialog;
-
 				$scope.distributionTypes = ["Patient", "Department", "Institution"];
 				$scope.distributionType = $scope.distributionTypes[0];
-
 				$scope.returnOperationTypes = ["Department", "Institution", "Patient"];
 				$scope.returnOperationType = $scope.returnOperationTypes[0];
 				$scope.showOperationItemsSection = self.showOperationItemsSection;
 				$scope.changeItemQuantity = self.changeItemQuantity;
 				$scope.changeExpiration = self.changeExpiration;
-
 				CreateOperationFunctions.onChangeDatePicker(
 					self.onOperationDateSuccessfulCallback,
 					'operationDateId-display');
@@ -160,7 +139,7 @@
 				if($scope.institutionStockroom !== undefined &&
 					(($scope.operationType.name === 'Distribution' && $scope.distributionType === 'Institution') ||
 					$scope.operationType.name === 'Return' && $scope.returnOperationType === 'Institution')) {
-					if($scope.institutionStockroom.name !== ' - Not Defined - ') {
+					if($scope.institutionStockroom.name !== notDefined.name) {
 						$scope.entity.institution = $scope.institutionStockroom.uuid;
 					} else {
 						emr.errorAlert("openhmis.inventory.operations.required.institution");
@@ -172,7 +151,7 @@
 				if($scope.department !== undefined &&
 					(($scope.operationType.name === 'Distribution' && $scope.distributionType === 'Department') ||
 					$scope.operationType.name === 'Return' && $scope.returnOperationType === 'Department')) {
-					if($scope.department.name !== ' - Not Defined - ') {
+					if($scope.department.name !== notDefined.name) {
 						$scope.entity.department = $scope.department.uuid;
 					} else {
 						emr.errorAlert("openhmis.inventory.operations.required.department");
@@ -181,7 +160,8 @@
 				}
 
 				// validate selected patient
-				if(!CreateOperationFunctions.validatePatient($scope)) {
+				if($scope.entity.institution === "" && $scope.entity.department === "" &&
+					!CreateOperationFunctions.validatePatient($scope)) {
 					return false;
 				}
 
@@ -393,7 +373,6 @@
 
 		self.onLoadOperationTypesSuccessful = self.onLoadOperationTypesSuccessful || function(data) {
 				$scope.operationTypes = data.results;
-				//$scope.operationType = $scope.operationType || $scope.operationTypes[0];
 				if($scope.operationType === undefined) {
 					for(var i = 0; $scope.operationTypes.length; i++) {
 						var operationType = $scope.operationTypes[i];

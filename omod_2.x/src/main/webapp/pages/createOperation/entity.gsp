@@ -33,17 +33,17 @@
 
 </script>
 
-<div ng-show="loading" style="margin:200px;">
+<div ng-show="loading" class="loading-msg">
     <span>${ui.message("openhmis.inventory.admin.create.processing")}</span>
     <br />
-    <span style="margin:150px;">
+    <span class="loading-img">
         <img src="${ ui.resourceLink("uicommons", "images/spinner.gif") }"/>
     </span>
 </div>
 
 <div ng-hide="loading">
     <h1>${ui.message('openhmis.inventory.admin.create')}</h1>
-    <form name="entityForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
+    <form name="entityForm" class="entity-form create-operation-content" ng-class="{'submitted': submitted}">
         <fieldset class="content createOperation">
             <div class="action-container" ng-show="operationType.name === 'Adjustment' && sourceStockroom.name !== ' - Not Defined - '">
                 <ul>
@@ -232,8 +232,8 @@
                                         <b>${ui.message("openhmis.inventory.item.quantity")}:</b>
                                     </td>
                                     <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
-                                        <input type="number" ng-model="lineItem.itemStockQuantity" class="form-control"
-                                               ng-enter="changeItemQuantity(lineItem)" style="width:60px;"
+                                        <input type="number" ng-model="lineItem.itemStockQuantity" class="form-control input-quantity"
+                                               ng-enter="changeItemQuantity(lineItem)"
                                                ng-change="changeItemQuantity(lineItem)" />
                                     </td>
                                     <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
@@ -244,8 +244,7 @@
                                                 ng-change="changeExpiration(lineItem)"
                                                 ng-show="!lineItem.expirationHasDatePicker"
                                                 class="right-justify form-control"
-                                                ng-options="itemStockExpirationDate for itemStockExpirationDate in lineItem.expirationDates"
-                                                style="width:100px;">
+                                                ng-options="itemStockExpirationDate for itemStockExpirationDate in lineItem.expirationDates">
                                         </select>
                                         <span ng-show="lineItem.expirationHasDatePicker">
                                             ${ ui.includeFragment("uicommons", "field/datetimepicker", [
@@ -260,7 +259,7 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td colspan="3" style="font-size:11px;" ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                    <td colspan="3" class="existing-quantity" ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
                                         <b>${ui.message("openhmis.inventory.operations.existingQuantity")}:</b>
                                         <span ng-show="lineItem.selected">
                                             {{lineItem.existingQuantity}}
@@ -281,7 +280,7 @@
             <input type="button" class="confirm right" value="${ui.message('general.save')}"
                        ng-click="saveOrUpdate()" />
         </div>
-        <div id="change-operation-date-dialog" class="dialog" style="display:none">
+        <div id="change-operation-date-dialog" class="dialog hide-dialog">
             <div class="dialog-header">
                 <span>
                     <i class="icon-warning-sign"></i>
@@ -289,16 +288,16 @@
                         ${ui.message('openhmis.inventory.operations.confirm.title.operationTypeDate')}
                     </h3>
                 </span>
-                <i class="icon-remove cancel show-cursor" style="float:right;"
+                <i class="icon-remove cancel show-cursor align-right"
                    ng-click="closeThisDialog()"></i>
             </div>
             <div class="dialog-content form">
                 <table class="operation-date">
                     <tr>
-                        <td style="width:30%">
+                        <td>
                             ${ui.message('openhmis.inventory.operations.operationDate')}
                         </td>
-                        <td style="width:60%">
+                        <td>
                             ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                                     id: "operationDateId",
                                     formFieldName: "operationDate",
@@ -312,8 +311,7 @@
                         <td>${ui.message('openhmis.inventory.operation.occurs')}</td>
                         <td>
                             <select ng-model="operationOccurDate" class="form-control"
-                                    ng-options="occur.name for occur in operationOccurs"
-                                    style="width:235px">
+                                    ng-options="occur.name for occur in operationOccurs">
                             </select>
                         </td>
                     </tr>
@@ -331,13 +329,13 @@
             </div>
         </div>
 
-        <div id="warning-dialog" class="dialog" style="display:none;">
+        <div id="warning-dialog" class="dialog hide-dialog">
             <div class="dialog-header">
                 <span>
                     <i class="icon-warning-sign"></i>
                     <h3>{{warningTitle}}</h3>
                 </span>
-                <i class="icon-remove cancel show-cursor"  style="float:right;" ng-click="closeThisDialog()"></i>
+                <i class="icon-remove cancel show-cursor align-right" ng-click="closeThisDialog()"></i>
             </div>
             <div class="dialog-content form">
                 <span>{{warningMessage}}</span>

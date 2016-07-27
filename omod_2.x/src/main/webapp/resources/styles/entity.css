@@ -178,6 +178,15 @@ table.operation-date td{
     vertical-align: baseline;
     border: 0px;
 }
+table.operation-date td:first-child{
+    width: 30%;
+}
+table.operation-date td:nth-child(2){
+    width: 60%;
+}
+table.operation-date td select{
+    width:235px;
+}
 table.operation-date td select option{
     font-size: 0.9em;
 }
@@ -270,5 +279,21 @@ table.item-details td input[type="image"]{
     padding: 1px 2px;
     border-radius: 4px;
 }
-
-
+.create-operation-content{
+    font-size: inherit;
+}
+.loading-msg{
+    margin: 200px;
+}
+.loading-img{
+    margin: 150px;
+}
+.input-quantity{
+    width: 60px;
+}
+fieldset.nested .line-item select {
+    width: 100px;
+}
+table.item-details td.existing-quantity{
+    font-size:11px;
+}
