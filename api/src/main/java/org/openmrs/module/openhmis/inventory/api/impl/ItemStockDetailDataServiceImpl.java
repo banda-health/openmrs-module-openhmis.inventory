@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -78,36 +78,35 @@ public class ItemStockDetailDataServiceImpl
 			throw new IllegalArgumentException("The stockroom must be defined.");
 		}
 
-		// Because this is an aggregate query we cannot use the normal executeCriteria method and instead have to do it
-		// manually.
-		Criteria criteria = getRepository().createCriteria(ItemStockDetail.class);
-		criteria.createAlias("item", "i");
-		criteria.add(Restrictions.eq("stockroom", stockroom));
+		// We cannot use a normal Criteria query here because criteria does not support a group by with a having statement
+		// so HQL it is!
 
-		criteria.setProjection(Projections.projectionList().add(Projections.groupProperty("item"))
-		        .add(Projections.groupProperty("expiration")).add(Projections.sum("quantity")));
-
-		// Load the record count (for paging)
 		if (pagingInfo != null && pagingInfo.shouldLoadRecordCount()) {
-			// Because we're already doing a group by query, we can't just use the loadPagingTotal method.
+			// Load the record count (for paging)
+			String countHql = "select 1 "
+			        + "from ItemStockDetail as detail "
+			        + "where stockroom.id = " + stockroom.getId() + " "
+			        + "group by item, expiration "
+			        + "having sum(detail.quantity) <> 0";
+			Query countQuery = getRepository().createQuery(countHql);
 
-			// This is horrible, it just executes the full query to get the count.
-			List countList = criteria.list();
-			Integer count = countList.size();
+			Integer count = countQuery.list().size();
 
 			pagingInfo.setTotalRecordCount(count.longValue());
 			pagingInfo.setLoadRecordCount(false);
 		}
 
-		// Add the ordering
-		criteria.addOrder(Order.asc("i.name"));
-		criteria.addOrder(Order.asc("expiration"));
+		// Create the query and optionally add paging
+		String hql = "select i, detail.expiration, sum(detail.quantity) as sumQty "
+		        + "from ItemStockDetail as detail inner join detail.item as i "
+		        + "where detail.stockroom.id = " + stockroom.getId() + " "
+		        + "group by i, detail.expiration "
+		        + "having sum(detail.quantity) <> 0"
+		        + "order by i.name asc, detail.expiration asc";
+		Query query = getRepository().createQuery(hql);
+		query = this.createPagingQuery(pagingInfo, query);
 
-		// Add the paging stuff
-		criteria = this.createPagingCriteria(pagingInfo, criteria);
-
-		// Load the criteria into an untyped list
-		List list = criteria.list();
+		List list = query.list();
 
 		// Parse the aggregate query into an ItemStockSummary object
 		List<ItemStockSummary> results = new ArrayList<ItemStockSummary>(list.size());
