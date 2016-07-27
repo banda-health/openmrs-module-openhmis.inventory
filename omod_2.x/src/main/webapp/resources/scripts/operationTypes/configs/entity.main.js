@@ -13,7 +13,7 @@
  *
  */
 
-requirejs(['operationTypes/configs/entities.module'], function() {
+requirejs(['operationTypes/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
