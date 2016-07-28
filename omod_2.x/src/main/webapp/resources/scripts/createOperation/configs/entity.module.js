@@ -19,7 +19,7 @@
  * page either creates a new operation if NO uuid is given, else loads an
  * existing entity for editing.
  */
-(function () {
+(function() {
 	define([], loadpage);
 
 	function loadpage() {
@@ -28,7 +28,7 @@
 			'angularUtils.directives.dirPagination', 'app.stockOperationFunctionsFactory', 'app.css', 'app.filters', 'app.pagination',
 			'app.cookies', 'app.genericMetadataModel', 'app.lineItemModel', 'app.restfulServices',
 			'app.genericEntityController', 'app.genericManageController']);
-		app.config(function ($stateProvider, $urlRouterProvider, $provide) {
+		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 			/*
 			 * Configure routes and urls. The default route is '/' which loads
 			 * manage entities.page. 'edit' route calls entities.page -- it
@@ -42,24 +42,8 @@
 				controller: 'CreateOperationController'
 			});
 
-			$provide.factory('$exceptionHandler', function ($injector) {
-				return function (exception, cause) {
-					/*
-					 * Handle common exceptions
-					 */
-					// unknown provider..
-					var exc = String(exception);
-					if (exc.indexOf("unpr") !== -1) {
-						console.log("ISSUE LOADING MODULE(S)");
-						console.log(exc);
-					} else if (exc.indexOf("session") !== -1 || exc.indexOf("timeout") !== -1) {
-						emr.message("SESSION TIMEOUT");
-						console.log(exc + " - " + cause);
-					} else {
-						console.log(exc + " - " + cause);
-						emr.message(cause);
-					}
-				}
+			$provide.factory('$exceptionHandler', function($injector) {
+				return handleException;
 			});
 		});
 		return app;
