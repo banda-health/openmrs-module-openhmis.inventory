@@ -44,74 +44,45 @@
 
                 $scope.searchReportItems = self.searchReportItems;
 
-                //chec moduleSettings (ctrl-n) for the names of the reports
+                //Load in the 5 reports from their string names in ModuleSettings.java
                 ReportRestfulService.getReports("openhmis.inventory.reports.stockTake", function(data){
                     $scope.stockTakeReport = data;
+                });
+                ReportRestfulService.getReports("openhmis.inventory.reports.stockroom", function(data){
+                    $scope.stockroomUsageReport = data;
                 });
                 ReportRestfulService.getReports("openhmis.inventory.reports.stockCard", function(data){
                     $scope.stockCardReport = data;
                 });
-                ReportRestfulService.getReports("openhmis.inventory.reports.stockroom", function(data){
-                    $scope.stockTakeReport = data;
+                ReportRestfulService.getReports("openhmis.inventory.reports.stockOperationsByStockroom", function(data){
+                    $scope.stockOperationsByStockroomReport = data;
                 });
-                ReportRestfulService.getReports("openhmis.inventory.reports.stockTake", function(data){
-                    $scope.stockTakeReport = data;
-                });
-                ReportRestfulService.getReports("openhmis.inventory.reports.stockTake", function(data){
-                    $scope.stockTakeReport = data;
+                ReportRestfulService.getReports("openhmis.inventory.reports.expiringStock", function(data){
+                    $scope.expiringStockReport = data;
                 });
 
-                $scope.stockTakeReport = {
-                    name: "Stock Take",
-                    description: "The current inventory for a specific stockroom",
-                    reportId: 5
-                };
-                $scope.stockCardReport = {
-                    name: "Stock Card for an Item ",
-                    description: "All transactions for a specific item, over a time period, for a specific stockroom or all stockrooms",
-                    reportId_AllStockrooms: 3,
-                    reportId_OneStockroom: 4
-                };
-                $scope.stockroomUsageReport = {
-                    name: "Stockroom Usage Report",
-                    description: "All items used by a specific stockroom, over a time period",
-                    reportId: 6
-                };
-                $scope.expiringStockReport = {
-                    name: "Expiring Stock",
-                    description: "All items that expire by a specified date",
-                    reportId: 1
-                };
-
-                ReportsFunctions.onChangeDatePicker('stockCardReport_beginDate-display',
-                    function(value){
-                        $scope.stockCardReport_beginDate = value;
-                    }
-                );
-
-                ReportsFunctions.onChangeDatePicker('stockCardReport_endDate-display',
-                    function(value){
-                        $scope.stockCardReport_endDate = value;
-                    }
-                );
-
-                ReportsFunctions.onChangeDatePicker('stockroomUsage_beginDate-display',
-                    function(value){
-                        $scope.stockroomUsage_beginDate = value;
-                    }
-                );
-
-                ReportsFunctions.onChangeDatePicker('stockroomUsage_endDate-display',
-                    function(value){
-                        $scope.stockroomUsage_endDate = value;
-                    }
-                );
-
-                ReportsFunctions.onChangeDatePicker('expiringStock_expiresByDate-display',
-                    function(value){
-                        $scope.expiringStock_expiresByDate = value;
-                    }
-                );
+                //Set change listeners for all datepickers used in reports/entity.page
+                ReportsFunctions.onChangeDatePicker('stockCardReport_beginDate-display', function(value){
+                    $scope.stockCardReport_beginDate = value;
+                });
+                ReportsFunctions.onChangeDatePicker('stockCardReport_endDate-display', function(value){
+                    $scope.stockCardReport_endDate = value;
+                }); 
+                ReportsFunctions.onChangeDatePicker('stockOperationsByStockroomReport_beginDate-display', function(value){
+                    $scope.stockOperationsByStockroomReport_beginDate = value;
+                });
+                ReportsFunctions.onChangeDatePicker('stockOperationsByStockroomReport_endDate-display', function(value){
+                    $scope.stockOperationsByStockroomReport_endDate = value;
+                }); 
+                ReportsFunctions.onChangeDatePicker('stockroomUsage_beginDate-display', function(value){
+                    $scope.stockroomUsageReport_beginDate = value;
+                });
+                ReportsFunctions.onChangeDatePicker('stockroomUsage_endDate-display', function(value){
+                    $scope.stockroomUsageReport_endDate = value;
+                });
+                ReportsFunctions.onChangeDatePicker('expiringStock_expiresByDate-display', function(value){
+                    $scope.expiringStock_expiresByDate = value;
+                });
             }
 
         self.loadStockRooms = self.loadStockRooms || function(){
@@ -144,38 +115,45 @@
         }
         
         $scope.generateReport_StockCardReport = function(){
-            var stockroom = $scope.stockCardReport_stockroom;
             var item = $scope.stockCardReportItem;
             var beginDate = $scope.stockCardReport_beginDate;
             var endDate = $scope.stockCardReport_endDate;
+            var reportId = $scope.stockCardReport.reportId;
     
-            var reportId;
             var parameters = "itemUuid=" + item.uuid
                 + "&beginDate=" + ReportsFunctions.formatDate(beginDate)
                 + "&endDate=" + ReportsFunctions.formatDate(endDate);
-
-            if(stockroom == null){
-                reportId = $scope.stockCardReport.reportId_AllStockrooms;
-            } else{
-                reportId =  $scope.stockCardReport.reportId_OneStockroom;
-                parameters += "&stockroomId=" +stockroom.id;
-            }
             
             return printReport(reportId, parameters);
         }
 
-
-
+        $scope.generateReport_StockOperationsByStockroomReport = function(){
+            var stockroom = $scope.stockOperationsByStockroomReport_stockroom;
+            var item = $scope.stockOperationsByStockroomReportItem;
+            var beginDate = $scope.stockOperationsByStockroomReport_beginDate;
+            var endDate = $scope.stockOperationsByStockroomReport_endDate;
+            var reportId = $scope.stockOperationsByStockroomReport.reportId;
+    
+            var parameters = "itemUuid=" + item.uuid
+                + "&beginDate=" + ReportsFunctions.formatDate(beginDate)
+                + "&endDate=" + ReportsFunctions.formatDate(endDate)
+                + "&stockroomId=" + stockroom.id;
+                
+            return printReport(reportId, parameters);
+        }
 
         $scope.setStockCardReportItem = function(item){
             $scope.stockCardReportItem = item;
         }
 
+        $scope.setStockOperationsByStockroomReportItem = function(item){
+            $scope.stockOperationsByStockroomReportItem = item;
+        }
 
         $scope.generateReport_StockroomUsage = function() {
-            var stockroom = $scope.stockroomUsage_stockroom;
-            var beginDate = $scope.stockroomUsage_beginDate;
-            var endDate = $scope.stockroomUsage_endDate;
+            var stockroom = $scope.stockroomUsageReport_stockroom;
+            var beginDate = $scope.stockroomUsageReport_beginDate;
+            var endDate = $scope.stockroomUsageReport_endDate;
 
             var reportId = $scope.stockroomUsageReport.reportId;
             var parameters = "stockroomId=" + stockroom.id

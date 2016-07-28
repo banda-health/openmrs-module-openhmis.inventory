@@ -16,8 +16,6 @@
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
-
-
 </script>
 
 <div id="reportPage">
@@ -29,14 +27,14 @@
     <fieldset>
         <legend>
             <i class="icon-list-alt"></i>
-            {{stockTakeReport.name}}
+            {{stockTakeReport.reportName}}
         </legend>
-        <small>{{stockTakeReport.description}}</small>
+        <small>{{stockTakeReport.reportDescription}}</small>
 
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select class="form-control" ng-model="StockTakeReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select class="form-control" ng-model="StockTakeReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms' autofocus>
                     <option value="" selected="selected">Select Stockroom</option>
                 </select>
             </li>
@@ -53,17 +51,9 @@
     <fieldset>
         <legend>
             <i class="icon-list-alt"></i>
-            {{stockCardReport.name}}
+            {{stockCardReport.reportName}}
         </legend>
-        <small>{{stockCardReport.description}}</small>
-        <ul class="table-layout">
-            <li><label>Stockroom </label></li>
-            <li>
-                <select  class="form-control" ng-model="stockCardReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
-                    <option value="" ng-selected="selected">All Stockrooms</option>
-                </select>
-            </li>
-        </ul>
+        <small>{{stockCardReport.reportDescription}}</small>
 
         <ul class="table-layout">
             <li><label>Item</label></li>
@@ -119,13 +109,79 @@
     <fieldset>
         <legend>
             <i class="icon-list-alt"></i>
-            {{stockroomUsageReport.name}}
+            {{stockOperationsByStockroomReport.reportName}}
         </legend>
-        <small>{{stockroomUsageReport.description}}</small>
+        <small>{{stockOperationsByStockroomReport.reportDescription}}</small>
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select class="form-control" ng-model="stockroomUsage_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select  class="form-control" ng-model="stockOperationsByStockroomReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                    <option value="" selected="selected">Select Stockroom</option>
+                </select>
+            </li>
+        </ul>
+
+        <ul class="table-layout">
+            <li><label>Item</label></li>
+            <li>
+                ${ ui.includeFragment("openhmis.commons", "searchFragment", [
+                        typeahead: ["reportItem.name for reportItem in searchReportItems(\$viewValue)"],
+                        model: "stockOperationsByStockroomReport_item",
+                        typeaheadOnSelect: "setStockOperationsByStockroomReportItem(\$item)",
+                        typeaheadEditable: "true",
+                        class: ["form-control report-item"],
+                        placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')]
+                ])}
+            </li>
+        </ul>
+
+        <ul class="table-layout">
+            <li><label>Begin Date</label></li>
+            <li>
+                <span class="date">
+                    ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                            formFieldName: "stockOperationsByStockroomReport_beginDate",
+                            id: "stockOperationsByStockroomReport_beginDate",
+                            label: "",
+                            useTime: false
+                    ])}
+                </span>
+            </li>
+        </ul>
+
+        <ul class="table-layout">
+            <li><label>End Date</label></li>
+            <li>
+                <span class="date">
+                    ${ ui.includeFragment("uicommons", "field/datetimepicker", [
+                            formFieldName: "stockOperationsByStockroomReport_endDate",
+                            id: "stockOperationsByStockroomReport_endDate",
+                            label: "",
+                            useTime: false
+                    ])}
+                </span>
+            </li>
+        </ul>
+
+        <ul class="table-layout">
+            <li></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockOperationsByStockroomReport()">Generate Report</a></li>
+        </ul>
+    </fieldset>
+</div>
+<hr>
+
+<div class="report">
+    <fieldset>
+        <legend>
+            <i class="icon-list-alt"></i>
+            {{stockroomUsageReport.reportName}}
+        </legend>
+        <small>{{stockroomUsageReport.reportDescription}}</small>
+        <ul class="table-layout">
+            <li><label>Stockroom </label></li>
+            <li>
+                <select class="form-control" ng-model="stockroomUsageReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">Select Stockroom</option>
                 </select>
             </li>
@@ -135,7 +191,7 @@
             <li><label>Begin Date</label></li>
             <li>
                 ${ ui.includeFragment("uicommons", "field/datetimepicker", [
-                        formFieldName: "stockroomUsage_beginDate",
+                        formFieldName: "stockroomUsageReport_beginDate",
                         id: "stockroomUsage_beginDate",
                         label: "",
                         useTime: false
@@ -147,7 +203,7 @@
             <li><label>End Date</label></li>
             <li>
                 ${ ui.includeFragment("uicommons", "field/datetimepicker", [
-                        formFieldName: "stockroomUsage_endDate",
+                        formFieldName: "stockroomUsageReport_endDate",
                         id: "stockroomUsage_endDate",
                         label: "",
                         useTime: false
@@ -168,9 +224,9 @@
     <fieldset>
         <legend>
             <i class="icon-list-alt"></i>
-            {{expiringStockReport.name}}
+            {{expiringStockReport.reportName}}
         </legend>
-        <small>{{expiringStockReport.description}}</small>
+        <small>{{expiringStockReport.reportDescription}}</small>
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
