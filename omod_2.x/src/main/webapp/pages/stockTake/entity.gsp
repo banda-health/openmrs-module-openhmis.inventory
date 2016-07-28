@@ -124,7 +124,7 @@
 		<br/>
 	</div>
 
-	<div ng-show="stockTakeChangeCounter != 0" class="detail-section-border-top">
+	<div ng-show="stockTakeDetails.length != 0" class="detail-section-border-top">
 		<br/>
 		<p>
 			<a ng-show="showStockDetailsTable == false" id="stockTakehchange" class="btn btn-grey" ui-sref="new"
@@ -135,7 +135,7 @@
 			   ng-click="hideTableDetails()">
 				${ui.message('openhmis.inventory.stocktake.change.hideDetails')}
 			</a>
-			&nbsp;${ui.message('openhmis.inventory.stocktake.change.counter.label')} {{stockTakeChangeCounter}}
+			&nbsp;${ui.message('openhmis.inventory.stocktake.change.counter.label')} {{stockTakeDetails.length}}
 		</p>
 		<br/>
 	</div>

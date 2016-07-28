@@ -27,13 +27,13 @@
 	                             CookiesService) {
 		var self = this;
 		var module_name = 'inventory';
-		var entity_name_message_key = emr.message("openhmis.inventory.admin.stockTake");
-		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
+		var entity_name_message_key = "openhmis.inventory.admin.stockTake";
+		var CANCEL_PAGE = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
 		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, CANCEL_PAGE);
 			}
 		
 		/**
@@ -49,14 +49,12 @@
 				$scope.showStockDetails = false;
 				$scope.showStockChangeDetails = false;
 				$scope.showStockDetailsTable = false;
-				$scope.stockTakeChangeCounter = 0;
 				$scope.stockTakeDetails = [];
 				$scope.loading = false;
 				
 				$scope.stockroomDialog = function (stockroomChange, stockTakeCurrentPage) {
-					if ($scope.stockTakeChangeCounter != 0) {
-						$scope.stockTakeDetails.length = 0;
-						$scope.stockTakeChangeCounter = 0;
+					if ($scope.stockTakeDetails.length != 0) {
+						$scope.stockTakeDetails = [];
 						self.stockroomChangeDialog(stockroomChange);
 					} else {
 						$scope.loadStockDetails(stockTakeCurrentPage);
@@ -67,7 +65,7 @@
 					if ($scope.entity.stockroom != null) {
 						var stockroom_uuid = $scope.entity.stockroom.uuid;
 						self.loadStockDetails(stockroom_uuid, stockTakeCurrentPage);
-
+						
 						$scope.stockTakeLimit = CookiesService.get(stockroom_uuid + 'stockTakeLimit') || 5;
 						$scope.stockTakeCurrentPage = CookiesService.get(stockroom_uuid + 'stockTakeCurrentPage') || 1;
 						$scope.stockTakePagingFrom = PaginationService.pagingFrom;
@@ -75,7 +73,6 @@
 					} else {
 						$scope.showNoStockroomSelected = true;
 						$scope.showNoStockSummaries = false;
-						$scope.stockTakeChangeCounter = 0;
 						$scope.showStockChangeDetails = false;
 						$scope.stockTakeDetails = [];
 						$scope.showStockDetails = false;
@@ -99,38 +96,32 @@
 				}
 				
 			}
-
+		
 		self.stockroomChangeDialog = self.stockroomChangeDialog || function (id) {
 				StockTakeFunctions.stockroomChangeDialog(id, $scope);
 			}
 		
 		self.getNewStock = self.getNewStock || function (newStock) {
-				var index = StockTakeFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", newStock.id);
-				if ($scope.stockTakeDetails.length != 0) {
-					if (index == null) {
-						$scope.stockTakeDetails.push(newStock);
-					}
-					else {
-						$scope.stockTakeDetails[index] = newStock;
-					}
-				} else {
+				var index = EntityFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", newStock.id);
+				if (index == null) {
 					$scope.stockTakeDetails.push(newStock);
+				} else {
+					$scope.stockTakeDetails[index] = newStock;
 				}
-
+				
+				
 				for (var i = 0; i < $scope.stockTakeDetails.length; i++) {
 					if ($scope.stockTakeDetails[i].actualQuantity == $scope.stockTakeDetails[i].quantity || $scope.stockTakeDetails[i].actualQuantity == null) {
 						$scope.stockTakeDetails.splice(i, 1);
 					}
 				}
-
-				$scope.stockTakeChangeCounter = $scope.stockTakeDetails.length;
-
-				if ($scope.stockTakeChangeCounter > 0) {
+				
+				if ($scope.stockTakeDetails.length > 0) {
 					$scope.showStockChangeDetails = true;
 				} else {
 					$scope.showStockDetailsTable = false;
 				}
-				$scope.stockTakeDetails = $filter('orderBy')($scope.stockTakeDetails, ['item.name','expiration']);
+				$scope.stockTakeDetails = $filter('orderBy')($scope.stockTakeDetails, ['item.name', 'expiration']);
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {
@@ -154,31 +145,28 @@
 		
 		self.onLoadStockDetailsSuccessful = self.onLoadStockDetailsSuccessful || function (data) {
 				$scope.fetchedEntities = data.results;
-
+				
 				for (var i = 0; i < $scope.fetchedEntities.length; i++) {
 					$scope.fetchedEntities[i].id = $scope.fetchedEntities[i].item.uuid + "_" + $scope.fetchedEntities[i].expiration;
-					var index = StockTakeFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", $scope.fetchedEntities[i].id);
+					var index = EntityFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", $scope.fetchedEntities[i].id);
 					if (index != null) {
 						$scope.fetchedEntities[i].actualQuantity = $scope.stockTakeDetails[index].actualQuantity;
 					}
 				}
 				
 				$scope.totalNumOfResults = data.length;
-
+				
 				if (data.results.length != 0) {
 					$scope.showStockDetails = true;
 					$scope.showNoStockroomSelected = false;
 					$scope.showNoStockSummaries = false;
 				} else {
-					$scope.showStockDetails = false;
-					$scope.stockTakeChangeCounter = 0;
-					$scope.showStockChangeDetails = false;
-					$scope.stockTakeDetails = [];
 					$scope.showNoStockroomSelected = false;
 					$scope.showNoStockSummaries = true;
+					$scope.showStockDetails = false;
 				}
 			}
-
+		
 		self.onChangeEntityError = self.onChangeEntityError || function (error) {
 				emr.errorAlert(error);
 				$scope.loading = false;
@@ -210,13 +198,8 @@
 					emr.errorAlert("openhmis.inventory.stocktake.adjustment.empty.error");
 					return false;
 				}
-
+				
 				return true;
-			}
-
-		// @Override
-		self.setAdditionalMessageLabels = self.setAdditionalMessageLabels || function () {
-				return StockTakeFunctions.addMessageLabels();
 			}
 		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */

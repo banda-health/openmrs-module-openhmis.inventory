@@ -25,8 +25,6 @@
 		var service;
 		
 		service = {
-			addMessageLabels: addMessageLabels,
-			findIndexByKeyValue: findIndexByKeyValue,
 			formatDate: formatDate,
 			stockroomChangeDialog: stockroomChangeDialog
 		};
@@ -39,35 +37,8 @@
 		 * @returns formattedDate
 		 * */
 		function formatDate(date) {
-			var formattedDate = ($filter('date')(new Date(date), 'dd-MM-yyyy'));
-			return formattedDate;
+			return ($filter('date')(new Date(date), 'dd-MM-yyyy'));
 		}
-		
-		/**
-		 * Gets the Index of a given element in an array
-		 * @params arrayToSearch
-		 * @params key
-		 * @params valueToSearch
-		 * @returns index || null
-		 * */
-		function findIndexByKeyValue(arrayToSearch, key, valueToSearch) {
-			for (var i = 0; i < arrayToSearch.length; i++) {
-				if (arrayToSearch[i][key] == valueToSearch) {
-					return i;
-				}
-			}
-			return null;
-		}
-		
-		/**
-		 * All message labels used in the UI are defined here
-		 * @returns {{}}
-		 */
-		function addMessageLabels() {
-			var messages = {};
-			return messages;
-		}
-		
 		
 		/**
 		 * Disable and gray-out background when a dialog box opens up.
