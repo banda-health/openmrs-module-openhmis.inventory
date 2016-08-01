@@ -44,7 +44,7 @@
 			EntityRestFactory.loadEntities(requestParams, successCallback, function(error){console.log(error);});
 		}
 
-		function searchReportItems(module_name, q){
+		function searchReportItems(module_name, q) {
 			var requestParams = {};
 			requestParams['has_physical_inventory'] = 'true';
 			requestParams['q'] = q;
@@ -54,7 +54,7 @@
 			return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
 		}
 
-		function getReports(reportIdProperty, successCallback){
+		function getReports(reportIdProperty, successCallback) {
 			var requestParams = [];
 			requestParams['resource'] = MODULE_SETTINGS_URL;
 			requestParams['report'] = reportIdProperty;
