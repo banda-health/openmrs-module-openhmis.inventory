@@ -34,7 +34,7 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select class="form-control" ng-model="StockTakeReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms' autofocus>
+                <select required class="form-control" ng-model="StockTakeReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms' autofocus>
                     <option value="" selected="selected">Select Stockroom</option>
                 </select>
             </li>
@@ -115,7 +115,7 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select  class="form-control" ng-model="stockOperationsByStockroomReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select required  class="form-control" ng-model="stockOperationsByStockroomReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">Select Stockroom</option>
                 </select>
             </li>
@@ -181,7 +181,7 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select class="form-control" ng-model="stockroomUsageReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select required class="form-control" ng-model="stockroomUsageReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">Select Stockroom</option>
                 </select>
             </li>
@@ -230,7 +230,7 @@
         <ul class="table-layout">
             <li><label>Stockroom </label></li>
             <li>
-                <select  class="form-control" id="expiringStock-stockroom" ng-model="expiringStock_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
+                <select class="form-control" id="expiringStock-stockroom" ng-model="expiringStock_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">All Stockrooms</option>
                 </select>
             </li>
