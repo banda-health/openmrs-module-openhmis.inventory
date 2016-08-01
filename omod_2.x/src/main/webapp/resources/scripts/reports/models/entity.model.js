@@ -15,14 +15,11 @@
 
 (function() {
 	'use strict';
-
 	var baseModel = angular.module('app.genericMetadataModel');
 
 	/* Define model fields */
 	function ReportModel(GenericMetadataModel) {
-
 		var extended = angular.extend(GenericMetadataModel, {});
-
 		var defaultFields = extended.getModelFields();
 
 		// @Override
@@ -35,7 +32,5 @@
 	}
 
 	baseModel.factory("ReportModel", ReportModel);
-
 	ReportModel.$inject = ['GenericMetadataModel'];
-
 })();
