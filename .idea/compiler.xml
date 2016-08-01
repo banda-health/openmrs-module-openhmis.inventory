@@ -32,8 +32,6 @@
         <module name="openhmis.commons-omod" />
         <module name="openhmis.inventory-api" />
         <module name="openhmis.inventory-omod" />
-        <module name="openhmis.inventory-omod_1.x" />
-        <module name="openhmis.inventory-omod_2.x" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -45,11 +43,10 @@
       <module name="openhmis.commons" target="1.6" />
       <module name="openhmis.commons-api" target="1.6" />
       <module name="openhmis.commons-omod" target="1.6" />
-      <module name="openhmis.inventory" target="1.5" />
+      <module name="openhmis.inventory" target="1.6" />
       <module name="openhmis.inventory-api" target="1.6" />
       <module name="openhmis.inventory-omod" target="1.6" />
-      <module name="openhmis.inventory-omod_1.x" target="1.6" />
-      <module name="openhmis.inventory-omod_2.x" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>
+
