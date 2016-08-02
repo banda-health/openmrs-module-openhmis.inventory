@@ -66,7 +66,7 @@
 		}
 		
 		function errorCallback(error) {
-			console.log(error);
+			emr.errorAlert(error);
 		}
 	}
 })();

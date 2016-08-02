@@ -109,7 +109,10 @@
 					$scope.stockTakeDetails[index] = newStock;
 				}
 				
-				
+				/*
+				* This loop is to remove any stock that had the actualQuantity updated and before saving changed again to either a value
+				* equal to null or a value equal to the quantity
+				* */
 				for (var i = 0; i < $scope.stockTakeDetails.length; i++) {
 					if ($scope.stockTakeDetails[i].actualQuantity == $scope.stockTakeDetails[i].quantity || $scope.stockTakeDetails[i].actualQuantity == null) {
 						$scope.stockTakeDetails.splice(i, 1);
