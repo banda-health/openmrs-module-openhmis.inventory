@@ -43,7 +43,7 @@
 			});
 
 			$provide.factory('$exceptionHandler', function($injector) {
-				return handleException;
+				return ohmis.handleException;
 			});
 		});
 		return app;

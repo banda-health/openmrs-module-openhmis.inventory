@@ -49,7 +49,7 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function() {
 				$scope.loading = true;
-				if(self.sessionLocation === undefined) {
+				if (self.sessionLocation === undefined) {
 					CommonsRestfulFunctions.getSessionLocation(module_name, self.onLoadSessionLocationSuccessful);
 				}
 
@@ -116,30 +116,30 @@
 				$scope.submitted = false;
 				$scope.loading = false;
 				// validate operation number
-				if(!CreateOperationFunctions.validateOperationNumber($scope)) {
+				if (!CreateOperationFunctions.validateOperationNumber($scope)) {
 					return false;
 				}
 
 				$scope.entity.status = "NEW";
 				$scope.entity.instanceType = $scope.operationType.uuid;
 
-				if($scope.operationDate !== undefined) {
+				if ($scope.operationDate !== undefined) {
 					$scope.entity.operationDate = $scope.operationDate;
 				}
 
-				if($scope.sourceStockroom !== undefined) {
+				if ($scope.sourceStockroom !== undefined) {
 					$scope.entity.source = $scope.sourceStockroom.uuid;
 				}
 
-				if($scope.destinationStockroom !== undefined && $scope.operationType.hasDestination) {
+				if ($scope.destinationStockroom !== undefined && $scope.operationType.hasDestination) {
 					$scope.entity.destination = $scope.destinationStockroom.uuid;
 				}
 
 				// validate institution
-				if($scope.institutionStockroom !== undefined &&
+				if ($scope.institutionStockroom !== undefined &&
 					(($scope.operationType.name === 'Distribution' && $scope.distributionType === 'Institution') ||
 					$scope.operationType.name === 'Return' && $scope.returnOperationType === 'Institution')) {
-					if($scope.institutionStockroom.name !== notDefined.name) {
+					if ($scope.institutionStockroom.name !== notDefined.name) {
 						$scope.entity.institution = $scope.institutionStockroom.uuid;
 					} else {
 						emr.errorAlert("openhmis.inventory.operations.required.institution");
@@ -148,10 +148,10 @@
 				}
 
 				// validate department
-				if($scope.department !== undefined &&
+				if ($scope.department !== undefined &&
 					(($scope.operationType.name === 'Distribution' && $scope.distributionType === 'Department') ||
 					$scope.operationType.name === 'Return' && $scope.returnOperationType === 'Department')) {
-					if($scope.department.name !== notDefined.name) {
+					if ($scope.department.name !== notDefined.name) {
 						$scope.entity.department = $scope.department.uuid;
 					} else {
 						emr.errorAlert("openhmis.inventory.operations.required.department");
@@ -160,18 +160,17 @@
 				}
 
 				// validate selected patient
-				if($scope.entity.institution === "" && $scope.entity.department === "" &&
-					!CreateOperationFunctions.validatePatient($scope)) {
+				if ($scope.entity.institution === "" && $scope.entity.department === "" && !CreateOperationFunctions.validatePatient($scope)) {
 					return false;
 				}
 
 				// validate attribute types
-				if(!CreateOperationFunctions.validateAttributeTypes($scope)) {
+				if (!CreateOperationFunctions.validateAttributeTypes($scope)) {
 					return false;
 				}
 
 				// validate selected line items.
-				if(!CreateOperationFunctions.validateLineItems($scope)) {
+				if (!CreateOperationFunctions.validateLineItems($scope)) {
 					return false;
 				}
 
@@ -193,12 +192,12 @@
 
 		self.changeItemQuantity = self.changeItemQuantity || function(lineItem) {
 				var quantity = lineItem.itemStockQuantity;
-				if(quantity == 0 || ($scope.operationType.name !== 'Adjustment' && quantity <= 0)) {
+				if (quantity == 0 || ($scope.operationType.name !== 'Adjustment' && quantity <= 0)) {
 					emr.errorAlert("openhmis.inventory.operations.error.itemError");
 					lineItem.itemStockQuantity = 1;
 				} else {
 					var newQuantity;
-					if($scope.operationType.name === 'Adjustment' || $scope.operationType.name === 'Receipt') {
+					if ($scope.operationType.name === 'Adjustment' || $scope.operationType.name === 'Receipt') {
 						newQuantity = lineItem.existingQuantity + quantity;
 					} else {
 						newQuantity = lineItem.existingQuantity - quantity;
@@ -214,9 +213,9 @@
 
 		self.warningDialog = self.warningDialog || function(newVal, oldVal, source) {
 				self.loadOperationTypeAttributes();
-				if($scope.lineItems.length > 0) {
+				if ($scope.lineItems.length > 0) {
 					var lineItem = $scope.lineItems[0];
-					if(lineItem.itemStock !== "") {
+					if (lineItem.itemStock !== "") {
 						CreateOperationFunctions.changeWarningDialog($scope, newVal, oldVal, source);
 					}
 				} else {
@@ -226,34 +225,34 @@
 
 		self.addLineItem = self.addLineItem || function() {
 				var addItem = true;
-				for(var i = 0; i < $scope.lineItems.length; i++) {
+				for (var i = 0; i < $scope.lineItems.length; i++) {
 					var lineItem = $scope.lineItems[i];
-					if(!lineItem.selected) {
+					if (!lineItem.selected) {
 						addItem = false;
 						break;
 					}
 				}
-				if(addItem) {
+				if (addItem) {
 					var lineItem = new LineItemModel('', '', 1, '', false);
 					$scope.lineItems.push(lineItem);
 				}
 			}
 
 		self.removeLineItem = self.removeLineItem || function(lineItem) {
-				if(lineItem.selected) {
+				if (lineItem.selected) {
 					var index = $scope.lineItems.indexOf(lineItem);
-					if(index !== -1) {
+					if (index !== -1) {
 						$scope.lineItems.splice(index, 1);
 					}
 
-					if($scope.lineItems.length == 0) {
+					if ($scope.lineItems.length == 0) {
 						self.addLineItem();
 					}
 				}
 			}
 
 		self.searchPatients = self.searchPatients || function(currentPage) {
-				if($scope.patient !== undefined) {
+				if ($scope.patient !== undefined) {
 					$scope.currentPage = $scope.currentPage || currentPage;
 					$scope.patients = CommonsRestfulFunctions.searchPatients(
 						module_name, $scope.patient, $scope.currentPage,
@@ -284,7 +283,7 @@
 				lineItem.setExistingQuantity(0);
 				lineItem.setNewQuantity('');
 				lineItem.setItemStockQuantity(1);
-				if(stockOperationItem !== undefined) {
+				if (stockOperationItem !== undefined) {
 					lineItem.setItemStock(stockOperationItem);
 					lineItem.setItemStockDepartment(stockOperationItem.department);
 					lineItem.setItemStockHasExpiration(stockOperationItem.hasExpiration);
@@ -294,7 +293,7 @@
 
 					self.searchItemStock(stockOperationItem);
 
-					if(lineItem.expirationHasDatePicker) {
+					if (lineItem.expirationHasDatePicker) {
 						CreateOperationFunctions.onChangeDatePicker(self.onLineItemExpDateSuccessfulCallback);
 					}
 
@@ -314,28 +313,28 @@
 			}
 
 		self.searchItemStock = self.searchItemStock || function(stockOperationItem) {
-				if("uuid" in stockOperationItem && $scope.sourceStockroom !== undefined) {
+				if ("uuid" in stockOperationItem && $scope.sourceStockroom !== undefined) {
 					CreateOperationRestfulService.searchItemStock(module_name, stockOperationItem.uuid, $scope.sourceStockroom.uuid,
 						self.onLoadItemStockSuccessful);
 				}
 			}
 
 		self.changeExpiration = self.changeExpiration || function(lineItem) {
-				if(lineItem.itemStockExpirationDate !== 'Auto') {
+				if (lineItem.itemStockExpirationDate !== 'Auto') {
 					var selectedExpiration = lineItem.itemStockExpirationDate;
 					var existingQuantity = 0;
-					if(selectedExpiration === 'None') {
+					if (selectedExpiration === 'None') {
 						selectedExpiration = null;
 					}
-					for(var i = 0; i < lineItem.itemStockDetails.details.length; i++) {
+					for (var i = 0; i < lineItem.itemStockDetails.details.length; i++) {
 						var detail = lineItem.itemStockDetails.details[i];
 						var expiration = detail.expiration;
-						if(expiration !== null) {
+						if (expiration !== null) {
 							expiration = expiration.split("T")[0];
 							expiration = CreateOperationFunctions.formatDate(expiration);
 						}
 
-						if(expiration === selectedExpiration) {
+						if (expiration === selectedExpiration) {
 							existingQuantity += detail.quantity;
 						}
 					}
@@ -349,7 +348,7 @@
 			}
 
 		self.loadOperationTypeAttributes = self.loadOperationTypeAttributes || function() {
-				if($scope.operationType !== undefined) {
+				if ($scope.operationType !== undefined) {
 					CreateOperationRestfulService.loadOperationTypeAttributes(module_name, $scope.operationType.uuid,
 						self.onLoadOperationTypeAttributesSuccessful);
 				}
@@ -358,7 +357,7 @@
 		// callbacks..
 		self.onLoadOpNumGenSuccessful = self.onLoadOpNumGenSuccessful || function(data) {
 				$scope.isOperationNumberGenerated = false;
-				if(data.results && data.results === "true") {
+				if (data.results && data.results === "true") {
 					$scope.isOperationNumberGenerated = true;
 					$scope.entity.operationNumber = GENERATE_OPERATION_NUMBER;
 				}
@@ -366,17 +365,17 @@
 
 		self.onLoadNegativeStockRestrictedSuccessful = self.onLoadNegativeStockRestrictedSuccessful || function(data) {
 				$scope.isNegativeStockRestricted = false;
-				if(data.results && data.results === "true") {
+				if (data.results && data.results === "true") {
 					$scope.isNegativeStockRestricted = true;
 				}
 			}
 
 		self.onLoadOperationTypesSuccessful = self.onLoadOperationTypesSuccessful || function(data) {
 				$scope.operationTypes = data.results;
-				if($scope.operationType === undefined) {
-					for(var i = 0; $scope.operationTypes.length; i++) {
+				if ($scope.operationType === undefined) {
+					for (var i = 0; $scope.operationTypes.length; i++) {
 						var operationType = $scope.operationTypes[i];
-						if(operationType.canProcess) {
+						if (operationType.canProcess) {
 							$scope.operationType = operationType;
 							break;
 						}
@@ -394,16 +393,16 @@
 				$scope.destinationStockroom = $scope.destinationStockroom || $scope.destinationStockrooms[0]
 
 				$scope.sourceStockrooms = stockrooms;
-				if(self.sessionLocation !== undefined && $scope.sourceStockroom === undefined) {
-					for(var i = 0; i < $scope.sourceStockrooms.length; i++) {
+				if (self.sessionLocation !== undefined && $scope.sourceStockroom === undefined) {
+					for (var i = 0; i < $scope.sourceStockrooms.length; i++) {
 						var stockroom = $scope.sourceStockrooms[i];
-						if(stockroom !== undefined && stockroom.name === self.sessionLocation) {
+						if (stockroom !== undefined && stockroom.name === self.sessionLocation) {
 							$scope.sourceStockroom = stockroom;
 						}
 					}
 				}
 
-				if($scope.sourceStockroom !== undefined) {
+				if ($scope.sourceStockroom !== undefined) {
 					self.warningDialog();
 				}
 
@@ -426,11 +425,11 @@
 		self.onLoadOperationTypeAttributesSuccessful = self.onLoadOperationTypeAttributesSuccessful || function(data) {
 				var results = data;
 				$scope.fieldAttributesData = [];
-				if("attributeTypes" in results) {
+				if ("attributeTypes" in results) {
 					$scope.attributeTypeAttributes = results.attributeTypes;
 					$scope.attributes = {};
-					if($scope.attributeTypeAttributes != null && $scope.attributeTypeAttributes.length > 0) {
-						for(var i = 0; i < $scope.attributeTypeAttributes.length; i++) {
+					if ($scope.attributeTypeAttributes != null && $scope.attributeTypeAttributes.length > 0) {
+						for (var i = 0; i < $scope.attributeTypeAttributes.length; i++) {
 							var attribute = {
 								attributeType: $scope.attributeTypeAttributes[i].uuid,
 								value: "",
@@ -456,7 +455,7 @@
 				var itemStockExpirationDates = CreateOperationFunctions.createExpirationDates(itemStocks);
 				$scope.lineItem.setItemStockExpirationDate(itemStockExpirationDates[0]);
 				$scope.lineItem.setExpirationDates(itemStockExpirationDates);
-				if(itemStocks[0] !== null) {
+				if (itemStocks[0] !== null) {
 					$scope.lineItem.setItemStockDetails(itemStocks[0]);
 					$scope.lineItem.setExistingQuantity(itemStocks[0].quantity);
 					self.changeItemQuantity($scope.lineItem);
@@ -469,7 +468,7 @@
 
 		self.onOperationDateSuccessfulCallback = self.onOperationDateSuccessfulCallback || function(date) {
 				$scope.operationOccurDate = undefined;
-				if(date !== undefined) {
+				if (date !== undefined) {
 					var operationDate = CreateOperationFunctions.formatDate(new Date(date));
 					self.loadStockOperations(operationDate);
 				}

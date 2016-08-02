@@ -85,7 +85,7 @@
 		}
 
 		function loadOperationTypeAttributes(module_name, uuid, onLoadAttributeTypesSuccessful) {
-			if(uuid !== undefined) {
+			if (uuid !== undefined) {
 				setBaseUrl(module_name);
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'stockOperationType/' + uuid;
@@ -95,7 +95,7 @@
 		}
 
 		function loadStockOperations(module_name, operation_date, onLoadStockOperationSuccessful) {
-			if(operation_date !== undefined) {
+			if (operation_date !== undefined) {
 				setBaseUrl(module_name);
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'stockOperation';
@@ -124,7 +124,7 @@
 		}
 
 		function searchItemStock(module_name, item_uuid, stockroom_uuid, onLoadItemStockSuccessful) {
-			if(angular.isDefined(item_uuid) && angular.isDefined(stockroom_uuid)) {
+			if (angular.isDefined(item_uuid) && angular.isDefined(stockroom_uuid)) {
 				setBaseUrl(module_name);
 				var requestParams = [];
 				requestParams['rest_entity_name'] = 'itemStock';
@@ -151,7 +151,7 @@
 		}
 
 		function errorCallback(error) {
-			console.log(error);
+			emr.emrMessage(error);
 		}
 	}
 })();

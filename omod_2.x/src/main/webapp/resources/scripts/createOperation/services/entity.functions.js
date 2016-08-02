@@ -46,7 +46,7 @@
 
 		function formatDate(date, includeTime) {
 			var format = 'dd-MM-yyyy';
-			if(includeTime) {
+			if (includeTime) {
 				format += ' HH:mm';
 			}
 			return ($filter('date')(new Date(date), format));
@@ -59,7 +59,7 @@
 
 		function onChangeDatePicker(successfulCallback, id) {
 			var picker;
-			if(id !== undefined) {
+			if (id !== undefined) {
 				picker = angular.element(document.getElementById(id));
 				picker.bind('keyup change select', function() {
 					var input = this.value;
@@ -67,9 +67,9 @@
 				});
 			} else {
 				var elements = angular.element(document.getElementsByTagName("input"));
-				for(var i = 0; i < elements.length; i++) {
+				for (var i = 0; i < elements.length; i++) {
 					var element = elements[i];
-					if(element.id.indexOf("display") > -1) {
+					if (element.id.indexOf("display") > -1) {
 						picker = angular.element(element);
 						picker.bind('keyup change select', function() {
 							successfulCallback(this.value);
@@ -85,7 +85,7 @@
 				actions: {
 					confirm: function() {
 						var operationDate = angular.element(document.getElementById('operationDateId-field'))[0].value;
-						if($scope.operationOccurDate !== undefined) {
+						if ($scope.operationOccurDate !== undefined) {
 							var time = $scope.operationOccurDate.time;
 							operationDate += ', ' + time;
 							$scope.operationDate = formatDate(new Date(operationDate), true);
@@ -111,11 +111,11 @@
 		 * @param $scope
 		 */
 		function changeWarningDialog($scope, newVal, oldVal, source) {
-			if(source === 'operationType') {
+			if (source === 'operationType') {
 				$scope.operationType = JSON.parse(oldVal);
 				$scope.warningTitle = emr.message('openhmis.inventory.operations.confirm.title.operationTypeChange');
 				$scope.warningMessage = emr.message('openhmis.inventory.operations.confirm.operationTypeChange');
-			} else if(source === 'stockroom') {
+			} else if (source === 'stockroom') {
 				$scope.sourceStockroom = JSON.parse(oldVal);
 				$scope.warningTitle = emr.message('openhmis.inventory.operations.confirm.title.sourceStockroomChange');
 				$scope.warningMessage = emr.message('openhmis.inventory.operations.confirm.sourceStockroomChange');
@@ -125,16 +125,16 @@
 				selector: '#warning-dialog',
 				actions: {
 					confirm: function() {
-						if(source === 'operationType') {
+						if (source === 'operationType') {
 							$scope.operationType = newVal;
-						} else if(source === 'stockroom') {
+						} else if (source === 'stockroom') {
 							$scope.sourceStockroom = newVal;
 						}
 
 						$scope.lineItems = [];
 						$scope.addLineItem();
 
-						if(source === 'operationType') {
+						if (source === 'operationType') {
 							$scope.loadOperationTypeAttributes();
 						}
 
@@ -162,14 +162,14 @@
 			var itemStockExpirationDates = [];
 			//create expiration date drop-down
 			itemStockExpirationDates.push("Auto");
-			if(itemStocks !== null && itemStocks.length > 0) {
+			if (itemStocks !== null && itemStocks.length > 0) {
 				var itemStock = itemStocks[0];
-				if(itemStock !== null && "details" in itemStock) {
+				if (itemStock !== null && "details" in itemStock) {
 					var nullExpiration = false;
-					for(var i = 0; i < itemStock.details.length; i++) {
+					for (var i = 0; i < itemStock.details.length; i++) {
 						var detail = itemStock.details[i];
 						var expiration = detail.expiration;
-						if(expiration !== null) {
+						if (expiration !== null) {
 							expiration = expiration.split("T")[0];
 							expiration = formatDate(expiration);
 						} else {
@@ -177,11 +177,11 @@
 							continue;
 						}
 
-						if(itemStockExpirationDates.indexOf(expiration) === -1) {
+						if (itemStockExpirationDates.indexOf(expiration) === -1) {
 							itemStockExpirationDates.push(expiration);
 						}
 					}
-					if(nullExpiration) {
+					if (nullExpiration) {
 						itemStockExpirationDates.push("None");
 					}
 				}
@@ -191,21 +191,21 @@
 
 		function showOperationItemsSection($scope) {
 			var operationType = $scope.operationType;
-			if(operationType === undefined) {
+			if (operationType === undefined) {
 				return false;
-			} else if(operationType.hasRecipient && !operationType.hasSource && !operationType.hasDestination) {
+			} else if (operationType.hasRecipient && !operationType.hasSource && !operationType.hasDestination) {
 				return true;
-			} else if(operationType.hasSource && operationType.hasDestination) {
-				if($scope.sourceStockroom.name !== NOT_DEFINED && $scope.destinationStockroom.name !== NOT_DEFINED) {
+			} else if (operationType.hasSource && operationType.hasDestination) {
+				if ($scope.sourceStockroom.name !== NOT_DEFINED && $scope.destinationStockroom.name !== NOT_DEFINED) {
 					return true;
 				}
-			} else if(operationType.hasSource || operationType.hasDestination) {
-				if(operationType.hasSource) {
-					if($scope.sourceStockroom !== undefined && $scope.sourceStockroom.name !== NOT_DEFINED) {
+			} else if (operationType.hasSource || operationType.hasDestination) {
+				if (operationType.hasSource) {
+					if ($scope.sourceStockroom !== undefined && $scope.sourceStockroom.name !== NOT_DEFINED) {
 						return true;
 					}
 				} else {
-					if((operationType.hasDestination && $scope.destinationStockroom.name !== NOT_DEFINED)) {
+					if ((operationType.hasDestination && $scope.destinationStockroom.name !== NOT_DEFINED)) {
 						return true;
 					}
 				}
@@ -214,8 +214,8 @@
 		}
 
 		function checkDatePickerExpirationSection(lineItem, $scope) {
-			if(lineItem !== undefined && lineItem.itemStockHasExpiration) {
-				if($scope.operationType.name === 'Receipt' || $scope.operationType.name === 'Return') {
+			if (lineItem !== undefined && lineItem.itemStockHasExpiration) {
+				if ($scope.operationType.name === 'Receipt' || $scope.operationType.name === 'Return') {
 					lineItem.setExpirationHasDatePicker(true);
 				}
 			}
@@ -224,7 +224,7 @@
 		function validateAttributeTypes($scope) {
 			// validate attribute types
 			var requestAttributeTypes = [];
-			if(EntityFunctions.validateAttributeTypes($scope.attributeTypeAttributes, $scope.attributes, requestAttributeTypes)) {
+			if (EntityFunctions.validateAttributeTypes($scope.attributeTypeAttributes, $scope.attributes, requestAttributeTypes)) {
 				$scope.entity.attributes = requestAttributeTypes;
 				return true;
 			}
@@ -234,12 +234,12 @@
 		}
 
 		function validateOperationLineItems(lineItems, validatedItems) {
-			if(lineItems !== undefined) {
+			if (lineItems !== undefined) {
 				var failed = false;
-				for(var i = 0; i < lineItems.length; i++) {
+				for (var i = 0; i < lineItems.length; i++) {
 					var lineItem = lineItems[i];
-					if(lineItem.selected) {
-						if(lineItem.itemStock.name === undefined) {
+					if (lineItem.selected) {
+						if (lineItem.itemStock.name === undefined) {
 							var errorMessage =
 								emr.message("openhmis.inventory.operations.error.invalidItem") + " - " + lineItem.itemStock.toString();
 							emr.errorAlert(errorMessage);
@@ -251,13 +251,13 @@
 						var calculatedExpiration;
 						var dateNotRequired = true;
 						var expiration = lineItem.itemStockExpirationDate;
-						if(lineItem.itemStockHasExpiration) {
-							if(expiration === undefined || expiration === "") {
+						if (lineItem.itemStockHasExpiration) {
+							if (expiration === undefined || expiration === "") {
 								dateNotRequired = false;
-							} else if(expiration === 'None') {
+							} else if (expiration === 'None') {
 								calculatedExpiration = false;
 								expiration = undefined;
-							} else if(expiration === 'Auto') {
+							} else if (expiration === 'Auto') {
 								calculatedExpiration = true;
 								expiration = undefined;
 							} else {
@@ -268,14 +268,14 @@
 							expiration = undefined;
 						}
 
-						if(dateNotRequired) {
+						if (dateNotRequired) {
 							var item = {
 								calculatedExpiration: calculatedExpiration,
 								item: lineItem.itemStock.uuid,
 								quantity: lineItem.itemStockQuantity,
 							};
 
-							if(expiration !== undefined) {
+							if (expiration !== undefined) {
 								item['expiration'] = expiration;
 							}
 
@@ -285,7 +285,7 @@
 							failed = true;
 							continue;
 						}
-					} else if(lineItem.itemStock !== "") {
+					} else if (lineItem.itemStock !== "") {
 						var errorMessage =
 							emr.message("openhmis.inventory.operations.error.invalidItem") + " - " + lineItem.itemStock.toString();
 						emr.errorAlert(errorMessage);
@@ -295,9 +295,9 @@
 				}
 			}
 
-			if(validatedItems.length == 0 && !failed) {
+			if (validatedItems.length == 0 && !failed) {
 				emr.errorAlert("openhmis.inventory.operations.error.itemQuantity");
-			} else if(validatedItems.length > 0 && !failed) {
+			} else if (validatedItems.length > 0 && !failed) {
 				return true;
 			}
 
@@ -306,7 +306,7 @@
 
 		function validateLineItems($scope) {
 			var validatedItems = [];
-			if(validateOperationLineItems($scope.lineItems, validatedItems)) {
+			if (validateOperationLineItems($scope.lineItems, validatedItems)) {
 				$scope.entity.items = validatedItems;
 				return true;
 			}
@@ -317,8 +317,8 @@
 
 		// validate patient
 		function validatePatient($scope) {
-			if($scope.operationType.hasRecipient) {
-				if($scope.selectedPatient !== '') {
+			if ($scope.operationType.hasRecipient) {
+				if ($scope.selectedPatient !== '') {
 					$scope.entity.patient = $scope.selectedPatient.uuid;
 					$scope.entity.destination = '';
 					$scope.entity.institution = '';
@@ -334,7 +334,7 @@
 
 		// validate operation number
 		function validateOperationNumber($scope) {
-			if($scope.entity.operationNumber === undefined ||
+			if ($scope.entity.operationNumber === undefined ||
 				$scope.entity.operationNumber === '') {
 				$scope.submitted = true;
 				emr.errorAlert("openhmis.inventory.operations.error.number");
@@ -345,9 +345,9 @@
 
 		function populateOccurDates($scope, operations) {
 			$scope.operationOccurs = [];
-			if(operations !== null && operations.length > 0) {
+			if (operations !== null && operations.length > 0) {
 				var tempDate;
-				for(var i = 0; i < operations.length; i++) {
+				for (var i = 0; i < operations.length; i++) {
 					var operation = operations[i];
 					var operationDate = new Date(operation.operationDate);
 					var display = formatTime(new Date(operationDate));
@@ -361,7 +361,7 @@
 					tempDate = display;
 				}
 
-				if($scope.operationOccurs.length > 0) {
+				if ($scope.operationOccurs.length > 0) {
 					var operationDate = {};
 					operationDate['time'] = tempDate;
 					operationDate['name'] = emr.message("openhmis.inventory.operations.afterLastOperation");
