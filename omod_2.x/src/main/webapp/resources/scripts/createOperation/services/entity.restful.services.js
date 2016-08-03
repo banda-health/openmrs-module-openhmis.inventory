@@ -151,7 +151,7 @@
 		}
 
 		function errorCallback(error) {
-			emr.emrMessage(error);
+			emr.errorAlert(error);
 		}
 	}
 })();
