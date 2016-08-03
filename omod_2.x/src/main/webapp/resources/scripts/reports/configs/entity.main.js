@@ -18,14 +18,11 @@ requirejs(['reports/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
-emr.loadMessages([
-	"openhmis.inventory.report.rest_name",
-	"openhmis.inventory.item.enterItemSearch",
-	"openhmis.inventory.item.name",
-	"openhmis.inventory.admin.reports",
-	"openhmis.inventory.report.error.stockroomRequired",
-	"openhmis.inventory.report.error.itemRequired",
-	"openhmis.inventory.report.error.beginDateRequired",
-	"openhmis.inventory.report.error.endDateRequired",
-	"openhmis.inventory.report.error.expiryDateRequired",
-]);
+emr.loadMessages(["openhmis.inventory.report.rest_name",
+		"openhmis.inventory.item.enterItemSearch",
+		"openhmis.inventory.item.name", "openhmis.inventory.admin.reports",
+		"openhmis.inventory.report.error.stockroomRequired",
+		"openhmis.inventory.report.error.itemRequired",
+		"openhmis.inventory.report.error.beginDateRequired",
+		"openhmis.inventory.report.error.endDateRequired",
+		"openhmis.inventory.report.error.expiryDateRequired", ]);

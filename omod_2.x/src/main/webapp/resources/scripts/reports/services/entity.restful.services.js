@@ -17,7 +17,7 @@
 	'use strict';
 
 	angular.module('app.restfulServices').service('ReportRestfulService',
-		ReportRestfulService);
+			ReportRestfulService);
 
 	ReportRestfulService.$inject = ['EntityRestFactory'];
 
@@ -27,9 +27,9 @@
 	function ReportRestfulService(EntityRestFactory) {
 		var service;
 		service = {
-			loadStockRooms: loadStockRooms,
-			searchReportItems: searchReportItems,
-			getReports: getReports
+			loadStockRooms : loadStockRooms,
+			searchReportItems : searchReportItems,
+			getReports : getReports
 		};
 		return service;
 
@@ -41,7 +41,10 @@
 		function loadStockRooms(rest_entity_name, successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = rest_entity_name;
-			EntityRestFactory.loadEntities(requestParams, successCallback, function(error){console.log(error);});
+			EntityRestFactory.loadEntities(requestParams, successCallback,
+					function(error) {
+						console.log(error);
+					});
 		}
 
 		function searchReportItems(module_name, q) {
@@ -51,7 +54,8 @@
 			requestParams['limit'] = 10;
 			requestParams['startIndex'] = 1;
 
-			return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
+			return EntityRestFactory.autocompleteSearch(requestParams, 'item',
+					module_name);
 		}
 
 		function getReports(reportIdProperty, successCallback) {
@@ -60,7 +64,10 @@
 			requestParams['report'] = reportIdProperty;
 
 			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
-			EntityRestFactory.loadResults(requestParams, successCallback, function(error){console.log(error)});
+			EntityRestFactory.loadResults(requestParams, successCallback,
+					function(error) {
+						console.log(error)
+					});
 		}
 	}
 })();

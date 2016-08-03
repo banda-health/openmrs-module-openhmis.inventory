@@ -13,7 +13,7 @@
  *
  */
 
-(function () {
+(function() {
 	'use strict';
 
 	var app = angular.module('app.reportsFunctionsFactory', []);
@@ -24,7 +24,7 @@
 	function ReportsFunctions($filter) {
 		var service;
 		service = {
-			formatDate: formatDate,
+			formatDate : formatDate,
 			onChangeDatePicker : onChangeDatePicker
 		};
 
@@ -32,10 +32,9 @@
 			return $filter('date')(new Date(date), "dd-MM-yyyy");
 		}
 
-
 		function onChangeDatePicker(id, successfulCallback) {
 			var datePicker = angular.element(document.getElementById(id));
-			datePicker.bind('keyup change select checked', function () {
+			datePicker.bind('keyup change select checked', function() {
 				var input = this.value;
 				successfulCallback(input);
 			});

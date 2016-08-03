@@ -13,7 +13,6 @@
  *
  */
 
-
 (function() {
 	define([], loadpage);
 
@@ -22,9 +21,8 @@
 		var app = angular.module('entitiesApp', ['ui.bootstrap', 'ngDialog',
 				'ui.router', 'angularUtils.directives.dirPagination',
 				'app.css', 'app.filters', 'app.pagination', 'app.cookies',
-				'app.reportsFunctionsFactory',
-				'app.genericMetadataModel', 'app.restfulServices',
-				'app.genericEntityController']);
+				'app.reportsFunctionsFactory', 'app.genericMetadataModel',
+				'app.restfulServices', 'app.genericEntityController']);
 		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 
 			$urlRouterProvider.otherwise('/');
