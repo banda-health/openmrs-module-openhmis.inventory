@@ -80,6 +80,12 @@ form.search select {
     min-width: 0px;
 }
 
+fieldset.createOperation{
+    min-width: 100%;
+    margin: 0 0px;
+    border: 0px;
+}
+
 fieldset.search {
     min-width: 0px;
     width: 100%;
@@ -161,7 +167,146 @@ input.non-editable {
 }
 
 #operationTypesTable th:first-child, td:first-child {
-    width: 20%;
+    width: 30%;
+}
+ul.table-layout .gray-button{
+    background: #666666;
+    border-color: #666666;
+    color: white;
+}
+ul.table-layout{
+    margin: 0px;
+}
+table.operation-date{
+    width:440px;
+    height:200px;
+    border-style: hidden;
+}
+table.operation-date tr{
+    border: 0px;
+}
+table.operation-date td{
+    vertical-align: baseline;
+    border: 0px;
+}
+table.operation-date td:first-child{
+    width: 30%;
+}
+table.operation-date td:nth-child(2){
+    width: 60%;
+}
+table.operation-date td select{
+    width:235px;
+}
+table.operation-date td select option{
+    font-size: 0.9em;
+}
+table.operation-date tr:nth-child(even){
+    background:none;
+}
+.negative-quantity{
+    /*background: #FEFE22;*/
+    background: lightyellow;
+}
+
+fieldset.nested{
+    width:100%;
+}
+
+table.line-item tr:first-child{
+    width: 1%;
+}
+
+table.line-item tr:nth-child(even){
+    background: none;
+}
+
+table.item-details{
+    width: 100%;
+    margin: 5px 0px;
+}
+
+table.item-details td{
+    line-height: 1px;
+    font-size: 0.9em;
+    border: 0px;
+}
+
+table.item-details tr{
+    border: 0px;
+}
+
+table.item-details td input{
+    min-width: 0px;
+}
+
+table.line-item .autocomplete-search{
+    width: 380px;
+}
+table.icons{
+    width:50px;
+    background-color:inherit;
+}
+table.icons td:first-child{
+    width:5px;
+}
+table.icons tr{
+    border: 0px;
+}
+table.icons td{
+    border: 0px;
+    padding: 0px 4px;
+    vertical-align: middle;
+}
+table.icons td input{
+    padding: 0px 0px;
+    margin-top: 0px;
+}
+table.icons td:first-child{
+    width: 1%;
+}
+
+table.item-details td:first-child{
+    width: 1%;
+}
+table.item-details td:nth-child(2){
+    width: 1%;
+}
+table.item-details td:nth-child(3){
+    width: 5%;
+}
+table.item-details td:nth-child(4){
+    width: 1%;
+}
+table.item-details td:nth-child(5){
+}
+table.item-details td input[type="image"]{
+    min-width:0;
+    border: 1px solid transparent;
+    background-color: transparent;
+}
+.recent-lozenge {
+    vertical-align: text-top;
+    padding: 1px 2px;
+    border-radius: 4px;
+}
+.create-operation-content{
+    font-size: inherit;
+}
+.loading-msg{
+    margin: 200px;
+}
+.loading-img{
+    margin: 150px;
+}
+.input-quantity{
+    width: 60px;
+}
+fieldset.nested .line-item select {
+    width: 100px;
+}
+table.item-details td.existing-quantity{
+    font-size:11px;
 }
 
 #stockTakeTable table td {
