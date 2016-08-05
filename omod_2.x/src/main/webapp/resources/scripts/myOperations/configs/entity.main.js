@@ -78,5 +78,6 @@ emr.loadMessages([
     "openhmis.commons.general.completeOperation",
     "openhmis.commons.general.cancelOperation",
     "openhmis.commons.general.cancelReason",
-    "openhmis.commons.general.postSearchMessage"
+    "openhmis.commons.general.postSearchMessage",
+    "openhmis.commons.general.status",
 ]);
