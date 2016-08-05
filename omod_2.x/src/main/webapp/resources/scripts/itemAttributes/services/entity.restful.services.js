@@ -34,14 +34,15 @@
             requestParams['resource'] = 'fieldgenhandlers.json';
             EntityRestFactory.setCustomBaseUrl('/' + OPENMRS_CONTEXT_PATH + '/');
             EntityRestFactory.loadResults(requestParams,
-                onLoadFormatFieldsSuccessful,
-                function(error){
-                    console.log(error);
-                }
+                onLoadFormatFieldsSuccessful,errorCallback
             );
             //reset base url..
             EntityRestFactory.setBaseUrl(module_name);
         }
+	
+	    function errorCallback(error) {
+		    emr.errorAlert(error);
+	    }
 
     }
 })();
