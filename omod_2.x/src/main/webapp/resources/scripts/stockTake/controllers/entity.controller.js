@@ -102,8 +102,9 @@
 			}
 		
 		self.getNewStock = self.getNewStock || function (newStock) {
-				var index = EntityFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", newStock.id);
-				if (index == null) {
+				console.log($scope.stockTakeDetails);
+				var index = EntityFunctions.findIndexByKeyValue($scope.stockTakeDetails,newStock.id);
+				if (index < 0 ) {
 					$scope.stockTakeDetails.push(newStock);
 				} else {
 					$scope.stockTakeDetails[index] = newStock;
@@ -151,8 +152,8 @@
 				
 				for (var i = 0; i < $scope.fetchedEntities.length; i++) {
 					$scope.fetchedEntities[i].id = $scope.fetchedEntities[i].item.uuid + "_" + $scope.fetchedEntities[i].expiration;
-					var index = EntityFunctions.findIndexByKeyValue($scope.stockTakeDetails, "id", $scope.fetchedEntities[i].id);
-					if (index != null) {
+					var index = EntityFunctions.findIndexByKeyValue($scope.stockTakeDetails,$scope.fetchedEntities[i].id);
+					if (index > -1) {
 						$scope.fetchedEntities[i].actualQuantity = $scope.stockTakeDetails[index].actualQuantity;
 					}
 				}
