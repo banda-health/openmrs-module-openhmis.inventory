@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Set;
 
 /**
- * Created by dubdabasoduba on 21/01/2016.
+ * Controller to manage the Inventory Role Creation page.
  */
 @Controller
 @RequestMapping(ModuleWebConstants.ROLE_CREATION_2X_ROOT)

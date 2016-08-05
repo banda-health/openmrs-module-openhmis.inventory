@@ -153,7 +153,7 @@
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 				"type": "link",
 				"label": "Stock Take",
-				"url": "module/openhmis/inventory/inventory.form",
+				"url": "openhmis.inventory/stockTake/entities.page",
 				"icon": "icon-list-alt",
 				"requiredPrivilege": "Task: Access Stock Take"
 			},
