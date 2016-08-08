@@ -17,28 +17,23 @@
 
 	var base = angular.module('app.genericEntityController');
 	base.controller("ReportController", ReportController);
-	ReportController.$inject = ['$stateParams', '$injector', '$scope',
-			'$filter', 'ReportModel', 'ReportRestfulService',
-			'ReportsFunctions', 'EntityRestFactory'];
+	ReportController.$inject = [ '$stateParams', '$injector', '$scope', '$filter', 'ReportModel', 'ReportRestfulService',
+			'ReportsFunctions', 'EntityRestFactory' ];
 
-	function ReportController($stateParams, $injector, $scope, $filter,
-			ReportModel, ReportRestfulService, ReportsFunctions,
-			EntityRestFactory) {
+	function ReportController($stateParams, $injector, $scope, $filter, ReportModel, ReportRestfulService,
+			ReportsFunctions, EntityRestFactory) {
 
 		var self = this;
 
 		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.report.name";
 		var cancel_page = 'entity.page';
-		var rest_entity_name = emr
-				.message("openhmis.inventory.report.rest_name");
+		var rest_entity_name = emr.message("openhmis.inventory.report.rest_name");
 
 		// @Override
-		self.setRequiredInitParameters = self.setRequiredInitParameters
-				|| function() {
-					self.bindBaseParameters(module_name, rest_entity_name,
-							entity_name_message_key, cancel_page);
-				}
+		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
+			self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+		}
 
 		/**
 		 * Initializes and binds any required variable and/or function specific
@@ -47,98 +42,68 @@
 		 * @type {Function}
 		 */
 		// @Override
-		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
-				|| function(uuid) {
-					/* bind variables.. */
-					self.loadStockRooms();
+		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function(uuid) {
+			/* bind variables.. */
+			self.loadStockRooms();
 
-					$scope.searchReportItems = self.searchReportItems;
+			$scope.searchReportItems = self.searchReportItems;
 
-					// Load in the 5 reports from their string names in
-					// ModuleSettings.java
-					ReportRestfulService.getReport(
-							"openhmis.inventory.reports.stockTake", function(
-									data) {
-								$scope.stockTakeReport = data;
-							});
-					ReportRestfulService.getReport(
-							"openhmis.inventory.reports.stockroom", function(
-									data) {
-								$scope.stockroomUsageReport = data;
-							});
-					ReportRestfulService.getReport(
-							"openhmis.inventory.reports.stockCard", function(
-									data) {
-								$scope.stockCardReport = data;
-							});
-					ReportRestfulService
-							.getReport(
-									"openhmis.inventory.reports.stockOperationsByStockroom",
-									function(data) {
-										$scope.stockOperationsByStockroomReport = data;
-									});
-					ReportRestfulService.getReport(
-							"openhmis.inventory.reports.expiringStock",
-							function(data) {
-								$scope.expiringStockReport = data;
-							});
+			// Load in the 5 reports from their string names in
+			// ModuleSettings.java
+			ReportRestfulService.getReport("openhmis.inventory.reports.stockTake", function(data) {
+				$scope.stockTakeReport = data;
+			});
+			ReportRestfulService.getReport("openhmis.inventory.reports.stockroom", function(data) {
+				$scope.stockroomUsageReport = data;
+			});
+			ReportRestfulService.getReport("openhmis.inventory.reports.stockCard", function(data) {
+				$scope.stockCardReport = data;
+			});
+			ReportRestfulService.getReport("openhmis.inventory.reports.stockOperationsByStockroom", function(data) {
+				$scope.stockOperationsByStockroomReport = data;
+			});
+			ReportRestfulService.getReport("openhmis.inventory.reports.expiringStock", function(data) {
+				$scope.expiringStockReport = data;
+			});
 
-					// Set change listeners for all datepickers used in
-					// reports/entity.page
-					ReportsFunctions.onChangeDatePicker(
-							'stockCardReport_beginDate-display',
-							function(value) {
-								$scope.stockCardReport_beginDate = value;
-							});
-					ReportsFunctions.onChangeDatePicker(
-							'stockCardReport_endDate-display', function(value) {
-								$scope.stockCardReport_endDate = value;
-							});
-					ReportsFunctions
-							.onChangeDatePicker(
-									'stockOperationsByStockroomReport_beginDate-display',
-									function(value) {
-										$scope.stockOperationsByStockroomReport_beginDate = value;
-									});
-					ReportsFunctions
-							.onChangeDatePicker(
-									'stockOperationsByStockroomReport_endDate-display',
-									function(value) {
-										$scope.stockOperationsByStockroomReport_endDate = value;
-									});
-					ReportsFunctions.onChangeDatePicker(
-							'stockroomUsage_beginDate-display',
-							function(value) {
-								$scope.stockroomUsageReport_beginDate = value;
-							});
-					ReportsFunctions.onChangeDatePicker(
-							'stockroomUsage_endDate-display', function(value) {
-								$scope.stockroomUsageReport_endDate = value;
-							});
-					ReportsFunctions.onChangeDatePicker(
-							'expiringStock_expiresByDate-display', function(
-									value) {
-								$scope.expiringStock_expiresByDate = value;
-							});
-				}
+			// Set change listeners for all datepickers used in
+			// reports/entity.page
+			ReportsFunctions.onChangeDatePicker('stockCardReport_beginDate-display', function(value) {
+				$scope.stockCardReport_beginDate = value;
+			});
+			ReportsFunctions.onChangeDatePicker('stockCardReport_endDate-display', function(value) {
+				$scope.stockCardReport_endDate = value;
+			});
+			ReportsFunctions.onChangeDatePicker('stockOperationsByStockroomReport_beginDate-display', function(value) {
+				$scope.stockOperationsByStockroomReport_beginDate = value;
+			});
+			ReportsFunctions.onChangeDatePicker('stockOperationsByStockroomReport_endDate-display', function(value) {
+				$scope.stockOperationsByStockroomReport_endDate = value;
+			});
+			ReportsFunctions.onChangeDatePicker('stockroomUsage_beginDate-display', function(value) {
+				$scope.stockroomUsageReport_beginDate = value;
+			});
+			ReportsFunctions.onChangeDatePicker('stockroomUsage_endDate-display', function(value) {
+				$scope.stockroomUsageReport_endDate = value;
+			});
+			ReportsFunctions.onChangeDatePicker('expiringStock_expiresByDate-display', function(value) {
+				$scope.expiringStock_expiresByDate = value;
+			});
+		}
 
-		self.loadStockRooms = self.loadStockRooms
-				|| function() {
-					ReportRestfulService.loadStockRooms("stockroom",
-							self.onLoadStockRoomSuccessful);
-				}
-		self.onLoadStockRoomSuccessful = self.onLoadStockRoomSuccessful
-				|| function(data) {
-					$scope.stockrooms = data.results;
-				}
+		self.loadStockRooms = self.loadStockRooms || function() {
+			ReportRestfulService.loadStockRooms("stockroom", self.onLoadStockRoomSuccessful);
+		}
+		self.onLoadStockRoomSuccessful = self.onLoadStockRoomSuccessful || function(data) {
+			$scope.stockrooms = data.results;
+		}
 		self.searchReportItems = self.searchReportItems || function(search) {
 			$scope.operationItem = {};
 			return ReportRestfulService.searchReportItems(module_name, search);
 		}
 
 		function printReport(reportId, parameters) {
-			var url = "/" + OPENMRS_CONTEXT_PATH
-					+ "/module/openhmis/inventory/jasperReport.form?";
+			var url = "/" + OPENMRS_CONTEXT_PATH + "/module/openhmis/inventory/jasperReport.form?";
 			url += "reportId=" + reportId + "&" + parameters;
 			window.open(url, "pdfDownload");
 
@@ -152,43 +117,38 @@
 				var value = parameterObject[objectKeys[i]];
 
 				switch (name) {
-					case "stockroom" :
-						if (!value) {
-							emr
-									.errorAlert('openhmis.inventory.report.error.stockroomRequired');
-							return false;
-						}
-						break;
-					case "item" :
-						if (!value) {
-							emr
-									.errorAlert('openhmis.inventory.report.error.itemRequired');
-							return false;
-						}
-						break;
-					case "beginDate" :
-						if (!value) {
-							emr
-									.errorAlert('openhmis.inventory.report.error.beginDateRequired');
-							return false;
-						}
-						break;
-					case "endDate" :
-						if (!value) {
-							emr
-									.errorAlert('openhmis.inventory.report.error.endDateRequired');
-							return false;
-						}
-						break;
-					case "expiryDate" :
-						if (!value) {
-							emr
-									.errorAlert('openhmis.inventory.report.error.expiryDateRequired');
-							return false;
-						}
-						break;
-					default :
+				case "stockroom":
+					if (!value) {
+						emr.errorAlert('openhmis.inventory.report.error.stockroomRequired');
 						return false;
+					}
+					break;
+				case "item":
+					if (!value) {
+						emr.errorAlert('openhmis.inventory.report.error.itemRequired');
+						return false;
+					}
+					break;
+				case "beginDate":
+					if (!value) {
+						emr.errorAlert('openhmis.inventory.report.error.beginDateRequired');
+						return false;
+					}
+					break;
+				case "endDate":
+					if (!value) {
+						emr.errorAlert('openhmis.inventory.report.error.endDateRequired');
+						return false;
+					}
+					break;
+				case "expiryDate":
+					if (!value) {
+						emr.errorAlert('openhmis.inventory.report.error.expiryDateRequired');
+						return false;
+					}
+					break;
+				default:
+					return false;
 				}
 			}
 			return true;
@@ -231,9 +191,8 @@
 
 			if (parametersAreValid) {
 				var reportId = $scope.stockCardReport.reportId;
-				var parameters = "itemUuid=" + item.uuid + "&beginDate="
-						+ ReportsFunctions.formatDate(beginDate) + "&endDate="
-						+ ReportsFunctions.formatDate(endDate);
+				var parameters = "itemUuid=" + item.uuid + "&beginDate=" + ReportsFunctions.formatDate(beginDate)
+						+ "&endDate=" + ReportsFunctions.formatDate(endDate);
 
 				return printReport(reportId, parameters);
 			}
@@ -253,10 +212,8 @@
 
 			if (parametersAreValid) {
 				var reportId = $scope.stockOperationsByStockroomReport.reportId;
-				var parameters = "itemUuid=" + item.uuid + "&beginDate="
-						+ ReportsFunctions.formatDate(beginDate) + "&endDate="
-						+ ReportsFunctions.formatDate(endDate)
-						+ "&stockroomId=" + stockroom.id;
+				var parameters = "itemUuid=" + item.uuid + "&beginDate=" + ReportsFunctions.formatDate(beginDate)
+						+ "&endDate=" + ReportsFunctions.formatDate(endDate) + "&stockroomId=" + stockroom.id;
 
 				return printReport(reportId, parameters);
 			}
@@ -274,9 +231,8 @@
 
 			if (parametersAreValid) {
 				var reportId = $scope.stockroomUsageReport.reportId;
-				var parameters = "stockroomId=" + stockroom.id + "&beginDate="
-						+ ReportsFunctions.formatDate(beginDate) + "&endDate="
-						+ ReportsFunctions.formatDate(endDate);
+				var parameters = "stockroomId=" + stockroom.id + "&beginDate=" + ReportsFunctions.formatDate(beginDate)
+						+ "&endDate=" + ReportsFunctions.formatDate(endDate);
 
 				return printReport(reportId, parameters);
 			}
@@ -292,8 +248,7 @@
 
 			if (parametersAreValid) {
 				var reportId = $scope.expiringStockReport.reportId;
-				var parameters = "expiresBy="
-						+ ReportsFunctions.formatDate(expiryDate);
+				var parameters = "expiresBy=" + ReportsFunctions.formatDate(expiryDate);
 				if (stockroom != null) {
 					parameters += "&stockroomId=" + stockroom.id;
 				}

@@ -18,11 +18,10 @@
 
 	function loadpage() {
 		'use strict';
-		var app = angular.module('entitiesApp', ['ui.bootstrap', 'ngDialog',
-				'ui.router', 'angularUtils.directives.dirPagination',
-				'app.css', 'app.filters', 'app.pagination', 'app.cookies',
-				'app.reportsFunctionsFactory', 'app.genericMetadataModel',
-				'app.restfulServices', 'app.genericEntityController']);
+		var app = angular.module('entitiesApp', [ 'ui.bootstrap', 'ngDialog', 'ui.router',
+				'angularUtils.directives.dirPagination', 'app.css', 'app.filters', 'app.pagination', 'app.cookies',
+				'app.reportsFunctionsFactory', 'app.genericMetadataModel', 'app.restfulServices',
+				'app.genericEntityController' ]);
 		app.config(function($stateProvider, $urlRouterProvider, $provide) {
 
 			$urlRouterProvider.otherwise('/');
@@ -39,8 +38,7 @@
 					var exc = String(exception);
 					if (exc.indexOf("unpr") !== -1) {
 						console.log(exc);
-					} else if (exc.indexOf("session") !== -1
-							|| exc.indexOf("timeout") !== -1) {
+					} else if (exc.indexOf("session") !== -1 || exc.indexOf("timeout") !== -1) {
 						console.log(exc + " - " + cause);
 						emr.message("SESSION TIMEOUT");
 					} else {

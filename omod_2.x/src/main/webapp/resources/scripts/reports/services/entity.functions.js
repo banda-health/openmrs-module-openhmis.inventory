@@ -19,7 +19,7 @@
 	var app = angular.module('app.reportsFunctionsFactory', []);
 	app.service('ReportsFunctions', ReportsFunctions);
 
-	ReportsFunctions.$inject = ['$filter'];
+	ReportsFunctions.$inject = [ '$filter' ];
 
 	function ReportsFunctions($filter) {
 		var service;

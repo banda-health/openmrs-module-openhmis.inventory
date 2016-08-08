@@ -16,10 +16,9 @@
 (function() {
 	'use strict';
 
-	angular.module('app.restfulServices').service('ReportRestfulService',
-			ReportRestfulService);
+	angular.module('app.restfulServices').service('ReportRestfulService', ReportRestfulService);
 
-	ReportRestfulService.$inject = ['EntityRestFactory'];
+	ReportRestfulService.$inject = [ 'EntityRestFactory' ];
 
 	var MODULE_SETTINGS_URL = 'module/openhmis/inventory/moduleSettings.page';
 	var ROOT_URL = '/' + OPENMRS_CONTEXT_PATH + '/';
@@ -35,16 +34,16 @@
 
 		/**
 		 * load list of stockrooms
+		 * 
 		 * @param rest_entity_name
 		 * @param successCallback
 		 */
 		function loadStockRooms(rest_entity_name, successCallback) {
 			var requestParams = {};
 			requestParams['rest_entity_name'] = rest_entity_name;
-			EntityRestFactory.loadEntities(requestParams, successCallback,
-					function(error) {
-						console.log(error);
-					});
+			EntityRestFactory.loadEntities(requestParams, successCallback, function(error) {
+				console.log(error);
+			});
 		}
 
 		function searchReportItems(module_name, q) {
@@ -54,8 +53,7 @@
 			requestParams['limit'] = 10;
 			requestParams['startIndex'] = 1;
 
-			return EntityRestFactory.autocompleteSearch(requestParams, 'item',
-					module_name);
+			return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
 		}
 
 		function getReport(reportIdProperty, successCallback) {
@@ -64,10 +62,9 @@
 			requestParams['report'] = reportIdProperty;
 
 			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
-			EntityRestFactory.loadResults(requestParams, successCallback,
-					function(error) {
-						console.log(error)
-					});
+			EntityRestFactory.loadResults(requestParams, successCallback, function(error) {
+				console.log(error)
+			});
 		}
 	}
 })();

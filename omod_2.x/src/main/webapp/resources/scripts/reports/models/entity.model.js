@@ -24,7 +24,7 @@
 
 		// @Override
 		extended.getModelFields = function() {
-			var fields = ["stockrooms"];
+			var fields = [ "stockrooms" ];
 			return fields.concat(defaultFields);
 		};
 
@@ -32,5 +32,5 @@
 	}
 
 	baseModel.factory("ReportModel", ReportModel);
-	ReportModel.$inject = ['GenericMetadataModel'];
+	ReportModel.$inject = [ 'GenericMetadataModel' ];
 })();
