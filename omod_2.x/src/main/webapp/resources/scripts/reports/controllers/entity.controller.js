@@ -18,13 +18,13 @@
 	var base = angular.module('app.genericEntityController');
 	base.controller("ReportController", ReportController);
 	ReportController.$inject = [ '$stateParams', '$injector', '$scope', '$filter', 'ReportModel', 'ReportRestfulService',
-			'ReportsFunctions', 'EntityRestFactory' ];
+			'ReportsFunctions', 'EntityRestFactory', 'CommonsRestfulFunctions'];
 
 	function ReportController($stateParams, $injector, $scope, $filter, ReportModel, ReportRestfulService,
-			ReportsFunctions, EntityRestFactory) {
+			ReportsFunctions, EntityRestFactory, CommonsRestfulFunctions) {
 
 		var self = this;
-
+CommonsRestfulFunctions
 		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.report.name";
 		var cancel_page = 'entity.page';
@@ -92,14 +92,14 @@
 		}
 
 		self.loadStockRooms = self.loadStockRooms || function() {
-			ReportRestfulService.loadStockRooms("stockroom", self.onLoadStockRoomSuccessful);
+			CommonsRestfulFunctions.loadStockRooms("stockroom", self.onLoadStockRoomSuccessful);
 		}
 		self.onLoadStockRoomSuccessful = self.onLoadStockRoomSuccessful || function(data) {
 			$scope.stockrooms = data.results;
 		}
 		self.searchReportItems = self.searchReportItems || function(search) {
 			$scope.operationItem = {};
-			return ReportRestfulService.searchReportItems(module_name, search);
+			return CommonsRestfulFunctions.searchReportItems(module_name, search);
 		}
 
 		function printReport(reportId, parameters) {

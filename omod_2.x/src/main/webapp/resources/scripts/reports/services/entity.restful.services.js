@@ -32,30 +32,6 @@
 		};
 		return service;
 
-		/**
-		 * load list of stockrooms
-		 * 
-		 * @param rest_entity_name
-		 * @param successCallback
-		 */
-		function loadStockRooms(rest_entity_name, successCallback) {
-			var requestParams = {};
-			requestParams['rest_entity_name'] = rest_entity_name;
-			EntityRestFactory.loadEntities(requestParams, successCallback, function(error) {
-				console.log(error);
-			});
-		}
-
-		function searchReportItems(module_name, q) {
-			var requestParams = {};
-			requestParams['has_physical_inventory'] = 'true';
-			requestParams['q'] = q;
-			requestParams['limit'] = 10;
-			requestParams['startIndex'] = 1;
-
-			return EntityRestFactory.autocompleteSearch(requestParams, 'item', module_name);
-		}
-
 		function getReport(reportIdProperty, successCallback) {
 			var requestParams = [];
 			requestParams['resource'] = MODULE_SETTINGS_URL;
