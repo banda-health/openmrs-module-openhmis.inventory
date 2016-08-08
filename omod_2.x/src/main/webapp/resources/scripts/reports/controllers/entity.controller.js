@@ -56,28 +56,28 @@
 
 					// Load in the 5 reports from their string names in
 					// ModuleSettings.java
-					ReportRestfulService.getReports(
+					ReportRestfulService.getReport(
 							"openhmis.inventory.reports.stockTake", function(
 									data) {
 								$scope.stockTakeReport = data;
 							});
-					ReportRestfulService.getReports(
+					ReportRestfulService.getReport(
 							"openhmis.inventory.reports.stockroom", function(
 									data) {
 								$scope.stockroomUsageReport = data;
 							});
-					ReportRestfulService.getReports(
+					ReportRestfulService.getReport(
 							"openhmis.inventory.reports.stockCard", function(
 									data) {
 								$scope.stockCardReport = data;
 							});
 					ReportRestfulService
-							.getReports(
+							.getReport(
 									"openhmis.inventory.reports.stockOperationsByStockroom",
 									function(data) {
 										$scope.stockOperationsByStockroomReport = data;
 									});
-					ReportRestfulService.getReports(
+					ReportRestfulService.getReport(
 							"openhmis.inventory.reports.expiringStock",
 							function(data) {
 								$scope.expiringStockReport = data;

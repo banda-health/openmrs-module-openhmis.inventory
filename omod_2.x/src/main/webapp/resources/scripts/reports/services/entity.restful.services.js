@@ -58,7 +58,7 @@
 					module_name);
 		}
 
-		function getReports(reportIdProperty, successCallback) {
+		function getReport(reportIdProperty, successCallback) {
 			var requestParams = [];
 			requestParams['resource'] = MODULE_SETTINGS_URL;
 			requestParams['report'] = reportIdProperty;
