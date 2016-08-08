@@ -18,5 +18,6 @@
 </script>
 
 ${ui.includeFragment("openhmis.inventory", "stockOperations/entities", [
-        pageTitle: [ui.message('openhmis.inventory.admin.myOperations')]
+        pageTitle: [ui.message('openhmis.inventory.admin.myOperations')],
+        createOperation: true
 ])}

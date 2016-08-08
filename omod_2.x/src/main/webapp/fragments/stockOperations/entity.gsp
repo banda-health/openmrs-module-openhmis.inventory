@@ -21,7 +21,7 @@
 <div class="detail-section-border-bottom">
     <ul class="table-layout">
         <li>
-            <span>{{messageLabels['openhmis.inventory.operations.operationDate']}}</span>
+            <span>${ui.message('openhmis.inventory.operations.operationDate')}</span>
         </li>
         <li>
             <span>{{stockOperation.operationDate | date: 'dd-MM-yyyy, h:mma'}}</span>
@@ -29,7 +29,7 @@
     </ul>
     <ul class="table-layout">
         <li>
-            <span>{{messageLabels['openhmis.inventory.operations.operationNumber']}}</span>
+            <span>${ui.message('openhmis.inventory.operations.operationNumber')}</span>
         </li>
         <li>
             <span>{{stockOperation.operationNumber}}</span>
@@ -37,7 +37,7 @@
     </ul>
     <ul class="table-layout">
         <li>
-            <span>{{messageLabels['openhmis.inventory.general.status']}}</span>
+            <span>{{messageLabels['openhmis.commons.general.status']}}</span>
         </li>
         <li>
             <span>{{stockOperation.status}}</span>
@@ -99,12 +99,13 @@
             <span>{{stockOperation.institution.name}}</span>
         </li>
     </ul>
-    <ul class="table-layout" ng-repeat="attributeType in stockOperation.instanceType.attributeTypes">
+    <ul class="table-layout" ng-repeat="attribute in stockOperation.attributes">
         <li>
-            <span>{{attributeType.name}}</span>
+            <span>{{attribute.attributeType.name}}</span>
         </li>
         <li>
-            <span></span>
+            <span ng-show="attribute.value.display !== undefined">{{attribute.value.display}}</span>
+            <span ng-hide="attribute.value.display !== undefined">{{attribute.value}}</span>
         </li>
     </ul>
     <ul class="table-layout">
