@@ -48,6 +48,7 @@ public interface IItemStockDetailDataService extends IObjectDataService<ItemStoc
 	 * @should return an empty list if no records are found
 	 * @should return the item stock summary records
 	 * @should return paged results if paging is specified
+	 * @should return correctly paged results when aggregate qty is zero
 	 */
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_METADATA })

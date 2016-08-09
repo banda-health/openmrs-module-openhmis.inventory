@@ -106,7 +106,7 @@
 		<br/>
 		<ul class="table-layout">
 			<li class="valign">
-				<span>{{messageLabels['openhmis.inventory.attribute.type.namePlural']}}</span>
+				<span>{{messageLabels['openhmis.commons.attribute.type.namePlural']}}</span>
 			</li>
 			<li>
 				<div class="bbf-editor">

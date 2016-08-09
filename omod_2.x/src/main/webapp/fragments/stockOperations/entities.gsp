@@ -1,5 +1,6 @@
 <%
     def title = config.pageTitle;
+    def createOperation = config.createOperation;
 %>
 <div id="entities-body">
     <br/>
@@ -15,6 +16,14 @@
                     ${ui.message('openhmis.inventory.admin.operations')}
             <%  } %>
         </span>
+        <% if(createOperation) { %>
+            <span style="float:right;">
+                <a class="button confirm" href="/${ ui.contextPath() }/openhmis.inventory/createOperation/entities.page">
+                    <i class="icon-plus"></i>
+                    ${ui.message('openhmis.inventory.operations.createOperation')}
+                </a>
+            </span>
+        <% } %>
     </div>
     <br/><br/>
 
@@ -24,7 +33,7 @@
                 <fieldset class="search">
                     <table class="search">
                         <tr>
-                            <td>${ui.message('openhmis.inventory.general.status')}:
+                            <td>${ui.message('openhmis.commons.general.status')}:
                                 <select ng-model="operation_status" ng-change="searchStockOperation(currentPage)">
                                     <option value="" selected="selected">${ui.message('openhmis.commons.general.any')}</option>
                                     <option value="Pending">Pending</option>
@@ -70,7 +79,7 @@
                     <th>${ui.message('openhmis.inventory.operations.operationDate')}</th>
                     <th>${ui.message('openhmis.inventory.operations.operationType')}</th>
                     <th>${ui.message('openhmis.inventory.operations.operationNumber')}</th>
-                    <th>${ui.message('openhmis.inventory.general.status')}</th>
+                    <th>${ui.message('openhmis.commons.general.status')}</th>
                 </tr>
                 </thead>
                 <tbody>

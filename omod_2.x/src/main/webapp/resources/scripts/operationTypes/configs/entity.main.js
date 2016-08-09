@@ -13,7 +13,7 @@
  *
  */
 
-requirejs(['operationTypes/configs/entities.module'], function() {
+requirejs(['operationTypes/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
@@ -47,6 +47,7 @@ emr.loadMessages([
 	"openhmis.commons.general.edit",
 	"openhmis.commons.general.saveChanges",
 	"openhmis.commons.general.confirm",
+	"openhmis.commons.attribute.type.namePlural",
 	"openhmis.inventory.operations.type.sourceLabel",
 	"openhmis.inventory.operations.type.destinationLabel",
 	"openhmis.inventory.operations.type.recipientLabel",

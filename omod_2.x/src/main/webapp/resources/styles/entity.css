@@ -16,37 +16,42 @@
 .entities-table th:first-child, td:first-child {
     width: 30%;
 }
+
 #attribute-types-dialog {
     width: 500px;
 }
+
 ul.dialog-table-layout li {
     width: 150px;
     margin: 0 0;
 }
-#dialog-bottom ul{
+
+#dialog-bottom ul {
     margin-bottom: 0;
 }
+
 .dialog-select {
     font-size: 14px;
     min-width: 115%
 }
-table.manage-stockOperations-table th:first-child, td:first-child{
+
+table.manage-stockOperations-table th:first-child, td:first-child {
     width: 80%;
 }
 
-table.manage-stockOperations-item-table th:first-child, td:first-child{
+table.manage-stockOperations-item-table th:first-child, td:first-child {
     width: 160%;
 }
 
-table.manage-stockOperations-transactions-table th:first-child, td:first-child{
+table.manage-stockOperations-transactions-table th:first-child, td:first-child {
     width: 50%;
 }
 
-table.manage-stockOperations-transactions-table th:nth-child(2), td:nth-child(1){
+table.manage-stockOperations-transactions-table th:nth-child(2), td:nth-child(1) {
     width: 130%;
 }
 
-table.manage-stockOperations-transactions-table th:nth-child(5), td:nth-child(5){
+table.manage-stockOperations-transactions-table th:nth-child(5), td:nth-child(5) {
     width: 40%;
 }
 
@@ -54,48 +59,56 @@ table.search {
     border-style: hidden;
 }
 
-table.search td{
+table.search td {
     border: 0px;
 }
 
-table.search input{
+table.search input {
     width: 330px;
 }
 
-table.search select{
+table.search select {
     width: 170px;
 }
 
-form.search{
+form.search {
     width: 100%;
-    float:left;
+    float: left;
 }
 
-form.search select{
+form.search select {
     min-width: 0px;
+}
+
+fieldset.createOperation{
+    min-width: 100%;
+    margin: 0 0px;
+    border: 0px;
 }
 
 fieldset.search {
     min-width: 0px;
     width: 100%;
 }
-ul.search-area{
+
+ul.search-area {
     text-align: left;
 }
 
-ul.search-area li{
+ul.search-area li {
     display: inline-block;
     vertical-align: top;
     margin: 0px 2px;
 }
 
-.search-area{
+.search-area {
     height: 27px;
 }
 
-ul.search-area-input{
+ul.search-area-input {
     text-align: left;
 }
+
 table.manage-stockrooms-table th:first-child, td:first-child {
     width: 30%;
 }
@@ -107,19 +120,21 @@ table.manage-stockrooms-items-table th:first-child, td:first-child {
 table.manage-stockrooms-transactions-table th:nth-child(1), td:nth-child(1) {
     width: 50%;
 }
+
 table.manage-stockrooms-transactions-table th:nth-child(3), td:nth-child(3) {
     width: 120%;
 }
+
 table.manage-stockrooms-transactions-table th:last-child, td:last-child {
     width: 40%;
 }
 
-.not-found{
-    margin-left:300px;
+.not-found {
+    margin-left: 300px;
 }
 
-#item-details-dialog{
-    max-width:none;
+#item-details-dialog {
+    max-width: none;
     width: 600px;
 }
 
@@ -138,19 +153,207 @@ table.manage-stockrooms-transactions-table th:last-child, td:last-child {
 input.non-editable {
     background-color: lightgrey
 }
-#item-price-dialog ul{
+
+#item-price-dialog ul {
     margin-bottom: 0px;
 }
 
-#item-code-dialog ul{
+#item-code-dialog ul {
     margin-bottom: 0px;
 }
 
 #attribute-types-dialog select option {
-    font-size:0.875em;
+    font-size: 0.875em;
 }
+
 #operationTypesTable th:first-child, td:first-child {
-    width: 20%;
+    width: 30%;
+}
+ul.table-layout .gray-button{
+    background: #666666;
+    border-color: #666666;
+    color: white;
+}
+ul.table-layout{
+    margin: 0px;
+}
+table.operation-date{
+    width:440px;
+    height:200px;
+    border-style: hidden;
+}
+table.operation-date tr{
+    border: 0px;
+}
+table.operation-date td{
+    vertical-align: baseline;
+    border: 0px;
+}
+table.operation-date td:first-child{
+    width: 30%;
+}
+table.operation-date td:nth-child(2){
+    width: 60%;
+}
+table.operation-date td select{
+    width:235px;
+}
+table.operation-date td select option{
+    font-size: 0.9em;
+}
+table.operation-date tr:nth-child(even){
+    background:none;
+}
+.negative-quantity{
+    /*background: #FEFE22;*/
+    background: lightyellow;
+}
+
+fieldset.nested{
+    width:100%;
+}
+
+table.line-item tr:first-child{
+    width: 1%;
+}
+
+table.line-item tr:nth-child(even){
+    background: none;
+}
+
+table.item-details{
+    width: 100%;
+    margin: 5px 0px;
+}
+
+table.item-details td{
+    line-height: 1px;
+    font-size: 0.9em;
+    border: 0px;
+}
+
+table.item-details tr{
+    border: 0px;
+}
+
+table.item-details td input{
+    min-width: 0px;
+}
+
+table.line-item .autocomplete-search{
+    width: 380px;
+}
+table.icons{
+    width:50px;
+    background-color:inherit;
+}
+table.icons td:first-child{
+    width:5px;
+}
+table.icons tr{
+    border: 0px;
+}
+table.icons td{
+    border: 0px;
+    padding: 0px 4px;
+    vertical-align: middle;
+}
+table.icons td input{
+    padding: 0px 0px;
+    margin-top: 0px;
+}
+table.icons td:first-child{
+    width: 1%;
+}
+
+table.item-details td:first-child{
+    width: 1%;
+}
+table.item-details td:nth-child(2){
+    width: 1%;
+}
+table.item-details td:nth-child(3){
+    width: 5%;
+}
+table.item-details td:nth-child(4){
+    width: 1%;
+}
+table.item-details td:nth-child(5){
+}
+table.item-details td input[type="image"]{
+    min-width:0;
+    border: 1px solid transparent;
+    background-color: transparent;
+}
+.recent-lozenge {
+    vertical-align: text-top;
+    padding: 1px 2px;
+    border-radius: 4px;
+}
+.create-operation-content{
+    font-size: inherit;
+}
+.loading-msg{
+    margin: 200px;
+}
+.loading-img{
+    margin: 150px;
+}
+.input-quantity{
+    width: 60px;
+}
+fieldset.nested .line-item select {
+    width: 100px;
+}
+table.item-details td.existing-quantity{
+    font-size:11px;
+}
+
+#stockTakeTable table td {
+    font-size: 0.85em;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.btn-grey {
+    background-color: #666666;
+    color: white;
+}
+
+.btn-grey:hover {
+    background-color: #666666;
+    color: white;
+}
+
+#stockTakeStockroomDropdown {
+    width: 200px;
+}
+
+ul.stocktakeSearch {
+    font-size: 10pt;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
 }
 
 #reportPage{
