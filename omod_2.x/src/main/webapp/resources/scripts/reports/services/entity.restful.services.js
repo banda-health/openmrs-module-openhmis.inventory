@@ -26,10 +26,10 @@
 	function ReportRestfulService(EntityRestFactory) {
 		var service;
 		service = {
-			getReport : getReport
+			getReports : getReports
 		};
 		return service;
-
+ 
 		function getReport(reportIdProperty, successCallback) {
 			var requestParams = [];
 			requestParams['resource'] = MODULE_SETTINGS_URL;
