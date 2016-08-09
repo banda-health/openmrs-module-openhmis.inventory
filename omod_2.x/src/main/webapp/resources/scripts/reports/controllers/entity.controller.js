@@ -99,7 +99,7 @@ CommonsRestfulFunctions
 		}
 		self.searchReportItems = self.searchReportItems || function(search) {
 			$scope.operationItem = {};
-			return CommonsRestfulFunctions.searchReportItems(module_name, search);
+			return CommonsRestfulFunctions.searchItems(module_name, search);
 		}
 
 		function printReport(reportId, parameters) {
