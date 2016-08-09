@@ -6,7 +6,7 @@
  *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
- * the License for the specific language governing rights and
+ * the L 	icense for the specific language governing rights and
  * limitations under the License.
  *
  * Copyright (C) OpenHMIS.  All Rights Reserved.
@@ -24,7 +24,7 @@
 			ReportsFunctions, EntityRestFactory, CommonsRestfulFunctions) {
 
 		var self = this;
-CommonsRestfulFunctions
+
 		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.report.name";
 		var cancel_page = 'entity.page';
@@ -94,12 +94,13 @@ CommonsRestfulFunctions
 		self.loadStockRooms = self.loadStockRooms || function() {
 			CommonsRestfulFunctions.loadStockRooms("stockroom", self.onLoadStockRoomSuccessful);
 		}
+
 		self.onLoadStockRoomSuccessful = self.onLoadStockRoomSuccessful || function(data) {
 			$scope.stockrooms = data.results;
 		}
 		self.searchReportItems = self.searchReportItems || function(search) {
 			$scope.operationItem = {};
-			return CommonsRestfulFunctions.searchReportItems(module_name, search);
+			return CommonsRestfulFunctions.searchItems(module_name, search);
 		}
 
 		function printReport(reportId, parameters) {
