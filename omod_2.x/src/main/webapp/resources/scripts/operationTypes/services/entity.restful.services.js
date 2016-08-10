@@ -67,9 +67,9 @@
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
-
+		
 		function errorCallback(error) {
-			console.log(error);
+			emr.errorAlert(error);
 		}
 	}
 

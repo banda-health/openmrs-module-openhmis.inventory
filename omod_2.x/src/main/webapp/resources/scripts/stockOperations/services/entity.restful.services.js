@@ -204,9 +204,9 @@
                 );
             }
         }
-
-        function errorCallback(error){
-            console.log(error);
+    
+        function errorCallback(error) {
+            emr.errorAlert(error);
         }
     }
 })();
