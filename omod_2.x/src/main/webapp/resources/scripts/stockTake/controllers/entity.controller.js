@@ -22,6 +22,8 @@
 		'StockTakeModel', 'StockTakeRestfulService', 'PaginationService', 'EntityFunctions', 'StockTakeFunctions',
 		'CookiesService'];
 	
+	var INVENTORY_TASK_DASHBOARD_PAGE_URL = ROOT_URL + 'openhmis.inventory/inventory/inventoryTasksDashboard.page';
+	
 	function StockTakeController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockTakeModel,
 	                             StockTakeRestfulService, PaginationService, EntityFunctions, StockTakeFunctions,
 	                             CookiesService) {

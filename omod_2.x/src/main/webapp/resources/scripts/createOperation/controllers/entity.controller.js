@@ -22,6 +22,8 @@
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
 		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions'];
 	
+	var MY_OPERATIONS_URL = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
+	
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
 	                                   CookiesService, LineItemModel, CommonsRestfulFunctions) {

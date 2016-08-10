@@ -17,7 +17,9 @@
 	'use strict';
 
 	angular.module('app.restfulServices').service('CreateOperationRestfulService', CreateOperationRestfulService);
-
+	
+	var MODULE_SETTINGS_URL = 'module/openhmis/inventory/moduleSettings.page';
+	
 	CreateOperationRestfulService.$inject = ['EntityRestFactory'];
 
 	function CreateOperationRestfulService(EntityRestFactory) {
