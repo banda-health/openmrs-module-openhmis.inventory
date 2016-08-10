@@ -19,7 +19,6 @@
 </script>
 
 <div id="reportPage">
-<input id="reportUrl" type="hidden" value="{{ ui.message('openhmis.inventory.admin.reports')}}" />
 
 <h2>{{ ui.message("openhmis.inventory.admin.reports")}}</h2>
 
