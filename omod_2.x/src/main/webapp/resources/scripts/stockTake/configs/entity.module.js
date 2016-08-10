@@ -39,24 +39,8 @@
 				controller: 'StockTakeController'
 			});
 			
-			$provide.factory('$exceptionHandler', function ($injector) {
-				return function (exception, cause) {
-					/*
-					 * Handle common exceptions
-					 */
-					// unknown provider..
-					var exc = String(exception);
-					if (exc.indexOf("unpr") !== -1) {
-						console.log("ISSUE LOADING MODULE(S)");
-						console.log(exc);
-					} else if (exc.indexOf("session") !== -1 || exc.indexOf("timeout") !== -1) {
-						emr.message("SESSION TIMEOUT");
-						console.log(exc + " - " + cause);
-					} else {
-						console.log(exc + " - " + cause);
-						emr.message(cause);
-					}
-				}
+			$provide.factory('$exceptionHandler', function($injector) {
+				return ohmis.handleException;
 			});
 		});
 		return app;
