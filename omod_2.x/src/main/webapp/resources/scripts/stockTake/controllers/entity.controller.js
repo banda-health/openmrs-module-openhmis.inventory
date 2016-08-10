@@ -28,12 +28,11 @@
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.admin.stockTake";
-		var CANCEL_PAGE = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
 		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, CANCEL_PAGE);
+				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, INVENTORY_TASK_DASHBOARD_PAGE_URL);
 			}
 		
 		/**

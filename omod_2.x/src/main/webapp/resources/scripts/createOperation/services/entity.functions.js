@@ -21,8 +21,6 @@
 
 	CreateOperationFunctions.$inject = ['EntityFunctions', '$filter'];
 
-	var NOT_DEFINED = ' - Not Defined - ';
-
 	function CreateOperationFunctions(EntityFunctions, $filter) {
 		var service;
 

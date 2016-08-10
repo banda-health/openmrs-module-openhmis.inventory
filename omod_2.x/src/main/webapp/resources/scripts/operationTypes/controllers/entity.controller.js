@@ -31,13 +31,12 @@
 		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.operations.type.name";
 		var rest_entity_name = emr.message("openhmis.inventory.operations.type.name_rest");
-		var cancel_page = 'entities.page';
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters
 			|| function () {
 				self.bindBaseParameters(module_name, rest_entity_name,
-					entity_name_message_key, cancel_page);
+					entity_name_message_key, CANCEL_PAGE);
 			}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope

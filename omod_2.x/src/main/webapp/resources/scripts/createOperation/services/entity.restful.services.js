@@ -20,9 +20,6 @@
 
 	CreateOperationRestfulService.$inject = ['EntityRestFactory'];
 
-	var ROOT_URL = '/' + OPENMRS_CONTEXT_PATH + '/';
-	var MODULE_SETTINGS_URL = 'module/openhmis/inventory/moduleSettings.page';
-
 	function CreateOperationRestfulService(EntityRestFactory) {
 		var service;
 

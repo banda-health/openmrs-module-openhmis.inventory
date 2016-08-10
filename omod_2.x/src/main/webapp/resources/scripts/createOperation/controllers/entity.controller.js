@@ -21,24 +21,19 @@
 	CreateOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
 		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions'];
-
-	var ROOT_URL = '/' + OPENMRS_CONTEXT_PATH + '/';
-	var MY_OPERATIONS_URL = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
-	var GENERATE_OPERATION_NUMBER = "WILL BE GENERATED";
-
+	
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
 	                                   CookiesService, LineItemModel, CommonsRestfulFunctions) {
 		var self = this;
 		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
-		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
 		var notDefined = {name: ' - Not Defined - '};
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, CANCEL_PAGE);
 			}
 
 		/**
