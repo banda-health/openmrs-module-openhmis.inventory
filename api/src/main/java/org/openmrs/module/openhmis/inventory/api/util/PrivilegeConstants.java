@@ -58,7 +58,7 @@ public class PrivilegeConstants {
 	public static final String TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE = "Task: Access Generate Item Mappings";
 	public static final String TASK_ACCESS_INVENTORY_SETTINGS_PAGE = "Task: Access Inventory Settings";
 	public static final String TASK_ACCESS_MY_OPERATIONS_PAGE = "Task: Access My Operations";
-	public static final String TASK_ACCESS_CREATE_OPERATION_PAGE = "Task:Access Create Operation";
+	public static final String TASK_ACCESS_CREATE_OPERATION_PAGE = "Task: Access Create Operation";
 	public static final String TASK_ACCESS_INVENTORY_REPORTS_PAGE = "Task: Access Inventory Reports";
 	public static final String TASK_ACCESS_STOCK_TAKE_PAGE = "Task: Access Stock Take";
 
@@ -71,7 +71,8 @@ public class PrivilegeConstants {
 	        TASK_ACCESS_MANAGE_INSTITUTIONS_PAGE, TASK_ACCESS_MANAGE_STOCKROOMS_PAGE,
 	        TASK_ACCESS_MANAGE_OPERATION_TYPES_PAGE, TASK_ACCESS_VIEW_STOCK_OPERATIONS_PAGE,
 	        TASK_ACCESS_GENERATE_ITEM_MAPPINGS_PAGE, TASK_ACCESS_INVENTORY_SETTINGS_PAGE, TASK_ACCESS_MY_OPERATIONS_PAGE,
-	        TASK_ACCESS_CREATE_OPERATION_PAGE, TASK_ACCESS_INVENTORY_REPORTS_PAGE, TASK_ACCESS_STOCK_TAKE_PAGE };
+	        TASK_ACCESS_CREATE_OPERATION_PAGE, TASK_ACCESS_INVENTORY_REPORTS_PAGE, TASK_ACCESS_STOCK_TAKE_PAGE,
+	        ROLLBACK_OPERATIONS };
 
 	protected PrivilegeConstants() {}
 
