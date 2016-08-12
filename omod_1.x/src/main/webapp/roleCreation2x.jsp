@@ -7,9 +7,9 @@
 <openmrs:require allPrivileges="<%= PrivilegeConstants.MANAGE_METADATA %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.ROLE_CREATION_PAGE %>" />
 
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>' />
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "styles/bootstrap.css" %>' />
+<openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>' />
+<openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
+<openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "styles/bootstrap.css" %>' />
 <%@ include file="/WEB-INF/view/module/openhmis/commons/template/common/customizedHeader.jsp"%>
 
 <%@ include file="template/localHeader.jsp"%>
@@ -100,6 +100,6 @@
 		</tr>
 	</table>
 
-	<p><input class="submitButton confirm right" value="Save" type="submit" value="<openmrs:message code="Role.save"/>"></p>
+	<p><input class="submitButton confirm right" type="submit" value="<openmrs:message code="openhmis.inventory.roleCreation.page.role.save"/>"></p>
 </form>
 </div>

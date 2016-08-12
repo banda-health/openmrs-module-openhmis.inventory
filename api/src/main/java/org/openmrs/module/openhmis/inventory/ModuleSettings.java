@@ -36,6 +36,8 @@ public class ModuleSettings {
 	public static final String USE_WILDCARD_ITEM_SEARCH_PROPERTY = "openhmis.inventory.useWildcardItemSearch";
 	public static final String RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD =
 	        "openhmis.inventory.restrictNegativeInventoryStockCreation";
+	public static final String AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE =
+	        "openhmis.inventory.autoSelectItemStockWithFurthestExpiration";
 	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
 	        "openhmis.inventory.reports.stockOperationsByStockroom";
 
@@ -66,6 +68,12 @@ public class ModuleSettings {
 		return Boolean.parseBoolean(property);
 	}
 
+	public static boolean autoSelectItemStockWithFurthestExpirationDate() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE);
+		return Boolean.parseBoolean(property);
+	}
+	
 	public static boolean useWildcardItemSearch() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
@@ -121,6 +129,13 @@ public class ModuleSettings {
 			settings.setAutoCompleteOperations(false);
 		}
 
+		prop = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE);
+		if (!StringUtils.isEmpty(prop)) {
+			settings.setAutoSelectItemStockFurthestExpirationDate(Boolean.parseBoolean(prop));
+		} else {
+			settings.setAutoSelectItemStockFurthestExpirationDate(false);
+		}
+		
 		prop = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
 		if (StringUtils.isNotEmpty(prop)) {
 			settings.setWildcardItemSearch(Boolean.parseBoolean(prop));
@@ -193,6 +208,13 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY, Boolean.FALSE.toString());
 		}
 
+		Boolean autoSelectItemStockFurthestExpirationDate = settings.getAutoSelectItemStockFurthestExpirationDate();
+		if (Boolean.TRUE.equals(autoSelectItemStockFurthestExpirationDate)) {
+			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE, Boolean.TRUE.toString());
+		} else {
+			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE, Boolean.FALSE.toString());
+		}
+		
 		Boolean wildcardItemSearch = settings.getWildcardItemSearch();
 		if (Boolean.TRUE.equals(wildcardItemSearch)) {
 			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.TRUE.toString());

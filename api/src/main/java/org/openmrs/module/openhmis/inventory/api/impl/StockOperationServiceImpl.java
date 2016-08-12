@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.HashSet;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.javatuples.Pair;
@@ -290,6 +291,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 				// For each item transaction
 				int totalQty = 0;
+
 				for (StockOperationTransaction tx : itemTxs) {
 					// Sum the total quantity for this specific item
 					totalQty += tx.getQuantity();
@@ -651,41 +653,105 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 			tx.setExpiration(detail.getExpiration());
 			tx.setBatchOperation(detail.getBatchOperation());
 
-			if (detail.getQuantity() < 0) {
-				// The detail quantity is already negative so just subtract more
-				detail.setQuantity(detail.getQuantity() - tx.getQuantity());
+			// get the cumulative total quantity for item stocks with the same expiration date.
+			int cumulativeQuantity = calculateTotalItemStockQuantity(stock, detail);
+			int remainingQuantity = 0;
+
+			if (cumulativeQuantity == 0) {
+				// DO NOT use this item stock or any other with the same expiration date.
+				deleteItemStockDetailRecords(stock, detail);
+				// Find other details to fulfill this tx
+				findAndUpdateSourceDetail(newTransactions, operation, stock, tx);
 			} else {
-				// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
-				detail.setQuantity(detail.getQuantity() - Math.abs(tx.getQuantity()));
-
-				if (detail.getQuantity() == 0) {
-					// If the quantity is exactly zero than we can simply remove the detail record
-					stock.getDetails().remove(detail);
-				} else if (detail.getQuantity() < 0) {
-					stock.getDetails().remove(detail);
-
-					// Set the tx quantity to the number actually deduced from the detail
-					//Math.abs is needed to handle negative adjustments correctly
-					tx.setQuantity(Math.abs(tx.getQuantity()) + detail.getQuantity());
-
-					//if adjustment make sure that the quantity is negaitve (this method is only dealing with
-					// negative adjustments)
-					if (operation.isAdjustmentType()) {
-						tx.setQuantity(tx.getQuantity() * -1);
+				if ((cumulativeQuantity + tx.getQuantity()) < 0) {
+					if (cumulativeQuantity > 0) {
+						// UPDATE the current transaction quantity with the cumulative quantity
+						// and create another transaction (after processing the current transaction)
+						// with the remainingQuantity.
+						// FOR INSTANCE: if the cumulativeQuantity = 5, transaction quantity = -6,
+						// set transaction quantity to -5,
+						// and create another transaction with quantity = -1
+						remainingQuantity = cumulativeQuantity + tx.getQuantity();
+						tx.setQuantity(cumulativeQuantity * -1);
 					}
-
-					// Create a new tx to handle the remaining stock request
-					ReservedTransaction newTx = new ReservedTransaction(tx);
-					Integer newTxQuantity =
-					        operation.isAdjustmentType() ? detail.getQuantity() : Math.abs(detail.getQuantity());
-					newTx.setQuantity(newTxQuantity);
-
-					// Add the new tx to the list of transactions to add to the operations
-					newTransactions.add(newTx);
-
-					// Find the details to fulfill this new tx
-					findAndUpdateSourceDetail(newTransactions, operation, stock, newTx);
 				}
+
+				if (detail.getQuantity() < 0) {
+					// The detail quantity is already negative so just subtract more
+					detail.setQuantity(detail.getQuantity() - tx.getQuantity());
+				} else {
+					// Subtract the tx quantity from the detail and ensure that it has enough to fulfill the request
+					detail.setQuantity(detail.getQuantity() - Math.abs(tx.getQuantity()));
+
+					if (detail.getQuantity() == 0) {
+						// If the quantity is exactly zero than we can simply remove the detail record
+						stock.getDetails().remove(detail);
+					} else if (detail.getQuantity() < 0) {
+						stock.getDetails().remove(detail);
+
+						// Set the tx quantity to the number actually deduced from the detail
+						//Math.abs is needed to handle negative adjustments correctly
+						tx.setQuantity(Math.abs(tx.getQuantity()) + detail.getQuantity());
+
+						//if adjustment make sure that the quantity is negative (this method is only dealing with
+						// negative adjustments)
+						if (operation.isAdjustmentType()) {
+							tx.setQuantity(tx.getQuantity() * -1);
+						}
+
+						remainingQuantity +=
+						        operation.isAdjustmentType() ? detail.getQuantity() : Math.abs(detail.getQuantity());
+					}
+				}
+			}
+
+			// Create a new tx to handle the remaining stock request
+			if (remainingQuantity != 0) {
+				ReservedTransaction newTx = new ReservedTransaction(tx);
+				newTx.setQuantity(remainingQuantity);
+
+				// Add the new tx to the list of transactions to add to the operations
+				newTransactions.add(newTx);
+
+				// Find the details to fulfill this new tx
+				findAndUpdateSourceDetail(newTransactions, operation, stock, newTx);
+			}
+		}
+	}
+
+	/**
+	 * Calculates the total quantities for item stocks with the same expiration date.
+	 * @param stock
+	 * @param detail
+	 * @return
+	 */
+	private int calculateTotalItemStockQuantity(ItemStock stock, ItemStockDetail detail) {
+		int cumulativeQuantity = 0;
+		for (ItemStockDetail stockDetail : stock.getDetails()) {
+			Date stockDetailExp = stockDetail.getExpiration();
+			Date detailExp = detail.getExpiration();
+			if (stockDetailExp == null && detailExp == null) {
+				cumulativeQuantity += stockDetail.getQuantity();
+			} else if (stockDetailExp != null && detailExp != null) {
+				if (stockDetailExp.getTime() == detail.getExpiration().getTime()) {
+					cumulativeQuantity += stockDetail.getQuantity();
+				}
+			}
+		}
+		return cumulativeQuantity;
+	}
+
+	/**
+	 * Deletes item stocks with given expiration date.
+	 * @param stock
+	 * @param detail
+	 */
+	private void deleteItemStockDetailRecords(ItemStock stock, ItemStockDetail detail) {
+		List<ItemStockDetail> deleteStockDetails = findDetailByExpiration(stock, detail.getExpiration());
+
+		if (deleteStockDetails.size() > 0) {
+			for (ItemStockDetail deleteDetail : deleteStockDetails) {
+				stock.getDetails().remove(deleteDetail);
 			}
 		}
 	}
@@ -720,8 +786,10 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 		List<ItemStockDetail> results = null;
 		if (Boolean.TRUE.equals(tx.isCalculatedExpiration()) && Boolean.TRUE.equals(tx.isCalculatedBatch())) {
-			// Find the detail that will expire the soonest (could be multiple, each with a different batch op)
-			results = findDetailByClosestExpiration(stock.getDetails(), new DateTime(operation.getOperationDate()));
+			// Find the detail that will expire the soonest/ furthest (could be multiple, each with a different batch op)
+			results =
+			        findDetailByClosestOrFurthestExpiration(ModuleSettings.autoSelectItemStockWithFurthestExpirationDate(),
+			            stock.getDetails(), new DateTime(operation.getOperationDate()));
 
 			if (results == null || results.size() == 0) {
 				detail = null;
@@ -733,7 +801,9 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		} else if (Boolean.TRUE.equals(tx.isCalculatedExpiration())) {
 			// Find the detail with the specific batch and pick the best expiration if there are multiple
 			results = findDetailByBatch(stock, tx.getBatchOperation());
-			results = findDetailByClosestExpiration(results, new DateTime(operation.getOperationDate()));
+			results =
+			        findDetailByClosestOrFurthestExpiration(ModuleSettings.autoSelectItemStockWithFurthestExpirationDate(),
+			            results, new DateTime(operation.getOperationDate()));
 
 			detail = results.size() == 0 ? null : results.get(0);
 		} else if (Boolean.TRUE.equals(tx.isCalculatedBatch())) {
@@ -808,7 +878,8 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 		return results;
 	}
 
-	private List<ItemStockDetail> findDetailByClosestExpiration(Collection<ItemStockDetail> details, DateTime date) {
+	private List<ItemStockDetail> findDetailByClosestOrFurthestExpiration(
+	        boolean furthestExpirationDate, Collection<ItemStockDetail> details, DateTime date) {
 		if (details == null || details.size() == 0) {
 			return null;
 		}
@@ -819,8 +890,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 			// If there is only a single detail record then we can just use that
 			results.addAll(details);
 		} else {
-			// Find the detail(s) with the closest expiration to the specified date
-			long closest = 0;
+			long range = 0;
 			for (ItemStockDetail detail : details) {
 				long temp;
 				if (detail.getExpiration() == null) {
@@ -831,15 +901,15 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 				if (results.size() == 0) {
 					results.add(detail);
-					closest = temp;
+					range = temp;
 				} else {
-					if (temp == closest) {
+					if (temp == range) {
 						results.add(detail);
-					} else if (temp < closest) {
+					} else if ((temp < range && !furthestExpirationDate) || (temp > range && furthestExpirationDate)) {
 						results.clear();
 						results.add(detail);
 
-						closest = temp;
+						range = temp;
 					}
 				}
 			}

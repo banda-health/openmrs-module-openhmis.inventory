@@ -6,8 +6,8 @@
         { label: "${ ui.message("openhmis.inventory.manage.module")}",
             link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/manageModule.page' },
         { label: "${ ui.message("openhmis.inventory.admin.departments")}",
-            link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/department/entities.page#/'},
-        { label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.department.name")}"}
+            link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/department/entities.page##/'},
+        { label: "${ui.message("openhmis.inventory.department.name")}"}
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));

@@ -46,12 +46,20 @@
 
                 $scope.searchItems = self.searchItems;
                 $scope.selectItem = self.selectItem;
-
-                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
-                    [self.entity_name]);
             }
 
-        self.searchStockOperation = self.searchStockOperation || function(){
+        self.searchStockOperation = self.searchStockOperation || function(currentPage){
+                if(currentPage === undefined){
+                    currentPage = $scope.currentPage;
+                }
+                else{
+                    $scope.currentPage = currentPage;
+                }
+
+                CookiesService.set('startIndex', $scope.startIndex);
+                CookiesService.set('limit', $scope.limit);
+                CookiesService.set('currentPage', currentPage);
+
                 var operationType_uuid;
                 var stockroom_uuid;
                 var operationItem_uuid;
@@ -64,12 +72,12 @@
                     stockroom_uuid = $scope.stockroom.uuid;
                 }
 
-                if($scope.operationItem != null){
+                if($scope.searchOperationItem !== '' && $scope.operationItem != null){
                     operationItem_uuid = $scope.operationItem.uuid;
                 }
 
                 StockOperationRestfulService.searchStockOperation(
-                    rest_entity_name, $scope.currentPage, $scope.limit,
+                    rest_entity_name, currentPage, $scope.limit,
                     operationItem_uuid, $scope.operation_status,
                     operationType_uuid, stockroom_uuid,
                     self.onLoadSearchStockOperationSuccessful

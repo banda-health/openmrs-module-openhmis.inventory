@@ -11,9 +11,9 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.stockrooms")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/entities.page#/'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/stockroom/entities.page##/'
 		},
-		{label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.stockroom.name")}"}
+		{label: "${ui.message("openhmis.inventory.stockroom.name")}"}
 	];
 
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
@@ -76,7 +76,7 @@
 				model: "searchItemStockName",
 				onChangeEvent: "searchItemStock(entity.uuid)",
 				class: ["field-display ui-autocomplete-input form-control searchinput"],
-				placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
+				placeholder: [ui.message("openhmis.commons.general.enterSearchPhrase")]
 		])}
 		<br /><br />
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
@@ -96,7 +96,7 @@
 		</table>
 
 		<div ng-show="items.length == 0 && searchItemStockName != ''">
-			${ui.message('openhmis.inventory.general.preSearchMessage')} {{searchItemStockName}} ${ui.message('openhmis.inventory.item.postSearchMessage')}
+			${ui.message('openhmis.commons.general.preSearchMessage')} - <b> {{searchItemStockName}} </b> - {{postSearchMessage}}
 		</div>
 
 		<div class="not-found" ng-show="items.length == 0 && searchItemStockName == ''">
@@ -152,16 +152,13 @@
 			<!-- search item stock operations -->
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [
 					model: "searchItemStockOperationName",
-					class: ["form-control autocomplete-search"],
-					placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
+					class: ["field-display ui-autocomplete-input form-control searchinput"],
+					placeholder: [ui.message("openhmis.commons.general.itemSearchPhrase")],
 					typeahead: ["item.name for item in searchOperationItems(\$viewValue)"],
 					typeaheadEditable: "true",
 					typeaheadOnSelect: "selectOperationsItem(\$item)",
+					ngEnterEvent: "searchItemStockOperation(entity.uuid,itemStockOperationCurrentPage)"
 			])}
-			<span>
-				<input type="button" class="confirm right" value="Search"
-				       ng-click="searchItemStockOperation(entity.uuid, itemStockOperationCurrentPage)" />
-			</span>
 		</div>
 		<br />
 		<table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-table">
@@ -205,16 +202,13 @@
             <!-- search item stock transactions -->
             ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                     model: "searchItemStockTransactionName",
-                    class: ["form-control autocomplete-search"],
-                    placeholder: [ui.message("openhmis.inventory.general.itemSearchPhrase")],
+					class: ["field-display ui-autocomplete-input form-control searchinput"],
+                    placeholder: [ui.message("openhmis.commons.general.itemSearchPhrase")],
                     typeahead: ["item.name for item in searchTransactionItems(\$viewValue)"],
                     typeaheadEditable: "true",
                     typeaheadOnSelect: "selectTransactionsItem(\$item)",
+					ngEnterEvent: "searchItemStockTransaction(entity.uuid,itemStockTransactionCurrentPage)"
             ])}
-            <span>
-                <input type="button" class="confirm right" value="Search"
-                       ng-click="searchItemStockTransaction(entity.uuid, itemStockTransactionCurrentPage)" />
-            </span>
         </div>
         <br />
 	    <table style="margin-bottom:5px;" class="manage-entities-table manage-stockrooms-transactions-table">

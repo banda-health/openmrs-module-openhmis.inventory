@@ -5,12 +5,10 @@
 <%@ include file="/WEB-INF/template/include.jsp" %>
 <openmrs:require allPrivileges="<%= PrivilegeWebConstants.SETTINGS_PAGE_PRIVILEGES %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.SETTINGS_PAGE %>"/>
-
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>'/>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
-<openmrs:htmlInclude file='<%= ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "styles/bootstrap.css" %>' />
+<openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>'/>
+<openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
+<openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "styles/bootstrap.css" %>' />
 <%@ include file="/WEB-INF/view/module/openhmis/commons/template/common/customizedHeader.jsp"%>
-
 <%@ include file="template/localHeader.jsp" %>
 
 <%@ include file="template/customizedLinksHeader.jsp" %>
@@ -177,9 +175,21 @@
 					</spring:bind>
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<spring:bind path="autoSelectItemStockFurthestExpirationDate">
+						<input id="autoSelectItemStockFurthestExpirationDate" name="${status.expression}" type="checkbox"
+							   <c:if test="${settings.autoSelectItemStockFurthestExpirationDate}">checked</c:if> />
+						<label class="removeBold" for="autoSelectItemStockFurthestExpirationDate">
+							<spring:message code="openhmis.inventory.settings.autoSelectItemStockFurthestExpirationDate"/>
+						</label>
+					</spring:bind>
+				</td>
+				<td></td>
+			</tr>
 		</table>
 		<br/>
-		<p><input class="submitButton confirm right" value="Save" type="submit" value="<openmrs:message code="Role.save"/>">
+		<p><input class="submitButton confirm right" type="submit" value="<openmrs:message code="openhmis.inventory.settings.page.settings.save"/>">
 		</p>
 	</form:form>
 </div>

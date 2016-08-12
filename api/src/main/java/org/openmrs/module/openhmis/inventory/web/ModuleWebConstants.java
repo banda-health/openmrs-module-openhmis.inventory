@@ -23,7 +23,7 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MODULE_ROOT = WebConstants.MODULE_BASE + ModuleConstants.MODULE_NAME + "/";
 	public static final String MODULE_RESOURCE_ROOT = WebConstants.MODULE_RESOURCE_BASE + ModuleConstants.MODULE_NAME + "/";
 
-	public static final String MODULE_COMMONS_RESOURCE_ROOT = "/openmrs/moduleResources/openhmis/commons/";
+	public static final String MODULE_COMMONS_RESOURCE_ROOT = "/moduleResources/openhmis/commons/";
 	public static final String MODULE_COMMON_TEMPLATE_URL = "/WEB-INF/view/module/openhmis/commons/template/common/";
 
 	public static final String ROLE_CREATION_ROOT = MODULE_ROOT + "roleCreation";
@@ -76,11 +76,15 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String SETTINGS_2X_ROOT = MODULE_ROOT + "settings2x";
 	public static final String SETTINGS_2X_PAGE = SETTINGS_2X_ROOT + ".page";
 
+	public static final String MODULE_SETTINGS_ROOT = MODULE_ROOT + "moduleSettings";
+
 	public static final String JASPER_REPORT_PAGE = MODULE_ROOT + "jasperReport";
 
 	public static final String LANDING_PAGE_EXTENSION_POINT_ID = "org.openmrs.module.openhmis.inventory.landing";
 	public static final String MANAGE_MODULE_PAGE_EXTENSION_POINT_ID =
 	        "org.openmrs.module.openhmis.inventory.manage.module";
+	public static final String TASKS_DASHBOARD_PAGE_EXTENSION_POINT_ID =
+	        "org.openmrs.module.openhmis.inventory.tasks.dashboard";
 
 	public static final String MESSAGE_PROPERTIES_JS_URI = MODULE_ROOT + "inventoryMessageProperties.js";
 	public static final String MESSAGE_PAGE = MODULE_ROOT + "inventoryMessageProperties";

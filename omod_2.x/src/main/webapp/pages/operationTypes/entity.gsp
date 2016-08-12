@@ -11,9 +11,9 @@
 		},
 		{
 			label: "${ ui.message("openhmis.inventory.admin.operationTypes")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationTypes/entities.page#/'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/operationTypes/entities.page##/'
 		},
-		{label: "${ ui.message("openhmis.inventory.general.edit")} ${ui.message("openhmis.inventory.operations.type.name")}"}
+		{label: "${ui.message("openhmis.inventory.operations.type.name")}"}
 	];
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 
@@ -105,8 +105,8 @@
 		</ul>
 		<br/>
 		<ul class="table-layout">
-			<li>
-				<span>{{messageLabels['openhmis.inventory.attribute.type.namePlural']}}</span>
+			<li class="valign">
+				<span>{{messageLabels['openhmis.commons.attribute.type.namePlural']}}</span>
 			</li>
 			<li>
 				<div class="bbf-editor">
@@ -123,99 +123,7 @@
 						<div class="bbf-actions">
 							<button type="button" data-action="add" ng-click="addAttributeType()">Add</button>
 						</div>
-
-						<div id="attribute-types-dialog" class="dialog" style="display:none;">
-							<div class="dialog-header">
-								<span ng-show="addAttributeTypeTitle != ''">
-									<i class="icon-plus-sign"></i>
-
-									<h3>{{addAttributeTypeTitle}}</h3>
-								</span>
-								<span ng-show="editAttributeTypeTitle != ''">
-									<i class="icon-edit"></i>
-
-									<h3>{{editAttributeTypeTitle}}</h3>
-								</span>
-							</div>
-
-							<div class="dialog-content form" id="dialog-bottom">
-								<ul class="table-layout dialog-table-layout">
-									<li class="required">
-										<span>{{messageLabels['general.name']}}</span>
-									</li>
-									<li>
-										<input type="text" style="min-width: 100%;"
-										       placeholder="" required ng-model="attributeType.name"/>
-									</li>
-								</ul>
-								<ul class="table-layout dialog-table-layout">
-									<li class="required">
-										<span>{{messageLabels['PersonAttributeType.format']}}</span>
-									</li>
-									<li>
-										<select id="formatSelect" class="form-control" style="font-size: 14px" ng-model="attributeType.format"
-										        ng-options="field for field in formatFields track by field">
-											<option value="0">-- Please Select Format --</option>
-											<option ng-selected="attributeType.format == field"></option>
-										</select>
-									</li>
-								</ul>
-								<ul class="table-layout dialog-table-layout">
-									<li class="not-required">
-										<span>{{messageLabels['PersonAttributeType.foreignKey']}}</span>
-									</li>
-									<li>
-										<input type="number" ng-model="attributeType.foreignKey"/>
-									</li>
-								</ul>
-								<ul class="table-layout dialog-table-layout">
-									<li class="not-required">
-										<span>{{messageLabels['PatientIdentifierType.format']}}</span>
-									</li>
-									<li>
-										<input type="text" ng-model="attributeType.regExp"/>
-									</li>
-								</ul>
-								<ul class="table-layout dialog-table-layout">
-									<li class="not-required">
-										<span>{{messageLabels['FormField.required']}}</span>
-									</li>
-									<li>
-										<input type="checkbox" ng-model="attributeType.required"/>
-									</li>
-								</ul>
-								<ul class="table-layout dialog-table-layout">
-									<li class="required">
-										<span>{{messageLabels['Field.attributeName']}} {{messageLabels['Obs.order']}}</span>
-									</li>
-									<li>
-										<input type="number" required ng-model="attributeType.attributeOrder"/>
-									</li>
-								</ul>
-								<br/>
-
-								<div class="ngdialog-buttons detail-section-border-top">
-									<br/>
-									<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}"
-									       ng-click="cancel()"/>
-									<span ng-show="addAttributeTypeTitle != ''">
-										<input type="button" class="confirm right"
-										       ng-disabled="attributeType.name == '' || attributeType.name == undefined || attributeType.attributeOrder == undefined
-										       || attributeType.format == undefined || attributeType.format == ''"
-										       value="{{messageLabels['general.save']}}"
-										       ng-click="saveOrUpdate()"/>
-									</span>
-									<span ng-show="editAttributeTypeTitle != ''">
-										<input type="button" class="confirm right"
-										       ng-disabled="attributeType.name == '' || attributeType.name == undefined
-										        || attributeType.attributeOrder == undefined
-										       || attributeType.format == undefined || attributeType.format == ''"
-										       value="{{messageLabels['openhmis.inventory.general.confirm']}}"
-										       ng-click="saveOrUpdate()"/>
-									</span>
-								</div>
-							</div>
-						</div>
+						${ui.includeFragment("openhmis.commons", "attributeTypesFragment")}
 					</div>
 				</div>
 			</li>
@@ -231,7 +139,7 @@
 				<input type="button" class="confirm right"
 				       value="{{messageLabels['general.save']}}"
 				       ng-disabled="entity.name == '' || entity.name == undefined"
-				       ng-click="removeoperationTypesTemporaryIds(); saveOrUpdate()"/>
+				       ng-click="saveOrUpdate()"/>
 			</span>
 		</p>
 	</fieldset>

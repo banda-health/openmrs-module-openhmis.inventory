@@ -45,9 +45,6 @@
 				$scope.searchItemsByName = self.searchItemsByName;
 				$scope.searchField = CookiesService.get('searchField') || $scope.searchField || '';
 				$scope.department = CookiesService.get('department') || {};
-
-				$scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
-					[self.entity_name]);
 			}
 
 		self.loadDepartments = self.loadDepartments || function(){
@@ -56,7 +53,7 @@
 
 		self.searchItemsByName = self.searchItemsByName || function(currentPage){
 				// reset current page when the search field is cleared
-				if($scope.searhField === undefined || $scope.searchField === ''){
+				if($scope.searchField === undefined || $scope.searchField === ''){
 					currentPage = 1;
 					$scope.currentPage = currentPage;
 				}

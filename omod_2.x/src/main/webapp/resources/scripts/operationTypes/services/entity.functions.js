@@ -24,183 +24,25 @@
 	function OperationsTypeFunctions() {
 		var service;
 		service = {
-			addMessageLabels: addMessageLabels,
-			addAttributeType: addAttributeType,
-			insertOperationTypesTemporaryId: insertOperationTypesTemporaryId,
-			removeOperationTypesTemporaryId: removeOperationTypesTemporaryId,
-			removeAttributeType: removeAttributeType,
-			removeFromList: removeFromList,
-			editAttributeType: editAttributeType
+			addMessageLabels: addMessageLabels
 		};
 
 		return service;
-
-		/**
-		 * Displays a popup dialog box with the attribute types . Saves the attributeType on clicking the 'Ok' button
-		 * @param $scope
-		 */
-		function addAttributeType($scope) {
-			$scope.editAttributeTypeTitle = '';
-			$scope.addAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.add']
-				+ ' '
-				+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
-			$scope.saveButton = $scope.messageLabels['general.save'];
-			var dialog = emr
-				.setupConfirmationDialog({
-					selector: '#attribute-types-dialog',
-					actions: {
-						confirm: function () {
-							$scope.entity.attributeTypes = $scope.entity.attributeTypes
-								|| [];
-							$scope.submitted = true;
-							if (angular.isDefined($scope.attributeType)
-								&& $scope.attributeType.name !== "" && $scope.attributeType.format !== "") {
-								$scope.entity.attributeTypes
-									.push($scope.attributeType);
-								insertOperationTypesTemporaryId(
-									$scope.entity.attributeTypes,
-									$scope.attributeType);
-								updateAttributeOrder($scope.entity.attributeTypes, $scope.attributeType);
-								$scope.attributeType = {};
-								console.log($scope.attributeTypes);
-							}
-							$scope.$apply();
-							dialog.close();
-						},
-						cancel: function () {
-							dialog.close();
-						}
-					}
-				});
-
-			dialog.show();
-		}
-
-		/**
-		 * Opens a popup dialog box to edit an attribute Type
-		 * @param attributeType
-		 * @param ngDialog
-		 * @param $scope
-		 */
-		function editAttributeType(attributeType, $scope) {
-			var tmpAttributeType = attributeType;
-
-			var editAttributeType = {
-				attributeOrder : attributeType.attributeOrder,
-				foreignKey : attributeType.foreignKey,
-				format : attributeType.format,
-				name : attributeType.name,
-				regExp : attributeType.regExp,
-				required : attributeType.required,
-			}
-
-			$scope.attributeType = editAttributeType;
-
-			$scope.editAttributeTypeTitle = $scope.messageLabels['openhmis.inventory.general.edit']
-				+ ' '
-				+ $scope.messageLabels['openhmis.inventory.attribute.type.name'];
-			$scope.editButton = $scope.messageLabels['general.update'];
-			$scope.addAttributeTypeTitle = '';
-			var dialog = emr.setupConfirmationDialog({
-				selector: '#attribute-types-dialog',
-				actions: {
-					confirm: function () {
-						tmpAttributeType.attributeOrder = $scope.attributeType.attributeOrder;
-						tmpAttributeType.foreignKey = $scope.attributeType.foreignKey;
-						tmpAttributeType.format = $scope.attributeType.format;
-						tmpAttributeType.name = $scope.attributeType.name;
-						tmpAttributeType.regExp = $scope.attributeType.regExp;
-						tmpAttributeType.required = $scope.attributeType.required;
-						$scope.$apply();
-
-						updateAttributeOrder($scope.entity.attributeTypes, tmpAttributeType);
-						$scope.attributeType = {};
-						dialog.close();
-					},
-					cancel: function () {
-						$scope.attributeType = {};
-						dialog.close();
-					}
-				}
-			});
-
-			dialog.show();
-		}
-
-		/**
-		 * ng-repeat requires that every item have a unique identifier.
-		 * This function sets a temporary unique id for all attribute types in the list.
-		 * @param operationTypes (attributeTypes)
-		 * @param operationType - optional
-		 */
-		function insertOperationTypesTemporaryId(attributeTypes, attributeType) {
-			if (angular.isDefined(attributeType)) {
-				var index = attributeTypes.indexOf(attributeType);
-				attributeType.id = index;
-			} else {
-				for (var attributeType in attributeTypes) {
-					var index = attributeTypes.indexOf(attributeType);
-					attributeType.id = index;
-				}
-			}
-		}
-
-		/*We check the index of the attribute type in the attributeTypes array. The Attribute Type
-		 * attributeOrder is always the same as index of the attribute type then compare an assign the
-		 * attributeOrder */
-		function updateAttributeOrder(attributeTypes, attributeType) {
-			if (angular.isDefined(attributeType)) {
-				var index = attributeTypes.indexOf(attributeType);
-				if (attributeType.attributeOrder != index) {
-					attributeType.attributeOrder = index;
-				}
-			}
-		}
-
-		/**
-		 * Removes an attribute Type from the list
-		 * @param attribute Type
-		 * @param attribute Types
-		 */
-		function removeAttributeType(attributeType, attributeTypes) {
-			removeFromList(attributeType, attributeTypes);
-		}
-
-		/**
-		 * Searches an attribute type and removes it from the list
-		 * @param attribute type
-		 * @param attribute Types
-		 */
-		function removeFromList(attributeType, attributeTypes) {
-			var index = attributeTypes.indexOf(attributeType);
-			if (index != -1) {
-				attributeTypes.splice(index, 1);
-			}
-		}
-
-		/**
-		 * Remove the temporary unique id from all operation types (attributetypes) before submitting.
-		 * @param items
-		 */
-		function removeOperationTypesTemporaryId(attributeTypes) {
-			for (var index in attributeTypes) {
-				var attributeType = attributeTypes[index];
-				delete attributeType.id;
-			}
-		}
+		
+		
 
 		function addMessageLabels() {
 			var messages = {};
-			messages['openhmis.inventory.general.add'] = emr
-				.message('openhmis.inventory.general.add');
+			messages['openhmis.commons.general.add'] = emr
+				.message('openhmis.commons.general.add');
 			messages['openhmis.inventory.attribute.type.name'] = emr
 				.message('openhmis.inventory.attribute.type.name');
-			messages['openhmis.inventory.general.edit'] = emr
-				.message('openhmis.inventory.general.edit');
-			messages['openhmis.inventory.general.saveChanges'] = emr
-				.message("openhmis.inventory.general.saveChanges");
-			messages['openhmis.inventory.general.confirm'] = emr
-				.message("openhmis.inventory.general.confirm");
+			messages['openhmis.commons.general.edit'] = emr
+				.message('openhmis.commons.general.edit');
+			messages['openhmis.commons.general.saveChanges'] = emr
+				.message("openhmis.commons.general.saveChanges");
+			messages['openhmis.commons.general.confirm'] = emr
+				.message("openhmis.commons.general.confirm");
 			messages['openhmis.inventory.operations.type.sourceLabel'] = emr
 				.message("openhmis.inventory.operations.type.sourceLabel");
 			messages['openhmis.inventory.operations.type.destinationLabel'] = emr
