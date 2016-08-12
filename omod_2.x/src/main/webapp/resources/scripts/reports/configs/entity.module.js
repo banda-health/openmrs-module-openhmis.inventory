@@ -30,11 +30,11 @@
 				templateUrl : 'entity.page',
 				controller : 'ReportController'
 			});
-
+			
 			$provide.factory('$exceptionHandler', function($injector) {
 				return ohmis.handleException;
 			});
-			
+
 		});
 		return app;
 	}
