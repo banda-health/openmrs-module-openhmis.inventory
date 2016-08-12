@@ -26,7 +26,7 @@
 	function ReportRestfulService(EntityRestFactory) {
 		var service;
 		service = {
-			getReports : getReports
+			getReport : getReport
 		};
 		return service;
  
