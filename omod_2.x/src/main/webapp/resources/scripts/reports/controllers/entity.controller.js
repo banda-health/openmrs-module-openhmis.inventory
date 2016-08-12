@@ -116,39 +116,26 @@
 			for (var i = 0; i < objectKeys.length; i++) {
 				var name = objectKeys[i];
 				var value = parameterObject[objectKeys[i]];
-
-				switch (name) {
-				case "stockroom":
-					if (!value) {
-						emr.errorAlert('openhmis.inventory.report.error.stockroomRequired');
-						return false;
+				if (!value) {
+					switch (name) {
+						case "stockroom":
+							emr.errorAlert('openhmis.inventory.report.error.stockroomRequired');
+							break;
+						case "item":
+							emr.errorAlert('openhmis.inventory.report.error.itemRequired');
+							break;
+						case "beginDate":
+							emr.errorAlert('openhmis.inventory.report.error.beginDateRequired');
+							break;
+						case "endDate":
+							emr.errorAlert('openhmis.inventory.report.error.endDateRequired');
+							break;
+						case "expiryDate":
+							emr.errorAlert('openhmis.inventory.report.error.expiryDateRequired');
+							break;
+						default:
+							break;
 					}
-					break;
-				case "item":
-					if (!value) {
-						emr.errorAlert('openhmis.inventory.report.error.itemRequired');
-						return false;
-					}
-					break;
-				case "beginDate":
-					if (!value) {
-						emr.errorAlert('openhmis.inventory.report.error.beginDateRequired');
-						return false;
-					}
-					break;
-				case "endDate":
-					if (!value) {
-						emr.errorAlert('openhmis.inventory.report.error.endDateRequired');
-						return false;
-					}
-					break;
-				case "expiryDate":
-					if (!value) {
-						emr.errorAlert('openhmis.inventory.report.error.expiryDateRequired');
-						return false;
-					}
-					break;
-				default:
 					return false;
 				}
 			}
