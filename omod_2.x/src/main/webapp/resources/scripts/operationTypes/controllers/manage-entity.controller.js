@@ -34,12 +34,14 @@
 				.message("openhmis.inventory.operations.type.name");
 		var rest_entity_name = emr
 				.message("openhmis.inventory.operations.type.name_rest");
+		var PRIVILEGE_ACCESS_MANAGE_OPERATION_TYPES_PAGE = "Task: Access Manage Operation Types";
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
 				|| function() {
 					self.bindBaseParameters(module_name, rest_entity_name,
 							entity_name);
+					self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_OPERATION_TYPES_PAGE);
 				}
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */

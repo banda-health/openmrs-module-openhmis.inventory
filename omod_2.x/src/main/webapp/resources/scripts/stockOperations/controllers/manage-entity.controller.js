@@ -27,10 +27,12 @@
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stock.operation.name");
         var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
+        var PRIVILEGE_ACCESS_VIEW_STOCK_OPERATIONS_PAGE = "Task: Access View Stock Operations";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
                 self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.checkPrivileges(PRIVILEGE_ACCESS_VIEW_STOCK_OPERATIONS_PAGE);
             }
 
         // @Override

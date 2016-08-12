@@ -27,10 +27,12 @@
         var entity_name_message_key = "openhmis.inventory.stockroom.name";
         var cancel_page = 'entities.page';
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
+        var PRIVILEGE_ACCESS_MANAGE_STOCKROOMS_PAGE = "Task: Access Manage Stockrooms";
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
                 self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+                self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_STOCKROOMS_PAGE);
             }
 
         /**

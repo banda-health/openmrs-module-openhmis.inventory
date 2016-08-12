@@ -29,10 +29,12 @@
         var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.itemAttributeType");
         var rest_name = emr.message("openhmis.inventory.itemAttributeType_rest");
+        var PRIVILEGE_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE = "Task: Access Manage Item Attribute Types";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
                 self.bindBaseParameters(module_name, rest_name, entity_name);
+                self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE);
             }
 
         /* ENTRY POINT: Instantiate the base controller which loads the page */

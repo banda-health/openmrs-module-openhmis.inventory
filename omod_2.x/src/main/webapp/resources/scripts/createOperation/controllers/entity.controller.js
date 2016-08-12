@@ -35,10 +35,12 @@
 		var cancel_page = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
 		var notDefined = {name: ' - Not Defined - '};
+		var PRIVILEGE_ACCESS_CREATE_OPERATION_PAGE = "Task: Access Create Operation";
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
 				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+				self.checkPrivileges(PRIVILEGE_ACCESS_CREATE_OPERATION_PAGE);
 			}
 
 		/**

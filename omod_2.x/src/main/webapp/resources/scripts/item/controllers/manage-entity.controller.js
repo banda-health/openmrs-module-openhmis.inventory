@@ -31,12 +31,14 @@
 		var module_name = 'inventory';
 		var entity_name = emr.message("openhmis.inventory.item.name");
 		var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
+		var PRIVILEGE_ACCESS_MANAGE_ITEMS_PAGE = "Task: Access Manage Items";
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
 				|| function() {
 					self.bindBaseParameters(module_name, rest_entity_name,
 							entity_name);
+				self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_ITEMS_PAGE);
 				}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
