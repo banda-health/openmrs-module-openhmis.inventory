@@ -22,7 +22,7 @@
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
 		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions'];
 	
-	var MY_OPERATIONS_URL = '/' + OPENMRS_CONTEXT_PATH + '/openhmis.inventory/myOperations/entities.page';
+	var MY_OPERATIONS_URL = ROOT_URL + 'openhmis.inventory/myOperations/entities.page';
 	
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
@@ -35,7 +35,7 @@
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, CANCEL_PAGE);
+				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 			}
 
 		/**

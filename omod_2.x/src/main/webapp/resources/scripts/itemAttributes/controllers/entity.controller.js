@@ -32,7 +32,7 @@
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(module_name, rest_name, entity_name_message_key, CANCEL_PAGE);
+				self.bindBaseParameters(module_name, rest_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 			}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope

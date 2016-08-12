@@ -15,6 +15,7 @@
 	ui.includeJavascript("openhmis.inventory", "institution/models/entity.model.js")
 	ui.includeJavascript("openhmis.inventory", "institution/controllers/entity.controller.js")
 	ui.includeJavascript("openhmis.inventory", "institution/controllers/manage-entity.controller.js")
+    ui.includeJavascript("openhmis.inventory", "constants.js")
 %>
 
 <script data-main="institution/configs/entity.main"

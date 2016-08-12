@@ -23,6 +23,7 @@
     ui.includeJavascript("openhmis.inventory", "stockOperations/controllers/entity.controller.js")
     ui.includeJavascript("openhmis.inventory", "myOperations/controllers/view-entity.controller.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.functions.js")
+    ui.includeJavascript("openhmis.inventory", "constants.js")
 %>
 
 <script data-main="myOperations/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
