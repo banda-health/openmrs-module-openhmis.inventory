@@ -21,6 +21,7 @@ public class Settings {
 
 	private Boolean autoGenerateOperationNumber;
 	private Boolean autoCompleteOperations;
+	private Boolean wildcardItemSearch;
 	private Integer operationNumberGeneratorSourceId;
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
@@ -43,6 +44,14 @@ public class Settings {
 
 	public void setAutoCompleteOperations(Boolean autoCompleteOperations) {
 		this.autoCompleteOperations = autoCompleteOperations;
+	}
+
+	public Boolean getWildcardItemSearch() {
+		return wildcardItemSearch;
+	}
+
+	public void setWildcardItemSearch(Boolean wildcardItemSearch) {
+		this.wildcardItemSearch = wildcardItemSearch;
 	}
 
 	public Integer getOperationNumberGeneratorSourceId() {

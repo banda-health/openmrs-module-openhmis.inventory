@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
@@ -70,7 +71,7 @@ public class ItemSearchHandler
 
 		String hasPhysicalInventoryString = context.getParameter("has_physical_inventory");
 		Boolean hasPhysicalInventory = null;
-		if (!StringUtils.isEmpty(hasPhysicalInventoryString)) {
+		if (StringUtils.isNotEmpty(hasPhysicalInventoryString)) {
 			hasPhysicalInventory = Boolean.parseBoolean(hasPhysicalInventoryString);
 		}
 
@@ -107,9 +108,14 @@ public class ItemSearchHandler
 	        Boolean hasPhysicalInventory) {
 		ItemSearch template = new ItemSearch();
 
-		if (!StringUtils.isEmpty(name)) {
+		if (StringUtils.isNotEmpty(name)) {
 			template.setNameComparisonType(BaseObjectTemplateSearch.StringComparisonType.LIKE);
-			template.getTemplate().setName(name + "%");
+			if (ModuleSettings.useWildcardItemSearch()) {
+				template.getTemplate().setName("%" + name + "%");
+			} else {
+				template.getTemplate().setName(name + "%");
+			}
+
 		}
 
 		template.getTemplate().setDepartment(department);
