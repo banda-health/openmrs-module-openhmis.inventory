@@ -26,14 +26,12 @@
 	                             StockTakeRestfulService, PaginationService, EntityFunctions, StockTakeFunctions,
 	                             CookiesService) {
 		var self = this;
-		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.admin.stockTake";
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
-		var INVENTORY_TASK_DASHBOARD_PAGE_URL = ROOT_URL + 'openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, INVENTORY_TASK_DASHBOARD_PAGE_URL);
+				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, INVENTORY_TASK_DASHBOARD_PAGE_URL);
 			}
 		
 		/**
@@ -129,7 +127,7 @@
 			}
 		
 		self.loadStockrooms = self.loadStockrooms || function () {
-				StockTakeRestfulService.loadStockrooms(module_name, self.onLoadStockroomsSuccessful);
+				StockTakeRestfulService.loadStockrooms(INVENTORY_MODULE_NAME, self.onLoadStockroomsSuccessful);
 			}
 		
 		self.loadStockDetails = self.loadStockDetails || function (stockroomUuid, stockTakeCurrentPage) {

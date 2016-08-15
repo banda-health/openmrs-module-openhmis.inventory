@@ -24,13 +24,12 @@
     function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, DepartmentModel) {
         var self = this;
 
-        var module_name = 'inventory';
         var entity_name_message_key = "openhmis.inventory." + ENTITY_NAME + ".name";
         var rest_entity_name = ENTITY_NAME;
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
             };
 
         /**

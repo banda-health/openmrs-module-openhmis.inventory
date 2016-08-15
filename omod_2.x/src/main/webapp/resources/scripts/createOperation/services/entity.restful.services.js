@@ -18,8 +18,6 @@
 
 	angular.module('app.restfulServices').service('CreateOperationRestfulService', CreateOperationRestfulService);
 	
-	var MODULE_SETTINGS_URL = 'module/openhmis/inventory/moduleSettings.page';
-	
 	CreateOperationRestfulService.$inject = ['EntityRestFactory'];
 
 	function CreateOperationRestfulService(EntityRestFactory) {
@@ -106,7 +104,7 @@
 
 		function isOperationNumberGenerated(onLoadOpNumGenSuccessful) {
 			var requestParams = [];
-			requestParams['resource'] = MODULE_SETTINGS_URL;
+			requestParams['resource'] = INVENTORY_MODULE_SETTINGS_URL;
 			requestParams['setting'] = 'openhmis.inventory.autoGenerateOperationNumber';
 			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
 			EntityRestFactory.loadResults(requestParams,
@@ -115,7 +113,7 @@
 
 		function isNegativeStockRestricted(onLoadNegativeStockSuccessful) {
 			var requestParams = [];
-			requestParams['resource'] = MODULE_SETTINGS_URL;
+			requestParams['resource'] = INVENTORY_MODULE_SETTINGS_URL;
 			requestParams['setting'] = 'openhmis.inventory.restrictNegativeInventoryStockCreation';
 			EntityRestFactory.setCustomBaseUrl(ROOT_URL);
 			EntityRestFactory.loadResults(requestParams,

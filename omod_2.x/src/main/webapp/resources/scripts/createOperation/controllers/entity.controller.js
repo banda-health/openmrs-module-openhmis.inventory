@@ -22,20 +22,19 @@
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
 		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions'];
 	
-	var MY_OPERATIONS_URL = ROOT_URL + 'openhmis.inventory/myOperations/entities.page';
-	
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
 	                                   CookiesService, LineItemModel, CommonsRestfulFunctions) {
 		var self = this;
-		var module_name = 'inventory';
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
 		var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
 		var notDefined = {name: ' - Not Defined - '};
+		var MY_OPERATIONS_URL = ROOT_URL + 'openhmis.inventory/myOperations/entities.page';
+		var GENERATE_OPERATION_NUMBER = "WILL BE GENERATED";
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-				self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 			}
 
 		/**
@@ -47,7 +46,7 @@
 			|| function() {
 				$scope.loading = true;
 				if (self.sessionLocation === undefined) {
-					CommonsRestfulFunctions.getSessionLocation(module_name, self.onLoadSessionLocationSuccessful);
+					CommonsRestfulFunctions.getSessionLocation(INVENTORY_MODULE_NAME, self.onLoadSessionLocationSuccessful);
 				}
 
 				$scope.isOperationNumberGenerated = false;
@@ -63,14 +62,14 @@
 				$scope.changeOperationDate = self.changeOperationDate;
 				$scope.expirationDate = '';
 				$scope.operationTypes = [];
-				CreateOperationRestfulService.loadStockOperationTypes(module_name, self.onLoadOperationTypesSuccessful);
+				CreateOperationRestfulService.loadStockOperationTypes(INVENTORY_MODULE_NAME, self.onLoadOperationTypesSuccessful);
 				$scope.sourceStockrooms = [];
 				$scope.destinationStockrooms = [];
-				CreateOperationRestfulService.loadStockrooms(module_name, self.onLoadStockroomsSuccessful);
+				CreateOperationRestfulService.loadStockrooms(INVENTORY_MODULE_NAME, self.onLoadStockroomsSuccessful);
 				$scope.institutions = [];
-				CreateOperationRestfulService.loadInstitutions(module_name, self.onLoadInstitutionsSuccessful);
+				CreateOperationRestfulService.loadInstitutions(INVENTORY_MODULE_NAME, self.onLoadInstitutionsSuccessful);
 				$scope.departments = [];
-				CreateOperationRestfulService.loadDepartments(module_name, self.onLoadDepartmentsSuccessful);
+				CreateOperationRestfulService.loadDepartments(INVENTORY_MODULE_NAME, self.onLoadDepartmentsSuccessful);
 				$scope.loadOperationTypeAttributes = self.loadOperationTypeAttributes;
 				$scope.patient;
 				$scope.patients = [];
@@ -205,7 +204,7 @@
 			}
 
 		self.loadStockOperations = self.loadStockOperations || function(date) {
-				CreateOperationRestfulService.loadStockOperations(module_name, date, self.onLoadStockOperationsSuccessful);
+				CreateOperationRestfulService.loadStockOperations(INVENTORY_MODULE_NAME, date, self.onLoadStockOperationsSuccessful);
 			}
 
 		self.warningDialog = self.warningDialog || function(newVal, oldVal, source) {
@@ -252,14 +251,14 @@
 				if ($scope.patient !== undefined) {
 					$scope.currentPage = $scope.currentPage || currentPage;
 					$scope.patients = CommonsRestfulFunctions.searchPatients(
-						module_name, $scope.patient, $scope.currentPage,
+						INVENTORY_MODULE_NAME, $scope.patient, $scope.currentPage,
 						$scope.limit, $scope);
 				}
 			}
 
 		self.selectPatient = self.selectPatient || function(patient) {
 				$scope.selectedPatient = patient;
-				CommonsRestfulFunctions.loadVisit(module_name, patient.uuid, $scope);
+				CommonsRestfulFunctions.loadVisit(INVENTORY_MODULE_NAME, patient.uuid, $scope);
 			}
 
 		self.changePatient = self.changePatient || function() {
@@ -267,11 +266,11 @@
 			}
 
 		self.endVisit = self.endVisit || function() {
-				CommonsRestfulFunctions.endVisit(module_name, $scope.visit.uuid, $scope);
+				CommonsRestfulFunctions.endVisit(INVENTORY_MODULE_NAME, $scope.visit.uuid, $scope);
 			}
 
 		self.searchStockOperationItems = self.searchStockOperationItems || function(search) {
-				return CreateOperationRestfulService.searchStockOperationItems(module_name, search);
+				return CreateOperationRestfulService.searchStockOperationItems(INVENTORY_MODULE_NAME, search);
 			}
 
 		self.selectStockOperationItem = self.selectStockOperationItem || function(stockOperationItem, lineItem) {
@@ -302,16 +301,16 @@
 			}
 
 		self.searchFieldAttributePatients = self.searchFieldAttributePatients || function(q) {
-				return CommonsRestfulFunctions.searchPerson(module_name, q, 'patient');
+				return CommonsRestfulFunctions.searchPerson(INVENTORY_MODULE_NAME, q, 'patient');
 			}
 
 		self.searchFieldAttributePerson = self.searchFieldAttributePerson || function(q) {
-				return CommonsRestfulFunctions.searchPerson(module_name, q, 'person');
+				return CommonsRestfulFunctions.searchPerson(INVENTORY_MODULE_NAME, q, 'person');
 			}
 
 		self.searchItemStock = self.searchItemStock || function(stockOperationItem) {
 				if ("uuid" in stockOperationItem && $scope.sourceStockroom !== undefined) {
-					CreateOperationRestfulService.searchItemStock(module_name, stockOperationItem.uuid, $scope.sourceStockroom.uuid,
+					CreateOperationRestfulService.searchItemStock(INVENTORY_MODULE_NAME, stockOperationItem.uuid, $scope.sourceStockroom.uuid,
 						self.onLoadItemStockSuccessful);
 				}
 			}
@@ -346,7 +345,7 @@
 
 		self.loadOperationTypeAttributes = self.loadOperationTypeAttributes || function() {
 				if ($scope.operationType !== undefined) {
-					CreateOperationRestfulService.loadOperationTypeAttributes(module_name, $scope.operationType.uuid,
+					CreateOperationRestfulService.loadOperationTypeAttributes(INVENTORY_MODULE_NAME, $scope.operationType.uuid,
 						self.onLoadOperationTypeAttributesSuccessful);
 				}
 			}

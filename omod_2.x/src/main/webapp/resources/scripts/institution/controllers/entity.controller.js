@@ -26,7 +26,6 @@
 
 		var self = this;
 
-		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.institution.name";
 		var rest_entity_name = emr
 				.message("openhmis.inventory.institution.name_rest");
@@ -34,7 +33,7 @@
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters
 				|| function() {
-					self.bindBaseParameters(module_name, rest_entity_name,
+					self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name,
 						entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 				}
 

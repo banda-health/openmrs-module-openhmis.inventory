@@ -25,14 +25,13 @@
 				ItemAttributeTypesModel, ItemAttributeTypesRestfulService, EntityFunctions) {
 
 		var self = this;
-
-		var module_name = 'inventory';
+		
 		var entity_name_message_key = "openhmis.inventory.itemAttributeType";
 		var rest_name = emr.message("openhmis.inventory.itemAttributeType_rest");
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(module_name, rest_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 			}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
@@ -41,7 +40,7 @@
 				$scope.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate;
 
 				// call functions..
-				ItemAttributeTypesRestfulService.loadFormatFields(module_name, self.onLoadFormatFieldsSuccessful);
+				ItemAttributeTypesRestfulService.loadFormatFields(INVENTORY_MODULE_NAME, self.onLoadFormatFieldsSuccessful);
 
 			}
 
