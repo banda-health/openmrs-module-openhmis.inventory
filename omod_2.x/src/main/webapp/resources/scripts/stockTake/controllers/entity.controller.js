@@ -22,8 +22,6 @@
 		'StockTakeModel', 'StockTakeRestfulService', 'PaginationService', 'EntityFunctions', 'StockTakeFunctions',
 		'CookiesService'];
 	
-	var INVENTORY_TASK_DASHBOARD_PAGE_URL = ROOT_URL + 'openhmis.inventory/inventory/inventoryTasksDashboard.page';
-	
 	function StockTakeController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockTakeModel,
 	                             StockTakeRestfulService, PaginationService, EntityFunctions, StockTakeFunctions,
 	                             CookiesService) {
@@ -31,6 +29,7 @@
 		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.admin.stockTake";
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
+		var INVENTORY_TASK_DASHBOARD_PAGE_URL = ROOT_URL + 'openhmis.inventory/inventory/inventoryTasksDashboard.page';
 		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
