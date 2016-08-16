@@ -72,6 +72,11 @@
 	</globalProperty>
 
 	<globalProperty>
+		<property>${project.parent.artifactId}.useWildcardItemSearch</property>
+		<description>Whether or not a search string matches only the start of an item (false) or anywhere in the item (true).</description>
+	</globalProperty>
+
+	<globalProperty>
 		<property>${project.parent.artifactId}.showOperationCancelReason</property>
 		<description>true/false whether or not the cancel reason field should be used.</description>
 	</globalProperty>
