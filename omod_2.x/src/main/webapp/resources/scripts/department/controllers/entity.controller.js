@@ -25,7 +25,6 @@
         var self = this;
 
         var entity_name_message_key = "openhmis.inventory." + ENTITY_NAME + ".name";
-        var PRIVILEGE_ACCESS_MANAGE_DEPARTMENTS_PAGE = "Task: Access Manage Departments";
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {

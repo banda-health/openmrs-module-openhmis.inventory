@@ -28,7 +28,6 @@
 		
 		var entity_name_message_key = "openhmis.inventory.itemAttributeType";
 		var rest_name = emr.message("openhmis.inventory.itemAttributeType_rest");
-		var PRIVILEGE_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE = "Task: Access Manage Item Attribute Types";
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {

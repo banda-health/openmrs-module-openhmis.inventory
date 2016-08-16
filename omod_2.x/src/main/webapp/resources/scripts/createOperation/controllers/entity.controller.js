@@ -32,8 +32,6 @@
 		var MY_OPERATIONS_URL = ROOT_URL + 'openhmis.inventory/myOperations/entities.page';
 		var GENERATE_OPERATION_NUMBER = "WILL BE GENERATED";
 		
-		var PRIVILEGE_ACCESS_CREATE_OPERATION_PAGE = "Task: Access Create Operation";
-		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
 				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);

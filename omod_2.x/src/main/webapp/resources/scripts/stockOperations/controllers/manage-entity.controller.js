@@ -26,7 +26,6 @@
         var self = this;
         var entity_name = emr.message("openhmis.inventory.stock.operation.name");
         var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
-        var PRIVILEGE_ACCESS_VIEW_STOCK_OPERATIONS_PAGE = "Task: Access View Stock Operations";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {

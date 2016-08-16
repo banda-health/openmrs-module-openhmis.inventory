@@ -26,7 +26,6 @@
         var self = this;
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
-        var PRIVILEGE_ACCESS_MANAGE_STOCKROOMS_PAGE = "Task: Access Manage Stockrooms";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {

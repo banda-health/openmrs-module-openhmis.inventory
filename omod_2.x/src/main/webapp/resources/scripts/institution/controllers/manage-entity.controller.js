@@ -31,7 +31,6 @@
 		var entity_name = emr.message("openhmis.inventory.institution.name");
 		var rest_entity_name = emr
 				.message("openhmis.inventory.institution.name_rest");
-		var PRIVILEGE_ACCESS_MANAGE_INSTITUTIONS_PAGE = "Task: Access Manage Institutions";
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName

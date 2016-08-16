@@ -28,7 +28,6 @@
 		var self = this;
 		var entity_name_message_key = "openhmis.inventory.admin.stockTake";
 		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
-		var PRIVILEGE_ACCESS_STOCK_TAKE_PAGE = "Task: Access Stock Take";
 		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {

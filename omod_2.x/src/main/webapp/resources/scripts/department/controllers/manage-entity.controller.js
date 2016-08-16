@@ -28,7 +28,6 @@
         var self = this;
 
         var entity_name = emr.message("openhmis.inventory." + ENTITY_NAME + ".name");
-	    var PRIVILEGE_ACCESS_MANAGE_DEPARTMENTS_PAGE = "Task: Access Manage Departments";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {

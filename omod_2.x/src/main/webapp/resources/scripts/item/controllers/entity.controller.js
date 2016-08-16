@@ -26,7 +26,6 @@
 
         var entity_name_message_key = "openhmis.inventory.item.name";
         var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
-	    var PRIVILEGE_ACCESS_MANAGE_ITEMS_PAGE = "Task: Access Manage Items";
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {

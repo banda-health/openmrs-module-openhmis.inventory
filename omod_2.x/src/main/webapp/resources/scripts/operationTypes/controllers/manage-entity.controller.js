@@ -33,7 +33,6 @@
 				.message("openhmis.inventory.operations.type.name");
 		var rest_entity_name = emr
 				.message("openhmis.inventory.operations.type.name_rest");
-		var PRIVILEGE_ACCESS_MANAGE_OPERATION_TYPES_PAGE = "Task: Access Manage Operation Types";
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
