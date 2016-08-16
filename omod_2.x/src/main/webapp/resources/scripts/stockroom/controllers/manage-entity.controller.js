@@ -24,13 +24,12 @@
     function ManageStockroomsController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
                                   StockroomModel, CookiesService, StockroomRestfulService) {
         var self = this;
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name);
             }
 
         // @Override
@@ -41,7 +40,7 @@
             }
 
         self.loadLocations = self.loadLocations || function(){
-                StockroomRestfulService.loadLocations(module_name, self.onLoadLocationsSuccessful);
+                StockroomRestfulService.loadLocations(INVENTORY_MODULE_NAME, self.onLoadLocationsSuccessful);
             }
 
         self.searchStockroomsByName = self.searchStockroomsByName || function(currentPage){

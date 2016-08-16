@@ -26,13 +26,12 @@
 
         var self = this;
 
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.itemAttributeType");
         var rest_name = emr.message("openhmis.inventory.itemAttributeType_rest");
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_name, entity_name);
             }
 
         /* ENTRY POINT: Instantiate the base controller which loads the page */

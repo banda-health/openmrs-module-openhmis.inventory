@@ -27,13 +27,12 @@
                                     StockOperationModel, CookiesService,
                                     StockOperationRestfulService) {
         var self = this;
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stock.operation.name");
         var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name);
             }
 
         // @Override
@@ -98,7 +97,7 @@
 
         self.searchItems = self.searchItems || function(search){
                 $scope.operationItem = {};
-                return StockOperationRestfulService.searchStockOperationItems(module_name, search);
+                return StockOperationRestfulService.searchStockOperationItems(INVENTORY_MODULE_NAME, search);
             }
 
         self.selectItem = self.selectItem || function(item){
