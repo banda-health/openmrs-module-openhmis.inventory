@@ -27,14 +27,12 @@
                                          DepartmentModel, CookiesService) {
         var self = this;
 
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory." + ENTITY_NAME + ".name");
-        var rest_entity_name = ENTITY_NAME;
 	    var PRIVILEGE_ACCESS_MANAGE_DEPARTMENTS_PAGE = "Task: Access Manage Departments";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, ENTITY_NAME, entity_name);
                 self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_DEPARTMENTS_PAGE);
             };
 

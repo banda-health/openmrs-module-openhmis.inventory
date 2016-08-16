@@ -24,14 +24,13 @@
     function ManageStockroomsController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
                                   StockroomModel, CookiesService, StockroomRestfulService) {
         var self = this;
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
         var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
         var PRIVILEGE_ACCESS_MANAGE_STOCKROOMS_PAGE = "Task: Access Manage Stockrooms";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name);
                 self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_STOCKROOMS_PAGE);
             }
 
@@ -43,7 +42,7 @@
             }
 
         self.loadLocations = self.loadLocations || function(){
-                StockroomRestfulService.loadLocations(module_name, self.onLoadLocationsSuccessful);
+                StockroomRestfulService.loadLocations(INVENTORY_MODULE_NAME, self.onLoadLocationsSuccessful);
             }
 
         self.searchStockroomsByName = self.searchStockroomsByName || function(currentPage){

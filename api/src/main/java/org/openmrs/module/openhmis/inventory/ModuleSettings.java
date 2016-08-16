@@ -33,6 +33,7 @@ public class ModuleSettings {
 	public static final String EXPIRING_STOCK_REPORT_ID_PROPERTY = "openhmis.inventory.reports.expiringStock";
 	public static final String AUTO_COMPLETE_OPERATIONS_PROPERTY = "openhmis.inventory.autoCompleteOperations";
 	public static final String SHOW_OPERATATION_CANCEL_REASEON_FIELD = "openhmis.inventory.showOperationCancelReason";
+	public static final String USE_WILDCARD_ITEM_SEARCH_PROPERTY = "openhmis.inventory.useWildcardItemSearch";
 	public static final String RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD =
 	        "openhmis.inventory.restrictNegativeInventoryStockCreation";
 	public static final String AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE =
@@ -72,6 +73,12 @@ public class ModuleSettings {
 		String property = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE);
 		return Boolean.parseBoolean(property);
 	}
+	
+	public static boolean useWildcardItemSearch() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
+		return Boolean.parseBoolean(property);
+	}
 
 	public static Settings loadSettings() {
 		Settings settings = new Settings();
@@ -86,37 +93,37 @@ public class ModuleSettings {
 		}
 
 		String prop = adminService.getGlobalProperty(STOCK_TAKE_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockTakeReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCK_CARD_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockCardReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCKROOM_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockroomReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(EXPIRING_STOCK_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setExpiringStockReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setStockOperationsByStockroomReportId(Integer.parseInt(prop));
 		}
 
 		prop = adminService.getGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY);
-		if (!StringUtils.isEmpty(prop)) {
+		if (StringUtils.isNotEmpty(prop)) {
 			settings.setAutoCompleteOperations(Boolean.parseBoolean(prop));
 		} else {
 			settings.setAutoCompleteOperations(false);
@@ -127,6 +134,13 @@ public class ModuleSettings {
 			settings.setAutoSelectItemStockFurthestExpirationDate(Boolean.parseBoolean(prop));
 		} else {
 			settings.setAutoSelectItemStockFurthestExpirationDate(false);
+		}
+		
+		prop = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
+		if (StringUtils.isNotEmpty(prop)) {
+			settings.setWildcardItemSearch(Boolean.parseBoolean(prop));
+		} else {
+			settings.setWildcardItemSearch(false);
 		}
 
 		return settings;
@@ -199,6 +213,13 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE, Boolean.TRUE.toString());
 		} else {
 			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE, Boolean.FALSE.toString());
+		}
+		
+		Boolean wildcardItemSearch = settings.getWildcardItemSearch();
+		if (Boolean.TRUE.equals(wildcardItemSearch)) {
+			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.TRUE.toString());
+		} else {
+			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.FALSE.toString());
 		}
 	}
 

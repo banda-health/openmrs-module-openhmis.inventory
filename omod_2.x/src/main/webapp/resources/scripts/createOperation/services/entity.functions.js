@@ -18,10 +18,11 @@
 
 	var app = angular.module('app.stockOperationFunctionsFactory', []);
 	app.service('CreateOperationFunctions', CreateOperationFunctions);
-
-	CreateOperationFunctions.$inject = ['EntityFunctions', '$filter'];
-
+	
+	
 	var NOT_DEFINED = ' - Not Defined - ';
+	
+	CreateOperationFunctions.$inject = ['EntityFunctions', '$filter'];
 
 	function CreateOperationFunctions(EntityFunctions, $filter) {
 		var service;

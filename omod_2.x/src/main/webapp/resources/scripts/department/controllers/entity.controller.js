@@ -24,15 +24,12 @@
     function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, DepartmentModel) {
         var self = this;
 
-        var module_name = 'inventory';
         var entity_name_message_key = "openhmis.inventory." + ENTITY_NAME + ".name";
-        var cancel_page = 'entities.page';
-        var rest_entity_name = ENTITY_NAME;
         var PRIVILEGE_ACCESS_MANAGE_DEPARTMENTS_PAGE = "Task: Access Manage Departments";
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
                 self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_DEPARTMENTS_PAGE);
             };
 

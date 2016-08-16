@@ -70,6 +70,14 @@
 		</td></tr>
 		<tr><td>
 			<br />
+			<spring:bind path="wildcardItemSearch">
+				<input id="wildcardItemSearch" name="${status.expression}" type="checkbox"
+					   <c:if test="${settings.wildcardItemSearch}">checked</c:if> />
+				<label for="wildcardItemSearch"><spring:message code="openhmis.inventory.report.use.wildcard.item.search.label"/></label>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
 			<label for="stockTakeReportId"><spring:message code="openhmis.inventory.report.select.stock.take.label"/> </label>
 			<spring:bind path="stockTakeReportId">
 				<select id="stockTakeReportId" name="${status.expression}">

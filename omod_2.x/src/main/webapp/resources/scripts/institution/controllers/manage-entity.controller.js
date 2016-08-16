@@ -28,7 +28,6 @@
 
 		var self = this;
 
-		var module_name = 'inventory';
 		var entity_name = emr.message("openhmis.inventory.institution.name");
 		var rest_entity_name = emr
 				.message("openhmis.inventory.institution.name_rest");
@@ -37,7 +36,7 @@
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
 				|| function() {
-					self.bindBaseParameters(module_name, rest_entity_name,
+					self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name,
 							entity_name);
 				self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_INSTITUTIONS_PAGE);
 				}
