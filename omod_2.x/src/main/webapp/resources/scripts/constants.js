@@ -5,7 +5,7 @@ var RELATIVE_CANCEL_PAGE_URL = 'entities.page';
 var INVENTORY_MODULE_NAME = 'inventory';
 var INVENTORY_TASK_DASHBOARD_PAGE_URL = ROOT_URL + 'openhmis.inventory/inventory/inventoryTasksDashboard.page';
 
-/*Privileges */
+/*Defining the privileges to be used in the angular files*/
 var PRIVILEGE_ACCESS_CREATE_OPERATION_PAGE = "Task: Access Create Operation";
 var PRIVILEGE_ACCESS_MANAGE_DEPARTMENTS_PAGE = "Task: Access Manage Departments";
 var PRIVILEGE_ACCESS_MANAGE_INSTITUTIONS_PAGE = "Task: Access Manage Institutions";
