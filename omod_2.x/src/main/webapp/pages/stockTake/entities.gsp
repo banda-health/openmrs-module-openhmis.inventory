@@ -22,6 +22,7 @@
     ui.includeJavascript("openhmis.inventory", "stockTake/services/entity.restful.services.js")
     ui.includeJavascript("openhmis.inventory", "stockTake/controllers/entity.controller.js")
     ui.includeJavascript("openhmis.inventory", "stockTake/services/entity.functions.js")
+    ui.includeJavascript("openhmis.inventory", "constants.js")
 %>
 
 <script data-main="stockTake/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
