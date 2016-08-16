@@ -76,8 +76,6 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String SETTINGS_2X_ROOT = MODULE_ROOT + "settings2x";
 	public static final String SETTINGS_2X_PAGE = SETTINGS_2X_ROOT + ".page";
 
-	public static final String MODULE_SETTINGS_ROOT = MODULE_ROOT + "moduleSettings";
-
 	public static final String JASPER_REPORT_PAGE = MODULE_ROOT + "jasperReport";
 
 	public static final String LANDING_PAGE_EXTENSION_POINT_ID = "org.openmrs.module.openhmis.inventory.landing";
@@ -89,6 +87,8 @@ public class ModuleWebConstants extends WebConstants {
 	public static final String MESSAGE_PROPERTIES_JS_URI = MODULE_ROOT + "inventoryMessageProperties.js";
 	public static final String MESSAGE_PAGE = MODULE_ROOT + "inventoryMessageProperties";
 	public static final String MESSAGE_PROPERTIES_JS = "/ws/module/openhmis/inventory/inventoryMessageProperties.js";
+
+	public static final String MODULE_SETTINGS_ROOT = MODULE_ROOT + "moduleSettings";
 
 	protected ModuleWebConstants() {}
 }
