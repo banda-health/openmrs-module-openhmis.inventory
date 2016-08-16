@@ -215,7 +215,7 @@ public class StockOperationServiceImpl extends BaseOpenmrsService implements ISt
 
 			// Check to see if we should autocomplete the operation
 			if (operation.getStatus() == StockOperationStatus.PENDING
-			        && ModuleSettings.loadSettings().getAutoCompleteOperations()) {
+			        && ModuleSettings.isOperationAutoCompleted()) {
 				operation.setStatus(StockOperationStatus.COMPLETED);
 				operation = submitOperation(operation, false);
 			}
