@@ -162,7 +162,7 @@
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 				"type": "link",
 				"label": "Inventory Reports",
-				"url": "module/openhmis/inventory/inventory.form",
+				"url": "openhmis.inventory/reports/entities.page",
 				"icon": "icon-file-alt",
 				"requiredPrivilege": "Task: Access Inventory Reports"
 			}
