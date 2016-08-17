@@ -32,7 +32,7 @@
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
                 self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_name, entity_name);
-                self.checkPrivileges(PRIVILEGE_ACCESS_MANAGE_ITEM_ATTRIBUTE_TYPE_PAGE);
+                self.checkPrivileges(TASK_MANAGE_METADATA);
             }
 
         /* ENTRY POINT: Instantiate the base controller which loads the page */
