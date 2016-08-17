@@ -25,14 +25,13 @@
 
 		var self = this;
 
-		var module_name = 'inventory';
 		var entity_name_message_key = "openhmis.inventory.report.name";
-		var cancel_page = 'entity.page';
 		var rest_entity_name = emr.message("openhmis.inventory.report.rest_name");
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-			self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+			self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+			self.checkPrivileges(TASK_ACCESS_INVENTORY_REPORTS_PAGE);
 		}
 
 		/**
@@ -104,8 +103,7 @@
 		}
 
 		function printReport(reportId, parameters) {
-			var url = "/" + OPENMRS_CONTEXT_PATH + "/module/openhmis/inventory/jasperReport.form?";
-			url += "reportId=" + reportId + "&" + parameters;
+			var url = INVENTORY_REPORTS_PAGE_URL += "reportId=" + reportId + "&" + parameters;
 			window.open(url, "pdfDownload");
 
 			return false;

@@ -35,7 +35,7 @@
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
 				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
-				self.checkPrivileges(PRIVILEGE_ACCESS_CREATE_OPERATION_PAGE);
+				self.checkPrivileges(TASK_ACCESS_CREATE_OPERATION_PAGE);
 			}
 		/**
 		 * Initializes and binds any required variable and/or function specific to entity.page

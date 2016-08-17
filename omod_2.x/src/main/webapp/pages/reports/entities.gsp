@@ -25,6 +25,7 @@
     ui.includeJavascript("openhmis.inventory", "reports/services/entity.restful.services.js")
     ui.includeJavascript("openhmis.inventory", "reports/services/entity.functions.js")
     ui.includeJavascript("openhmis.inventory", "reports/controllers/entity.controller.js")
+    ui.includeJavascript("openhmis.inventory", "constants.js")
 %>
 
 <script data-main="reports/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>

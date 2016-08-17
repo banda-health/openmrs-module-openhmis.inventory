@@ -3,7 +3,7 @@
 <%--@elvariable id="settings" type="org.openmrs.module.openhmis.inventory.api.model.Settings"--%>
 
 <%@ include file="/WEB-INF/template/include.jsp" %>
-<openmrs:require allPrivileges="<%= PrivilegeWebConstants.TASK_ACCESS_INVENTORY_SETTINGS_PAGE %>" otherwise="/login.htm"
+<openmrs:require allPrivileges="<%= PrivilegeWebConstants.TASK_MANAGE_METADATA %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.SETTINGS_PAGE %>"/>
 <openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>'/>
 <openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_COMMONS_RESOURCE_ROOT + "css/css_2.x/style2x.css" %>'/>
