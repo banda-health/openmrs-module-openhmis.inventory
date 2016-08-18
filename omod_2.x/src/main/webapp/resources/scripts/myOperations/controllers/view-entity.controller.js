@@ -33,6 +33,7 @@
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
                 self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name);
+                self.checkPrivileges(TASK_ACCESS_MY_OPERATIONS_PAGE);
             }
 
         // @Override

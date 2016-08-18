@@ -28,11 +28,11 @@
         var self = this;
 
         var entity_name = emr.message("openhmis.inventory." + ENTITY_NAME + ".name");
-        var rest_entity_name = ENTITY_NAME;
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, ENTITY_NAME, entity_name);
+                self.checkPrivileges(TASK_MANAGE_METADATA);
             };
 
         // @Override

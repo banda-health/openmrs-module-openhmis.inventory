@@ -31,6 +31,7 @@
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
 			self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+			self.checkPrivileges(TASK_ACCESS_INVENTORY_REPORTS_PAGE);
 		}
 
 		/**
@@ -102,8 +103,7 @@
 		}
 
 		function printReport(reportId, parameters) {
-			var url = "/" + OPENMRS_CONTEXT_PATH + "/module/openhmis/inventory/jasperReport.form?";
-			url += "reportId=" + reportId + "&" + parameters;
+			var url = INVENTORY_REPORTS_PAGE_URL += "reportId=" + reportId + "&" + parameters;
 			window.open(url, "pdfDownload");
 
 			return false;
