@@ -26,11 +26,11 @@
 		var self = this;
 
 		var entity_name_message_key = "openhmis.inventory.report.name";
-		var rest_entity_name = emr.message("openhmis.inventory.report.rest_name");
+		var REST_ENTITY_NAME = "report";
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-			self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+			self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 			self.checkPrivileges(TASK_ACCESS_INVENTORY_REPORTS_PAGE);
 		}
 
