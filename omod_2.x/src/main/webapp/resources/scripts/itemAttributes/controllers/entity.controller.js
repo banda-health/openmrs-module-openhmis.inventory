@@ -27,11 +27,11 @@
 		var self = this;
 		
 		var entity_name_message_key = "openhmis.inventory.itemAttributeType";
-		var rest_name = emr.message("openhmis.inventory.itemAttributeType_rest");
+		var REST_ENTITY_NAME = "itemAttributeType";
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+				self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 			}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope

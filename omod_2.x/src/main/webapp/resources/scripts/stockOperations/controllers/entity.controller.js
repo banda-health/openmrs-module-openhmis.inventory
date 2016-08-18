@@ -24,11 +24,11 @@
     function StockOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockOperationModel, StockOperationRestfulService, PaginationService, StockOperationFunctions, CookiesService) {
         var self = this;
         var entity_name_message_key = "openhmis.inventory.stock.operation.name";
-        var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
+        var REST_ENTITY_NAME = "stockOperation";
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
             }
 
         /**
@@ -55,14 +55,14 @@
                 $scope.invokeOperation = self.invokeOperation;
                 $scope.showOperationActionsDialog = StockOperationFunctions.showOperationActionsDialog;
 
-                self.stockOperation(uuid, rest_entity_name);
+                self.stockOperation(uuid, REST_ENTITY_NAME);
                 self.stockOperationItem(uuid, $scope.stockOperationItemCurrentPage);
                 self.stockOperationTransaction(uuid, $scope.stockOperationItemCurrentPage);
 
             }
 
         self.invokeOperation = self.invokeOperation || function(status, uuid){
-                StockOperationRestfulService.invokeOperation(status, uuid, rest_entity_name, self.onLoadInvokeOperationSuccessful);
+                StockOperationRestfulService.invokeOperation(status, uuid, REST_ENTITY_NAME, self.onLoadInvokeOperationSuccessful);
             }
 
         /**

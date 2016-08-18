@@ -27,14 +27,14 @@
 	                                   CookiesService, LineItemModel, CommonsRestfulFunctions) {
 		var self = this;
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
-		var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
+		var REST_ENTITY_NAME = "stockOperation";
 		var notDefined = {name: ' - Not Defined - '};
 		var MY_OPERATIONS_URL = ROOT_URL + 'openhmis.inventory/myOperations/entities.page';
 		var GENERATE_OPERATION_NUMBER = "WILL BE GENERATED";
 
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+				self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
 			}
 
 		/**

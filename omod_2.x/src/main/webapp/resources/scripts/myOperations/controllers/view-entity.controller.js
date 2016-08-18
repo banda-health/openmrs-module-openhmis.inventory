@@ -28,11 +28,11 @@
                                     StockOperationRestfulService) {
         var self = this;
         var entity_name = emr.message("openhmis.inventory.stock.operation.name");
-        var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
+        var REST_ENTITY_NAME = "stockOperation";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name);
             }
 
         // @Override
@@ -88,7 +88,7 @@
                 }
 
                 StockOperationRestfulService.searchStockOperation(
-                    rest_entity_name, currentPage, $scope.limit,
+                    REST_ENTITY_NAME, currentPage, $scope.limit,
                     operationItem_uuid, $scope.operation_status,
                     operationType_uuid, stockroom_uuid,
                     self.onLoadSearchStockOperationSuccessful, 'myOperation'

@@ -27,11 +27,11 @@
 	                             CookiesService) {
 		var self = this;
 		var entity_name_message_key = "openhmis.inventory.admin.stockTake";
-		var rest_entity_name = emr.message("openhmis.inventory.stocktake.rest_name");
+		var REST_ENTITY_NAME = "inventoryStockTake";
 		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, INVENTORY_TASK_DASHBOARD_PAGE_URL);
+				self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, INVENTORY_TASK_DASHBOARD_PAGE_URL);
 			}
 		
 		/**
