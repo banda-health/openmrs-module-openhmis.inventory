@@ -99,11 +99,11 @@
 		}
 		self.searchReportItems = self.searchReportItems || function(search) {
 			$scope.operationItem = {};
-			return CommonsRestfulFunctions.searchItems(module_name, search);
+			return CommonsRestfulFunctions.searchItems(INVENTORY_MODULE_NAME, search);
 		}
 
 		function printReport(reportId, parameters) {
-			var url = INVENTORY_REPORTS_PAGE_URL += "reportId=" + reportId + "&" + parameters;
+			var url = INVENTORY_REPORTS_PAGE_URL + "reportId=" + reportId + "&" + parameters;
 			window.open(url, "pdfDownload");
 
 			return false;
