@@ -20,9 +20,6 @@
 
 	ReportRestfulService.$inject = [ 'EntityRestFactory' ];
 
-	var MODULE_SETTINGS_URL = 'module/openhmis/inventory/moduleSettings.page';
-	var ROOT_URL = '/' + OPENMRS_CONTEXT_PATH + '/';
-
 	function ReportRestfulService(EntityRestFactory) {
 		var service;
 		service = {
@@ -32,7 +29,7 @@
  
 		function getReport(reportIdProperty, successCallback) {
 			var requestParams = [];
-			requestParams['resource'] = MODULE_SETTINGS_URL;
+			requestParams['resource'] = INVENTORY_MODULE_SETTINGS_URL;
 			requestParams['report'] = reportIdProperty;
 
 			EntityRestFactory.setCustomBaseUrl(ROOT_URL);

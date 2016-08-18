@@ -36,6 +36,7 @@
 			|| function () {
 				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name,
 					entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+				self.checkPrivileges(TASK_MANAGE_METADATA);
 			}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope

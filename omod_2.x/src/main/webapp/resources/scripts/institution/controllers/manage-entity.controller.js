@@ -37,6 +37,7 @@
 				|| function() {
 					self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name,
 							entity_name);
+				self.checkPrivileges(TASK_MANAGE_METADATA);
 				}
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
