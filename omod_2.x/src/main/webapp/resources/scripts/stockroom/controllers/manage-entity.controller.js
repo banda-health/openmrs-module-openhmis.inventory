@@ -25,11 +25,11 @@
                                   StockroomModel, CookiesService, StockroomRestfulService) {
         var self = this;
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
-        var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
+        var REST_ENTITY_NAME = "stockroom";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name);
                 self.checkPrivileges(TASK_MANAGE_METADATA);
             }
 

@@ -31,13 +31,12 @@
 
 		var entity_name = emr
 				.message("openhmis.inventory.operations.type.name");
-		var rest_entity_name = emr
-				.message("openhmis.inventory.operations.type.name_rest");
+		var REST_ENTITY_NAME = "stockOperationType";
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
 				|| function() {
-					self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name,
+					self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME,
 							entity_name);
 					self.checkPrivileges(TASK_MANAGE_METADATA);
 				}
