@@ -73,7 +73,7 @@ public class ModuleSettings {
 		String property = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE);
 		return Boolean.parseBoolean(property);
 	}
-	
+
 	public static boolean useWildcardItemSearch() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
@@ -135,7 +135,7 @@ public class ModuleSettings {
 		} else {
 			settings.setAutoSelectItemStockFurthestExpirationDate(false);
 		}
-		
+
 		prop = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
 		if (StringUtils.isNotEmpty(prop)) {
 			settings.setWildcardItemSearch(Boolean.parseBoolean(prop));
@@ -214,7 +214,7 @@ public class ModuleSettings {
 		} else {
 			adminService.setGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE, Boolean.FALSE.toString());
 		}
-		
+
 		Boolean wildcardItemSearch = settings.getWildcardItemSearch();
 		if (Boolean.TRUE.equals(wildcardItemSearch)) {
 			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.TRUE.toString());
