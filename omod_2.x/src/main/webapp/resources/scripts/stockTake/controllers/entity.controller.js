@@ -32,6 +32,7 @@
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
 				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, INVENTORY_TASK_DASHBOARD_PAGE_URL);
+				self.checkPrivileges(TASK_ACCESS_STOCK_TAKE_PAGE);
 			}
 		
 		/**

@@ -31,12 +31,12 @@
 		var notDefined = {name: ' - Not Defined - '};
 		var MY_OPERATIONS_URL = ROOT_URL + 'openhmis.inventory/myOperations/entities.page';
 		var GENERATE_OPERATION_NUMBER = "WILL BE GENERATED";
-
+		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
 				self.bindBaseParameters(INVENTORY_MODULE_NAME, rest_entity_name, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+				self.checkPrivileges(TASK_ACCESS_CREATE_OPERATION_PAGE);
 			}
-
 		/**
 		 * Initializes and binds any required variable and/or function specific to entity.page
 		 * @type {Function}
