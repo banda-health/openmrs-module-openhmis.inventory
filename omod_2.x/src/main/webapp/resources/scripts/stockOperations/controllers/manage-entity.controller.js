@@ -77,7 +77,7 @@
                 }
 
                 StockOperationRestfulService.searchStockOperation(
-                    rest_entity_name, currentPage, $scope.limit,
+                    REST_ENTITY_NAME, currentPage, $scope.limit,
                     operationItem_uuid, $scope.operation_status,
                     operationType_uuid, stockroom_uuid,
                     self.onLoadSearchStockOperationSuccessful
