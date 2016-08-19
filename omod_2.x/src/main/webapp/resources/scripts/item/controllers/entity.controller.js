@@ -24,14 +24,13 @@
 
         var self = this;
 
-        var module_name = 'inventory';
         var entity_name_message_key = "openhmis.inventory.item.name";
-        var cancel_page = 'entities.page';
-        var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
+        var REST_ENTITY_NAME = "item";
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+                self.checkPrivileges(TASK_MANAGE_METADATA);
             }
 
         /**
@@ -52,7 +51,7 @@
                 /* bind functions.. */
                 // auto-complete search concept function
                 $scope.searchConcepts = function (search) {
-                    return ItemRestfulService.searchConcepts(module_name, search);
+                    return ItemRestfulService.searchConcepts(INVENTORY_MODULE_NAME, search);
                 };
 
                 // retrieve stocks (if any) associated to the item
@@ -140,13 +139,13 @@
                 // validate name.
                 if(!angular.isDefined($scope.entity.name) || $scope.entity.name === ''){
                     $scope.submitted = true;
-                    emr.errorAlert(emr.message("openhmis.inventory.general.name.required"));
+                    emr.errorAlert(emr.message("openhmis.commons.general.name.required"));
                 }
 
                 // validate prices.
                 if($scope.entity.prices.length === 0){
                     $scope.submitted = true;
-                    emr.errorAlert(emr.message("openhmis.inventory.general.required.prices"));
+                    emr.errorAlert(emr.message("openhmis.commons.general.required.prices"));
                 }
                 else {
                     var defaultPriceSet = false;
@@ -156,7 +155,7 @@
                         // checks for invalid prices.
                         if(price['price'] === undefined){
                             $scope.submitted = true;
-                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.required.priceValue"), [price['name']]);
+                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.commons.general.required.priceValue"), [price['name']]);
                             emr.errorAlert(errorMsg);
                         }
 
@@ -175,7 +174,7 @@
 
                     if(!defaultPriceSet ){
                         $scope.submitted = true;
-                        emr.errorAlert(emr.message("openhmis.inventory.general.required.defaultPrice"));
+                        emr.errorAlert(emr.message("openhmis.commons.general.required.defaultPrice"));
                     }
                 }
 
@@ -191,7 +190,7 @@
                         var value = $scope.attributes[itemAttributeType.uuid] || "";
                         if(required && value === ""){
                             $scope.submitted = true;
-                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.inventory.general.required.itemAttribute"), [itemAttributeType.name]);
+                            var errorMsg = $filter('EmrFormat')(emr.message("openhmis.commons.general.required.itemAttribute"), [itemAttributeType.name]);
                             emr.errorAlert(errorMsg);
                             failItemAttributeTypeValidation = true;
                         }

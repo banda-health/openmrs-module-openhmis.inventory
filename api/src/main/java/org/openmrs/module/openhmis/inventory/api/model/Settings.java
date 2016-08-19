@@ -21,12 +21,14 @@ public class Settings {
 
 	private Boolean autoGenerateOperationNumber;
 	private Boolean autoCompleteOperations;
+	private Boolean wildcardItemSearch;
 	private Integer operationNumberGeneratorSourceId;
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
 	private Integer stockOperationsByStockroomReportId;
 	private Integer stockroomReportId;
 	private Integer expiringStockReportId;
+	private Boolean autoSelectItemStockFurthestExpirationDate;
 
 	public Boolean getAutoGenerateOperationNumber() {
 		return autoGenerateOperationNumber;
@@ -42,6 +44,14 @@ public class Settings {
 
 	public void setAutoCompleteOperations(Boolean autoCompleteOperations) {
 		this.autoCompleteOperations = autoCompleteOperations;
+	}
+
+	public Boolean getWildcardItemSearch() {
+		return wildcardItemSearch;
+	}
+
+	public void setWildcardItemSearch(Boolean wildcardItemSearch) {
+		this.wildcardItemSearch = wildcardItemSearch;
 	}
 
 	public Integer getOperationNumberGeneratorSourceId() {
@@ -90,5 +100,13 @@ public class Settings {
 
 	public void setExpiringStockReportId(Integer expiringStockReportId) {
 		this.expiringStockReportId = expiringStockReportId;
+	}
+
+	public Boolean getAutoSelectItemStockFurthestExpirationDate() {
+		return autoSelectItemStockFurthestExpirationDate;
+	}
+
+	public void setAutoSelectItemStockFurthestExpirationDate(Boolean autoSelectItemStockFurthestExpirationDate) {
+		this.autoSelectItemStockFurthestExpirationDate = autoSelectItemStockFurthestExpirationDate;
 	}
 }

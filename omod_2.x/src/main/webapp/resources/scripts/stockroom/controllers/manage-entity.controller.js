@@ -24,34 +24,50 @@
     function ManageStockroomsController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
                                   StockroomModel, CookiesService, StockroomRestfulService) {
         var self = this;
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stockroom.name");
-        var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
+        var REST_ENTITY_NAME = "stockroom";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name);
+                self.checkPrivileges(TASK_MANAGE_METADATA);
             }
 
         // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
                 self.loadLocations();
+                $scope.searchStockroomsByName = self.searchStockroomsByName;
                 $scope.searchStockrooms = self.searchStockrooms;
-
-              $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
-                    [self.entity_name]);
             }
 
         self.loadLocations = self.loadLocations || function(){
-                StockroomRestfulService.loadLocations(module_name, self.onLoadLocationsSuccessful);
+                StockroomRestfulService.loadLocations(INVENTORY_MODULE_NAME, self.onLoadLocationsSuccessful);
             }
 
-        self.searchStockrooms = self.searchStockrooms || function(){
+        self.searchStockroomsByName = self.searchStockroomsByName || function(currentPage){
+                if($scope.searchField === undefined || $scope.searchField === ''){
+                    currentPage = 1;
+                    $scope.currentPage = currentPage;
+                }
+
+                self.searchStockrooms(currentPage);
+            }
+
+        self.searchStockrooms = self.searchStockrooms || function(currentPage){
+                CookiesService.set('searchField', $scope.searchField);
+                CookiesService.set('startIndex', $scope.startIndex);
+                CookiesService.set('limit', $scope.limit);
+                CookiesService.set('includeRetired', $scope.includeRetired);
+                CookiesService.set('currentPage', currentPage);
+
                 var location_uuid;
                 if($scope.location !== "" && $scope.location !== null){
                     location_uuid = $scope.location.uuid;
                 }
-                StockroomRestfulService.searchStockrooms(rest_entity_name, location_uuid, $scope.currentPage, $scope.limit, $scope.includeRetired, $scope.searchField, self.onSearchStockRoomsSuccessful);
+
+                CookiesService.set('location_uuid', location_uuid);
+
+                StockroomRestfulService.searchStockrooms(rest_entity_name, location_uuid, currentPage, $scope.limit, $scope.includeRetired, $scope.searchField, self.onSearchStockRoomsSuccessful);
             }
 
         // call back

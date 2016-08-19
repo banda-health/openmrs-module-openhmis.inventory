@@ -4,7 +4,7 @@
 <%--@elvariable id="roles" type="java.util.List<org.openmrs.Role>"--%>
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
-<openmrs:require allPrivileges="<%= PrivilegeConstants.MANAGE_METADATA %>" otherwise="/login.htm"
+<openmrs:require allPrivileges="<%= PrivilegeConstants.TASK_MANAGE_METADATA %>" otherwise="/login.htm"
                  redirect="<%= ModuleWebConstants.ROLE_CREATION_PAGE %>" />
 
 <openmrs:htmlInclude file='<%= request.getContextPath() + ModuleWebConstants.MODULE_RESOURCE_ROOT + "css/style.css" %>' />
@@ -100,6 +100,6 @@
 		</tr>
 	</table>
 
-	<p><input class="submitButton confirm right" value="Save" type="submit" value="<openmrs:message code="Role.save"/>"></p>
+	<p><input class="submitButton confirm right" type="submit" value="<openmrs:message code="openhmis.inventory.roleCreation.page.role.save"/>"></p>
 </form>
 </div>

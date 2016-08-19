@@ -23,14 +23,13 @@
 
     function StockroomController($stateParams, $injector, $scope, $filter, EntityRestFactory, StockroomModel, StockroomRestfulService, PaginationService, EntityFunctions, StockroomsFunctions, CookiesService) {
         var self = this;
-        var module_name = 'inventory';
         var entity_name_message_key = "openhmis.inventory.stockroom.name";
-        var cancel_page = 'entities.page';
-        var rest_entity_name = emr.message("openhmis.inventory.stockroom.rest_name");
+        var REST_ENTITY_NAME = "stockroom";
 
         // @Override
         self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name_message_key, cancel_page);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+                self.checkPrivileges(TASK_MANAGE_METADATA);
             }
 
         /**
@@ -67,9 +66,10 @@
                 $scope.searchTransactionItems = self.searchTransactionItems;
                 $scope.selectOperationsItem = self.selectOperationsItem;
                 $scope.selectTransactionsItem = self.selectTransactionsItem;
+                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.commons.general.postSearchMessage"), ['Item']);
 
                 // load list of locations
-                StockroomRestfulService.loadLocations(module_name ,self.onLoadLocationsSuccessful);
+                StockroomRestfulService.loadLocations(INVENTORY_MODULE_NAME ,self.onLoadLocationsSuccessful);
 
                 // load item stocks
                 self.searchItemStock(uuid);
@@ -78,11 +78,11 @@
             }
 
         self.searchOperationItems = self.searchOperationItems || function(search){
-                return StockroomRestfulService.searchItems(module_name, search);
+                return StockroomRestfulService.searchItems(INVENTORY_MODULE_NAME, search);
             }
 
         self.searchTransactionItems = self.searchTransactionItems || function(search){
-                return StockroomRestfulService.searchItems(module_name, search);
+                return StockroomRestfulService.searchItems(INVENTORY_MODULE_NAME, search);
             }
 
         self.selectOperationsItem = self.selectOperationsItem || function(item){
@@ -174,6 +174,7 @@
         self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function(){
                 if(!angular.isDefined($scope.entity.name) || $scope.entity.name === ''){
                     $scope.submitted = true;
+                    emr.errorAlert(emr.message("openhmis.commons.general.name.required"));
                     return false;
                 }
                 return true;

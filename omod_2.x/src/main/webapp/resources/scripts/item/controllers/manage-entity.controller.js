@@ -28,15 +28,15 @@
 
 		var self = this;
 
-		var module_name = 'inventory';
 		var entity_name = emr.message("openhmis.inventory.item.name");
-		var rest_entity_name = emr.message("openhmis.inventory.item.rest_name");
+		var REST_ENTITY_NAME = "item";
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
 				|| function() {
-					self.bindBaseParameters(module_name, rest_entity_name,
-							entity_name);
+					self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME,
+						entity_name);
+					 self.checkPrivileges(TASK_MANAGE_METADATA);
 				}
 
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
@@ -45,9 +45,6 @@
 				$scope.searchItemsByName = self.searchItemsByName;
 				$scope.searchField = CookiesService.get('searchField') || $scope.searchField || '';
 				$scope.department = CookiesService.get('department') || {};
-
-				$scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
-					[self.entity_name]);
 			}
 
 		self.loadDepartments = self.loadDepartments || function(){
@@ -56,7 +53,7 @@
 
 		self.searchItemsByName = self.searchItemsByName || function(currentPage){
 				// reset current page when the search field is cleared
-				if($scope.searhField === undefined || $scope.searchField === ''){
+				if($scope.searchField === undefined || $scope.searchField === ''){
 					currentPage = 1;
 					$scope.currentPage = currentPage;
 				}

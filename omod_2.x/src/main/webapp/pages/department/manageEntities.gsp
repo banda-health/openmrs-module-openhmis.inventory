@@ -31,13 +31,13 @@
 	</div>
 	<br/><br/><br/>
 
-	<div ng-controller="ManageEntityController">
+	<div>
 		<div id="entities">
 			${ ui.includeFragment("openhmis.commons", "searchFragment", [
 					model: "searchField",
 					onChangeEvent: "updateContent()",
 					class: ["field-display ui-autocomplete-input form-control searchinput"],
-					placeholder: [ui.message("openhmis.inventory.general.enterSearchPhrase")]
+					placeholder: [ui.message("openhmis.commons.general.enterSearchPhrase")]
 			])}
 
 			<br/><br/>
@@ -59,11 +59,11 @@
 
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				${ui.message('openhmis.inventory.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
+				${ui.message('openhmis.commons.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>
-				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
+				<span>${ui.message('openhmis.commons.general.includeRetired')}</span>
 			</div>
 			${ui.includeFragment("openhmis.commons", "paginationFragment")}
 		</div>

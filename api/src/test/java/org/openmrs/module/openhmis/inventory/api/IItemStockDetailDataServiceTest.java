@@ -309,4 +309,181 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		Assert.assertEquals(60, (long)summary.getQuantity());
 		Assert.assertEquals(cal2.getTime(), summary.getExpiration());
 	}
+
+	/**
+	 * @verifies return correctly paged results when aggregate qty is zero
+	 * @see IItemStockDetailDataService#getItemStockSummaryByStockroom(Stockroom, PagingInfo)
+	 */
+	@Test
+	public void getItemStockSummaryByStockroom_shouldReturnCorrectlyPagedResultsWhenAggregateQtyIsZero() throws Exception {
+		Stockroom sr = new Stockroom();
+		sr.setName("new");
+
+		stockroomDataService.save(sr);
+		Context.flushSession();
+
+		// Set up the stock so that exactly 5 item stock records should be returned
+		Item item2 = itemDataService.getById(2);
+
+		ItemStock stock = new ItemStock();
+		stock.setItem(item2);
+		stock.setStockroom(sr);
+		stock.setQuantity(100);
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 2);
+
+		ItemStockDetail detail = new ItemStockDetail();
+		detail.setItem(item2);
+		detail.setExpiration(cal.getTime());
+		detail.setBatchOperation(stockOperationDataService.getById(0));
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(true);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(20);
+
+		stock.addDetail(detail);
+
+		detail = new ItemStockDetail();
+		detail.setItem(item2);
+		detail.setExpiration(cal.getTime());
+		detail.setBatchOperation(stockOperationDataService.getById(1));
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(true);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(20);
+
+		stock.addDetail(detail);
+
+		Calendar cal2 = Calendar.getInstance();
+		cal2.add(Calendar.YEAR, 3);
+		detail = new ItemStockDetail();
+		detail.setItem(item2);
+		detail.setExpiration(cal2.getTime());
+		detail.setBatchOperation(stockOperationDataService.getById(0));
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(true);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(60);
+
+		stock.addDetail(detail);
+
+		// These next two stock details will cancel themselves out and should not appear in the results but they also
+		// should not be returned from the db
+		detail = new ItemStockDetail();
+		detail.setItem(item2);
+		detail.setExpiration(null);
+		detail.setBatchOperation(null);
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(true);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(-10);
+
+		stock.addDetail(detail);
+
+		detail = new ItemStockDetail();
+		detail.setItem(item2);
+		detail.setExpiration(null);
+		detail.setBatchOperation(stockOperationDataService.getById(0));
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(false);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(10);
+
+		stock.addDetail(detail);
+
+		sr.addItem(stock);
+
+		Item item0 = itemDataService.getById(0);
+
+		stock = new ItemStock();
+		stock.setItem(item0);
+		stock.setStockroom(sr);
+		stock.setQuantity(50);
+
+		detail = new ItemStockDetail();
+		detail.setItem(item0);
+		detail.setExpiration(null);
+		detail.setBatchOperation(stockOperationDataService.getById(0));
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(null);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(50);
+
+		stock.addDetail(detail);
+
+		sr.addItem(stock);
+
+		Item item6 = itemDataService.getById(6);
+
+		stock = new ItemStock();
+		stock.setItem(item6);
+		stock.setStockroom(sr);
+		stock.setQuantity(50);
+
+		Calendar cal3 = Calendar.getInstance();
+		cal3.add(Calendar.YEAR, 4);
+
+		detail = new ItemStockDetail();
+		detail.setItem(item6);
+		detail.setExpiration(cal3.getTime());
+		detail.setBatchOperation(stockOperationDataService.getById(0));
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(null);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(30);
+
+		stock.addDetail(detail);
+
+		Calendar cal4 = Calendar.getInstance();
+		cal4.add(Calendar.YEAR, 5);
+
+		detail = new ItemStockDetail();
+		detail.setItem(item6);
+		detail.setExpiration(cal4.getTime());
+		detail.setBatchOperation(stockOperationDataService.getById(0));
+		detail.setStockroom(sr);
+		detail.setCalculatedExpiration(null);
+		detail.setCalculatedBatch(true);
+		detail.setQuantity(20);
+
+		stock.addDetail(detail);
+
+		sr.addItem(stock);
+
+		stockroomDataService.save(sr);
+		Context.flushSession();
+
+		PagingInfo pagingInfo = new PagingInfo(1, 5);
+		List<ItemStockSummary> results = service.getItemStockSummaryByStockroom(sr, pagingInfo);
+
+		Assert.assertNotNull(results);
+		Assert.assertEquals(5, results.size());
+		Assert.assertEquals(5, (long)pagingInfo.getTotalRecordCount());
+
+		ItemStockSummary summary = results.get(0);
+		Assert.assertEquals(item0, summary.getItem());
+		Assert.assertEquals(50, (long)summary.getQuantity());
+		Assert.assertNull(summary.getExpiration());
+
+		summary = results.get(1);
+		Assert.assertEquals(item2, summary.getItem());
+		Assert.assertEquals(40, (long)summary.getQuantity());
+		Assert.assertEquals(cal.getTime(), summary.getExpiration());
+
+		summary = results.get(2);
+		Assert.assertEquals(item2, summary.getItem());
+		Assert.assertEquals(60, (long)summary.getQuantity());
+		Assert.assertEquals(cal2.getTime(), summary.getExpiration());
+
+		summary = results.get(3);
+		Assert.assertEquals(item6, summary.getItem());
+		Assert.assertEquals(30, (long)summary.getQuantity());
+		Assert.assertEquals(cal3.getTime(), summary.getExpiration());
+
+		summary = results.get(4);
+		Assert.assertEquals(item6, summary.getItem());
+		Assert.assertEquals(20, (long)summary.getQuantity());
+		Assert.assertEquals(cal4.getTime(), summary.getExpiration());
+	}
 }

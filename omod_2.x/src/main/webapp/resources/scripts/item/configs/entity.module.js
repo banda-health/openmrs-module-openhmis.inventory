@@ -59,29 +59,9 @@
 					}
 				}
 			});
-
+			
 			$provide.factory('$exceptionHandler', function($injector) {
-				return function(exception, cause) {
-					/*
-					 * There are times when the manage item's page won't render on
-					 * initial page load -- which is brought about by inconsistencies in
-					 * loading dependencies. As a work around we look out for such errors
-					 * and reload the page. TODO: Find a better solution to ensure all
-					 * dependencies are loaded before bootstrapping the application.
-					 */
-					// unknown provider..
-					var exc = String(exception);
-					if (exc.indexOf("unpr") !== -1) {
-						console.log(exc);
-					} else if (exc.indexOf("session") !== -1
-							|| exc.indexOf("timeout") !== -1) {
-						console.log(exc + " - " + cause);
-						emr.message("SESSION TIMEOUT");
-					} else {
-						console.log(exc + " - " + cause);
-						emr.message(cause);
-					}
-				}
+				return ohmis.handleException;
 			});
 		});
 		return app;

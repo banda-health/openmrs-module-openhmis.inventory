@@ -1,5 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.stockrooms") ])
+    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("openhmis.inventory.admin.operations") ])
 
     /* load stylesheets */
     ui.includeCss("openhmis.commons", "bootstrap.css")
@@ -17,12 +17,13 @@
     /* load re-usables/common modules */
     ui.includeFragment("openhmis.commons", "load.reusable.modules")
 
-    /* load stockroom modules */
+    /* load operations modules */
     ui.includeJavascript("openhmis.inventory", "stockOperations/models/entity.model.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.restful.services.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/controllers/entity.controller.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/controllers/manage-entity.controller.js")
     ui.includeJavascript("openhmis.inventory", "stockOperations/services/entity.functions.js")
+    ui.includeJavascript("openhmis.inventory", "constants.js")
 %>
 
 <script data-main="stockOperations/configs/entity.main" src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>

@@ -19,9 +19,9 @@
 	var app = angular.module('app.itemFunctionsFactory', []);
 	app.service('ItemFunctions', ItemFunctions);
 
-	ItemFunctions.$inject = [];
+	ItemFunctions.$inject = ['EntityFunctions'];
 
-	function ItemFunctions() {
+	function ItemFunctions(EntityFunctions) {
 		var service;
 
 		service = {
@@ -124,7 +124,7 @@
 		 */
 		function addItemCode($scope) {
 			$scope.editItemCodeTitle = '';
-			$scope.addItemCodeTitle = $scope.messageLabels['openhmis.inventory.general.add']
+			$scope.addItemCodeTitle = $scope.messageLabels['openhmis.commons.general.add']
 					+ ' '
 					+ $scope.messageLabels['openhmis.inventory.item.code.name'];
 			var dialog = emr.setupConfirmationDialog({
@@ -150,6 +150,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
@@ -159,7 +161,7 @@
 		function addItemPrice($scope) {
 			$scope.itemPrice = {};
 			$scope.editItemPriceTitle = '';
-			$scope.addItemPriceTitle = $scope.messageLabels['openhmis.inventory.general.add']
+			$scope.addItemPriceTitle = $scope.messageLabels['openhmis.commons.general.add']
 					+ ' '
 					+ $scope.messageLabels['openhmis.inventory.item.price.name'];
 			var dialog = emr.setupConfirmationDialog({
@@ -183,6 +185,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
@@ -201,7 +205,7 @@
 
 			$scope.itemPrice = editItemPrice;
 			$scope.addItemPriceTitle = '';
-			$scope.editItemPriceTitle = $scope.messageLabels['openhmis.inventory.general.edit']
+			$scope.editItemPriceTitle = $scope.messageLabels['openhmis.commons.general.edit']
 					+ ' '
 					+ $scope.messageLabels['openhmis.inventory.item.price.name'];
 
@@ -225,6 +229,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
@@ -241,7 +247,7 @@
 			};
 
 			$scope.itemCode = editItemCode;
-			$scope.editItemCodeTitle = $scope.messageLabels['openhmis.inventory.general.edit']
+			$scope.editItemCodeTitle = $scope.messageLabels['openhmis.commons.general.edit']
 					+ ' '
 					+ $scope.messageLabels['openhmis.inventory.item.code.name'];
 			$scope.addItemCodeTitle = '';
@@ -264,6 +270,8 @@
 			});
 
 			dialog.show();
+
+			EntityFunctions.disableBackground();
 		}
 
 		/**
@@ -301,10 +309,10 @@
 					.message('openhmis.inventory.stockroom.name');
 			messages['openhmis.inventory.item.quantity'] = emr
 					.message('openhmis.inventory.item.quantity');
-			messages['openhmis.inventory.general.add'] = emr
-					.message('openhmis.inventory.general.add');
-			messages['openhmis.inventory.general.edit'] = emr
-					.message('openhmis.inventory.general.edit');
+			messages['openhmis.commons.general.add'] = emr
+					.message('openhmis.commons.general.add');
+			messages['openhmis.commons.general.edit'] = emr
+					.message('openhmis.commons.general.edit');
 			return messages;
 		}
 	}

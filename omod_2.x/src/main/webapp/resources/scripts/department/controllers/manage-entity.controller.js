@@ -27,18 +27,17 @@
                                          DepartmentModel, CookiesService) {
         var self = this;
 
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory." + ENTITY_NAME + ".name");
-        var rest_entity_name = ENTITY_NAME;
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, ENTITY_NAME, entity_name);
+                self.checkPrivileges(TASK_MANAGE_METADATA);
             };
 
         // @Override
         self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
-                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
+                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.commons.general.postSearchMessage"),
                     [self.entity_name]);
             }
 

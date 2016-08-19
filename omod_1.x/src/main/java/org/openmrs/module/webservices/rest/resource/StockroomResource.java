@@ -31,6 +31,7 @@ public class StockroomResource extends BaseRestMetadataResource<Stockroom> {
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("location", Representation.REF);
+		description.addProperty("id");
 
 		return description;
 	}

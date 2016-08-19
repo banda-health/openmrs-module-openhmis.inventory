@@ -24,13 +24,13 @@
     function ManageStockOperationsController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
                                              StockOperationModel, CookiesService, StockOperationRestfulService) {
         var self = this;
-        var module_name = 'inventory';
         var entity_name = emr.message("openhmis.inventory.stock.operation.name");
-        var rest_entity_name = emr.message("openhmis.inventory.stock.operation.rest_name");
+        var REST_ENTITY_NAME = "stockOperation";
 
         // @Override
         self.getModelAndEntityName = self.getModelAndEntityName || function() {
-                self.bindBaseParameters(module_name, rest_entity_name, entity_name);
+                self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name);
+                self.checkPrivileges(TASK_MANAGE_METADATA);
             }
 
         // @Override
@@ -46,12 +46,20 @@
 
                 $scope.searchItems = self.searchItems;
                 $scope.selectItem = self.selectItem;
-
-                $scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.inventory.general.postSearchMessage"),
-                    [self.entity_name]);
             }
 
-        self.searchStockOperation = self.searchStockOperation || function(){
+        self.searchStockOperation = self.searchStockOperation || function(currentPage){
+                if(currentPage === undefined){
+                    currentPage = $scope.currentPage;
+                }
+                else{
+                    $scope.currentPage = currentPage;
+                }
+
+                CookiesService.set('startIndex', $scope.startIndex);
+                CookiesService.set('limit', $scope.limit);
+                CookiesService.set('currentPage', currentPage);
+
                 var operationType_uuid;
                 var stockroom_uuid;
                 var operationItem_uuid;
@@ -64,12 +72,12 @@
                     stockroom_uuid = $scope.stockroom.uuid;
                 }
 
-                if($scope.operationItem != null){
+                if($scope.searchOperationItem !== '' && $scope.operationItem != null){
                     operationItem_uuid = $scope.operationItem.uuid;
                 }
 
                 StockOperationRestfulService.searchStockOperation(
-                    rest_entity_name, $scope.currentPage, $scope.limit,
+                    REST_ENTITY_NAME, currentPage, $scope.limit,
                     operationItem_uuid, $scope.operation_status,
                     operationType_uuid, stockroom_uuid,
                     self.onLoadSearchStockOperationSuccessful
@@ -78,7 +86,7 @@
 
         self.searchItems = self.searchItems || function(search){
                 $scope.operationItem = {};
-                return StockOperationRestfulService.searchStockOperationItems(module_name, search);
+                return StockOperationRestfulService.searchStockOperationItems(INVENTORY_MODULE_NAME, search);
             }
 
         self.selectItem = self.selectItem || function(item){

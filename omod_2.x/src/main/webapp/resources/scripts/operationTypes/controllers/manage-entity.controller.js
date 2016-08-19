@@ -29,17 +29,16 @@
 
 		var self = this;
 
-		var module_name = 'inventory';
 		var entity_name = emr
 				.message("openhmis.inventory.operations.type.name");
-		var rest_entity_name = emr
-				.message("openhmis.inventory.operations.type.name_rest");
+		var REST_ENTITY_NAME = "stockOperationType";
 
 		// @Override
 		self.getModelAndEntityName = self.getModelAndEntityName
 				|| function() {
-					self.bindBaseParameters(module_name, rest_entity_name,
+					self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME,
 							entity_name);
+					self.checkPrivileges(TASK_MANAGE_METADATA);
 				}
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */

@@ -35,10 +35,10 @@
 	<div ng-controller="ManageStockroomsController">
 		<div id="entities">
 			<div class="btn-group">
+				${ui.message('openhmis.inventory.location.name')}:
 				<ul class="search-area">
 					<li>
-						${ui.message('openhmis.inventory.location.name')}:
-						<select ng-model="location" ng-change="searchStockrooms()"
+						<select ng-model="location" ng-change="searchStockrooms(currentPage)" style="height:33px;"
 						        ng-options='location.display for location in locations track by location.uuid'>
 							<option value="" selected="selected">Any</option>
 						</select>
@@ -46,7 +46,7 @@
 					<li>
 						${ ui.includeFragment("openhmis.commons", "searchFragment", [
 								model: "searchField",
-								onChangeEvent: "searchStockrooms()",
+								onChangeEvent: "searchStockroomsByName(currentPage)",
 								class: ["field-display ui-autocomplete-input form-control searchinput"],
 								placeholder: [ui.message("openhmis.inventory.stockroom.searchStockroom")]
 						])}
@@ -77,13 +77,13 @@
 
 			<div ng-show="fetchedEntities.length == 0 && searchField != ''">
 				<br/>
-				${ui.message('openhmis.inventory.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
+				${ui.message('openhmis.commons.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="searchStockrooms()"></span>
-				<span>${ui.message('openhmis.inventory.general.includeRetired')}</span>
+				<span>${ui.message('openhmis.commons.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment" ,[onChange: "searchStockrooms()", onPageChange: "searchStockrooms()"])}
+			${ui.includeFragment("openhmis.commons", "paginationFragment" ,[onChange: "searchStockrooms(currentPage)", onPageChange: "searchStockrooms(currentPage)"])}
 		</div>
 	</div>
 </div>

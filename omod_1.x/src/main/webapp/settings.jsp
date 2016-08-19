@@ -31,6 +31,9 @@
 </h2>
 
 <form:form method="POST" modelAttribute="settings">
+	<b class="boxHeader"><spring:message code="openhmis.inventory.admin.settings" /></b>
+
+	<div class="box">
 	<table>
 		<c:if test="${hasIdgenModule == true}">
 		<tr><td>
@@ -63,6 +66,14 @@
 				<input id="autoCompleteOperations" name="${status.expression}" type="checkbox"
 				       <c:if test="${settings.autoCompleteOperations}">checked</c:if> />
 				<label for="autoCompleteOperations"><spring:message code="openhmis.inventory.report.auto.complete.operation.label"/></label>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
+			<spring:bind path="wildcardItemSearch">
+				<input id="wildcardItemSearch" name="${status.expression}" type="checkbox"
+					   <c:if test="${settings.wildcardItemSearch}">checked</c:if> />
+				<label for="wildcardItemSearch"><spring:message code="openhmis.inventory.report.use.wildcard.item.search.label"/></label>
 			</spring:bind>
 		</td></tr>
 		<tr><td>
@@ -140,9 +151,20 @@
 				</select>
 			</spring:bind>
 		</td></tr>
+		<tr><td>
+			<br />
+			<spring:bind path="autoSelectItemStockFurthestExpirationDate">
+				<input id="autoSelectItemStockFurthestExpirationDate" name="${status.expression}" type="checkbox"
+					   <c:if test="${settings.autoSelectItemStockFurthestExpirationDate}">checked</c:if> />
+				<label for="autoSelectItemStockFurthestExpirationDate">
+					<spring:message code="openhmis.inventory.settings.autoSelectItemStockFurthestExpirationDate"/>
+				</label>
+			</spring:bind>
+		</td></tr>
 	</table>
 	<br />
 	<input type="submit" value="Save" >
+	</div>
 </form:form>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

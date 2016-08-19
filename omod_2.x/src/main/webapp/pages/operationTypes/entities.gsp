@@ -21,9 +21,10 @@
 	ui.includeJavascript("openhmis.inventory", "operationTypes/controllers/entity.controller.js")
 	ui.includeJavascript("openhmis.inventory", "operationTypes/controllers/manage-entity.controller.js")
 	ui.includeJavascript("openhmis.inventory", "operationTypes/services/entity.functions.js")
+    ui.includeJavascript("openhmis.inventory", "constants.js")
 %>
 
-<script data-main="operationTypes/configs/entities.main"
+<script data-main="operationTypes/configs/entity.main"
         src="/${ ui.contextPath() }/moduleResources/uicommons/scripts/require/require.js"></script>
 
 <div id="entitiesApp">
