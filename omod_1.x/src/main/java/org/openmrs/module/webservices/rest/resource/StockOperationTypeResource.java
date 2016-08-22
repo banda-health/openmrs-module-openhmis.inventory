@@ -64,10 +64,9 @@ public class StockOperationTypeResource
 		return description;
 	}
 
-	// Workaround to fix the TypeVariable issue on base generic property
 	@PropertySetter("attributeTypes")
 	public void setAttributeTypes(IStockOperationType instance, List<StockOperationAttributeType> attributeTypes) {
-		super.setAttributeTypesBase(instance, attributeTypes);
+		super.baseSetAttributeTypes(instance, attributeTypes);
 	}
 
 	public static Boolean userCanProcess(IStockOperationType operationType) {

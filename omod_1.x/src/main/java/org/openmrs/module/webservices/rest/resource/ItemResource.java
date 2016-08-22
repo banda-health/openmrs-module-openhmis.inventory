@@ -130,10 +130,9 @@ public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Ite
 		}
 	}
 
-	@Override
 	@PropertySetter("attributes")
 	public void setAttributes(Item instance, List<ItemAttribute> attributes) {
-		super.setAttributes(instance, attributes);
+		super.baseSetAttributes(instance, attributes);
 	}
 
 	@Override
