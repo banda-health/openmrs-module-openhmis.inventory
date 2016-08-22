@@ -17,6 +17,8 @@ import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 
 /**
@@ -30,9 +32,14 @@ public class ItemAttributeResource extends BaseRestAttributeObjectResource<ItemA
 		return new ItemAttribute();
 	}
 
-	@Override
+	@PropertyGetter("value")
+	public Object getValue(ItemAttribute attribute) {
+		return super.baseGetValue(attribute);
+	}
+
+	@PropertySetter("attributeType")
 	public void setAttributeType(ItemAttribute instance, ItemAttributeType attributeType) {
-		super.setAttributeType(instance, attributeType);
+		super.baseSetAttributeType(instance, attributeType);
 	}
 
 	@Override

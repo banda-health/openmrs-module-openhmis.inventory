@@ -223,10 +223,9 @@ public class StockOperationResource
 		instance.setInstanceType(instanceType);
 	}
 
-	@Override
 	@PropertySetter("attributes")
 	public void setAttributes(StockOperation instance, List<StockOperationAttribute> attributes) {
-		super.setAttributes(instance, attributes);
+		super.baseSetAttributes(instance, attributes);
 	}
 
 	@PropertySetter("operationDate")
