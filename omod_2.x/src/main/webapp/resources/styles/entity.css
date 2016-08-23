@@ -241,7 +241,7 @@ table.item-details td input{
 }
 
 table.line-item .autocomplete-search{
-    width: 380px;
+    width: 350px;
 }
 table.icons{
     width:50px;
@@ -300,7 +300,7 @@ table.item-details td input[type="image"]{
     margin: 150px;
 }
 .input-quantity{
-    width: 60px;
+    width: 80px;
 }
 fieldset.nested .line-item select {
     width: 100px;
