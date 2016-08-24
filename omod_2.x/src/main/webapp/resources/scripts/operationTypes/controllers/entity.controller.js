@@ -78,6 +78,7 @@
 		
 		// @Override
 		self.onChangeEntityError = self.onChangeEntityError || function (error) {
+				$scope.loading = false;
 				if(error.indexOf("inv_stock_operation_attribute_type") != -1){
 					emr.errorAlert("openhmis.inventory.general.attributeTypeInUse.error");
 				}
@@ -132,6 +133,8 @@
 				if($scope.entity.attributeTypes === ''){
 					$scope.entity.attributeTypes = null;
 				}
+
+				$scope.loading = true;
 				return true;
 			}
 
