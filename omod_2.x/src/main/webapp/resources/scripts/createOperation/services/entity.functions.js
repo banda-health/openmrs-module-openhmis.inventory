@@ -322,7 +322,6 @@
 			if ($scope.operationType.hasRecipient) {
 				if ($scope.selectedPatient !== '') {
 					$scope.entity.patient = $scope.selectedPatient.uuid;
-					$scope.entity.destination = '';
 					$scope.entity.institution = '';
 					$scope.entity.department = '';
 				} else {
