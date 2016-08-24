@@ -216,7 +216,8 @@
 
 		function checkDatePickerExpirationSection(lineItem, $scope) {
 			if (lineItem !== undefined && lineItem.itemStockHasExpiration) {
-				if ($scope.operationType.name === 'Receipt' || $scope.operationType.name === 'Return') {
+				if ($scope.operationType.name === 'Receipt' || $scope.operationType.name === 'Return' ||
+					$scope.operationType.name === 'Initial') {
 					lineItem.setExpirationHasDatePicker(true);
 				}
 			}
