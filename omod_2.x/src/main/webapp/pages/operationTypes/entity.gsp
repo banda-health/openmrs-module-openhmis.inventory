@@ -19,7 +19,15 @@
 
 </script>
 
-<form onsubmit="return removeIndexFromItems()">
+<div ng-show="loading" class="loading-msg">
+	<span>${ui.message("openhmis.commons.general.processingPage")}</span>
+	<br />
+	<span class="loading-img">
+		<img src="${ ui.resourceLink("uicommons", "images/spinner.gif") }"/>
+	</span>
+</div>
+
+<form ng-hide="loading" onsubmit="return removeIndexFromItems()">
 
 	${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 

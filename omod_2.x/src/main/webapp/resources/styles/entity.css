@@ -301,12 +301,7 @@ table.item-details td input[type="image"]{
 .create-operation-content{
     font-size: inherit;
 }
-.loading-msg{
-    margin: 200px;
-}
-.loading-img{
-    margin: 150px;
-}
+
 .input-quantity{
     width: 80px;
 }

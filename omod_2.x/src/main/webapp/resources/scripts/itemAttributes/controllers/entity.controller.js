@@ -59,6 +59,8 @@
 				if (!angular.isDefined($scope.entity.foreignKey) || $scope.entity.foreignKey === '') {
 					$scope.entity.foreignKey = null;
 				}
+
+				$scope.loading = true;
 				return true;
 			}
 

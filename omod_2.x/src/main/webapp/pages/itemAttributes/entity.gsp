@@ -8,7 +8,16 @@
     ];
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 </script>
-<form name="itemAttributeForm" class="entity-form" ng-class="{'submitted': submitted}">
+
+<div ng-show="loading" class="loading-msg">
+    <span>${ui.message("openhmis.commons.general.processingPage")}</span>
+    <br />
+    <span class="loading-img">
+        <img src="${ ui.resourceLink("uicommons", "images/spinner.gif") }"/>
+    </span>
+</div>
+
+<form ng-hide="loading" name="itemAttributeForm" class="entity-form" ng-class="{'submitted': submitted}">
 
     ${ ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 

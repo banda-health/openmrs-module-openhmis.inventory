@@ -177,6 +177,8 @@
                     emr.errorAlert(emr.message("openhmis.commons.general.name.required"));
                     return false;
                 }
+
+                $scope.loading = true;
                 return true;
             }
 

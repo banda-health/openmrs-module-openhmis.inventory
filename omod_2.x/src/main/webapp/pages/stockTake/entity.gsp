@@ -19,14 +19,12 @@
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 </script>
 
-<div ng-show="loading" style="margin:200px;justify-content: center;">
-	<p style="margin: auto">
-		<span>${ui.message("openhmis.inventory.stocktake.saving")}</span>
-		<br/>
-		<span style="margin:150px;">
-			<img src="${ui.resourceLink("uicommons", "images/spinner.gif")}"/>
-		</span>
-	</p>
+<div ng-show="loading" class="loading-msg">
+	<span>${ui.message("openhmis.inventory.stocktake.saving")}</span>
+	<br/>
+	<span class="loading-img">
+		<img src="${ui.resourceLink("uicommons", "images/spinner.gif")}"/>
+	</span>
 </div>
 
 <div ng-hide="loading">
