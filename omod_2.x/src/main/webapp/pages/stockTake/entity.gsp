@@ -167,7 +167,7 @@
 	<div ng-show="showStockDetails == true" class="detail-section-border-top">
 		<br/>
 		<input type="button" class="cancel" value="{{messageLabels['general.cancel']}}" ng-click="cancel()"/>
-		<input ng-disabled="stockTakeChangeCounter < 0" type="button" class="confirm right"
+		<input ng-disabled="stockTakeDetails.length == 0" type="button" class="confirm right"
 		       value="{{messageLabels['general.save']}}" ng-click="saveOrUpdate()"/>
 		<br/>
 	</div>
