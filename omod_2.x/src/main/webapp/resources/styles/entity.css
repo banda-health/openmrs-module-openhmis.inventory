@@ -239,7 +239,15 @@ table.item-details tr{
 table.item-details td input{
     min-width: 0px;
 }
-
+table.item-details .date input{
+    width: 120px;
+    margin: 1px 0px -15px 0px;
+}
+table.line-item .add-on{
+    position:relative;
+    left: 97px;
+    top: -8px;
+}
 table.line-item .autocomplete-search{
     width: 350px;
 }
