@@ -221,7 +221,7 @@
                                         ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                                             typeahead: ["stockOperationItem.name for stockOperationItem in searchStockOperationItems(\$viewValue)"],
                                             model: "lineItem.itemStock",
-                                            typeaheadOnSelect: "selectStockOperationItem(\$item, lineItem)",
+                                            typeaheadOnSelect: "selectStockOperationItem(\$item, lineItem, \$index)",
                                             typeaheadEditable: "true",
                                             class: ["form-control autocomplete-search"],
                                             showRemoveIcon: "false",
@@ -232,7 +232,8 @@
                                         <b>${ui.message("openhmis.inventory.item.quantity")}:</b>
                                     </td>
                                     <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
-                                        <input type="number" ng-model="lineItem.itemStockQuantity" class="form-control input-quantity"
+                                        <input id="quantity-{{\$index}}" type="number" ng-model="lineItem.itemStockQuantity"
+                                               class="form-control input-quantity"
                                                ng-enter="changeItemQuantity(lineItem)"
                                                ng-change="changeItemQuantity(lineItem)" />
                                     </td>
@@ -246,7 +247,9 @@
                                                 class="right-justify form-control"
                                                 ng-options="itemStockExpirationDate for itemStockExpirationDate in lineItem.expirationDates">
                                         </select>
+
                                         <span ng-show="lineItem.expirationHasDatePicker">
+
                                             ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                                                     formFieldName: "lineItemExpDate",
                                                     label: "",
@@ -254,6 +257,7 @@
                                                     startDate : new Date(),
                                             ])}
                                         </span>
+                                        <br />
                                     </td>
 
                                 </tr>

@@ -58,22 +58,24 @@
 			return ($filter('date')(new Date(time), format));
 		}
 
-		function onChangeDatePicker(successfulCallback, id) {
+		function onChangeDatePicker(successfulCallback, id, lineItem) {
 			var picker;
 			if (id !== undefined) {
 				picker = angular.element(document.getElementById(id));
 				picker.bind('keyup change select', function() {
-					var input = this.value;
-					successfulCallback(input);
+					successfulCallback(this.value);
 				});
 			} else {
 				var elements = angular.element(document.getElementsByTagName("input"));
 				for (var i = 0; i < elements.length; i++) {
 					var element = elements[i];
 					if (element.id.indexOf("display") > -1) {
+						if (lineItem !== undefined) {
+							element.id = lineItem.id;
+						}
 						picker = angular.element(element);
 						picker.bind('keyup change select', function() {
-							successfulCallback(this.value);
+							lineItem.itemStockExpirationDate = formatDate(new Date(this.value));
 						});
 					}
 				}
