@@ -54,6 +54,7 @@
                     return false;
                 }
 
+                $scope.loading = true;
                 return true;
             };
 

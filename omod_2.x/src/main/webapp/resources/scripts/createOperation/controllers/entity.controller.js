@@ -20,11 +20,11 @@
 	base.controller("CreateOperationController", CreateOperationController);
 	CreateOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
-		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions'];
+		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions', '$timeout'];
 	
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
-	                                   CookiesService, LineItemModel, CommonsRestfulFunctions) {
+	                                   CookiesService, LineItemModel, CommonsRestfulFunctions, $timeout) {
 		var self = this;
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
 		var REST_ENTITY_NAME = "stockOperation";
@@ -46,7 +46,7 @@
 			|| function() {
 				$scope.loading = true;
 				if (self.sessionLocation === undefined) {
-					CommonsRestfulFunctions.getSessionLocation(INVENTORY_MODULE_NAME, self.onLoadSessionLocationSuccessful);
+					CommonsRestfulFunctions.getSession(INVENTORY_MODULE_NAME, self.onLoadSessionLocationSuccessful);
 				}
 
 				$scope.isOperationNumberGenerated = false;
@@ -167,6 +167,7 @@
 
 				// validate selected line items.
 				if (!CreateOperationFunctions.validateLineItems($scope)) {
+
 					return false;
 				}
 
@@ -188,19 +189,14 @@
 
 		self.changeItemQuantity = self.changeItemQuantity || function(lineItem) {
 				var quantity = lineItem.itemStockQuantity;
-				if (quantity == 0 || ($scope.operationType.name !== 'Adjustment' && quantity <= 0)) {
-					emr.errorAlert("openhmis.inventory.operations.error.itemError");
-					lineItem.itemStockQuantity = 1;
+				var newQuantity;
+				if ($scope.operationType.name === 'Adjustment' || $scope.operationType.name === 'Receipt') {
+					newQuantity = lineItem.existingQuantity + quantity;
 				} else {
-					var newQuantity;
-					if ($scope.operationType.name === 'Adjustment' || $scope.operationType.name === 'Receipt') {
-						newQuantity = lineItem.existingQuantity + quantity;
-					} else {
-						newQuantity = lineItem.existingQuantity - quantity;
-					}
-
-					lineItem.setNewQuantity(newQuantity);
+					newQuantity = lineItem.existingQuantity - quantity;
 				}
+
+				lineItem.setNewQuantity(newQuantity);
 			}
 
 		self.loadStockOperations = self.loadStockOperations || function(date) {
@@ -273,7 +269,8 @@
 				return CreateOperationRestfulService.searchStockOperationItems(INVENTORY_MODULE_NAME, search);
 			}
 
-		self.selectStockOperationItem = self.selectStockOperationItem || function(stockOperationItem, lineItem) {
+		self.selectStockOperationItem = self.selectStockOperationItem ||
+			function(stockOperationItem, lineItem, index) {
 				$scope.lineItem = {};
 				lineItem.setInvalidEntry(false);
 				lineItem.setExistingQuantity(0);
@@ -290,7 +287,10 @@
 					self.searchItemStock(stockOperationItem);
 
 					if (lineItem.expirationHasDatePicker) {
-						CreateOperationFunctions.onChangeDatePicker(self.onLineItemExpDateSuccessfulCallback);
+						$scope.count = $scope.count || 1;
+						lineItem.id = $scope.count++;
+						lineItem.expirationDates = [];
+						CreateOperationFunctions.onChangeDatePicker(self.onLineItemExpDateSuccessfulCallback, undefined, lineItem);
 					}
 
 					// load next line item
@@ -298,6 +298,17 @@
 				} else {
 					lineItem.setItemStockHasExpiration(false);
 				}
+
+				self.focusNext(index);
+			}
+
+		self.focusNext = self.focusNext || function(index) {
+				//focus on quantity input..
+				$timeout(function() {
+					var elem = document.getElementById('quantity-' + index);
+					document.getElementById('quantity-' + index).focus();
+					$scope.lineItem.itemStockQuantity.focus();
+				}, 100);
 			}
 
 		self.searchFieldAttributePatients = self.searchFieldAttributePatients || function(q) {
@@ -448,9 +459,12 @@
 
 		self.onLoadItemStockSuccessful = self.onLoadItemStockSuccessful || function(data) {
 				var itemStocks = data.results;
-				var itemStockExpirationDates = CreateOperationFunctions.createExpirationDates(itemStocks);
-				$scope.lineItem.setItemStockExpirationDate(itemStockExpirationDates[0]);
-				$scope.lineItem.setExpirationDates(itemStockExpirationDates);
+				if (!$scope.lineItem.expirationHasDatePicker) {
+					var itemStockExpirationDates = CreateOperationFunctions.createExpirationDates(itemStocks);
+					$scope.lineItem.setItemStockExpirationDate(itemStockExpirationDates[0]);
+					$scope.lineItem.setExpirationDates(itemStockExpirationDates);
+				}
+
 				if (itemStocks[0] !== null) {
 					$scope.lineItem.setItemStockDetails(itemStocks[0]);
 					$scope.lineItem.setExistingQuantity(itemStocks[0].quantity);

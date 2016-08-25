@@ -4,7 +4,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>openhmis.inventory</artifactId>
-	<version>2.3.1</version>
+	<version>2.3.2</version>
 	<packaging>pom</packaging>
 	<name>OpenHMIS Inventory Module</name>
 	<description>Provides inventory services that can be used by other modules.</description>
@@ -38,7 +38,7 @@
 		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</connection>
 		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</developerConnection>
 		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</url>
-		<tag>v2.3.1</tag>
+		<tag>v2.3.2</tag>
 	</scm>
 
 	<modules>
