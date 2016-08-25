@@ -91,8 +91,6 @@
 					if (entity.actualQuantity >= 0) {
 						entity.id = entity.item.uuid + "_" + entity.expiration;
 						self.getNewStock(entity);
-					} else {
-						emr.errorAlert("openhmis.inventory.stocktake.negative.actual.quantity.error");
 					}
 				}
 				
@@ -117,7 +115,6 @@
 				* */
 				for (var i = 0; i < $scope.stockTakeDetails.length; i++) {
 					if ($scope.stockTakeDetails[i].actualQuantity == $scope.stockTakeDetails[i].quantity || $scope.stockTakeDetails[i].actualQuantity == null) {
-						emr.errorAlert("openhmis.inventory.stocktake.null.or.same.actual.quantity.error");
 						$scope.stockTakeDetails.splice(i, 1);
 					}
 				}
