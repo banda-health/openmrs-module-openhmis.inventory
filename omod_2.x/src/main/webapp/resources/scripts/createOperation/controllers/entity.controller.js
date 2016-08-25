@@ -188,19 +188,14 @@
 
 		self.changeItemQuantity = self.changeItemQuantity || function(lineItem) {
 				var quantity = lineItem.itemStockQuantity;
-				if (quantity == 0 || ($scope.operationType.name !== 'Adjustment' && quantity <= 0)) {
-					emr.errorAlert("openhmis.inventory.operations.error.itemError");
-					lineItem.itemStockQuantity = 1;
+				var newQuantity;
+				if ($scope.operationType.name === 'Adjustment' || $scope.operationType.name === 'Receipt') {
+					newQuantity = lineItem.existingQuantity + quantity;
 				} else {
-					var newQuantity;
-					if ($scope.operationType.name === 'Adjustment' || $scope.operationType.name === 'Receipt') {
-						newQuantity = lineItem.existingQuantity + quantity;
-					} else {
-						newQuantity = lineItem.existingQuantity - quantity;
-					}
-
-					lineItem.setNewQuantity(newQuantity);
+					newQuantity = lineItem.existingQuantity - quantity;
 				}
+
+				lineItem.setNewQuantity(newQuantity);
 			}
 
 		self.loadStockOperations = self.loadStockOperations || function(date) {

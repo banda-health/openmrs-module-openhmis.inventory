@@ -250,6 +250,12 @@
 							continue;
 						}
 
+						if (lineItem.itemStockQuantity == 0) {
+							emr.errorAlert("openhmis.inventory.operations.error.itemError");
+							failed = true;
+							continue;
+						}
+
 						var calculatedExpiration;
 						var dateNotRequired = true;
 						var expiration = lineItem.itemStockExpirationDate;
