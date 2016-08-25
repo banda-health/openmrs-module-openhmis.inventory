@@ -128,7 +128,7 @@
 				"label": "Inventory Settings",
 				"url": "module/openhmis/inventory/settings2x.page",
 				"icon": "icon-cog",
-				"requiredPrivilege": "Task: Access Inventory Settings"
+				"requiredPrivilege": "Task: Manage Inventory Metadata"
 			},
 			{
 				"id": "openhmis.inventory.inventoryPendingOperations",
