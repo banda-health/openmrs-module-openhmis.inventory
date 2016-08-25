@@ -198,26 +198,26 @@
                         </tr>
                     </thead>
                     <tr ng-repeat="lineItem in lineItems" >
-                        <td class="item-actions" ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                        <td class="item-actions" ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                             <table class="icons">
                                 <tr>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                                         <input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
                                                title="${ui.message('openhmis.inventory.operations.removeItemStock')}"
                                                ng-show="lineItem.selected"
                                                class="remove,{{lineItem.selected ? 'row_selected' : ''}}" ng-click="removeLineItem(lineItem)">
                                     </td>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
-                                        <i ng-show="lineItem.newQuantity < 0" class="icon-info-sign" title="Out of Stock"></i>
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
+                                        <i ng-show="(lineItem.newQuantity < 0 && operationType.hasSource)" class="icon-info-sign" title="Out of Stock"></i>
                                     </td>
                                 </tr>
                             </table>
                         </td>
-                        <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                        <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
 
                             <table class="item-details" ng-shdow="lineItem.selected">
                                 <tr>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0, 'not-valid': lineItem.invalidEntry === true}">
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource), 'not-valid': lineItem.invalidEntry === true}">
                                         ${ ui.includeFragment("openhmis.commons", "searchFragment", [
                                             typeahead: ["stockOperationItem.name for stockOperationItem in searchStockOperationItems(\$viewValue)"],
                                             model: "lineItem.itemStock",
@@ -228,18 +228,18 @@
                                             ngEnterEvent: "addLineItem()",
                                             placeholder: [ui.message('openhmis.inventory.item.enterItemSearch')],
                                     ])}</td>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                                         <b>${ui.message("openhmis.inventory.item.quantity")}:</b>
                                     </td>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                                         <input type="number" ng-model="lineItem.itemStockQuantity" class="form-control input-quantity"
                                                ng-enter="changeItemQuantity(lineItem)"
                                                ng-change="changeItemQuantity(lineItem)" />
                                     </td>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                                         <b>${ui.message("openhmis.inventory.stockroom.expiration")}:</b>
                                     </td>
-                                    <td ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                                         <select ng-model="lineItem.itemStockExpirationDate"
                                                 ng-change="changeExpiration(lineItem)"
                                                 ng-show="!lineItem.expirationHasDatePicker"
