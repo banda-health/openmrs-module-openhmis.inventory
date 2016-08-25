@@ -323,7 +323,6 @@
                            ng-click="closeThisDialog('Cancel')" />
                     <input type="button" class="confirm right btn gray-button"
                            value="${ui.message('openhmis.inventory.operations.changeDate')}"
-                           ng-disabled="operationOccurDate === undefined"
                            ng-click="confirm('OK')" />
                 </div>
             </div>
