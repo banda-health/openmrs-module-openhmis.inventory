@@ -46,7 +46,7 @@
 			|| function() {
 				$scope.loading = true;
 				if (self.sessionLocation === undefined) {
-					CommonsRestfulFunctions.getSessionLocation(INVENTORY_MODULE_NAME, self.onLoadSessionLocationSuccessful);
+					CommonsRestfulFunctions.getSession(INVENTORY_MODULE_NAME, self.onLoadSessionLocationSuccessful);
 				}
 
 				$scope.isOperationNumberGenerated = false;
