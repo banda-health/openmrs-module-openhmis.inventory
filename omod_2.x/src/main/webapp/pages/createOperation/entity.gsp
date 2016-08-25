@@ -257,7 +257,7 @@
                                     </td>
 
                                 </tr>
-                                <tr>
+                                <tr ng-show="operationType.hasSource">
                                     <td></td>
                                     <td colspan="3" class="existing-quantity" ng-class="{'negative-quantity' : lineItem.newQuantity < 0}">
                                         <b>${ui.message("openhmis.inventory.operations.existingQuantity")}:</b>
