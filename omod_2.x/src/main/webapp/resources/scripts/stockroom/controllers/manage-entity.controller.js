@@ -67,7 +67,7 @@
 
                 CookiesService.set('location_uuid', location_uuid);
 
-                StockroomRestfulService.searchStockrooms(rest_entity_name, location_uuid, currentPage, $scope.limit, $scope.includeRetired, $scope.searchField, self.onSearchStockRoomsSuccessful);
+                StockroomRestfulService.searchStockrooms(REST_ENTITY_NAME, location_uuid, currentPage, $scope.limit, $scope.includeRetired, $scope.searchField, self.onSearchStockRoomsSuccessful);
             }
 
         // call back
