@@ -467,7 +467,8 @@
 
 				if (itemStocks[0] !== null) {
 					$scope.lineItem.setItemStockDetails(itemStocks[0]);
-					$scope.lineItem.setExistingQuantity(itemStocks[0].quantity);
+					$scope.lineItem.setExistingQuantity(
+						CreateOperationFunctions.calculateSumItemStockDetailQuantities(itemStocks[0].details));
 					self.changeItemQuantity($scope.lineItem);
 				}
 			}
