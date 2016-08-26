@@ -41,6 +41,7 @@
 			validatePatient: validatePatient,
 			validateOperationNumber: validateOperationNumber,
 			populateOccurDates: populateOccurDates,
+			calculateSumItemStockDetailQuantities: calculateSumItemStockDetailQuantities,
 		};
 
 		return service;
@@ -377,6 +378,15 @@
 					$scope.operationOccurs.push(operationDate);
 				}
 			}
+		}
+
+		function calculateSumItemStockDetailQuantities(itemStockDetails) {
+			var totalQuantity = 0;
+			for (var i = 0; i < itemStockDetails.length; i++) {
+				totalQuantity += itemStockDetails[i].quantity;
+			}
+
+			return totalQuantity;
 		}
 	}
 })();
