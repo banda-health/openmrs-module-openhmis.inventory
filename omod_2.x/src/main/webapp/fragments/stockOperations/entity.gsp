@@ -99,6 +99,14 @@
             <span>{{stockOperation.institution.name}}</span>
         </li>
     </ul>
+    <ul class="table-layout" ng-hide="stockOperation.department === null">
+        <li>
+            <span>${ui.message('openhmis.inventory.department.name')}</span>
+        </li>
+        <li>
+            <span>{{stockOperation.department.name}}</span>
+        </li>
+    </ul>
     <ul class="table-layout" ng-repeat="attribute in stockOperation.attributes">
         <li>
             <span>{{attribute.attributeType.name}}</span>

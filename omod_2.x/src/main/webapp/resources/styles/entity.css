@@ -239,9 +239,17 @@ table.item-details tr{
 table.item-details td input{
     min-width: 0px;
 }
-
+table.item-details .date input{
+    width: 120px;
+    margin: 1px 0px -15px 0px;
+}
+table.line-item .add-on{
+    position:relative;
+    left: 97px;
+    top: -8px;
+}
 table.line-item .autocomplete-search{
-    width: 380px;
+    width: 350px;
 }
 table.icons{
     width:50px;
@@ -293,14 +301,9 @@ table.item-details td input[type="image"]{
 .create-operation-content{
     font-size: inherit;
 }
-.loading-msg{
-    margin: 200px;
-}
-.loading-img{
-    margin: 150px;
-}
+
 .input-quantity{
-    width: 60px;
+    width: 80px;
 }
 fieldset.nested .line-item select {
     width: 100px;

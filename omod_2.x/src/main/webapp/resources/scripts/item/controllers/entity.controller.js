@@ -253,6 +253,7 @@
                     $scope.entity.department = department.uuid;
                 }
 
+                $scope.loading = true;
                 return true;
             }
 
