@@ -127,7 +127,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>openhmis.commons-tools</artifactId>
-				<version>3.3.0-SNAPSHOT</version>
+				<version>3.5.0-SNAPSHOT</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
@@ -261,7 +261,7 @@
 						<dependency>
 							<groupId>org.openmrs.module</groupId>
 							<artifactId>openhmis.commons-tools</artifactId>
-							<version>3.3.0-SNAPSHOT</version>
+							<version>3.4.0</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -282,7 +282,7 @@
 						<dependency>
 							<groupId>org.openmrs.module</groupId>
 							<artifactId>openhmis.commons-tools</artifactId>
-							<version>3.3.0-SNAPSHOT</version>
+							<version>3.4.0</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -350,6 +350,17 @@
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+		</repository>
+		<repository>
+			<id>openhmis-repo</id>
+			<name>OpenHMIS Nexus Repository</name>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<url>http://mavenrepo.openhmisafrica.org/content/repositories/snapshots</url>
 		</repository>
 	</repositories>
 
