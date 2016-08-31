@@ -230,11 +230,6 @@
 		<description>Able to access inventory tasks page</description>
 	</privilege>
 
-	<privilege>
-		<name>Task: Access My Operations</name>
-        <description>Able to access the Pending Operations page</description>
-	</privilege>
-
     <privilege>
         <name>Task: Access Create Operation</name>
         <description>Able to access the create inventory operations page</description>
@@ -253,6 +248,11 @@
 	<privilege>
 		<name>Task: Manage Inventory Metadata</name>
 		<description>Able to add/edit/retire inventory module metadata</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: View Stock Operations</name>
+		<description>Able to access the view stock operations page.</description>
 	</privilege>
 
 </module>

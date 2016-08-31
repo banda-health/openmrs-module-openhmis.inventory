@@ -20,21 +20,21 @@
 	base.controller("CreateOperationController", CreateOperationController);
 	CreateOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
-		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions', '$timeout'];
+		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions', '$timeout', 'EntityFunctions'];
 	
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
-	                                   CookiesService, LineItemModel, CommonsRestfulFunctions, $timeout) {
+	                                   CookiesService, LineItemModel, CommonsRestfulFunctions, $timeout, EntityFunctions) {
 		var self = this;
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
 		var REST_ENTITY_NAME = "stockOperation";
 		var notDefined = {name: ' - Not Defined - '};
-		var MY_OPERATIONS_URL = ROOT_URL + 'openhmis.inventory/myOperations/entities.page';
+		var VIEW_STOCK_OPERATIONS = ROOT_URL + 'openhmis.inventory/stockOperations/entities.page#/';
 		var GENERATE_OPERATION_NUMBER = "WILL BE GENERATED";
 		
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
-				self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+				self.bindBaseParameters(INVENTORY_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, INVENTORY_TASK_DASHBOARD_PAGE_URL);
 				self.checkPrivileges(TASK_ACCESS_CREATE_OPERATION_PAGE);
 			}
 		/**
@@ -299,16 +299,7 @@
 					lineItem.setItemStockHasExpiration(false);
 				}
 
-				self.focusNext(index);
-			}
-
-		self.focusNext = self.focusNext || function(index) {
-				//focus on quantity input..
-				$timeout(function() {
-					var elem = document.getElementById('quantity-' + index);
-					document.getElementById('quantity-' + index).focus();
-					$scope.lineItem.itemStockQuantity.focus();
-				}, 100);
+				EntityFunctions.focusOnElement('quantity-' + index);
 			}
 
 		self.searchFieldAttributePatients = self.searchFieldAttributePatients || function(q) {
@@ -467,7 +458,8 @@
 
 				if (itemStocks[0] !== null) {
 					$scope.lineItem.setItemStockDetails(itemStocks[0]);
-					$scope.lineItem.setExistingQuantity(itemStocks[0].quantity);
+					$scope.lineItem.setExistingQuantity(
+						CreateOperationFunctions.calculateSumItemStockDetailQuantities(itemStocks[0].details));
 					self.changeItemQuantity($scope.lineItem);
 				}
 			}
@@ -498,7 +490,7 @@
 			}
 
 		self.onChangeEntitySuccessful = self.onChangeEntitySuccessful || function() {
-				window.location = MY_OPERATIONS_URL;
+				window.location = VIEW_STOCK_OPERATIONS;
 			}
 
 		// @Override

@@ -1,6 +1,5 @@
 <%
     def title = config.pageTitle;
-    def createOperation = config.createOperation;
 %>
 <div id="entities-body">
     <br/>
@@ -16,14 +15,13 @@
                     ${ui.message('openhmis.inventory.admin.operations')}
             <%  } %>
         </span>
-        <% if(createOperation) { %>
-            <span style="float:right;">
-                <a class="button confirm" href="/${ ui.contextPath() }/openhmis.inventory/createOperation/entities.page">
-                    <i class="icon-plus"></i>
-                    ${ui.message('openhmis.inventory.operations.createOperation')}
-                </a>
-            </span>
-        <% } %>
+        <span style="float:right;">
+            <a class="button confirm" href="/${ ui.contextPath() }/openhmis.inventory/createOperation/entities.page">
+                <i class="icon-plus"></i>
+                ${ui.message('openhmis.inventory.operations.createOperation')}
+            </a>
+        </span>
+
     </div>
     <br/><br/>
 
