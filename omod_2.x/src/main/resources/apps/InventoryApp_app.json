@@ -104,15 +104,6 @@
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
 			},
 			{
-				"id": "openhmis.inventory.viewStockOperationLink",
-				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
-				"type": "link",
-				"label": "View Stock Operation",
-				"url": "openhmis.inventory/stockOperations/entities.page",
-				"icon": "icon-list",
-				"requiredPrivilege": "Task: Manage Inventory Metadata"
-			},
-			{
 				"id": "openhmis.inventory.generateItemMappingsLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
@@ -131,15 +122,6 @@
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
 			},
 			{
-				"id": "openhmis.inventory.inventoryPendingOperations",
-				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
-				"type": "link",
-				"label": "My Operations",
-				"url": "openhmis.inventory/myOperations/entities.page",
-				"icon": "icon-suitcase",
-				"requiredPrivilege": "Task: Access My Operations"
-			},
-			{
 				"id": "openhmis.inventory.createInventoryOperations",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 				"type": "link",
@@ -147,6 +129,15 @@
 				"url": "openhmis.inventory/createOperation/entities.page",
 				"icon": "icon-folder-open",
 				"requiredPrivilege": "Task: Access Create Operation"
+			},
+			{
+				"id": "openhmis.inventory.viewStockOperationLink",
+				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
+				"type": "link",
+				"label": "View Stock Operation",
+				"url": "openhmis.inventory/stockOperations/entities.page",
+				"icon": "icon-list",
+				"requiredPrivilege": "Task: View Stock Operations"
 			},
 			{
 				"id": "openhmis.inventory.stockTake",
