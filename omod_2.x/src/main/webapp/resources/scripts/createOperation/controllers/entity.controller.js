@@ -20,11 +20,11 @@
 	base.controller("CreateOperationController", CreateOperationController);
 	CreateOperationController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory',
 		'OperationModel', 'CreateOperationRestfulService', 'PaginationService', 'CreateOperationFunctions',
-		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions', '$timeout'];
+		'CookiesService', 'LineItemModel', 'CommonsRestfulFunctions', '$timeout', 'EntityFunctions'];
 	
 	function CreateOperationController($stateParams, $injector, $scope, $filter, EntityRestFactory, OperationModel,
 	                                   CreateOperationRestfulService, PaginationService, CreateOperationFunctions,
-	                                   CookiesService, LineItemModel, CommonsRestfulFunctions, $timeout) {
+	                                   CookiesService, LineItemModel, CommonsRestfulFunctions, $timeout, EntityFunctions) {
 		var self = this;
 		var entity_name_message_key = emr.message("openhmis.inventory.stock.operation.name");
 		var REST_ENTITY_NAME = "stockOperation";
@@ -299,16 +299,7 @@
 					lineItem.setItemStockHasExpiration(false);
 				}
 
-				self.focusNext(index);
-			}
-
-		self.focusNext = self.focusNext || function(index) {
-				//focus on quantity input..
-				$timeout(function() {
-					var elem = document.getElementById('quantity-' + index);
-					document.getElementById('quantity-' + index).focus();
-					$scope.lineItem.itemStockQuantity.focus();
-				}, 100);
+				EntityFunctions.focusOnElement('quantity-' + index);
 			}
 
 		self.searchFieldAttributePatients = self.searchFieldAttributePatients || function(q) {
