@@ -197,7 +197,7 @@
                             <th>${ui.message('openhmis.inventory.item.name')}</th>
                         </tr>
                     </thead>
-                    <tr ng-repeat="lineItem in lineItems" >
+                    <tr ng-repeat="lineItem in lineItems">
                         <td class="item-actions" ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                             <table class="icons">
                                 <tr>
@@ -237,19 +237,19 @@
                                                ng-enter="changeItemQuantity(lineItem)"
                                                ng-change="changeItemQuantity(lineItem)" />
                                     </td>
-                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
+                                    <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}"
+                                        ng-show="(!lineItem.expirationHasDatePicker && lineItem.expirationDates.length > 0) || lineItem.expirationHasDatePicker">
                                         <b>${ui.message("openhmis.inventory.stockroom.expiration")}:</b>
                                     </td>
                                     <td ng-class="{'negative-quantity' : (lineItem.newQuantity < 0 && operationType.hasSource)}">
                                         <select ng-model="lineItem.itemStockExpirationDate"
                                                 ng-change="changeExpiration(lineItem)"
-                                                ng-show="!lineItem.expirationHasDatePicker"
+                                                ng-show="!lineItem.expirationHasDatePicker && lineItem.expirationDates.length > 0"
                                                 class="right-justify form-control"
                                                 ng-options="itemStockExpirationDate for itemStockExpirationDate in lineItem.expirationDates">
                                         </select>
 
                                         <span ng-show="lineItem.expirationHasDatePicker">
-
                                             ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                                                     formFieldName: "lineItemExpDate",
                                                     label: "",
