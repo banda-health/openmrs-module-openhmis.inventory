@@ -70,10 +70,12 @@
 				var elements = angular.element(document.getElementsByTagName("input"));
 				for (var i = 0; i < elements.length; i++) {
 					var element = elements[i];
-					if (element.id.indexOf("display") > -1) {
+					if (element.id.indexOf("operationDate") == -1 &&
+						element.id.indexOf("display") > -1 && (element.id !== lineItem.id)) {
 						if (lineItem !== undefined) {
 							element.id = lineItem.id;
 						}
+
 						picker = angular.element(element);
 						picker.bind('keyup change select', function() {
 							lineItem.itemStockExpirationDate = formatDate(new Date(this.value));
@@ -253,8 +255,12 @@
 							continue;
 						}
 
-						if (lineItem.itemStockQuantity == 0) {
-							emr.errorAlert("openhmis.inventory.operations.error.itemError");
+						if (lineItem.itemStockQuantity === 0 ||
+							lineItem.itemStockQuantity === undefined ||
+							lineItem.itemStockQuantity === null) {
+							var errorMessage =
+								emr.message("openhmis.inventory.operations.error.itemError") + " - " + lineItem.itemStock.name;
+							emr.errorAlert(errorMessage);
 							failed = true;
 							continue;
 						}
@@ -264,7 +270,13 @@
 						var expiration = lineItem.itemStockExpirationDate;
 						if (lineItem.itemStockHasExpiration) {
 							if (expiration === undefined || expiration === "") {
-								dateNotRequired = false;
+								var expDate = jQuery("#"+lineItem.id).val();
+								if(expDate !== undefined && expDate !== ""){
+									expiration = formatDate(new Date(expDate));
+									calculatedExpiration = true;
+								} else {
+									dateNotRequired = false;
+								}
 							} else if (expiration === 'None') {
 								calculatedExpiration = false;
 								expiration = undefined;
@@ -292,7 +304,9 @@
 
 							validatedItems.push(item);
 						} else {
-							emr.errorAlert("openhmis.inventory.operations.error.expiryDate");
+							var errorMessage =
+								emr.message("openhmis.inventory.operations.error.expiryDate") + " - " + lineItem.itemStock.name;
+							emr.errorAlert(errorMessage);
 							failed = true;
 							continue;
 						}
