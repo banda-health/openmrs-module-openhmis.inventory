@@ -134,7 +134,7 @@
 				"id": "openhmis.inventory.viewStockOperationLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 				"type": "link",
-				"label": "View Stock Operation",
+				"label": "View Stock Operations",
 				"url": "openhmis.inventory/stockOperations/entities.page",
 				"icon": "icon-list",
 				"requiredPrivilege": "Task: View Stock Operations"

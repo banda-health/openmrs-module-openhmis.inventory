@@ -49,6 +49,7 @@
 					CommonsRestfulFunctions.getSession(INVENTORY_MODULE_NAME, self.onLoadSessionLocationSuccessful);
 				}
 
+				$scope.count = 0;
 				$scope.isOperationNumberGenerated = false;
 				$scope.isNegativeStockRestricted = false;
 				CreateOperationRestfulService.isOperationNumberGenerated(self.onLoadOpNumGenSuccessful);
@@ -226,6 +227,8 @@
 				}
 				if (addItem) {
 					var lineItem = new LineItemModel('', '', 1, '', false);
+					$scope.count = $scope.count + 1;
+					lineItem.id = $scope.count;
 					$scope.lineItems.push(lineItem);
 				}
 			}
@@ -276,6 +279,7 @@
 				lineItem.setExistingQuantity(0);
 				lineItem.setNewQuantity('');
 				lineItem.setItemStockQuantity(1);
+				lineItem.setExpirationHasDatePicker(false);
 				if (stockOperationItem !== undefined) {
 					lineItem.setItemStock(stockOperationItem);
 					lineItem.setItemStockDepartment(stockOperationItem.department);
@@ -287,8 +291,10 @@
 					self.searchItemStock(stockOperationItem);
 
 					if (lineItem.expirationHasDatePicker) {
-						$scope.count = $scope.count || 1;
-						lineItem.id = $scope.count++;
+						if($scope.count !== lineItem.id){
+							lineItem.id = $scope.count;
+						}
+
 						lineItem.expirationDates = [];
 						CreateOperationFunctions.onChangeDatePicker(self.onLineItemExpDateSuccessfulCallback, undefined, lineItem);
 					}
