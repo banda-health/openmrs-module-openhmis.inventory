@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.search;
 
@@ -18,6 +18,9 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateSearch;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 
+/**
+ * A search template class for the {@link StockOperation} model.
+ */
 public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperationTemplate> {
 	public StockOperationSearch() {
 		this(new StockOperationTemplate());
@@ -31,7 +34,7 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 	private ComparisonType sourceComparisonType;
 	private ComparisonType destinationComparisonType;
 	private ComparisonType patientComparisonType;
-    private ComparisonType institutionComparisonType;
+	private ComparisonType institutionComparisonType;
 	private DateComparisonType dateCreatedComparisonType;
 
 	public void setOperationNumberComparisonType(StringComparisonType operationNumberComparisonType) {
@@ -74,19 +77,22 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 		this.patientComparisonType = patientComparisonType;
 	}
 
-    public ComparisonType getInstitutionComparisonType() {
-        return institutionComparisonType;
-    }
+	public ComparisonType getInstitutionComparisonType() {
+		return institutionComparisonType;
+	}
 
-    public void setInstitutionComparisonType(ComparisonType institutionComparisonType) {
-        this.institutionComparisonType = institutionComparisonType;
-    }
+	public void setInstitutionComparisonType(ComparisonType institutionComparisonType) {
+		this.institutionComparisonType = institutionComparisonType;
+	}
 
-    @Override
+	@Override
 	public void updateCriteria(Criteria criteria) {
 		super.updateCriteria(criteria);
 
-		StockOperation operation = getTemplate();
+		StockOperationTemplate operation = getTemplate();
+		if (operation.getItem() != null) {
+			criteria.createAlias("items", "items").add(Restrictions.eq("items.item", operation.getItem()));
+		}
 		if (operation.getOperationNumber() != null) {
 			criteria.add(createCriterion("operationNumber", operation.getOperationNumber(), operationNumberComparisonType));
 		}
@@ -96,25 +102,29 @@ public class StockOperationSearch extends BaseObjectTemplateSearch<StockOperatio
 		if (operation.getStatus() != null) {
 			criteria.add(Restrictions.eq("status", operation.getStatus()));
 		}
-		if (operation.getSource() != null ||
-				(sourceComparisonType != null && sourceComparisonType != ComparisonType.EQUAL)) {
+		if (operation.getSource() != null || (sourceComparisonType != null
+		        && sourceComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("source", operation.getSource(), sourceComparisonType));
 		}
-		if (operation.getDestination() != null ||
-				(destinationComparisonType != null && destinationComparisonType != ComparisonType.EQUAL)) {
+		if (operation.getDestination() != null
+		        || (destinationComparisonType != null && destinationComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("destination", operation.getDestination(), destinationComparisonType));
 		}
-		if (operation.getPatient() != null ||
-				(patientComparisonType != null && patientComparisonType != ComparisonType.EQUAL)) {
+		if (operation.getPatient() != null
+		        || (patientComparisonType != null && patientComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("patient", operation.getPatient(), patientComparisonType));
-        }
-        if (operation.getInstitution() != null ||
-                (institutionComparisonType != null && institutionComparisonType != ComparisonType.EQUAL)) {
-            criteria.add(createCriterion("institution", operation.getInstitution(), institutionComparisonType));
-        }
-		if (operation.getDateCreated() != null ||
-				(dateCreatedComparisonType != null && dateCreatedComparisonType != DateComparisonType.EQUAL)) {
+		}
+		if (operation.getInstitution() != null
+		        || (institutionComparisonType != null && institutionComparisonType != ComparisonType.EQUAL)) {
+			criteria.add(createCriterion("institution", operation.getInstitution(), institutionComparisonType));
+		}
+		if (operation.getDateCreated() != null
+		        || (dateCreatedComparisonType != null && dateCreatedComparisonType != DateComparisonType.EQUAL)) {
 			criteria.add(createCriterion("dateCreated", operation.getDateCreated(), dateCreatedComparisonType));
+		}
+		if (operation.getStockroom() != null) {
+			criteria.add(Restrictions.or(Restrictions.eq("source", operation.getStockroom()),
+			    Restrictions.eq("destination", operation.getStockroom())));
 		}
 	}
 }

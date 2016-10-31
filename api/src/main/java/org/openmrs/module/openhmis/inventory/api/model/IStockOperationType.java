@@ -1,3 +1,16 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.openmrs.OpenmrsMetadata;
@@ -46,13 +59,14 @@ public interface IStockOperationType extends OpenmrsMetadata, IInstanceType<Stoc
 	void setHasRecipient(Boolean hasRecipient);
 
 	/**
-	 * Returns whether the operation type requires an associated {@link Recipient}.
+	 * Returns whether the operation type requires an associated recipient (a {@link Institution}, {@link Department}, or
+	 * {@link org.openmrs.Patient}).
 	 * @return {@code true} if the operation type requires and associated patient; otherwise, {@code false}.
 	 */
 	Boolean getRecipientRequired();
 
 	/**
-	 * Sets whether the operation type requires an associated {@link Recipient}.
+	 * Sets whether the operation type requires an associated recipient.
 	 * @param required Whether the operation type requires an associated patient.
 	 */
 	void setRecipientRequired(Boolean required);
@@ -89,9 +103,27 @@ public interface IStockOperationType extends OpenmrsMetadata, IInstanceType<Stoc
 
 	/**
 	 * Sets the user {@link Role} for users that can approve operations of this type.
- 	 * @param role The role required to approve the operation.
+	 * @param role The role required to approve the operation.
 	 */
 	void setRole(Role role);
+
+	/**
+	 * Calculates if the specified {@link User} can process this type.
+	 * @param user The user to check.
+	 * @return {@code true} if the user can process the type; otherwise, {@code false}.
+	 * @should return true when type has no role or user defined
+	 * @should return false when type has different role than user
+	 * @should return false when type has different user than user
+	 * @should return true when type has same role or parent role as user
+	 * @should return true when type has same user as user
+	 * @should return true when type has user role and different user than user
+	 * @should return true when type has different role and same user as user
+	 * @should return true when type has different user and user is sys dev
+	 * @should return true when type has different role and user is sys dev
+	 * @should return true when type has different role and user and user is sys dev
+	 * @should throw IllegalArgumentException if user is null
+	 */
+	boolean userCanProcess(User user);
 
 	/**
 	 * Called when the {@link StockOperation} status is initially created and the status is StockOperationStatus.PENDING.
@@ -110,4 +142,10 @@ public interface IStockOperationType extends OpenmrsMetadata, IInstanceType<Stoc
 	 * @param operation The associated stock operation.
 	 */
 	void onCompleted(StockOperation operation);
+
+	/**
+	 * Determines weather or not negative quantities for items are allowed
+	 * @return true if negative quantities are allowed, else false
+	 */
+	boolean isNegativeItemQuantityAllowed();
 }

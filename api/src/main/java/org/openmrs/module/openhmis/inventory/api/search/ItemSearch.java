@@ -5,11 +5,11 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.search;
 
@@ -18,6 +18,9 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.openhmis.commons.api.entity.search.BaseMetadataTemplateSearch;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 
+/**
+ * A search template class for the {@link Item} model.
+ */
 public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 	public static final long serialVersionUID = 0L;
 
@@ -55,11 +58,7 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 		if (item.getDepartment() != null) {
 			criteria.add(Restrictions.eq("department", item.getDepartment()));
 		}
-		if (item.getCategory() != null) {
-			criteria.add(Restrictions.eq("category", item.getCategory()));
-		}
-		if (item.getConcept() != null ||
-				(conceptComparisonType != null && conceptComparisonType != ComparisonType.EQUAL)) {
+		if (item.getConcept() != null || (conceptComparisonType != null && conceptComparisonType != ComparisonType.EQUAL)) {
 			criteria.add(createCriterion("concept", item.getConcept(), conceptComparisonType));
 		}
 		if (item.getHasExpiration() != null) {
@@ -73,4 +72,3 @@ public class ItemSearch extends BaseMetadataTemplateSearch<Item> {
 		}
 	}
 }
-

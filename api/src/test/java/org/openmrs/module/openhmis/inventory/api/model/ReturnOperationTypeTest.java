@@ -21,26 +21,26 @@ public class ReturnOperationTypeTest extends BaseOperationTypeTest {
 		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
 		executeDataSet(IStockroomDataServiceTest.DATASET);
 		executeDataSet(DATASET);
-		
+
 		stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
 		stockOperationDataService = Context.getService(IStockOperationDataService.class);
 	}
-	
+
 	@Test
 	public void onCancelled_shouldClearReservedTransactions() throws Exception {
 		ReturnOperationType returnOperationType = (ReturnOperationType)stockOperationTypeDataService.getById(4);
 		StockOperation stockOperation = stockOperationDataService.getById(3);
-		
+
 		assertTrue(stockOperation.getReserved().size() == 1);
 		returnOperationType.onCancelled(stockOperation);
 		assertTrue(stockOperation.getReserved().size() == 0);
 	}
-	
+
 	@Test
 	public void onCompleted_shouldSetDestinationStockroom() throws Exception {
 		ReturnOperationType returnOperationType = (ReturnOperationType)stockOperationTypeDataService.getById(4);
 		StockOperation stockOperation = stockOperationDataService.getById(3);
-		
+
 		returnOperationType.onCompleted(stockOperation);
 		Set<StockOperationTransaction> transactions = stockOperation.getTransactions();
 		assertTrue(transactions.size() == 1);
@@ -48,5 +48,5 @@ public class ReturnOperationTypeTest extends BaseOperationTypeTest {
 			assertTrue(transaction.getStockroom().getId() == 4);
 		}
 	}
-	
+
 }

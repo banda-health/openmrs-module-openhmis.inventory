@@ -1,0 +1,21 @@
+td.field-dateCreated { width: 200px; }
+td.field-operationDate { width: 200px; }
+td.field-operationNumber { width: 150px; }
+td.field-instanceType {width: 125px; }
+
+input.readonly {
+	border: 1px solid #BDBDBD;
+	color: #BDBDBD;
+}
+
+#operationTabList li.ui-state-default {
+	background: #d3d3d3 none !important;
+}
+
+#operationTabList li.ui-tabs-active {
+	background: white none !important;
+}
+
+.no-close .ui-dialog-titlebar-close {
+	display: none;
+}

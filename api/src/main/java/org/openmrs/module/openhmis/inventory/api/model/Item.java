@@ -5,44 +5,44 @@
  * http://license.openmrs.org
  *
  * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
  *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
 package org.openmrs.module.openhmis.inventory.api.model;
-
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.openmrs.BaseCustomizableMetadata;
-import org.openmrs.Concept;
-import org.openmrs.customdatatype.Customizable;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.openmrs.Concept;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSimpleCustomizableMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.ISimpleCustomizable;
+
 /**
  * Model class that represents a product or service.
  */
-public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Customizable<ItemAttribute> {
-	public static final long serialVersionUID = 0L;
+public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implements ISimpleCustomizable<ItemAttribute> {
+	public static final long serialVersionUID = 1L;
 
 	private Integer itemId;
 	private Set<ItemCode> codes;
 	private Set<ItemPrice> prices;
 	private Department department;
-	private Category category;
 	private Concept concept;
 	private ItemPrice defaultPrice;
 	private Boolean hasExpiration;
 	private Integer defaultExpirationPeriod;
+	private Integer minimumQuantity;
 	private Boolean hasPhysicalInventory;
 	private Boolean conceptAccepted;
+	private BigDecimal buyingPrice;
 
-	public Item() {
-	}
+	public Item() {}
 
 	public Item(Integer itemId) {
 		this.itemId = itemId;
@@ -150,14 +150,6 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 		this.defaultPrice = defaultPrice;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
 	public Concept getConcept() {
 		return concept;
 	}
@@ -208,6 +200,22 @@ public class Item extends BaseCustomizableMetadata<ItemAttribute> implements Cus
 
 	public void setConceptAccepted(Boolean conceptAccepted) {
 		this.conceptAccepted = conceptAccepted;
+	}
+
+	public Integer getMinimumQuantity() {
+		return minimumQuantity;
+	}
+
+	public void setMinimumQuantity(Integer minimumQuantity) {
+		this.minimumQuantity = minimumQuantity;
+	}
+
+	public BigDecimal getBuyingPrice() {
+		return buyingPrice;
+	}
+
+	public void setBuyingPrice(BigDecimal buyingPrice) {
+		this.buyingPrice = buyingPrice;
 	}
 
 	@Override

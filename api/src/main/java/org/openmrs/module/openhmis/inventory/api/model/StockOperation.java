@@ -1,30 +1,42 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.openhmis.inventory.api.model;
-
-import org.openmrs.Patient;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceMetadata;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.openmrs.Patient;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomizableMetadata;
+import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
+
 /**
- * This class represents an operation performed on item stock.  Examples of an operation include transferring
- * item stock from one stockroom to another or selling item stock to a patient.  Each of these types of operations is
- * modeled by a specific {@link IStockOperationType} class that defines what happens when a stock operation is
- * initially created (NEW), being processed (PENDING), cancelled (CANCELLED), or completed (COMPLETED).
- *
- * A stock operation is composed of the item stock changes and two types of stock transactions: reserved and completed.
- * The reserved transactions denote the state of the item stock while the operation is in progress (PENDING). For example,
- * when stock is transferred from one stockroom to another it is considered "owned" by the operation while the status is
- * PENDING and there will be the associated reserved transactions for each item stock while in that state. Once the operation
- * is CANCELLED or COMPLETED the pending transactions become completed transactions and the ownership of the item stock is
- * transitioned to the associated stockroom.
+ * This class represents an operation performed on item stock. Examples of an operation include transferring item stock from
+ * one stockroom to another or selling item stock to a patient. Each of these types of operations is modeled by a specific
+ * {@link IStockOperationType} class that defines what happens when a stock operation is initially created (NEW), being
+ * processed (PENDING), cancelled (CANCELLED), or completed (COMPLETED). A stock operation is composed of the item stock
+ * changes and two types of stock transactions: reserved and completed. The reserved transactions denote the state of the
+ * item stock while the operation is in progress (PENDING). For example, when stock is transferred from one stockroom to
+ * another it is considered "owned" by the operation while the status is PENDING and there will be the associated reserved
+ * transactions for each item stock while in that state. Once the operation is CANCELLED or COMPLETED the pending
+ * transactions become completed transactions and the ownership of the item stock is transitioned to the associated
+ * stockroom.
  */
-public class StockOperation
-		extends BaseCustomizableInstanceMetadata<IStockOperationType, StockOperationAttribute>
-		implements Comparable<StockOperation> {
-	public static final long serialVersionUID = 0L;
+public class StockOperation extends BaseInstanceCustomizableMetadata<IStockOperationType, StockOperationAttribute>
+        implements Comparable<StockOperation> {
+	public static final long serialVersionUID = 2L;
 
 	private Integer id;
 	private StockOperationStatus status;
@@ -34,10 +46,13 @@ public class StockOperation
 
 	private String operationNumber;
 	private Date operationDate;
+	private Integer operationOrder;
 	protected Stockroom source;
 	protected Stockroom destination;
 	protected Patient patient;
 	protected Institution institution;
+	protected Department department;
+	private String cancelReason;
 
 	@Override
 	public Integer getId() {
@@ -71,6 +86,14 @@ public class StockOperation
 
 	public void setOperationDate(Date operationDate) {
 		this.operationDate = operationDate;
+	}
+
+	public Integer getOperationOrder() {
+		return operationOrder;
+	}
+
+	public void setOperationOrder(Integer operationOrder) {
+		this.operationOrder = operationOrder;
 	}
 
 	public Stockroom getSource() {
@@ -115,21 +138,37 @@ public class StockOperation
 		}
 	}
 
-    public Patient getPatient() {
-        return patient;
-    }
+	public Patient getPatient() {
+		return patient;
+	}
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 
-    public Institution getInstitution() {
-        return institution;
-    }
+	public Institution getInstitution() {
+		return institution;
+	}
 
-    public void setInstitution(Institution institution) {
-        this.institution = institution;
-    }
+	public void setInstitution(Institution institution) {
+		this.institution = institution;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public String getCancelReason() {
+		return cancelReason;
+	}
+
+	public void setCancelReason(String cancelReason) {
+		this.cancelReason = cancelReason;
+	}
 
 	public StockOperationItem addItem(Item item, int quantity) {
 		return addItem(item, quantity, null, null);
@@ -149,7 +188,7 @@ public class StockOperation
 		operationItem.setQuantity(quantity);
 
 		if (expiration == null) {
-			if (item.getHasExpiration()) {
+			if (Boolean.TRUE.equals(item.getHasExpiration())) {
 				operationItem.setCalculatedExpiration(true);
 			} else {
 				operationItem.setCalculatedExpiration(false);
@@ -298,15 +337,18 @@ public class StockOperation
 	public void setTransactions(Set<StockOperationTransaction> transactions) {
 		this.transactions = transactions;
 	}
-	
+
 	public boolean hasReservedTransactions() {
 		return (getReserved() != null && getReserved().size() > 0);
 	}
-	
+
 	public boolean hasTransactions() {
 		return (getTransactions() != null && getTransactions().size() > 0);
 	}
-	
+
+	public boolean isAdjustmentType() {
+		return (WellKnownOperationTypes.getAdjustment()).equals(this.getInstanceType());
+	}
 
 	@Override
 	public int compareTo(StockOperation o) {
@@ -326,5 +368,5 @@ public class StockOperation
 
 		return result;
 	}
-}
 
+}

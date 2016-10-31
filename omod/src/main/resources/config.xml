@@ -15,17 +15,22 @@
 
 	<aware_of_modules>
 		<aware_of_module version="2.8">org.openmrs.module.idgen</aware_of_module>
+		<aware_of_module version="3.3.1">org.openmrs.module.uiframework</aware_of_module>
+		<aware_of_module version="2.3">org.openmrs.module.appframework</aware_of_module>
+		<aware_of_module version="2.2">org.openmrs.module.providermanagement</aware_of_module>
+		<aware_of_module version="1.7">org.openmrs.module.uicommons</aware_of_module>
 	</aware_of_modules>
 
 	<require_modules>
-		<require_module version="2.6">org.openmrs.module.webservices.rest</require_module>
-		<require_module version="2.0">org.openmrs.module.openhmis.commons</require_module>
-		<require_module version="2.0">org.openmrs.module.openhmis.backboneforms</require_module>
+		<require_module version="2.9">org.openmrs.module.webservices.rest</require_module>
+		<require_module version="3.0">org.openmrs.module.openhmis.commons</require_module>
+		<require_module version="2.3">org.openmrs.module.openhmis.backboneforms</require_module>
+		<require_module version="1.5.6">org.openmrs.module.jasperreport</require_module>
 	</require_modules>
 
 	<!-- Module Activator -->
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.InventoryModuleActivator</activator>
-	
+
 	<globalProperty>
 		<property>${project.parent.artifactId}.autoGenerateOperationNumber</property>
 		<description>true/false whether or not the operation number should be generated automatically.</description>
@@ -35,7 +40,61 @@
 		<property>${project.parent.artifactId}.operationNumberIdentifierSourceId</property>
 		<description>ID of the Idgen Module identifier source.</description>
 	</globalProperty>
-	
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.stockTake</property>
+		<description>The ID of the Stock Take report.</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.stockCard</property>
+		<description>The ID of the Stock Card report.</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.stockOperationsByStockroom</property>
+		<description>The ID of the Stock Operations by Stockroom report.</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.stockroom</property>
+		<description>The ID of the Stockroom report.</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.reports.expiringStock</property>
+		<description>The ID of the Expiring Stock report.</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.autoCompleteOperations</property>
+		<description>Whether or not to automatically complete operations once submitted (true/false).</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.useWildcardItemSearch</property>
+		<description>Whether or not a search string matches only the start of an item (false) or anywhere in the item (true).</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.showOperationCancelReason</property>
+		<description>true/false whether or not the cancel reason field should be used.</description>
+	</globalProperty>
+
+    <globalProperty>
+        <property>${project.parent.artifactId}.restrictNegativeInventoryStockCreation</property>
+        <defaultValue>false</defaultValue>
+        <description>true/false whether or not the system should restrict creation of stock with negative amounts</description>
+    </globalProperty>
+
+	<globalProperty>
+		<property>${project.parent.artifactId}.autoSelectItemStockWithFurthestExpiration</property>
+		<defaultValue>false</defaultValue>
+		<description>Whether to select an item stock with the furthest expiration date, when AUTO expiration date field is selected while doing an adjustment.
+		Selecting true will AUTO select an item stock with the furthest expiration date.
+		</description>
+	</globalProperty>
+
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
@@ -45,22 +104,21 @@
         <point>org.openmrs.headerFull.userBar</point>
         <class>org.openmrs.module.openhmis.inventory.extension.html.InventoryLinkExt</class>
     </extension>
-    
-<!-- 
+
+<!--
     This extension point is not in use at the moment as it is not possible to link from a concept to a specific item
-    As soon as #inv-82 is solved this extension point should be used to display the linked items on the concept page 
+    As soon as #inv-82 is solved this extension point should be used to display the linked items on the concept page
 
     <extension>
         <point>org.openmrs.dictionary.conceptFooter</point>
         <class>org.openmrs.module.openhmis.inventory.extension.html.ItemConceptMappingExt</class>
     </extension>
- -->    
-	
+ -->
+
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 		InvItem.hbm.xml
 		InvDepartment.hbm.xml
-		InvCategory.hbm.xml
 		InvStockroom.hbm.xml
 		InvInstitution.hbm.xml
 	</mappingFiles>
@@ -130,6 +188,11 @@
 		<description>Able to purge inventory operations</description>
 	</privilege>
 
+	<privilege>
+		<name>Rollback Inventory Operations</name>
+		<description>Able to rollback inventory operations</description>
+	</privilege>
+
 	<!--  Metadata  -->
 	<privilege>
 		<name>View Inventory Metadata</name>
@@ -145,5 +208,51 @@
 		<name>Purge Inventory Metadata</name>
 		<description>Able to purge inventory module metadata</description>
 	</privilege>
-</module>
 
+	<!-- App privileges for OpenMRS 2.x -->
+	<privilege>
+		<name>App: View Inventory App</name>
+		<description>Able to see the Inventory App Icon on the home page</description>
+	</privilege>
+
+	<privilege>
+		<name>App: Access Inventory Tasks</name>
+		<description>Able to access inventory tasks page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Manage Inventory Module</name>
+		<description>Able to access manage inventory module page</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: Access Inventory Task</name>
+		<description>Able to access inventory tasks page</description>
+	</privilege>
+
+    <privilege>
+        <name>Task: Access Create Operation</name>
+        <description>Able to access the create inventory operations page</description>
+    </privilege>
+
+    <privilege>
+        <name>Task: Access Stock Take</name>
+        <description>Able to access the stock take page</description>
+    </privilege>
+
+    <privilege>
+        <name>Task: Access Inventory Reports</name>
+        <description>Able to access the inventory reports page</description>
+    </privilege>
+
+	<privilege>
+		<name>Task: Manage Inventory Metadata</name>
+		<description>Able to add/edit/retire inventory module metadata</description>
+	</privilege>
+
+	<privilege>
+		<name>Task: View Stock Operations</name>
+		<description>Able to access the view stock operations page.</description>
+	</privilege>
+
+</module>

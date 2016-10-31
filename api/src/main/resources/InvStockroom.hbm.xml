@@ -16,7 +16,7 @@
 		<property name="description" type="java.lang.String" column="description" length="1024" />
 		<many-to-one name="location" class="org.openmrs.Location" column="location_id" />
 
-		<set name="items" lazy="true" inverse="true" cascade="all-delete-orphan">
+		<set name="items" lazy="true" inverse="true" cascade="all-delete-orphan" fetch="subselect">
 			<key column="stockroom_id" />
 			<one-to-many class="ItemStock" />
 		</set>
@@ -50,7 +50,7 @@
 		<many-to-one name="item" class="Item" not-null="true" lazy="false" column="item_id" />
 		<property name="quantity" type="int" not-null="true" column="quantity" />
 
-		<set name="details" lazy="false" inverse="true" cascade="all-delete-orphan" order-by="id asc">
+		<set name="details" lazy="false" inverse="true" cascade="all-delete-orphan" order-by="id asc" fetch="subselect">
 			<key column="item_stock_id"/>
 			<one-to-many class="ItemStockDetail" />
 		</set>
@@ -123,6 +123,7 @@
 		<subclass name="AdjustmentOperationType" discriminator-value="adjustment" />
 		<subclass name="DisposedOperationType" discriminator-value="disposed" />
 		<subclass name="DistributionOperationType" discriminator-value="distribution" />
+		<subclass name="InitialOperationType" discriminator-value="initial" />
 		<subclass name="ReceiptOperationType" discriminator-value="receipt" />
 		<subclass name="ReturnOperationType" discriminator-value="return" />
 		<subclass name="TransferOperationType" discriminator-value="transfer" />
@@ -177,6 +178,7 @@
 		<property name="description" type="java.lang.String" column="description" />
 		<property name="operationNumber" type="java.lang.String" column="operation_number" not-null="true"/>
 		<property name="operationDate" type="java.util.Date" column="operation_date" not-null="true" />
+		<property name="operationOrder" type="int" column="operation_order" />
 
 		<many-to-one name="instanceType" class="IStockOperationType" not-null="true" lazy="false" column="operation_type_id" />
 
@@ -185,6 +187,7 @@
 		<many-to-one name="destination" class="Stockroom" column="destination_id" access="field" />
 		<many-to-one name="patient" class="org.openmrs.Patient" column="patient_id" access="field" />
         <many-to-one name="institution" class="Institution" column="institution_id" access="field" />
+		<many-to-one name="department" class="Department" column="department_id" access="field" />
 
 		<set name="items" lazy="true" inverse="true" access="field" cascade="all-delete-orphan">
 			<key column="operation_id" />
@@ -213,6 +216,7 @@
 		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
 		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
 		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+		<property name="cancelReason" type="java.lang.String" column="cancel_reason" length="500" not-null="false"/>
 	</class>
 	<class name="StockOperationAttribute" table="inv_stock_operation_attribute">
 		<cache usage="read-write"/>

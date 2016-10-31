@@ -1,3 +1,16 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import java.util.Set;
@@ -6,13 +19,15 @@ import java.util.TreeSet;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseCustomizableInstanceType;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseInstanceCustomizableType;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 
-public abstract class StockOperationTypeBase
-		extends BaseCustomizableInstanceType<StockOperationAttributeType>
-		implements IStockOperationType {
+/**
+ * Base model class used by models that represent a stock operation type.
+ */
+public abstract class StockOperationTypeBase extends BaseInstanceCustomizableType<StockOperationAttributeType>
+        implements IStockOperationType {
 	public static final long serialVersionUID = 0L;
 
 	private Integer id;
@@ -32,6 +47,9 @@ public abstract class StockOperationTypeBase
 
 	@Override
 	public abstract void onCompleted(StockOperation operation);
+
+	@Override
+	public abstract boolean isNegativeItemQuantityAllowed();
 
 	@Override
 	public Integer getId() {
@@ -99,9 +117,46 @@ public abstract class StockOperationTypeBase
 		this.role = role;
 	}
 
-	protected Set<StockOperationTransaction> executeCopyReserved(
-			StockOperation operation,
-			Action2<ReservedTransaction, StockOperationTransaction> action) {
+	public boolean userCanProcess(User currentUser) {
+		if (currentUser == null) {
+			throw new IllegalArgumentException("The current user must be defined.");
+		}
+
+		// Users can process the type if they have either the role OR are the same user as defined for the type. If no
+		// role or user are defined for the type then all users can process the type. Super users always have access to
+		// process every type.
+
+		if (currentUser.isSuperUser()) {
+			return true;
+		}
+
+		// Assume that current user can process operation
+		boolean canProcess = true;
+
+		Role role = this.getRole();
+		User user = this.getUser();
+
+		// If operation type has role restriction
+		if (role != null) {
+			if (!currentUser.hasRole(role.getRole())) {
+				canProcess = false;
+			}
+		}
+
+		// If there is a user restriction and either the role test did not pass or if there is no role test
+		if (user != null && ((role != null && !canProcess) || (role == null))) {
+			if (currentUser.getUserId().equals(user.getUserId())) {
+				canProcess = true;
+			} else {
+				canProcess = false;
+			}
+		}
+
+		return canProcess;
+	}
+
+	protected Set<StockOperationTransaction> executeCopyReserved(StockOperation operation,
+	        Action2<ReservedTransaction, StockOperationTransaction> action) {
 		Set<StockOperationTransaction> transactions = new TreeSet<StockOperationTransaction>();
 
 		// Loop through the reserved transactions
@@ -125,9 +180,8 @@ public abstract class StockOperationTypeBase
 		return transactions;
 	}
 
-	protected Set<StockOperationTransaction> executeCopyReservedAndClear(
-			StockOperation operation,
-			Action2<ReservedTransaction, StockOperationTransaction> action) {
+	protected Set<StockOperationTransaction> executeCopyReservedAndClear(StockOperation operation,
+	        Action2<ReservedTransaction, StockOperationTransaction> action) {
 		Set<StockOperationTransaction> result = executeCopyReserved(operation, action);
 
 		// Clear out the transactions for the operation
@@ -136,4 +190,3 @@ public abstract class StockOperationTypeBase
 		return result;
 	}
 }
-
