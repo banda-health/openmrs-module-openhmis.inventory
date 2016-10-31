@@ -15,7 +15,7 @@
 <h2>
     <spring:message code="openhmis.inventory.admin.stockrooms" />
 </h2>
-
+<input type=hidden class="locationRestriction" value="${locationRestriction}"/>
 <div id="itemDetailsDialog" style="display: none">
 </div>
 

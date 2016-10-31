@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.openhmis.inventory.api.model;
 
+import org.openmrs.Location;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 /**
@@ -22,6 +23,7 @@ public class Department extends BaseSerializableOpenmrsMetadata {
 	public static final long serialVersionUID = 0L;
 
 	private Integer departmentId;
+	private Location location;
 
 	@Override
 	public Integer getId() {
@@ -31,5 +33,21 @@ public class Department extends BaseSerializableOpenmrsMetadata {
 	@Override
 	public void setId(Integer id) {
 		departmentId = id;
+	}
+
+	/**
+	 * Gets the optional {@link org.openmrs.Location} where this department is located.
+	 * @return The department location.
+	 */
+	public Location getLocation() {
+		return location;
+	}
+
+	/**
+	 * Sets the optional {@link org.openmrs.Location} where this department is located.
+	 * @param location The department location.
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 }

@@ -25,6 +25,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Location;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
@@ -339,5 +340,22 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 		}
 
 		super.purge(operation);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS })
+	public List<StockOperation> getOperationsByLocation(final Location location, PagingInfo paging) {
+		if (location == null) {
+			throw new IllegalArgumentException("The stockroom must be defined.");
+		}
+
+		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.or(Restrictions.eq(HibernateCriteriaConstants.SOURCE + ".locaiont", location),
+				    Restrictions.eq(HibernateCriteriaConstants.DESTINATION + ".locaiont", location)));
+			}
+		}, getDefaultSort());
 	}
 }

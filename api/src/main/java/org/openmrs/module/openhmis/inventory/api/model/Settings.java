@@ -21,6 +21,7 @@ public class Settings {
 
 	private Boolean autoGenerateOperationNumber;
 	private Boolean autoCompleteOperations;
+	private Boolean locationRestrictions;
 	private Boolean wildcardItemSearch;
 	private Integer operationNumberGeneratorSourceId;
 	private Integer stockTakeReportId;
@@ -44,6 +45,14 @@ public class Settings {
 
 	public void setAutoCompleteOperations(Boolean autoCompleteOperations) {
 		this.autoCompleteOperations = autoCompleteOperations;
+	}
+
+	public Boolean getLocationRestrictions() {
+		return locationRestrictions;
+	}
+
+	public void setLocationRestrictions(Boolean locationRestrictions) {
+		this.locationRestrictions = locationRestrictions;
 	}
 
 	public Boolean getWildcardItemSearch() {

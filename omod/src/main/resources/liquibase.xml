@@ -1106,4 +1106,14 @@
 			columnName="attribute_order"
 			tableName="inv_item_attribute_type"/>
 	</changeSet>
+    <changeSet id="icchange.kmri.inventory-01" author="Mark Nicoll">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="inv_department" columnName="location_id" />
+            </not>
+        </preConditions>
+        <addColumn tableName="inv_department">
+            <column name="location_id" type="int"><constraints nullable="true" /></column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

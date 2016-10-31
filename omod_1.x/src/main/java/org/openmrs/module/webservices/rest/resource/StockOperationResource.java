@@ -22,12 +22,14 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Location;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
@@ -53,6 +55,7 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.util.OpenmrsConstants;
 import org.springframework.web.client.RestClientException;
 
 /**
@@ -76,6 +79,23 @@ public class StockOperationResource
 		this.stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
 		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.itemDataService = Context.getService(IItemDataService.class);
+	}
+
+	@Override
+	protected PageableResult doGetAll(RequestContext context) {
+		if (ModuleSettings.areItemsRestrictedByLocation()) {
+			//kmri location restriction
+			String loc = Context.getAuthenticatedUser().getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
+			Location ltemp = Context.getLocationService().getLocation(Integer.parseInt(loc));
+			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+
+			return new AlreadyPagedWithLength<StockOperation>(context,
+			        Context.getService(IStockOperationDataService.class).getOperationsByLocation(
+			            ltemp, pagingInfo),
+			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+		} else {
+			return super.doGetAll(context);
+		}
 	}
 
 	@Override

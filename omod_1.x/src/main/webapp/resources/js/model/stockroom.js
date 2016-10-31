@@ -33,7 +33,8 @@ define(
 					type: 'LocationSelect',
 					options: new openhmis.GenericCollection(null, {
 						model: openhmis.Location,
-						url: 'v1/location'
+						//icchange kmri location restriction
+                        url: ($('.locationRestriction').val() == 'true' ? 'v2/inventory/location' : 'v1/location')
 					}),
 					objRef: true
 				}
@@ -55,6 +56,13 @@ define(
 
 			toString: function() {
 				return this.get('name');
+			}
+		});
+
+		//icchange kmri location restriction
+		openhmis.LocationEdit = openhmis.Location.extend({
+			meta: {
+				restUrl: ($('.locationRestriction').val() == 'true' ? 'v2/inventory/location' : 'v1/location')
 			}
 		});
 
