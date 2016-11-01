@@ -23,6 +23,7 @@ public class Settings {
 	private Boolean autoCompleteOperations;
 	private Boolean wildcardItemSearch;
 	private Integer operationNumberGeneratorSourceId;
+	private Integer stockLowReportId;
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
 	private Integer stockOperationsByStockroomReportId;
@@ -60,6 +61,14 @@ public class Settings {
 
 	public void setOperationNumberGeneratorSourceId(Integer sourceId) {
 		this.operationNumberGeneratorSourceId = sourceId;
+	}
+
+	public Integer getStockLowReportId() {
+		return stockLowReportId;
+	}
+
+	public void setStockLowReportId(Integer stockLowReportId) {
+		this.stockLowReportId = stockLowReportId;
 	}
 
 	public Integer getStockTakeReportId() {

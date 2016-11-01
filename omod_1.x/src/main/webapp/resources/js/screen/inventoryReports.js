@@ -53,6 +53,10 @@ curl(
 
             $('.date').datepicker();
 
+            if ($("#generateLowReport").length > 0) {
+                $("#generateLowReport").click(printLowReport)
+            }
+
             if ($("#generateTakeReport").length > 0) {
                 $("#generateTakeReport").click(printTakeReport)
             }
@@ -80,6 +84,11 @@ curl(
             var name = ui.item.label;
             $('#itemSearchOperationsByStockroom').val(name);
             $('#item-uuid-searchOperationsByStockroom').val(uuid).trigger('change');
+        }
+
+        function printLowReport() {
+        	var reportId = $('#stockLowReportId').val();
+            return printReport(reportId, "stockroomId=0");
         }
 
         function printTakeReport() {
