@@ -50,7 +50,7 @@ public abstract class SettingsControllerBase {
 		model.addAttribute("reports", reportService.getJasperReports());
 		model.addAttribute("settings", ModuleSettings.loadSettings());
 
-		HeaderController.render(model, request);
+		//HeaderController.render(model, request);
 
 	}
 

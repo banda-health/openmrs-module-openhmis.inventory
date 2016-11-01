@@ -38,8 +38,11 @@ public class ModuleSettings {
 	        "openhmis.inventory.restrictNegativeInventoryStockCreation";
 	public static final String AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE =
 	        "openhmis.inventory.autoSelectItemStockWithFurthestExpiration";
+	public static final String RESTRICT_INVENTORY_ITEMS_BY_LOCATION =
+	        "openhmis.inventory.restrictInventoryItemsByLocations";
 	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
 	        "openhmis.inventory.reports.stockOperationsByStockroom";
+	private static final String LOW_STOCK_WARNING_MESSAGE = "openhmis.inventory.lowStockWarning";
 
 	public static boolean generateOperationNumber() {
 		return generateOperationNumber(Context.getAdministrationService());
@@ -77,6 +80,18 @@ public class ModuleSettings {
 	public static boolean useWildcardItemSearch() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY);
+		return Boolean.parseBoolean(property);
+	}
+
+	public static boolean areItemsRestrictedByLocation() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(RESTRICT_INVENTORY_ITEMS_BY_LOCATION);
+		return Boolean.parseBoolean(property);
+	}
+
+	public static boolean lowStockWarning() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(LOW_STOCK_WARNING_MESSAGE);
 		return Boolean.parseBoolean(property);
 	}
 
@@ -141,6 +156,13 @@ public class ModuleSettings {
 			settings.setWildcardItemSearch(Boolean.parseBoolean(prop));
 		} else {
 			settings.setWildcardItemSearch(false);
+		}
+
+		prop = adminService.getGlobalProperty(LOW_STOCK_WARNING_MESSAGE);
+		if (StringUtils.isNotEmpty(prop)) {
+			settings.setLowStockWarning(Boolean.parseBoolean(prop));
+		} else {
+			settings.setLowStockWarning(false);
 		}
 
 		return settings;
@@ -220,6 +242,13 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.TRUE.toString());
 		} else {
 			adminService.setGlobalProperty(USE_WILDCARD_ITEM_SEARCH_PROPERTY, Boolean.FALSE.toString());
+		}
+
+		Boolean lowStockWarning = settings.getLowStockWarning();
+		if (Boolean.TRUE.equals(wildcardItemSearch)) {
+			adminService.setGlobalProperty(LOW_STOCK_WARNING_MESSAGE, Boolean.TRUE.toString());
+		} else {
+			adminService.setGlobalProperty(LOW_STOCK_WARNING_MESSAGE, Boolean.FALSE.toString());
 		}
 	}
 

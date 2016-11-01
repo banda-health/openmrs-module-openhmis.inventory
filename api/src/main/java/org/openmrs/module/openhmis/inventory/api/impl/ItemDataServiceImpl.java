@@ -20,8 +20,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.Location;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -32,6 +34,7 @@ import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
 import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
@@ -250,6 +253,48 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 	@Override
 	public String getRetirePrivilege() {
 		return PrivilegeConstants.MANAGE_ITEMS;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public int getTotalItemByLocation(final Item item, final Location location) {
+		if (item == null) {
+			throw new NullPointerException("The item must be defined");
+		}
+		if (location == null) {
+			throw new NullPointerException("The location must be defined");
+		}
+
+		Criteria criteria = getRepository().createCriteria(ItemStock.class);
+		criteria.createAlias("item", "it");
+		criteria.setProjection(Projections.sum("quantity"));
+		criteria.add(Restrictions.eq("it.location", location));
+		criteria.add(Restrictions.eq("item", item));
+		Long result = (Long)criteria.uniqueResult();
+		if (result == null) {
+			result = new Long(0);
+		}
+		return result.intValue();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public int getTotalItem(final Item item) {
+		if (item == null) {
+			throw new NullPointerException("The item must be defined");
+		}
+
+		Criteria criteria = getRepository().createCriteria(ItemStock.class);
+		criteria.createAlias("item", "it");
+		criteria.setProjection(Projections.sum("quantity"));
+		criteria.add(Restrictions.eq("item", item));
+		Long result = (Long)criteria.uniqueResult();
+		if (result == null) {
+			result = new Long(0);
+		}
+		return result.intValue();
 	}
 
 }
