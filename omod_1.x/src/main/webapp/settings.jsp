@@ -161,14 +161,6 @@
 				</label>
 			</spring:bind>
 		</td></tr>
-		<tr><td>
-           	<br />
-           	<spring:bind path="lowStockWarning">
-           		<input id="lowStockWarning" name="${status.expression}" type="checkbox"
-        	       <c:if test="${settings.lowStockWarning}">checked</c:if> />
-          		<label for="lowStockWarning"><spring:message code="openhmis.inventory.low.stock.warning.label"/></label>
-           	</spring:bind>
-        </td></tr>
 	</table>
 	<br />
 	<input type="submit" value="Save" >

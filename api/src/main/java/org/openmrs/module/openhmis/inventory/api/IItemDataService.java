@@ -16,7 +16,6 @@ package org.openmrs.module.openhmis.inventory.api;
 import java.util.List;
 
 import org.openmrs.Concept;
-import org.openmrs.Location;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
@@ -188,12 +187,4 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	ItemPrice getItemPriceByUuid(String uuid);
-
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	int getTotalItemByLocation(Item item, Location location);
-
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	int getTotalItem(Item item);
 }

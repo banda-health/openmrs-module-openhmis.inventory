@@ -13,25 +13,21 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Location;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.Utility;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
-import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
@@ -57,8 +53,6 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
-import org.openmrs.notification.Alert;
-import org.openmrs.util.OpenmrsConstants;
 import org.springframework.web.client.RestClientException;
 
 /**
@@ -395,38 +389,6 @@ public class StockOperationResource
 		// Process each operation item to set the appropriate fields
 		for (StockOperationItem opItem : items) {
 			Item sourceItem = opItem.getItem();
-
-			//icchange kmri low stock warning
-			if (ModuleSettings.lowStockWarning()) {
-				String loc = Context.getAuthenticatedUser().getUserProperty(
-				    OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-				Location ltemp = Context.getLocationService().getLocation(Integer.parseInt(loc));
-
-				int num = 0;
-				if (ModuleSettings.areItemsRestrictedByLocation()) {
-					num = Context.getService(IItemDataService.class).getTotalItemByLocation(sourceItem, ltemp);
-				} else {
-					num = Context.getService(IItemDataService.class).getTotalItem(sourceItem);
-				}
-				num += opItem.getQuantity();
-				if (sourceItem.getMinimumQuantity() != null && sourceItem.getMinimumQuantity().intValue() > num) {
-					//get all users by location
-					List<User> userlist = Context.getUserService().getAllUsers();
-					List<User> restricteduserlist = new ArrayList<User>();
-					if (ModuleSettings.areItemsRestrictedByLocation()) {
-						for (User u : userlist) {
-							String userloc = u.getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-							if (userloc.equals(loc)) {
-								restricteduserlist.add(u);
-							}
-						}
-					} else {
-						restricteduserlist = userlist;
-					}
-					Context.getAlertService().saveAlert(new Alert("WARNING: Stock is below minimum for "
-					        + sourceItem.getName(), restricteduserlist));
-				}
-			}
 
 			if (type.getHasSource()) {
 				// If the operation has a source we will allow an expiration or null, regardless of whether the source
