@@ -43,7 +43,7 @@
           <form id="stockLowReport" onsubmit="return false;">
             <input id="stockLowReportId" type="hidden" value="${stockLowReport.reportId}" />
             <br /><br />
-            <input id="generateLowReport" type="submit" value="Generate Report"/>
+            <input id="generateLowReport" type="submit" value="<spring:message code="openhmis.inventory.report.generate.button"/>"/>
           </form>
         </div>
         <br />
