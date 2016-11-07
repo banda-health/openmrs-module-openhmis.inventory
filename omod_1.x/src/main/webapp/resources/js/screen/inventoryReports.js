@@ -88,7 +88,7 @@ curl(
 
         function printLowReport() {
         	var reportId = $('#stockLowReportId').val();
-            return printReport(reportId, "stockroomId=0");
+            return printReport(reportId, "");
         }
 
         function printTakeReport() {
@@ -202,7 +202,11 @@ curl(
         function printReport(reportId, parameters) {
             var reportUrl = $("#reportUrl").val();
             var url = openhmis.url.openmrs + reportUrl + ".form?";
-            url += "reportId=" + reportId  + "&" + parameters;
+            if(parameters != null && parameters != ""){
+            	url += "reportId=" + reportId  + "&" + parameters;
+            }else{
+            	url += "reportId=" + reportId;
+            }
             window.open(url, "pdfDownload");
 
             return false;
