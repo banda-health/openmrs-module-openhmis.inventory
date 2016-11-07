@@ -48,7 +48,7 @@ public interface IDepartmentDataService extends IMetadataDataService<Department>
 	 * @param location The location.
 	 * @param includeRetired Whether retired stockrooms should be included in the results.
 	 * @param pagingInfo The paging information
-	 * @return All departments for the specified {@link location}.
+	 * @return All departments for the specified {@link Location}.
 	 */
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })

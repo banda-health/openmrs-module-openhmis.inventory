@@ -347,14 +347,14 @@ public class StockOperationDataServiceImpl extends BaseCustomizableMetadataDataS
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS, PrivilegeConstants.VIEW_STOCKROOMS })
 	public List<StockOperation> getOperationsByLocation(final Location location, PagingInfo paging) {
 		if (location == null) {
-			throw new IllegalArgumentException("The stockroom must be defined.");
+			throw new IllegalArgumentException("The location must be defined.");
 		}
 
 		return executeCriteria(StockOperation.class, paging, new Action1<Criteria>() {
 			@Override
 			public void apply(Criteria criteria) {
-				criteria.add(Restrictions.or(Restrictions.eq(HibernateCriteriaConstants.SOURCE + ".locaiont", location),
-				    Restrictions.eq(HibernateCriteriaConstants.DESTINATION + ".locaiont", location)));
+				criteria.add(Restrictions.or(Restrictions.eq(HibernateCriteriaConstants.SOURCE + ".location", location),
+				    Restrictions.eq(HibernateCriteriaConstants.DESTINATION + ".location", location)));
 			}
 		}, getDefaultSort());
 	}

@@ -229,5 +229,5 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
-	List<StockOperation> getOperationsByLocation(Location l, PagingInfo paging);
+	List<StockOperation> getOperationsByLocation(Location location, PagingInfo paging);
 }

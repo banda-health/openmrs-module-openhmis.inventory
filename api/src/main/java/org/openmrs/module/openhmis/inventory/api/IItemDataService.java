@@ -208,7 +208,7 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	 * @param location The location.
 	 * @param includeRetired Whether retired stockrooms should be included in the results.
 	 * @param pagingInfo The paging information
-	 * @return All stockrooms for the specified {@link location}.
+	 * @return All stockrooms for the specified {@link Location}.
 	 */
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
