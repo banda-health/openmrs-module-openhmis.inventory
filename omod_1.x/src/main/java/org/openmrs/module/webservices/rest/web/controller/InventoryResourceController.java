@@ -16,6 +16,7 @@ package org.openmrs.module.webservices.rest.web.controller;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
 import org.openmrs.util.OpenmrsConstants;
 import org.springframework.stereotype.Controller;
@@ -43,57 +44,59 @@ public class InventoryResourceController extends MainResourceController {
 	//icchange kmri location restriction
 	@RequestMapping(value = "location", method = RequestMethod.GET)
 	@ResponseBody
-	public String getLocations(ModelMap model) throws IOException {
+	public SimpleObject getLocations(ModelMap model) throws IOException {
 		List<Location> locationlist = new ArrayList<Location>();
 
-		String loc = Context.getAuthenticatedUser().getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-		Location ltemp = Context.getLocationService().getLocation(Integer.parseInt(loc));
+		String location = Context.getAuthenticatedUser().getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
+		Location locationTemp = Context.getLocationService().getLocation(Integer.parseInt(location));
+		locationlist.add(locationTemp);
 
-		locationlist.add(ltemp);
+		SimpleObject results = new SimpleObject();
+		List<SimpleObject> locationObjectList = new ArrayList<SimpleObject>();
 
 		//jackson doesn't work for location class so we convert it manually
-		String output = "{\"results\": [";
 		for (int i = 0; i < locationlist.size(); i++) {
-			if (i != 0) {
-				output += ",";
-			}
-			output += "{\"display\":\"" + locationlist.get(i).getName()
-			        + "\",\"uuid\":\"" + locationlist.get(i).getUuid() + "\"";
-			output +=
-			        ",\"links\":["
-			                + "{\"rel\":\"self\"," + "\"uri\":\"/openmrs/ws/rest/v2/inventory/location/" + ltemp.getUuid()
-			                + "\"" + "}"
-			                + ",{\"rel\":\"full\"," + "\"uri\":\"/openmrs/ws/rest/v2/inventory/location/" + ltemp.getUuid()
-			                + "?v=full\"" + "}"
-			                + "]";
-			output += "}";
+			SimpleObject locationObject = new SimpleObject();
+			locationObject.add("display", locationlist.get(i).getName());
+			locationObject.add("uuid", locationlist.get(i).getUuid());
+			SimpleObject linkObjectSelf = new SimpleObject();
+			linkObjectSelf.add("rel", "self");
+			linkObjectSelf.add("uri", "/openmrs/ws/rest/v2/inventory/location/" + locationTemp.getUuid());
+			SimpleObject linkObjectFull = new SimpleObject();
+			linkObjectFull.add("rel", "full");
+			linkObjectFull.add("uri", "/openmrs/ws/rest/v2/inventory/location/" + locationTemp.getUuid() + "?v=full");
+			List<SimpleObject> linklist = new ArrayList<SimpleObject>();
+			linklist.add(linkObjectSelf);
+			linklist.add(linkObjectFull);
+			locationObject.put("links", linklist);
+			locationObjectList.add(locationObject);
 		}
-		output += "]}";
-
-		return output;
+		results.add("results", locationObjectList);
+		return results;
 	}
 
 	//icchange kmri location restriction
-	@RequestMapping(value = "location/{locationuuid}", method = RequestMethod.GET)
+	@RequestMapping(value = "location/{locationUuid}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getLocationsByUudi(@PathVariable String locationuuid, ModelMap model) throws IOException {
-		Location ltemp = Context.getLocationService().getLocationByUuid(locationuuid);
+	public SimpleObject getLocationsByUudi(@PathVariable String locationUuid, ModelMap model) throws IOException {
+		Location locationTemp = Context.getLocationService().getLocationByUuid(locationUuid);
 
 		//jackson doesn't work for location class so we convert it manually
-		String output = "{";
-		output += "\"display\":\"" + ltemp.getName() + "\""
-		        + ",\"name\":\"" + ltemp.getName() + "\""
-		        + ",\"description\":\"" + ltemp.getDescription() + "\""
-		        + ",\"uuid\":\"" + ltemp.getUuid() + "\"";
-		output +=
-		        ",\"links\":["
-		                + "{\"rel\":\"self\"," + "\"uri\":\"/openmrs/ws/rest/v2/inventory/location/" + ltemp.getUuid()
-		                + "\"" + "}"
-		                + ",{\"rel\":\"full\"," + "\"uri\":\"/openmrs/ws/rest/v2/inventory/location/" + ltemp.getUuid()
-		                + "?v=full\"" + "}"
-		                + "]";
-		output += "}";
-
-		return output;
+		SimpleObject locationObject = new SimpleObject();
+		locationObject.add("display", locationTemp.getName());
+		locationObject.add("name", locationTemp.getName());
+		locationObject.add("description", locationTemp.getDescription());
+		locationObject.add("uuid", locationTemp.getUuid());
+		SimpleObject linkObjectSelf = new SimpleObject();
+		linkObjectSelf.add("rel", "self");
+		linkObjectSelf.add("uri", "/openmrs/ws/rest/v2/inventory/location/" + locationTemp.getUuid());
+		SimpleObject linkObjectFull = new SimpleObject();
+		linkObjectFull.add("rel", "full");
+		linkObjectFull.add("uri", "/openmrs/ws/rest/v2/inventory/location/" + locationTemp.getUuid() + "?v=full");
+		List<SimpleObject> linklist = new ArrayList<SimpleObject>();
+		linklist.add(linkObjectSelf);
+		linklist.add(linkObjectFull);
+		locationObject.put("links", linklist);
+		return locationObject;
 	}
 }
