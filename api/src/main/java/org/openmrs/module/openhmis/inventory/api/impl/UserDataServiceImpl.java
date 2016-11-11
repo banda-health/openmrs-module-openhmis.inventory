@@ -26,6 +26,7 @@ import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthoriz
 import org.openmrs.module.openhmis.inventory.api.IUserDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
+import org.openmrs.util.LocationUtility;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.web.user.UserProperties;
 
@@ -50,13 +51,6 @@ public class UserDataServiceImpl extends BaseMetadataDataServiceImpl<User>
 		List<User> result = criteria.list();
 
 		return result;
-	}
-
-	@Override
-	public Location getCurrentUserLocation() {
-		String location = Context.getAuthenticatedUser().getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-		Location locationTemp = Context.getLocationService().getLocation(Integer.parseInt(location));
-		return locationTemp;
 	}
 
 	@Override

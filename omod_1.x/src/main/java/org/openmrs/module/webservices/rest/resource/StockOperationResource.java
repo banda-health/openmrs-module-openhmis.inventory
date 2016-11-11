@@ -60,6 +60,7 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.notification.Alert;
+import org.openmrs.util.LocationUtility;
 import org.openmrs.util.OpenmrsConstants;
 import org.springframework.web.client.RestClientException;
 
@@ -397,7 +398,7 @@ public class StockOperationResource
 		List<User> restrictedUserList;
 		//get all users by location
 		if (ModuleSettings.areItemsRestrictedByLocation()) {
-            Location location = Context.getService(IUserDataService.class).getCurrentUserLocation();
+            Location location = LocationUtility.getUserDefaultLocation();
             restrictedUserList = Context.getService(IUserDataService.class).getUsersByLocation(location);
 		} else {
             List<User> userList = Context.getUserService().getAllUsers();

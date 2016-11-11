@@ -33,5 +33,4 @@ public interface IUserDataService extends IMetadataDataService<User> {
 	@Transactional(readOnly = true)
 	List<User> getUsersByLocation(Location location);
 
-	Location getCurrentUserLocation();
 }
