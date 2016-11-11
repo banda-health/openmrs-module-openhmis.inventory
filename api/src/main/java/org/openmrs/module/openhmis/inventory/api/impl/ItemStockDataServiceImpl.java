@@ -17,7 +17,10 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Location;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
@@ -25,6 +28,7 @@ import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -58,5 +62,50 @@ public class ItemStockDataServiceImpl extends BaseObjectDataServiceImpl<ItemStoc
 				criteria.add(Restrictions.eq("item", item));
 			}
 		}, Order.asc("s.name"));
+	}
+
+	/*
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public int getTotalNumberOfParticularItemAtLocation(final Item item, final Location location) {
+	    if (item == null) {
+	        throw new NullPointerException("The item must be defined");
+	    }
+	    if (location == null) {
+	        throw new NullPointerException("The location must be defined");
+	    }
+
+	    Criteria criteria = getRepository().createCriteria(ItemStock.class);
+	    criteria.createAlias("item", "it");
+	    criteria.createAlias("it.department","de");
+	    criteria.setProjection(Projections.sum("quantity"));
+	    criteria.add(Restrictions.eq("de.location", location));
+	    criteria.add(Restrictions.eq("item", item));
+	    Long result = (Long)criteria.uniqueResult();
+	    if (result == null) {
+	        result = new Long(0);
+	    }
+	    return result.intValue();
+	}
+	*/
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public int getTotalNumberOfParticularItem(final Item item) {
+		if (item == null) {
+			throw new NullPointerException("The item must be defined");
+		}
+
+		Criteria criteria = getRepository().createCriteria(ItemStock.class);
+		criteria.createAlias("item", "it");
+		criteria.setProjection(Projections.sum("quantity"));
+		criteria.add(Restrictions.eq("item", item));
+		Long result = getRepository().selectValue(criteria);
+		if (result == null) {
+			result = new Long(0);
+		}
+		return result.intValue();
 	}
 }

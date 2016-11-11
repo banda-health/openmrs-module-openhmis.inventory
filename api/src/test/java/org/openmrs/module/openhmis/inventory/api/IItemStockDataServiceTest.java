@@ -4,18 +4,18 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.Location;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.model.Item;
-import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
-import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
-import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
-import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
+import org.openmrs.module.openhmis.inventory.api.model.*;
 
 import com.google.common.collect.Iterators;
 
 public class IItemStockDataServiceTest extends IObjectDataServiceTest<IItemStockDataService, ItemStock> {
+	private LocationService locationService;
+	private IDepartmentDataService departmentDataService;
 	private IItemDataService itemDataService;
 	private IStockroomDataService stockroomDataService;
 	private IStockOperationDataService stockOperationDataService;
@@ -24,6 +24,8 @@ public class IItemStockDataServiceTest extends IObjectDataServiceTest<IItemStock
 	public void before() throws Exception {
 		super.before();
 
+		this.locationService = Context.getLocationService();
+		this.departmentDataService = Context.getService(IDepartmentDataService.class);
 		this.itemDataService = Context.getService(IItemDataService.class);
 		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.stockOperationDataService = Context.getService(IStockOperationDataService.class);
@@ -174,4 +176,101 @@ public class IItemStockDataServiceTest extends IObjectDataServiceTest<IItemStock
 	public void getItemStockByItem_shouldThrowIllegalArgumentExceptionIfItemIsNull() throws Exception {
 		service.getItemStockByItem(null, null);
 	}
+
+    /**
+     * @verifies checks to see that the function returns 0 if there is no stock
+     * @see IItemStockDataService#getTotalNumberOfParticularItem(Item)
+     */
+	@Test
+	public void getTotalNumberOfParticularItem_testTotalIfItemHasNoStock() throws Exception {
+		Item item = new Item();
+		item.setName("ItemTest");
+		itemDataService.save(item);
+		Context.flushSession();
+
+		int total = service.getTotalNumberOfParticularItem(item);
+		Assert.assertEquals(0, total);
+	}
+
+    /**
+     * @verifies checks to see that items are being totaled properly
+     * @see IItemStockDataService#getTotalNumberOfParticularItem(Item)
+     */
+	@Test
+	public void getTotalNumberOfParticularItem_testTotalIfItemHasStock() throws Exception {
+		Stockroom stockroomTest = new Stockroom();
+		stockroomTest.setName("StockroomTest");
+		stockroomDataService.save(stockroomTest);
+		Item item = new Item();
+		item.setName("ItemTest");
+		itemDataService.save(item);
+		ItemStock itemStock = new ItemStock();
+		itemStock.setItem(item);
+		itemStock.setQuantity(2);
+		itemStock.setStockroom(stockroomTest);
+		service.save(itemStock);
+		Context.flushSession();
+
+		int total = service.getTotalNumberOfParticularItem(item);
+		Assert.assertEquals(2, total);
+
+		ItemStock itemStock2 = new ItemStock();
+		itemStock2.setItem(item);
+		itemStock2.setQuantity(2);
+		itemStock2.setStockroom(stockroomTest);
+		service.save(itemStock2);
+		Context.flushSession();
+
+		total = service.getTotalNumberOfParticularItem(item);
+		Assert.assertEquals(4, total);
+	}
+
+    /**
+     * @verifies checks to make sure if one item is changed in quantity
+     * that that particular items total is the only one affected.
+     * @see IItemStockDataService#getTotalNumberOfParticularItem(Item)
+     */
+	@Test
+	public void getTotalNumberOfParticularItem_testTotalIfParticularItemsHaveCorrectStockTotals() throws Exception {
+		Stockroom stockroomTest = new Stockroom();
+		stockroomTest.setName("StockroomTest");
+		stockroomDataService.save(stockroomTest);
+
+		Item item1 = new Item();
+		item1.setName("ItemTest");
+		itemDataService.save(item1);
+		ItemStock itemStock = new ItemStock();
+		itemStock.setItem(item1);
+		itemStock.setQuantity(4);
+		itemStock.setStockroom(stockroomTest);
+		service.save(itemStock);
+
+		Item item2 = new Item();
+		item2.setName("ItemTest");
+		itemDataService.save(item2);
+		ItemStock itemStock2 = new ItemStock();
+		itemStock2.setItem(item2);
+		itemStock2.setQuantity(3);
+		itemStock2.setStockroom(stockroomTest);
+		service.save(itemStock2);
+		Context.flushSession();
+
+		int total = service.getTotalNumberOfParticularItem(item1);
+		Assert.assertEquals(4, total);
+		total = service.getTotalNumberOfParticularItem(item2);
+		Assert.assertEquals(3, total);
+
+		ItemStock itemStock2b = new ItemStock();
+		itemStock2b.setItem(item2);
+		itemStock2b.setQuantity(2);
+		itemStock2b.setStockroom(stockroomTest);
+		service.save(itemStock2b);
+		Context.flushSession();
+
+        total = service.getTotalNumberOfParticularItem(item1);
+        Assert.assertEquals(4, total);
+		total = service.getTotalNumberOfParticularItem(item2);
+		Assert.assertEquals(5, total);
+	}
+
 }
