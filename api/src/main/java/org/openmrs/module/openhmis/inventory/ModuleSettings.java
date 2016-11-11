@@ -89,7 +89,7 @@ public class ModuleSettings {
 		return Boolean.parseBoolean(property);
 	}
 
-	public static boolean lowStockWarning() {
+	public static boolean lowStockWarningActive() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(LOW_STOCK_WARNING_MESSAGE);
 		return Boolean.parseBoolean(property);

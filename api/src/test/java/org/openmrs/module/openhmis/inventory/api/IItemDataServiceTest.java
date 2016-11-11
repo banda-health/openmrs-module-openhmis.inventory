@@ -31,6 +31,7 @@ import org.openmrs.module.openhmis.commons.api.entity.search.BaseObjectTemplateS
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
+import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.ItemCode;
 import org.openmrs.module.openhmis.inventory.api.model.ItemPrice;
 import org.openmrs.module.openhmis.inventory.api.search.ItemSearch;
@@ -793,6 +794,6 @@ public class IItemDataServiceTest extends IMetadataDataServiceTest<IItemDataServ
 
 		items = service.getItemsWithoutConcept(null, null);
 		Assert.assertEquals(3, items.size());
-
 	}
+
 }

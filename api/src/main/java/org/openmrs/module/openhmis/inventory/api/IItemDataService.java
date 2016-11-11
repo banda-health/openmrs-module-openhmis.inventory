@@ -189,11 +189,4 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	ItemPrice getItemPriceByUuid(String uuid);
 
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	int getTotalItemByLocation(Item item, Location location);
-
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	int getTotalItem(Item item);
 }
