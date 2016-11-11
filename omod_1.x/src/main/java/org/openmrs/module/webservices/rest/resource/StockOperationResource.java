@@ -33,10 +33,12 @@ import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
+import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.IUserDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
@@ -392,39 +394,33 @@ public class StockOperationResource
 	private void processItemStock(StockOperation operation, Set<StockOperationItem> items) {
 		IStockOperationType type = operation.getInstanceType();
 
+		List<User> restrictedUserList;
+		//get all users by location
+		if (ModuleSettings.areItemsRestrictedByLocation()) {
+            Location location = Context.getService(IUserDataService.class).getCurrentUserLocation();
+            restrictedUserList = Context.getService(IUserDataService.class).getUsersByLocation(location);
+		} else {
+            List<User> userList = Context.getUserService().getAllUsers();
+			restrictedUserList = userList;
+		}
+
 		// Process each operation item to set the appropriate fields
 		for (StockOperationItem opItem : items) {
 			Item sourceItem = opItem.getItem();
 
 			//icchange kmri low stock warning
-			if (ModuleSettings.lowStockWarning()) {
-				String loc = Context.getAuthenticatedUser().getUserProperty(
-				    OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-				Location ltemp = Context.getLocationService().getLocation(Integer.parseInt(loc));
-
-				int num = 0;
-				if (ModuleSettings.areItemsRestrictedByLocation()) {
-					num = Context.getService(IItemDataService.class).getTotalItemByLocation(sourceItem, ltemp);
-				} else {
-					num = Context.getService(IItemDataService.class).getTotalItem(sourceItem);
-				}
+			//The intent of this code is to create a warning when an operation causes an item
+			// to go below or stay below the minimum amount required for that item. This warning
+			// should be visible to all users (or all users at a particular location if
+			// location restricted). Our users wanted a visible system wide warning that
+			// informed as to when they were getting low on a particular stock so they would
+			// know when and what to reorder.
+			if (ModuleSettings.lowStockWarningActive()) {
+				int num = Context.getService(IItemStockDataService.class).getTotalNumberOfParticularItem(sourceItem);
 				num += opItem.getQuantity();
 				if (sourceItem.getMinimumQuantity() != null && sourceItem.getMinimumQuantity().intValue() > num) {
-					//get all users by location
-					List<User> userlist = Context.getUserService().getAllUsers();
-					List<User> restricteduserlist = new ArrayList<User>();
-					if (ModuleSettings.areItemsRestrictedByLocation()) {
-						for (User u : userlist) {
-							String userloc = u.getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-							if (userloc.equals(loc)) {
-								restricteduserlist.add(u);
-							}
-						}
-					} else {
-						restricteduserlist = userlist;
-					}
 					Context.getAlertService().saveAlert(new Alert("WARNING: Stock is below minimum for "
-					        + sourceItem.getName(), restricteduserlist));
+					        + sourceItem.getName(), restrictedUserList));
 				}
 			}
 

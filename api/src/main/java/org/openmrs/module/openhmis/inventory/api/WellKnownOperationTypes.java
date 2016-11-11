@@ -64,4 +64,5 @@ public final class WellKnownOperationTypes {
 
 		return service.getByUuid(uuid);
 	}
+
 }

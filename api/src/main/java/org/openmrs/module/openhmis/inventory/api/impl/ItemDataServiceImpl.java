@@ -255,46 +255,4 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		return PrivilegeConstants.MANAGE_ITEMS;
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public int getTotalItemByLocation(final Item item, final Location location) {
-		if (item == null) {
-			throw new NullPointerException("The item must be defined");
-		}
-		if (location == null) {
-			throw new NullPointerException("The location must be defined");
-		}
-
-		Criteria criteria = getRepository().createCriteria(ItemStock.class);
-		criteria.createAlias("item", "it");
-		criteria.setProjection(Projections.sum("quantity"));
-		criteria.add(Restrictions.eq("it.location", location));
-		criteria.add(Restrictions.eq("item", item));
-		Long result = (Long)criteria.uniqueResult();
-		if (result == null) {
-			result = new Long(0);
-		}
-		return result.intValue();
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public int getTotalItem(final Item item) {
-		if (item == null) {
-			throw new NullPointerException("The item must be defined");
-		}
-
-		Criteria criteria = getRepository().createCriteria(ItemStock.class);
-		criteria.createAlias("item", "it");
-		criteria.setProjection(Projections.sum("quantity"));
-		criteria.add(Restrictions.eq("item", item));
-		Long result = (Long)criteria.uniqueResult();
-		if (result == null) {
-			result = new Long(0);
-		}
-		return result.intValue();
-	}
-
 }
