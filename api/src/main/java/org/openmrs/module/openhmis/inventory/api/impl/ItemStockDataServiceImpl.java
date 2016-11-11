@@ -64,32 +64,6 @@ public class ItemStockDataServiceImpl extends BaseObjectDataServiceImpl<ItemStoc
 		}, Order.asc("s.name"));
 	}
 
-	/*
-	@Override
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public int getTotalNumberOfParticularItemAtLocation(final Item item, final Location location) {
-	    if (item == null) {
-	        throw new NullPointerException("The item must be defined");
-	    }
-	    if (location == null) {
-	        throw new NullPointerException("The location must be defined");
-	    }
-
-	    Criteria criteria = getRepository().createCriteria(ItemStock.class);
-	    criteria.createAlias("item", "it");
-	    criteria.createAlias("it.department","de");
-	    criteria.setProjection(Projections.sum("quantity"));
-	    criteria.add(Restrictions.eq("de.location", location));
-	    criteria.add(Restrictions.eq("item", item));
-	    Long result = (Long)criteria.uniqueResult();
-	    if (result == null) {
-	        result = new Long(0);
-	    }
-	    return result.intValue();
-	}
-	*/
-
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
