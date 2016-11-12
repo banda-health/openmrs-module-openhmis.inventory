@@ -18,6 +18,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
+import org.openmrs.util.LocationUtility;
 import org.openmrs.util.OpenmrsConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -47,8 +48,7 @@ public class InventoryResourceController extends MainResourceController {
 	public SimpleObject getLocations(ModelMap model) throws IOException {
 		List<Location> locationlist = new ArrayList<Location>();
 
-		String location = Context.getAuthenticatedUser().getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-		Location locationTemp = Context.getLocationService().getLocation(Integer.parseInt(location));
+		Location locationTemp = LocationUtility.getUserDefaultLocation();
 		locationlist.add(locationTemp);
 
 		SimpleObject results = new SimpleObject();

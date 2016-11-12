@@ -27,6 +27,7 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.util.LocationUtility;
 import org.openmrs.util.OpenmrsConstants;
 
 /**
@@ -50,13 +51,12 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 	protected PageableResult doGetAll(RequestContext context) {
 		if (ModuleSettings.areItemsRestrictedByLocation()) {
 			//kmri location restrictions
-			String loc = Context.getAuthenticatedUser().getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-			Location ltemp = Context.getLocationService().getLocation(Integer.parseInt(loc));
+			Location locationTemp = LocationUtility.getUserDefaultLocation();
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
 			return new AlreadyPagedWithLength<Department>(context,
 			        Context.getService(IDepartmentDataService.class).getDepartmentsByLocation(
-			            ltemp, context.getIncludeAll(), pagingInfo),
+			            locationTemp, context.getIncludeAll(), pagingInfo),
 			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
 		} else {
 			return super.doGetAll(context);
