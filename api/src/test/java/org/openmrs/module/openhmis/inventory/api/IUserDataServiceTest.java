@@ -27,10 +27,10 @@ public class IUserDataServiceTest extends BaseModuleContextSensitiveTest {
 	PersonService personService;
 	UserService userService;
 
-    /**
-     * @verifies return a list of users restricted by location
-     * @see IUserDataService#getUsersByLocation(Location)
-     */
+	/**
+	 * @verifies return a list of users restricted by location
+	 * @see IUserDataService#getUsersByLocation(Location)
+	 */
 	@Test
 	public void userInfoTest_shouldGetTwoDifferentListsOfUsersPerTwoDifferentLocations() {
 		service = Context.getService(IUserDataService.class);

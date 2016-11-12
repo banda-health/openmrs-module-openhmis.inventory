@@ -13,6 +13,7 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -67,7 +68,7 @@ public class ItemStockDataServiceImpl extends BaseObjectDataServiceImpl<ItemStoc
 	@Override
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
-	public int getTotalNumberOfParticularItem(final Item item) {
+	public int getTotalQuantityOfParticularItem(final Item item) {
 		if (item == null) {
 			throw new NullPointerException("The item must be defined");
 		}
@@ -82,4 +83,22 @@ public class ItemStockDataServiceImpl extends BaseObjectDataServiceImpl<ItemStoc
 		}
 		return result.intValue();
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Integer> getTotalQuantityPerItemOfItemsInList(final List<Item> itemList) {
+		if (itemList == null) {
+			throw new NullPointerException("The itemList must be defined");
+		}
+
+		List<Integer> resultList = new ArrayList<Integer>();
+		for (int i = 0; i < itemList.size(); i++) {
+            int result = getTotalQuantityOfParticularItem(itemList.get(i));
+			resultList.add(new Integer(result));
+		}
+
+		return resultList;
+	}
+
 }

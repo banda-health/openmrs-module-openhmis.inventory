@@ -13,12 +13,12 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Date;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.commons.lang.StringUtils;
@@ -398,32 +398,17 @@ public class StockOperationResource
 		List<User> restrictedUserList;
 		//get all users by location
 		if (ModuleSettings.areItemsRestrictedByLocation()) {
-            Location location = LocationUtility.getUserDefaultLocation();
-            restrictedUserList = Context.getService(IUserDataService.class).getUsersByLocation(location);
+			Location location = LocationUtility.getUserDefaultLocation();
+			restrictedUserList = Context.getService(IUserDataService.class).getUsersByLocation(location);
 		} else {
-            List<User> userList = Context.getUserService().getAllUsers();
+			List<User> userList = Context.getUserService().getAllUsers();
 			restrictedUserList = userList;
 		}
 
+		List<Item> itemList = new ArrayList<Item>();
 		// Process each operation item to set the appropriate fields
 		for (StockOperationItem opItem : items) {
 			Item sourceItem = opItem.getItem();
-
-			//icchange kmri low stock warning
-			//The intent of this code is to create a warning when an operation causes an item
-			// to go below or stay below the minimum amount required for that item. This warning
-			// should be visible to all users (or all users at a particular location if
-			// location restricted). Our users wanted a visible system wide warning that
-			// informed as to when they were getting low on a particular stock so they would
-			// know when and what to reorder.
-			if (ModuleSettings.lowStockWarningActive()) {
-				int num = Context.getService(IItemStockDataService.class).getTotalNumberOfParticularItem(sourceItem);
-				num += opItem.getQuantity();
-				if (sourceItem.getMinimumQuantity() != null && sourceItem.getMinimumQuantity().intValue() > num) {
-					Context.getAlertService().saveAlert(new Alert("WARNING: Stock is below minimum for "
-					        + sourceItem.getName(), restrictedUserList));
-				}
-			}
 
 			if (type.getHasSource()) {
 				// If the operation has a source we will allow an expiration or null, regardless of whether the source
@@ -458,6 +443,29 @@ public class StockOperationResource
 				} else {
 					// The batch operation was not set so flag it as calculated
 					opItem.setCalculatedBatch(true);
+				}
+			}
+			itemList.add(sourceItem);
+		}
+
+		//icchange kmri low stock warning
+		//The intent of this code is to create a warning when an operation causes an item
+		// to go below or stay below the minimum amount required for that item. This warning
+		// should be visible to all users (or all users at a particular location if
+		// location restricted). Our users wanted a visible system wide warning that
+		// informed as to when they were getting low on a particular stock so they would
+		// know when and what to reorder.
+		if (ModuleSettings.lowStockWarningActive()) {
+
+			List<Integer> num = Context.getService(IItemStockDataService.class)
+			        .getTotalQuantityPerItemOfItemsInList(itemList);
+
+			for (int i = 0; i < num.size(); i++) {
+				Item sourceItem = itemList.get(i);
+				if (sourceItem.getMinimumQuantity() != null
+				        && sourceItem.getMinimumQuantity().intValue() > num.get(i).intValue()) {
+					Context.getAlertService().saveAlert(new Alert("WARNING: Stock is below minimum for "
+					        + sourceItem.getName(), restrictedUserList));
 				}
 			}
 		}
