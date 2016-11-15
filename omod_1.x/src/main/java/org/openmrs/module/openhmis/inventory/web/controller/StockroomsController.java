@@ -31,6 +31,6 @@ public class StockroomsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model) throws IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.stockroom");
-		model.addAttribute("locationRestriction", ModuleSettings.loadSettings().getLocationRestrictions());
+		model.addAttribute("locationRestriction", ModuleSettings.areItemsRestrictedByLocation());
 	}
 }

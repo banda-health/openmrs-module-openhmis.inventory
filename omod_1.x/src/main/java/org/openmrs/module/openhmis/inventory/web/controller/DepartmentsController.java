@@ -32,6 +32,6 @@ public class DepartmentsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void departments(ModelMap model) throws IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.department");
-		model.addAttribute("locationRestriction", ModuleSettings.loadSettings().getLocationRestrictions());
+		model.addAttribute("locationRestriction", ModuleSettings.areItemsRestrictedByLocation());
 	}
 }

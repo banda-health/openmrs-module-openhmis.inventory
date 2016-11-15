@@ -88,11 +88,14 @@ public class StockOperationResource
 			//kmri location restriction
 			Location locationTemp = LocationUtility.getUserDefaultLocation();
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-
-			return new AlreadyPagedWithLength<StockOperation>(context,
-			        Context.getService(IStockOperationDataService.class).getOperationsByLocation(
-			            locationTemp, pagingInfo),
-			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			if (locationTemp != null) {
+				return new AlreadyPagedWithLength<StockOperation>(context,
+				        Context.getService(IStockOperationDataService.class).getOperationsByLocation(
+				            locationTemp, pagingInfo),
+				        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			} else {
+				return new EmptySearchResult();
+			}
 		} else {
 			return super.doGetAll(context);
 		}

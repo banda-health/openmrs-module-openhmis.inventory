@@ -26,8 +26,8 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.util.LocationUtility;
-import org.openmrs.util.OpenmrsConstants;
 
 /**
  * REST resource representing a {@link Stockroom}.
@@ -59,11 +59,14 @@ public class StockroomResource extends BaseRestMetadataResource<Stockroom> {
 			//kmri location restriction
 			Location locationTemp = LocationUtility.getUserDefaultLocation();
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-
-			return new AlreadyPagedWithLength<Stockroom>(context,
-			        Context.getService(IStockroomDataService.class).getStockroomsByLocation(
-			            locationTemp, context.getIncludeAll(), pagingInfo),
-			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			if (locationTemp != null) {
+				return new AlreadyPagedWithLength<Stockroom>(context,
+				        Context.getService(IStockroomDataService.class).getStockroomsByLocation(
+				            locationTemp, context.getIncludeAll(), pagingInfo),
+				        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			} else {
+				return new EmptySearchResult();
+			}
 		} else {
 			return super.doGetAll(context);
 		}

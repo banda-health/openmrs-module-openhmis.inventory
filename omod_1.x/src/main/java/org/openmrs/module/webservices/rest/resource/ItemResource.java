@@ -47,6 +47,8 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
+import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.util.LocationUtility;
 import org.openmrs.util.OpenmrsConstants;
 
 /**
@@ -79,14 +81,16 @@ public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Ite
 	protected PageableResult doGetAll(RequestContext context) {
 		//icchange-kmri location restriction
 		if (ModuleSettings.areItemsRestrictedByLocation()) {
-			String loc = Context.getAuthenticatedUser().
-			        getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
-			Location ltemp = Context.getLocationService().getLocation(Integer.parseInt(loc));
+			Location locationTemp = LocationUtility.getUserDefaultLocation();
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-			return new AlreadyPagedWithLength<Item>(context,
-			        Context.getService(IItemDataService.class).getItemsByLocation(
-			            ltemp, context.getIncludeAll(), pagingInfo),
-			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			if (locationTemp != null) {
+				return new AlreadyPagedWithLength<Item>(context,
+				        Context.getService(IItemDataService.class).getItemsByLocation(
+				            locationTemp, context.getIncludeAll(), pagingInfo),
+				        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			} else {
+				return new EmptySearchResult();
+			}
 		} else {
 			return super.doGetAll(context);
 		}

@@ -27,8 +27,8 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.util.LocationUtility;
-import org.openmrs.util.OpenmrsConstants;
 
 /**
  * REST resource representing a {@link Department}.
@@ -53,11 +53,14 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 			//kmri location restrictions
 			Location locationTemp = LocationUtility.getUserDefaultLocation();
 			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
-
-			return new AlreadyPagedWithLength<Department>(context,
-			        Context.getService(IDepartmentDataService.class).getDepartmentsByLocation(
-			            locationTemp, context.getIncludeAll(), pagingInfo),
-			        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			if (locationTemp != null) {
+				return new AlreadyPagedWithLength<Department>(context,
+				        Context.getService(IDepartmentDataService.class).getDepartmentsByLocation(
+				            locationTemp, context.getIncludeAll(), pagingInfo),
+				        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			} else {
+				return new EmptySearchResult();
+			}
 		} else {
 			return super.doGetAll(context);
 		}

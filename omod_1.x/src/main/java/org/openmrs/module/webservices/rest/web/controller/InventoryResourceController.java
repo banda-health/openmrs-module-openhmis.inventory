@@ -49,8 +49,9 @@ public class InventoryResourceController extends MainResourceController {
 		List<Location> locationlist = new ArrayList<Location>();
 
 		Location locationTemp = LocationUtility.getUserDefaultLocation();
-		locationlist.add(locationTemp);
-
+		if (locationTemp != null) {
+			locationlist.add(locationTemp);
+		}
 		SimpleObject results = new SimpleObject();
 		List<SimpleObject> locationObjectList = new ArrayList<SimpleObject>();
 
@@ -78,7 +79,7 @@ public class InventoryResourceController extends MainResourceController {
 	//icchange kmri location restriction
 	@RequestMapping(value = "location/{locationUuid}", method = RequestMethod.GET)
 	@ResponseBody
-	public SimpleObject getLocationsByUudi(@PathVariable String locationUuid, ModelMap model) throws IOException {
+	public SimpleObject getLocationsByUuid(@PathVariable String locationUuid, ModelMap model) throws IOException {
 		Location locationTemp = Context.getLocationService().getLocationByUuid(locationUuid);
 
 		//jackson doesn't work for location class so we convert it manually

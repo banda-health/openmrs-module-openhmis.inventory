@@ -83,6 +83,20 @@
 			</tr>
 			<tr>
 				<td>
+                   	<spring:bind path="locationRestrictions">
+                   		<input id="locationRestrictions" name="${status.expression}" type="checkbox"
+                   	       <c:if test="${settings.locationRestrictions}">checked</c:if> />
+                   		<label class="removeBold" for="locationRestrictions"><spring:message
+                   				code="openhmis.inventory.report.location.restriction.label"/></label>
+                   		<br/>
+                        <label for="locationRestrictions"><spring:message
+                        		code="openhmis.inventory.report.location.restriction.warning"/></label>
+                  	</spring:bind>
+                </td>
+                <td></td>
+            </tr>
+			<tr>
+				<td>
 					<label class="removeBold"  for="stockTakeReportId"><spring:message
 							code="openhmis.inventory.report.select.stock.take.label"/> </label>
 				</td>
