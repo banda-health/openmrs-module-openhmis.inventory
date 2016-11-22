@@ -56,7 +56,6 @@ import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.util.LocationUtility;
-import org.openmrs.util.OpenmrsConstants;
 import org.springframework.web.client.RestClientException;
 
 /**

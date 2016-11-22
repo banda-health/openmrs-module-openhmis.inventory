@@ -49,7 +49,6 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.util.LocationUtility;
-import org.openmrs.util.OpenmrsConstants;
 
 /**
  * REST resource representing an {@link Item}.

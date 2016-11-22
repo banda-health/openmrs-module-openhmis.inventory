@@ -1116,4 +1116,13 @@
             <column name="location_id" type="int"><constraints nullable="true" /></column>
         </addColumn>
     </changeSet>
+    <changeSet id="icchange.kmri.inventory-02" author="Mark Nicoll">
+        <preConditions onFail="MARK_RAN">
+                <columnExists tableName="inv_department" columnName="location_id" />
+        </preConditions>
+        <addForeignKeyConstraint constraintName="inv_department_location"
+                                 baseColumnNames="location_id" baseTableName="inv_department"
+                                 referencedColumnNames="location_id" referencedTableName="location"  />
+    </changeSet>
+    
 </databaseChangeLog>
