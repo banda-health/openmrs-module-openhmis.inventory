@@ -16,7 +16,10 @@
     <spring:message code="openhmis.inventory.admin.stockrooms" />
 </h2>
 <input type=hidden class="locationRestriction" value="${locationRestriction}"/>
+<c:if test="${locationRestriction}">
+	<spring:message code="openhmis.inventory.admin.stockroom.location.restriction" />
+</c:if>
+
 <div id="itemDetailsDialog" style="display: none">
 </div>
-
 <%@ include file="/WEB-INF/template/footer.jsp" %>
