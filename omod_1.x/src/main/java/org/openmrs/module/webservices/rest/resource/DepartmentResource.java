@@ -13,14 +13,22 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import org.openmrs.Location;
 import org.openmrs.annotation.Handler;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
+import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.util.LocationUtility;
 
 /**
  * REST resource representing a {@link Department}.
@@ -33,9 +41,29 @@ public class DepartmentResource extends BaseRestMetadataResource<Department> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
+		description.addProperty("location", Representation.REF);
 		description.addProperty("description", Representation.REF);
 
 		return description;
+	}
+
+	@Override
+	protected PageableResult doGetAll(RequestContext context) {
+		if (ModuleSettings.areItemsRestrictedByLocation()) {
+			//kmri location restrictions
+			Location locationTemp = LocationUtility.getUserDefaultLocation();
+			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+			if (locationTemp != null) {
+				return new AlreadyPagedWithLength<Department>(context,
+				        Context.getService(IDepartmentDataService.class).getDepartmentsByLocation(
+				            locationTemp, context.getIncludeAll(), pagingInfo),
+				        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			} else {
+				return new EmptySearchResult();
+			}
+		} else {
+			return super.doGetAll(context);
+		}
 	}
 
 	@Override

@@ -21,7 +21,7 @@
       </profile>
       <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="openhmis.backboneforms-api" />
@@ -30,8 +30,34 @@
         <module name="openhmis.cashier-omod" />
         <module name="openhmis.commons-api" />
         <module name="openhmis.commons-omod" />
+      </profile>
+      <profile default="false" name="Annotation profile for openhmis.inventory-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="openhmis.inventory-api" />
+      </profile>
+      <profile default="false" name="Annotation profile for openhmis.inventory-omod" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="openhmis.inventory-omod" />
+      </profile>
+      <profile default="false" name="Annotation profile for openhmis.inventory-omod_1.x" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="openhmis.inventory-omod_1.x" />
+      </profile>
+      <profile default="false" name="Annotation profile for openhmis.inventory-omod_2.x" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="openhmis.inventory-omod_2.x" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -46,6 +72,8 @@
       <module name="openhmis.inventory" target="1.6" />
       <module name="openhmis.inventory-api" target="1.6" />
       <module name="openhmis.inventory-omod" target="1.6" />
+      <module name="openhmis.inventory-omod_1.x" target="1.6" />
+      <module name="openhmis.inventory-omod_2.x" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

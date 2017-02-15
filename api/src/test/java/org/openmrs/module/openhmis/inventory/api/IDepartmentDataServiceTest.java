@@ -14,15 +14,26 @@
 
 package org.openmrs.module.openhmis.inventory.api;
 
+import junit.framework.Assert;
+import org.junit.Test;
+import org.openmrs.Location;
+import org.openmrs.api.LocationService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
+
+import java.util.List;
 
 public class IDepartmentDataServiceTest extends IMetadataDataServiceTest<IDepartmentDataService, Department> {
 	public static final String DEPARTMENT_DATASET = TestConstants.BASE_DATASET_DIR + "DepartmentTest.xml";
 
+	public LocationService locationService;
+
 	@Override
 	public void before() throws Exception {
 		super.before();
+
+		locationService = Context.getLocationService();
 
 		executeDataSet(DEPARTMENT_DATASET);
 	}
@@ -55,4 +66,50 @@ public class IDepartmentDataServiceTest extends IMetadataDataServiceTest<IDepart
 	protected void assertEntity(Department expected, Department actual) {
 		super.assertEntity(expected, actual);
 	}
+
+	@Test
+	public void getDepartmentsByLocation_TestGettingDepartmentsViaLocations() {
+		Location location1 = new Location();
+		location1.setName("locationTest1");
+		locationService.saveLocation(location1);
+
+		Location location2 = new Location();
+		location2.setName("locationTest2");
+		locationService.saveLocation(location2);
+
+		Location location3 = new Location();
+		location3.setName("locationTest3");
+		locationService.saveLocation(location3);
+
+		Department department1 = new Department();
+		department1.setName("depatmenttest1");
+		department1.setLocation(location1);
+		service.save(department1);
+
+		Department department2 = new Department();
+		department2.setName("depatmenttest2");
+		department2.setLocation(location1);
+		service.save(department2);
+
+		Department department3 = new Department();
+		department3.setName("depatmenttest3");
+		department3.setLocation(location2);
+		service.save(department3);
+
+		Context.flushSession();
+
+		List<Department> departmentList = service.getDepartmentsByLocation(location1, false);
+		Assert.assertEquals(2, departmentList.size());
+		Assert.assertTrue(departmentList.get(0).getName().equals("depatmenttest1"));
+		Assert.assertTrue(departmentList.get(1).getName().equals("depatmenttest2"));
+
+		departmentList = service.getDepartmentsByLocation(location2, false);
+		Assert.assertEquals(1, departmentList.size());
+		Assert.assertTrue(departmentList.get(0).getName().equals("depatmenttest3"));
+
+		departmentList = service.getDepartmentsByLocation(location3, false);
+		Assert.assertEquals(0, departmentList.size());
+
+	}
+
 }

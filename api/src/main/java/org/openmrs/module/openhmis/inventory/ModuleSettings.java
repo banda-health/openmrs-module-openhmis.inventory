@@ -37,6 +37,8 @@ public class ModuleSettings {
 	public static final String USE_WILDCARD_ITEM_SEARCH_PROPERTY = "openhmis.inventory.useWildcardItemSearch";
 	public static final String RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD =
 	        "openhmis.inventory.restrictNegativeInventoryStockCreation";
+	public static final String RESTRICT_INVENTORY_ITEMS_BY_LOCATION =
+	        "openhmis.inventory.restrictInventoryItemsByLocations";
 	public static final String AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE =
 	        "openhmis.inventory.autoSelectItemStockWithFurthestExpiration";
 	private static final String STOCK_OPERATIONS_BY_STOCKROOM_REPORT_ID_PROPERTY =
@@ -66,6 +68,13 @@ public class ModuleSettings {
 	public static boolean isNegativeStockRestricted() {
 		AdministrationService adminService = Context.getAdministrationService();
 		String property = adminService.getGlobalProperty(RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD);
+		return Boolean.parseBoolean(property);
+	}
+
+	//icchange kmri location restriction
+	public static boolean areItemsRestrictedByLocation() {
+		AdministrationService adminService = Context.getAdministrationService();
+		String property = adminService.getGlobalProperty(RESTRICT_INVENTORY_ITEMS_BY_LOCATION);
 		return Boolean.parseBoolean(property);
 	}
 
@@ -133,6 +142,14 @@ public class ModuleSettings {
 			settings.setAutoCompleteOperations(Boolean.parseBoolean(prop));
 		} else {
 			settings.setAutoCompleteOperations(false);
+		}
+
+		//icchange kmri location restriction
+		prop = adminService.getGlobalProperty(RESTRICT_INVENTORY_ITEMS_BY_LOCATION);
+		if (!StringUtils.isEmpty(prop)) {
+			settings.setLocationRestrictions(Boolean.parseBoolean(prop));
+		} else {
+			settings.setLocationRestrictions(false);
 		}
 
 		prop = adminService.getGlobalProperty(AUTO_SELECT_ITEM_STOCK_FURTHEST_EXPIRATION_DATE);
@@ -219,6 +236,14 @@ public class ModuleSettings {
 			adminService.setGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY, Boolean.TRUE.toString());
 		} else {
 			adminService.setGlobalProperty(AUTO_COMPLETE_OPERATIONS_PROPERTY, Boolean.FALSE.toString());
+		}
+
+		//icchange kmri location restriction
+		Boolean locationRestrictions = settings.getLocationRestrictions();
+		if (Boolean.TRUE.equals(locationRestrictions)) {
+			adminService.setGlobalProperty(RESTRICT_INVENTORY_ITEMS_BY_LOCATION, Boolean.TRUE.toString());
+		} else {
+			adminService.setGlobalProperty(RESTRICT_INVENTORY_ITEMS_BY_LOCATION, Boolean.FALSE.toString());
 		}
 
 		Boolean autoSelectItemStockFurthestExpirationDate = settings.getAutoSelectItemStockFurthestExpirationDate();

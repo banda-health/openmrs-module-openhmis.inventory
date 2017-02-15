@@ -69,6 +69,16 @@
 			</spring:bind>
 		</td></tr>
 		<tr><td>
+           	<br />
+           	<spring:bind path="locationRestrictions">
+        		<input id="locationRestrictions" name="${status.expression}" type="checkbox"
+           	       <c:if test="${settings.locationRestrictions}">checked</c:if> />
+           		<label for="locationRestrictions"><spring:message code="openhmis.inventory.report.location.restriction.label"/></label>
+           		<br/>
+           		<label for="locationRestrictions"><spring:message code="openhmis.inventory.report.location.restriction.warning"/></label>
+           	</spring:bind>
+        </td></tr>
+		<tr><td>
 			<br />
 			<spring:bind path="wildcardItemSearch">
 				<input id="wildcardItemSearch" name="${status.expression}" type="checkbox"

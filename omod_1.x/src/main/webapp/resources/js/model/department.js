@@ -16,6 +16,7 @@ define(
 		openhmis.url.backboneBase + 'js/openhmis',
 		openhmis.url.backboneBase + 'js/lib/i18n',
 		openhmis.url.backboneBase + 'js/model/generic',
+		openhmis.url.backboneBase + 'js/model/location'
 	],
 	function(openhmis, __) {
 		openhmis.Department = openhmis.GenericModel.extend({
@@ -28,6 +29,16 @@ define(
 
 			schema: {
 				name: 'Text',
+				//icchange kmri - location input added
+				location: {
+                  	type: 'LocationSelect',
+                   	options: new openhmis.GenericCollection(null, {
+                   		 model: openhmis.LocationEdit,
+                   		 //icchange kmri location restriction
+                   		 url: ($('.locationRestriction').val() == 'true' ? 'v2/inventory/location' : 'v1/location')
+                   	}),
+                   	objRef: true
+                },
 				description: 'Text'
 			},
 

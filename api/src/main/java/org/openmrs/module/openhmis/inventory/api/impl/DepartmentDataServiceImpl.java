@@ -13,12 +13,22 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.openmrs.Location;
+import org.openmrs.annotation.Authorized;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.commons.api.f.Action1;
 import org.openmrs.module.openhmis.inventory.api.IDepartmentDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.HibernateCriteriaConstants;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Data service implementation class for {@link Department}s.
@@ -33,5 +43,32 @@ public class DepartmentDataServiceImpl extends BaseMetadataDataServiceImpl<Depar
 	@Override
 	protected void validate(Department entity) {
 		return;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	public List<Department> getDepartmentsByLocation(Location location, boolean includeRetired) {
+		return getDepartmentsByLocation(location, includeRetired, null);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	public List<Department> getDepartmentsByLocation(final Location location, final boolean includeRetired,
+	        PagingInfo pagingInfo) {
+		if (location == null) {
+			throw new NullPointerException("The location must be defined");
+		}
+
+		return executeCriteria(Department.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.add(Restrictions.eq(HibernateCriteriaConstants.LOCATION, location));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
+				}
+			}
+		}, getDefaultSort());
 	}
 }

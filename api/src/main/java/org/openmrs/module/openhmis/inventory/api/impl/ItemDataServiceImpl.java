@@ -22,6 +22,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
+import org.openmrs.Location;
 import org.openmrs.OpenmrsObject;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -250,6 +251,34 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 	@Override
 	public String getRetirePrivilege() {
 		return PrivilegeConstants.MANAGE_ITEMS;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Item> getItemsByLocation(Location location, boolean includeRetired) {
+		return getItemsByLocation(location, includeRetired, null);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Item> getItemsByLocation(final Location location, final boolean includeRetired,
+	        PagingInfo pagingInfo) {
+		if (location == null) {
+			throw new NullPointerException("The location must be defined");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.createAlias("department", "departmentref");
+				criteria.add(Restrictions.eq("departmentref.location", location));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
+				}
+			}
+		}, getDefaultSort());
 	}
 
 }

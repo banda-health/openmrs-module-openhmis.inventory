@@ -197,7 +197,9 @@ define(
 				this.events['change #location_uuid'] = 'onFormSubmit';
 				openhmis.BaseSearchView.prototype.initialize.call(this, options);
 				var locationCollection = new openhmis.GenericCollection([], {
-                    model: openhmis.Location,
+					//icchange kmri location restriction
+					//model: openhmis.Location
+                    model: openhmis.LocationEdit,
                     limit: openhmis.rest.maxResults
                 });
 				locationCollection.on("reset", function(collection) {

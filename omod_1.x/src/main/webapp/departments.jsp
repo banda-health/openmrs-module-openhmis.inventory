@@ -12,5 +12,8 @@
 <h2>
 	<spring:message code="openhmis.inventory.admin.departments" />
 </h2>
-
+<input type=hidden class="locationRestriction" value="${locationRestriction}"/>
+<c:if test="${locationRestriction}">
+	<spring:message code="openhmis.inventory.admin.departments.location.restriction" />
+</c:if>
 <%@ include file="/WEB-INF/template/footer.jsp" %>
