@@ -83,18 +83,36 @@
 			</tr>
 			<tr>
 				<td>
-                   	<spring:bind path="locationRestrictions">
-                   		<input id="locationRestrictions" name="${status.expression}" type="checkbox"
-                   	       <c:if test="${settings.locationRestrictions}">checked</c:if> />
-                   		<label class="removeBold" for="locationRestrictions"><spring:message
-                   				code="openhmis.inventory.report.location.restriction.label"/></label>
-                   		<br/>
-                        <label for="locationRestrictions"><spring:message
-                        		code="openhmis.inventory.report.location.restriction.warning"/></label>
-                  	</spring:bind>
-                </td>
-                <td></td>
-            </tr>
+          <spring:bind path="locationRestrictions">
+            <input id="locationRestrictions" name="${status.expression}" type="checkbox"
+                 <c:if test="${settings.locationRestrictions}">checked</c:if> />
+            <label class="removeBold" for="locationRestrictions"><spring:message
+                code="openhmis.inventory.report.location.restriction.label"/></label>
+            <br/>
+              <label for="locationRestrictions"><spring:message
+                  code="openhmis.inventory.report.location.restriction.warning"/></label>
+          </spring:bind>
+          </td>
+          <td></td>
+      </tr>
+      <tr>
+        <td>
+    				<label for="stockLowReportId"><spring:message code="openhmis.inventory.report.select.stock.Low.label"/> </label>
+    		</td>
+        <td>
+    			<spring:bind path="stockLowReportId">
+    				<select id="stockLowReportId" name="${status.expression}">
+    					<option value=""></option>
+    					<c:forEach items="${reports}" var="report">
+    						<option value="${report.reportId}"
+    					    	<c:if test="${settings.stockLowReportId == report.reportId}">selected</c:if>>
+    							${report.name}
+    						</option>
+    					</c:forEach>
+    				</select>
+    			</spring:bind>
+    		</td>
+    	</tr>
 			<tr>
 				<td>
 					<label class="removeBold"  for="stockTakeReportId"><spring:message

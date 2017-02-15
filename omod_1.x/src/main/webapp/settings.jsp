@@ -88,6 +88,21 @@
 		</td></tr>
 		<tr><td>
 			<br />
+			<label for="stockLowReportId"><spring:message code="openhmis.inventory.report.select.stock.Low.label"/> </label>
+			<spring:bind path="stockLowReportId">
+				<select id="stockLowReportId" name="${status.expression}">
+					<option value=""></option>
+					<c:forEach items="${reports}" var="report">
+						<option value="${report.reportId}"
+						    <c:if test="${settings.stockLowReportId == report.reportId}">selected</c:if>>
+								${report.name}
+						</option>
+					</c:forEach>
+				</select>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
 			<label for="stockTakeReportId"><spring:message code="openhmis.inventory.report.select.stock.take.label"/> </label>
 			<spring:bind path="stockTakeReportId">
 				<select id="stockTakeReportId" name="${status.expression}">

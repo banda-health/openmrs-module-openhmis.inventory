@@ -14,13 +14,17 @@
 package org.openmrs.module.openhmis.inventory.web.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.jasperreport.ReportsControllerBase;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
+import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.Settings;
+import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
+import org.openmrs.util.OpenmrsConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.WebRequest;
@@ -41,7 +45,9 @@ public class JasperReportController extends ReportsControllerBase {
 	@Override
 	public String parse(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
 		Settings settings = ModuleSettings.loadSettings();
-		if (settings.getStockTakeReportId() != null && reportId == settings.getStockTakeReportId()) {
+		if (settings.getStockLowReportId() != null && reportId == settings.getStockLowReportId()) {
+			return renderStockLowReport(reportId, request, response);
+		} else if (settings.getStockTakeReportId() != null && reportId == settings.getStockTakeReportId()) {
 			return renderStockTakeReport(reportId, request, response);
 		} else if (settings.getStockCardReportId() != null && reportId == settings.getStockCardReportId()) {
 			return renderStockCardReport(reportId, request, response);
@@ -58,6 +64,21 @@ public class JasperReportController extends ReportsControllerBase {
 		return null;
 	}
 
+	private void locationRestrict(HashMap<String, Object> params) {
+		String location = Context.getAuthenticatedUser().getUserProperty(OpenmrsConstants.USER_PROPERTY_DEFAULT_LOCATION);
+		Location locationtemp = Context.getLocationService().getLocation(Integer.parseInt(location));
+		params.put("userlocation", location);
+		params.put("userlocationname", locationtemp.getName());
+	}
+
+	private String renderStockLowReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
+		//kmri report must be location restricted
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("stockroomId", -1);
+		locationRestrict(params);
+		return renderReport(reportId, params, null, response);
+	}
+
 	private String renderStockTakeReport(int reportId, WebRequest request, HttpServletResponse response) throws IOException {
 		int stockroomId;
 		String temp = request.getParameter("stockroomId");
@@ -71,7 +92,9 @@ public class JasperReportController extends ReportsControllerBase {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("stockroomId", stockroomId);
-
+		Stockroom stockroomtemp = Context.getService(IStockroomDataService.class).getById(stockroomId);
+		params.put("stockroomName", stockroomtemp.getName());
+		locationRestrict(params);
 		return renderReport(reportId, params, null, response);
 	}
 
