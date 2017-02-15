@@ -31,6 +31,7 @@ public class Settings {
 	private Integer stockroomReportId;
 	private Integer expiringStockReportId;
 	private Boolean autoSelectItemStockFurthestExpirationDate;
+	private Boolean lowStockWarning;
 
 	public Boolean getAutoGenerateOperationNumber() {
 		return autoGenerateOperationNumber;
@@ -126,5 +127,13 @@ public class Settings {
 
 	public void setAutoSelectItemStockFurthestExpirationDate(Boolean autoSelectItemStockFurthestExpirationDate) {
 		this.autoSelectItemStockFurthestExpirationDate = autoSelectItemStockFurthestExpirationDate;
+	}
+
+	public Boolean getLowStockWarning() {
+		return lowStockWarning;
+	}
+
+	public void setLowStockWarning(Boolean lowStockWarning) {
+		this.lowStockWarning = lowStockWarning;
 	}
 }

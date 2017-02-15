@@ -15,6 +15,7 @@ package org.openmrs.module.openhmis.inventory.api;
 
 import java.util.List;
 
+import org.openmrs.Location;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface IItemStockDataService extends IObjectDataService<ItemStock> {
+
 	/**
 	 * Returns the {@link ItemStock} for the specified {@link Item}.
 	 * @param item The item to find the item stock of.
@@ -41,4 +43,28 @@ public interface IItemStockDataService extends IObjectDataService<ItemStock> {
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_METADATA })
 	List<ItemStock> getItemStockByItem(Item item, PagingInfo pagingInfo);
+
+	/**
+	 * Returns the total quantity between all {@Link ItemStock} instances for the specified {@link Item} .
+	 * @param item The item to find the quantity of.
+	 * @return The total item stock quantity for the specified item.
+	 * @should return 0 if the item has no item stock associated with it
+	 * @should throw IllegalArgumentException if item is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	int getTotalQuantityOfParticularItem(Item item);
+
+	/**
+	 * Returns the total quantity between all {@Link ItemStock} instances for each element of {@link Item} {@Link
+	 *  List}.
+	 * @param itemList The item list to find the quantity of.
+	 * @return The a list of total item stock quantity for each item in list.
+	 * @should always return a list even if input list is empty.
+	 * @should return an empty list if input is an empty list.
+	 * @should throw IllegalArgumentException if itemList is null
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	List<Integer> getTotalQuantityPerItemOfItemsInList(List<Item> itemList);
 }

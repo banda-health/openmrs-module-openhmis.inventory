@@ -13,11 +13,15 @@
  */
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Location;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.f.Action1;
@@ -25,6 +29,7 @@ import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -59,4 +64,41 @@ public class ItemStockDataServiceImpl extends BaseObjectDataServiceImpl<ItemStoc
 			}
 		}, Order.asc("s.name"));
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public int getTotalQuantityOfParticularItem(final Item item) {
+		if (item == null) {
+			throw new NullPointerException("The item must be defined");
+		}
+
+		Criteria criteria = getRepository().createCriteria(ItemStock.class);
+		criteria.createAlias("item", "it");
+		criteria.setProjection(Projections.sum("quantity"));
+		criteria.add(Restrictions.eq("item", item));
+		Long result = getRepository().selectValue(criteria);
+		if (result == null) {
+			result = new Long(0);
+		}
+		return result.intValue();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Integer> getTotalQuantityPerItemOfItemsInList(final List<Item> itemList) {
+		if (itemList == null) {
+			throw new NullPointerException("The itemList must be defined");
+		}
+
+		List<Integer> resultList = new ArrayList<Integer>();
+		for (int i = 0; i < itemList.size(); i++) {
+            int result = getTotalQuantityOfParticularItem(itemList.get(i));
+			resultList.add(new Integer(result));
+		}
+
+		return resultList;
+	}
+
 }

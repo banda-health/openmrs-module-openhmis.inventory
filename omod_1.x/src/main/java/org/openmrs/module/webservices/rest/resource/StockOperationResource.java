@@ -13,12 +13,14 @@
  */
 package org.openmrs.module.webservices.rest.resource;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,10 +33,12 @@ import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.commons.api.f.Action2;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
+import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationService;
 import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
 import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
+import org.openmrs.module.openhmis.inventory.api.IUserDataService;
 import org.openmrs.module.openhmis.inventory.api.model.IStockOperationType;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
@@ -55,7 +59,10 @@ import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
+import org.openmrs.notification.Alert;
 import org.openmrs.util.LocationUtility;
+import org.openmrs.util.OpenmrsConstants;
+
 import org.springframework.web.client.RestClientException;
 
 /**
@@ -408,6 +415,17 @@ public class StockOperationResource
 	private void processItemStock(StockOperation operation, Set<StockOperationItem> items) {
 		IStockOperationType type = operation.getInstanceType();
 
+		List<User> restrictedUserList;
+		//get all users by location
+		if (ModuleSettings.areItemsRestrictedByLocation()) {
+			Location location = LocationUtility.getUserDefaultLocation();
+			restrictedUserList = Context.getService(IUserDataService.class).getUsersByLocation(location);
+		} else {
+			List<User> userList = Context.getUserService().getAllUsers();
+			restrictedUserList = userList;
+		}
+
+		List<Item> itemList = new ArrayList<Item>();
 		// Process each operation item to set the appropriate fields
 		for (StockOperationItem opItem : items) {
 			Item sourceItem = opItem.getItem();
@@ -445,6 +463,29 @@ public class StockOperationResource
 				} else {
 					// The batch operation was not set so flag it as calculated
 					opItem.setCalculatedBatch(true);
+				}
+			}
+			itemList.add(sourceItem);
+		}
+
+		//icchange kmri low stock warning
+		//The intent of this code is to create a warning when an operation causes an item
+		// to go below or stay below the minimum amount required for that item. This warning
+		// should be visible to all users (or all users at a particular location if
+		// location restricted). Our users wanted a visible system wide warning that
+		// informed as to when they were getting low on a particular stock so they would
+		// know when and what to reorder.
+		if (ModuleSettings.lowStockWarningActive()) {
+
+			List<Integer> num = Context.getService(IItemStockDataService.class)
+			        .getTotalQuantityPerItemOfItemsInList(itemList);
+
+			for (int i = 0; i < num.size(); i++) {
+				Item sourceItem = itemList.get(i);
+				if (sourceItem.getMinimumQuantity() != null
+				        && sourceItem.getMinimumQuantity().intValue() > num.get(i).intValue()) {
+					Context.getAlertService().saveAlert(new Alert("WARNING: Stock is below minimum for "
+					        + sourceItem.getName(), restrictedUserList));
 				}
 			}
 		}
