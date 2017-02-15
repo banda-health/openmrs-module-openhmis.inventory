@@ -53,6 +53,10 @@ curl(
 
             $('.date').datepicker();
 
+            if ($("#generateLowReport").length > 0) {
+                $("#generateLowReport").click(printLowReport)
+            }
+
             if ($("#generateTakeReport").length > 0) {
                 $("#generateTakeReport").click(printTakeReport)
             }
@@ -80,6 +84,11 @@ curl(
             var name = ui.item.label;
             $('#itemSearchOperationsByStockroom').val(name);
             $('#item-uuid-searchOperationsByStockroom').val(uuid).trigger('change');
+        }
+
+        function printLowReport() {
+        	var reportId = $('#stockLowReportId').val();
+            return printReport(reportId, "");
         }
 
         function printTakeReport() {
@@ -193,7 +202,11 @@ curl(
         function printReport(reportId, parameters) {
             var reportUrl = $("#reportUrl").val();
             var url = openhmis.url.openmrs + reportUrl + ".form?";
-            url += "reportId=" + reportId  + "&" + parameters;
+            if(parameters != null && parameters != ""){
+            	url += "reportId=" + reportId  + "&" + parameters;
+            }else{
+            	url += "reportId=" + reportId;
+            }
             window.open(url, "pdfDownload");
 
             return false;

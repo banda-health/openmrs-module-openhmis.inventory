@@ -44,7 +44,12 @@ public class InventoryReportsController {
 		Settings settings = ModuleSettings.loadSettings();
 		IStockroomDataService stockroomDataService = Context.getService(IStockroomDataService.class);
 
-		Integer reportId = settings.getStockTakeReportId();
+		Integer reportId = settings.getStockLowReportId();
+		if (reportId != null) {
+			handleReport(model, reportId, "stockLowReport");
+		}
+
+		reportId = settings.getStockTakeReportId();
 		if (reportId != null) {
 			handleReport(model, reportId, "stockTakeReport");
 		}
