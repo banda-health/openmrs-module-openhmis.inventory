@@ -16,6 +16,7 @@ package org.openmrs.module.openhmis.inventory.api;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.Location;
 import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
@@ -225,4 +226,8 @@ public interface IStockOperationDataService extends IMetadataDataService<StockOp
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
 	StockOperation getFirstOperationByDate(Date date);
+
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_OPERATIONS })
+	List<StockOperation> getOperationsByLocation(Location location, PagingInfo paging);
 }

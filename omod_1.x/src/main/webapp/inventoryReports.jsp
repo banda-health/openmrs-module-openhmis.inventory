@@ -31,9 +31,25 @@
       </b>
     </td>
     <td>
-      <c:if test="${stockTakeReport == null && stockCardReport == null && stockroomReport == null && expiringStockReport == null}" >
+      <c:if test="${stockLowReport == null && stockTakeReport == null && stockCardReport == null && stockroomReport == null && expiringStockReport == null}" >
         <div style="color: grey">No inventory reports have been defined.</div>
       </c:if>
+
+      <c:if test="${stockLowReport != null}" >
+        <h3>${stockLowReport.name}</h3>
+        <div style="color: grey">${stockLowReport.description}</div>
+        <br />
+        <div>
+          <form id="stockLowReport" onsubmit="return false;">
+            <input id="stockLowReportId" type="hidden" value="${stockLowReport.reportId}" />
+            <br /><br />
+            <input id="generateLowReport" type="submit" value="<spring:message code="openhmis.inventory.report.generate.button"/>"/>
+          </form>
+        </div>
+        <br />
+        <hr>
+      </c:if>
+
       <c:if test="${stockTakeReport != null}" >
         <h3>${stockTakeReport.name}</h3>
         <div style="color: grey">${stockTakeReport.description}</div>

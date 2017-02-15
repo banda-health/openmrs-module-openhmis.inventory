@@ -62,6 +62,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.notification.Alert;
 import org.openmrs.util.LocationUtility;
 import org.openmrs.util.OpenmrsConstants;
+
 import org.springframework.web.client.RestClientException;
 
 /**
@@ -85,6 +86,25 @@ public class StockOperationResource
 		this.stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
 		this.stockroomDataService = Context.getService(IStockroomDataService.class);
 		this.itemDataService = Context.getService(IItemDataService.class);
+	}
+
+	@Override
+	protected PageableResult doGetAll(RequestContext context) {
+		if (ModuleSettings.areItemsRestrictedByLocation()) {
+			//kmri location restriction
+			Location locationTemp = LocationUtility.getUserDefaultLocation();
+			PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+			if (locationTemp != null) {
+				return new AlreadyPagedWithLength<StockOperation>(context,
+				        Context.getService(IStockOperationDataService.class).getOperationsByLocation(
+				            locationTemp, pagingInfo),
+				        pagingInfo.hasMoreResults(), pagingInfo.getTotalRecordCount());
+			} else {
+				return new EmptySearchResult();
+			}
+		} else {
+			return super.doGetAll(context);
+		}
 	}
 
 	@Override

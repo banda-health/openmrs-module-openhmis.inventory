@@ -36,19 +36,18 @@ public class Department extends BaseSerializableOpenmrsMetadata {
 	}
 
 	/**
-	 * Gets the optional {@link org.openmrs.Location} where this stockroom is located.
-	 * @return The stockroom location.
+	 * Gets the optional {@link org.openmrs.Location} where this department is located.
+	 * @return The department location.
 	 */
 	public Location getLocation() {
 		return location;
 	}
 
 	/**
-	 * Sets the optional {@link org.openmrs.Location} where this stockroom is located.
-	 * @param location The stockroom location.
+	 * Sets the optional {@link org.openmrs.Location} where this department is located.
+	 * @param location The department location.
 	 */
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-
 }

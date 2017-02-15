@@ -189,4 +189,29 @@ public interface IItemDataService extends IMetadataDataService<Item> {
 	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
 	ItemPrice getItemPriceByUuid(String uuid);
 
+	/**
+	 * Gets all the stockrooms for the specified {@link Location}.
+	 * @param location The location.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @return All stockrooms for the specified {@link Location}.
+	 * @should throw NullPointerException if the location is null
+	 * @should return an empty list if the location has no stockrooms
+	 * @should not return retired stockrooms unless specified
+	 * @should return all stockrooms for the specified location
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	List<Item> getItemsByLocation(Location location, boolean includeRetired);
+
+	/**
+	 * Gets all the stockrooms for the specified {@link Location}.
+	 * @param location The location.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @param pagingInfo The paging information
+	 * @return All stockrooms for the specified {@link Location}.
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	List<Item> getItemsByLocation(Location location, boolean includeRetired,
+	        PagingInfo pagingInfo);
 }

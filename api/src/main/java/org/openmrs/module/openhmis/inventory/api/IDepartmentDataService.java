@@ -13,9 +13,15 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
+import org.openmrs.Location;
+import org.openmrs.annotation.Authorized;
+import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.Department;
+import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Interface that represents classes which perform data operations for {@link Department}s.
@@ -23,4 +29,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface IDepartmentDataService extends IMetadataDataService<Department> {
 
+	/**
+	 * Gets all the departments for the specified {@link Location}.
+	 * @param location The location.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @return All stockrooms for the specified {@link Location}.
+	 * @should throw NullPointerException if the location is null
+	 * @should return an empty list if the location has no stockrooms
+	 * @should not return retired stockrooms unless specified
+	 * @should return all departments for the specified location
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	List<Department> getDepartmentsByLocation(Location location, boolean includeRetired);
+
+	/**
+	 * Gets all the departments for the specified {@link Location}.
+	 * @param location The location.
+	 * @param includeRetired Whether retired stockrooms should be included in the results.
+	 * @param pagingInfo The paging information
+	 * @return All departments for the specified {@link Location}.
+	 */
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_STOCKROOMS })
+	List<Department> getDepartmentsByLocation(Location location, boolean includeRetired,
+	        PagingInfo pagingInfo);
 }

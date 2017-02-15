@@ -255,4 +255,32 @@ public class ItemDataServiceImpl extends BaseCustomizableMetadataDataServiceImpl
 		return PrivilegeConstants.MANAGE_ITEMS;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Item> getItemsByLocation(Location location, boolean includeRetired) {
+		return getItemsByLocation(location, includeRetired, null);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ITEMS })
+	public List<Item> getItemsByLocation(final Location location, final boolean includeRetired,
+	        PagingInfo pagingInfo) {
+		if (location == null) {
+			throw new NullPointerException("The location must be defined");
+		}
+
+		return executeCriteria(Item.class, pagingInfo, new Action1<Criteria>() {
+			@Override
+			public void apply(Criteria criteria) {
+				criteria.createAlias("department", "departmentref");
+				criteria.add(Restrictions.eq("departmentref.location", location));
+				if (!includeRetired) {
+					criteria.add(Restrictions.eq(HibernateCriteriaConstants.RETIRED, false));
+				}
+			}
+		}, getDefaultSort());
+	}
+
 }

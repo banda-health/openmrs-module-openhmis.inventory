@@ -15,6 +15,7 @@ package org.openmrs.module.openhmis.inventory.web.controller;
 
 import java.io.IOException;
 
+import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.web.ModuleWebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,5 +31,6 @@ public class StockroomsController {
 	@RequestMapping(method = RequestMethod.GET)
 	public void render(ModelMap model) throws IOException {
 		model.addAttribute("modelBase", "openhmis.inventory.stockroom");
+		model.addAttribute("locationRestriction", ModuleSettings.areItemsRestrictedByLocation());
 	}
 }

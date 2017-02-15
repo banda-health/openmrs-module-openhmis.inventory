@@ -21,8 +21,10 @@ public class Settings {
 
 	private Boolean autoGenerateOperationNumber;
 	private Boolean autoCompleteOperations;
+	private Boolean locationRestrictions;
 	private Boolean wildcardItemSearch;
 	private Integer operationNumberGeneratorSourceId;
+	private Integer stockLowReportId;
 	private Integer stockTakeReportId;
 	private Integer stockCardReportId;
 	private Integer stockOperationsByStockroomReportId;
@@ -47,6 +49,14 @@ public class Settings {
 		this.autoCompleteOperations = autoCompleteOperations;
 	}
 
+	public Boolean getLocationRestrictions() {
+		return locationRestrictions;
+	}
+
+	public void setLocationRestrictions(Boolean locationRestrictions) {
+		this.locationRestrictions = locationRestrictions;
+	}
+
 	public Boolean getWildcardItemSearch() {
 		return wildcardItemSearch;
 	}
@@ -61,6 +71,14 @@ public class Settings {
 
 	public void setOperationNumberGeneratorSourceId(Integer sourceId) {
 		this.operationNumberGeneratorSourceId = sourceId;
+	}
+
+	public Integer getStockLowReportId() {
+		return stockLowReportId;
+	}
+
+	public void setStockLowReportId(Integer stockLowReportId) {
+		this.stockLowReportId = stockLowReportId;
 	}
 
 	public Integer getStockTakeReportId() {

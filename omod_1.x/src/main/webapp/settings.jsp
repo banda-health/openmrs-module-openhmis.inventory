@@ -69,11 +69,36 @@
 			</spring:bind>
 		</td></tr>
 		<tr><td>
+           	<br />
+           	<spring:bind path="locationRestrictions">
+        		<input id="locationRestrictions" name="${status.expression}" type="checkbox"
+           	       <c:if test="${settings.locationRestrictions}">checked</c:if> />
+           		<label for="locationRestrictions"><spring:message code="openhmis.inventory.report.location.restriction.label"/></label>
+           		<br/>
+           		<label for="locationRestrictions"><spring:message code="openhmis.inventory.report.location.restriction.warning"/></label>
+           	</spring:bind>
+        </td></tr>
+		<tr><td>
 			<br />
 			<spring:bind path="wildcardItemSearch">
 				<input id="wildcardItemSearch" name="${status.expression}" type="checkbox"
 					   <c:if test="${settings.wildcardItemSearch}">checked</c:if> />
 				<label for="wildcardItemSearch"><spring:message code="openhmis.inventory.report.use.wildcard.item.search.label"/></label>
+			</spring:bind>
+		</td></tr>
+		<tr><td>
+			<br />
+			<label for="stockLowReportId"><spring:message code="openhmis.inventory.report.select.stock.Low.label"/> </label>
+			<spring:bind path="stockLowReportId">
+				<select id="stockLowReportId" name="${status.expression}">
+					<option value=""></option>
+					<c:forEach items="${reports}" var="report">
+						<option value="${report.reportId}"
+						    <c:if test="${settings.stockLowReportId == report.reportId}">selected</c:if>>
+								${report.name}
+						</option>
+					</c:forEach>
+				</select>
 			</spring:bind>
 		</td></tr>
 		<tr><td>
