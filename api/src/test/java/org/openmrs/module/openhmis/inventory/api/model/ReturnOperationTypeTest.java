@@ -4,28 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
 
 public class ReturnOperationTypeTest extends BaseOperationTypeTest {
-	IStockOperationTypeDataService stockOperationTypeDataService;
-	IStockOperationDataService stockOperationDataService;
-
-	@Before
-	public void before() throws Exception {
-		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
-		executeDataSet(IStockroomDataServiceTest.DATASET);
-		executeDataSet(DATASET);
-
-		stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
-		stockOperationDataService = Context.getService(IStockOperationDataService.class);
-	}
-
 	@Test
 	public void onCancelled_shouldClearReservedTransactions() throws Exception {
 		ReturnOperationType returnOperationType = (ReturnOperationType)stockOperationTypeDataService.getById(4);
@@ -48,5 +29,4 @@ public class ReturnOperationTypeTest extends BaseOperationTypeTest {
 			assertTrue(transaction.getStockroom().getId() == 4);
 		}
 	}
-
 }

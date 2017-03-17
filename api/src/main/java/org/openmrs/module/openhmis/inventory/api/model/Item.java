@@ -221,6 +221,6 @@ public class Item extends BaseSimpleCustomizableMetadata<ItemAttribute> implemen
 	@Override
 	@JsonIgnore
 	public Boolean getRetired() {
-		return isRetired();
+		return super.getRetired();
 	}
 }

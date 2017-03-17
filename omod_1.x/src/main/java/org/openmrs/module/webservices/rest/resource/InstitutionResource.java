@@ -26,7 +26,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
  * REST resource representing an {@link Institution}.
  */
 @Resource(name = ModuleRestConstants.INSTITUTION_RESOURCE, supportedClass = Institution.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 @Handler(supports = { Institution.class }, order = 0)
 public class InstitutionResource extends BaseRestMetadataResource<Institution> {
 

@@ -47,7 +47,7 @@ import com.google.common.collect.Iterables;
  * REST resource representing an {@link Item}.
  */
 @Resource(name = ModuleRestConstants.ITEM_RESOURCE, supportedClass = Item.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class ItemResource extends BaseRestSimpleCustomizableMetadataResource<Item, ItemAttribute> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {

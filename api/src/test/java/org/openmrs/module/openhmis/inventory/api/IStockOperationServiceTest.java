@@ -6,12 +6,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.BaseModuleContextTest;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
@@ -23,12 +25,11 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 
-public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
+public class IStockOperationServiceTest extends BaseModuleContextTest {
 	IStockOperationTypeDataService typeService;
 	IStockroomDataService stockroomService;
 	IItemDataService itemService;
@@ -1452,7 +1453,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(false, detail.getCalculatedBatch());
 		Assert.assertEquals(false, detail.getCalculatedExpiration());
 		Assert.assertEquals(receiptOperation, detail.getBatchOperation());
-		Assert.assertEquals(exp, detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(exp, detail.getExpiration()));
 
 		// Now create a transfer operation
 		StockOperation transferOperation = operationTest.createEntity(true);
@@ -1494,7 +1495,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(true, detail.getCalculatedBatch());
 		Assert.assertEquals(true, detail.getCalculatedExpiration());
 		Assert.assertEquals(receiptOperation, detail.getBatchOperation());
-		Assert.assertEquals(exp, detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(exp, detail.getExpiration()));
 	}
 
 	@Test
@@ -1574,21 +1575,21 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(10, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), detail.getExpiration()));
 		Assert.assertEquals(receipt, detail.getBatchOperation());
 
 		// Transfer pending tx and tx should now have exp and batch from completed receipt
 		ReservedTransaction resTx = Iterators.getOnlyElement(transfer.getReserved().iterator());
 		Assert.assertEquals(item, resTx.getItem());
 		Assert.assertEquals(5, (int)resTx.getQuantity());
-		Assert.assertEquals(expCal.getTime(), resTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), resTx.getExpiration()));
 		Assert.assertEquals(receipt, resTx.getBatchOperation());
 
 		tx = Iterators.getOnlyElement(transfer.getTransactions().iterator());
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
 		// Complete the transfer
@@ -1603,7 +1604,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(5, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), detail.getExpiration()));
 		Assert.assertEquals(receipt, detail.getBatchOperation());
 	}
 
@@ -1704,7 +1705,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(10, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), detail.getExpiration()));
 		Assert.assertEquals(receipt, detail.getBatchOperation());
 
 		// Transfer tx's should now have exp and batch from completed receipt
@@ -1726,14 +1727,14 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 			Assert.assertEquals(transfer.getDestination(), tx.getStockroom());
 		}
 
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
 		tx = Iterators.get(transfer.getTransactions().iterator(), 1);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(5 * factor, (int)tx.getQuantity());
 		Assert.assertEquals(stockroom, tx.getStockroom());
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
 		// Dest SR should have receipt exp and batch and be set to auto
@@ -1743,7 +1744,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(5, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), detail.getExpiration()));
 		Assert.assertEquals(receipt, detail.getBatchOperation());
 		Assert.assertTrue(detail.getCalculatedExpiration());
 		Assert.assertTrue(detail.getCalculatedBatch());
@@ -1843,7 +1844,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(15, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), detail.getExpiration()));
 		Assert.assertEquals(receipt, detail.getBatchOperation());
 
 		// Transfer tx's should now have exp and batch from cancelled receipt
@@ -1862,14 +1863,14 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		}
 
 		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
 		tx = Iterators.get(transfer.getTransactions().iterator(), 1);
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(5 * factor, (int)tx.getQuantity());
 		Assert.assertEquals(transfer.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(receipt, tx.getBatchOperation());
 
 		// Dest SR should have receipt exp and batch and be set to auto
@@ -2086,7 +2087,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item, detail.getItem());
 		Assert.assertEquals(10, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 
 		stock = stockroomService.getItem(r1.getDestination(), item2);
@@ -2095,7 +2096,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertEquals(15, (int)detail.getQuantity());
-		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 
 		// T1 tx's should now have exp and batch from completed receipt
@@ -2104,14 +2105,14 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertEquals(t1.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
 		tx = getTransactionForItem(t1.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-10, (int)tx.getQuantity());
 		Assert.assertEquals(t1.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), tx.getExpiration()));
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
 		// Operations should still be PENDING
@@ -2134,7 +2135,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertEquals(3, (int)detail.getQuantity());
-		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 
 		// T2 tx's should now have exp and batch from completed receipt
@@ -2143,14 +2144,14 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertEquals(t2.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
 		tx = getTransactionForItem(t2.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-7, (int)tx.getQuantity());
 		Assert.assertEquals(t2.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), tx.getExpiration()));
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
 		// Complete T2
@@ -2168,7 +2169,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(item2, detail.getItem());
 		Assert.assertEquals(4, (int)detail.getQuantity());
-		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 
 		// D1 tx's should now have exp and batch from completed receipt
@@ -2177,14 +2178,14 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(item, tx.getItem());
 		Assert.assertEquals(-5, (int)tx.getQuantity());
 		Assert.assertEquals(d1.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), tx.getExpiration()));
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
 		tx = getTransactionForItem(d1.getTransactions(), item2);
 		Assert.assertEquals(item2, tx.getItem());
 		Assert.assertEquals(-3, (int)tx.getQuantity());
 		Assert.assertEquals(d1.getSource(), tx.getStockroom());
-		Assert.assertEquals(expCal2.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), tx.getExpiration()));
 		Assert.assertEquals(r1, tx.getBatchOperation());
 
 		// Complete D1
@@ -2202,7 +2203,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(10, stock.getQuantity());
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(10, (int)detail.getQuantity());
-		Assert.assertEquals(expCal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 		Assert.assertFalse(detail.getCalculatedExpiration());
 		Assert.assertFalse(detail.getCalculatedBatch());
@@ -2212,7 +2213,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(15, stock.getQuantity());
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(15, (int)detail.getQuantity());
-		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 		Assert.assertFalse(detail.getCalculatedExpiration());
 		Assert.assertFalse(detail.getCalculatedBatch());
@@ -2225,7 +2226,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(3, stock.getQuantity());
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(3, (int)detail.getQuantity());
-		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 		Assert.assertTrue(detail.getCalculatedExpiration());
 		Assert.assertTrue(detail.getCalculatedBatch());
@@ -2238,7 +2239,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(4, stock.getQuantity());
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertEquals(4, (int)detail.getQuantity());
-		Assert.assertEquals(expCal2.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(expCal2.getTime(), detail.getExpiration()));
 		Assert.assertEquals(r1, detail.getBatchOperation());
 		Assert.assertTrue(detail.getCalculatedExpiration());
 		Assert.assertTrue(detail.getCalculatedBatch());
@@ -2390,7 +2391,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertFalse(detail.getCalculatedBatch());
 		Assert.assertEquals(op, detail.getBatchOperation());
 		Assert.assertFalse(detail.getCalculatedExpiration());
-		Assert.assertEquals(cal.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal.getTime(), detail.getExpiration()));
 	}
 
 	/**
@@ -2874,7 +2875,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(1, stock.getDetails().size());
 		ItemStockDetail detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(exp.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(exp.getTime(), detail.getExpiration()));
 		Assert.assertEquals(25, (long)detail.getQuantity());
 
 		StockOperation op2 = new StockOperation();
@@ -2896,7 +2897,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(1, stock.getDetails().size());
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(exp.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(exp.getTime(), detail.getExpiration()));
 		Assert.assertEquals(15, (long)detail.getQuantity());
 
 		stock = stockroomService.getItem(dest, newItem);
@@ -2905,7 +2906,7 @@ public class IStockOperationServiceTest extends BaseModuleContextSensitiveTest {
 		Assert.assertEquals(1, stock.getDetails().size());
 		detail = Iterators.getOnlyElement(stock.getDetails().iterator());
 		Assert.assertNotNull(detail);
-		Assert.assertEquals(exp.getTime(), detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(exp.getTime(), detail.getExpiration()));
 		Assert.assertEquals(10, (long)detail.getQuantity());
 	}
 

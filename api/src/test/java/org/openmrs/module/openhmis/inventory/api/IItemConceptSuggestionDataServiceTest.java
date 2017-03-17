@@ -12,11 +12,11 @@ import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.BaseModuleContextTest;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemConceptSuggestion;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class IItemConceptSuggestionDataServiceTest extends BaseModuleContextSensitiveTest {
+public class IItemConceptSuggestionDataServiceTest extends BaseModuleContextTest {
 	public static final String ITEM_DATASET = TestConstants.BASE_DATASET_DIR + "ItemTest.xml";
 
 	private IItemConceptSuggestionDataService service;

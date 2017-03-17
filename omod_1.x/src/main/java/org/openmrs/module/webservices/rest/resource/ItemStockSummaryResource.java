@@ -38,7 +38,7 @@ import org.openmrs.module.webservices.rest.web.response.ResponseException;
  * REST resource representing an {@link ItemStockSummary}.
  */
 @Resource(name = ModuleRestConstants.INVENTORY_STOCK_TAKE_SUMMARY_RESOURCE, supportedClass = ItemStockSummary.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class ItemStockSummaryResource extends DelegatingCrudResource<ItemStockSummary> {
 
 	private IStockroomDataService stockroomDataService;

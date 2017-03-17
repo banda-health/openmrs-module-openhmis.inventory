@@ -25,7 +25,7 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
  * REST resource representing an {@link ItemAttribute}.
  */
 @Resource(name = ModuleRestConstants.ITEM_ATTRIBUTE_RESOURCE, supportedClass = ItemAttribute.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class ItemAttributeResource extends BaseRestAttributeObjectResource<ItemAttribute, ItemAttributeType> {
 	@Override
 	public ItemAttribute newDelegate() {

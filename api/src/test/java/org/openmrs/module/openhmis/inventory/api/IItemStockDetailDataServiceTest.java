@@ -16,19 +16,20 @@ package org.openmrs.module.openhmis.inventory.api;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.BaseModuleContextTest;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockDetail;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStockSummary;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveTest {
+public class IItemStockDetailDataServiceTest extends BaseModuleContextTest {
 	private IItemStockDetailDataService service;
 	private IItemDataService itemDataService;
 	private IStockroomDataService stockroomDataService;
@@ -180,12 +181,12 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		summary = results.get(1);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(40, (long)summary.getQuantity());
-		Assert.assertEquals(cal.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal.getTime(), summary.getExpiration()));
 
 		summary = results.get(2);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(60, (long)summary.getQuantity());
-		Assert.assertEquals(cal2.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal2.getTime(), summary.getExpiration()));
 	}
 
 	/**
@@ -299,7 +300,7 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		summary = results.get(0);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(40, (long)summary.getQuantity());
-		Assert.assertEquals(cal.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal.getTime(), summary.getExpiration()));
 
 		pagingInfo.setPage(3);
 		results = service.getItemStockSummaryByStockroom(sr, pagingInfo);
@@ -307,7 +308,7 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		summary = results.get(0);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(60, (long)summary.getQuantity());
-		Assert.assertEquals(cal2.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal2.getTime(), summary.getExpiration()));
 	}
 
 	/**
@@ -469,21 +470,21 @@ public class IItemStockDetailDataServiceTest extends BaseModuleContextSensitiveT
 		summary = results.get(1);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(40, (long)summary.getQuantity());
-		Assert.assertEquals(cal.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal.getTime(), summary.getExpiration()));
 
 		summary = results.get(2);
 		Assert.assertEquals(item2, summary.getItem());
 		Assert.assertEquals(60, (long)summary.getQuantity());
-		Assert.assertEquals(cal2.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal2.getTime(), summary.getExpiration()));
 
 		summary = results.get(3);
 		Assert.assertEquals(item6, summary.getItem());
 		Assert.assertEquals(30, (long)summary.getQuantity());
-		Assert.assertEquals(cal3.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal3.getTime(), summary.getExpiration()));
 
 		summary = results.get(4);
 		Assert.assertEquals(item6, summary.getItem());
 		Assert.assertEquals(20, (long)summary.getQuantity());
-		Assert.assertEquals(cal4.getTime(), summary.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal4.getTime(), summary.getExpiration()));
 	}
 }
