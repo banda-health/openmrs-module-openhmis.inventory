@@ -15,7 +15,7 @@
     ui.includeJavascript("uicommons", "ngDialog/ngDialog.js")
 
     /* load re-usables/common modules */
-    ui.includeFragment("openhmis.commons", "load.reusable.modules")
+    ui.includeFragment("openhmis.commons", "loadReusableModules")
 
     /* load stockTake modules */
     ui.includeJavascript("openhmis.inventory", "stockTake/models/entity.model.js")

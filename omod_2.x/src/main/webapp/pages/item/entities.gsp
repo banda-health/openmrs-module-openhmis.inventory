@@ -14,7 +14,7 @@
     ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
 
     /* load re-usables/common modules */
-    ui.includeFragment("openhmis.commons", "load.reusable.modules")
+    ui.includeFragment("openhmis.commons", "loadReusableModules")
 
     /* load item modules */
     ui.includeJavascript("openhmis.inventory", "item/models/entity.model.js")

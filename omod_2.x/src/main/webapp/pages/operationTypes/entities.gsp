@@ -13,7 +13,7 @@
 	ui.includeCss("openhmis.inventory", "entity.css")
 	
 	/* load re-usables/common modules */
-	ui.includeFragment("openhmis.commons", "load.reusable.modules")
+	ui.includeFragment("openhmis.commons", "loadReusableModules")
 	
 	/* load operationTypes modules */
 	ui.includeJavascript("openhmis.inventory", "operationTypes/models/entity.model.js")

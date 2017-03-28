@@ -10,7 +10,7 @@
 	ui.includeCss("openhmis.inventory", "entity.css")
 
 	/* load re-usables/common modules */
-	ui.includeFragment("openhmis.commons", "load.reusable.modules")
+	ui.includeFragment("openhmis.commons", "loadReusableModules")
 
 	ui.includeJavascript("openhmis.inventory", "institution/models/entity.model.js")
 	ui.includeJavascript("openhmis.inventory", "institution/controllers/entity.controller.js")
