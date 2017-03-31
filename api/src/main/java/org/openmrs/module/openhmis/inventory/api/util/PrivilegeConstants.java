@@ -104,6 +104,8 @@ public class PrivilegeConstants {
 		names.add(privilegeConstantsCompatibility.getViewNavigationMenuPrivilege());
 		names.add(privilegeConstantsCompatibility.getViewUsersPrivilege());
 		names.add(privilegeConstantsCompatibility.getViewRolesPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewVisitPrivilege());
+		names.add(privilegeConstantsCompatibility.getViewPatientsPrivilege());
 
 		for (String name : names) {
 			privileges.add(service.getPrivilege(name));
