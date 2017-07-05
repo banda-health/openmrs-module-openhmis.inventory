@@ -19,8 +19,6 @@ import org.junit.Test;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.TestConstants;
 import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 
 public class IStockOperationTypeTest extends BaseOperationTypeTest {
@@ -28,9 +26,8 @@ public class IStockOperationTypeTest extends BaseOperationTypeTest {
 	protected User testUser;
 
 	@Before
-	public void setUp() throws Exception {
-		executeDataSet(TestConstants.CORE_DATASET);
-		executeDataSet(IStockroomDataServiceTest.DATASET);
+	public void before() throws Exception {
+		super.before();
 
 		testType = WellKnownOperationTypes.getAdjustment();
 		testUser = Context.getUserService().getUser(5506);

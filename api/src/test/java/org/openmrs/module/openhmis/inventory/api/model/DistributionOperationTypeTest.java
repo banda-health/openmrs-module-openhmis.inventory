@@ -10,26 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationTypeDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.TestConstants;
 
 public class DistributionOperationTypeTest extends BaseOperationTypeTest {
-	IStockOperationTypeDataService stockOperationTypeDataService;
-	IStockOperationDataService stockOperationDataService;
 	Patient patient;
 
 	@Before
 	public void before() throws Exception {
-		executeDataSet(TestConstants.CORE_DATASET);
-		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
-		executeDataSet(IStockroomDataServiceTest.DATASET);
-		executeDataSet(DATASET);
-
-		stockOperationTypeDataService = Context.getService(IStockOperationTypeDataService.class);
-		stockOperationDataService = Context.getService(IStockOperationDataService.class);
+		super.before();
 
 		patient = Context.getPatientService().getPatient(1);
 	}
@@ -76,5 +63,4 @@ public class DistributionOperationTypeTest extends BaseOperationTypeTest {
 		distributionOperationType.onCompleted(stockOperation);
 		assertEquals(0, stockOperation.getReserved().size());
 	}
-
 }

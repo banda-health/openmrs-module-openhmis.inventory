@@ -7,7 +7,7 @@
     ui.includeJavascript("uicommons", "angular-common.js")
 
     /* load re-usables/common modules */
-    ui.includeFragment("openhmis.commons", "load.reusable.modules")
+    ui.includeFragment("openhmis.commons", "loadReusableModules")
 
     /* load item attribute types modules */
     ui.includeJavascript("openhmis.inventory", "itemAttributes/models/entity.model.js")

@@ -25,7 +25,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
  * REST resource representing a {@link StockOperationItem}.
  */
 @Resource(name = ModuleRestConstants.OPERATION_ITEM_RESOURCE, supportedClass = StockOperationItem.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class StockOperationItemResource extends ItemStockDetailBaseResource<StockOperationItem> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {

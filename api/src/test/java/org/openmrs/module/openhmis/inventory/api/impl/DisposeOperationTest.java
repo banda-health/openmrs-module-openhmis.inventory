@@ -5,20 +5,9 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.inventory.api.IItemDataService;
-import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.IItemStockDataService;
-import org.openmrs.module.openhmis.inventory.api.IItemStockDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.ITestableStockOperationService;
-import org.openmrs.module.openhmis.inventory.api.TestConstants;
 import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemStock;
@@ -27,42 +16,8 @@ import org.openmrs.module.openhmis.inventory.api.model.ReservedTransaction;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class DisposeOperationTest extends BaseModuleContextSensitiveTest {
-
-	IItemDataService itemDataService;
-	IStockroomDataService stockroomDataService;
-	IItemStockDataService itemStockDataService;
-	IStockOperationDataService operationDataService;
-	ITestableStockOperationService service;
-
-	IItemDataServiceTest itemTest;
-	IStockOperationDataServiceTest operationTest;
-	IStockroomDataServiceTest stockroomTest;
-	IItemStockDataServiceTest itemStockTest;
-
-	StockOperationServiceImplTest stockOperationServiceImplTest;
-
-	@Before
-	public void before() throws Exception {
-		executeDataSet(TestConstants.CORE_DATASET);
-		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
-		executeDataSet(IStockroomDataServiceTest.DATASET);
-
-		stockroomDataService = Context.getService(IStockroomDataService.class);
-		itemDataService = Context.getService(IItemDataService.class);
-		itemStockDataService = Context.getService(IItemStockDataService.class);
-		operationDataService = Context.getService(IStockOperationDataService.class);
-		service = Context.getService(ITestableStockOperationService.class);
-
-		itemTest = new IItemDataServiceTest();
-		operationTest = new IStockOperationDataServiceTest();
-		stockroomTest = new IStockroomDataServiceTest();
-		itemStockTest = new IItemStockDataServiceTest();
-		stockOperationServiceImplTest = new StockOperationServiceImplTest();
-	}
-
+public class DisposeOperationTest extends BaseOperationTest {
 	@Test
 	public void submitOperation_shouldReduceBatchQuantity_singleBatch_noExpirationDate() throws Exception {
 		Stockroom sourceRoom = stockroomDataService.getById(0);

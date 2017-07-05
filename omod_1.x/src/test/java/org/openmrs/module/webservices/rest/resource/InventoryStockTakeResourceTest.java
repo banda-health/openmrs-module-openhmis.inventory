@@ -71,7 +71,6 @@ public class InventoryStockTakeResourceTest {
 		iss2.setItem(item2);
 		iss2.setActualQuantity(5);
 		iss2.setQuantity(0);
-
 	}
 
 	@Test(expected = RestClientException.class)
@@ -96,6 +95,7 @@ public class InventoryStockTakeResourceTest {
 
 		Assert.assertEquals("A-Test-1", operation.getOperationNumber());
 		Assert.assertEquals(2, operation.getItems().size());
+
 		Set<StockOperationItem> items = operation.getItems();
 		for (StockOperationItem item : items) {
 			if (item.getItem().getId() == 1) {
@@ -105,7 +105,6 @@ public class InventoryStockTakeResourceTest {
 				Assert.assertEquals(new Integer(5), item.getQuantity());
 			}
 		}
-
 	}
 
 	@Test
@@ -122,7 +121,5 @@ public class InventoryStockTakeResourceTest {
 		StockOperation operation = resource.createOperation(delegate);
 
 		Assert.assertEquals("M-Test-2", operation.getOperationNumber());
-
 	}
-
 }
