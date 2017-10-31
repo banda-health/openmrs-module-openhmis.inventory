@@ -38,7 +38,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
  */
 @Resource(name = ModuleRestConstants.ITEM_CONCEPT_SUGGESTION_LIST_RESOURCE,
         supportedClass = ItemConceptSuggestionList.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class ItemConceptSuggetionListResource
         extends BaseRestMetadataResource<ItemConceptSuggestionList>
         implements IMetadataDataServiceResource<ItemConceptSuggestionList> {

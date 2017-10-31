@@ -1,5 +1,8 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
+import static org.openmrs.module.openhmis.inventory.ModuleSettings.RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD;
+import static org.openmrs.module.openhmis.inventory.ModuleSettings.isNegativeStockRestricted;
+
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -7,14 +10,14 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import com.mchange.util.AssertException;
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.openhmis.commons.api.BaseModuleContextTest;
 import org.openmrs.module.openhmis.inventory.ModuleSettings;
 import org.openmrs.module.openhmis.inventory.api.IItemDataService;
 import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
@@ -36,16 +39,12 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperation;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationItem;
 import org.openmrs.module.openhmis.inventory.api.model.StockOperationStatus;
 import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 
-import static org.openmrs.module.openhmis.inventory.ModuleSettings.RESTRICT_NEGATIVE_INVENTORY_STOCK_CREATION_FIELD;
-import static org.openmrs.module.openhmis.inventory.ModuleSettings.isNegativeStockRestricted;
-
-public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTest {
+public class StockOperationServiceImplTest extends BaseModuleContextTest {
 	IItemDataService itemDataService;
 	IStockroomDataService stockroomDataService;
 	IItemStockDataService itemStockDataService;
@@ -91,7 +90,11 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		Collection<ItemStockDetail> results = Collections2.filter(stock.getDetails(), new Predicate<ItemStockDetail>() {
 			@Override
 			public boolean apply(@Nullable ItemStockDetail detail) {
-				return ObjectUtils.equals(detail.getExpiration(), expiration);
+				if (detail.getExpiration() == null || expiration == null) {
+					return detail.getExpiration() == null && expiration == null;
+				} else {
+					return DateUtils.isSameDay(detail.getExpiration(), expiration);
+				}
 			}
 		});
 
@@ -184,7 +187,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			}
 		});
 		Assert.assertEquals(item2, testTx.getItem());
-		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar1.getTime(), testTx.getExpiration()));
 	}
 
 	/**
@@ -448,7 +451,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			}
 		});
 		Assert.assertEquals(item2, testTx.getItem());
-		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar2.getTime(), testTx.getExpiration()));
 	}
 
 	/**
@@ -660,7 +663,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		// Ensure that the closest expiration stock was selected
 		tx = Iterators.get(operation.getReserved().iterator(), 0);
 		Assert.assertEquals(item2, tx.getItem());
-		Assert.assertEquals(calendar3.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar3.getTime(), tx.getExpiration()));
 	}
 
 	/**
@@ -731,7 +734,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			        }
 		        });
 		Assert.assertEquals(item2, testTx.getItem());
-		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar2.getTime(), testTx.getExpiration()));
 		Assert.assertEquals(1, (int)testTx.getBatchOperation().getId());
 		Assert.assertEquals(20, (int)testTx.getQuantity());
 
@@ -743,7 +746,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			}
 		});
 		Assert.assertEquals(item2, testTx.getItem());
-		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar1.getTime(), testTx.getExpiration()));
 		Assert.assertEquals(2, (int)testTx.getBatchOperation().getId());
 		Assert.assertEquals(5, (int)testTx.getQuantity());
 	}
@@ -813,7 +816,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 			        }
 		        });
 		Assert.assertEquals(newItem, testTx.getItem());
-		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar1.getTime(), testTx.getExpiration()));
 		Assert.assertEquals(2, (int)testTx.getBatchOperation().getId());
 		Assert.assertEquals(10, (int)testTx.getQuantity());
 
@@ -1058,7 +1061,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		        });
 		Assert.assertEquals(newItem, testTx.getItem());
 		Assert.assertEquals(5, (int)testTx.getQuantity());
-		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar1.getTime(), testTx.getExpiration()));
 		Assert.assertTrue(testTx.isCalculatedExpiration());
 
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
@@ -1069,7 +1072,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		});
 		Assert.assertEquals(newItem, testTx.getItem());
 		Assert.assertEquals(5, (int)testTx.getQuantity());
-		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar1.getTime(), testTx.getExpiration()));
 		Assert.assertFalse(testTx.isCalculatedExpiration());
 
 		testTx = Iterators.find(operation.getReserved().iterator(), new Predicate<ReservedTransaction>() {
@@ -1230,7 +1233,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		        });
 		Assert.assertEquals(newItem, testTx.getItem());
 		Assert.assertEquals(5, (int)testTx.getQuantity());
-		Assert.assertEquals(calendar1.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar1.getTime(), testTx.getExpiration()));
 		Assert.assertTrue(testTx.isCalculatedBatch());
 		Assert.assertTrue(testTx.isCalculatedExpiration());
 
@@ -1242,7 +1245,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		});
 		Assert.assertEquals(newItem, testTx.getItem());
 		Assert.assertEquals(10, (int)testTx.getQuantity());
-		Assert.assertEquals(calendar2.getTime(), testTx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(calendar2.getTime(), testTx.getExpiration()));
 		Assert.assertFalse(testTx.isCalculatedBatch());
 		Assert.assertFalse(testTx.isCalculatedExpiration());
 	}
@@ -1492,7 +1495,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 		ReservedTransaction tx = Iterators.getOnlyElement(transactions.iterator());
 		Assert.assertEquals(15, (long)tx.getQuantity());
 		Assert.assertEquals(op, tx.getBatchOperation());
-		Assert.assertEquals(cal.getTime(), tx.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(cal.getTime(), tx.getExpiration()));
 	}
 
 	/**
@@ -1553,7 +1556,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 
 		detail = findDetail(stock, dt);
 		Assert.assertEquals(200, (long)detail.getQuantity());
-		Assert.assertEquals(dt, detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(dt, detail.getExpiration()));
 	}
 
 	/**
@@ -1610,7 +1613,7 @@ public class StockOperationServiceImplTest extends BaseModuleContextSensitiveTes
 
 		ItemStockDetail detail = findDetail(stock, dt);
 		Assert.assertEquals(100, (long)detail.getQuantity());
-		Assert.assertEquals(dt, detail.getExpiration());
+		Assert.assertTrue(DateUtils.isSameDay(dt, detail.getExpiration()));
 
 		detail = findDetail(stock, null);
 		Assert.assertEquals(200, (long)detail.getQuantity());

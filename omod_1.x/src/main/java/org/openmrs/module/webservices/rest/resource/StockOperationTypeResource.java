@@ -32,7 +32,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceD
  * REST resource representing a {@link IStockOperationType}.
  */
 @Resource(name = ModuleRestConstants.OPERATION_TYPE_RESOURCE, supportedClass = IStockOperationType.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class StockOperationTypeResource
         extends BaseRestInstanceTypeResource<IStockOperationType, StockOperationAttributeType> {
 	@Override

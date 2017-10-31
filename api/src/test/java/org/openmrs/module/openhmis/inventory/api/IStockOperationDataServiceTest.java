@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import liquibase.util.StringUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Patient;
@@ -32,6 +30,8 @@ import org.openmrs.module.openhmis.inventory.api.model.Stockroom;
 import org.openmrs.module.openhmis.inventory.api.search.StockOperationSearch;
 
 import com.google.common.collect.Iterators;
+
+import liquibase.util.StringUtils;
 
 public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<IStockOperationDataService, StockOperation> {
 	IStockOperationTypeDataService typeService;
@@ -724,7 +724,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations with the specified status for specified user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusForSpecifiedUser() throws Exception {
@@ -752,7 +753,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations with the specified operation type for specified user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedOperationTypeForSpecifiedUser() throws Exception {
@@ -779,7 +781,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations with the specified item for specified user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedItemForSpecifiedUser() throws Exception {
@@ -819,7 +822,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations with the specified status and operation type for specified user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeForSpecifiedUser()
@@ -851,7 +855,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations with the specified status and item for specified user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndItemForSpecifiedUser() throws Exception {
@@ -891,7 +896,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations with the specified status and item for specified user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWithTheSpecifiedStatusAndOperationTypeAndItemForSpecifiedUser()
@@ -925,7 +931,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return specified operations created by user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsCreatedByUser() throws Exception {
@@ -949,7 +956,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return specified operations with user as attribute type user
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserAsAttributeTypeUser() throws Exception {
@@ -988,7 +996,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return specified operations with user role as attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserRoleAsAttributeTypeRole() throws Exception {
@@ -1028,7 +1037,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return specified operations with user role as child role of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserRoleAsChildRoleOfAttributeTypeRole()
@@ -1068,7 +1078,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return specified operations with user role as grandchild role of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnSpecifiedOperationsWithUserRoleAsGrandchildRoleOfAttributeTypeRole()
@@ -1112,7 +1123,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies not return operations when user role not descendant of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldNotReturnOperationsWhenUserRoleNotDescendantOfAttributeTypeRole() throws Exception {
@@ -1140,7 +1152,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies not return operations when user role is parent of attribute type role
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldNotReturnOperationsWhenUserRoleIsParentOfAttributeTypeRole() throws Exception {
@@ -1168,7 +1181,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return empty list when no operations
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnEmptyListWhenNoOperations() throws Exception {
@@ -1189,7 +1203,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return paged operations when paging is specified
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnPagedOperationsWhenPagingIsSpecified() throws Exception {
@@ -1217,7 +1232,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations when paging is null
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsWhenPagingIsNull() throws Exception {
@@ -1230,7 +1246,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies throw NullPointerException when user is null
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getUserOperations_shouldThrowIllegalArgumentExceptionWhenUserIsNull() throws Exception {
@@ -1239,7 +1256,8 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return all operations for user when status is null
-	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item, PagingInfo)
+	 * @see IStockOperationDataService#getUserOperations(User, StockOperationStatus, IStockOperationType, Item,  Stockroom,
+	 * PagingInfo)
 	 */
 	@Test
 	public void getUserOperations_shouldReturnAllOperationsForUserWhenStatusIsNull() throws Exception {
@@ -1252,8 +1270,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 
 	/**
 	 * @verifies return items for the specified operation
-	 * @see IStockOperationDataService#getItemsByOperation(org.openmrs.module.openhmis.inventory.api.model.StockOperation,
-	 *      org.openmrs.module.openhmis.commons.api.PagingInfo)
+	 * @see IStockOperationDataService#getItemsByOperation(StockOperation, PagingInfo)
 	 */
 	@Test
 	public void getItemsByOperation_shouldReturnItemsForTheSpecifiedOperation() throws Exception {

@@ -38,7 +38,7 @@ import org.springframework.web.client.RestClientException;
  * REST resource representing an {@link InventoryStockTake}.
  */
 @Resource(name = ModuleRestConstants.INVENTORY_STOCK_TAKE_RESOURCE, supportedClass = InventoryStockTake.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class InventoryStockTakeResource extends BaseRestObjectResource<InventoryStockTake> {
 
 	private IStockOperationService operationService;

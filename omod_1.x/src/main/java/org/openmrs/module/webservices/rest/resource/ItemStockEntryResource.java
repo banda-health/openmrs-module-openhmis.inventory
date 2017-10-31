@@ -23,7 +23,7 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
  * REST resource representing an {@link ItemStockEntry}.
  */
 @Resource(name = ModuleRestConstants.ITEM_STOCK_ENTRY_RESOURCE, supportedClass = ItemStockEntry.class,
-        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
+        supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.*" })
 public class ItemStockEntryResource extends ItemStockDetailBaseResource<ItemStockEntry> {
 	@Override
 	public ItemStockEntry save(ItemStockEntry item) {

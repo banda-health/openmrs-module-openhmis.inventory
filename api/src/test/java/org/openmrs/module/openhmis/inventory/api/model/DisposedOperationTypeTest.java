@@ -1,31 +1,12 @@
 package org.openmrs.module.openhmis.inventory.api.model;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.inventory.api.IItemDataServiceTest;
-import org.openmrs.module.openhmis.inventory.api.IStockOperationDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataService;
-import org.openmrs.module.openhmis.inventory.api.IStockroomDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.WellKnownOperationTypes;
 
 import com.google.common.collect.Iterators;
 
 public class DisposedOperationTypeTest extends BaseOperationTypeTest {
-	IStockOperationDataService stockOperationDataService;
-	IStockroomDataService stockroomDataService;
-
-	@Before
-	public void before() throws Exception {
-		executeDataSet(IItemDataServiceTest.ITEM_DATASET);
-		executeDataSet(IStockroomDataServiceTest.DATASET);
-		executeDataSet(DATASET);
-
-		stockOperationDataService = Context.getService(IStockOperationDataService.class);
-		stockroomDataService = Context.getService(IStockroomDataService.class);
-	}
-
 	@Test
 	public void onPending_shouldNegateQuantityAndSetStockroomAndPatient() throws Exception {
 		IStockOperationType operationType = WellKnownOperationTypes.getDisposed();
@@ -136,5 +117,4 @@ public class DisposedOperationTypeTest extends BaseOperationTypeTest {
 		Assert.assertEquals(1, stockOperation.getTransactions().size());
 		Assert.assertEquals(0, stockOperation.getReserved().size());
 	}
-
 }
