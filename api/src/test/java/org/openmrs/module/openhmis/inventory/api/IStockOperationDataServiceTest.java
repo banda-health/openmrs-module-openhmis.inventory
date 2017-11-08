@@ -1090,7 +1090,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(Context.getUserService().getRole("Grandchild"));
 		user.setRoles(roles);
-		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.getUserService().saveUser(user);
 		Context.flushSession();
 
 		StockOperation operation = createEntity(true);
@@ -1134,7 +1134,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(Context.getUserService().getRole("Other"));
 		user.setRoles(roles);
-		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.getUserService().saveUser(user);
 		Context.flushSession();
 
 		StockOperation operation = createEntity(true);
@@ -1163,7 +1163,7 @@ public class IStockOperationDataServiceTest extends IMetadataDataServiceTest<ISt
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(Context.getUserService().getRole("Parent"));
 		user.setRoles(roles);
-		Context.getUserService().saveUser(user, "1wWhatever");
+		Context.getUserService().saveUser(user);
 		Context.flushSession();
 
 		StockOperation operation = createEntity(true);
