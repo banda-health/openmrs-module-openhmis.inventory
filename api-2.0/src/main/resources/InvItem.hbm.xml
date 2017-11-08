@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.openhmis.inventory.api.model" auto-import="false">
+	<class name="Item"  table="inv_item">
+		<cache usage="read-write"/>
+
+		<id name="id" type="int" column="item_id">
+			<generator class="native">
+				<param name="sequence">inv_item_item_id_seq</param>
+			</generator>
+		</id>
+		<discriminator column="item_id" insert="false" />
+
+		<property name="name" type="java.lang.String" column="name" not-null="true" length="255" />
+		<property name="description" type="java.lang.String" column="description" length="1024" />
+		<property name="hasExpiration" type="boolean" column="has_expiration" />
+		<property name="hasPhysicalInventory" type="boolean" column="has_physical_inventory" />
+		<property name="defaultExpirationPeriod" type="int" column="default_expiration_period" />
+		<property name="conceptAccepted" type="boolean" column="concept_accepted" />
+		<property name="minimumQuantity" type="int" column="minimum_quantity" />
+		<property name="buyingPrice" type="java.math.BigDecimal" column="buying_price" />
+
+		<!-- Associations -->
+		<many-to-one name="department" class="Department" column="department_id" />
+		<many-to-one name="defaultPrice" class="ItemPrice" column="default_price_id" />
+		<many-to-one name="concept" class="org.openmrs.Concept" column="concept_id" />
+
+		<set name="attributes" lazy="false" fetch="subselect" inverse="true" cascade="all-delete-orphan">
+			<key column="item_id" />
+			<one-to-many class="ItemAttribute" />
+		</set>
+
+		<set name="prices" lazy="false" fetch="subselect" inverse="true" cascade="all-delete-orphan">
+			<key column="item_id" not-null="true" />
+			<one-to-many class="ItemPrice" />
+		</set>
+		<set name="codes" lazy="false" fetch="subselect" inverse="true" cascade="all-delete-orphan">
+			<key column="item_id" not-null="true" />
+			<one-to-many class="ItemCode" />
+		</set>
+
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+
+	<class name="ItemAttribute" table="inv_item_attribute">
+		<id name="id" type="int" column="item_attribute_id">
+			<generator class="native">
+				<param name="sequence">inv_item_attribute_item_attribute_id_seq</param>
+			</generator>
+		</id>
+		<discriminator column="item_attribute_id" insert="false" />
+
+		<many-to-one name="owner" class="Item" not-null="true" column="item_id" />
+		<many-to-one name="attributeType" class="ItemAttributeType" not-null="true" column="item_attribute_type_id" />
+		<property name="value" type="text" not-null="true" access="field" column="value_reference" length="65535" />
+
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<property name="retired" type="java.lang.Boolean" column="retired" length="1" not-null="true" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+
+	<class name="ItemAttributeType" table="inv_item_attribute_type">
+		<id name="id" type="int" column="item_attribute_type_id">
+			<generator class="native">
+				<param name="sequence">inv_item_attribute_type_item_attribute_type_id_seq</param>
+			</generator>
+		</id>
+		<discriminator column="item_attribute_type_id" insert="false" />
+
+		<property name="name" type="java.lang.String" column="name" not-null="true" length="255" />
+		<property name="description" type="java.lang.String" column="description" length="1024" />
+		<property name="attributeOrder" type="int" column="attribute_order" />
+		<property name="foreignKey" type="int" column="foreignKey" />
+		<property name="format" type="java.lang.String" column="format" length="255" />
+		<property name="regExp" type="java.lang.String" column="reg_exp" length="255" />
+		<property name="required" type="boolean" column="required" length="1" not-null="true" />
+
+		<!-- BaseOpenmrsMetadata fields -->
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+		<property name="retired" type="boolean" column="retired" length="1" not-null="true" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+
+	<class name="ItemPrice" table="inv_item_price">
+		<id name="id" type="int" column="item_price_id">
+			<generator class="native">
+				<param name="sequence">inv_item_price_item_price_id_seq</param>
+			</generator>
+		</id>
+		<discriminator column="item_price_id" insert="false" />
+
+		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
+
+		<property name="name" type="java.lang.String" column="name" not-null="false" length="255" />
+		<property name="description" type="java.lang.String" column="description" length="1024" />
+		<property name="price" type="java.math.BigDecimal" column="price" not-null="true" />
+
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+
+		<property name="retired" type="java.lang.Boolean" column="retired" length="1" not-null="true" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+
+	<class name="ItemCode" table="inv_item_code">
+		<id name="id" type="int" column="item_code_id">
+			<generator class="native">
+				<param name="sequence">inv_item_code_item_code_id_seq</param>
+			</generator>
+		</id>
+		<discriminator column="item_code_id" insert="false" />
+
+		<many-to-one name="item" class="Item" not-null="true" column="item_id" />
+
+		<property name="name" type="java.lang.String" column="name" not-null="false" length="255" />
+		<property name="description" type="java.lang.String" column="description" length="1024" />
+		<property name="code" type="java.lang.String" column="code" not-null="true" length="255" />
+
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+		<property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+
+		<property name="retired" type="java.lang.Boolean" column="retired" length="1" not-null="true" />
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+		<property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+	</class>
+</hibernate-mapping>

@@ -7,10 +7,14 @@
 		<version>2.5.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>openhmis.inventory-api</artifactId>
+	<artifactId>openhmis.inventory-api-2.0</artifactId>
 	<packaging>jar</packaging>
-	<name>OpenHMIS Inventory Module Module API</name>
+	<name>OpenHMIS Inventory Module Module API 2.0</name>
 	<description>API project for the OpenHMIS inventory module</description>
+
+	<properties>
+		<openMRSBuildVersion>2.0.5</openMRSBuildVersion>
+	</properties>
 
 	<dependencies>
 
@@ -19,73 +23,23 @@
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
+			<version>${openMRSBuildVersion}</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
+			<version>${openMRSBuildVersion}</version>
 			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.api</groupId>
-			<artifactId>openmrs-api</artifactId>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.web</groupId>
-			<artifactId>openmrs-web</artifactId>
-			<type>test-jar</type>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.test</groupId>
-			<artifactId>openmrs-test</artifactId>
-			<type>pom</type>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- End OpenMRS core -->
 
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>openhmis.commons-api</artifactId>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>openhmis.commons-tests</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.javatuples</groupId>
-			<artifactId>javatuples</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>idgen-api</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>uiframework-api</artifactId>
+			<artifactId>${project.parent.artifactId}-api</artifactId>
+			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -96,13 +50,6 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
 
 		<plugins>
 			<plugin>
