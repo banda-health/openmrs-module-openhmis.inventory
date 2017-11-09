@@ -44,6 +44,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-omod_1.x</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-omod_2.x</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>webservices.rest-omod</artifactId>
 		</dependency>
@@ -241,7 +255,8 @@
 						<configuration>
 							<includeGroupIds>${project.parent.groupId}</includeGroupIds>
 							<includeArtifactIds>
-								${project.parent.artifactId}-api
+								${project.parent.artifactId}-api, ${project.parent.artifactId}-omod_1.x,
+								${project.parent.artifactId}-omod_2.x
 							</includeArtifactIds>
 							<excludeTransitive>true</excludeTransitive>
 							<includes>**/*</includes>

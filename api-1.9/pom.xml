@@ -13,7 +13,7 @@
 	<description>API project for the OpenHMIS inventory module</description>
 
 	<properties>
-		<openMRSBuildVersion>1.9.9</openMRSBuildVersion>
+		<openMRSVersion>1.9.9</openMRSVersion>
 	</properties>
 
 	<dependencies>
@@ -23,14 +23,14 @@
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
-			<version>${openMRSBuildVersion}</version>
+			<version>${openMRSVersion}</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
-			<version>${openMRSBuildVersion}</version>
+			<version>${openMRSVersion}</version>
 			<type>jar</type>
 		</dependency>
 
