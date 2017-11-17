@@ -379,7 +379,8 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<!-- <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url> -->
+			<url>https://openmrs.jfrog.io/openmrs/public</url>
 		</repository>
 		<repository>
 			<id>openhmis-repo</id>
@@ -398,7 +399,7 @@
 		<pluginRepository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<url>https://openmrs.jfrog.io/openmrs/public</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
