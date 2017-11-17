@@ -14,7 +14,6 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>Modules</name>
-			<!-- <url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>-->
 			<url>https://openmrs.jfrog.io/openmrs/modules/</url>
 		</repository>
 		<snapshotRepository>
@@ -379,7 +378,6 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<!-- <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url> -->
 			<url>https://openmrs.jfrog.io/openmrs/public</url>
 		</repository>
 		<repository>
