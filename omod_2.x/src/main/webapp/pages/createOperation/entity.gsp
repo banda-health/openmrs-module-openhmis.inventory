@@ -45,7 +45,7 @@
     <h1>${ui.message('openhmis.inventory.admin.create')}</h1>
     <form name="entityForm" class="entity-form create-operation-content" ng-class="{'submitted': submitted}">
         <fieldset class="content createOperation">
-            <div class="action-container" ng-show="operationType.name === 'Adjustment' && sourceStockroom.name !== ' - Not Defined - '">
+            <div class="action-container" ng-show="(operationType.name === 'Adjustment' ||operationType.name === 'Ajuste') && sourceStockroom.name !== ' - Not Defined - '">
                 <ul>
                     <h3>${ui.message('openhmis.inventory.operations.itemStockActions')}</h3>
                     <li>
@@ -112,7 +112,7 @@
                     </select>
                 </li>
             </ul>
-            <ul class="table-layout" ng-show="operationType.name === 'Distribution' && distributionType !== 'Patient'">
+            <ul class="table-layout" ng-show="(operationType.name === 'Distribution' || operationType.name === 'Distribucion') && distributionType !== 'Patient'">
                 <li class="not-required">
                     <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
                 </li>
@@ -143,7 +143,7 @@
                 </li>
             </ul>
             <ul class="table-layout"
-                ng-show="((operationType.name === 'Distribution' && distributionType === 'Institution') || (operationType.name === 'Return' && returnOperationType === 'Institution'))">
+                ng-show="((operationType.name === 'Distribution' && distributionType === 'Institution') || (operationType.name === 'Return' && returnOperationType === 'Institution') || (operationType.name === 'Retorno' && returnOperationType === 'Institution') || (operationType.name === 'Distribucion' && distributionType === 'Institution'))">
                 <li class="required">
                     <span>${ui.message('openhmis.inventory.institution.name')}</span>
                 </li>
@@ -154,7 +154,7 @@
                 </li>
             </ul>
             <ul class="table-layout"
-                ng-show="((operationType.name === 'Distribution' && distributionType === 'Department') || (operationType.name === 'Return' && returnOperationType === 'Department'))">
+                ng-show="((operationType.name === 'Distribution' && distributionType === 'Department') || (operationType.name === 'Return' && returnOperationType === 'Department') || (operationType.name === 'Retorno' && returnOperationType === 'Department') || (operationType.name === 'Distribucion' && distributionType === 'Department'))">
                 <li class="required">
                     <span>${ui.message('openhmis.inventory.department.name')}</span>
                 </li>
@@ -167,7 +167,7 @@
 
             ${ui.includeFragment("openhmis.commons", "fieldTypesFragment")}
 
-            <ul class="table-layout" ng-show="operationType.name === 'Distribution' && distributionType === 'Patient'">
+            <ul class="table-layout" ng-show="(operationType.name === 'Distribution' || operationType.name === 'Distribucion') && distributionType === 'Patient'">
                 <li class="not-required">
                     <span>${ui.message('openhmis.inventory.operations.distributeTo')}</span>
                 </li>
@@ -178,8 +178,8 @@
                 </li>
             </ul>
             ${ui.includeFragment("openhmis.commons", "patientSearchFragment", [
-                    showPatientDetails: "operationType.hasRecipient && selectedPatient !== '' && ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient'))",
-                    showPatientSearchBox: "operationType.hasRecipient && selectedPatient === '' && ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient'))"
+                    showPatientDetails: "operationType.hasRecipient && selectedPatient !== '' && ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient') || (operationType.name === 'Retorno' && returnOperationType === 'Patient') || (operationType.name === 'Distribucion' && distributionType === 'Patient'))",
+                    showPatientSearchBox: "operationType.hasRecipient && selectedPatient === '' && ((operationType.name === 'Distribution' && distributionType === 'Patient') || (operationType.name === 'Return' && returnOperationType === 'Patient') || (operationType.name === 'Retorno' && returnOperationType === 'Patient') || (operationType.name === 'Distribucion' && distributionType === 'Patient'))"
             ])}
             <fieldset class="nested"
                       ng-show="(!operationType.hasRecipient && (operationType.hasSource || operationType.hasDestination) ||
