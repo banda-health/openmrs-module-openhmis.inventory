@@ -4,7 +4,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>openhmis.inventory</artifactId>
-	<version>2.4.0</version>
+	<version>2.4.1</version>
 	<packaging>pom</packaging>
 	<name>OpenHMIS Inventory Module</name>
 	<description>Provides inventory services that can be used by other modules.</description>
@@ -14,7 +14,6 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>Modules</name>
-			<!-- <url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>-->
 			<url>https://openmrs.jfrog.io/openmrs/modules/</url>
 		</repository>
 		<snapshotRepository>
@@ -39,7 +38,7 @@
 		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</connection>
 		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</developerConnection>
 		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-openhmis.inventory.git</url>
-		<tag>v2.4.0</tag>
+		<tag>v2.4.1</tag>
 	</scm>
 
 	<modules>
@@ -379,7 +378,7 @@
 		<repository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<url>https://openmrs.jfrog.io/openmrs/public</url>
 		</repository>
 		<repository>
 			<id>openhmis-repo</id>
@@ -398,7 +397,7 @@
 		<pluginRepository>
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
-			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<url>https://openmrs.jfrog.io/openmrs/public</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
