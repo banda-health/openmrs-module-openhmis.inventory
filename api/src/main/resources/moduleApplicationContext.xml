@@ -32,6 +32,14 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
+				<value>org.openmrs.module.openhmis.inventory.api.IItemAttributeDataService</value>
+				<ref bean="invItemAttributeService" />
+			</list>
+		</property>
+	</bean>
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
 				<value>org.openmrs.module.openhmis.inventory.api.IItemAttributeTypeDataService</value>
 				<ref bean="invItemAttributeTypeService" />
 			</list>
@@ -131,6 +139,16 @@
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target">
 			<bean class="org.openmrs.module.openhmis.inventory.api.impl.ItemDataServiceImpl">
+				<property name="repository" ref="genericRepository" />
+			</bean>
+		</property>
+		<property name="preInterceptors" ref="serviceInterceptors" />
+		<property name="transactionAttributeSource" ref="transactionAttributeSource" />
+	</bean>
+	<bean id="invItemAttributeService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="target">
+			<bean class="org.openmrs.module.openhmis.inventory.api.impl.ItemAttributeDataServiceImpl">
 				<property name="repository" ref="genericRepository" />
 			</bean>
 		</property>
