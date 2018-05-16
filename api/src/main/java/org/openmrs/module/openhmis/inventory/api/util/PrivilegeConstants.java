@@ -13,12 +13,13 @@
  */
 package org.openmrs.module.openhmis.inventory.api.util;
 
+import static org.openmrs.module.jasperreport.util.JasperReportPrivilegeConstants.VIEW_JASPER_REPORTS;
+
 import org.openmrs.Privilege;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.compatibility.PrivilegeConstantsCompatibility;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -111,6 +112,12 @@ public class PrivilegeConstants {
 		names.add(org.openmrs.util.PrivilegeConstants.VIEW_NAVIGATION_MENU);
 		names.add(privilegeConstantsCompatibility.GET_USERS);
 		names.add(privilegeConstantsCompatibility.GET_ROLES);
+
+		names.add(org.openmrs.util.PrivilegeConstants.MANAGE_GLOBAL_PROPERTIES);
+		names.add(org.openmrs.util.PrivilegeConstants.MANAGE_ROLES);
+		names.add(VIEW_JASPER_REPORTS);
+		names.add(privilegeConstantsCompatibility.GET_VISITS);
+		names.add(privilegeConstantsCompatibility.GET_PATIENTS);
 
 		for (String name : names) {
 			privileges.add(service.getPrivilege(name));
