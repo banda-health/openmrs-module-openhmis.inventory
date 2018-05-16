@@ -16,7 +16,9 @@ import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
  */
 package org.openmrs.module.openhmis.inventory.web;
 
+import org.openmrs.module.openhmis.commons.api.compatibility.PrivilegeConstantsCompatibility;
 import org.openmrs.module.openhmis.inventory.api.util.PrivilegeConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Constants class for privilges required by web resources.
@@ -34,5 +36,8 @@ public class PrivilegeWebConstants extends PrivilegeConstants {
 	public static final String INVENTORY_PAGE_PRIVILEGES = MANAGE_OPERATIONS + ", " + VIEW_OPERATIONS;
 	public static final String SETTINGS_PAGE_PRIVILEGES = MANAGE_METADATA;
 
-	protected PrivilegeWebConstants() {}
+	@Autowired
+	protected PrivilegeWebConstants(PrivilegeConstantsCompatibility privilegeConstantsCompatibility) {
+		super(privilegeConstantsCompatibility);
+	}
 }

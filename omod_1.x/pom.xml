@@ -12,6 +12,10 @@
 	<name>OpenHMIS Inventory Module Module OMOD 1.x</name>
 	<description>OMOD project for the OpenHMIS inventory module</description>
 
+	<properties>
+		<openMRSVersion>1.9.9</openMRSVersion>
+	</properties>
+
 	<dependencies>
 		<!-- Begin OpenMRS modules -->
 
@@ -83,18 +87,21 @@
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
+			<version>${openMRSVersion}</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
+			<version>${openMRSVersion}</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
+			<version>${openMRSVersion}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
@@ -102,6 +109,7 @@
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
+			<version>${openMRSVersion}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
@@ -109,6 +117,7 @@
 		<dependency>
 			<groupId>org.openmrs.test</groupId>
 			<artifactId>openmrs-test</artifactId>
+			<version>${openMRSVersion}</version>
 			<type>pom</type>
 			<scope>test</scope>
 		</dependency>

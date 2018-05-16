@@ -59,8 +59,7 @@
 
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>openhmis.commons-api</artifactId>
-			<type>test-jar</type>
+			<artifactId>openhmis.commons-tests</artifactId>
 			<scope>test</scope>
 		</dependency>
 
