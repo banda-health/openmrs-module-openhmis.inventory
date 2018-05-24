@@ -45,6 +45,7 @@ public class ItemAttributeResource extends BaseRestAttributeObjectResource<ItemA
 
 	@Override
 	public Class<? extends IObjectDataService<ItemAttribute>> getServiceClass() {
-		return IItemAttributeDataService.class;
+		return null;
+		//		return IItemAttributeDataService.class;
 	}
 }
