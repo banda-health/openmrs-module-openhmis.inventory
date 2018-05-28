@@ -6,7 +6,8 @@ import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 
-public class IItemAttributeDataServiceTest extends IObjectDataServiceTest<IItemAttributeDataService, ItemAttribute> {
+public class IItemAttributeDataServiceTest extends
+        IObjectDataServiceTest<IItemAttributeDataService, ItemAttribute> {
 	public static final String ITEM_ATTRIBUTE_DATASET = TestConstants.BASE_DATASET_DIR + "ItemAttributeTest.xml";
 
 	private IItemDataService itemDataService;
@@ -26,19 +27,16 @@ public class IItemAttributeDataServiceTest extends IObjectDataServiceTest<IItemA
 
 	@Override
 	public ItemAttribute createEntity(boolean valid) {
-		ItemAttribute itemAttribute = new ItemAttribute();
-
-		Item item = itemDataService.getById(0);
 		ItemAttributeType itemAttributeType = itemAttributeTypeDataService.getById(0);
+		Item item = itemDataService.getById(0);
 
+		ItemAttribute itemAttribute = new ItemAttribute();
+		itemAttribute.setOwner(item);
 		if (valid) {
-			itemAttribute.setOwner(item);
+			itemAttribute.setValue("100");
 		}
 
 		itemAttribute.setAttributeType(itemAttributeType);
-		itemAttribute.setId(itemAttributeType.getId());
-		itemAttribute.setValue("100");
-
 		return itemAttribute;
 	}
 
@@ -51,7 +49,6 @@ public class IItemAttributeDataServiceTest extends IObjectDataServiceTest<IItemA
 	protected void updateEntityFields(ItemAttribute itemAttribute) {
 		itemAttribute.setOwner(itemDataService.getById(1));
 		itemAttribute.setAttributeType(itemAttributeTypeDataService.getById(1));
-		itemAttribute.setId(itemAttribute.getAttributeType().getId());
 		itemAttribute.setValue("200");
 	}
 }

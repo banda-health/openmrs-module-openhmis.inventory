@@ -14,22 +14,25 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
+import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IItemAttributeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
+import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Data service implementation class for {@link ItemAttributeType}s.
  */
 @Transactional
-public class ItemAttributeDataServiceImpl extends BaseMetadataDataServiceImpl<ItemAttribute>
+public class ItemAttributeDataServiceImpl
+        extends BaseObjectDataServiceImpl<ItemAttribute, BasicObjectAuthorizationPrivileges>
         implements IItemAttributeDataService {
 	@Override
-	protected IMetadataAuthorizationPrivileges getPrivileges() {
-		return new BasicMetadataAuthorizationPrivileges();
+	protected BasicObjectAuthorizationPrivileges getPrivileges() {
+		return new BasicObjectAuthorizationPrivileges();
 	}
 
 	@Override

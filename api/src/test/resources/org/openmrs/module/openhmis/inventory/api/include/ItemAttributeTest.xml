@@ -1,79 +1,61 @@
 <dataset>
-	<inv_item_attribute
-			item_attribute_id="0"
-			item_id="0"
-			item_attribute_type_id="0"
-			value_reference="7"
-			creator="1"
-			date_created="2012-01-01 00:00:00.0"
-			retired="false"
-			uuid="4028814B399565AA013995675A7E0001" />
+    <inv_item_attribute
+            item_attribute_id="0"
+            item_id="0"
+            item_attribute_type_id="0"
+            value_reference="7"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0000"/>
 
-	<inv_item_attribute_type
-			item_attribute_type_id="1"
-			name="test 2 item attribute type"
-			description="test description numero dos"
-			creator="1"
-			required="0"
-			format="java.lang.String"
-			date_created="2012-01-01 00:00:00.0"
-			retired="false"
-			uuid="4028814B399565AA01399671011D000A" />
+    <inv_item_attribute
+            item_attribute_id="1"
+            item_id="0"
+            item_attribute_type_id="1"
+            value_reference="1"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0001"/>
 
-	<inv_item_attribute_type
-			item_attribute_type_id="2"
-			name="test 3 item attribute type"
-			description="test description 3"
-			creator="1"
-			required="1"
-			format="java.lang.Boolean"
-			date_created="2012-01-01 00:00:00.0"
-			retired="false"
-			uuid="4028814B399565AA01399681B1B5000E" />
+    <inv_item_attribute
+            item_attribute_id="2"
+            item_id="0"
+            item_attribute_type_id="2"
+            value_reference="true"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0002"/>
 
-	<inv_item_attribute_type
-			item_attribute_type_id="3"
-			name="test 4 item attribute type"
-			description="test description 4"
-			creator="1"
-			required="0"
-			format="java.lang.String"
-			date_created="2012-01-01 00:00:00.0"
-			retired="false"
-			uuid="4028814B399565AA01399671011D00DD" />
+    <inv_item_attribute
+            item_attribute_id="3"
+            item_id="0"
+            item_attribute_type_id="3"
+            value_reference="3"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0003"/>
 
-	<inv_item_attribute_type
-			item_attribute_type_id="4"
-			name="test 5 item attribute type"
-			description="test description 5"
-			creator="1"
-			required="0"
-			format="java.lang.Integer"
-			date_created="2012-01-01 00:00:00.0"
-			retired="false"
-			uuid="4028814B399565AA01399671011D00EE" />
+    <inv_item_attribute
+            item_attribute_id="4"
+            item_id="0"
+            item_attribute_type_id="4"
+            value_reference="4"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0004"/>
 
-	<inv_item_attribute_type
-			item_attribute_type_id="5"
-			name="test 6 item attribute type"
-			description="test description 6"
-			creator="1"
-			required="0"
-			format="java.lang.Integer"
-			date_created="2012-01-01 00:00:00.0"
-			retired="false"
-			attribute_order="1"
-			uuid="4028814B399565AA01399671011D00FF" />
-
-	<inv_item_attribute_type
-			item_attribute_type_id="6"
-			name="test 7 item attribute type"
-			description="test description 7"
-			creator="1"
-			required="0"
-			format="java.lang.Integer"
-			date_created="2012-01-01 00:00:00.0"
-			foreignKey="3"
-			retired="false"
-			uuid="4028828A480C83CE01480CD2D6070002" />
+    <inv_item_attribute
+            item_attribute_id="5"
+            item_id="0"
+            item_attribute_type_id="5"
+            value_reference="5"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0005"/>
 </dataset>
