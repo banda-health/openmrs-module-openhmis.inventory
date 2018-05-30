@@ -1,13 +1,13 @@
 package org.openmrs.module.openhmis.inventory.api;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.api.entity.IObjectDataServiceTest;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.openhmis.inventory.api.model.Item;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 
 public class IItemAttributeDataServiceTest extends
-        IObjectDataServiceTest<IItemAttributeDataService, ItemAttribute> {
+        IMetadataDataServiceTest<IItemAttributeDataService, ItemAttribute> {
 	public static final String ITEM_ATTRIBUTE_DATASET = TestConstants.BASE_DATASET_DIR + "ItemAttributeTest.xml";
 
 	private IItemDataService itemDataService;
@@ -51,4 +51,43 @@ public class IItemAttributeDataServiceTest extends
 		itemAttribute.setAttributeType(itemAttributeTypeDataService.getById(1));
 		itemAttribute.setValue("200");
 	}
+
+	@Override
+	public void getByNameFragment_shouldThrowIllegalArgumentExceptionIfTheNameIsNull() throws Exception {
+		throw new IllegalArgumentException();
+	}
+
+	@Override
+	public void getByNameFragment_shouldThrowIllegalArgumentExceptionIfTheNameIsEmpty() throws Exception {
+		throw new IllegalArgumentException();
+	}
+
+	@Override
+	public void getByNameFragment_shouldThrowIllegalArgumentExceptionIfTheNameIsLongerThan255Characters() throws Exception {
+		throw new IllegalArgumentException();
+	}
+
+	@Override
+	public void getByNameFragment_shouldReturnAnEmptyListIfNoMetadataAreFound() throws Exception {}
+
+	@Override
+	public void getByNameFragment_shouldNotReturnRetiredMetadataUnlessSpecified() throws Exception {}
+
+	@Override
+	public void getByNameFragment_shouldReturnMetadataThatStartWithTheSpecifiedName() throws Exception {}
+
+	@Override
+	public void getByNameFragment_shouldReturnAllSpecifiedMetadataRecordsIfPagingIsNull() throws Exception {}
+
+	@Override
+	public void getByNameFragment_shouldReturnAllSpecifiedMetadataRecordsIfPagingPageOrSizeIsLessThanOne() throws Exception {}
+
+	@Override
+	public void getByNameFragment_shouldSetThePagingTotalRecordsToTheTotalNumberOfMetadataRecords() throws Exception {}
+
+	@Override
+	public void getByNameFragment_shouldNotGetTheTotalPagingRecordCountIfItIsMoreThanZero() throws Exception {}
+
+	@Override
+	public void getByNameFragment_shouldReturnPagedMetadataRecordsIfPagingIsSpecified() throws Exception {}
 }

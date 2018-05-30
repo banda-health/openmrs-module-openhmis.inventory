@@ -14,29 +14,32 @@
 package org.openmrs.module.openhmis.inventory.api.impl;
 
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServiceImpl;
-import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.openhmis.inventory.api.IItemAttributeDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttributeType;
 import org.openmrs.module.openhmis.inventory.api.security.BasicMetadataAuthorizationPrivileges;
-import org.openmrs.module.openhmis.inventory.api.security.BasicObjectAuthorizationPrivileges;
 import org.springframework.transaction.annotation.Transactional;
+import org.hibernate.criterion.Order;
 
 /**
  * Data service implementation class for {@link ItemAttributeType}s.
  */
 @Transactional
-public class ItemAttributeDataServiceImpl
-        extends BaseObjectDataServiceImpl<ItemAttribute, BasicObjectAuthorizationPrivileges>
+public class ItemAttributeDataServiceImpl extends BaseMetadataDataServiceImpl<ItemAttribute>
         implements IItemAttributeDataService {
 	@Override
-	protected BasicObjectAuthorizationPrivileges getPrivileges() {
-		return new BasicObjectAuthorizationPrivileges();
+	protected IMetadataAuthorizationPrivileges getPrivileges() {
+		return new BasicMetadataAuthorizationPrivileges();
 	}
 
 	@Override
 	protected void validate(ItemAttribute entity) {
 		return;
+	}
+
+	@Override
+	protected Order[] getDefaultSort() {
+		return new Order[] { Order.asc("id") };
 	}
 }

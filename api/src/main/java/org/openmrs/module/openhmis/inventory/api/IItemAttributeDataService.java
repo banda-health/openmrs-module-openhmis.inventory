@@ -13,7 +13,7 @@
  */
 package org.openmrs.module.openhmis.inventory.api;
 
-import org.openmrs.module.openhmis.commons.api.entity.IObjectDataService;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.openhmis.inventory.api.model.ItemAttribute;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,4 +21,4 @@ import org.springframework.transaction.annotation.Transactional;
  * Interface that represents classes which perform data operations for {@link ItemAttribute}s.
  */
 @Transactional
-public interface IItemAttributeDataService extends IObjectDataService<ItemAttribute> {}
+public interface IItemAttributeDataService extends IMetadataDataService<ItemAttribute> {}
