@@ -188,6 +188,8 @@
 					if (stockObject[i].expiration != null) {
 						stockObject[i].expiration = StockTakeFunctions.formatDate(stockObject[i].expiration);
 					}
+
+					stockObject[i].item = stockObject[i].item.uuid;
 				}
 				
 				if ($scope.stockTakeDetails.length != 0) {
