@@ -1,0 +1,61 @@
+<dataset>
+    <inv_item_attribute
+            item_attribute_id="0"
+            item_id="0"
+            item_attribute_type_id="0"
+            value_reference="7"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0000"/>
+
+    <inv_item_attribute
+            item_attribute_id="1"
+            item_id="0"
+            item_attribute_type_id="1"
+            value_reference="1"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0001"/>
+
+    <inv_item_attribute
+            item_attribute_id="2"
+            item_id="0"
+            item_attribute_type_id="2"
+            value_reference="true"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0002"/>
+
+    <inv_item_attribute
+            item_attribute_id="3"
+            item_id="0"
+            item_attribute_type_id="3"
+            value_reference="3"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0003"/>
+
+    <inv_item_attribute
+            item_attribute_id="4"
+            item_id="0"
+            item_attribute_type_id="4"
+            value_reference="4"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0004"/>
+
+    <inv_item_attribute
+            item_attribute_id="5"
+            item_id="0"
+            item_attribute_type_id="5"
+            value_reference="5"
+            creator="1"
+            date_created="2012-01-01 00:00:00.0"
+            retired="false"
+            uuid="4028814B399565AA013995675A7E0005"/>
+</dataset>
