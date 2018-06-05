@@ -190,7 +190,7 @@
 			</tr>
 		</table>
 		<br/>
-		<p><input class="submitButton confirm right" type="submit" value="<openmrs:message code="openhmis.inventory.settings.page.settings.save"/>">
+		<p><input class="submitButton confirm right" type="submit" value="<spring:message code="openhmis.inventory.settings.page.settings.save"/>">
 		</p>
 	</form:form>
 </div>
