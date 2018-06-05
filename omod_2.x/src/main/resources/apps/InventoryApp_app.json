@@ -8,7 +8,7 @@
 				"id": "openhmis.inventory.inventoryLandingPageLink",
 				"extensionPointId": "org.openmrs.referenceapplication.homepageLink",
 				"type": "link",
-				"label": "Inventario",
+				"label": "Inventory",
 				"url": "openhmis.inventory/inventoryLanding.page",
 				"icon": "icon-book",
 				"requiredPrivilege": "App: View Inventory App"
@@ -17,7 +17,7 @@
 				"id": "openhmis.inventory.registration.editVisit",
 				"extensionPointId": "org.openmrs.referenceapplication.homepageLink",
 				"type": "link",
-				"label": "Editar Visita",
+				"label": "Edit Visit",
 				"url": "findPatient.htm",
 				"icon": "icon-stethoscope",
 				"requiredPrivilege": "App: Edit Visit"
@@ -26,7 +26,7 @@
 				"id": "openhmis.inventory.inventoryTasksLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.landing",
 				"type": "link",
-				"label": "Tareas de Inventario",
+				"label": "Inventory Tasks",
 				"url": "openhmis.inventory/inventory/inventoryTasksDashboard.page",
 				"icon": "icon-book",
 				"requiredPrivilege": "App: Access Inventory Tasks"
@@ -35,7 +35,7 @@
 				"id": "openhmis.inventory.manageInventoryModuleLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.landing",
 				"type": "link",
-				"label": "Administrar el modulo de inventario",
+				"label": "Manage Inventory Module",
 				"url": "openhmis.inventory/inventory/manageModule.page",
 				"icon": "icon-cogs",
 				"requiredPrivilege": "Task: Manage Inventory Module"
@@ -44,7 +44,7 @@
 				"id": "openhmis.inventory.inventoryRoleCreationLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Creacion de roles de Inventario",
+				"label": "Inventory Role Creation",
 				"url": "module/openhmis/inventory/roleCreation2x.page",
 				"icon": "icon-user",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -53,7 +53,7 @@
 				"id": "openhmis.inventory.manageItemsLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Administrar Items",
+				"label": "Manage Items",
 				"url": "openhmis.inventory/item/entities.page",
 				"icon": "icon-italic",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -62,7 +62,7 @@
 				"id": "openhmis.inventory.manageItemAttributeTypesLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Administrar los tipos de atributo",
+				"label": "Manage Item Attribute Types",
 				"url": "openhmis.inventory/itemAttributes/entities.page",
 				"icon": "icon-edit",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -71,7 +71,7 @@
 				"id": "openhmis.inventory.manageDepartmentsLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Administrar Departamentos",
+				"label": "Manage Departments",
 				"url": "openhmis.inventory/department/entities.page",
 				"icon": "icon-briefcase",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -80,7 +80,7 @@
 				"id": "openhmis.inventory.manageInstitutionsLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Administrar Instituciones",
+				"label": "Manage Institutions",
 				"url": "openhmis.inventory/institution/entities.page",
 				"icon": "icon-building",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -89,7 +89,7 @@
 				"id": "openhmis.inventory.manageStockroomsLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Administrar Bodegas",
+				"label": "Manage Stockrooms",
 				"url": "openhmis.inventory/stockroom/entities.page",
 				"icon": "icon-home",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -98,7 +98,7 @@
 				"id": "openhmis.inventory.manageOperationTypesLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Administrar tipos de Operacion",
+				"label": "Manage Operation Types",
 				"url": "openhmis.inventory/operationTypes/entities.page",
 				"icon": "icon-edit",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -107,7 +107,7 @@
 				"id": "openhmis.inventory.generateItemMappingsLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Generar mapeos de Items",
+				"label": "Generate Item Mappings",
 				"url": "module/openhmis/inventory/itemConceptSuggestion.form",
 				"icon": "icon-random",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -116,7 +116,7 @@
 				"id": "openhmis.inventory.inventorySettingsLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.manage.module",
 				"type": "link",
-				"label": "Configuraciones de Inventario",
+				"label": "Inventory Settings",
 				"url": "module/openhmis/inventory/settings2x.page",
 				"icon": "icon-cog",
 				"requiredPrivilege": "Task: Manage Inventory Metadata"
@@ -125,7 +125,7 @@
 				"id": "openhmis.inventory.createInventoryOperations",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 				"type": "link",
-				"label": "Crear Operacion",
+				"label": "Create Operation",
 				"url": "openhmis.inventory/createOperation/entities.page",
 				"icon": "icon-folder-open",
 				"requiredPrivilege": "Task: Access Create Operation"
@@ -134,7 +134,7 @@
 				"id": "openhmis.inventory.viewStockOperationLink",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 				"type": "link",
-				"label": "Ver operaciones de Stock",
+				"label": "View Stock Operations",
 				"url": "openhmis.inventory/stockOperations/entities.page",
 				"icon": "icon-list",
 				"requiredPrivilege": "Task: View Stock Operations"
@@ -152,7 +152,7 @@
 				"id": "openhmis.inventory.inventoryReports",
 				"extensionPointId": "org.openmrs.module.openhmis.inventory.tasks.dashboard",
 				"type": "link",
-				"label": "Reportes de Inventario",
+				"label": "Inventory Reports",
 				"url": "openhmis.inventory/reports/entities.page",
 				"icon": "icon-file-alt",
 				"requiredPrivilege": "Task: Access Inventory Reports"
