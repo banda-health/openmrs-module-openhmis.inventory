@@ -34,13 +34,13 @@
             <li><label>Stockroom </label></li>
             <li>
                 <select required class="form-control" ng-model="StockTakeReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms' autofocus>
-                    <option value="" selected="selected">Select Stockroom</option>
+                    <option value="" selected="selected">Seleccione Bodega</option>
                 </select>
             </li>
         </ul>
         <ul class="table-layout">
             <li></li>
-            <li><a class="btn btn-grey" ng-click="generateReport_StockTakeReport()">Generate Report</a></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockTakeReport()">Generar Reporte</a></li>
         </ul>
     </fieldset>
 </div>
@@ -69,7 +69,7 @@
         </ul>
 
         <ul class="table-layout">
-            <li><label>Begin Date</label></li>
+            <li><label>Fecha de Inicio</label></li>
             <li>
                 <span class="date">
                     ${ ui.includeFragment("uicommons", "field/datetimepicker", [
@@ -83,7 +83,7 @@
         </ul>
 
         <ul class="table-layout">
-            <li><label>End Date</label></li>
+            <li><label>Fecha Final</label></li>
             <li>
                 <span class="date">
                     ${ ui.includeFragment("uicommons", "field/datetimepicker", [
@@ -98,7 +98,7 @@
 
         <ul class="table-layout">
             <li></li>
-            <li><a class="btn btn-grey" ng-click="generateReport_StockCardReport()">Generate Report</a></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockCardReport()">Generar Reporte</a></li>
         </ul>
     </fieldset>
 </div>
@@ -115,7 +115,7 @@
             <li><label>Stockroom </label></li>
             <li>
                 <select required  class="form-control" ng-model="stockOperationsByStockroomReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
-                    <option value="" selected="selected">Select Stockroom</option>
+                    <option value="" selected="selected">Seleccione Bodega</option>
                 </select>
             </li>
         </ul>
@@ -135,7 +135,7 @@
         </ul>
 
         <ul class="table-layout">
-            <li><label>Begin Date</label></li>
+            <li><label>Fecha de Inicio</label></li>
             <li>
                 <span class="date">
                     ${ ui.includeFragment("uicommons", "field/datetimepicker", [
@@ -149,7 +149,7 @@
         </ul>
 
         <ul class="table-layout">
-            <li><label>End Date</label></li>
+            <li><label>Fecha Final</label></li>
             <li>
                 <span class="date">
                     ${ ui.includeFragment("uicommons", "field/datetimepicker", [
@@ -164,7 +164,7 @@
 
         <ul class="table-layout">
             <li></li>
-            <li><a class="btn btn-grey" ng-click="generateReport_StockOperationsByStockroomReport()">Generate Report</a></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockOperationsByStockroomReport()">Generar Reporte</a></li>
         </ul>
     </fieldset>
 </div>
@@ -178,16 +178,16 @@
         </legend>
         <small>{{stockroomUsageReport.reportDescription}}</small>
         <ul class="table-layout">
-            <li><label>Stockroom </label></li>
+            <li><label>Bodega </label></li>
             <li>
                 <select required class="form-control" ng-model="stockroomUsageReport_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
-                    <option value="" selected="selected">Select Stockroom</option>
+                    <option value="" selected="selected">Seleccione Bodega</option>
                 </select>
             </li>
         </ul>
 
         <ul class="table-layout">
-            <li><label>Begin Date</label></li>
+            <li><label>Fecha de Inicio</label></li>
             <li>
                 ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                         formFieldName: "stockroomUsageReport_beginDate",
@@ -199,7 +199,7 @@
         </ul>
 
         <ul class="table-layout">
-            <li><label>End Date</label></li>
+            <li><label>Fecha Final</label></li>
             <li>
                 ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                         formFieldName: "stockroomUsageReport_endDate",
@@ -212,7 +212,7 @@
 
         <ul class="table-layout">
             <li></li>
-            <li><a class="btn btn-grey" ng-click="generateReport_StockroomUsage()">Generate Report</a></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_StockroomUsage()">Generar Reporte</a></li>
         </ul>
     </fieldset>
 </div>
@@ -227,7 +227,7 @@
         </legend>
         <small>{{expiringStockReport.reportDescription}}</small>
         <ul class="table-layout">
-            <li><label>Stockroom </label></li>
+            <li><label>Bodega </label></li>
             <li>
                 <select class="form-control" id="expiringStock-stockroom" ng-model="expiringStock_stockroom" ng-options='stockroom.name for stockroom in stockrooms'>
                     <option value="" selected="selected">All Stockrooms</option>
@@ -236,7 +236,7 @@
         </ul>
 
         <ul class="table-layout">
-            <li><label>Expires by</label></li>
+            <li><label>Expira para</label></li>
             <li>
                 ${ ui.includeFragment("uicommons", "field/datetimepicker", [
                         formFieldName: "expiringStock_expiresByDate",
@@ -249,7 +249,7 @@
 
         <ul class="table-layout">
             <li></li>
-            <li><a class="btn btn-grey" ng-click="generateReport_ExpiringStock()">Generate Report</a></li>
+            <li><a class="btn btn-grey" ng-click="generateReport_ExpiringStock()">Generar Reporte</a></li>
         </ul>
     </fieldset>
 </div>
