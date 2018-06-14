@@ -80,11 +80,23 @@ public class ItemSearchHandler
 		List<Item> items = null;
 		PagingInfo pagingInfo = PagingUtil.getPagingInfoFromContext(context);
 
-		// If no parameters are specified first attempt a search by code (an exact match), then by name
+		// If no parameters are specified, check if the global 'wildcard item search' setting is enabled
+		// and search by name, then by code. If the global 'wildcard' is not enabled, search by code (an exact match),
+		// then by name
 		if (department == null && hasPhysicalInventory == null) {
 			if (query != null) {
-				// Try searching by code
-				items = service.getItemsByCode(query, context.getIncludeAll(), pagingInfo);
+
+				// Check if the global wildcard search is enabled
+				if (ModuleSettings.useWildcardItemSearch()) {
+					query = '%' + query + '%';
+					items = service.getByNameFragment(query, context.getIncludeAll(), pagingInfo);
+				}
+
+				if (items == null || items.size() == 0) {
+					// Try searching by code
+					pagingInfo = PagingUtil.getPagingInfoFromContext(context);
+					items = service.getItemsByCode(query, context.getIncludeAll(), pagingInfo);
+				}
 			}
 
 			if (items == null || items.size() == 0) {

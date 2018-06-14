@@ -13,10 +13,13 @@
  */
 package org.openmrs.module.openhmis.inventory.api.util;
 
+import static org.openmrs.module.jasperreport.util.JasperReportPrivilegeConstants.VIEW_JASPER_REPORTS;
+
 import org.openmrs.Privilege;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.openhmis.commons.web.PrivilegeConstantsCompatibility;
+import org.openmrs.module.openhmis.commons.api.compatibility.PrivilegeConstantsCompatibility;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +30,9 @@ import java.util.Set;
  * Constants class for module privilege constants.
  */
 public class PrivilegeConstants {
+
+	private static PrivilegeConstantsCompatibility privilegeConstantsCompatibility;
+
 	public static final String MANAGE_ITEMS = "Manage Inventory Items";
 	public static final String VIEW_ITEMS = "View Inventory Items";
 	public static final String PURGE_ITEMS = "Purge Inventory Items";
@@ -61,7 +67,10 @@ public class PrivilegeConstants {
 	        TASK_ACCESS_CREATE_OPERATION_PAGE, TASK_ACCESS_INVENTORY_REPORTS_PAGE, TASK_ACCESS_STOCK_TAKE_PAGE,
 	        ROLLBACK_OPERATIONS, TASK_MANAGE_INVENTORY_METADATA };
 
-	protected PrivilegeConstants() {}
+	@Autowired
+	protected PrivilegeConstants(PrivilegeConstantsCompatibility privilegeConstantsCompatibility) {
+		PrivilegeConstants.privilegeConstantsCompatibility = privilegeConstantsCompatibility;
+	}
 
 	/**
 	 * Gets all the privileges defined by the module.
@@ -95,15 +104,20 @@ public class PrivilegeConstants {
 		}
 
 		List<String> names = new ArrayList<String>();
-		PrivilegeConstantsCompatibility privilegeConstantsCompatibility = new PrivilegeConstantsCompatibility();
 
-		names.add(privilegeConstantsCompatibility.getEditPatientIdentifiersPrivilege());
-		names.add(privilegeConstantsCompatibility.getViewAdminFunctionsPrivilege());
-		names.add(privilegeConstantsCompatibility.getViewConceptsPrivilege());
-		names.add(privilegeConstantsCompatibility.getViewLocationsPrivilege());
-		names.add(privilegeConstantsCompatibility.getViewNavigationMenuPrivilege());
-		names.add(privilegeConstantsCompatibility.getViewUsersPrivilege());
-		names.add(privilegeConstantsCompatibility.getViewRolesPrivilege());
+		names.add(org.openmrs.util.PrivilegeConstants.EDIT_PATIENT_IDENTIFIERS);
+		names.add(org.openmrs.util.PrivilegeConstants.VIEW_ADMIN_FUNCTIONS);
+		names.add(privilegeConstantsCompatibility.GET_CONCEPTS);
+		names.add(privilegeConstantsCompatibility.GET_LOCATIONS);
+		names.add(org.openmrs.util.PrivilegeConstants.VIEW_NAVIGATION_MENU);
+		names.add(privilegeConstantsCompatibility.GET_USERS);
+		names.add(privilegeConstantsCompatibility.GET_ROLES);
+
+		names.add(org.openmrs.util.PrivilegeConstants.MANAGE_GLOBAL_PROPERTIES);
+		names.add(org.openmrs.util.PrivilegeConstants.MANAGE_ROLES);
+		names.add(VIEW_JASPER_REPORTS);
+		names.add(privilegeConstantsCompatibility.GET_VISITS);
+		names.add(privilegeConstantsCompatibility.GET_PATIENTS);
 
 		for (String name : names) {
 			privileges.add(service.getPrivilege(name));

@@ -10,6 +10,7 @@ import org.openmrs.module.openhmis.inventory.api.model.StockOperationTypeBase;
 
 public class IStockOperationTypeDataServiceTest
         extends IMetadataDataServiceTest<IStockOperationTypeDataService, IStockOperationType> {
+
 	@Override
 	public void before() throws Exception {
 		super.before();
