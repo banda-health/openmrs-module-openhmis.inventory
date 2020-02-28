@@ -22,4 +22,7 @@ emr.loadMessages([ "openhmis.inventory.report.rest_name", "openhmis.inventory.it
 		"openhmis.inventory.item.name", "openhmis.inventory.admin.reports",
 		"openhmis.inventory.report.error.stockroomRequired", "openhmis.inventory.report.error.itemRequired",
 		"openhmis.inventory.report.error.beginDateRequired", "openhmis.inventory.report.error.endDateRequired",
-		"openhmis.inventory.report.error.expiryDateRequired", ]);
+		"openhmis.inventory.report.error.expiryDateRequired", "openhmis.inventory.report.stockroom.label",
+		"openhmis.inventory.reports.select.stockroom.label", "openhmis.inventory.reports.generate.reports.label",
+		"openhmis.inventory.reports.item.label", "openhmis.inventory.reports.startdate.label",
+		"openhmis.inventory.reports.enddate.label", "openhmis.inventory.reports.expirationdate.label",]);
